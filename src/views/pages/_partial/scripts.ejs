@@ -2,14 +2,16 @@
   integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script> -->
 
 <% if (config.nodeenv == "production") { %>
-<script async src="https://www.googletagmanager.com/gtag/js?id=UA-149415550-1"></script>
+<!-- Global site tag (gtag.js) - Google Analytics -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=UA-146976156-1"></script>
 <script>
   window.dataLayer = window.dataLayer || [];
-  function gtag() { dataLayer.push(arguments); }
+  function gtag(){dataLayer.push(arguments);}
   gtag('js', new Date());
-  gtag('config', 'UA-149415550-1');
+
+  gtag('config', 'UA-146976156-1');
 </script>
-<% } %>
+
 
 <script src="/js/vendor.min.js"></script>
 <% if (__config.nodeenv == 'development') { %>
