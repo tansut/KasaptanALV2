@@ -88,12 +88,19 @@ class Resource extends BaseModel<Resource> {
     description: string;
 
     get note() {
-        let note = '';
+        let note = this.tag2;
         if (this.tag1 == 'yemek-tarifi') {
-            note = this.tag2 ? (this.tag2) : (this.title + " yapacağım, lütfen uygun hazırlayın.");
+            note = this.tag2 ;
         } else if (this.tag1 == 'hazirlama-sekli') {
             note = this.tag2 ? (this.tag2) : (this.title + " olarak hazırlayın.")
         }
+
+        // if (this.tag1 == 'yemek-tarifi') {
+        //     note = this.tag2 ? (this.tag2) : (this.title + " yapacağım, lütfen uygun hazırlayın.");
+        // } else if (this.tag1 == 'hazirlama-sekli') {
+        //     note = this.tag2 ? (this.tag2) : (this.title + " olarak hazırlayın.")
+        // }
+
         return note
     }
 

@@ -70,14 +70,14 @@
           <div class="col-md-2 col-6 ">
 
             <div class="card product-card card-static item-card">
-              <a class="card-img-top d-block overflow-hidden gallery-item video-item" href="/<%= `${resource.product.slug}?r=${resource.id}`  %>">
+              <a class="card-img-top d-block overflow-hidden gallery-item video-item" href="/<%= `${resource.product.slug}/yemek-tarifi/${__helper.slugify(resource.title || 'tarif')}?r=${resource.id}`  %>">
                 <!-- <img class="rounded" src="<%= `https://img.youtube.com/vi/${resource.contentUrl}/maxresdefault.jpg` %>"
                   alt="<%= resource.title  %>"> -->
                   <img class="rounded" src="<%= `/${resource.product.slug}/resimler/thumbnail` %>" alt="<%= resource.title  %>">
 
               </a>
               <div class="card-body pl-0 text-center">
-                <h3 class="product-title font-size-md"><a href="/<%= resource.product.slug%>"><%= resource.title  %></a>
+                <h3 class="product-title font-size-md"><a href="/<%= `${resource.product.slug}/yemek-tarifi/${__helper.slugify(resource.title || 'tarif')}?r=${resource.id}`  %>"><%= resource.title  %></a>
                 </h3>
               </div>
             </div>

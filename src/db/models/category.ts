@@ -31,6 +31,11 @@ class Category extends BaseModel<Category> {
     slug: string;
 
     @Column({
+        allowNull: true
+    })
+    tarifTitle: string;
+
+    @Column({
         allowNull: true,
         type: DataType.TEXT
     })

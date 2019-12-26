@@ -48,7 +48,7 @@
 
         <%if (controller.foods.length) {%>
         <div class="d-flex flex-wrap justify-content-between align-items-center pt-1 border-bottom pb-1 mb-2">
-                <h3 class="h4 mb-0 mr-2">Etler Bizden Tarifleri</h3>
+                <h3 class="h4 mb-0 mr-2"><%= controller.category.tarifTitle || 'Etler Bizden Tarifleri' %></h3>
                 <a class="btn btn-sm btn-light" href="/et-yemek-tarifleri/<%=controller.category.slug%>"><i class="czi-arrow-right ml-1 mr-n1"></i></a>
             </div>   
             <p> <span class="badge badge-primary mr-2"><i class=" czi-add-circle mr-2">
@@ -63,12 +63,12 @@
                             
                           <div class="card product-card card-static item-card">
                             <a class="card-img-top d-block overflow-hidden gallery-item video-item"
-                            href="/<%=`${resource.product.slug}?r=${resource.id}`  %>">
+                            href="/<%= `${resource.product.slug}/yemek-tarifi/${__helper.slugify(resource.title || 'tarif')}?r=${resource.id}`  %>">
                               <!-- <img class="rounded" src="<%= `https://img.youtube.com/vi/${resource.contentUrl}/maxresdefault.jpg` %>" alt="<%= resource.title  %>"> -->
                               <img class="rounded" src="<%= `/${resource.product.slug}/resimler/thumbnail` %>" alt="<%= resource.title  %>">
                             </a>
                             <div class="card-body pl-0 text-center">
-                              <h3 class="product-title font-size-md"><a href="/<%= resource.product.slug%>"><%= resource.title  %></a>
+                              <h3 class="product-title font-size-md"><a href="/<%= `${resource.product.slug}/yemek-tarifi/${__helper.slugify(resource.title || 'tarif')}?r=${resource.id}`  %>"><%= resource.title  %></a>
                               </h3>
                             </div>
                           </div>

@@ -25,7 +25,7 @@ export default class Route extends ViewRouter {
 
     renderPage() {
         this.res.render('pages/category.ejs', this.viewData({
-
+            pageTitle: this.category.name + ' Et Lezzetleri'
         }))
     }
 
@@ -45,7 +45,7 @@ export default class Route extends ViewRouter {
         }
 
         this.res.render('pages/foods.ejs', this.viewData({
-
+            pageTitle: 'Et Yemek Tarifleri'
         }))
     }
 

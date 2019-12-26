@@ -97,62 +97,9 @@
                   <%})%>
                 </div>
                 <div class="">
-                  <!-- <div class="d-flex flex-wrap justify-content-between align-items-center pt-1 border-bottom pb-1 mb-2">
-                    <h4 class="h5 mb-0 mr-2"></h4>
-                </div>    -->
-  
 
-                <% if (false) {%>
-                  <div class="d-none table-responsive" data-simplebar>
-                    <div class="d-flex pb-2 ">
-                            <% otherVideos.forEach((resource, i)=> {%>
-                            <div class="mr-2 ">
-                                <div class="item-slider">
-                                    
-                                  <div class="card product-card card-static item-card">
-                                    <a data-resid="<%=resource.id%>" class="gallery-item video-item "
-                                      data-sub-html='<h6 class="font-size-normal text-light"><%=resource.title%></h6>'
-                                      href="<%= `https://www.youtube.com/watch?v=${resource.contentUrl}?autoplay=1` %>">
-                                      <img class="rounded-top"
-                                        src="<%= `https://img.youtube.com/vi/${resource.contentUrl}/maxresdefault.jpg` %>"
-                                        alt="<%=product.name%>" /><span class="gallery-item-caption"><%=resource.title%></span></a>
-                                    <% if (resource.badge) {%>
-                                        <span class="badge badge-primary badge-shadow product-img-badge"><%= resource.badge%></span>
-                                      <% } %>
-                                        <% if (resource.tag1 == 'yemek-tarifi') {%>
-                                        <div class="text-center">
-                                         
-                                          <button type="button" onclick=''
-                                            class="btn btn-block btn-primary btn-sm rounded-0"><i class=" czi-add-circle mr-2">
-                                            </i><%= resource.tag3 || 'Uygun hazırlayın' %></button>
-                                        </div>
-                                    <% } %>
-                                    <% if (resource.tag1 == 'bilgi') {%>
-                                      <div class="text-center">
-                                        <button type="button" onclick=''
-                                          class="btn btn-block btn-primary btn-sm rounded-0 "><i class=" czi-info mr-2">
-                                          </i><%= resource.badge %></button>
-                                      </div>
-                                  <% } %>
-  
-                                    <!-- <a class="card-img-top d-block overflow-hidden gallery-item video-item"
-                                    href="/<%=`${product.slug}?r=${resource.id}`  %>">
-                                       <img class="rounded" src="<%= `https://img.youtube.com/vi/${resource.contentUrl}/maxresdefault.jpg` %>" alt="<%= resource.title  %>"> 
-                                    </a> -->
-                                    <!-- <div class="card-body pl-0 text-center">
-                                      <h3 class="product-title font-size-md"><a href="/<%= product.slug%>"><%= resource.title  %></a>
-                                      </h3>
-                                    </div> -->
-                                  </div>
-            
-                                </div>
-            
-                            </div>  
-                            <%})%>
-                    </div>
-            </div> 
 
-<%}%>
+
                 </div>
             
 
@@ -161,7 +108,6 @@
             </div>
 
 
-            <!-- Product details-->
             <div id="productapp" v-cloak class="col-lg-5 ">
               <div class="product-details pl-4  pl-lg-0 pr-4  pt-3 pb-0">
                 <% if (view.butcher) {%>
@@ -210,7 +156,10 @@
                             
 <div class="d-flex mb-2 pb-1 font-size-md flex-wrap justify-content-between border-bottom">
   <a href="javascript:openSlider(<%=t.id%>)"><i class=" czi-youtube mr-1"></i><%=t.title%></a>
+  
+  <% if (t.note) { %>
   <a title="Bu yemeğe uygun hazırla" href="javascript:<%= include('./_partial/addtonote.ejs', {resource: t }) %>"><span class="color-primary"><i class=" czi-add-circle"></i></span>  </a>
+  <% } %>
 </div>
                              
                          
@@ -253,7 +202,7 @@
                     <div id="noteanchor">
                      
                       <h5 class="h6 mb-2 text-accent pb-0 bor2der-bottom"><i class="czi-thumb-up mr-1"></i class="czi-thumb-up mr-1"> Kolayca satın alın</h5>
-                     <p v-if="product && product.purchaseOptions.length > 1" class="font-size-sm">İşinizi kolaylaştırmak için hazırladığımız seçenekleri kullanın.</p>
+                     <p v-if="product && product.purchaseOptions.length > 1 && !selectedUnit" class="xfont-size-sm">İşinizi kolaylaştırmak için hazırladığımız seçenekleri kullanın.</p>
                       <input type="hidden" id="product-id" value="<%= product.id %>" />
                       <div class="xform-group">
                         <div v-if="product && product.purchaseOptions.length > 1">
@@ -274,11 +223,19 @@
                           <p v-if="selectedUnit && selectedUnit.desc">
                             {{ selectedUnit.desc }}
                           </p>
+                          <p v-if="selectedUnit && !selectedUnit.desc">
+                            <a @click="showCalculator(selectedUnit)" href="#size-chart"
+                              class="text-accent">
+                              Hesaplama aracımız
+                            </a>
+                              ihtiyacınızı belirlemede size yardımcı olabilir.
+                          </p>
+
                           <div class="d-flex align-items-center justify-content-between">
                             <label><b>Ne kadar</b> almak istersiniz?&nbsp;</label>
                           
                             <label> <a @click="showCalculator(selectedUnit)"
-                              class="text-accent font-weight-medium font-size-sm " href="#size-chart">Hesaplayalım</a>
+                              class="text-accent font-weight-medium font-size-sm " href="#size-chart">Hesaplama Aracı</a>
                             </label>
                             
 
@@ -307,7 +264,7 @@
                               <label class="">Kaç <b>{{ selectedUnit.unit }}</b> almak istersiniz?&nbsp;</label>
                             
                               <label> <a @click="showCalculator(selectedUnit)"
-                                class="text-accent font-weight-medium font-size-sm " href="#size-chart">Hesaplayalım</a>
+                                class="text-accent font-weight-medium font-size-sm " href="#size-chart">Hesaplama Aracı</a>
                               </label>
                               
   
@@ -340,7 +297,9 @@
                                 
     <div class="d-flex mb-2 pb-1 font-size-md flex-wrap justify-content-between border-bottom">
       <a href="javascript:openSlider(<%=t.id%>)"><i class=" czi-youtube mr-1"></i><%=t.title%></a>
-      <a title="Bu yemeğe uygun hazırla" href="javascript:<%= include('./_partial/addtonote.ejs', {resource: t }) %>"><span class="color-primary"><i class=" czi-add-circle"></i></span>  </a>
+      <% if (t.note) { %>
+      <a title="Bu şekilde hazırlayın" href="javascript:<%= include('./_partial/addtonote.ejs', {resource: t }) %>"><span class="color-primary"><i class=" czi-add-circle"></i></span>  </a>
+    <% } %>
     </div>
                                  
                              
@@ -451,7 +410,7 @@
                   <% videoTarifs.forEach((resource,i) => {%>
                     <% if (resource.contentType == "video-youtube") { %>
                   <div class="col-md-4 col-sm-6">
-                      <%- include('./_partial/product-resource-view.ejs', {first: false, note: true, resource: resource}) %>
+                      <%- include('./_partial/product-resource-view.ejs', {first: false, note: resource.note, resource: resource}) %>
                    
                       <!-- <a data-resid="<%=resource.id%>" class="gallery-item video-item "
                         data-sub-html="<%= `<h6 class="font-size-normal text-light">${resource.title}</h6><button type="button" onclick="window.App.ProductApp.addToNote('${resource.note}');" class="btn btn-block btn-primary btn-sm rounded-0"><i class=" czi-add-circle mr-2"></i>${resource.tag3 || 'Siparişimi bu yemeğe uygun hazırlayın'}</button>`%>"

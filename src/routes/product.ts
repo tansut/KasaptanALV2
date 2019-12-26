@@ -220,6 +220,7 @@ export default class Route extends ViewRouter {
 
     static SetRoutes(router: express.Router) {
         router.get("/:product", Route.BindRequest(Route.prototype.productRoute));
+        router.get("/:product/yemek-tarifi/:tarif", Route.BindRequest(Route.prototype.productRoute));
         router.get("/:product/:butcher", Route.BindRequest(Route.prototype.productRoute));
         router.get("/:product/resimler/:filename", Route.BindRequest(Route.prototype.productPhotoRoute));
     }
