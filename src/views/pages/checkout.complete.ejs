@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <% include ./_partial/head %>
+</head>
+
+<body>
+  <% include ./_partial/header %>
+
+
+
+
+  <div class="page-title-overlap bg-accent pt-4">
+    <div class="container d-lg-flex justify-content-between py-2 py-lg-3">
+      <div class="order-lg-2 mb-3 mb-lg-0 pt-lg-2">
+        <nav aria-label="breadcrumb">
+          <ol class="breadcrumb breadcrumb-light flex-lg-nowrap justify-content-center justify-content-lg-star">
+            <li class="breadcrumb-item"><a class="text-nowrap" href="/"><i class="czi-home"></i></a></li>
+            <li class="breadcrumb-item text-nowrap active" aria-current="page">Alışverişimi Tamamla</li>
+          </ol>
+        </nav>
+      </div>
+      <div class="order-lg-1 pr-lg-4 text-center text-lg-left">
+        <h1 class="h3 text-light mb-0">Alışverişimi Tamamla</h1>
+      </div>
+    </div>
+  </div>
+
+  <div class="container pb-5 mb-sm-4">
+      <div class="pt-5">
+        <div class="card py-3 mt-sm-3">
+          <div class="card-body text-center">
+            <h2 class="h4 pb-3">Siparişinizi başarıyla aldık, teşekkürler!</h2>
+            <p class="font-size-sm mb-2">Siparişiniz başarıyla alındı ve en kısa zamanda teslimat ve diğer konularda sizi bilgilendireceğiz.</p>
+            <p class="font-size-sm mb-2">Sipariş numaranızı not edebilir veya profilim sayfasından siparişini takip edebilirsiniz:<span class='font-weight-medium'><%= order.ordernum %></span></p>
+            <p class="font-size-sm">Birazdan e-posta adresinize de gerekli bilgileri ulaştırıyor olacağız. Çok teşekkürler!</p><a class="btn btn-secondary mt-3 mr-3" href="/">Alışverişe Dön</a><a class="btn btn-primary mt-3" href="/user/orders/<%=order.ordernum%>"><i class="czi-bag"></i>&nbsp;Siparişi Takip Et</a>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  <% include ./_partial/footer %>
+  <% include ./_partial/scripts %>
+
+</body>
+
+</html>

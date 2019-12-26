@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <% include ./_partial/head %>
+</head>
+
+<body>
+  <% include ./_partial/header %>
+
+
+  <div class="page-title-overlap bg-primary pt-4">
+    <div class="container d-lg-flex justify-content-between py-2 py-lg-3">
+      <div class="order-lg-2 mb-3 mb-lg-0 pt-lg-2">
+        <nav aria-label="breadcrumb">
+          <ol class="breadcrumb breadcrumb-light flex-lg-nowrap justify-content-center justify-content-lg-star">
+            <li class="breadcrumb-item"><a class="text-nowrap" href="/"><i class="czi-home"></i></a></li>
+            <li class="breadcrumb-item text-nowrap"><a href="/reyonlar">Reyonlar</a>
+            </li>
+            <li class="breadcrumb-item text-nowrap active" aria-current="page">Reyonlar</li>
+          </ol>
+        </nav>
+      </div>
+      <div class="order-lg-1 pr-lg-4 text-center text-lg-left">
+        <h1 class="h3 text-light mb-0">Tüm Lezzetler</h1>
+      </div>
+    </div>
+  </div>
+
+  <div class="container">
+    <div class="bg-light box-shadow-lg rounded-lg px-4 py-3 mb-5">
+      <div class="px-lg-3">
+
+        <% var viewCats = ['reyon', 'amac'] %>
+        <% viewCats.forEach(cat => { %>
+        <% var reyonlar = __categories.filter(p=>p.type == cat) %>
+        <% for(var c=0; c< reyonlar.length; c++) {%>
+        <% var categoryProds = __products.byCategory[reyonlar[c].slug] %>
+
+        <div class="d-flex flex-wrap justify-content-between align-items-center pt-1 border-bottom pb-1 mb-2">
+          <h2 class="h3 mb-2 mr-2"><%=reyonlar[c].name%></h2>
+
+        </div>
+
+        <!-- dfsdfdsfd -->
+<!--  -->
+
+
+
+        <%- include('./_partial/products-view', {viewId: "", viewMode:'tab', products: categoryProds}); %>
+
+        <%}%>
+        <%})%>
+
+      </div>
+    </div>
+  </div>
+
+
+
+  <% include ./_partial/footer %>
+  <% include ./_partial/scripts %>
+
+</body>
+
+</html>

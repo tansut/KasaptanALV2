@@ -1,0 +1,30 @@
+<% if (typeof (viewMode) == 'undefined' || viewMode == 'tab') { %>
+<div class="container-fluid">
+    <ul class="nav nav-tabs justify-content-center mb-2 mb-md-4" id="pills-tab" role="tablist">
+        <% for(var i=0; i< categories.length; i++) {%>
+        <% var category = categories[i] %>
+        <li class="nav-item">
+            <a class="nav-link <%= i== 0 ? 'active':'' %>" id="<%= category.slug %>-tab" data-toggle="pill"
+                href="#<%= category.slug %>" role="tab" aria-controls="<%= category.name %>"
+                aria-selected="<%= i== 0 ? 'true':'false' %>"><%= category.name %></a>
+        </li>
+        <% } %>
+    </ul>
+    <div class="tab-content" id="pills-tabContent">
+        <% for(var i=0; i< categories.length; i++) {%>
+        <% var category = categories[i] %>
+        <div class="tab-pane fade <%= i== 0 ? 'show':'' %> <%= i== 0 ? 'active':'' %>" id="<%= category.slug %>"
+            role="tabpanel" aria-labelledby="<%= category.slug %>-tab">
+            <div class="mb-4">
+                <% var products = controller.filterProductsByCategory(category.slug) %>
+                <div class="container mb-2 mb-md-4">
+                    <%- include('./products-view', {viewId: "", viewMode:'tab', products: products}); %>
+
+                </div>
+            </div>
+        </div>
+        <% } %>
+    </div>
+</div>
+
+<% }  %>

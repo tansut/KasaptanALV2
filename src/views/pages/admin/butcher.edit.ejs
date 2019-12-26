@@ -1,0 +1,299 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <% include ./_partial/head %>
+
+    <style>
+        .image {
+            width: 200px;
+        }
+    </style>
+</head>
+
+<body>
+    <% include ./_partial/header %>
+    <!-- Page Content -->
+    <div class="container m-4">
+        <h1><%= butcher.name %></h4>
+
+    </div>
+    <div class="container-fluid">
+        <div id="main">
+
+            <ul class="nav nav-tabs">
+                <li class="nav-item">
+                    <a class="nav-link active" data-toggle="tab" href="#home">Temel Bilgiler</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" data-toggle="tab" href="#menu1">Resimler</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" data-toggle="tab" href="#menu2">Video</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" data-toggle="tab" href="#menu3">Ürünler</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" data-toggle="tab" href="#menu4">Açıklama</a>
+                </li>
+            </ul>
+
+
+
+            <div class="tab-content">
+                <div id="home" class="container-fluid tab-pane active"><br>
+                    <form name="saveform" method="POST">
+                        <div class="row">
+                            <div class="col">
+                                <div class="form-group">
+                                    <label>Slug</label>
+                                    <input type="text" class="form-control" name="butcherslug" id="butcherslug"
+                                        value="<%= butcher.slug %>">
+                                </div>
+                                <div class="form-group">
+                                    <label>Adı</label>
+                                    <input type="text" class="form-control" name="butchername" id="butchername"
+                                        value="<%= butcher.name %>">
+                                </div>
+                                <div class="form-group">
+                                    <label>Adres</label>
+                                    <input type="text" class="form-control" name="butcheradres" id="butcheradres"
+                                        value="<%= butcher.address %>">
+                                </div>
+
+
+
+
+                                <div class="form-group">
+                                    <label>Şehir</label>
+                                    <select class="custom-select" name="areal1" onchange="this.form.submit()">
+                                        <% 
+                                        for(var i=0; i<area1.length; i++) {%>
+                                        <option value="<%=area1[i].id %>"
+                                            <% if (area1[i].id == butcher.areaLevel1Id) { %>selected<% } %>>
+                                            <%= area1[i].name %></option>
+                                        <% } 
+                                    
+                                    %>
+                                    </select>
+                                </div>
+                                <div class="form-group">
+                                    <label>İlçe</label>
+                                    <select class="custom-select" name="areal2" id="areal2"
+                                        onchange="this.form.submit()">
+                                        <% 
+                                            for(var i=0; i<area2.length; i++) {%>
+                                        <option value="<%=area2[i].id %>"
+                                            <% if (area2[i].id == butcher.areaLevel2Id) { %>selected<% } %>>
+                                            <%= area2[i].name %></option>
+                                        <% } 
+                                        
+                                        %>
+                                    </select>
+                                </div>
+                                <div class="form-group">
+                                    <label>Semt</label>
+                                    <select name="areal3" class="custom-select" id="areal3">
+                                        <% 
+                                                for(var i=0; i<area3.length; i++) {%>
+                                        <option value="<%=area3[i].id %>"
+                                            <% if (area3[i].id == butcher.areaLevel3Id) { %>selected<% } %>>
+                                            <%= area3[i].name %></option>
+                                        <% } 
+                                            
+                                            %>
+                                    </select>
+                                </div>
+                                <div class="form-group">
+                                    <label>postakod</label>
+                                    <input type="text" class="form-control" name="butcherpostal" id="butcherpostal"
+                                        value="<%= butcher.postal %>">
+                                </div>
+
+
+
+                            </div>
+
+                            <div class="col">
+
+                                <div class="form-group">
+                                    <label>Tel</label>
+                                    <input type="text" class="form-control" name="butchertel" id="butchertel"
+                                        value="<%= butcher.phone %>">
+                                </div>
+
+                                <div class="form-group">
+                                    <label>web</label>
+                                    <input type="text" class="form-control" name="butcherweb" id="butcherweb"
+                                        value="<%= butcher.website %>">
+                                </div>
+                                <div class="form-group">
+                                    <label>instagram adı</label>
+                                    <input type="text" class="form-control" name="butcherinstagram"
+                                        id="butcherinstagram" value="<%= butcher.instagram %>">
+                                </div>
+
+                                <div class="form-group">
+                                    <label>instagram video</label>
+
+                                    <textarea class="form-control" name="butchervideoinstagram"
+                                        id="butchervideoinstagram"><%= butcher.videoInstagramStr %></textarea>
+                                </div>
+
+                                <div class="form-group">
+                                    <label>facebook adı</label>
+                                    <input type="text" class="form-control" name="butcherfacebook" id="butcherfacebook"
+                                        value="<%= butcher.facebook %>">
+                                </div>
+                                <div class="form-group">
+                                    <label>Açıklama</label>
+
+                                    <textarea rows="10" class="form-control" name="butcherdesc"
+                                        id="butcherdesc"><%= butcher.description %></textarea>
+                                </div>
+                                <div class="form-group form-check">
+                                    <input type="checkbox" name="butcherapproved" class="form-check-input"
+                                        id="butcherapproved" <%= butcher.approved ? "checked" : "" %> />
+
+
+                                    <label class="form-check-label" for="exampleCheck1">Onaylı</label>
+                                </div>
+                            </div>
+
+                        </div>
+                        <button type="submit" name="save" value="true" class="btn btn-primary">Kaydet</button>
+                    </form>
+                </div>
+
+                <div id="menu4" class="container-fluid tab-pane active"><br>
+
+                </div>
+
+                <div id="menu1" class="container-fluid tab-pane fade"><br>
+                    <form name="saveimgform" method="POST">
+                        <a href="<%= `/pages/admin/resource/butcher-google-photos/${butcher.id}?fileprefix=${butcher.slug}&title=${butcher.name}` %>"
+                            target="_blank">Düzenle</a>
+                        <div class="row">
+
+                            <% for(var i=0; i<images.length; i++) {%>
+                            <div class="mx-3 col">
+                                <img class="image my-2 img-thumbnail"
+                                    src="<%= `/${butcher.slug}/fotograf/${images[i].contentUrl}?thumbnail=1`  %>" />
+                            </div>
+                            <% } %>
+                        </div>
+                    </form>
+                </div>
+                <div id="menu2" class="container-fluid tab-pane fade"><br>
+                    <%- butcher.videoInstagramStr %>
+                </div>
+
+                <div id="menu3" class="container-fluid tab-pane fade"><br>
+                    <div class="">
+                        <% var products = controller.products %>
+                        <% for(var i=0; i<products.length; i++) {%>
+                        <form name="saveproductform" method="POST" class="bg-light mb-2 p-2">
+                            <% var prodinfo = controller.getButcherProductInfo(products[i].id) %>
+                            <input type="hidden" name="productid" value="<%= products[i].id %>">
+
+                            <div class="form-group">
+
+                                <div class="form-check">
+                                    <input class="form-check-input" type="checkbox" name="productenabled"
+                                        <%= prodinfo.enabled ? "checked" : "" %> aria-label="Checkbox">
+                                    <label class="form-check-label font-weight-bold" for="defaultCheck1">
+                                        <%= products[i].name %>
+                                    </label>
+                                </div>
+
+
+
+
+                            </div>
+
+                            <div class="row">
+
+                                <% var productunits = controller.getProductUnits(products[i]) %>
+                                <% for(var k=0; k<productunits.length; k++) {%>
+
+                                <div class="col">
+
+
+                                    <div class="form-group">
+                                        <label><%= productunits[k] %></label>
+                                        <input type="text" class="form-control" name="<%=`unit${k+1}price` %>"
+                                            id="<%=`unit${k+1}price` %>" value="<%= prodinfo[`unit${k+1}price`] %>">
+                                    </div>
+                                </div>
+                                <% } %>
+                                <div class="col">
+                                    <div class="form-group">
+                                        <label>Ürün Sırası</label>
+                                        <input type="text" class="form-control" value="<%= prodinfo.displayOrder %>"
+                                            name="productdisplayorder">
+
+
+                                    </div>
+                                </div>
+                                <div class="col">
+                                        <div class="form-group">
+                                            <label>KG Fiyatı</label>
+                                            <input type="text" class="form-control" value="<%= prodinfo.kgPrice %>"
+                                                name="productkgPrice">
+    
+    
+                                        </div>
+                                    </div>                                
+                            </div>
+                            <div class="form-group">
+
+                                <div class="form-check">
+                                    <input id="productvitrin" class="form-check-input" type="checkbox"
+                                        name="productvitrin" <%= prodinfo.vitrin ? "checked" : "" %>
+                                        aria-label="Checkbox">
+                                    <label class="form-check-label font-weight-bold" for="defaultCheck1">
+                                        Vitrin
+                                    </label>
+                                </div>
+
+
+
+
+                            </div>
+                            <button type="submit" name="updateproduct" value="true"
+                                class="btn btn-primary">Kaydet</button>
+                        </form>
+                        <% } %>
+                    </div>
+                </div>
+            </div>
+
+
+
+
+
+
+
+
+
+
+        </div>
+    </div>
+
+
+    <% include ./_partial/scripts %>
+    <script>
+
+        function setimgdel(i) {
+            debugger;
+            $("deleteimage").val(i)
+        }
+        window.App.Ready.then(function () {
+
+            //window.App.Render("PlaceList", null, document.getElementById('main'))
+        })
+    </script>
+</body>
+
+</html>

@@ -1,0 +1,8 @@
+<select class="form-control custom-select" id="<%= id %>" name="<%= id %>">
+    <% let days = controller.Shipment.availableDays()%>
+    <% Object.keys(days).forEach(key=> { %>
+      
+            <option <%= key == selected? 'selected':'' %> value="<%=key%>"><%= days[key]%></option>
+      
+    <%})%>
+</select>

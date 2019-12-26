@@ -1,0 +1,27 @@
+{
+    "compilerOptions": {
+        "watch": true,
+        "target": "es5",
+        "jsx": "react",
+        "module": "commonjs",
+        "declaration": false,
+        "noImplicitAny": false,
+        "removeComments": true,
+        "emitDecoratorMetadata": true,
+        "experimentalDecorators": true,
+        "sourceMap": true,
+        "listFiles": false,
+        "allowJs": true,
+        "outDir": "public/js",
+        "rootDir": "www/src",
+        "suppressImplicitAnyIndexErrors": true,
+        "esModuleInterop": true
+    },
+    "include": [
+        "./www/src/**/*"
+    ],
+    "exclude": [
+        "./node_modules/**/*",
+        "./src/**/*"
+    ]
+}

@@ -1,0 +1,12 @@
+export NODE_ENV=development
+export DBNAME=kasap
+export PORT=3000
+export DBADDRESS=localhost
+export DBUSER=kasapburada
+export DBPWD=cGgyMDE4Li4=
+export DBPORT=3306
+export EMAILHOST=mail.kasapburada.com
+export EMAILPORT=8889
+export EMAILUSERNAME=noreply@kasapburada.com
+export EMAILPASS=Deneme987@.
+export BLUEBIRD_W_FORGOTTEN_RETURN=0

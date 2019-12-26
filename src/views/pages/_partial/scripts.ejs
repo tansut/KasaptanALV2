@@ -1,0 +1,231 @@
+<!-- <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"
+  integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script> -->
+
+<% if (config.nodeenv == "production") { %>
+<script async src="https://www.googletagmanager.com/gtag/js?id=UA-149415550-1"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag() { dataLayer.push(arguments); }
+  gtag('js', new Date());
+  gtag('config', 'UA-149415550-1');
+</script>
+<% } %>
+
+<script src="/js/vendor.min.js"></script>
+<% if (__config.nodeenv == 'development') { %>
+<script src="/js/vue.js"></script>
+<% } else { %>
+<script src="/js/vue.min.js"></script>
+
+<%} %>
+<script src="/js/site.min.js"></script>
+<script src="/js/app.js"></script>
+
+
+
+<script>
+
+
+
+  window.shopcard = {
+    card: {
+      data: <%-JSON.stringify(__shopcard() || { items: [] }) %>,
+    }
+  };
+
+  window.shopcard.count = new Vue({
+    el: '#shopcardcount',
+    data: {
+      card: window.shopcard.card
+    }
+  })
+
+  $('.searchBox').autoComplete({
+    resolverSettings: {
+      url: '/api/v1/fts'
+    },
+    events: {
+      searchPost: function (res) {
+         window.__searchResult = res;
+        return res.map(function (p) {
+          return {
+            id: p.id,
+            text: p.name
+          }
+        })
+        // return window.__searchResult;
+      }
+
+    }
+  });
+
+  $('.searchBox').on('autocomplete.select', function (evt, item) {
+    let go = window.__searchResult.find(function(result) {
+      return result.id == item.id
+    });
+    window.location.href = go.url;
+  });
+</script>
+<% if (typeof _usrmsg != 'undefined') { %>
+<script>
+  window.App.alert("<%=_usrmsg.text%>", "<%=_usrmsg.type %>")
+</script>
+<% } %>
+
+
+<script>
+
+  function setCookie(name, value, days) {
+    var expires = "";
+    if (days) {
+      var date = new Date();
+      date.setTime(date.getTime() + (days * 24 * 60 * 60 * 1000));
+      expires = "; expires=" + date.toUTCString();
+    }
+    document.cookie = name + "=" + (value || "") + expires + "; path=/";
+  }
+
+  function getCookie(name) {
+    var nameEQ = name + "=";
+    var ca = document.cookie.split(';');
+    for (var i = 0; i < ca.length; i++) {
+      var c = ca[i];
+      while (c.charAt(0) == ' ') c = c.substring(1, c.length);
+      if (c.indexOf(nameEQ) == 0) return c.substring(nameEQ.length, c.length);
+    }
+    return null;
+  }
+  function eraseCookie(name) {
+    document.cookie = name + '=; Max-Age=-99999999;';
+  }
+
+  $(document).ready(function () {
+
+    var ulg = window.kb.userlocation();
+    var guideinited = false;
+    var inited = false;
+
+
+
+    var userGuide = {
+      guideinited: false,
+      autoPopuped: getCookie("guidewindow"),
+      open: function () {
+        if (!this.guideinited) {
+          this.guideinited = true;
+          ulg.init({
+            openDistricts: false,
+            cityDomSelector: "#guidecityselectpicker",
+            districtDomSelector: "#guidedistrictselectpicker"
+          }, function () {
+            $('#meatGuideModal').modal();
+            $("#meat-guide-close-button").click(function () {
+              f = $("#meat-guide-form")[0]
+              if (f.checkValidity()) {
+                $.ajax({
+                  type: "POST",
+                  url: "/api/v1/sitelog/create",
+                  data: {
+                    district: ulg.selectedDistrict.name,
+                    city: ulg.selectedCity.name,
+                    email: $("#user-email").val(),
+                    logtype: "anonymous-user-download-meat-guide"
+                  },
+                  success: function () {
+                    $('#meatGuideModal').modal("hide");
+                    alert("Teşekkürler")
+                  }
+                }
+                )
+              }
+            });
+            $('#meatGuideModal').on('shown.bs.modal', function () {
+
+            })
+          });
+        } else $('#meatGuideModal').modal("show")
+
+      }
+    }
+
+
+    $(".select-area-action").click(function() {
+            window.kb.selectArea(function (sender, ul) {
+            window.location.href = "/adres-belirle/" + ul.selectedDistrict.slug + '?r=' + window.location.href;
+            //window.location.reload(true) // = "/" + window.App.ProductApp.product.slug + "?semt=" + ul.selectedDistrict.slug
+
+      });
+        })
+        
+    $(".explore-area-action").click(function () {
+      window.kb.selectArea(function (sender, ul) {
+        window.location.href = "/" + ul.selectedDistrict.slug + "?save=1"
+
+      });
+    })
+
+    $(".get-userguide-action").click(function () {
+      userGuide.open();
+    })
+
+
+    $(window).scroll(function () {
+      if (($(document).scrollTop() >= $(document).height() / 3) && !userGuide.autoPopuped) {
+        userGuide.autoPopuped = true;
+        setCookie("guidewindow", "1", 30);
+        userGuide.open();
+      }
+    });
+
+  })
+
+</script>
+
+
+
+
+
+<% if (!__req.user) { %>
+
+  <script>
+      window.App.User = {
+        isAuthenticated: false        
+      }
+    </script>
+
+<!-- <script type="text/javascript">
+  var _j = document.createElement("script");
+  _j.setAttribute("src", "https://public.jetlink.io/Sdk/Jetlink.js?j=" + new Date(Date()).getTime() / 1000);
+  _j.onload = function () { Jetlink.Init("jetlink-web-chat-759eb454-ce92-4846", "7992ed68086247c4aa380d1405d7153b"); };
+  document.head.appendChild(_j);
+</script> -->
+
+<% } else { %>
+
+  <script>
+      window.App.User = {
+        isAuthenticated: <%=__req.user ? true: false%>,
+        
+        prefAdr: <%- JSON.stringify(__req.prefAddr || {}) %>
+      }
+    </script>
+
+  <!-- <script type="text/javascript">
+    var _j = document.createElement("script");
+    _j.setAttribute("src", "https://public.jetlink.io/Sdk/Jetlink.js?j=" + new Date(Date()).getTime() / 1000);
+    _j.onload = function () { 
+       var user = {
+            SourceUserId: "<%=__req.user.id%>",
+            Email: "<%=__req.user.email%>",
+            Phone: "<%=__req.user.mphone%>",
+            Name: "<%=__req.user.name%>",
+            Surname: "<%=__req.user.name%>"
+        };
+        Jetlink.SetUser(user);	
+    
+      Jetlink.Init("jetlink-web-chat-759eb454-ce92-4846", "7992ed68086247c4aa380d1405d7153b"); 
+    };
+    document.head.appendChild(_j);
+    </script> -->
+
+<%}%>

@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <% include ./_partial/head %>
+
+</head>
+
+<body>
+    <% include ./_partial/header %>
+    <!-- Page Content -->
+    <div class="container">
+        <h1>Kategoriler</h4>
+
+            <table class="table table-hover">
+                <thead>
+                    <tr>
+                        <th>Adı</th>
+                        <th>Tipi</th>
+                        <th>Slug</th>
+                        <th>Resimler</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <% 
+                            for(var i=0; i<categories.length; i++) {%>
+                    <tr>
+                        <td><a href="<%= `/pages/admin/category/${categories[i].slug}` %>"><%= categories[i].name %>
+                            </a>
+                        </td>
+                        <td><%= categories[i].type %></td>
+                        <td><%= categories[i].slug %></td>
+                        <td><a href="<%= `/pages/admin/resource/category-photos/${categories[i].id}?fileprefix=${categories[i].slug}&title=${categories[i].name}` %>"
+                                target="_blank">Düzenle</a></td>
+                    </tr>
+
+
+                    <% } 
+                        
+                        %>
+
+                </tbody>
+            </table>
+
+
+    </div>
+    <div class="container">
+        <div id="main">
+
+
+
+
+
+
+
+
+
+
+
+
+        </div>
+    </div>
+
+
+    <% include ./_partial/scripts %>
+    <script>
+
+
+        window.App.Ready.then(function () {
+
+            //window.App.Render("PlaceList", null, document.getElementById('main'))
+        })
+    </script>
+</body>
+
+</html>

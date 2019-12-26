@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <% include ./_partial/head %>
+</head>
+
+<body>
+    <% include ./_partial/header %>
+    <!-- Page Content -->
+    <div class="container-fluid m-4">
+        <h1>Menü</h4>
+    </div>
+    <div class="container-fluid">
+        <div id="main">
+            <ul class="list-group">
+                <li class="list-group-item"><a href="butcher/list">Kasaplar</a></li>
+                <li class="list-group-item"><a href="product/list">Ürünler</a></li>
+                <li class="list-group-item"><a href="category/list">Kategoriler</a></li>
+                <li class="list-group-item"><a href="butcher/googlesearch">Kasap Ara</a></li>
+                <li class="list-group-item"><a href="admin/clearcache">Clear Cache</a></li>
+            </ul>
+        </div>
+    </div>
+
+
+    <% include ./_partial/scripts %>
+    <script>
+        window.App.Ready.then(function () {
+
+
+        })
+    </script>
+</body>
+
+</html>

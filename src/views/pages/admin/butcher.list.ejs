@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <% include ./_partial/head %>
+
+</head>
+
+<body>
+    <% include ./_partial/header %>
+    <!-- Page Content -->
+    <div class="container">
+        <h1>Kasaplar</h4>
+
+            <table class="table table-hover">
+                <thead>
+                    <tr>
+                        <th>Adı</th>
+                        <th>Onaylı</th>
+                        <th>web</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <% 
+                            for(var i=0; i<butchers.length; i++) {%>
+                    <tr>
+                        <td><a href="<%= `/pages/admin/butcher/${butchers[i].slug}` %>"><%= butchers[i].name %> </a>
+                        </td>
+                        <td><%= butchers[i].approved %></td>
+                        <td><%= butchers[i].website %></td>
+                    </tr>
+
+
+                    <% } 
+                        
+                        %>
+
+                </tbody>
+            </table>
+
+
+    </div>
+    <div class="container">
+        <div id="main">
+
+
+
+
+
+
+
+
+
+
+
+
+        </div>
+    </div>
+
+
+    <% include ./_partial/scripts %>
+    <script>
+
+
+        window.App.Ready.then(function () {
+
+            //window.App.Render("PlaceList", null, document.getElementById('main'))
+        })
+    </script>
+</body>
+
+</html>

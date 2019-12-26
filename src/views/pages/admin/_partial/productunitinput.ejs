@@ -1,0 +1,91 @@
+<h3><%= unit %></h3>
+<div class="row bg-light mb-2 p-4">
+                    
+
+    <div class="col">
+        <div class="row">
+            <div class="col-md-2 mb-3">
+                <div class="form-group">
+                    <label>Birim</label>
+                    <input type="text" class="form-control" name="<%=unit %>" id="<%=unit%>"
+                        value="<%= product[unit] %>">
+                </div>
+
+                <div class="form-group">
+                    <label>Başlık</label>
+                    <input type="text" class="form-control" name="<%=unit%>title" id="<%=unit%>title"
+                        value="<%= product[unit + 'title'] %>">
+                </div>
+            </div>
+            <div class="col-md-6 mb-3">
+                <div class="form-group">
+                    <label>Açıklama</label>
+                    <input type="text" class="form-control" name="<%=unit%>desc" id="<%=unit%>desc"
+                        value="<%= product[unit + 'desc'] %>">
+                </div>
+            </div>
+            <div class="col-md-2 mb-3">
+                <div class="form-group">
+                    <label>KG Oranı</label>
+                    <input type="text" class="form-control" name="<%=unit%>kgRatio" id="<%=unit%>kgRatio"
+                        value="<%= product[unit + 'kgRatio'] %>">
+                </div>
+            </div>    
+            <div class="col-md-2 mb-3">
+                    <div class="form-group">
+                        <label>Sıra Puan</label>
+                        <input type="text" class="form-control" name="<%=unit%>Order" id="<%=unit%>Order"
+                            value="<%= product[unit + 'Order'] %>">
+                    </div>
+                </div>                                                                        
+        </div>
+
+        <div class="row">
+            <div class="col-md-2 mb-3">
+                <div class="form-group">
+                    <label>Varsayılan</label>
+                    <input type="text" class="form-control" name="<%=unit%>def" id="<%=unit%>def"
+                        value="<%= product[unit+ 'def']  %>">
+                </div>
+            </div>
+            <div class="col-md-2 mb-3">
+                <div class="form-group">
+                    <label>Min</label>
+                    <input type="text" class="form-control" name="<%=unit%>min" id="<%=unit%>min"
+                        value="<%= product[unit + 'min'] %>">
+                </div>
+            </div>
+            <div class="col-md-2 mb-3">
+                <div class="form-group">
+                    <label>Max</label>
+                    <input type="text" class="form-control" name="<%=unit%>max" id="<%=unit%>max"
+                        value="<%= product[unit + 'max'] %>">
+                </div>
+            </div>    
+            <div class="col-md-2 mb-3">
+                    <div class="form-group">
+                        <label>Artış</label>
+                        <input type="text" class="form-control" name="<%=unit%>step" id="<%=unit%>step"
+                            value="<%= product[unit + 'step'] %>">
+                    </div>
+                </div>      
+                <div class="col-md-2 mb-3">
+                    <div class="form-group">
+                        <label>Porsiyon</label>
+                        <input type="text" class="form-control" name="<%=unit%>perPerson" id="<%=unit%>perPerson"
+                            value="<%= product[unit + 'perPerson'] %>">
+                    </div>
+                </div>                                                                                                              
+        </div>
+
+        <div class="row">
+            <div class="col-md-12 mb-3">
+                <div class="form-group">
+                    <label>Varsayılan not</label>
+                    <textarea rows="5" type="text" class="form-control" name="<%=unit%>note" id="<%=unit%>note"><%= product[unit + 'note'] %></textarea>
+                </div>
+            </div>  
+        </div>
+
+    </div>
+</div>

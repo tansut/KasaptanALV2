@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <% include ./_partial/head %>
+</head>
+
+<body>
+  <% include ./_partial/header %>
+
+
+
+  <!-- Page Content -->
+
+  <!-- Page Title (Light)-->
+  <div class="bg-secondary py-4 mb-2 mb-md-4">
+    <div class="container d-lg-flex justify-content-between py-2 py-lg-3">
+      <div class="order-lg-2 mb-3 mb-lg-0 pt-lg-2">
+        <nav aria-label="breadcrumb">
+          <ol class="breadcrumb flex-lg-nowrap justify-content-center justify-content-lg-star">
+
+
+
+            <li class="breadcrumb-item active" aria-current="page"><%= area.name %></li>
+
+
+          </ol>
+        </nav>
+      </div>
+      <div class="order-lg-1 pr-lg-4 text-center text-lg-left">
+        <h1 class="h2"><%= area.name  %></h1>
+        <p class="lead">
+          <%= area.name %>, en seçkin kasapların lezzetleriyle dolu.</p>
+      </div>
+    </div>
+  </div>
+
+
+
+
+
+  <div class="container">
+
+    <section id="butchers-section">
+
+      <!-- <div class="card-deck">
+        <% for(var i=0; i<butchers.length; i++) {%>
+        <div class="card">
+
+          <img src="<%= `/${butchers[i].slug}/fotograf/thumbnail` %>" class="card-img-top" alt="...">
+
+          <div class="card-body">
+            <h5 class="card-title"><%= butchers[i].name  %></h5>
+            <p class="card-text"><%= ellipsis(butchers[i].address,150) %></p>
+          </div>
+          <div class="card-footer text-center">
+            <small class="text-center"></small>
+            <a href="<%= `/${butchers[i].slug}` %>" class="btn btn-sm btn-dark">Keşfet</a>
+            </small>
+          </div>
+        </div>
+        <% } %>
+
+      </div> -->
+
+
+      <div class="row">
+        <% for(var i=0; i<butchers.length; i++) {%>
+
+        <div class="col-md-3 col-12 mb-2 mb-md-4">
+
+          <div class="card h-100">
+            <img src="<%= `/${butchers[i].slug}/fotograf/thumbnail` %>" class="card-img-top" alt="...">
+            <div class="card-body text-center ">
+              <h5 class="card-title"><%= butchers[i].name %></h5>
+              <div class="card-text-container">
+
+                <p class="card-text text-muted"><%= butchers[i].areaLevel2.name %>/<%= butchers[i].areaLevel1.name %>
+                </p>
+
+
+              </div>
+            </div>
+            <div class="card-footer text-center">
+              <small class="text-center"></small>
+              <a href="<%= `/${butchers[i].slug}` %>" class="btn btn-sm btn-dark">Keşfet</a>
+              </small>
+            </div>
+          </div>
+
+
+        </div>
+
+        <% } %>
+      </div>
+    </section>
+  </div>
+
+  <% if(typeof(subs) != "undefined"){ %>
+  <div class="container-fluid text-center pb-4 bg-light">
+    <% for(var i=0; i<subs.length; i++) {%>
+
+    <a href="<%= `/${subs[i].slug}` %>" class="btn btn-sm btn-light mx-2 my-2"><%= subs[i].name %></a>
+
+
+    <% } %>
+  </div>
+
+
+
+  <% } %>
+
+
+
+
+
+
+  </div>
+
+  <% include ./_partial/footer %>
+  <% include ./_partial/scripts %>
+
+  <script>
+
+    // $("#open-order-dialog-button").click(function () {
+    //   window.Intercom('showNewMessage', "<%= area.name %> bölgesinden et siparişi verebilir miyim?")
+    // })
+  </script>
+</body>
+
+</html>

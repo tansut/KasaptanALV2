@@ -1,0 +1,28 @@
+<% var butcher = typeof(butcher) != 'undefined' ? butcher: null %>
+
+<% if (typeof (viewMode) == 'undefined' || viewMode == 'tab') { %>
+<div class="row">
+    <% for(var j=0; j< products.length; j++) {%>
+    <div class="col-md-3 col-6 ">
+        <%- include('./product-view.ejs', {product: products[j]}) %>
+    </div>
+    <% } %>
+</div>
+<%} else { %>
+
+<div class="cz-carousel">
+
+    <div class="cz-carousel-inner" data-carousel-options=' { "autoHeight" : true, "nav" : false, "items" :
+                2.2, "gutter" : 15, "autoplay" : false, "responsive" : {"0":{"items":2.2},"500":{"items":3.3, "gutter"
+                : 18},"768":{"items":3.3, "gutter" : 20}, "1100" :{"gutter": 24}}}''>
+                <% for(var j=0; j< products.length; j++) {%>
+                    <div>
+                        <%- include('./product-view.ejs', {butcher: butcher, product: products[j]}); %>
+                    </div>
+
+
+                <% } %>
+            </div>
+        </div>
+
+<% } %>

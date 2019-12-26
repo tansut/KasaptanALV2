@@ -1,0 +1,34 @@
+// 
+// user-variables.scss
+// Use this to override Bootstrap and Cartzilla variables
+//
+
+// Example of a variable override to change Cartzilla background color
+// Remove the "//" to comment it in and see it in action!
+// $body-bg: #12263F;
+
+$primary: #e31013;
+//  $dark: darken($primary, 45%);
+// 
+// 
+$accent: #276ff6;
+
+.text-primary-dark {
+   color: darken($primary, 5%);
+}
+
+.bg-primary-darkest {
+    background-color: darken($primary, 45%) !important; 
+}
+
+.bg-primary-darker {
+    background-color: darken($primary, 20%) !important; 
+}
+
+.bg-primary-dark {
+    background-color: darken($primary, 5%) !important; 
+}
+
+// .bg-darken {
+//     background-color: darken($dark, 5%);
+// }

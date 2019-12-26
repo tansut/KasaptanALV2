@@ -1,0 +1,63 @@
+<div class="tab-pane fade show active" id="signup-tab">
+    <form class="needs-validation " autocomplete="off" onsubmit="App.Auth.signup()" novalidate id="signup-form-1">
+
+        <div class="alert alert-success" role="alert">
+            Sadece 30sn'de kaydolun, sonu gelmeyen formlar yok.
+        </div>
+        <div class="form-group">
+            <label for="su-tel">Cep Telefonu</label>
+            <input class="form-control" minlength="10" maxlength="15" type="tel" id="su-tel" placeholder="53xxxxxxxx"
+                required>
+            <div class="invalid-feedback">Geçersiz telefon numarası.</div>
+        </div>
+        <button class="btn btn-primary btn-block btn-shadow" type="submit">Şifremi Gönder</button>
+    </form>
+
+    <form class="needs-validation d-none" autocomplete="off" onsubmit="App.Auth.signup_verify()" novalidate
+        id="signup-form-2">
+        <div class="alert alert-info" role="alert">
+            Şifreni cep telefonuna ilettik. Şifreni aşağıya girerek hesabını oluştur.
+        </div>
+        <div class="form-group">
+            <label for="su-sms">Şifren</label>
+            <div class="password-toggle">
+                <input class="form-control" placeholder="telefonuna ilettiğimiz şifren" type="password" id="su-sms"
+                    required>
+                <label class="password-toggle-btn">
+                    <input class="custom-control-input" type="checkbox"><i
+                        class="czi-eye password-toggle-indicator"></i><span class="sr-only">Şifreyi Göster</span>
+                </label>
+            </div>
+        </div>
+
+
+
+        <button class="btn btn-primary btn-block btn-shadow" type="submit">Doğrula</button>
+    </form>
+
+    <form class="needs-validation d-none" autocomplete="off" onsubmit="App.Auth.signup_complete()" novalidate
+        id="signup-form-3">
+        <div class="alert alert-info" role="alert">
+            Son adımda adın ve e-posta adresini alarak işi tamamlıyoruz.
+        </div>
+        <div class="form-group">
+            <!-- <label for="su-name">Ad Soyad</label> -->
+            <input class="form-control" type="text" id="su-name" placeholder="adın ve soyadın" required>
+            <div class="invalid-feedback">Lütfen adını gir.</div>
+        </div>
+        <div class="form-group">
+            <!-- <label for="su-email">E-Posta Adresi</label> -->
+            <input class="form-control" type="email" id="su-email" placeholder="e-posta adresin" required>
+            <div class="invalid-feedback">Geçersiz e-posta adresi.</div>
+        </div>
+
+        <button class="btn btn-primary btn-block btn-shadow" type="submit">Tamamla</button>
+    </form>
+
+    <form class="needs-validation d-none" autocomplete="off" onsubmit="App.Auth.signup_complete()" novalidate
+        id="signup-form-4">
+        thanks
+
+        <button class="btn btn-primary btn-block btn-shadow" type="submit">Tamamla</button>
+    </form>
+</div>

@@ -1,0 +1,13 @@
+<% var butcher = typeof(butcher) != 'undefined' ? butcher: null %>
+
+<div class="card product-card card-static item-card">
+     <% if (product.badge == 'video') { %>
+     <a class="btn-wishlist btn-sm" href="/<%= product.slug  %><%= (butcher ? `/${butcher}`:'') %>" type="button"><i class="czi-video"></i></a>
+     <% } %>
+    <a class="card-img-top d-block overflow-hidden" href="/<%= product.slug  %><%= (butcher ? `/${butcher}`:'') %>"><img class="rounded"
+            src="<%= `/${product.slug}/resimler/thumbnail` %>" alt="<%= product.title  %>"></a>
+    <div class="card-body pl-0 text-center">
+        <h3 class="product-title font-size-md"><a href="/<%= product.slug%> <%= (butcher ? `/${butcher}`:'') %>"><%= product.name  %></a>
+        </h3>
+    </div>
+</div>

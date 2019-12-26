@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <% include ./_partial/head %>
+</head>
+
+<body>
+    <% include ./_partial/header %>
+    <!-- Page Content -->
+
+
+    <div class="container text-center m-4">
+        <h1>Google ile ara ve ekle</h4>
+
+    </div>
+    <div class="container">
+        <div id="main"></div>
+    </div>
+
+    <% include ./_partial/scripts %>
+
+    <script>
+        window.App.Ready.then(function () {
+            window.App.Render("PlaceList", null, document.getElementById('main'))
+        })
+    </script>
+</body>
+
+</html>

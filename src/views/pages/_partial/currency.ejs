@@ -1,0 +1,6 @@
+<% var parts = __helper.formatCurrency(value) %>
+
+<%= parts.val %>.<small><%= parts.krs %></small> TL
+
+<%= typeof unit != 'undefined' ? '/' + unit: '' %>
+

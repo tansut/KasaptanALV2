@@ -1,0 +1,198 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <% include ./_partial/head %>
+</head>
+
+<body>
+  <% include ./_partial/header %>
+
+
+
+
+  <div class="page-title-overlap bg-accent pt-4">
+    <div class="container d-lg-flex justify-content-between py-2 py-lg-3">
+      <div class="order-lg-2 mb-3 mb-lg-0 pt-lg-2">
+        <nav aria-label="breadcrumb">
+          <ol class="breadcrumb breadcrumb-light flex-lg-nowrap justify-content-center justify-content-lg-star">
+            <li class="breadcrumb-item"><a class="text-nowrap" href="/"><i class="czi-home"></i></a></li>
+            <li class="breadcrumb-item text-nowrap active" aria-current="page">Alışverişimi Tamamla</li>
+          </ol>
+        </nav>
+      </div>
+      <div class="order-lg-1 pr-lg-4 text-center text-lg-left">
+        <h1 class="h3 text-light mb-0">Alışverişimi Tamamla</h1>
+      </div>
+    </div>
+  </div>
+
+    <!-- Page Content-->
+    <div class="container mb-4">
+        <form class="needs-validation" method="post" novalidate action="/alisveris-sepetim/saveship">
+        <div class="row">
+          
+          <section class="col-lg-8 " v-cloak id="shopcardshipment">
+        
+            <%- include('./_partial/checkout-steps.ejs', {   step: 2        }); %>
+            <% for (let bi in shopcard.shipment) { %>
+            <% let shipment = shopcard.shipment[bi]%>
+            <div class="border mb-4">
+              <div class="bg-secondary p-3  mb-4"><a class="media align-items-center" href="/<%=shopcard.butchers[bi].slug%>"><img class="rounded-circle" width="64" src="/<%=shopcard.butchers[bi].slug%>/fotograf/thumbnail" alt="<%=shopcard.butchers[bi].name%>">
+                <div class="media-body pl-2"><span class="font-size-ms text-muted">Teslimatı planlayalım</span>
+                  <h3 class="h4 mb-0 mr-2"><%= shopcard.butchers[bi].name %></h3>
+                </div></a></div>
+
+            
+            <nav class="text-center pl-4 pr-4 nav nav-pills nav-pills-dark nav-fill mb-4">
+              <a class="nav-item shadow-none nav-link mb-2 mb-md-0" @click="card.shipment[<%=bi%>].howTo = 'ship'" v-bind:class="{ active: card && card.shipment['<%=bi%>'].howTo == 'ship' }">Adresime Gönderin</a>
+              <a class="nav-item shadow-none nav-link" @click="card.shipment[<%=bi%>].howTo = 'take'" v-bind:class="{ active: card && card.shipment['<%=bi%>'].howTo == 'take' }">Ben Gelip Alacağım</a>
+            </nav>
+            
+             <input type="hidden" v-bind:value="card && card.shipment['<%=bi%>'].howTo" name="howto<%=bi%>" id="howto<%=bi%>"> 
+          
+             <% if (!shipment.dispatcher) {  %>
+             <div v-if="card && card.shipment['<%=bi%>'].howTo == 'ship'">
+                
+                 <div class="alert alert-warning mx-4 mb-4">
+                  
+                    <p class="">
+                      <span class="font-weight-medium">Ben Gelip Alacağım</span> seçeneği ile siparişinizi kasabımız hazırlayabilir ve beklemeden hızlıca teslim alabilirsiniz. 
+
+                    </p>
+
+                    <p>
+                        <span class="font-weight-medium">Kasabımızın bu bölgeye gönderimi mevcut değil.</span>
+                    </p>
+
+                 </div> 
+
+                  
+                
+                 
+              </div>
+              <%} %>
+             <div class="table-responsive">
+                <table class="table font-size-sm ">
+                  <tbody>                   
+                    <tr>
+                      <td>
+                        <div class="custom-control custom-radio mb-4">
+                          <input class="custom-control-input" type="radio" id="callme<%=bi%>" value="callme" name="shipping-method<%=bi%>" <%= shipment.type == 'callme' ? 'checked':'' %>>
+                          <label class="custom-control-label" for="callme<%=bi%>"></label>
+                        </div>
+                      </td>
+                      <td class="align-middle"><span class="text-dark font-weight-medium">Beni arayın</span><br><span class="text-muted">
+                        Telefonda teslimat gün ve saatini hızlıca planlayalım.
+  
+                      </span></td>
+                    </tr>
+                    <% if (controller.shipmentHours.length > 0) {%>
+                      <tr>
+
+                          <td>
+                            <div class="custom-control custom-radio mb-4">
+                              <input class="custom-control-input" type="radio" id="sameday<%=bi%>" value="sameday" <%= shipment.type == 'sameday' ? 'checked':'' %> name="shipping-method<%=bi%>">
+                              <label class="custom-control-label" for="sameday<%=bi%>"></label>
+                            </div>
+                          </td>
+
+                          
+                          <td class="align-middle"><span class="text-dark font-weight-medium">Bugün</span><br><span class="text-muted">
+      
+                          </span>
+                          <div class="mt-2">
+                            <%- include('./_partial/shiptime.ejs', {
+                              nextHours: true,
+                              id: 'samedaytime' + bi,
+                              selected: shipment.hours[0] ,
+                              hours: controller.shipmentHours
+                            }) %>
+                          </div>
+                        
+                        </td>
+
+                        
+                        </tr> 
+                        <%}%>
+                          
+                          <tr>
+                              <td>
+                                <div class="custom-control custom-radio mb-4">
+                                  <input class="custom-control-input"  value="plan" type="radio" <%= shipment.type == 'plan' ? 'checked':'' %> id="plan<%=bi%>" name="shipping-method<%=bi%>">
+                                  <label class="custom-control-label" for="plan<%=bi%>"></label>
+                                </div>
+                              </td>
+                              <td class="align-middle"><span class="text-dark font-weight-medium">Tarih ve saat belirleyelim</span><br><span class="text-muted">
+          
+                              </span>
+                              <div class="mt-2">
+                                  <%- include('./_partial/shipday.ejs', {
+                                    id: 'planday' +bi,
+                                    selected: shipment.days[0]                             
+                                  }) %>
+                                </div>                          
+                              <div class="mt-2">
+                                  <%- include('./_partial/shiptime.ejs', {
+                                    nextHours: false,
+                                    id: 'plantime' + bi,
+                                    selected: shipment.hours[0] ,
+                                    hours: controller.shipmentHours
+                                  }) %>
+                                </div>
+                            </td>
+                            </tr>                           
+                  </tbody>
+                </table>
+              </div>
+                <div v-if="card && card.shipment[<%=bi%>].dispatcher && (card.shipment[<%=bi%>].howTo == 'ship')" class="mx-4 mb-4 custom-control custom-checkbox">
+                  <input class="custom-control-input" name="informme<%=bi%>" type="checkbox" <%= shipment.informMe ? 'checked':'' %> id="informme<%=bi%>">
+                  <label class="custom-control-label" for="informme<%=bi%>">Paketim çıkmadan önce arayıp haber verirseniz sevinirim.</label>
+                </div>   
+                <% if (shopcard.getShippingCost(bi) > 0) { %>
+                  <div class="alert alert-info mx-4 mb-4" v-if="card && card.shipment['<%=bi%>'].howTo == 'ship'">
+                    <p class="font-size-sm">
+                    Alışveriş toplamınız <%- include('./_partial/currency.ejs', {value: shopcard.butchers[bi].subTotal}) %> olarak gözüküyor.
+                    <%=shipment.dispatcher.name%>, <%- include('./_partial/currency.ejs', {value: shipment.dispatcher.totalForFree}) %> ve üzeri siparişleri ücretsiz teslim etmekte.
+                  </p>  
+                  <p class="font-size-sm">Bir kaç ürün daha almak isterseniz 
+                    <a class="alert-link" href="/<%=shopcard.butchers[bi].slug%>">kasabı</a> ziyaret edebilirsiniz.                      
+                  </p>
+                   </div> 
+                    <%}%>
+
+
+            </div>
+              
+        <%}%>
+            
+
+
+
+
+            <!-- Navigation (desktop)-->
+            <div class="d-none d-lg-flex">
+              <div class="w-50 pr-3"><a class="btn btn-secondary btn-block" href="/alisveris-sepetim/adres"><i class="czi-arrow-left mt-sm-0 mr-1"></i><span class="d-none d-sm-inline">Geri</span><span class="d-inline d-sm-none">Geri</span></a></div>
+              <div class="w-50 pl-2"><button type="submit" id="save-adres" name="save-adres" class="btn btn-accent btn-block"><span class="d-none d-sm-inline">Sonraki Adım</span><span class="d-inline d-sm-none">Sonraki</span><i class="czi-arrow-right mt-sm-0 ml-1"></i></button></div>
+            </div>
+          </section>
+  
+        </div>
+        <!-- Navigation (mobile)-->
+        <div class="row d-lg-none">
+          <div class="col-lg-8">
+            <div class="d-flex pt-4 mt-3">
+              <div class="w-50 pr-3"><a class="btn btn-secondary btn-block" href="/alisveris-sepetim/adres"><i class="czi-arrow-left mt-sm-0 mr-1"></i><span class="d-none d-sm-inline">Önceki</span><span class="d-inline d-sm-none">Geri</span></a></div>              <div class="w-50 pl-2"><button type="submit" id="save-adres" name="save-adres" class="btn btn-accent btn-block"><span class="d-none d-sm-inline">Sonraki Adım</span><span class="d-inline d-sm-none">Next</span><i class="czi-arrow-right mt-sm-0 ml-1"></i></button></div>
+            </div>
+          </div>
+        </div></form>
+      </div>
+
+  <% include ./_partial/footer %>
+  <% include ./_partial/scripts %>
+<script>
+window.App.ShopcardShipmentApp.card = window.shopcard.card.data;
+</script>
+</body>
+
+</html>

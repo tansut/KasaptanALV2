@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <% include ./_partial/head %>
+</head>
+
+<body>
+  <% include ./_partial/header %>
+
+  <!-- Page Title (Light)-->
+  <div class="bg-secondary py-4">
+    <div class="container d-lg-flex justify-content-between py-2 py-lg-3">
+      <div class="order-lg-2 mb-3 mb-lg-0 pt-lg-2">
+        <nav aria-label="breadcrumb">
+          <ol class="breadcrumb flex-lg-nowrap justify-content-center justify-content-lg-star">
+
+
+            <li class="breadcrumb-item text-nowrap"><a href="/et-kulturu">Et Kültürü</a>
+            </li>
+            <li class="breadcrumb-item text-nowrap" aria-current="page">
+              <a href="/et-kulturu/<%=controller.content.categorySlug%>"> <%= controller.content.category %></a>
+
+
+            </li>
+            <li class="breadcrumb-item active" aria-current="page">Makale</li>
+
+
+          </ol>
+        </nav>
+      </div>
+      <div class="order-lg-1 pr-lg-4 text-center text-lg-left">
+        <h1 class="h2"><%= controller.content.title %></h1>
+        <p class="lead"><%= controller.content.description %></p>
+      </div>
+    </div>
+  </div>
+
+
+
+  <div class="container">
+
+    <div id="carouselExampleSlidesOnly" class="carousel slide mb-2" data-ride="carousel">
+      <div class="carousel-inner">
+        <% var contentImgs = controller.getContentImages() %>
+        <% for(var i=0; i<contentImgs.length; i++) {%>
+        <div class="carousel-item active">
+          <img src="<%= contentImgs[i].url %>" class="d-block w-100" alt="<%= controller.content.title %>">
+        </div>
+
+        <% } %>
+      </div>
+    </div>
+
+
+    <%- include(`./content.${controller.content.slug}.ejs`) %>
+
+  </div>
+
+q
+
+
+  <% include ./_partial/footer %>
+  <% include ./_partial/scripts %>
+
+</body>
+
+</html>

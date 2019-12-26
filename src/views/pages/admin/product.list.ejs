@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <% include ./_partial/head %>
+
+    <style>
+        .image {
+            width: 200px;
+        }
+    </style>
+</head>
+
+<body>
+    <% include ./_partial/header %>
+    <!-- Page Content -->
+    <div class="container-fluid m-4">
+        <h1>Ürünler</h4>
+
+
+
+
+    </div>
+    <div class="container-fluid">
+        <div id="main">
+
+            <table class="table table-hover">
+                <thead>
+                    <tr>
+                        <th>Adı</th>
+                        <th>slug</th>
+                        <th>kategori</th>
+                        <th>tag1</th>
+                        <th>tag2</th>
+                        <th>resimler</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <% for(var i=0; i<products.length; i++) {%>
+                    <tr>
+                        <td><a href="<%= `/pages/admin/product/${products[i].slug}` %>"><%= products[i].name %> </a>
+                        </td>
+                        <td><%= products[i].slug %></td>
+                        <td><%= products[i].getCategories().map(p=>p.name).join(',') %></td>
+                        <td><%= products[i].tag1 %></td>
+                        <td><%= products[i].tag2 %></td>
+                        <td><a
+                                href="<%= `/pages/admin/resource/product-photos/${products[i].id}?fileprefix=${products[i].slug}&title=${products[i].name}` %>">Düzenle</a>
+                        </td>
+                    </tr>
+
+
+                    <% } 
+                                
+                                %>
+
+                </tbody>
+            </table>
+
+
+
+
+
+
+
+
+
+
+        </div>
+    </div>
+
+
+    <% include ./_partial/scripts %>
+    <script>
+
+
+        window.App.Ready.then(function () {
+
+            //window.App.Render("PlaceList", null, document.getElementById('main'))
+        })
+    </script>
+</body>
+
+</html>

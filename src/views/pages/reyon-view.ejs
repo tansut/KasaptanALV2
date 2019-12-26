@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <% include ./_partial/head %>
+</head>
+
+<body>
+  <% include ./_partial/header %>
+
+
+  <div class="page-title-overlap bg-primary pt-4">
+    <div class="container d-lg-flex justify-content-between py-2 py-lg-3">
+      <div class="order-lg-2 mb-3 mb-lg-0 pt-lg-2">
+        <nav aria-label="breadcrumb">
+          <ol class="breadcrumb breadcrumb-light flex-lg-nowrap justify-content-center justify-content-lg-star">
+            <li class="breadcrumb-item"><a class="text-nowrap" href="/"><i class="czi-home"></i></a></li>
+            <li class="breadcrumb-item text-nowrap active" aria-current="page">Tüm Lezzetler</li>
+          </ol>
+        </nav>
+      </div>
+      <div class="order-lg-1 pr-lg-4 text-center text-lg-left">
+        <h1 class="h3 text-light mb-0">Tüm Lezzetler</h1>
+      </div>
+    </div>
+  </div>
+
+  <div class="container">
+    <div class="bg-light box-shadow-lg rounded-lg px-4 py-4 mb-2 mb-md-4">
+      <div class="">
+
+
+        <% var viewCats = ['list', 'reyon'] %>
+        <% viewCats.forEach(cat => { %>
+        <a id="<%=cat%>"></a>
+        <div class="pt-1 border-bottom pb-1 mb-2">
+          <h3 class="h4 mb-0 mr-2"><%= controller.browseTypes[cat] %></h3>
+        </div>
+        <div class="row justify-content-center">
+          <% var reyonlar = __categories.filter(p=>p.type == cat) %>
+
+          <% for(var c=0; c< reyonlar.length; c++) {%>
+          <div class="col-md-3 col-6 mb-3">
+            <div class="card border-0"><a class="d-block overflow-hidden rounded-lg"
+                href="<%= `/${reyonlar[c].slug}`%>"><img class="d-block w-100"
+                  src="<%=`/${reyonlar[c].slug}/resimler/thumbnail` %>" alt="<%= reyonlar[c].name %>"></a>
+              <div class="card-body">
+                <h3 class="product-title font-size-md text-wrap text-center"><%= reyonlar[c].name %></h3>
+
+
+                <!-- <ul class="list-unstyled font-size-sm mb-0">
+                  <% var categoryProds = controller.products.byCategory[reyonlar[c].slug].slice(0,3) %>
+                  <% for(var j=0; j< categoryProds.length; j++) {%>
+                  <li class="d-flex align-items-center justify-content-between"><a class="nav-link-style"
+                      href="<%= `/${categoryProds[j].slug}`%>"><i
+                        class="czi-arrow-right-circle mr-2"></i><%=categoryProds[j].name %></a></li>
+
+                  <% } %>
+                  <li class="d-flex align-items-center justify-content-between"><a class="nav-link-style"
+                      href="<%= `/${reyonlar[c].slug}`%>"><i class="czi-arrow-right-circle mr-2"></i>Tümü</a></li>
+
+
+
+
+
+                </ul> -->
+              </div>
+            </div>
+          </div>
+          <%}%>
+        </div>
+              <%})%>
+        
+
+
+      </div>
+    </div>
+  </div>
+
+
+
+
+  <% include ./_partial/footer %>
+  <% include ./_partial/scripts %>
+
+</body>
+
+</html>

@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <% include ./_partial/head %>
+</head>
+
+<body>
+  <% include ./_partial/header %>
+
+
+
+
+  <div class="page-title-overlap bg-accent pt-4">
+    <div class="container d-lg-flex justify-content-between py-2 py-lg-3">
+      <div class="order-lg-2 mb-3 mb-lg-0 pt-lg-2">
+        <nav aria-label="breadcrumb">
+          <ol class="breadcrumb breadcrumb-light flex-lg-nowrap justify-content-center justify-content-lg-star">
+            <li class="breadcrumb-item"><a class="text-nowrap" href="/"><i class="czi-home"></i></a></li>
+            <li class="breadcrumb-item text-nowrap active" aria-current="page">Alışverişimi Tamamla</li>
+          </ol>
+        </nav>
+      </div>
+      <div class="order-lg-1 pr-lg-4 text-center text-lg-left">
+        <h1 class="h3 text-light mb-0">Alışverişimi Tamamla</h1>
+      </div>
+    </div>
+  </div>
+
+    <!-- Page Content-->
+    <div class="container mb-4">
+        <form class="needs-validation" method="post" novalidate action="/alisveris-sepetim/savepayment">
+        <div class="row">
+          <section class="col-lg-8">
+            <!-- Steps-->
+            
+            <%- include('./_partial/checkout-steps.ejs', {   step: 3        }); %>
+            <% for (let bi in shopcard.payment) { %>
+              <% let payment = shopcard.payment[bi]%>
+              <div class=" border  mb-4">
+                  <div class="bg-secondary p-3  "><a class="media align-items-center" href="/<%=shopcard.butchers[bi].slug%>"><img class="rounded-circle" width="64" src="/<%=shopcard.butchers[bi].slug%>/fotograf/thumbnail" alt="<%=shopcard.butchers[bi].name%>">
+                    <div class="media-body pl-2"><span class="font-size-ms text-muted">Ödemeyi planlayalım</span>
+                      <h3 class="h4 mb-0 mr-2"><%= shopcard.butchers[bi].name %></h3>
+                    </div></a></div>
+
+       
+                <div class="table-responsive">
+
+                  <table class="table font-size-sm ">
+                    <tbody>                   
+                      <tr>
+                        <td>
+                          <div class="custom-control custom-radio mb-4">
+                            <input class="custom-control-input" type="radio" id="cashondoor<%=bi%>" value="cashondoor" name="paymentmethod<%=bi%>" <%= shopcard.payment[bi].type == 'cashondoor' ? 'checked':'' %>>
+                            <label class="custom-control-label" for="cashondoor<%=bi%>"></label>
+                          </div>
+                        </td>
+                        <td class="align-middle"><span class="text-dark font-weight-medium">Teslim alırken nakit</span><br><span class="text-muted">
+                          Lezzetleri teslim alırken nakit öderim.
+    
+                        </span></td>
+                      </tr>
+                      <tr>
+                          <td>
+                            <div class="custom-control custom-radio mb-4">
+                              <input class="custom-control-input" type="radio" value="creditcardondoor" id="creditcardondoor<%=bi%>" <%= shopcard.payment[bi].type == 'creditcardondoor' ? 'checked':'' %> name="paymentmethod<%=bi%>">
+                              <label class="custom-control-label" for="creditcardondoor<%=bi%>"></label>
+                            </div>
+                          </td>
+                          <td class="align-middle"><span class="text-dark font-weight-medium">Teslim alırken kredi kartı</span><br><span class="text-muted">
+                              Lezzetleri teslim alırken kredi kartımla öderim.
+                          </span></td>
+                        </tr>                               
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+              <% } %>
+ 
+           
+            <!-- Navigation (desktop)-->
+            <div class="d-none d-lg-flex">
+              <div class="w-50 pr-3"><a class="btn btn-secondary btn-block" href="/alisveris-sepetim/ship"><i class="czi-arrow-left mt-sm-0 mr-1"></i><span class="d-none d-sm-inline">Geri</span><span class="d-inline d-sm-none">Geri</span></a></div>
+              <div class="w-50 pl-2"><button type="submit" id="save-adres" name="save-adres" class="btn btn-accent btn-block"><span class="d-none d-sm-inline">Sonraki Adım</span><span class="d-inline d-sm-none">Sonraki</span><i class="czi-arrow-right mt-sm-0 ml-1"></i></button></div>
+            </div>
+          </section>
+          <!-- Sidebar-->
+          <!-- <aside class="col-lg-4 pt-4 pt-lg-0">
+              
+
+            <div class="cz-sidebar-static rounded-lg box-shadow-lg ml-lg-auto">
+              <div class="widget mb-3">
+                <h2 class="widget-title text-center">Order summary</h2>
+                <div class="media align-items-center pb-2 border-bottom"><a class="d-block mr-2" href="shop-single-v1.html"><img width="64" src="img/shop/cart/widget/01.jpg" alt="Product"/></a>
+                  <div class="media-body">
+                    <h6 class="widget-product-title"><a href="shop-single-v1.html">Women Colorblock Sneakers</a></h6>
+                    <div class="widget-product-meta"><span class="text-accent mr-2">$150.<small>00</small></span><span class="text-muted">x 1</span></div>
+                  </div>
+                </div>
+                <div class="media align-items-center py-2 border-bottom"><a class="d-block mr-2" href="shop-single-v1.html"><img width="64" src="img/shop/cart/widget/02.jpg" alt="Product"/></a>
+                  <div class="media-body">
+                    <h6 class="widget-product-title"><a href="shop-single-v1.html">TH Jeans City Backpack</a></h6>
+                    <div class="widget-product-meta"><span class="text-accent mr-2">$79.<small>50</small></span><span class="text-muted">x 1</span></div>
+                  </div>
+                </div>
+                <div class="media align-items-center py-2 border-bottom"><a class="d-block mr-2" href="shop-single-v1.html"><img width="64" src="img/shop/cart/widget/03.jpg" alt="Product"/></a>
+                  <div class="media-body">
+                    <h6 class="widget-product-title"><a href="shop-single-v1.html">3-Color Sun Stash Hat</a></h6>
+                    <div class="widget-product-meta"><span class="text-accent mr-2">$22.<small>50</small></span><span class="text-muted">x 1</span></div>
+                  </div>
+                </div>
+                <div class="media align-items-center py-2 border-bottom"><a class="d-block mr-2" href="shop-single-v1.html"><img width="64" src="img/shop/cart/widget/04.jpg" alt="Product"/></a>
+                  <div class="media-body">
+                    <h6 class="widget-product-title"><a href="shop-single-v1.html">Cotton Polo Regular Fit</a></h6>
+                    <div class="widget-product-meta"><span class="text-accent mr-2">$9.<small>00</small></span><span class="text-muted">x 1</span></div>
+                  </div>
+                </div>
+              </div>
+              <ul class="list-unstyled font-size-sm pb-2 border-bottom">
+                <li class="d-flex justify-content-between align-items-center"><span class="mr-2">Subtotal:</span><span class="text-right">$265.<small>00</small></span></li>
+                <li class="d-flex justify-content-between align-items-center"><span class="mr-2">Shipping:</span><span class="text-right">—</span></li>
+                <li class="d-flex justify-content-between align-items-center"><span class="mr-2">Taxes:</span><span class="text-right">$9.<small>50</small></span></li>
+                <li class="d-flex justify-content-between align-items-center"><span class="mr-2">Discount:</span><span class="text-right">—</span></li>
+              </ul>
+              <h3 class="font-weight-normal text-center my-4">$274.<small>50</small></h3>
+            </div>
+           
+          </aside> -->
+        </div>
+        <!-- Navigation (mobile)-->
+        <div class="row d-lg-none">
+          <div class="col-lg-8">
+            <div class="d-flex">
+              <div class="w-50 pr-3"><a class="btn btn-secondary btn-block" href="/alisveris-sepetim/ship"><i class="czi-arrow-left mt-sm-0 mr-1"></i><span class="d-none d-sm-inline">Geri</span><span class="d-inline d-sm-none">Geri</span></a></div>
+              <div class="w-50 pl-2"><button type="submit" id="save-adres" name="save-adres" class="btn btn-accent btn-block"><span class="d-none d-sm-inline">Sonraki Adım</span><span class="d-inline d-sm-none">Sonraki Adım</span><i class="czi-arrow-right mt-sm-0 ml-1"></i></button></div>
+            </div>
+          </div>
+        </div>
+        </form>
+      </div>
+
+  <% include ./_partial/footer %>
+  <% include ./_partial/scripts %>
+
+</body>
+
+</html>

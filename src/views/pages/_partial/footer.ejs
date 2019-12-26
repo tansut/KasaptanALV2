@@ -1,0 +1,236 @@
+
+
+<footer class="bg-primary-darker pt-5">
+    <div class="container">
+            <div class="text-center cookiealert" role="alert">
+                <p>
+                        <b>Kullanıcı deneyiminizi artırmak için çerez kullanıyoruz.</b> 
+                      
+                </p>
+
+                  
+                    <button type="button" class="btn btn-primary btn-sm acceptcookies" aria-label="Close">
+                        Onayla
+                    </button>
+                  </div>
+                 
+        <div class="row pb-2">
+            <div class="col-md-4 col-sm-6">
+                <div class="widget widget-links widget-light pb-2 mb-4">
+                    <h3 class="widget-title text-light">Listeler</h3>
+                    <ul class="widget-list">
+                        <% var viewCats = ['list', 'amac'] %>
+                        <% viewCats.forEach(cat => { %>
+                        <% var reyonlar = __categories.filter(p=>p.type == cat) %>
+                        <% for(var c=0; c< reyonlar.length; c++) {%>
+                        <li class="widget-list-item"><a class="widget-list-link"
+                                href="<%= `/${reyonlar[c].slug}`%>"><%= reyonlar[c].name %></a></li>
+                        <%}%>
+                        <% }) %>
+                        <li class="widget-list-item">
+                            <a class="widget-list-link" href="<%= `/reyonlar`%>"><i
+                                    class="czi-arrow-right-circle mr-2"></i>Tümü</a>
+                        </li>
+
+                    </ul>
+                </div>                
+                <div class="widget widget-links widget-light pb-2 mb-4">
+                    <h3 class="widget-title text-light">Reyonlar</h3>
+                    <ul class="widget-list">
+                        <% var viewCats = ['reyon', 'amac'] %>
+                        <% viewCats.forEach(cat => { %>
+                        <% var reyonlar = __categories.filter(p=>p.type == cat) %>
+                        <% for(var c=0; c< reyonlar.length; c++) {%>
+                        <li class="widget-list-item"><a class="widget-list-link"
+                                href="<%= `/${reyonlar[c].slug}`%>"><%= reyonlar[c].name %></a></li>
+                        <%}%>
+                        <% }) %>
+                        <li class="widget-list-item">
+                            <a class="widget-list-link" href="<%= `/reyonlar`%>"><i
+                                    class="czi-arrow-right-circle mr-2"></i>Tümü</a>
+                        </li>
+
+                    </ul>
+                </div>
+
+
+            </div>
+
+
+
+            <div class="col-md-4 col-sm-6">
+
+                <div class="widget widget-links widget-light pb-2 mb-4 mr-4">
+                    <h3 class="widget-title text-light">Şehirler</h3>
+                    <% var cityChunks = _.chunk(__butcherCities, 12) %>
+                    <div class="row">
+                        <% cityChunks.forEach((chunk, i) => { %>
+                        <div class="col">
+                            <ul class="widget-list">
+                                <% for(var i=0; i<chunk.length; i++) {%>
+                                    <% if (chunk[i].name == 'Ankara') {%>
+                                <li class="widget-list-item"><a class="widget-list-link"
+                                        href="<%= `/${chunk[i].slug}` %>"><%= chunk[i].name %></a></li>
+                                <%}%>
+
+                                <%}%>
+                                    
+                                    
+                                                                </li>
+                                        
+                                                            </ul>                        
+                                            </div>
+                                            <% }) %>
+                        </div>
+
+
+                    </div>
+                    <div class="widget widget-links widget-light pb-2 mb-4">
+                        <h3 class="widget-title text-light">Hakkımızda</h3>
+                        <ul class="widget-list">
+                            <li class="widget-list-item"><a class="widget-list-link" href="/hikayemiz">Hikayemiz</a></li>
+                            <li class="widget-list-item"><a class="widget-list-link" href="/kasap-basvuru">Kasap Seçim Kriterlerimiz</a></li>
+                            <li class="widget-list-item"><a class="widget-list-link" href="/kullanici-sozlesmesi">Kullanıcı Sözleşmesi</a></li>
+                            <li class="widget-list-item"><a class="widget-list-link" href="/iletisim">İletişim</a></li>
+                        
+                        </ul>
+                    </div>                   
+                </div>
+                <div class="col-md-4">
+                    <div class="widget pb-2 mb-4">
+                        <h3 class="widget-title text-light pb-1">İyi Et Rehberi</h3>
+                        <a class="btn btn-primary get-userguide-action " href="#">Ücretsiz İndir</a>
+                    </div>
+                    <div class="widget widget-links widget-light pb-2 mb-4">
+                            <h3 class="widget-title text-light">Kullanıcı İşlemleri</h3>
+                            <ul class="widget-list">
+                                <li class="widget-list-item"><a class="widget-list-link" href="/user">Hesabım</a></li>
+                                <li class="widget-list-item"><a class="widget-list-link" href="/user/orders">Siparişlerim</a></li>
+                                <li class="widget-list-item"><a class="widget-list-link" href="/user/orders">Sipariş takibi</a>
+                                </li>
+                               </ul>
+                        </div>
+                        
+                    <!-- <div class="widget pb-2 mb-4">
+                        <h3 class="widget-title text-light pb-1">Download our app</h3>
+                        <div class="d-flex flex-wrap">
+                            <div class="mr-2 mb-2"><a class="btn-market btn-apple" href="#" role="button"><span
+                                        class="btn-market-subtitle">Download on the</span><span
+                                        class="btn-market-title">App
+                                        Store</span></a></div>
+                            <div class="mb-2"><a class="btn-market btn-google" href="#" role="button"><span
+                                        class="btn-market-subtitle">Download on the</span><span
+                                        class="btn-market-title">Google
+                                        Play</span></a></div>
+                        </div>
+                    </div> -->
+                </div>
+            </div>
+        </div>
+        <div class="pt-5 bg-primary-darkest">
+            <div class="container">
+                 <!-- <div class="row pb-3">
+                    <div class="col-md-3 col-sm-6 mb-4">
+                        <div class="media"><i class="czi-rocket text-primary" style="font-size: 2.25rem;"></i>
+                            <div class="media-body pl-3">
+                                <h6 class="font-size-base text-light mb-1">Hızlı ve güvenli teslimat</h6>
+                                <p class="mb-0 font-size-ms text-light opacity-50">Free delivery for all orders over
+                                    $200
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-3 col-sm-6 mb-4">
+                        <div class="media"><i class="czi-currency-exchange text-primary"
+                                style="font-size: 2.25rem;"></i>
+                            <div class="media-body pl-3">
+                                <h6 class="font-size-base text-light mb-1">Money back guarantee</h6>
+                                <p class="mb-0 font-size-ms text-light opacity-50">We return money within 30 days</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-3 col-sm-6 mb-4">
+                        <div class="media"><i class="czi-support text-primary" style="font-size: 2.25rem;"></i>
+                            <div class="media-body pl-3">
+                                <h6 class="font-size-base text-light mb-1">24/7 customer support</h6>
+                                <p class="mb-0 font-size-ms text-light opacity-50">Friendly 24/7 customer support</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-3 col-sm-6 mb-4">
+                        <div class="media"><i class="czi-card text-primary" style="font-size: 2.25rem;"></i>
+                            <div class="media-body pl-3">
+                                <h6 class="font-size-base text-light mb-1">Secure online payment</h6>
+                                <p class="mb-0 font-size-ms text-light opacity-50">We posess SSL / Secure сertificate
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                </div> -->
+                <!-- <hr class="hr-light pb-4 mb-3">  -->
+                <div class="row pb-2">
+                    <div class="col-md-6 text-center text-md-left mb-4">
+                        <div class="text-nowrap mb-4"><a class="d-inline-block align-middle mt-n1 mr-3" href="#"><img
+                                    class="d-block" width="144" src="/img/logo-nav.png" alt="Kasapburada" /></a>
+
+                        </div>
+                         <!-- <div class="widget widget-links widget-light">
+                            <ul class="widget-list d-flex flex-wrap justify-content-center justify-content-md-start">
+                                <li class="widget-list-item mr-4"><a class="widget-list-link" href="/kullanici-sozlesmesi">Kullanıcı Sözleşmesi</a></li>                                
+                                    <li class="widget-list-item mr-4"><a class="widget-list-link" href="/iletisim">İletişim</a></li>
+
+                                </li>
+                            </ul>
+                        </div>  -->
+                    </div>
+                    <div class="col-md-6 text-center text-md-right mb-4">
+                        <div class="mb-3"><a target="_blank" class="social-btn sb-light sb-twitter ml-2 mb-2"
+                                href="https://twitter.com/kasapburada"><i class="czi-twitter"></i></a><a target="_blank"
+                                class="social-btn sb-light sb-facebook ml-2 mb-2"
+                                href="https://www.facebook.com/kasapburada"><i class="czi-facebook"></i></a><a
+                                target="_blank" class="social-btn sb-light sb-instagram ml-2 mb-2"
+                                href="https://www.instagram.com/kasapburada/"><i class="czi-instagram"></i></a>
+                        </div>
+                    </div>
+                </div>
+                <div class="pb-4 font-size-xs text-light opacity-50 text-center text-md-left">© Tüm hakları saklıdır.
+                    <!-- <a class="text-light" href="http://www.kalitte.com.tr" target="_blank">Kalitte Profesyonel Bilgi
+                        Teknolojileri Limited Şirketi</a> -->
+                    
+                    </div>
+            </div>
+        </div>
+</footer>
+<!-- Back To Top Button--><a class="btn-scroll-top" href="#top" data-scroll><span
+        class="btn-scroll-top-tooltip text-muted font-size-sm mr-2">Yukarı</span><i
+        class="btn-scroll-top-icon czi-arrow-up">
+    </i></a>
+
+
+
+<div class="modal fade" id="areaModal" tabindex="-1" role="dialog" aria-labelledby="areaModalLabel"
+    aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="areaModalLabel">Semtinizi seçin</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form>
+                    <% include ../_partial/userlocation %>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button id="exploreAreaButton" type="button" class="btn btn-sm btn-primary">Seç</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- START Bootstrap-Cookie-Alert -->
+
+
+<% include ../_partial/meat-guide-dialog %>

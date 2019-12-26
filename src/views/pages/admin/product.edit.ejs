@@ -1,0 +1,234 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <% include ./_partial/head %>
+
+    <style>
+        .image {
+            width: 200px;
+        }
+    </style>
+</head>
+
+<body>
+    <% include ./_partial/header %>
+    <!-- Page Content -->
+    <div class="container m-4">
+        <h1><%= product.name %></h4>
+
+    </div>
+    <div class="container-fluid">
+        <div id="main">
+
+            <ul class="nav nav-tabs">
+                <li class="nav-item">
+                    <a class="nav-link active" data-toggle="tab" href="#home">Temel Bilgiler</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link " data-toggle="tab" href="#units">Birim ve Fiyat</a>
+                </li>                
+                <li class="nav-item">
+                    <a class="nav-link" data-toggle="tab" href="#menu1">Resimler</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" data-toggle="tab" href="#menu2">Kategoriler</a>
+                </li>
+            </ul>
+
+
+
+            <div class="tab-content">
+                <div id="home" class="container-fluid tab-pane active"><br>
+                    <form name="saveform" method="POST">
+                        <div class="row">
+                            <div class="col">
+                                <div class="form-group">
+                                    <label>Slug</label>
+                                    <input type="text" class="form-control" name="slug" id="slug"
+                                        value="<%= product.slug %>">
+                                </div>
+                                <div class="form-group">
+                                    <label>Adı</label>
+                                    <input type="text" class="form-control" name="name" id="name"
+                                        value="<%= product.name %>">
+                                </div>
+
+
+                                <div class="form-group">
+                                    <label>Kısa Açıklama</label>
+                                    <textarea class="form-control" name="description"
+                                        id="description"><%= product.shortdesc %></textarea>
+
+
+                                </div>
+
+                                <div class="form-group">
+                                    <label>Varsayılan not</label>
+                                    <textarea class="form-control" name="notePlaceholder"
+                                        id="notePlaceholder"><%= product.notePlaceholder %></textarea>
+
+
+                                </div>
+
+                                
+
+                                <div class="form-group">
+                                        <label>Ürün Açıklaması</label>
+                                        <textarea rows="15" class="form-control" name="mddesc"
+                                            id="mddesc"><%= product.mddesc %></textarea>
+    
+    
+                                    </div>
+
+                                <div class="row">
+                                    <div class="col-md-6 mb-3">
+                                        <div class="form-group">
+                                            <label>Tag1</label>
+                                            <input type="text" class="form-control" name="tag1" id="tag1"
+                                                value="<%= product.tag1 %>">
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6 mb-3">
+                                        <div class="form-group">
+                                            <label>Tag2</label>
+                                            <input type="text" class="form-control" name="tag2" id="tag2"
+                                                value="<%= product.tag2 %>">
+                                        </div>
+                                    </div>
+                                </div>
+
+
+
+
+
+                            </div>
+
+                        
+                        </div>
+
+
+                        <button type="submit" name="save" value="true" class="btn btn-primary">Kaydet</button>
+                    </form>
+                </div>
+                <div id="units" class="container-fluid tab-pane"><br>
+                    <form name="saveform" method="POST">
+                        <div class="row">
+                     
+
+                            <div class="col">
+ <%- include('./_partial/productunitinput.ejs', {
+     unit: 'unit1'
+ }) %>
+ <%- include('./_partial/productunitinput.ejs', {
+    unit: 'unit2'
+}) %>
+<%- include('./_partial/productunitinput.ejs', {
+    unit: 'unit3'
+}) %>
+                            </div>
+                        </div>
+
+                        <div class="row">
+                                <div class="col-md-6 mb-3">
+                                        <div class="form-group">
+                                            <label>Varsayılan Birim No (0 kg için)</label>
+                                            <input type="text" class="form-control" name="defaultUnit" id="defaultUnit"
+                                                value="<%= product.defaultUnit %>">
+                                        </div>
+                                    </div>
+
+                                    <div class="col-md-2 mb-3">
+                                            <div class="form-group">
+                                                <label>Oranı</label>
+                                                <input type="text" class="form-control" name="defaultAmount" id="defaultAmount"
+                                                    value="<%= product.defaultAmount %>">
+                                            </div>
+                                        </div>                                    
+
+                        </div>
+                        <div class="row">
+                                <div class="col-md-6 mb-3">
+                                        <div class="form-group">
+                                            <label>Porsiyon KG Oranı</label>
+                                            <input type="text" class="form-control" name="perPersonKg" id="perPersonKg"
+                                                value="<%= product.perPersonKg %>">
+                                        </div>
+                                    </div>
+
+                                                             
+
+                        </div>                        
+
+                        <button type="submit" name="saveunits" value="true" class="btn btn-primary">Kaydet</button>
+                    </form>
+                </div>
+                <div id="menu1" class="container-fluid tab-pane fade"><br>
+                    <form name="saveimgform" method="POST">
+                        <a href="<%= `/pages/admin/resource/product-photos/${product.id}?fileprefix=${product.slug}&title=${product.name}&videotype=product-videos` %>"
+                            target="_blank">Düzenle</a>
+                        <div class="row">
+
+                            <% for(var i=0; i<images.length; i++) {%>
+                            <div class="mx-3 col">
+                                <img class="image my-2 img-thumbnail"
+                                    src="<%= `/${product.slug}/resimler/${images[i].contentUrl}?thumbnail=1`  %>" />
+                            </div>
+                            <% } %>
+                        </div>
+                    </form>
+                </div>
+                <div id="menu2" class="container-fluid tab-pane fade"><br>
+
+                    <div class="">
+                        <% for(var i=0; i<categories.length; i++) {%>
+                        <form name="savecategoryform" method="POST">
+                            <% var catinfo = controller.getProductCategory(categories[i].id) %>
+                            <div class="form-group">
+                                <label><%= categories[i].name %></label>
+
+                                <div class="input-group mb-3">
+
+                                    <div class="input-group-prepend">
+                                        <div class="input-group-text">
+                                            <input type="checkbox" name="categoryenabled"
+                                                <%= catinfo.enabled ? "checked" : "" %> aria-label="Checkbox">
+                                        </div>
+                                    </div>
+                                    <input type="hidden" name="categoryid" value="<%= categories[i].id %>">
+                                    <input type="text" class="form-control" value="<%= catinfo.displayOrder %>"
+                                        name="categorydisplayorder">
+                                    <button type="submit" name="updatecategory" value="true"
+                                        class="btn btn-primary">Kaydet</button>
+
+                                </div>
+                            </div>
+                        </form>
+                        <% } %>
+                    </div>
+
+                </div>
+            </div>
+
+
+
+
+        </div>
+    </div>
+
+
+    <% include ./_partial/scripts %>
+    <script>
+
+        function setimgdel(i) {
+            debugger;
+            $("deleteimage").val(i)
+        }
+        window.App.Ready.then(function () {
+
+            //window.App.Render("PlaceList", null, document.getElementById('main'))
+        })
+    </script>
+</body>
+
+</html>

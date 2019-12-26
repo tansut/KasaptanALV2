@@ -1,0 +1,31 @@
+{
+    "compilerOptions": {
+        "typeRoots": [
+            "types"
+        ],
+        "jsx": "react",
+        "watch": true,
+        "target": "es6",
+        "module": "commonjs",
+        "declaration": false,
+        "noImplicitAny": false,
+        "removeComments": false,
+        "emitDecoratorMetadata": true,
+        "experimentalDecorators": true,
+        "moduleResolution": "node",
+        "allowJs": true,
+        "sourceMap": true,
+        "listFiles": false,
+        "outDir": "bin",   
+        "rootDir": "src",
+        "suppressImplicitAnyIndexErrors": true
+    },
+    "include": [
+        "./src/**/*",
+        "typings/*.d.ts"
+    ],
+    "exclude": [
+        "./node_modules/**/*",
+        "./www/**/*"
+    ]
+}
