@@ -1,24 +1,24 @@
 {
-  "name": "kasapburada",
+  "name": "kasaptanal",
   "version": "1.0.0",
-  "description": "kasapburada.com",
-  "main": "bin/kasapburada.js",
+  "description": "kasapbkasaptanalurada.com",
+  "main": "bin/kasaptanal.js",
   "author": "kalitte",
   "license": "ISC",
   "repository": {
     "type": "git",
-    "url": "git@bitbucket.org:kalitte/kasapburada.git"
+    "url": "git@bitbucket.org:kalitte/kasaptanal.git"
   },
   "engines": {
     "node": "12.10.0"
   },
   "scripts": {
-    "start": "node --icu-data-dir=./node_modules/full-icu ./bin/kasapburada",
+    "start": "node --icu-data-dir=./node_modules/full-icu ./bin/kasaptanal",
     "deploy-production": "./node_modules/shipit-cli/bin/shipit production deploy",
     "postinstall": "node_modules/.bin/gulp deploy",
-    "debug": "source ./.vscode/debug.sh;  nodemon  --inspect --icu-data-dir=./node_modules/full-icu ./bin/kasapburada",
-    "prod": "source ./.vscode/prod-aws.sh;  nodemon --inspect ./bin/kasapburada",
-    "prodaws": "source ./.vscode/prod-aws.sh;  nodemon --inspect ./bin/kasapburada",
+    "debug": "source ./.vscode/debug.sh;  nodemon  --inspect --icu-data-dir=./node_modules/full-icu ./bin/kasaptanal",
+    "prod": "source ./.vscode/prod-aws.sh;  nodemon --inspect ./bin/kasaptanal",
+    "prodaws": "source ./.vscode/prod-aws.sh;  nodemon --inspect ./bin/kasaptanal",
     "build:live-api": "nodemon --exec ./node_modules/.bin/ts-node -- ./src/app.ts /start api"
   },
   "dependencies": {

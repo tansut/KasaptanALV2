@@ -21,7 +21,7 @@
             "outFiles": [
                 "${workspaceRoot}/bin/**/*.js"
             ],
-            "program": "${workspaceRoot}/src/kasapburada.ts",
+            "program": "${workspaceRoot}/src/kasaptanal.ts",
             "runtimeArgs": [
                 "--nolazy"
             ],
@@ -29,21 +29,9 @@
             "sourceMaps": true,
             "stopOnEntry": false,
             "console": "internalConsole",
-            // "preLaunchTask": {
-            //     "task": "server.tsc",
-            //     "type": "gulp"
-            // },
+
             "env": {
-                // "NODE_ENV": "development",
-                // "DBNAME": "kasapburada",
-                // "PORT": "3001",
-                // "DBADDRESS": "localhost",
-                // "DBUSER": "kasapburada",
-                // "DBPWD": "cGgyMDE4Li4=",
-                // "EMAILHOST": "mail.jdash.io",
-                // "EMAILPORT": "8889",
-                // "EMAILUSERNAME": "hello@jdash.io",
-                // "EMAILPASS": "jdash2017."
+
             }
         }
     ]

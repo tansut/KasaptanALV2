@@ -126,7 +126,7 @@ export default class UserRoute extends ApiRouter {
     }
 
     async sendPassword(pwd: string, phoneNumber: string) {
-        await Sms.send('90' + phoneNumber, `KasapBurada giris sifreniz ve onay kodunuz: ${pwd}.`);
+        await Sms.send('90' + phoneNumber, `kasaptanAl giris sifreniz ve onay kodunuz: ${pwd}.`);
         return pwd;
     }
 
@@ -136,7 +136,7 @@ export default class UserRoute extends ApiRouter {
     async create(model: SignupModel): Promise<UserModel> {
         var user = new UserModel();
         user.mphone = Helper.getPhoneNumber(model.phone);
-        user.email = user.mphone + '@unverified.kasapburada.com';
+        user.email = user.mphone + '@unverified.kasaptanal.com';
         user.ivCode = (Math.random() * 999999).toString();
         let pwd = await this.generatePwd()
         user.setPassword(pwd);

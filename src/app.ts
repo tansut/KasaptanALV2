@@ -33,7 +33,7 @@ bluebird.config({
     warnings: false
 });
 
-class KasapBuradaApp {
+class KasaptanAlApp {
     app: express.Application;
     apiRouter: express.Router;
     viewsRouter: express.Router;
@@ -100,11 +100,11 @@ class KasapBuradaApp {
             let proto = req.header("x-forwarded-proto") || null;
             let host = (req.get('Host') || "").toLowerCase();
 
-            if (proto && host == "kasapburada.com")
-                return res.redirect(301, "https://www.kasapburada.com" + req.originalUrl)
+            if (proto && host == "kasaptanal.com")
+                return res.redirect(301, "https://www.kasaptanal.com" + req.originalUrl)
 
             if (proto && proto != "https")
-                return res.redirect(301, "https://www.kasapburada.com" + req.originalUrl)
+                return res.redirect(301, "https://www.kasaptanal.com" + req.originalUrl)
 
             return next()
         })
@@ -179,9 +179,9 @@ class KasapBuradaApp {
     }
 }
 
-export var App: KasapBuradaApp;
+export var App: KasaptanAlApp;
 
-export default () => (App = new KasapBuradaApp());
+export default () => (App = new KasaptanAlApp());
 
 
 
