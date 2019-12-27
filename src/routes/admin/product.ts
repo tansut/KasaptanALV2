@@ -100,6 +100,7 @@ export default class Route extends ViewRouter {
             this.product.shortdesc = this.req.body.description;
             this.product.mddesc = this.req.body.mddesc;
             this.product.notePlaceholder = this.req.body.notePlaceholder;
+            this.product.featuresText = this.req.body.featuresText;
 
             await this.product.save();
         } else if (this.req.body.saveunits == "true") {

@@ -67,6 +67,11 @@ class Product extends BaseModel<Product> {
     })
     notePlaceholder: string;
 
+    @Column({
+        allowNull: true,
+        type: DataType.TEXT
+    })
+    featuresText: string;
     
 
     @Column({

@@ -148,13 +148,13 @@
                     <% if (tarifs.length) { %>
                       <div>
                         <div class="mb-4">
-                          <h5 class="h6 mb-2">Bu yemekler için uygun</h5>
+                          <h5 class="h6 mb-2 font-size-md">Bu yemekler için uygun</h5>
                           <!-- <label class=""><span
                             class="badge badge-primary font-size-xs mr-2">Bu yemekler için uygun:</span><span class=""></span></label> -->
                             <div class="mb-2">
                             <% tarifs.forEach(t=> { %>
                             
-<div class="d-flex mb-2 pb-1 font-size-md flex-wrap justify-content-between border-bottom">
+<div class="d-flex mb-2 pb-1 font-size-sm flex-wrap justify-content-between border-bottom">
   <a href="javascript:openSlider(<%=t.id%>)"><i class=" czi-youtube mr-1"></i><%=t.title%></a>
   
   <% if (t.note) { %>
@@ -174,35 +174,37 @@
 
                       <% } %>
 
-                      <% if (false) { %>
-                        <div>
-                          <div class="mb-4">
-                            <h5 class="h6 mb-2">Şu kaynaklar mevcut</h5>
-                            <!-- <label class=""><span
-                              class="badge badge-primary font-size-xs mr-2">mekler için uygun:</span><span class=""></span></label> -->
-                              <div class="mb-2">
-                              <% otherVideos.forEach(t=> { %>
-                              
-  
-                                <div class="d-flex mb-2 pb-1 font-size-md flex-wrap justify-content-between border-bottom">
-                                  <a class="linka-black" href="javascript:openSlider(<%=t.id%>)"><i class="czi-youtube mr-1"></i><%=t.title%></a>
-                                </div>
-
-                           
-                                
-    
-                                
-                              <%})%>
-                            </div>
-                            </div>
-  
-                        </div>
-  
-                        <% } %>
-                    <div id="noteanchor">
                      
-                      <h5 class="h6 mb-2 text-accent pb-0 bor2der-bottom"><i class="czi-thumb-up mr-1"></i class="czi-thumb-up mr-1"> Kolayca satın alın</h5>
-                     <p v-if="product && product.purchaseOptions.length > 1" class="xfont-size-sm">İşinizi kolaylaştırmak için hazırladığımız seçenekleri kullanın.</p>
+                    <div id="noteanchor">
+
+                      <% if (product.featuresText) { %>
+                      <% var notes = product.featuresText.split('\n') %>
+                      <div class="border-bottom mb-4">
+                        <!-- <h5 class="h6 font-size-md mb-2">Şu şekilde hazırlıyoruz</h5> -->
+                        <ul class="list-unstyled font-size-sm mb-2">
+                          <%notes.forEach((note, i) => { %>
+                              <li><i class="czi-check text-primary mr-1"></i> <%=note%></li>
+                          <%})%>
+                          </ul>
+                      </div>
+   
+                      <% } %>
+                      <!-- <div v-if="product && product.notePlaceholder">
+                        <h5 class="h6 mb-2">Şu şekilde hazırlıyoruz</h5>
+
+                          <p  class="font-size-sm">
+                            {{product && product.notePlaceholder }} 
+                            </p>
+                      </div> -->
+                     
+                     <div class="">
+
+                   
+                      <h5 class="h6 mb-2 text-accent pb-2 font-size border-bottom"><i class="czi-thumb-up mr-1"></i>Kolayca satın alın</h5>
+<!--                     
+                      <p v-if="product && product.purchaseOptions.length > 1" class="font-size-sm mb-1">
+                        İşinizi kolaylaştıran seçenekleri kullanın.
+                      </p> -->
                       <input type="hidden" id="product-id" value="<%= product.id %>" />
                       <div class="xform-group">
                         <div v-if="product && product.purchaseOptions.length > 1">
@@ -220,7 +222,7 @@
                       </div>
                       <div v-if="selectedUnit" class="">
                         <div v-if="selectedUnit && selectedUnit.unit == 'kg'" class="form-group">
-                          <p v-if="selectedUnit && selectedUnit.desc">
+                          <p class="font-size" v-if="selectedUnit && selectedUnit.desc">
                             {{ selectedUnit.desc }}
                           </p>
                           <!-- <p v-if="selectedUnit && !selectedUnit.desc">
@@ -231,12 +233,11 @@
                               ihtiyacınızı belirlemede size yardımcı olabilir.
                           </p> -->
 
-                          <div class="d-flex align-items-center justify-content-between">
-                            <label><b>Ne kadar</b> almak istersiniz?&nbsp;</label>
-                          
-                            <label> <a @click="showCalculator(selectedUnit)"
-                              class="text-accent font-weight-medium font-size-sm " href="#size-chart">Hesaplama Aracı</a>
-                            </label>
+                          <div class="font-size-sm  d-flex align-items-center justify-content-between">
+                            <span><b>Ne kadar</b> hazırlayalım?</span>
+                            <span> <a @click="showCalculator(selectedUnit)"
+                              class="text-accent font-weight-medium " href="#size-chart">Hesaplama Aracı</a>
+                            </span>
                             
 
                           </div>
@@ -244,14 +245,15 @@
                             <div class="mb-3 bg-secondary border">
                             <amount-input :def="quantity || selectedUnit.default" :min="selectedUnit.min"
                             :max="selectedUnit.max" :step="selectedUnit.step" v-model="quantity"
-                            :unit="selectedUnit.unit"></amount-input>
+                            :unit="selectedUnit.unit">
+                            <!-- <div class="text-center pt-2 font-size-sm">
+                              <span><b>Ne kadar</b> hazırlayalım?</span>
+                              </div> -->
+                          </amount-input>
                           </div>
            
 
-                           <!-- <weight-input :def="quantity || selectedUnit.default" :min="selectedUnit.min"
-                            :max="selectedUnit.max" :step="selectedUnit.step" v-model="quantity">  -->
-
-
+                      
                           </weight-input>
                         </div>
                         <div v-if="selectedUnit &&  selectedUnit.unit != 'kg'" class="form-group">
@@ -260,10 +262,10 @@
                             <p v-if="selectedUnit && selectedUnit.desc">
                               {{ selectedUnit.desc }}
                             </p>
-                            <div class="d-flex align-items-center justify-content-between">
-                              <label class="">Kaç <b>{{ selectedUnit.unit }}</b> almak istersiniz?&nbsp;</label>
+                            <div class="d-flex align-items-center font-size-sm justify-content-between">
+                              <span>Kaç <b>{{ selectedUnit.unit }}</b> hazırlayalım?</span>
                             
-                              <label> <a @click="showCalculator(selectedUnit)"
+                              <span> <a @click="showCalculator(selectedUnit)"
                                 class="text-accent font-weight-medium font-size-sm " href="#size-chart">Hesaplama Aracı</a>
                               </label>
                               
@@ -277,7 +279,11 @@
                           <div class="mb-3 bg-secondary border">
                             <amount-input :def="quantity || selectedUnit.default" :min="selectedUnit.min"
                             :max="selectedUnit.max" :step="selectedUnit.step" v-model="quantity"
-                            :unit="selectedUnit.unit"></amount-input>
+                            :unit="selectedUnit.unit">
+                            <!-- <div class="text-center pt-2 font-size-sm">
+                              <span>Kaç <b>{{ selectedUnit.unit }}</b> hazırlayalım?</span>
+                              </div> -->
+                          </amount-input>
                           </div>
 
 
@@ -349,7 +355,7 @@
 
 
 
-
+                  </div>
 
 
                 </form>
@@ -383,7 +389,7 @@
             </li>
           <%}%>
 
-          <% if (otherButcherAlternatives) { %>
+          <% if (otherButcherAlternatives > 0) { %>
           <li class="nav-item">
             <a class="nav-link" id="vendors-tab" data-toggle="tab" href="#vendors" role="tab" aria-controls="contact"
               aria-selected="false">Kasaplar</a>
@@ -470,7 +476,7 @@
 
           </div>
           <!-- <div class="tab-pane fade" id="profile" role="tabpanel" aria-labelledby="profile-tab">...</div> -->
-          <% if (otherButcherAlternatives) { %>
+          <% if (otherButcherAlternatives > 0) { %>
           <div class="tab-pane fade" id="vendors" role="tabpanel" aria-labelledby="vendors-tab">
 
             <div class="row">

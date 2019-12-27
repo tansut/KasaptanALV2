@@ -186,7 +186,20 @@
 
 
 
+<script>
+$(document).ready(function()
+{
+  var allImages = document.querySelectorAll(".gallery-item");
+  allImages.forEach((value)=>{
+    value.oncontextmenu = (e)=>{
+      e.preventDefault()
+        return false;
+    }
+})
+});
 
+
+  </script>
 
 <% if (!__req.user) { %>
 

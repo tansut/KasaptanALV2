@@ -20,8 +20,10 @@
             <div class="col-md-6 mb-3">
                 <div class="form-group">
                     <label>Açıklama</label>
-                    <input type="text" class="form-control" name="<%=unit%>desc" id="<%=unit%>desc"
-                        value="<%= product[unit + 'desc'] %>">
+
+                    <textarea rows="3" class="form-control" name="<%=unit%>desc" id="<%=unit%>desc"><%= product[unit + 'desc'] %></textarea>
+
+
                 </div>
             </div>
             <div class="col-md-2 mb-3">
