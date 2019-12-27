@@ -6,11 +6,13 @@ import Product from '../../db/models/product';
 import Butcher from '../../db/models/butcher';
 import ButcherProduct from '../../db/models/butcherproduct';
 import Helper from '../../lib/helper';
+var MarkdownIt = require('markdown-it')
 
 import * as _ from 'lodash';
 import Resource from '../../db/models/resource';
 
 export default class Route extends ApiRouter {
+    markdown = new MarkdownIt();
 
     async getFoodsForProducts(products: Product[]) {
         let allresources = await Resource.findAll({
@@ -162,7 +164,7 @@ export default class Route extends ApiRouter {
             view.purchaseOptions.push({
                 id: i + 1,
                 notePlaceholder: product[`${col}note`],
-                desc: product[`${col}desc`], // || (p == 'kg' ? 'kg ile satın alın' : ''),
+                desc: this.markdown.render(product[`${col}desc`] || ""), 
                 kgRatio: product[`${col}kgRatio`],
                 unitPrice: Helper.asCurrency(product[`${col}kgRatio`] * kgPrice),
                 unit: p,
