@@ -1,8 +1,12 @@
 <% var butcher = typeof(butcher) != 'undefined' ? butcher: null %>
-
+<% var badge = typeof(badge) != 'undefined' ? badge: product.tag2 %>
 <div class="card product-card card-static item-card">
+    <% if (badge && typeof(hideBadge) == 'undefined') { %>
+    <span class="badge badge-danger badge-shadow"><%=badge%></span>    
+
+    <% } %>
      <% if (product.badge == 'video') { %>
-     <a class="btn-wishlist btn-sm" href="/<%= product.slug  %><%= (butcher ? `/${butcher}`:'') %>" type="button"><i class="czi-video"></i></a>
+        <button class="btn-wishlist btn-sm" type="button" data-toggle="tooltip" data-placement="left" title="" data-original-title="Zengin içerik"><i class="czi-video"></i></button>
      <% } %>
     <a class="card-img-top d-block overflow-hidden" href="/<%= product.slug  %><%= (butcher ? `/${butcher}`:'') %>"><img class="rounded"
             src="<%= `/${product.slug}/resimler/thumbnail` %>" alt="<%= product.title  %>"></a>

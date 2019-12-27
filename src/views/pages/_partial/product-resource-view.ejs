@@ -1,28 +1,35 @@
+<div class="card product-card card-static item-card">
+  <% if (resource.badge) {%>
+    <span class="badge text-wrap badge-primary badge-shadow "><%= resource.badge || '' %>
+    </span>
+  
+    <% }%>
 
-    <a data-resid="<%=resource.id%>" class="gallery-item <%= !note ? 'mb-grid-gutter':''%>  <%= resource.contentType == 'video-youtube' ? 'video-item':''%>"
-        <% if (resource.tag1 == 'yemek-tarifi') { %>
-          data-sub-html="<%= `<h6 class="font-size-normal text-light">${resource.title || ''}</h6><p class="font-size-md mb-2">${resource.description || ''}</p>`%><%=`<button type="button" onclick="window.App.ProductApp.addToNote('${resource.note}', '${resource.settings ? resource.settings.po_unit: new String()}', '${resource.title}');" class="btn btn-block btn-primary btn-sm rounded-0"><i class=" czi-add-circle mr-2"></i>${resource.tag3 || 'Siparişimi bu yemeğe uygun hazırlayın'}</button>`%>"
-        
-        <%} else if (resource.tag1 == 'hazirlama-sekli') { %>
-          data-sub-html="<%= `<h6 class="font-size-normal text-light">${resource.title|| ''}</h6><p class="font-size-md mb-2">${resource.description || ''}</p><button type="button" onclick="window.App.ProductApp.addToNote('${resource.note}', '${resource.settings ? resource.settings.po_unit: new String()}', '${resource.title}');" class="btn btn-block btn-primary btn-sm rounded-0"><i class=" czi-add-circle mr-2"></i>${resource.tag3 || 'Siparişimi bu şekilde hazırlayın'}</button>`%>"
+ 
+
+  <a data-resid="<%=resource.id%>" class="gallery-item <%= !note ? 'mb-grid-gutter':''%>  <%= resource.contentType == 'video-youtube' ? 'video-item':''%>"
+    <% if (resource.tag1 == 'yemek-tarifi') { %>
+      data-sub-html="<%= `<h6 class="font-size-normal text-light">${resource.title || ''}</h6><p class="font-size-md mb-2">${resource.description || ''}</p>`%><%=`<button type="button" onclick="window.App.ProductApp.addToNote('${resource.note}', '${resource.settings ? resource.settings.po_unit: new String()}', '${resource.title}');" class="btn btn-block btn-primary btn-sm rounded-0"><i class=" czi-add-circle mr-2"></i>${resource.tag3 || 'Siparişimi bu yemeğe uygun hazırlayın'}</button>`%>"
     
-          <% } else { %>
-          data-sub-html="<%=`<h6 class="font-size-normal text-light">${resource.title|| ''}</h6><p class="font-size-md mb-2">${resource.description || ''}</h6>`%>"
-        <% } %>
-        href="<%= `${resource.getFileUrl()}` %>">
-        <img class="<%=first ? '': 'rounded'%>" src="<%=  `${first ? resource.getFileUrl(): resource.getThumbnailFileUrl()}` %>"
-          alt="<%=product.name%>" /><span class="gallery-item-caption"><%=resource.title || ''%></span></a>
-    
-      <% if (resource.badge) {%>
-      <span class="badge badge-primary badge-shadow product-img-badge"><%= resource.badge || '' %>
-      </span>
-    
-      <% }%>
-      <% if (note) { %>
-      <div class="text-center mb-3 mt-1">
-                           
-        <button type="button" onclick="<%= include('./addtonote.ejs', {resource: resource }) %>"
-          class="btn btn-primary btn-sm rounded-0"><i class=" czi-add-circle mr-2">
-          </i><%= resource.tag3 || 'Uygun Hazırla' %></button>
-      </div>
-      <%}%>
+    <%} else if (resource.tag1 == 'hazirlama-sekli') { %>
+      data-sub-html="<%= `<h6 class="font-size-normal text-light">${resource.title|| ''}</h6><p class="font-size-md mb-2">${resource.description || ''}</p><button type="button" onclick="window.App.ProductApp.addToNote('${resource.note}', '${resource.settings ? resource.settings.po_unit: new String()}', '${resource.title}');" class="btn btn-block btn-primary btn-sm rounded-0"><i class=" czi-add-circle mr-2"></i>${resource.tag3 || 'Siparişimi bu şekilde hazırlayın'}</button>`%>"
+
+      <% } else { %>
+      data-sub-html="<%=`<h6 class="font-size-normal text-light">${resource.title|| ''}</h6><p class="font-size-md mb-2">${resource.description || ''}</h6>`%>"
+    <% } %>
+    href="<%= `${resource.getFileUrl()}` %>">
+    <img class="<%=first ? '': 'rounded'%>" src="<%=  `${first ? resource.getFileUrl(): resource.getThumbnailFileUrl()}` %>"
+      alt="<%=product.name%>" /><span class="gallery-item-caption"><%=resource.title || ''%></span></a>
+
+
+  <% if (note) { %>
+  <div class="text-center mb-3 mt-1">
+                       
+    <button type="button" onclick="<%= include('./addtonote.ejs', {resource: resource }) %>"
+      class="btn btn-primary btn-sm rounded-0"><i class=" czi-add-circle mr-2">
+      </i><%= resource.tag3 || 'Uygun Hazırla' %></button>
+  </div>
+  <%}%>
+
+</div>
+

@@ -202,7 +202,7 @@
                     <div id="noteanchor">
                      
                       <h5 class="h6 mb-2 text-accent pb-0 bor2der-bottom"><i class="czi-thumb-up mr-1"></i class="czi-thumb-up mr-1"> Kolayca satın alın</h5>
-                     <p v-if="product && product.purchaseOptions.length > 1 && !selectedUnit" class="xfont-size-sm">İşinizi kolaylaştırmak için hazırladığımız seçenekleri kullanın.</p>
+                     <p v-if="product && product.purchaseOptions.length > 1" class="xfont-size-sm">İşinizi kolaylaştırmak için hazırladığımız seçenekleri kullanın.</p>
                       <input type="hidden" id="product-id" value="<%= product.id %>" />
                       <div class="xform-group">
                         <div v-if="product && product.purchaseOptions.length > 1">
@@ -223,13 +223,13 @@
                           <p v-if="selectedUnit && selectedUnit.desc">
                             {{ selectedUnit.desc }}
                           </p>
-                          <p v-if="selectedUnit && !selectedUnit.desc">
+                          <!-- <p v-if="selectedUnit && !selectedUnit.desc">
                             <a @click="showCalculator(selectedUnit)" href="#size-chart"
                               class="text-accent">
                               Hesaplama aracımız
                             </a>
                               ihtiyacınızı belirlemede size yardımcı olabilir.
-                          </p>
+                          </p> -->
 
                           <div class="d-flex align-items-center justify-content-between">
                             <label><b>Ne kadar</b> almak istersiniz?&nbsp;</label>
