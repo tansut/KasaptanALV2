@@ -137,42 +137,50 @@ class Product extends BaseModel<Product> {
 
     @Column({
         allowNull: true,
+        type: DataType.TEXT
     })
     unit1desc: string;
 
     @Column({
         allowNull: true,
+        type: DataType.TEXT
     })
     unit2desc: string;
 
     @Column({
         allowNull: true,
+        type: DataType.TEXT
     })
     unit3desc: string;
 
     @Column({
         allowNull: true,
+        type: DataType.TEXT
     })
     unit1note: string;
 
     @Column({
         allowNull: true,
+        type: DataType.TEXT
     })
     unit2note: string;
 
     @Column({
         allowNull: true,
+        type: DataType.TEXT
     })
     unit3note: string;
 
 
     @Column({
         allowNull: true,
+        type: DataType.TEXT
     })
     unit4desc: string;
 
     @Column({
         allowNull: true,
+        type: DataType.TEXT
     })
     unit5desc: string;
 
