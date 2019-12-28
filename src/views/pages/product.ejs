@@ -148,13 +148,18 @@
                     <% if (tarifs.length) { %>
                       <div>
                         <div class="mb-3">
-                          <h5 class="h6 mb-2 font-size">Bu yemekler için uygun</h5>
+                         
+                        <div class="d-flex flex-nowrap justify-content-between align-items-center">
+                          <h5 class="h6 mb-2 font-size">Pratik tarifler</h5>
+                          <a class="align-self-center mb-2  text-dark font-size-xs" href="#tarifVideos"> <i
+                            class="czi-arrow-right font-size-xs align-middle"></i></a>    
+                        </div>
                           <!-- <label class=""><span
                             class="badge badge-primary font-size-xs mr-2">Bu yemekler için uygun:</span><span class=""></span></label> -->
                             <div class="mb-2">
                             <% tarifs.forEach(t=> { %>
                             
-<div class="d-flex mb-2 pb-1 flex-wrap justify-content-between border-bottom">
+<div class="d-flex mb-2 pb-1 align-items-center flex-nowrap justify-content-between border-bottom">
   <a href="javascript:openSlider(<%=t.id%>)"><i class=" czi-youtube mr-1"></i><%=t.title%></a>
   
   <% if (t.note) { %>
@@ -200,7 +205,7 @@
                      <div class="">
 
                    
-                      <h5 class="h6 mb-2 text-accent "><i class="czi-thumb-up mr-1"></i>Kolayca satın alın</h5>
+                      <h5 class="h6 mb-2 text-accent "><i class="czi-thumb-up mr-2"></i>Kolayca satın alın</h5>
 <!--                     
                       <p v-if="product && product.purchaseOptions.length > 1" class="font-size-sm mb-1">
                         İşinizi kolaylaştıran seçenekleri kullanın.
@@ -364,13 +369,14 @@
           <div class="tab-pane fade show active" id="home" role="tabpanel" aria-labelledby="home-tab">
             <%- controller.markdown.render(product.mddesc || '') %>
             <% if (videoTarifs.length) {%>
-          <div class="d-flex flex-wrap justify-content-between align-items-center pt-1 border-bottom pb-1 mb-2">
+          <div id="tarifVideos" class="d-flex flex-wrap justify-content-between align-items-center pt-1 border-bottom pb-1 mb-2">
                     <h3 class="h5 mb-0 mr-2">Pratik Tarifler</h3>
-                    <a class="btn btn-sm btn-light" href="/et-yemek-tarifleri"><i class="czi-arrow-right ml-1 mr-n1"></i></a>
+                    <!-- <a class="btn btn-sm btn-light" href="/et-yemek-tarifleri"><i class="czi-arrow-right ml-1 mr-n1"></i></a> -->
                 </div>    
       
 
-            <span class="badge badge-primary mr-2"><i class=" czi-add-circle mr-2">
+            <span  class="badge badge-primary mr-2"><i class=" czi-add-circle mr-2">
+            
             </i>Uygun Hazırla</span>seçeneği ile etinizi istediğiniz yemeğe uygun olarak hazırlıyoruz.</p>
            
 

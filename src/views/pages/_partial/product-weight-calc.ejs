@@ -1,71 +1,61 @@
-<div class="modal fade"  id="size-chart">
-    <div class="modal-dialog modal-dialog-scrollable">
-      <div class="modal-content">
-        <div class="modal-header">
-          <h5 class="modal-title">{{options.title  || 'İhtiyacı belirleyelim'}} </h5>
-          <button class="close" type="button" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-        </div>
-        <div  class="modal-body p-0">
-<div class="container pt-4 mb-4" id="weightcalculatorapp">
-                    <form class=" " method="post" novalidate> 
-                      <div class="row">
-                        <div class="form-group col">
-                          <select v-model="personcount" class="custom-select" required id="person-count">
-                                  <option selected value="0">Kaç kişisiniz</option>
-                                  <option value="1">Yalnızım</option>
-                                  <option value="2">2 Kişiyiz</option>
-                                  <option value="3">3 Kişiyiz</option>
-                                  <option value="4">4 Kişiyiz</option>
-                                  <option value="5">5 Kişiyiz</option>
-                                  <option value="6">6 Kişiyiz</option>
-                                  <option value="7">7 Kişiyiz</option>
-                                  <option value="8">8 Kişiyiz</option>
-                          </select>
-                      
-                    </div>
-                    <div class="form-group col" v-if="true">
-                        <select v-model="meal" class="custom-select" required >                                      
-                                <option value="1">Bir öğünlük</option>
-                                <option selected value="2">İki öğünlük</option>
-                                <option value="3">Üç öğünlük</option>
-                                <option value="4">Dört öğünlük</option>
-                        </select>
-                    
-                  </div>  
-                      </div>
-                                               
+<div class="modal fade" id="size-chart">
+  <div class="modal-dialog modal-dialog-scrollable">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">{{options.title  || 'İhtiyacı belirleyelim'}} </h5>
+        <button class="close" type="button" data-dismiss="modal" aria-label="Close"><span
+            aria-hidden="true">&times;</span></button>
+      </div>
+      <div class="modal-body p-0">
+        <div class="" id="weightcalculatorapp">
+          <div class="bg-secondary border-bottom  pt-2">
+            <div class=" d-flex align-items-center justify-content-center mb-1">
+              <span class="font-weight-medium">Kaç kişisiniz ?</span>
+            </div>
+            <amount-input class="" :def="2" :min="1" :max="25" :step="1" v-model="personcount" unit="kişi"></amount-input>
+  
+          </div>
 
-                          <div class="form-group" v-if="personcount > 0">
-                             
-                            
-                              <!-- <h6 class="text-center" v-if="options.title"></h6> -->
-                              <p class="text-center">Bu miktarlar uygundur</p>
 
-                              <ul class="list-unstyled font-weight-medium">
-                                  <li v-for="(option, index) in result"  class="border-bottom pb-1 pt-1 d-flex justify-content-between">
-                                      <a v-if="option.unit != 'kg'" class="">
-                                          {{option.quantity}} {{option.unit}}                                      
-                                      </a>
 
-                                      <weight-view v-if="option.unit == 'kg'" :kg=option.quantity></weight-view>
-                                      <button data-dismiss="modal" @click="setUnit(option)" class="btn btn-sm btn-primary">Seç</button>
-                                    </li>
-                              </ul>
-                          </div>
-    
-                  
-    
-                      
-        
-    
-                              
-                              
-                              
-                       
-                        <!-- <button class="btn btn-primary btn-block" data-dismiss="modal">Budur</button>              -->
-                      </form>
-                </div>
+
+            <div class="pt-4 mb-4" v-if="personcount > 0">
+              <div class="mb-2 text-center font-size-sm text-muted ml-2" v-if="note"><i class="czi-announcement mr-1"></i>{{note}}</div>
+              <div class="d-flex align-items-center justify-content-center">
+                <button v-for="(option, index) in result" data-dismiss="modal" @click="setUnit(option)" class="btn mr-2 btn-primary">
+                  <i class="czi-check mr-1"></i>
+                  <span v-if="option.unit != 'kg'">
+                    {{option.quantity}} {{option.unit}}
+                  </span>
+  
+                  <weight-view v-if="option.unit == 'kg'" :kg=option.quantity></weight-view>
+                
+                </button>
+              </div>
+
+
+              <!-- <ul class="list-unstyled font-weight-medium">
+                <li v-for="(option, index) in result" class="pb-1 pt-1 d-flex align-items-center justify-content-between">
+                  <a v-if="option.unit != 'kg'" class="">
+                    {{option.quantity}} {{option.unit}}
+                  </a>
+
+                  <weight-view v-if="option.unit == 'kg'" :kg=option.quantity></weight-view>
+                  <button data-dismiss="modal" @click="setUnit(option)" class="btn btn-sm btn-primary">Seç</button>
+                </li>
+              </ul> -->
+            </div>
+
+
+
+
+
+
+
+
+
         </div>
       </div>
     </div>
   </div>
+</div>

@@ -50,7 +50,7 @@ Vue.component('amount-input', {
                         <button type="button" @click="decrement()" class="btn btn-lg btn-outline mr-4"><i class="czi-arrow-left-circle"></i></button>
                         <div class="d-inline text-nowrap text-center" style="min-width:5rem">
                             <div class="font-size-lg text-accent " v-if="unit!='kg'">
-                                <span class="mb-1 font-weight-medium">{{value}}</span>
+                                <span class="mb-1 font-weight-medium">{{value || '?'}}</span>
                                 <small>{{unit}}</small>
                             </div>
                             <div class="text-accent font-size-lg font-weight-medium">
@@ -304,9 +304,10 @@ Vue.component('amount-input', {
         data: function () {
             return {
                 product: null,
-                personcount: 0,
-                meal: 2,
+                personcount: 4,
+                meal: 1,
                 note: null,
+                perperson: null,
                 options: {}
             }
 
@@ -319,7 +320,9 @@ Vue.component('amount-input', {
 
             show(options) {
                 this.options = options || {};
-                this.personcount = 0;
+                this.personcount = options.personcount || 0;
+                this.perperson = options.perperson || null;
+                this.note = options.note || "";
                 $('#size-chart').modal("show");       
                 return new Promise((resolve, reject) => {
                     $(window).on('wc.setunit', function (e, option) {
@@ -340,7 +343,7 @@ Vue.component('amount-input', {
                     for (var i = 0; i < this.product.purchaseOptions.length; i++) {
                         if (this.options.unit && this.options.unit != this.product.purchaseOptions[i].unit)
                             continue;
-                        var q = this.meal * this.personcount * this.product.purchaseOptions[i].perPerson;
+                        var q = this.meal * this.personcount * (this.perperson || this.product.purchaseOptions[i].perPerson);
                         if (q < this.product.purchaseOptions[i].min) q = this.product.purchaseOptions[i].min;
                         else if (q > this.product.purchaseOptions[i].max) q = this.product.purchaseOptions[i].max
                         q = Math.ceil(q / this.product.purchaseOptions[i].step) * this.product.purchaseOptions[i].step;
@@ -392,7 +395,7 @@ Vue.component('amount-input', {
                 window.App.WeightCalculatorApp.show({unit: unit.unit})
             },
 
-            addToNote(note, unit, title, ratio) {
+            addToNote(note, unit, title, perperson, personCount, ponote) {
                 this.ensureUnitSelected();
                 
                 var oldNote = this.note = "";
@@ -407,8 +410,10 @@ Vue.component('amount-input', {
 
                 window.App.WeightCalculatorApp.show({
                     unit: unit,
-                    ratio: ratio,
-                    title: title
+                    title: title,
+                    personcount: personCount,
+                    perperson: perperson,
+                    note: ponote
                 }).then(function(result) {
                     $('#note').css({'background-color':'#fde9e8'});
                     setTimeout(() => {

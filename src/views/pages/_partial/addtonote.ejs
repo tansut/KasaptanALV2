@@ -1,1 +1,3 @@
-window.App.ProductApp.addToNote('<%= resource.note %>', '<%= resource.settings ? resource.settings.po_unit: new String() %>', '<%=resource.title%>')
+<% var settings = resource.settings || {} %>
+window.App.ProductApp.addToNote('<%= resource.note %>', '<%= settings.po_unit %>', '<%=resource.title%>', <%= settings.po_perperson || 0 %>, <%= settings.po_personcount || 0 %>, '<%= settings.po_quantityNote || new String() %>' )
+
