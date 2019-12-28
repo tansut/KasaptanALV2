@@ -53,7 +53,7 @@
   <!-- Page Content-->
   <div class="container cz-gallery">
     <!-- Gallery + details-->
-    <div class="bg-light box-shadow-lg mb-4 pb-4 rounded-lg">
+    <div class="bg-light box-shadow-lg mb-3 pb-4 rounded-lg">
       <div>
         <div class="row ">
           <!-- Product gallery-->
@@ -111,7 +111,7 @@
             <div id="productapp" v-cloak class="col-lg-5 ">
               <div class="product-details pl-4  pl-lg-0 pr-4  pt-3 pb-0">
                 <% if (view.butcher) {%>
-                <div class="mb-4">
+                <div class="mb-3">
 
                   <div>
 
@@ -143,18 +143,18 @@
 
                 </div>
                 <%} %>
-                <form id="product-form" class="mb-grid-gutter" @submit.prevent="addToShopcard">
+                <form id="product-form" class="" @submit.prevent="addToShopcard">
                   <div>
                     <% if (tarifs.length) { %>
                       <div>
-                        <div class="mb-4">
-                          <h5 class="h6 mb-2 font-size-md">Bu yemekler için uygun</h5>
+                        <div class="mb-3">
+                          <h5 class="h6 mb-2 font-size">Bu yemekler için uygun</h5>
                           <!-- <label class=""><span
                             class="badge badge-primary font-size-xs mr-2">Bu yemekler için uygun:</span><span class=""></span></label> -->
                             <div class="mb-2">
                             <% tarifs.forEach(t=> { %>
                             
-<div class="d-flex mb-2 pb-1 font-size-sm flex-wrap justify-content-between border-bottom">
+<div class="d-flex mb-2 pb-1 flex-wrap justify-content-between border-bottom">
   <a href="javascript:openSlider(<%=t.id%>)"><i class=" czi-youtube mr-1"></i><%=t.title%></a>
   
   <% if (t.note) { %>
@@ -179,9 +179,9 @@
 
                       <% if (product.featuresText) { %>
                       <% var notes = product.featuresText.split('\n') %>
-                      <div class="border-bottom mb-4">
+                      <div class="border-bottom mb-3">
                         <!-- <h5 class="h6 font-size-md mb-2">Şu şekilde hazırlıyoruz</h5> -->
-                        <ul class="list-unstyled font-size-sm mb-2">
+                        <ul class="list-unstyled mb-2">
                           <%notes.forEach((note, i) => { %>
                               <li><i class="czi-check text-primary mr-1"></i> <%=note%></li>
                           <%})%>
@@ -200,7 +200,7 @@
                      <div class="">
 
                    
-                      <h5 class="h6 mb-2 text-accent pb-2 font-size border-bottom"><i class="czi-thumb-up mr-1"></i>Kolayca satın alın</h5>
+                      <h5 class="h6 mb-2 text-accent "><i class="czi-thumb-up mr-1"></i>Kolayca satın alın</h5>
 <!--                     
                       <p v-if="product && product.purchaseOptions.length > 1" class="font-size-sm mb-1">
                         İşinizi kolaylaştıran seçenekleri kullanın.
@@ -221,27 +221,34 @@
 
                       </div>
                       <div v-if="selectedUnit" class="">
-                        <div  class="form-group">
-                          <div class="md-content mb-4" v-html="selectedUnit.desc" v-if="selectedUnit.desc">
+                        <div>
+                          <div class="md-content mb-3" v-html="selectedUnit.desc" v-if="selectedUnit.desc">
                              
                           </div>
                         
-                          <div class="font-size-sm  d-flex align-items-center justify-content-between">
-                            <span v-if="selectedUnit.unit != 'kg'">Kaç <b>{{ selectedUnit.unit }}</b> hazırlayalım?</span>
-                            <span v-if="selectedUnit.unit == 'kg'"><b>Ne kadar</b> hazırlayalım?</span>
-                            <span> <a @click="showCalculator(selectedUnit)"
-                              class="text-accent font-weight-medium " href="#size-chart">Hesaplama Aracı</a>
-                            </span>
-                            
-
-                          </div>
+              
                      
                             <div class="mb-3 bg-secondary border">
+
+                              <div class="mt-2 d-flex align-items-center justify-content-center mb-1">
+                                <span v-if="selectedUnit.unit != 'kg'">Kaç <b>{{ selectedUnit.unit }}</b> hazırlayalım?</span>
+                                <span v-if="selectedUnit.unit == 'kg'"><b>Ne kadar</b> hazırlayalım?</span>
+                             
+                                
+    
+                              </div>
+                              
                             <amount-input :def="quantity || selectedUnit.default" :min="selectedUnit.min"
                             :max="selectedUnit.max" :step="selectedUnit.step" v-model="quantity"
                             :unit="selectedUnit.unit">
                        
                           </amount-input>
+                        </div>
+                          <div class="  d-flex align-items-center justify-content-center">
+<p> <i class="czi-announcement mr-1"></i><a @click="showCalculator(selectedUnit)"
+  class="text-accent font-weight-medium " href="#size-chart">Miktar Hesaplama Aracı</a> doğru miktarda almanıza yardımcı olabilir.</p>
+                        
+                          
                           </div>
            
 
@@ -251,14 +258,14 @@
                        
                         <% if (hazirlanisResources.length) { %>
                           <div>
-                            <div class="mb-4">
+                            <div class="mb-3">
                               <h5 class="h6 mb-2">Şu şekilde hazırlayabiliriz</h5>
                               <!-- <label class=""><span
                                 class="badge badge-primary font-size-xs mr-2">Bu yemekler için uygun:</span><span class=""></span></label> -->
                                 <div class="mb-2">
                                 <% hazirlanisResources.forEach(t=> { %>
                                 
-    <div class="d-flex mb-2 pb-1 font-size-md flex-wrap justify-content-between border-bottom">
+    <div class="d-flex mb-2 pb-1  flex-wrap justify-content-between border-bottom">
       <a href="javascript:openSlider(<%=t.id%>)"><i class=" czi-youtube mr-1"></i><%=t.title%></a>
       <% if (t.note) { %>
       <a title="Bu şekilde hazırlayın" href="javascript:<%= include('./_partial/addtonote.ejs', {resource: t }) %>"><span class="color-primary"><i class=" czi-add-circle"></i></span>  </a>
@@ -358,7 +365,7 @@
             <%- controller.markdown.render(product.mddesc || '') %>
             <% if (videoTarifs.length) {%>
           <div class="d-flex flex-wrap justify-content-between align-items-center pt-1 border-bottom pb-1 mb-2">
-                    <h3 class="h4 mb-0 mr-2">Etler Bizden Tarifleri</h3>
+                    <h3 class="h5 mb-0 mr-2">Pratik Tarifler</h3>
                     <a class="btn btn-sm btn-light" href="/et-yemek-tarifleri"><i class="czi-arrow-right ml-1 mr-n1"></i></a>
                 </div>    
       

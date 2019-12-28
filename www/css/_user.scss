@@ -60,6 +60,8 @@ img{
 .navbar-dark .navbar-nav .nav-link {
 }
 
+
+
 .bg-edark {
     background-color: #e9ecef !important;
   }
@@ -117,6 +119,8 @@ img{
 .nav-pills.nav-pills-dark .nav-link {
    background-color: darken(#276ff6, 0%) !important; 
   color: white !important;
+  padding-right: 0.25rem !important;
+  padding-left: 0.25rem !important;
 }
 
 .truncate {
