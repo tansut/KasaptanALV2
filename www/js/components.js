@@ -404,10 +404,10 @@ Vue.component('amount-input', {
             addToNote(note, unit, title, perperson, personCount, ponote, noteph) {
                 this.ensureUnitSelected();
                 
-                var oldNote = this.note = "";
-                if (oldNote.indexOf(note)<0) {                    
-                    window.App.ProductApp.note = oldNote ? (oldNote + "\n" + note): note;
-                }
+                // var oldNote = this.note = "";
+                // if (oldNote.indexOf(note)<0) {                    
+                //     window.App.ProductApp.note = oldNote ? (oldNote + "\n" + note): note;
+                // }
 
                 window.lgData.lg0.destroy();
 

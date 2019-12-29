@@ -90,7 +90,7 @@ class Resource extends BaseModel<Resource> {
     get note() {
         let note = this.tag2;
         if (this.tag1 == 'yemek-tarifi') {
-            note = this.tag2 ;
+            note = this.tag2 || ('' + this.title + " yapacağım, normal şekilde hazırlayıp paketleyin lütfen.");
         } else if (this.tag1 == 'hazirlama-sekli') {
             note = this.tag2 ? (this.tag2) : (this.title + " olarak hazırlayın.")
         }
