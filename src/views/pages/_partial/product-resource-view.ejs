@@ -14,13 +14,18 @@
 
   <a data-resid="<%=resource.id%>" class="gallery-item <%= !note ? 'mb-grid-gutter':''%>  <%= resource.contentType == 'video-youtube' ? 'video-item':''%>"
     <% if (resource.tag1 == 'yemek-tarifi') { %>
-      data-sub-html="<%= `<h6 class="font-size-normal text-light">${resource.title || ''}</h6><p class="font-size-md mb-2">${resource.description || ''}</p>` + 
-      '<button type="button" onclick="'%>  <%= include(`./addtonote.ejs`, {resource: resource }) %>   <%='"class="btn btn-block btn-primary btn-sm rounded-0"><i class=" czi-add-circle mr-2"></i>'%><%= resource.tag3 || 'Uygun hazırlayın' + '</button>'%>"
+      data-sub-html="<%= `<h6 class="font-size-normal text-light">${resource.title || ''}</h6><p class="font-size-md mb-2">${resource.description || ''}</p>`%> 
+      <% if (resource.note) {%>
+      <%=  '<button type="button" onclick="'%>  <%= include(`./addtonote.ejs`, {resource: resource }) %>   <%='"class="btn btn-block btn-primary btn-sm rounded-0"><i class=" czi-add-circle mr-2"></i>'%><%= resource.tag3 || 'Uygun hazırla' + '</button>' %>
+      <% } %>
+      "
     
     <%} else if (resource.tag1 == 'hazirlama-sekli') { %>
-      data-sub-html="<%= `<h6 class="font-size-normal text-light">${resource.title || ''}</h6><p class="font-size-md mb-2">${resource.description || ''}</p>` + 
-      '<button type="button" onclick="'%>  <%= include(`./addtonote.ejs`, {resource: resource }) %>   <%='"class="btn btn-block btn-primary btn-sm rounded-0"><i class=" czi-add-circle mr-2"></i>'%><%= resource.tag3 || 'Bu şekilde hazırlayın' + '</button>'%>"
-  
+      data-sub-html="<%= `<h6 class="font-size-normal text-light">${resource.title || ''}</h6><p class="font-size-md mb-2">${resource.description || ''}</p>`%> 
+      <% if (resource.note) {%>
+      <%=  '<button type="button" onclick="'%>  <%= include(`./addtonote.ejs`, {resource: resource }) %>   <%='"class="btn btn-block btn-primary btn-sm rounded-0"><i class=" czi-add-circle mr-2"></i>'%><%= resource.tag3 || 'Bu şekilde hazırla' + '</button>' %>
+      <% } %>
+      "
       <% } else { %>
       data-sub-html="<%=`<h6 class="font-size-normal text-light">${resource.title|| ''}</h6><p class="font-size-md mb-2">${resource.description || ''}</h6>`%>"
     <% } %>
