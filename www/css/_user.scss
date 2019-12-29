@@ -46,7 +46,9 @@ img{
   }
 }
 
-
+.no-zoom {
+  touch-action: manipulation;
+}
 
 .md-content {
   p {

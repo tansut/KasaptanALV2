@@ -41,31 +41,17 @@
 
           <% for(var c=0; c< reyonlar.length; c++) {%>
           <div class="col-md-3 col-6 mb-3">
-            <div class="card border-0"><a class="d-block overflow-hidden rounded-lg"
-                href="<%= `/${reyonlar[c].slug}`%>"><img class="d-block w-100"
-                  src="<%=`/${reyonlar[c].slug}/resimler/thumbnail` %>" alt="<%= reyonlar[c].name %>"></a>
-              <div class="card-body">
-                <h3 class="product-title font-size-md text-wrap text-center"><%= reyonlar[c].name %></h3>
 
-
-                <!-- <ul class="list-unstyled font-size-sm mb-0">
-                  <% var categoryProds = controller.products.byCategory[reyonlar[c].slug].slice(0,3) %>
-                  <% for(var j=0; j< categoryProds.length; j++) {%>
-                  <li class="d-flex align-items-center justify-content-between"><a class="nav-link-style"
-                      href="<%= `/${categoryProds[j].slug}`%>"><i
-                        class="czi-arrow-right-circle mr-2"></i><%=categoryProds[j].name %></a></li>
-
-                  <% } %>
-                  <li class="d-flex align-items-center justify-content-between"><a class="nav-link-style"
-                      href="<%= `/${reyonlar[c].slug}`%>"><i class="czi-arrow-right-circle mr-2"></i>Tümü</a></li>
-
-
-
-
-
-                </ul> -->
+            <div class="card product-card card-static item-card">
+              <a class="card-img-top d-block overflow-hidden" href="<%= `/${reyonlar[c].slug}`%>">
+                <img class="rounded"
+                src="<%=`/${reyonlar[c].slug}/resimler/thumbnail` %>" alt="<%= reyonlar[c].name %>"></a>
+              <div class="card-body pl-0 text-center">
+                  <h3 class="product-title font-size-md"><a href="<%= `/${reyonlar[c].slug}`%>"><%= reyonlar[c].name %></a>
+                  </h3>
               </div>
-            </div>
+          </div>
+
           </div>
           <%}%>
         </div>

@@ -40,48 +40,69 @@
 
   <div class="container">
     <div class="bg-light box-shadow-lg rounded-lg px-4 py-4 mb-2 mb-md-4">
-      <div class="">
-        <%- include('./_partial/products-view', {viewId: "", viewMode:'tab', products: controller.products}); %>
 
-      </div>
+      <div class="row">
+        <% var foodsInserted = false %>
+        <% for(var j=0; j< controller.products.length; j++) {%>
+        <div class="col-md-3 col-6 ">
+            <%- include('./_partial/product-view.ejs', {product: controller.products[j]}) %>
+        </div>
+        <% if (!foodsInserted && (j == 11) && (controller.foods.length >= 4) && controller.category.tarifTitle) { foodsInserted = true; %>
+          <div class="mb-2 col-12">
+            <%- include('./_partial/foods-slider.ejs', {foods: controller.foods, category: controller.category}) %>
+
+          </div>
+        <% } %>
+        <% } %>
+    </div>
+
       <div>
 
-        <%if (controller.foods.length) {%>
-        <div class="d-flex flex-wrap justify-content-between align-items-center pt-1 border-bottom pb-1 mb-2">
-                <h3 class="h4 mb-0 mr-2"><%= controller.category.tarifTitle || 'Etler Bizden Tarifleri' %></h3>
-                <a class="btn btn-sm btn-light" href="/et-yemek-tarifleri/<%=controller.category.slug%>"><i class="czi-arrow-right ml-1 mr-n1"></i></a>
-            </div>   
-            <p> <span class="badge badge-primary mr-2"><i class=" czi-add-circle mr-2">
-            </i>Uygun Hazırla</span>seçeneği ile etinizi istediğiniz yemeğe uygun olarak hazırlıyoruz.</p>
-           
-
-    <div class="table-responsive" data-simplebar>
-            <div class="d-flex pb-2 ">
-                    <% controller.foods.forEach((resource, i)=> {%>
-                    <div class="mr-2 ">
-                        <div class="item-slider item-slider-sm">
-                            
-                          <div class="card product-card card-static item-card">
-                            <a class="card-img-top d-block overflow-hidden gallery-item video-item"
-                            href="/<%= `${resource.product.slug}/yemek-tarifi/${__helper.slugify(resource.title || 'tarif')}?r=${resource.id}`  %>">
-                              <!-- <img class="rounded" src="<%= `https://img.youtube.com/vi/${resource.contentUrl}/maxresdefault.jpg` %>" alt="<%= resource.title  %>"> -->
-                              <img class="rounded" src="<%= `/${resource.product.slug}/resimler/thumbnail` %>" alt="<%= resource.title  %>">
-                            </a>
-                            <div class="card-body pl-0 text-center">
-                              <h3 class="product-title font-size-md"><a href="/<%= `${resource.product.slug}/yemek-tarifi/${__helper.slugify(resource.title || 'tarif')}?r=${resource.id}`  %>"><%= resource.title  %></a>
-                              </h3>
-                            </div>
-                          </div>
-    
-                        </div>
-    
-                    </div>  
-                    <%})%>
-            </div>
-    </div> 
-
-    <%}%>
+        <% if (!foodsInserted) { %>
+           <%- include('./_partial/foods-slider.ejs', {foods: controller.foods, category: controller.category}) %>
+        <% } %>
+       
     </div>
+
+    <div class="">
+       <div class="d-flex flex-wrap justify-content-between align-items-center pt-1 border-bottom pb-1 mb-2">
+          <h3 class="h6 mb-0 mr-2">Diğer Lezzetler</h3>
+          <a class="btn btn-sm btn-light" href="/reyonlar"><i class="czi-arrow-right ml-1 mr-n1"></i></a>
+      </div>
+
+
+
+      <div class="table-responsive" data-simplebar>
+          <div class="d-flex pb-2">
+                  <% var viewCats = ['reyon', 'list'] %>
+                  <% viewCats.forEach(cat => { %>
+                  <% var reyonlar = (__categories.filter(p=>p.type == cat && p.id != controller.category.id)) %>
+                  <% for(var c=0; c< reyonlar.length; c++) {%>
+                  <div class="mr-2">
+
+                      <div class="item-slider item-slider-sm">
+                          
+                          <div class="card product-card card-static item-card">
+                              <a class="" href="<%= `/${reyonlar[c].slug}`%>"><img class="rounded shadow-lg"
+                                  src="<%=`/${reyonlar[c].slug}/resimler/thumbnail` %>" alt=""></a>
+
+                              <div class="card-body mb-0 pb-0 pl-0 text-center">
+                                  <h3 class="product-title mb-0 pb-0 font-size-md"><a href="<%= `/${reyonlar[c].slug}`%>"><%= reyonlar[c].name %></a>
+                                  </h3>
+                              </div>
+                            </div>
+
+                      </div>
+
+               
+
+                  </div>  
+                  <%}%>
+                  <%})%>                  
+          </div>
+  </div>
+</div>
+
     </div>
   </div>
 
