@@ -64,7 +64,7 @@ export default class Route extends ViewRouter {
             }
         let allcontent = await Content.findAll({
             attributes: ["title", "category", "description", "slug", "categorySlug"],
-            order: [["DisplayOrder", "ASC"]],
+            order: [["UpdatedOn", "DESC"]],
             where: where
         })
         this.allcontent = allcontent;

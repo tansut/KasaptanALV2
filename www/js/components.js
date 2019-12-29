@@ -308,7 +308,9 @@ Vue.component('amount-input', {
                 meal: 1,
                 note: null,
                 perperson: null,
-                options: {}
+                options: {},
+                cardnote: "",
+                cardnoteph: ""
             }
 
         },
@@ -323,6 +325,9 @@ Vue.component('amount-input', {
                 this.personcount = options.personcount || 0;
                 this.perperson = options.perperson || null;
                 this.note = options.note || "";
+                this.cardnote = options.cardnote || "";
+                this.cardnoteph = options.cardnoteph || "";
+
                 $('#size-chart').modal("show");       
                 return new Promise((resolve, reject) => {
                     $(window).on('wc.setunit', function (e, option) {
@@ -392,10 +397,11 @@ Vue.component('amount-input', {
             },
 
             showCalculator(unit) {
-                window.App.WeightCalculatorApp.show({unit: unit.unit})
+                // window.App.WeightCalculatorApp.show({unit: unit.unit})
+                this.addToNote(this.note, unit.unit, null, 0, null, "", unit.notePlaceholder)
             },
 
-            addToNote(note, unit, title, perperson, personCount, ponote) {
+            addToNote(note, unit, title, perperson, personCount, ponote, noteph) {
                 this.ensureUnitSelected();
                 
                 var oldNote = this.note = "";
@@ -413,13 +419,18 @@ Vue.component('amount-input', {
                     title: title,
                     personcount: personCount,
                     perperson: perperson,
-                    note: ponote
+                    note: ponote,
+                    cardnote: note,
+                    cardnoteph: noteph
                 }).then(function(result) {
+                    window.App.ProductApp.note = window.App.WeightCalculatorApp.cardnote;
+                    if ( window.App.ProductApp.note) {
                     $('#note').css({'background-color':'#fde9e8'});
                     setTimeout(() => {
                       $('#note').css({'background-color':'initial'});
                       
                     }, 1000); 
+                    }
                 })
 
                 //$('#size-chart').modal("show");                

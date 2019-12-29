@@ -2,16 +2,24 @@
         <a class="step-item <%= step >= 0 ? 'active':'' %>" href="/alisveris-sepetim">
                 <div class="step-progress"><span class="step-count">1</span></div>
                 <div class="step-label"><i class="czi-cart"></i>Kart</div>
-        </a><a class="step-item <%= step >= 1 ? 'active':'' %> <%= step == 1 ? 'current':'' %>" href="/alisveris-sepetim/adres">
+        </a>
+        <a class="step-item <%= step >= 1 ? 'active':'' %> <%= step == 1 ? 'current':'' %>"
+                href="/alisveris-sepetim/ship">
                 <div class="step-progress"><span class="step-count">2</span></div>
-                <div class="step-label"><i class="czi-user-circle"></i>Adres</div>
-        </a><a class="step-item <%= step >= 2 ? 'active':'' %> <%= step == 2 ? 'current':'' %>" href="/alisveris-sepetim/ship">
+                <div class="step-label"><i class="czi-user-circle"></i>Ulaşım</div>
+        </a>
+        <a class="step-item <%= step >= 2 ? 'active':'' %> <%= step == 2 ? 'current':'' %>"
+                href="/alisveris-sepetim/adres">
                 <div class="step-progress"><span class="step-count">3</span></div>
-                <div class="step-label"><i class="czi-package"></i>Ulaşım</div>
-        </a><a class="step-item <%= step >= 3 ? 'active':'' %> <%= step == 3 ? 'current':'' %>" href="/alisveris-sepetim/payment">
+                <div class="step-label"><i class="czi-package"></i>Adres</div>
+        </a>
+        <a class="step-item <%= step >= 3 ? 'active':'' %> <%= step == 3 ? 'current':'' %>"
+                href="/alisveris-sepetim/payment">
                 <div class="step-progress"><span class="step-count">4</span></div>
                 <div class="step-label"><i class="czi-card"></i>Ödeme</div>
-        </a><a class="step-item <%= step >= 4 ? 'active':'' %> <%= step == 4 ? 'current':'' %>" href="/alisveris-sepetim/review">
+        </a>
+        <a class="step-item <%= step >= 4 ? 'active':'' %> <%= step == 4 ? 'current':'' %>"
+                href="/alisveris-sepetim/review">
                 <div class="step-progress"><span class="step-count">5</span></div>
                 <div class="step-label"><i class="czi-check-circle"></i>Onay</div>
         </a>

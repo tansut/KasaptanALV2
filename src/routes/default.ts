@@ -13,6 +13,7 @@ import Category from '../db/models/category';
 import ProductManager from '../lib/productManager';
 import config from '../config';
 import ProductsApi from './api/product';
+import Content from '../db/models/content';
 let ellipsis = require('text-ellipsis');
 
 export default class Route extends ViewRouter {
@@ -20,9 +21,19 @@ export default class Route extends ViewRouter {
     products: Product[];
     foods: Resource[];
     categories: Category[];
+    blogItems: Content[];
 
+    async getBlogItems() {
 
+        let allcontent = await Content.findAll({
+            attributes: ["title", "category", "description", "slug", "categorySlug"],
+            order: [["UpdatedOn", "DESC"]],
+            limit: 15
+        })
 
+        return allcontent;
+    }
+    
     getCategory(type: string) {
         return this.categories.find(p => p.type == type);
     }
@@ -56,7 +67,8 @@ export default class Route extends ViewRouter {
         this.categories = await Category.findAll({
             order: ["type", "displayorder"]
         });
-                this.foods = await new ProductsApi(this.constructorParams).getFoods(10)
+        this.foods = await new ProductsApi(this.constructorParams).getFoods(10);
+        this.blogItems = await this.getBlogItems();
 
         this.res.render("pages/default.ejs", this.viewData({
             recentButchers: recentButchers,

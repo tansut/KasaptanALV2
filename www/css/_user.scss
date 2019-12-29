@@ -108,7 +108,8 @@ img{
 .nav-pills.nav-pills-dark .nav-link:not(.active) {
   background-color: $gray-200 !important;
   color: black !important;
-  
+  padding-right: 0.25rem !important;
+  padding-left: 0.25rem !important;
 }
 
 .hr_line {

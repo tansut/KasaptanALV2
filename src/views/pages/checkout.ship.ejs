@@ -34,7 +34,7 @@
           
           <section class="col-lg-8 " v-cloak id="shopcardshipment">
         
-            <%- include('./_partial/checkout-steps.ejs', {   step: 2        }); %>
+            <%- include('./_partial/checkout-steps.ejs', {   step: 1        }); %>
             <% for (let bi in shopcard.shipment) { %>
             <% let shipment = shopcard.shipment[bi]%>
             <div class="border mb-4">
@@ -45,7 +45,7 @@
 
             
             <nav class="text-center pl-4 pr-4 nav nav-pills nav-pills-dark nav-fill mb-4">
-              <a class="nav-item shadow-none nav-link mb-2 mb-md-0" @click="card.shipment[<%=bi%>].howTo = 'ship'" v-bind:class="{ active: card && card.shipment['<%=bi%>'].howTo == 'ship' }">Adresime Gönderin</a>
+              <a class="nav-item shadow-none nav-link" @click="card.shipment[<%=bi%>].howTo = 'ship'" v-bind:class="{ active: card && card.shipment['<%=bi%>'].howTo == 'ship' }">Adresime Gönderin</a>
               <a class="nav-item shadow-none nav-link" @click="card.shipment[<%=bi%>].howTo = 'take'" v-bind:class="{ active: card && card.shipment['<%=bi%>'].howTo == 'take' }">Ben Gelip Alacağım</a>
             </nav>
             
@@ -85,7 +85,9 @@
                       <td class="align-middle"><span class="text-dark font-weight-medium">Beni arayın</span><br><span class="text-muted">
                         Telefonda teslimat gün ve saatini hızlıca planlayalım.
   
-                      </span></td>
+                      </span>
+                      
+                    </td>
                     </tr>
                     <% if (controller.shipmentHours.length > 0) {%>
                       <tr>
@@ -123,9 +125,13 @@
                                   <label class="custom-control-label" for="plan<%=bi%>"></label>
                                 </div>
                               </td>
-                              <td class="align-middle"><span class="text-dark font-weight-medium">Tarih ve saat belirleyelim</span><br><span class="text-muted">
-          
-                              </span>
+                              <td class="align-middle"><span class="text-dark font-weight-medium">Tarih ve saat belirleyelim</span><br>
+                                <span v-if="card && card.shipment[<%=bi%>].dispatcher && (card.shipment[<%=bi%>].howTo == 'ship')" class="text-muted">
+                                Aşağıda belirttiğim şekilde bekliyorum.
+                                </span>
+                               <span v-if="card &&  (card.shipment[<%=bi%>].howTo == 'take')" class="text-muted">
+                                  Ben gelip alacağım, geldiğimde hazır olsun.
+                                  </span>
                               <div class="mt-2">
                                   <%- include('./_partial/shipday.ejs', {
                                     id: 'planday' +bi,

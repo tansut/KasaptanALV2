@@ -20,7 +20,18 @@
 
 
             <div class="pt-4 mb-4" v-if="personcount > 0">
-              <div class="mb-2 text-center font-size-sm text-muted px-4" v-if="note"><i class="czi-announcement mr-1"></i>{{note}}</div>
+              
+              <div class="form-group px-4 mt-2 mb-2">
+
+                <textarea v-model="cardnote"
+                  :placeholder="cardnoteph || 'notunuz varsa burayı kullanabilirsiniz.'"
+                  class="form-control font-size-sm" rows="3" name="wanote" id="wanote">
+    
+                                                  
+                                              </textarea>
+              </div>
+              <!-- <div class="mb-2 text-center font-size-xs text-muted px-4" v-if="note"><i class="czi-announcement mr-1"></i>{{note}}</div> -->
+
               <div class="d-flex align-items-center justify-content-center">
                 <button v-for="(option, index) in result" data-dismiss="modal" @click="setUnit(option)" class="btn mr-2 btn-primary">
                   <i class="czi-check mr-1"></i>

@@ -317,7 +317,7 @@
                         </div>
                         <% if (!view.butcher) {%>
                         <div class="text-center">
-                          <button @click="selectArea()" type="button" class="btn btn-accent btn-block"><i
+                          <button @click="selectArea()" type="button" class="btn btn-primary btn-block"><i
                               class="czi-cart font-size-lg mr-2"></i>Sepete Ekle</button>
                           <% if (__req.prefAddr) { %>
                           <p><small><%=__req.prefAddr.level1Text%>/<%=__req.prefAddr.level3Text%> için bu ürün
@@ -327,7 +327,7 @@
                       <%} %>
 
                           <% if (view.butcher && __req.prefAddr) { %>
-                          <button class="btn btn-accent btn-block" type="submit"><i
+                          <button class="btn btn-primary btn-block" type="submit"><i
                               class="czi-cart font-size-lg mr-2"></i>Sepete Ekle</button>
                           <% } %>
                         </div>

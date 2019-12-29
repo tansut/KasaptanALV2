@@ -59,7 +59,7 @@ export default class Route extends ViewRouter {
         }
 
         await this.shopcard.saveToRequest(this.req)
-        this.renderPage("pages/checkout.adres.ejs");
+        this.renderPage("pages/checkout.ship.ejs");
     }
 
 
@@ -110,7 +110,7 @@ export default class Route extends ViewRouter {
         // this.shopcard.address.level3Text = this.req.body.orderdistricttext;
         await this.setDispatcher();
         await this.shopcard.saveToRequest(this.req);
-        this.renderPage("pages/checkout.ship.ejs");
+        this.renderPage("pages/checkout.payment.ejs");
     }
 
 
@@ -121,10 +121,12 @@ export default class Route extends ViewRouter {
 
     async saveshipRoute() {
         this.shopcard = await ShopCard.createFromRequest(this.req);
+        let needAddress = false;
         for(let k in this.shopcard.butchers) {
             let butcher = this.shopcard.butchers[k];
             this.shopcard.shipment[k].type = this.req.body[`shipping-method${k}`];
             this.shopcard.shipment[k].howTo = this.req.body[`howto${k}`];
+            needAddress = !needAddress ? (this.shopcard.shipment[k].howTo == 'ship'): true;
             // this.shopcard.shipment[k].desc = ShipmentTypeDesc[this.shopcard.shipment[k].type];
             // this.shopcard.shipment[k].howToDesc = ShipmentHowToDesc[this.shopcard.shipment[k].howTo];
             this.shopcard.shipment[k].informMe = this.req.body[`informme${k}`] == 'on';
@@ -143,7 +145,8 @@ export default class Route extends ViewRouter {
         }
         this.shopcard.calculateShippingCosts();        
         await this.shopcard.saveToRequest(this.req);
-        this.renderPage("pages/checkout.payment.ejs");
+
+        needAddress ? this.renderPage("pages/checkout.adres.ejs"): this.renderPage("pages/checkout.payment.ejs");
     }
 
 
