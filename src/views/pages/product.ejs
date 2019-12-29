@@ -109,7 +109,7 @@
 
 
             <div id="productapp" v-cloak class="col-lg-5 ">
-              <div class="product-details pl-4  pl-lg-0 pr-4  pt-3 pb-0">
+              <div class=" pl-2  pl-lg-0 pr-lg-4 pr-2  pt-lg-3 pb-0">
                 <% if (view.butcher) {%>
                 <div class="mb-3">
 
@@ -124,13 +124,16 @@
                         width="64" src="/<%=view.butcher.slug%>/fotograf/thumbnail" alt="<%=view.butcher.name%>">
                       <div class="media-body pl-2">
                         <h6 class="h5 mb-0 mr-2"><%= view.butcher.name %></h6>
-                        <span class="font-size-ms text-muted">tarafından sağlanmakta</span>
+                        <span class="font-size-ms text-muted">sağlamaktadır.</span>
                       </div></a>
                       <a class="align-self-center d-md-block btn btn-sm" href="/<%=view.butcher.slug%>"><i
                           class="czi-arrow-right font-size-xs align-middle ml-1"></i></a>                        
                   </div>
                   <%if (otherButcherAlternatives) {%>
-                   <p class="text-right font-size-sm text-muted"><a class="text-muted" href="javascript:showOtherButchers()">Diğer kasaplar (<%= otherButcherAlternatives %>)</a> </p> 
+                    <div class="mt-2">
+                      <p class="text-right font-size-sm"><a class="text-dark font-weight-medium" href="javascript:showOtherButchers()"><span>Diğer kasaplar (</span><span class="text-primary"><%=otherButcherAlternatives %></span><span>)</span></a> </p> 
+
+                    </div>
                   <%}%>
           
 
@@ -144,13 +147,33 @@
                 </div>
                 <%} %>
                 <form id="product-form" class="" @submit.prevent="addToShopcard">
+                  <% if (product.featuresText) { %>
+                    <% var notes = product.featuresText.split('\n') %>
+                    <div class="border-bottom mb-3">
+                      <!-- <h5 class="h6 font-size-md mb-2">Şu şekilde hazırlıyoruz</h5> -->
+                      <ul class="list-unstyled mb-2">
+                        <%notes.forEach((note, i) => { %>
+                            <li><i class="czi-check text-primary mr-1"></i> <%=note%></li>
+                        <%})%>
+                        </ul>
+                    </div>
+ 
+                    <% } %>
                   <div>
                     <% if (tarifs.length) { %>
                       <div>
                         <div class="mb-3">
                          
                         <div class="d-flex flex-nowrap justify-content-between align-items-center">
-                          <h5 class="h6 mb-2 font-size">Pratik tarifler</h5>
+                          <a href="#tarifVideos">
+
+                         
+                          <h5 class="h6 mb-2 font-size">
+                            
+                            Bunlar için uygun
+                          
+                          </h5>
+                        </a>
                           <a class="align-self-center mb-2  text-dark font-size-xs" href="#tarifVideos"> <i
                             class="czi-arrow-right font-size-xs align-middle"></i></a>    
                         </div>
@@ -160,10 +183,10 @@
                             <% tarifs.forEach(t=> { %>
                             
 <div class="d-flex mb-2 pb-1 align-items-center flex-nowrap justify-content-between border-bottom">
-  <a href="javascript:openSlider(<%=t.id%>)"><i class=" czi-youtube mr-1"></i><%=t.title%></a>
+  <a class="text-primary" href="javascript:openSlider(<%=t.id%>)"><i class="text-primary czi-youtube mr-1"></i><%=t.title%></a>
   
   <% if (t.note) { %>
-  <a title="Bu yemeğe uygun hazırla" href="javascript:<%= include('./_partial/addtonote.ejs', {resource: t }) %>"><span class="color-primary"><i class=" czi-add-circle"></i></span>  </a>
+  <a class="text-primary" title="Bu yemeğe uygun hazırla" href="javascript:<%= include('./_partial/addtonote.ejs', {resource: t }) %>"><span class="color-primary"><i class=" czi-add-circle"></i></span>  </a>
   <% } %>
 </div>
                              
@@ -182,18 +205,7 @@
                      
                     <div id="noteanchor">
 
-                      <% if (product.featuresText) { %>
-                      <% var notes = product.featuresText.split('\n') %>
-                      <div class="border-bottom mb-3">
-                        <!-- <h5 class="h6 font-size-md mb-2">Şu şekilde hazırlıyoruz</h5> -->
-                        <ul class="list-unstyled mb-2">
-                          <%notes.forEach((note, i) => { %>
-                              <li><i class="czi-check text-primary mr-1"></i> <%=note%></li>
-                          <%})%>
-                          </ul>
-                      </div>
-   
-                      <% } %>
+
                       <!-- <div v-if="product && product.notePlaceholder">
                         <h5 class="h6 mb-2">Şu şekilde hazırlıyoruz</h5>
 
@@ -370,7 +382,7 @@
             <%- controller.markdown.render(product.mddesc || '') %>
             <% if (videoTarifs.length) {%>
           <div id="tarifVideos" class="d-flex flex-wrap justify-content-between align-items-center pt-1 border-bottom pb-1 mb-2">
-                    <h3 class="h5 mb-0 mr-2">Pratik Tarifler</h3>
+                    <h3 class="h5 mb-0 mr-2">Etler Bizden Tarifleri</h3>
                     <!-- <a class="btn btn-sm btn-light" href="/et-yemek-tarifleri"><i class="czi-arrow-right ml-1 mr-n1"></i></a> -->
                 </div>    
       

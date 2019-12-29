@@ -40,7 +40,7 @@ export default class Route extends ApiRouter {
         })
 
         let butchers = await User.sequelize.query("select name, slug as url, 'butcher' as type, match(name, description, mddesc) against (:search IN BOOLEAN MODE) as RELEVANCE " +
-            "from Butchers where match(name, description, mddesc)  against (:search IN BOOLEAN MODE) ORDER BY  RELEVANCE DESC LIMIT 10",
+            "from Butchers where approved=true and match(name, description, mddesc)  against (:search IN BOOLEAN MODE) ORDER BY  RELEVANCE DESC LIMIT 10",
             {
                 replacements: { search: search },
                 type: sq.QueryTypes.SELECT,
