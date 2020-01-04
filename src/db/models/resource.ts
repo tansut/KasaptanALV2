@@ -98,11 +98,11 @@ class Resource extends BaseModel<Resource> {
         let productName = this.product ? this.product.name: 'et';
         let note = this.tag2;
         if (this.tag1 == 'yemek-tarifi') {
-            note = this.tag2 || (`${this.title} yapacağım ${productName} hazırlayın.`);
+            note = this.tag2 || (`${this.title} yapacağım, lütfen uygun hazırlayın.`);
         } else if (this.tag1 == 'hazirlama-sekli') {
             note = this.tag2 ? (this.tag2) : (this.title + " olarak hazırlayın.")
         } else  if (this.tag1 == 'yemek') {
-            note = this.tag2 || (`${this.title} yapacağım ${productName} hazırlayın.`);
+            note = this.tag2 || (`${this.title} yapacağım, lütfen uygun hazırlayın.`);
         }
         // if (this.tag1 == 'yemek-tarifi') {
         //     note = this.tag2 ? (this.tag2) : (this.title + " yapacağım, lütfen uygun hazırlayın.");

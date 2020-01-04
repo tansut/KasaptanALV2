@@ -19,7 +19,7 @@ class ResourceCategory extends BaseModel<ResourceCategory> {
     resourceid: number
 
     @BelongsTo(() => Resource, "resourceid")
-    product: Product;
+    resource: Resource;
 
     @ForeignKey(() => Category)
     categoryid: number

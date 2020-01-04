@@ -43,21 +43,7 @@ export default class ProductManager {
         });
     }    
 
-    static async getResourcesOfCategories(catids: number[]) {
-        return await Resource.findAll({
-            include: [{
-                model: ResourceCategory,
-                as: 'categories',
-                include: [{
-                    model: Category}
-                ]
-            },
-            ], where: {
-                '$categories.category.id$': catids
-            },
-            order: [[ { model: ResourceCategory, as: 'categories' }, "displayOrder", "desc"], [ "displayorder", "desc"]]
-        });
-    }  
+
 
     static async getCategories() {
         return await Category.findAll({

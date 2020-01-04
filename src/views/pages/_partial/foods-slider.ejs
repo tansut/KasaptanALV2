@@ -1,20 +1,20 @@
 <%
 
   var mode = typeof(mode) == 'undefined' ? 'tarif': 'food';
-  var targetUrl = mode == 'tarif' ? 'et-yemek-tarifleri': 'et-yemekleri';
+  var targetUrl = typeof(allUrl) == 'undefined' ? (mode == 'tarif' ? '/et-yemek-tarifleri': '/et-yemekleri'): allUrl;
   var subUrl = mode == 'tarif' ? 'yemek-tarifi': 'ile-yapin';
 
 %>
 
 <div class="bg-secondary pb-2 ">
   <div class="bg-secondary rounded-lg mb-2 p-2 d-flex flex-nowrap justify-content-between align-items-center">
-      <a class="media align-items-center align-self-center" href="/<%=targetUrl%>">
+      <a class="media align-items-center align-self-center" href="<%=targetUrl%>">
         <img class="rounded-circle header-img d-none d-md-block"   src="<%= typeof(iconUrl) == 'undefined' ? '/img/logo-home.jpg': iconUrl%>" alt="<%=title%>">
       <div class="media-body pl-2">
-        <h3 class="h5 mb-0 mr-2"><%= typeof(title) != 'undefined' ? title: 'Etler Bizden Tarifleri' %></h3>
+        <h3 class="h5 mb-0 mr-2"><%= typeof(title) != 'undefined' ? title: 'Et Yemek Tarifleri' %></h3>
         <span class="font-size-ms text-muted"><%= typeof(text) != 'undefined' ? text: ''%></span>
       </div></a>
-      <a class="align-self-center d-md-block btn btn-sm" href="/<%=targetUrl%>">Tümü<i
+      <a class="align-self-center d-md-block btn btn-sm" href="<%=targetUrl%>">Tümü<i
           class="czi-arrow-right font-size-xs align-middle ml-1"></i></a>                        
   </div>
 

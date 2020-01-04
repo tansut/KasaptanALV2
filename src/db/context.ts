@@ -29,7 +29,7 @@ let init = (params?: any) => {
         password: config.dbpwd,
         port: config.dbport,
         host: config.dbaddress,
-        logging: false,
+        logging: true,
         dialectOptions: { decimalNumbers: true }
     });
 

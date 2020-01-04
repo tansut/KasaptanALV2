@@ -24,8 +24,8 @@ export default class Route extends ViewRouter {
     foodsWithCats = {}
     //categories: Category[];
 
-    renderPage() {
-        this.res.render('pages/category.ejs', this.viewData({
+    renderPage(view: string) {
+        this.res.render(view, this.viewData({
             pageTitle: this.category.name + ' Et Lezzetleri'
         }))
     }
@@ -37,10 +37,10 @@ export default class Route extends ViewRouter {
     generateFoodWithCats(foods: Resource[]) {
         let res = {};
 
-        foods.forEach(f=> {
-            f.categories.forEach(fc=> {
+        foods.forEach(f => {
+            f.categories.forEach(fc => {
                 if (!res[fc.categoryid])
-                res[fc.categoryid] = [];
+                    res[fc.categoryid] = [];
                 res[fc.categoryid].push(f);
             })
 
@@ -48,18 +48,38 @@ export default class Route extends ViewRouter {
         return res;
     }
 
+    async fillFoods(categoryid?: number, subcategory?: string) {
+        if (subcategory) {
+            let category = this.req.__categories.find(p => p.slug == subcategory);
+            this.products = await ProductManager.getProductsOfCategories([category.id])
+            this.foods = await new ProductsApi(this.constructorParams).getFoodResources(this.products, null, categoryid ? [categoryid]: null);
+            this.foodsWithCats = this.generateFoodWithCats(this.foods)
+        } else {
+            this.foods = await new ProductsApi(this.constructorParams).getFoodResources(null, null, categoryid ? [categoryid]: null);
+            this.foodsWithCats = this.generateFoodWithCats(this.foods)
+        }
+    }
+
+    async fillTarifs(subcategory?: string) {
+        if (subcategory) {
+            let category = this.req.__categories.find(p => p.slug == subcategory);
+            this.products = await ProductManager.getProductsOfCategories([category.id])
+            this.foods = await new ProductsApi(this.constructorParams).getTarifVideos(this.products);
+            this.foodsWithCats = this.generateFoodWithCats(this.foods)
+        } else {
+            this.foods = await new ProductsApi(this.constructorParams).getTarifVideos();
+            this.foodsWithCats = this.generateFoodWithCats(this.foods)
+        }
+    }
+
     @Auth.Anonymous()
     async viewFoodsRoute() {
         if (this.req.params.category) {
-            this.category = this.req.__categories.find(p=>p.slug == this.req.params.category);
-
+            this.category = this.req.__categories.find(p => p.slug == this.req.params.category);
             if (!this.category) return this.next();
-            this.products = await ProductManager.getProductsOfCategories([this.category.id])
-            this.foods = await new ProductsApi(this.constructorParams).getFoodResources(this.products);
-            this.foodsWithCats = this.generateFoodWithCats(this.foods)
+            await this.fillFoods(null, this.req.params.category)
         } else {
-            this.foods = await new ProductsApi(this.constructorParams).getFoodResources();
-            this.foodsWithCats = this.generateFoodWithCats(this.foods)
+            await this.fillFoods();
         }
 
         this.res.render('pages/foods.ejs', this.viewData({
@@ -67,23 +87,21 @@ export default class Route extends ViewRouter {
         }))
     }
 
+    @Auth.Anonymous()
     async viewTarifsRoute() {
         if (this.req.params.category) {
-            this.category = this.req.__categories.find(p=>p.slug == this.req.params.category);
+            this.category = this.req.__categories.find(p => p.slug == this.req.params.category);
 
             if (!this.category) return this.next();
-            this.products = await ProductManager.getProductsOfCategories([this.category.id])
-            this.foods = await new ProductsApi(this.constructorParams).getTarifVideos(this.products);
-            this.foodsWithCats = this.generateFoodWithCats(this.foods)
+            await this.fillTarifs(this.req.params.category)
         } else {
-            this.foods = await new ProductsApi(this.constructorParams).getTarifVideos();
-            this.foodsWithCats = this.generateFoodWithCats(this.foods)
+            await this.fillTarifs();
         }
 
         this.res.render('pages/tarifs.ejs', this.viewData({
             pageTitle: 'Et Yemek Tarifleri'
         }))
-    }    
+    }
 
 
     @Auth.Anonymous()
@@ -91,23 +109,30 @@ export default class Route extends ViewRouter {
         if (!this.req.params.category) {
             return this.next();
         }
-
-        this.category = this.req.__categories.find(p=>p.slug == this.req.params.category);
-
+        this.category = this.req.__categories.find(p => p.slug == this.req.params.category);
         if (!this.category) return this.next();
+
+        if (this.category.type == 'resource') {
+            await this.fillFoods(this.category.id, this.req.params.subcategory);
+            this.renderPage('pages/category-food.ejs')
+        }
+
+        else {
+            this.products = await ProductManager.getProductsOfCategories([this.category.id]);
+            this.foods = Helper.shuffle(await new ProductsApi(this.constructorParams).getResources({tag1: ['yemek-tarifi', 'yemek']}, this.products));
+
+            this.renderPage('pages/category.ejs')
         
-        this.products = await ProductManager.getProductsOfCategories([this.category.id]);
-        this.foods = await new ProductsApi(this.constructorParams).getTarifVideos(this.products);
+        }
 
 
-        this.renderPage()
 
     }
 
     @Auth.Anonymous()
     async categoryPhotoRoute() {
         if (!this.req.params.category || !this.req.params.filename) return this.next();
-        let category = this.req.__categories.find(p=>p.slug == this.req.params.category);
+        let category = this.req.__categories.find(p => p.slug == this.req.params.category);
         if (!category)
             return this.next();
 
@@ -124,15 +149,16 @@ export default class Route extends ViewRouter {
 
         if (this.req.params.filename == "thumbnail") {
             thumbnail = true;
-            photo = this.req.helper.getResourcesOfType(type + category.id).find(p=>p.ref1 == category.id)
+            photo = this.req.helper.getResourcesOfType(type + category.id).find(p => p.ref1 == category.id)
         }
-        else photo = this.req.helper.getResourcesOfType(type + this.req.params.filename).find(p=>p.contentUrl == this.req.params.filename);
+        else photo = this.req.helper.getResourcesOfType(type + this.req.params.filename).find(p => p.contentUrl == this.req.params.filename);
         res.sendResource(photo, thumbnail, thumbnail ? defaultFile : null)
     }
 
 
     static SetRoutes(router: express.Router) {
         router.get("/:category", Route.BindRequest(Route.prototype.viewRoute));
+        router.get("/:category/alt/:subcategory", Route.BindRequest(Route.prototype.viewRoute));
         router.get("/et-yemek-tarifleri", Route.BindRequest(Route.prototype.viewTarifsRoute));
         router.get("/et-yemek-tarifleri/:category", Route.BindRequest(Route.prototype.viewTarifsRoute));
         router.get("/et-yemekleri", Route.BindRequest(Route.prototype.viewFoodsRoute));

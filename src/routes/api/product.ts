@@ -16,53 +16,73 @@ import Category from '../../db/models/category';
 export default class Route extends ApiRouter {
     markdown = new MarkdownIt();
 
-    async getFoodResources(products4?: Product[], limit?: number) {
+    async getFoodResources(products4?: Product[], limit?: number, catids?: number[]) {
         return this.getResources({
             type: ['product-videos', 'product-photos'],
             tag1: 'yemek'
-        },products4, limit)
+        }, products4, limit, catids)
     }
 
-    async getResources(where, products4?: Product[], limit?: number) {
-        if (products4) where["ref1"] = products4.map(p=>p.id);
-        let allresources = await Resource.findAll({
+    async getResources(where, products4?: Product[], limit?: number, catids?: number[]) {
+        if (products4) where["ref1"] = products4.map(p => p.id);
+        if (catids) where['$categories.category.id$'] = catids;
+        let params = {
             where: where,
-            limit: limit || 1000,
             include: [{
                 model: ResourceCategory,
                 as: 'categories',
                 include: [{
-                    model: Category}
+                    model: Category
+                }
                 ]
-            }],            
-            order:  [['updatedon', 'DESC']]
-        }); 
+            }],
+            order: [[{ model: ResourceCategory, as: 'categories' }, "displayOrder", "desc"], ["updatedOn", "desc"]]
+        }
+        if (limit) params['limit'] = limit;
+        let allresources = await Resource.findAll(<any>params);
 
         let products = products4 || await Product.findAll({
             where: {
-                id: allresources.map(p=>p.ref1)
+                id: allresources.map(p => p.ref1)
             }
         })
 
         let resources = [];
 
-        allresources.forEach(p=> {
-            let product = products.find(r=>r.id == p.ref1);
+        allresources.forEach(p => {
+            let product = products.find(r => r.id == p.ref1);
             if (product) {
                 p.product = product;
                 resources.push(p);
-            }  
+            }
         })
 
-        return resources;        
-    }   
+        return resources;
+    }
+
+    static async getResourcesOfCategories(catids: number[]) {
+        return await Resource.findAll({
+            include: [{
+                model: ResourceCategory,
+                as: 'categories',
+                include: [{
+                    model: Category
+                }
+                ]
+            },
+            ], where: {
+                '$categories.category.id$': catids
+            },
+            order: [[{ model: ResourceCategory, as: 'categories' }, "displayOrder", "desc"], ["displayorder", "desc"]]
+        });
+    }
 
 
-    async getTarifVideos(products4?: Product[], limit?: number) {
+    async getTarifVideos(products4?: Product[], limit?: number, catids?: number[]) {
         return this.getResources({
             type: 'product-videos',
             tag1: 'yemek-tarifi'
-        }, products4, limit)          
+        }, products4, limit, catids)
     }
 
 
@@ -79,19 +99,19 @@ export default class Route extends ApiRouter {
 
         let products = await Product.findAll({
             where: {
-                id: resources.map(p=>p.ref1)
+                id: resources.map(p => p.ref1)
             }
         })
 
-        resources.forEach(p=> {
-            p.product = products.find(r=>r.id == p.ref1)
+        resources.forEach(p => {
+            p.product = products.find(r => r.id == p.ref1)
         })
 
         return resources;
     }
 
 
-    
+
 
 
     getProductUnits(product: Product) {
@@ -166,7 +186,7 @@ export default class Route extends ApiRouter {
             view.purchaseOptions.push({
                 id: i + 1,
                 notePlaceholder: product[`${col}note`],
-                desc: this.markdown.render(product[`${col}desc`] || ""), 
+                desc: this.markdown.render(product[`${col}desc`] || ""),
                 kgRatio: product[`${col}kgRatio`],
                 unitPrice: Helper.asCurrency(product[`${col}kgRatio`] * kgPrice),
                 unit: p,
