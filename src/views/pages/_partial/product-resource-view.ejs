@@ -16,14 +16,14 @@
     <% if (resource.tag1 == 'yemek-tarifi' || resource.tag1 == 'yemek') { %>
       data-sub-html="<%= `<h6 class="font-size-normal text-light">${resource.title || ''}</h6><p class="font-size-md mb-2">${resource.description || ''}</p>`%> 
       <% if (resource.note) {%>
-      <%=  '<button type="button" onclick="'%>  <%= include(`./addtonote.ejs`, {resource: resource }) %>   <%='"class="btn btn-block btn-primary btn-sm rounded-0"><i class=" czi-add-circle mr-2"></i>'%><%= resource.tag3 || 'Uygun Hazırla' + '</button>' %>
+      <%=  '<button type="button" onclick="'%>  <%= include(`./addtonote.ejs`, {resource: resource }) %>   <%='"class="btn btn-block btn-primary btn-sm rounded-0"><i class=" czi-thumb-up mr-2"></i>'%><%= resource.tag3 || 'Eti Bizden' + '</button>' %>
       <% } %>
       "
     
     <%} else if (resource.tag1 == 'hazirlama-sekli') { %>
       data-sub-html="<%= `<h6 class="font-size-normal text-light">${resource.title || ''}</h6><p class="font-size-md mb-2">${resource.description || ''}</p>`%> 
       <% if (resource.note) {%>
-      <%=  '<button type="button" onclick="'%>  <%= include(`./addtonote.ejs`, {resource: resource }) %>   <%='"class="btn btn-block btn-primary btn-sm rounded-0"><i class=" czi-add-circle mr-2"></i>'%><%= resource.tag3 || 'Bu şekilde hazırla' + '</button>' %>
+      <%=  '<button type="button" onclick="'%>  <%= include(`./addtonote.ejs`, {resource: resource }) %>   <%='"class="btn btn-block btn-primary btn-sm rounded-0"><i class=" czi-thumb-up mr-2"></i>'%><%= resource.tag3 || 'Bu şekilde hazırla' + '</button>' %>
       <% } %>
       "
       <% } else { %>
@@ -38,8 +38,8 @@
   <div class="text-center mb-3 mt-1">
                        
     <button type="button" onclick="<%= include('./addtonote.ejs', {resource: resource }) %>"
-      class="btn btn-primary btn-sm rounded-0"><i class=" czi-add-circle mr-2">
-      </i><%= resource.tag3 || 'Uygun Hazırla' %></button>
+      class="btn btn-primary btn-sm rounded-0"><i class=" czi-thumb-up mr-2">
+      </i><%= resource.tag3 || 'Eti Bizden' %></button>
   </div>
   <%}%>
 

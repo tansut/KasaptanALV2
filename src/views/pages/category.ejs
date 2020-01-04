@@ -16,7 +16,7 @@
         <nav aria-label="breadcrumb">
           <ol class="breadcrumb breadcrumb-light flex-lg-nowrap justify-content-center justify-content-lg-star">
             <li class="breadcrumb-item"><a class="text-nowrap" href="/"><i class="czi-home"></i></a></li>
-            <li class="breadcrumb-item text-nowrap"><a href="/reyonlar">Tüm Lezzetler</a>
+            <li class="breadcrumb-item text-nowrap"><a href="/reyonlar">Lezzetler</a>
             </li>
             <li class="breadcrumb-item text-nowrap active" aria-current="page"><%= controller.category.name %></li>
           </ol>
@@ -49,7 +49,7 @@
         </div>
         <% if (!foodsInserted && (controller.foods.length > 0) && (j == 11) && (controller.foods.length >= 4) && controller.category.tarifTitle) { foodsInserted = true; %>
           <div class="mb-2 mb-md-4 col-12">
-            <%- include('./_partial/foods-slider.ejs', {foods: controller.foods, title: controller.category.tarifTitle || 'Etler Bizden Tarifleri'}) %>
+            <%- include('./_partial/foods-slider.ejs', {mode: 'yemek', foods: controller.foods, title: controller.category.tarifTitle || 'Yemekler'}) %>
 
           </div>
         <% } %>
@@ -58,9 +58,9 @@
 
       <div>
 
-        <% if (!foodsInserted && controller.foods.length > 0) { %>
+        <% if (!foodsInserted && controller.category.tarifTitle && controller.foods.length > 0) { %>
           <div class="mb-2 mb-md-4">
-            <%- include('./_partial/foods-slider.ejs', {foods: controller.foods, title: controller.category.tarifTitle || 'Etler Bizden Tarifleri'}) %>
+            <%- include('./_partial/foods-slider.ejs', {mode: 'yemek', foods: controller.foods, title: controller.category.tarifTitle || 'Yemekler'}) %>
 
           </div>
         <% } %>
@@ -69,7 +69,7 @@
 
     <div class="">
        <div class="d-flex flex-wrap justify-content-between align-items-center pt-1 border-bottom pb-1 mb-2">
-          <h3 class="h6 mb-0 mr-2">Tüm Lezzetler</h3>
+          <h3 class="h6 mb-0 mr-2">Lezzetler</h3>
           <a class="btn btn-sm btn-light" href="/reyonlar"><i class="czi-arrow-right ml-1 mr-n1"></i></a>
       </div>
 

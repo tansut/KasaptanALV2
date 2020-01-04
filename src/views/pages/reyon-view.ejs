@@ -15,12 +15,12 @@
         <nav aria-label="breadcrumb">
           <ol class="breadcrumb breadcrumb-light flex-lg-nowrap justify-content-center justify-content-lg-star">
             <li class="breadcrumb-item"><a class="text-nowrap" href="/"><i class="czi-home"></i></a></li>
-            <li class="breadcrumb-item text-nowrap active" aria-current="page">Tüm Lezzetler</li>
+            <li class="breadcrumb-item text-nowrap active" aria-current="page">Lezzetler</li>
           </ol>
         </nav>
       </div>
       <div class="order-lg-1 pr-lg-4 text-center text-lg-left">
-        <h1 class="h3 text-light mb-0">Tüm Lezzetler</h1>
+        <h1 class="h3 text-light mb-0">Lezzetler</h1>
       </div>
     </div>
   </div>
@@ -32,10 +32,6 @@
 
         <% var viewCats = ['reyon', 'list'] %>
         <% viewCats.forEach(cat => { %>
-        <a id="<%=cat%>"></a>
-        <div class="pt-1 border-bottom pb-1 mb-2">
-          <h3 class="h4 mb-0 mr-2"><%= controller.browseTypes[cat] %></h3>
-        </div>
         <div class="row justify-content-center">
           <% var reyonlar = __categories.filter(p=>p.type == cat) %>
 

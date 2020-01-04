@@ -15,7 +15,7 @@
         <div class="topbar-text dropdown d-none d-md-none"><a class="topbar-link dropdown-toggle" href="#"
             data-toggle="dropdown">Hızlı Erişim</a>
           <ul class="dropdown-menu">
-            <li><a class="dropdown-item" href="/reyonlar"><i class="czi-view-grid text-muted mr-2"></i>Tüm Lezzetler</a></li>
+            <li><a class="dropdown-item" href="/reyonlar"><i class="czi-view-grid text-muted mr-2"></i>Lezzetler</a></li>
           <li>
             <li><a class="dropdown-item" href="tel:8503054216"><i class="czi-support text-muted mr-2"></i>0 850
                 3054216</a></li>
@@ -93,7 +93,7 @@
             class="navbar-brand d-lg-none mr-2" href="/" style="min-width: 2.125rem;"><img style="width: 8rem;"
               src="/img/logo-nav.png" alt="kasaptanal.com" /></a>
           <div class="input-group-overlay d-none d-lg-flex mx-4">
-            <input class="form-control appended-form-control searchBox" data-noresults-text="Maalesef bulamadık." autocomplete="off" type="text" placeholder="yemek, kasap, et">
+            <input class="form-control appended-form-control searchBox" data-noresults-text="Maalesef bulamadık." autocomplete="off" type="text" placeholder="yemek, tarif, kasap, et">
             <div class="input-group-append-overlay"><span class="input-group-text"><i class="czi-search"></i></span></div>
           </div>
           <div class="navbar-toolbar d-flex flex-shrink-0 align-items-center">
@@ -129,7 +129,7 @@
                 <div class="input-group-prepend-overlay"><span class="input-group-text"><i class="czi-search"></i></span>
                 </div>
                 <input class="form-control searchBox prepended-form-control" data-noresults-text="Maalesef bulamadık." autocomplete="off" type="text"
-                  placeholder="yemek, kasap, et">
+                  placeholder="yemek, tarif, kasap, et">
               </div>
   
           <div class="collapse navbar-collapse" id="navbarCollapse3">
@@ -169,17 +169,17 @@
   
               </li>
             </ul> -->
-          <ul class="d-none d-lg-block navbar-nav mega-nav pr-lg-2 mr-lg-2">
+          <ul class="d-none d-lg-block navbar-nav mega-nav">
                 <li class="nav-item dropdown"><a class="nav-link dropdown-toggle pl-0" href="/reyonlar"
-                    data-toggle="dropdown"><i class="czi-view-grid mr-2"></i>Listeler</a>
+                    data-toggle="dropdown"></i>LezzEtler</a>
     
                   <div class="dropdown-menu px-2 pl-0 pb-4">
-                    <% var viewCats = ['list'] %>
-                    <% var chunks = _.chunk(__categories.filter(p=>p.type == viewCats[0]), 4) %>
+                    <% var viewCats = ['reyon', 'list'] %>
+                    <% var chunks = _.chunk(__categories.filter(p=> viewCats.find(c=>(p.type == c)) != null), 5) %>
                     <% chunks.forEach(reyonlar => { %>
                     <div class="d-flex flex-wrap flex-md-nowrap">
                       <% for(var c=0; c < reyonlar.length; c++) {%>
-                      <div class="pt-4 px-3" style="width: 12rem;">
+                      <div class="pt-4 px-3" style="width: 8rem;">
                         <div class="widget widget-links"><a class="d-block overflow-hidden rounded-lg mb-3"
                             href="<%= `/${reyonlar[c].slug}`%>"><img class="rounded" src="<%=`/${reyonlar[c].slug}/resimler/thumbnail` %>"
                               alt="<%=reyonlar[c].name%>" /></a>
@@ -196,15 +196,71 @@
     
                     </div>
                     <% }) %>
-    
+                    <div class="text-center mt-2 border-top pt-4">
+                      <a href="/reyonlar" class="btn btn-sm btn-primary">Tamamı</a>
+                    </div>
                   </div>
     
     
                 </li>
               </ul> 
+
+           
+               <ul class="d-none d-lg-block navbar-nav mega-nav">
+                <li class="nav-item dropdown"><a class="nav-link dropdown-toggle pl-0" href="/reyonlar"
+                    data-toggle="dropdown">Yemekler</a>
+    
+                  <div class="dropdown-menu px-2 pl-0 pt-4 pb-4">
+                    <div class="px-3">
+                      <a href="/et-yemekleri" class="btn btn-sm btn-primary mr-2"><i class=" czi-thumb-up mr-2">
+            
+                      </i>Eti Bizden</a>seçeneği ile yapacağınız yemeğe uygun doğru eti hazırlıyoruz.</p>
+                     
+          
+                    </div>
+                    <% var viewCats = ['resource'] %>
+                    <% var chunks = _.chunk(__categories.filter(p=> viewCats.find(c=>(p.type == c)) != null), 5) %>
+                    <% chunks.forEach(reyonlar => { %>
+                    <div class="d-flex flex-wrap flex-md-nowrap">
+                      <% for(var c=0; c < reyonlar.length; c++) {%>
+                      <div class="pb-4 px-3" style="width: 8rem;">
+                        <div class="widget widget-links"><a class="d-block overflow-hidden rounded-lg mb-3"
+                            href="<%= `/${reyonlar[c].slug}`%>"><img class="rounded" src="<%=`/${reyonlar[c].slug}/resimler/thumbnail` %>"
+                              alt="<%=reyonlar[c].name%>" /></a>
+                          <h6 class="font-size-base mb-2 text-center">
+                            <a class="text-primary" href="<%= `/${reyonlar[c].slug}`%>"><%= reyonlar[c].name %></a>
+    
+                          </h6>
+                          
+                        </div>
+                      </div>
+                      <% } %>
+    
+    
+    
+                    </div>
+                    <% }) %>
+                 
+                    <div class="text-center mt-2 border-top pt-4">
+                      <a href="/et-yemekleri" class="btn btn-sm btn-primary">Siz Yemeği Seçin</a>
+                    </div>
+                  </div>
+    
+    
+                </li>
+              </ul>  
             <!-- Primary menu-->
-            <ul class="navbar-nav reyon-navbar">
-  
+            <ul class="navbar-nav reyon-navbar d-lg-none">
+              <li class="d-lg-none nav-item d-flex flex-nowrap align-items-center justify-content-between ">
+                <a class="nav-link  pl-0" href="/reyonlar"><%= 'LezzEtler' %></a>
+                <a class="pl-0 font-size-xs nav-link" href="/reyonlar">
+                 
+                  
+                  Tümü <i class="czi-arrow-right"></i>
+              
+                </a>
+                
+              </li>
               <% viewCats = ['reyon', 'list'] %>
               <% catTitles = {list: 'Listeler', reyon:'Reyonlar'}%>
               <% viewCats.forEach(cat => { %>
@@ -212,20 +268,11 @@
   
        
   
-              <li class="d-lg-none nav-item d-flex flex-nowrap align-items-center justify-content-between ">
-                <a class="nav-link  pl-0" href="/reyonlar#<%=cat%>"><%= catTitles[cat] %></a>
-                <a class="pl-0 font-size-xs nav-link" href="/reyonlar#<%=cat%>">
-                  <% if (cat != 'reyon') { %>
-                  
-                  Tümü <i class="czi-arrow-right"></i>
-                <%} %>
-                </a>
-                
-              </li>
+   
                
-                  <% var reyonlar = __categories.filter(p=>p.type == cat).slice(0,4) %>
+                  <% var reyonlar = __categories.filter(p=>p.type == cat).slice(0,6) %>
                   <% for(var c=0; c< reyonlar.length; c++) {%>
-                    <li class="<%= cat == 'list' ?  'd-lg-none':'' %> nav-item ">
+                    <li class="<%= (cat == 'list' || cat == 'reyon') ?  'd-lg-none':'' %> nav-item ">
                         <a class="pl-0 nav-link d-md-flex  align-items-md-center" href="/<%= reyonlar[c].slug %>">
                           <img class="d-md-block rounded-circle mr-2" src="/<%= reyonlar[c].slug %>/resimler/thumbnail" alt="<%= reyonlar[c].name %>" >
                           <span><%= reyonlar[c].name %></span>
@@ -242,41 +289,58 @@
   
             </ul>
     
-            <ul class="text-nowrap navbar-nav ml-auto">
-                <!-- <li class="nav-item dropdown"><a class="nav-link dropdown-toggle" href="#" data-toggle="dropdown">Account</i></a>
-                  <ul class="dropdown-menu">
-                    <li class="dropdown"><a class="dropdown-item dropdown-toggle" href="#" data-toggle="dropdown">Shop User Account</a>
-                      <ul class="dropdown-menu">
-                        <li><a class="dropdown-item" href="account-orders.html">Orders History</a></li>
-                        <li><a class="dropdown-item" href="account-profile.html">Profile Settings</a></li>
-                        <li><a class="dropdown-item" href="account-address.html">Account Addresses</a></li>
-                        <li><a class="dropdown-item" href="account-payment.html">Payment Methods</a></li>
-                        <li><a class="dropdown-item" href="account-wishlist.html">Wishlist</a></li>
-                        <li><a class="dropdown-item" href="account-tickets.html">My Tickets</a></li>
-                        <li><a class="dropdown-item" href="account-single-ticket.html">Single Ticket</a></li>
-                      </ul>
-                    </li>
-                    <li class="dropdown"><a class="dropdown-item dropdown-toggle" href="#" data-toggle="dropdown">Vendor Dashboard</a>
-                      <ul class="dropdown-menu">
-                        <li><a class="dropdown-item" href="dashboard-settings.html">Settings</a></li>
-                        <li><a class="dropdown-item" href="dashboard-purchases.html">Purchases</a></li>
-                        <li><a class="dropdown-item" href="dashboard-favorites.html">Favorites</a></li>
-                        <li><a class="dropdown-item" href="dashboard-sales.html">Sales</a></li>
-                        <li><a class="dropdown-item" href="dashboard-products.html">Products</a></li>
-                        <li><a class="dropdown-item" href="dashboard-add-new-product.html">Add New Product</a></li>
-                        <li><a class="dropdown-item" href="dashboard-payouts.html">Payouts</a></li>
-                      </ul>
-                    </li>
-                    <li><a class="dropdown-item" href="account-signin.html">Sign In / Sign Up</a></li>
-                    <li><a class="dropdown-item" href="account-password-recovery.html">Password Recovery</a></li>
-                  </ul>
-                </li> -->
+            <ul class="navbar-nav reyon-navbar d-lg-none">
+              <li class="d-lg-none nav-item d-flex flex-nowrap align-items-center justify-content-between ">
+                <a class="nav-link  pl-0" href="/et-yemekleri"><%= 'Yemekler' %></a>
+                <a class="pl-0 font-size-xs nav-link" href="/et-yemekleri">
+                 
+                  
+                  Tümü <i class="czi-arrow-right"></i>
+              
+                </a>
+                
+              </li>
+              <% viewCats = ['resource'] %>
+              <% catTitles = {list: 'Listeler', reyon:'Reyonlar'}%>
+              <% viewCats.forEach(cat => { %>
+  
+  
+       
+  
+   
+               
+                  <% var reyonlar = __categories.filter(p=>p.type == cat).slice(0,4) %>
+                  <% for(var c=0; c< reyonlar.length; c++) {%>
+                    <li class="<%= (cat == 'list' || cat == 'reyon') ?  'd-lg-none':'' %> nav-item ">
+                        <a class="pl-0 nav-link d-md-flex  align-items-md-center" href="/<%= reyonlar[c].slug %>">
+                          <img class="d-md-block rounded-circle mr-2" src="/<%= reyonlar[c].slug %>/resimler/thumbnail" alt="<%= reyonlar[c].name %>" >
+                          <span><%= reyonlar[c].name %></span>
+                          </a>
+          
+                      </li>
+                    <%}%>
+                      <%})%>
+  
+                     
+          
+          
+                      </li>
+  
+            </ul>
 
+          
+            <ul class="text-nowrap navbar-nav ">
+                
+<!-- 
                 <li class="nav-item"><a class="nav-link" href="/et-yemekleri">Siz Yemeği Seçin</a>
   
                 </li>
                 <li class="nav-item"><a class="nav-link" href="/et-yemek-tarifleri">Tarifler</a>
   
+                </li> -->
+
+                <li class="nav-item"><a class="nav-link" href="/et-yemek-tarifleri">Tarifler</a>
+
                 </li>
     
               <li class="nav-item"><a class="nav-link" href="/et-kulturu">Et Kültürü</a>

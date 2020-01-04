@@ -22,7 +22,7 @@
         <nav aria-label="breadcrumb">
           <ol class="breadcrumb breadcrumb-light flex-lg-nowrap justify-content-center justify-content-lg-star">
             <li class="breadcrumb-item"><a class="text-nowrap" href="/"><i class="czi-home"></i></a></li>
-            <li class="breadcrumb-item text-nowrap"><a href="/reyonlar">Tüm Lezzetler</a>
+            <li class="breadcrumb-item text-nowrap"><a href="/reyonlar">Lezzetler</a>
             </li>
             <li class="breadcrumb-item text-nowrap active" aria-current="page"><%= view.name %></li>
           </ol>
@@ -189,7 +189,7 @@
   <a class="text-primary" href="javascript:openSlider(<%=t.id%>)"><i class="text-primary <%= t.contentType == 'video-youtube' ? 'czi-youtube': 'czi-camera' %> mr-1"></i><%=t.title%></a>
   
   <% if (t.note) { %>
-  <a class="text-primary" title="Bu yemeğe uygun hazırla" href="javascript:<%= include('./_partial/addtonote.ejs', {resource: t }) %>"><span class="color-primary"><i class=" czi-add-circle"></i></span>  </a>
+  <!-- <a class="text-primary" title="Eti Bizden" href="javascript:<%= include('./_partial/addtonote.ejs', {resource: t }) %>"><span class="color-primary"><i class=" czi-thumb-up"></i></span>  </a> -->
   <% } %>
 </div>
                              
@@ -391,9 +391,9 @@
                 </div>    
       
 
-            <span  class="badge badge-primary mr-2"><i class=" czi-add-circle mr-2">
+            <span  class="btn btn-sm btn-primary mr-2"><i class=" czi-thumb-up mr-2">
             
-            </i>Uygun Hazırla</span>seçeneği ile etinizi istediğiniz yemeğe uygun olarak hazırlıyoruz.</p>
+            </i>Eti Bizden</span>seçeneği ile etinizi istediğiniz yemeğe uygun olarak hazırlıyoruz.</p>
            
 
 
@@ -404,30 +404,6 @@
                   <div class="col-md-4 col-sm-6">
                       <%- include('./_partial/product-resource-view.ejs', {first: false, note: resource.note, resource: resource}) %>
                    
-                      <!-- <a data-resid="<%=resource.id%>" class="gallery-item video-item "
-                        data-sub-html="<%= `<h6 class="font-size-normal text-light">${resource.title}</h6><button type="button" onclick="window.App.ProductApp.addToNote('${resource.note}');" class="btn btn-block btn-primary btn-sm rounded-0"><i class=" czi-add-circle mr-2"></i>${resource.tag3 || 'Siparişimi bu yemeğe uygun hazırlayın'}</button>`%>"
-                        href="<%= `https://www.youtube.com/watch?v=${resource.contentUrl}` %>">
-                        <img class="rounded-top"
-                          src="<%= `https://img.youtube.com/vi/${resource.contentUrl}/maxresdefault.jpg` %>"
-                          alt="<%=product.name%>" /><span class="gallery-item-caption"><%=resource.title%></span></a>
-                      <% if (resource.badge) {%>
-                          <span class="badge badge-primary badge-shadow product-img-badge"><%= resource.badge%></span>
-                        <% } %>
-                          <% if (resource.tag1 == 'yemek-tarifi') {%>
-                          <div class="text-center">
-                           
-                            <button type="button" onclick='window.App.ProductApp.addToNote("<%= resource.note %>")'
-                              class="btn btn-block btn-primary btn-sm rounded-0"><i class=" czi-add-circle mr-2">
-                              </i><%= resource.tag3 || 'Uygun Hazırla' %></button>
-                          </div>
-                      <% } %>
-                      <% if (resource.tag1 == 'bilgi') {%>
-                        <div class="text-center">
-                          <button type="button" onclick=''
-                            class="btn btn-block btn-primary btn-sm rounded-0 "><i class=" czi-info mr-2">
-                            </i><%= resource.badge %></button>
-                        </div>
-                    <% } %> -->
                                              
                   </div>
                   <% } %>
@@ -543,7 +519,7 @@
                                    
                                     <button type="button" @click='addToNote("<%= resource.note %>")'
                                       class="btn btn-block btn-primary btn-sm rounded-0"><i class=" czi-add-circle mr-2">
-                                      </i><%= resource.tag3 || 'Uygun Hazırla' %></button>
+                                      </i><%= resource.tag3 || 'Eti Bizden' %></button>
                                   </div>
                               <% } %>
                               <% if (resource.tag1 == 'bilgi') {%>

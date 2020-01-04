@@ -16,7 +16,7 @@
         <nav aria-label="breadcrumb">
           <ol class="breadcrumb breadcrumb-light flex-lg-nowrap justify-content-center justify-content-lg-star">
             <li class="breadcrumb-item"><a class="text-nowrap" href="/"><i class="czi-home"></i></a></li>
-            <li class="breadcrumb-item text-nowrap"><a href="/et-yemek-tarifleri">Et Yemek Tarifleri</a>
+            <li class="breadcrumb-item text-nowrap"><a href="/et-yemek-tarifleri">Tarifler</a>
             </li>
             <li class="breadcrumb-item text-nowrap active" aria-current="page">
               <%=controller.category? controller.category.name: 'Tümü'%></li>
@@ -25,13 +25,13 @@
       </div>
       <div class="order-lg-1 pr-lg-4 text-center text-lg-left">
         <h1 class="h3 text-light">
-          <%=controller.category ? controller.category.name + ' Yemek Tarifleri':'Et Yemek Tarifleri'%> </h1>
-        <p class="lead text-light">
-          <span  class=""><i class=" czi-add-circle mr-2">
-            
-          </i>Uygun Hazırla </span>seçeneği ile etinizi tarife uygun olarak hazırlıyoruz.</p>
-
-        </p>
+          <%=controller.category ? controller.category.name + ' Yemek Tarifleri':'Tarifler'%> </h1>
+          <p class="lead text-light">
+            <span class="btn btn-outline-light mr-2"><i class=" czi-thumb-up mr-2">
+              
+            </i>Eti Bizden </span>seçeneği ile yemek tarifine uygun doğru eti hazırlıyoruz.</p>
+  
+          </p>
       </div>
     </div>
   </div>
@@ -57,16 +57,6 @@
           <% }) %>
         </ul>
 
-        <!-- <div class="text-center">
-  <div class="btn-group mb-4 " role="group" aria-label="Reyonlar">
-   
-
-  <%reyonlar.forEach((category,i) => { %>
-    <a href="/et-yemek-tarifleri/<%=category.slug%>"  class="btn btn-sm btn-outline-dark"><%=category.name%></a>
-  <% }) %>
-
-</div>
-</div> -->
 
 
            <div class="row cz-gallery">
@@ -81,7 +71,7 @@
 
     </div>
   </div>
-
+  </div>
 
   <% include ./_partial/footer %>
   <% include ./_partial/scripts %>

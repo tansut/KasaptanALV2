@@ -16,7 +16,7 @@
         <nav aria-label="breadcrumb">
           <ol class="breadcrumb breadcrumb-light flex-lg-nowrap justify-content-center justify-content-lg-star">
             <li class="breadcrumb-item"><a class="text-nowrap" href="/"><i class="czi-home"></i></a></li>
-            <li class="breadcrumb-item text-nowrap"><a href="/et-yemekleri">Yemeği Seçin</a>
+            <li class="breadcrumb-item text-nowrap"><a href="/et-yemekleri">Siz Yemeği Seçin</a>
             </li>
             <li class="breadcrumb-item text-nowrap active" aria-current="page">
               <%=controller.category? controller.category.name: 'Tümü'%></li>
@@ -26,12 +26,12 @@
       <div class="order-lg-1 pr-lg-4 text-center text-lg-left">
         <h1 class="h3 text-light">
           <%=controller.category ? 'Siz Yemeği Seçin':'Siz Yemeği Seçin'%> </h1>
-          <p class="lead text-light">
-            <span  class=""><i class=" czi-add-circle mr-2">
-              
-            </i>Uygun Hazırla </span>seçeneği ile eti yapacağınız yemeğe uygun olarak hazırlıyoruz.</p>
-  
-          </p>
+        <p class="lead text-light">
+          <span class="btn btn-outline-light mr-2"><i class=" czi-thumb-up mr-2">
+
+            </i>Eti Bizden </span>seçeneği ile yapacağınız yemeğe uygun doğru eti hazırlıyoruz.</p>
+
+        </p>
       </div>
     </div>
   </div>
@@ -43,44 +43,38 @@
 
         <ul class="nav nav-tabs mb-0  nav-justified " id="pills-tab" role="tablist">
           <li class="nav-item">
-            <a class="nav-link nav-link-shrink <%= controller.category ? '': 'active' %>" id=all-tab" 
-              href="/et-yemekleri%>" role="tab" aria-controls="Tümü"
-              >Tümü</a>
+            <a class="nav-link nav-link-shrink <%= controller.category ? '': 'active' %>" id=all-tab"
+              href="/et-yemekleri%>" role="tab" aria-controls="Tümü">Tümü</a>
           </li>
 
           <%reyonlar.forEach((category,i) => { %>
           <li class="nav-item">
-            <a class="nav-link nav-link-shrink <%= controller.category ? (controller.category.id == category.id ? 'active':''): '' %>" id="<%= category.slug %>-tab" 
-              href="/et-yemekleri/<%=`${category.slug}`%>" role="tab" aria-controls="<%= category.name %>"
-              ><%= category.name %></a>
+            <a class="nav-link nav-link-shrink <%= controller.category ? (controller.category.id == category.id ? 'active':''): '' %>"
+              id="<%= category.slug %>-tab" href="/et-yemekleri/<%=`${category.slug}`%>" role="tab"
+              aria-controls="<%= category.name %>"><%= category.name %></a>
           </li>
           <% }) %>
         </ul>
 
         <% var foodCats = __categories.filter(p=>p.type == 'resource'); %>
-        
+
         <% foodCats.forEach((cat, i) => { %>
-          <% var foods = controller.getFoods(cat) %>
-          <% if (foods.length) { %>
-            <%- include('./_partial/foods-slider.ejs', {title: cat.name, text: cat.shortdesc, iconUrl: ('/' + cat.slug + '/resimler/thumbnail'), allUrl: '/' + cat.slug, foods: foods}); %>             
-          <%} %>
+        <% var foods = controller.getFoods(cat) %>
+        <% if (foods.length) { %>
+        <div class="border-bottom">
+          <%- include('./_partial/foods-slider.ejs', {title: cat.name, text: '', iconUrl: ('/' + cat.slug + '/resimler/thumbnail'), allUrl: '/' + cat.slug, foods: foods}); %>
+
+        </div>
+        <%} %>
         <%})%>
-        
 
 
 
-        <!-- <div class="row cz-gallery">
-          <% controller.foods.forEach((resource,i) => {%>
-            <div class="col-md-2 col-6 mb-4">
-            <%- include(`./_partial/resource-item.ejs`, {resource: resource, subUrl: 'ile-yapin'  }) %>
 
-          </div>
-          <% }) %>
-        </div> -->
 
       </div>
-
     </div>
+  </div>
   </div>
 
 

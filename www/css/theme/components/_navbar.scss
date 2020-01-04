@@ -41,19 +41,19 @@
 
 // Mega navigation (departments)
 
-.mega-nav {
-  position: relative;
-  &::after {
-    display: none;
-    position: absolute;
-    top: 50%;
-    right: 0;
-    transform: translateY(-50%);
-    width: $border-width;
-    height: 1.875rem;
-    content: '';
-  }
-}
+// .mega-nav {
+//   position: relative;
+//   &::after {
+//     display: none;
+//     position: absolute;
+//     top: 50%;
+//     right: 0;
+//     transform: translateY(-50%);
+//     width: $border-width;
+//     height: 1.875rem;
+//     content: '';
+//   }
+// }
 .mega-dropdown-column {
   width: $navbar-mega-dropdown-column-width;
 }
