@@ -21,6 +21,7 @@ export default class Route extends ViewRouter {
     category: Category;
     products: Product[];
     foods: Resource[];
+    foodsWithCats = {}
     //categories: Category[];
 
     renderPage() {
@@ -29,25 +30,60 @@ export default class Route extends ViewRouter {
         }))
     }
 
+    getFoods(category: Category) {
+        return this.foodsWithCats[category.id] || [];
+    }
+
+    generateFoodWithCats(foods: Resource[]) {
+        let res = {};
+
+        foods.forEach(f=> {
+            f.categories.forEach(fc=> {
+                if (!res[fc.categoryid])
+                res[fc.categoryid] = [];
+                res[fc.categoryid].push(f);
+            })
+
+        })
+        return res;
+    }
+
     @Auth.Anonymous()
     async viewFoodsRoute() {
-        let all = await ProductManager.getProducts();
-        //this.categories = await ProductManager.getCategories();
-
         if (this.req.params.category) {
             this.category = this.req.__categories.find(p=>p.slug == this.req.params.category);
 
             if (!this.category) return this.next();
-            this.products = <Product[]>ProductManager.filterProductsByCategory(all, { slug: this.category.slug }, { productType: 'generic' }, { chunk: 0 });
-            this.foods = await new ProductsApi(this.constructorParams).getFoodsForProducts(this.products);
+            this.products = await ProductManager.getProductsOfCategories([this.category.id])
+            this.foods = await new ProductsApi(this.constructorParams).getFoodResources(this.products);
+            this.foodsWithCats = this.generateFoodWithCats(this.foods)
         } else {
-            this.foods = await new ProductsApi(this.constructorParams).getFoods();
+            this.foods = await new ProductsApi(this.constructorParams).getFoodResources();
+            this.foodsWithCats = this.generateFoodWithCats(this.foods)
         }
 
         this.res.render('pages/foods.ejs', this.viewData({
-            pageTitle: 'Et Yemek Tarifleri'
+            pageTitle: 'Et Yemekleri'
         }))
     }
+
+    async viewTarifsRoute() {
+        if (this.req.params.category) {
+            this.category = this.req.__categories.find(p=>p.slug == this.req.params.category);
+
+            if (!this.category) return this.next();
+            this.products = await ProductManager.getProductsOfCategories([this.category.id])
+            this.foods = await new ProductsApi(this.constructorParams).getTarifVideos(this.products);
+            this.foodsWithCats = this.generateFoodWithCats(this.foods)
+        } else {
+            this.foods = await new ProductsApi(this.constructorParams).getTarifVideos();
+            this.foodsWithCats = this.generateFoodWithCats(this.foods)
+        }
+
+        this.res.render('pages/tarifs.ejs', this.viewData({
+            pageTitle: 'Et Yemek Tarifleri'
+        }))
+    }    
 
 
     @Auth.Anonymous()
@@ -59,10 +95,9 @@ export default class Route extends ViewRouter {
         this.category = this.req.__categories.find(p=>p.slug == this.req.params.category);
 
         if (!this.category) return this.next();
-
-        let all = await ProductManager.getProducts();
-        this.products = <Product[]>ProductManager.filterProductsByCategory(all, { slug: this.category.slug }, { productType: 'generic' }, { chunk: 0 });
-        this.foods = await new ProductsApi(this.constructorParams).getFoodsForProducts(this.products);
+        
+        this.products = await ProductManager.getProductsOfCategories([this.category.id]);
+        this.foods = await new ProductsApi(this.constructorParams).getTarifVideos(this.products);
 
 
         this.renderPage()
@@ -98,8 +133,10 @@ export default class Route extends ViewRouter {
 
     static SetRoutes(router: express.Router) {
         router.get("/:category", Route.BindRequest(Route.prototype.viewRoute));
-        router.get("/et-yemek-tarifleri", Route.BindRequest(Route.prototype.viewFoodsRoute));
-        router.get("/et-yemek-tarifleri/:category", Route.BindRequest(Route.prototype.viewFoodsRoute));
+        router.get("/et-yemek-tarifleri", Route.BindRequest(Route.prototype.viewTarifsRoute));
+        router.get("/et-yemek-tarifleri/:category", Route.BindRequest(Route.prototype.viewTarifsRoute));
+        router.get("/et-yemekleri", Route.BindRequest(Route.prototype.viewFoodsRoute));
+        router.get("/et-yemekleri/:category", Route.BindRequest(Route.prototype.viewFoodsRoute));
         router.get("/:category/resimler/:filename", Route.BindRequest(Route.prototype.categoryPhotoRoute));
 
     }

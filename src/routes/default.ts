@@ -19,6 +19,7 @@ let ellipsis = require('text-ellipsis');
 export default class Route extends ViewRouter {
 
     products: Product[];
+    tarifs: Resource[];
     foods: Resource[];
     categories: Category[];
     blogItems: Content[];
@@ -67,7 +68,9 @@ export default class Route extends ViewRouter {
         this.categories = await Category.findAll({
             order: ["type", "displayorder"]
         });
-        this.foods = await new ProductsApi(this.constructorParams).getFoods(10);
+        this.tarifs = await new ProductsApi(this.constructorParams).getTarifVideos(null, 10);
+        this.foods = await new ProductsApi(this.constructorParams).getFoodResources(null, 10);
+        
         this.blogItems = await this.getBlogItems();
 
         this.res.render("pages/default.ejs", this.viewData({

@@ -68,7 +68,7 @@ export default class Route extends ViewRouter {
             where: where
         })
         this.allcontent = allcontent;
-        this.resources = await new ProductsApi(this.constructorParams).getResources(25)
+        this.resources = await new ProductsApi(this.constructorParams).getInformationalVideos(25)
 
         this.res.render('pages/blog.index.ejs', this.viewData({ allcontent: allcontent }))
     }

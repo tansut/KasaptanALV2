@@ -24,12 +24,8 @@
                 <li class="nav-item">
                     <a class="nav-link active" data-toggle="tab" href="#home">Resimleri Düzenle</a>
                 </li>
-                <!-- <li class="nav-item">
-                    <a class="nav-link" data-toggle="tab" href="#menu1">Resimler</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" data-toggle="tab" href="#menu2">Video</a>
-                </li> -->
+
+
             </ul>
 
 
@@ -64,10 +60,10 @@
                         </div>
 
                     </form>
-                    <form class="mt-2" name="saveimgform" method="POST">
-                        <div>
-
+                    
+                       
                             <% for(var i=0; i<images.length; i++) {%>
+                                <form class="mt-2" name="saveimgform" method="POST">
                             <div class="border row p-2 mb-2 bg-light">
                                 <div class="col-md-2">
                                     <% if (images[i].contentType == 'image/jpeg') { %>
@@ -123,21 +119,43 @@
                                             </div>
                                            
                                         </div>
+
+                                        <% for(var c=0; c< controller.categories.length; c++) {%>
+                                            
+                                                <% var catinfo = controller.getResourceCategory(images[i], controller.categories[c].id) %>
+                                                <div class="form-group">
+                                                    <label><%= controller.categories[c].name %></label>
+                    
+                                                    <div class="input-group mb-3">
+                    
+                                                        <div class="input-group-prepend">
+                                                            <div class="input-group-text">
+                                                                <input type="checkbox" name="categoryenabled<%=controller.categories[c].id %>"
+                                                                    <%= catinfo.enabled ? "checked" : "" %> aria-label="Checkbox">
+                                                            </div>
+                                                        </div>                                                        
+                                                        <input type="hidden" name="resourceid<%=controller.categories[c].id %>" value="<%= images[i].id %>">
+                                                        <input type="text" class="form-control" value="<%= catinfo.displayOrder %>"
+                                                            name="categorydisplayorder<%=controller.categories[c].id %>">
+                                                        <button type="submit" name="updatecategory" value="<%= controller.categories[c].id %>"
+                                                            class="btn btn-primary">Kaydet</button>
+                    
+                                                    </div>
+                                                </div>
+                                           
+                                            <% } %>                                        
                                     
                                         </div>
 
                             </div>
+                        </form>
                             <% } %>
-                        </div>
-                    </form>
+                    
+                 
                 </div>
 
-                <!-- <div id="menu1" class="container tab-pane fade"><br>
 
-                </div>
-                <div id="menu2" class="container tab-pane fade"><br>
 
-                </div> -->
             </div>
 
 

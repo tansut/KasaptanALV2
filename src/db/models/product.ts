@@ -399,6 +399,7 @@ class Product extends BaseModel<Product> {
             },
             order: [["type", "ASC"], ["updatedOn", "DESC"]]
         })
+        this.resources.forEach(c=>c.product = this);
     }
 
 }

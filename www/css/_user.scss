@@ -96,8 +96,12 @@ img{
   
   .item-card {
     .card-body {
-      padding: 0.6rem;
+      padding: 0.6rem !important;
     } 
+  }
+
+  .header-img {
+    width: 3.0rem;
   }
 
   .item-slider-sm {

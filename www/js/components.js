@@ -409,14 +409,14 @@ Vue.component('amount-input', {
                 //     window.App.ProductApp.note = oldNote ? (oldNote + "\n" + note): note;
                 // }
 
-                window.lgData.lg0.destroy();
+                
 
-                window.App.scrollToAnchor("#noteanchor");
+                
 
 
                 window.App.WeightCalculatorApp.show({
                     unit: unit,
-                    title: title,
+                    title: window.App.ProductApp.product.name,
                     personcount: personCount,
                     perperson: perperson,
                     note: ponote,
@@ -431,6 +431,8 @@ Vue.component('amount-input', {
                       
                     }, 1000); 
                     }
+                    window.lgData.lg0.destroy();
+                    window.App.scrollToAnchor("#noteanchor");
                 })
 
                 //$('#size-chart').modal("show");                

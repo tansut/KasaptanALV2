@@ -2,6 +2,7 @@ import { Table, Column, DataType, Model, HasMany, CreatedAt, UpdatedAt, DeletedA
 import BaseModel from "./basemodel"
 import Helper from '../../lib/helper';
 import Product from './product';
+import ResourceCategory from './resourcecategory';
 
 @Table({
     tableName: "Resources",
@@ -25,6 +26,12 @@ class Resource extends BaseModel<Resource> {
 
 
     product: Product;
+
+    @HasMany(() => ResourceCategory, {
+        sourceKey: "id",
+        foreignKey: "resourceid"
+    })
+    categories: ResourceCategory[];    
 
     @Column({
         allowNull: false,
@@ -88,13 +95,15 @@ class Resource extends BaseModel<Resource> {
     description: string;
 
     get note() {
+        let productName = this.product ? this.product.name: 'et';
         let note = this.tag2;
         if (this.tag1 == 'yemek-tarifi') {
-            note = this.tag2 || ('' + this.title + " yapacağım, normal şekilde hazırlayıp paketleyin lütfen.");
+            note = this.tag2 || (`${this.title} yapacağım ${productName} hazırlayın.`);
         } else if (this.tag1 == 'hazirlama-sekli') {
             note = this.tag2 ? (this.tag2) : (this.title + " olarak hazırlayın.")
+        } else  if (this.tag1 == 'yemek') {
+            note = this.tag2 || (`${this.title} yapacağım ${productName} hazırlayın.`);
         }
-
         // if (this.tag1 == 'yemek-tarifi') {
         //     note = this.tag2 ? (this.tag2) : (this.title + " yapacağım, lütfen uygun hazırlayın.");
         // } else if (this.tag1 == 'hazirlama-sekli') {

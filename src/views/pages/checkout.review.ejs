@@ -63,7 +63,7 @@
             <div class="border mb-4">
 
             
-            <div class="bg-secondary p-3  mb-4"><a class="media align-items-center" href="/<%=shopcard.butchers[bi].slug%>"><img class="rounded-circle" width="64" src="/<%=shopcard.butchers[bi].slug%>/fotograf/thumbnail" alt="<%=shopcard.butchers[bi].name%>">
+            <div class="bg-secondary p-3  mb-4"><a class="media align-items-center" href="/<%=shopcard.butchers[bi].slug%>"><img class="rounded-circle header-img"  src="/<%=shopcard.butchers[bi].slug%>/fotograf/thumbnail" alt="<%=shopcard.butchers[bi].name%>">
               <div class="media-body pl-2"><span class="font-size-ms text-muted">Teslimat ve Ödeme</span>
                 <h3 class="h4 mb-0 mr-2"><%= shopcard.butchers[bi].name %></h3>
               </div></a></div>
@@ -114,7 +114,7 @@
                       <% let item = shopcard.items[pi] %>
                       <div class="media align-items-top pt-2 pb-2"><a class="d-block mr-2"
                           href="<%=`/${item.product.slug}/${butcher.slug}`%>">
-                          <img width="64" src="<%=`/${item.product.slug}/resimler/thumbnail`%>" alt="<%=`${item.product.name}`%>" />
+                          <img class="header-img" src="<%=`/${item.product.slug}/resimler/thumbnail`%>" alt="<%=`${item.product.name}`%>" />
           
                         </a>
                         <div class="media-body">

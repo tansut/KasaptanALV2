@@ -10,26 +10,39 @@ var MarkdownIt = require('markdown-it')
 
 import * as _ from 'lodash';
 import Resource from '../../db/models/resource';
+import ResourceCategory from '../../db/models/resourcecategory';
+import Category from '../../db/models/category';
 
 export default class Route extends ApiRouter {
     markdown = new MarkdownIt();
 
-    async getFoodsForProducts(products: Product[]) {
-        let allresources = await Resource.findAll({
-            where: {
-                type: 'product-videos',
-                tag1: 'yemek-tarifi'
-            },
-            order:  [['updatedon', 'DESC']]
-        });
+    async getFoodResources(products4?: Product[], limit?: number) {
+        return this.getResources({
+            type: ['product-videos', 'product-photos'],
+            tag1: 'yemek'
+        },products4, limit)
+    }
 
-        // let foods = products.filter(p=> {
-        //     return resources.find(r=>r.ref1 == p.id)
-        // });
-        
-        // foods.forEach(p=> {
-        //     p.resources = resources.filter(r=>r.ref1 == p.id)
-        // })
+    async getResources(where, products4?: Product[], limit?: number) {
+        if (products4) where["ref1"] = products4.map(p=>p.id);
+        let allresources = await Resource.findAll({
+            where: where,
+            limit: limit || 1000,
+            include: [{
+                model: ResourceCategory,
+                as: 'categories',
+                include: [{
+                    model: Category}
+                ]
+            }],            
+            order:  [['updatedon', 'DESC']]
+        }); 
+
+        let products = products4 || await Product.findAll({
+            where: {
+                id: allresources.map(p=>p.ref1)
+            }
+        })
 
         let resources = [];
 
@@ -42,9 +55,19 @@ export default class Route extends ApiRouter {
         })
 
         return resources;        
+    }   
+
+
+    async getTarifVideos(products4?: Product[], limit?: number) {
+        return this.getResources({
+            type: 'product-videos',
+            tag1: 'yemek-tarifi'
+        }, products4, limit)          
     }
 
-    async getResources(limit?) {
+
+
+    async getInformationalVideos(limit?) {
         let resources = await Resource.findAll({
             where: {
                 type: 'product-videos',
@@ -67,28 +90,7 @@ export default class Route extends ApiRouter {
         return resources;
     }
 
-    async getFoods(limit?) {
-        let resources = await Resource.findAll({
-            where: {
-                type: 'product-videos',
-                tag1: 'yemek-tarifi'
-            },
-            limit: limit || 1000,
-            order: [['updatedon', 'DESC']]
-        });
 
-        let products = await Product.findAll({
-            where: {
-                id: resources.map(p=>p.ref1)
-            }
-        })
-
-        resources.forEach(p=> {
-            p.product = products.find(r=>r.id == p.ref1)
-        })
-
-        return resources;
-    }
     
 
 

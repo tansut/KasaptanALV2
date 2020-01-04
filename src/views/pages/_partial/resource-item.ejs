@@ -1,0 +1,30 @@
+<div class="card h-100 shadow-lg product-card card-static item-card">
+    <a class="gallery-item d-block overflow-hidden gallery-item <%= resource.contentType == 'video-youtube' ? 'video-item':''%>"
+    href="<%= `${resource.getFileUrl()}`  %>"
+    <% if (resource.tag1 == 'yemek-tarifi' || resource.tag1 == 'yemek') { %>
+      data-sub-html="<%= `<h6 class="font-size-normal text-light">${resource.title || ''}</h6><p class="font-size-md mb-2">${resource.description || ''}</p>`%> 
+      <% if (resource.note) {%>
+      <%=  '<a href="'%>  <%= include(`./addtonotelink.ejs`, {resource: resource, subUrl: subUrl, disableSlider: true  }) %>   <%='"class="btn btn-block btn-primary btn-sm rounded-0"><i class=" czi-add-circle mr-2"></i>'%><%= resource.tag3 || 'Uygun Hazırla' + '</button>' %>
+      <% } %>
+      "
+    <% } %>
+    >
+      <img class="" 
+      <% if (resource.contentType == 'video-youtube') { %>                                                           
+        src="<%= `/${resource.product.slug}/resimler/thumbnail` %>" 
+      <% } else { %>
+        src="<%= `${resource.getThumbnailFileUrl()}` %>"
+      <% } %>
+      alt="<%= resource.title  %>">
+    </a>
+    <div class="card-body pl-0 text-center">
+      <h3 class="product-title font-size-md"><a href="/<%= `${resource.product.slug}/${subUrl}/${__helper.slugify(resource.title || 'tarif')}?r=${resource.id}`  %>"><%= resource.title  %></a>
+      </h3>
+    </div>
+    <div class="card-footer ">
+     
+      <a href="<%- include(`./addtonotelink.ejs`, {resource: resource, subUrl: subUrl, auto: false  }) %>" class="btn btn-sm btn-primary"><i class=" czi-add-circle mr-2">
+      </i>Hazırla</a>
+      </small>
+    </div>                          
+  </div> 

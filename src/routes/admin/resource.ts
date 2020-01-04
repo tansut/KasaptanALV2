@@ -10,19 +10,39 @@ import { parse } from 'querystring';
 import { threadId } from 'worker_threads';
 import Helper from '../../lib/helper';
 import * as fs from "fs"
+import Category from '../../db/models/category';
+import ResourceCategory from '../../db/models/resourcecategory';
 
 export default class Route extends ViewRouter {
+
+    categories: Category[] = [];
 
     async getResources() {
         return await Resource.findAll({
             where: {
                 type: [this.req.params.type, this.req.query.videotype],
                 ref1: this.req.params.ref1
-            }
+            },
+            include: [
+                {
+                    all: true
+                }
+            ]
             , order: [["updatedOn", "DESC"]]
         })
     }
 
+    getResourceCategory(resource: Resource, categoryid: number) {
+        let productCategory = resource.categories.find(c => c.categoryid == categoryid)
+        return productCategory ? {
+            displayOrder: productCategory.displayOrder,
+            enabled: true,
+            productCategory: productCategory
+        } : {
+                displayOrder: "",
+                enabled: false
+            }
+    }
 
 
     @Auth.Anonymous()
@@ -32,6 +52,7 @@ export default class Route extends ViewRouter {
         }
 
         let resources = await this.getResources()
+        this.categories = await this.getCategories();
 
         this.res.render('pages/admin/resource.get.ejs', this.viewData({ images: resources }))
     }
@@ -44,8 +65,8 @@ export default class Route extends ViewRouter {
             contentLength: 0,
             contentUrl: youtubeid,
             thumbnailUrl: "",
-            folder:         ""
-    })
+            folder: ""
+        })
         return res;
     }
 
@@ -82,6 +103,14 @@ export default class Route extends ViewRouter {
 
     }
 
+    async getCategories() {
+        return await Category.findAll({
+            where: {
+                type: 'resource'
+            }
+        })
+    }
+
     @Auth.Anonymous()
     async saveRoute() {
 
@@ -91,6 +120,7 @@ export default class Route extends ViewRouter {
 
 
         let resources = await this.getResources();
+        this.categories = await this.getCategories();
 
 
         if (this.req.body.delimage) {
@@ -111,7 +141,25 @@ export default class Route extends ViewRouter {
 
 
 
-        }
+        } else if (this.req.body.updatecategory) {
+            let categoryid = parseInt(this.req.body.updatecategory);
+            let id = parseInt(this.req.body['resourceid' + categoryid]);
+            let resource = await Resource.findByPk(id);
+            await ResourceCategory.destroy({
+                where: {
+                    resourceid: resource.id,
+                    categoryid: categoryid
+                }
+            })
+            if (this.req.body['categoryenabled' + categoryid] == "on") {
+                let newItem = new ResourceCategory();
+                newItem.resourceid = resource.id;
+                newItem.categoryid = categoryid;
+
+                newItem.displayOrder = (this.req.body['categorydisplayorder' + categoryid]  ? parseInt(this.req.body['categorydisplayorder' + categoryid]) : 0)
+                await newItem.save();
+            }
+            }
         else if (this.req.body.pritimage) {
             let id = parseInt(this.req.body.pritimage);
             let resource = resources.find((res) => res.id == id);
@@ -126,11 +174,11 @@ export default class Route extends ViewRouter {
             resource.tag3 = this.req.body['imgtag3' + id];
             resource.description = this.req.body['imgdesc' + id];
             resource.badge = this.req.body['imgbadge' + id];
-            resource.settings = this.req.body['imgsettings' + id] ? JSON.parse(this.req.body['imgsettings' + id]): {};
+            resource.settings = this.req.body['imgsettings' + id] ? JSON.parse(this.req.body['imgsettings' + id]) : {};
             //resource.note = this.req.body['imgnote' + id];
 
             await resource.save();
-        }
+        } 
         else if (this.req.body.addimg && this.req["files"] && Object.keys(this.req["files"]).length != 0) {
             let photofile = this.req["files"].photofile;
             await this.addPhoto(photofile);

@@ -48,7 +48,7 @@
             <%- include('./_partial/product-view.ejs', {product: controller.products[j]}) %>
         </div>
         <% if (!foodsInserted && (controller.foods.length > 0) && (j == 11) && (controller.foods.length >= 4) && controller.category.tarifTitle) { foodsInserted = true; %>
-          <div class="mb-2 col-12">
+          <div class="mb-2 mb-md-4 col-12">
             <%- include('./_partial/foods-slider.ejs', {foods: controller.foods, title: controller.category.tarifTitle || 'Etler Bizden Tarifleri'}) %>
 
           </div>
@@ -59,7 +59,10 @@
       <div>
 
         <% if (!foodsInserted && controller.foods.length > 0) { %>
-           <%- include('./_partial/foods-slider.ejs', {foods: controller.foods, title: controller.category.tarifTitle || 'Etler Bizden Tarifleri'}) %>
+          <div class="mb-2 mb-md-4">
+            <%- include('./_partial/foods-slider.ejs', {foods: controller.foods, title: controller.category.tarifTitle || 'Etler Bizden Tarifleri'}) %>
+
+          </div>
         <% } %>
        
     </div>

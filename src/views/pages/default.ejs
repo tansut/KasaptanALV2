@@ -119,13 +119,19 @@
     </section>
 
 
+    <div class="container mb-2 mb-md-4">
 
+        <%- include('./_partial/foods-slider.ejs', {mode: 'food', title: 'Yemeğinizi Seçin', text: 'En uygun eti biz buluyoruz', foods: controller.foods}); %>
+
+
+
+    </div>
     
     <%- include('./_partial/category-products-slider', {category: 'populer-etler', reverse: true, img: 'img/category/premium.jpg'}); %>
 
-    <div class="container">
+    <div class="container mb-2 mb-md-4">
 
-        <%- include('./_partial/foods-slider.ejs', {title: 'Etler Bizden Tarifleri', text: 'Eti yemeğe uygun hazırlıyoruz.', foods: controller.foods}); %>
+        <%- include('./_partial/foods-slider.ejs', {title: 'Tarifler', text: 'Tarife göre etinizi hazırlıyoruz', foods: controller.tarifs}); %>
 
 
 

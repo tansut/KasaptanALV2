@@ -8,7 +8,7 @@
                 
 
                     <div class="bg-secondary border-bottom p-2 d-flex flex-nowrap justify-content-between align-items-center">
-                        <a class="media align-items-center align-self-center" href="/<%=cat.slug%>"><img class="rounded-circle" width="64" src="/<%=cat.slug%>/resimler/thumbnail" alt="<%=cat.name%>">
+                        <a class="media align-items-center align-self-center" href="/<%=cat.slug%>"><img class="rounded-circle header-img d-none d-md-block"  src="/<%=cat.slug%>/resimler/thumbnail" alt="<%=cat.name%>">
                         <div class="media-body pl-2">
                           <h3 class="h5 mb-0 mr-2"><%= typeof(title) != 'undefined' ? title: cat.name %></h3>
                           <span class="font-size-ms text-muted"><%= (typeof(desc) != 'undefined') ? desc: cat.shortdesc %></span>

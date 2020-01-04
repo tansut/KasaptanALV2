@@ -38,7 +38,7 @@
             <% for (let bi in shopcard.shipment) { %>
             <% let shipment = shopcard.shipment[bi]%>
             <div class="border mb-4">
-              <div class="bg-secondary p-3  mb-4"><a class="media align-items-center" href="/<%=shopcard.butchers[bi].slug%>"><img class="rounded-circle" width="64" src="/<%=shopcard.butchers[bi].slug%>/fotograf/thumbnail" alt="<%=shopcard.butchers[bi].name%>">
+              <div class="bg-secondary p-3  mb-4"><a class="media align-items-center" href="/<%=shopcard.butchers[bi].slug%>"><img class="rounded-circle header-img"  src="/<%=shopcard.butchers[bi].slug%>/fotograf/thumbnail" alt="<%=shopcard.butchers[bi].name%>">
                 <div class="media-body pl-2"><span class="font-size-ms text-muted">Teslimatı planlayalım</span>
                   <h3 class="h4 mb-0 mr-2"><%= shopcard.butchers[bi].name %></h3>
                 </div></a></div>

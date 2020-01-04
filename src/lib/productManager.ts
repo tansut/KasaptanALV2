@@ -8,6 +8,8 @@ import ProductModel from '../db/models/product';
 import * as _ from "lodash";
 import Butcher from '../db/models/butcher';
 import ButcherProduct from '../db/models/butcherproduct';
+import Resource from '../db/models/resource';
+import ResourceCategory from '../db/models/resourcecategory';
 
 interface FilterOptions {
     chunk?: number;
@@ -25,6 +27,38 @@ export default class ProductManager {
         });
     }
 
+    static async getProductsOfCategories(catids: number[]) {
+        return await ProductModel.findAll({
+            include: [{
+                model: ProductCategory,
+                as: 'categories',
+                include: [{
+                    model: Category}
+                ]
+            },
+            ], where: {
+                '$categories.category.id$': catids
+            },
+            order: [[ { model: ProductCategory, as: 'categories' }, "displayOrder", "desc"], [ "displayorder", "desc"]]
+        });
+    }    
+
+    static async getResourcesOfCategories(catids: number[]) {
+        return await Resource.findAll({
+            include: [{
+                model: ResourceCategory,
+                as: 'categories',
+                include: [{
+                    model: Category}
+                ]
+            },
+            ], where: {
+                '$categories.category.id$': catids
+            },
+            order: [[ { model: ResourceCategory, as: 'categories' }, "displayOrder", "desc"], [ "displayorder", "desc"]]
+        });
+    }  
+
     static async getCategories() {
         return await Category.findAll({
             order: ["type", "displayorder"]
@@ -41,6 +75,29 @@ export default class ProductManager {
 
             }
         });
+    }
+
+    static filterResources(products: Resource[], filter = {}, options: FilterOptions = {}) {
+        let result = _.filter(products, filter)
+        return options.chunk > 0 ? _.chunk(result, options.chunk) : result
+    }
+
+    static filterResourcesByCategory(products: Resource[], categoryFilter = {}, productFilter = {}, options: FilterOptions = {}) {
+        let filteredProducts = ProductManager.filterResources(products, productFilter);
+        let result = products.filter(p => {
+            return p.categories.findIndex(c => {
+                let pass = true
+                Object.keys(categoryFilter).forEach(k => {
+                    let val = c.category[k];
+                    pass = pass && (val == categoryFilter[k])
+                })
+                return pass;
+            }) >= 0
+        })
+        result = _.orderBy(result, (i: Resource) => {
+            return i.categories.find(c=>c.category.slug == categoryFilter['slug']).displayOrder
+        }, ['desc']);
+        return options.chunk > 0 ? _.chunk(result, options.chunk) : result
     }
 
     static filterProducts(products: ProductModel[], filter = {}, options: FilterOptions = {}) {

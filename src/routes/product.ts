@@ -119,7 +119,7 @@ export default class Route extends ViewRouter {
         let dapi = new DispatcherApi(this.constructorParams);
 
         let butcher: Butcher = this.req.params.butcher ? await Butcher.getBySlug(this.req.params.butcher) : null;
-        this.foods = await api.getFoodsForProducts([product])
+        this.foods = await api.getTarifVideos([product])
         if (this.req.query.semt) {
             let l3 = await Area.getBySlug(this.req.query.semt);
             if (l3 && l3.level == 3) {
@@ -221,6 +221,7 @@ export default class Route extends ViewRouter {
     static SetRoutes(router: express.Router) {
         router.get("/:product", Route.BindRequest(Route.prototype.productRoute));
         router.get("/:product/yemek-tarifi/:tarif", Route.BindRequest(Route.prototype.productRoute));
+        router.get("/:product/ile-yapin/:tarif", Route.BindRequest(Route.prototype.productRoute));
         router.get("/:product/:butcher", Route.BindRequest(Route.prototype.productRoute));
         router.get("/:product/resimler/:filename", Route.BindRequest(Route.prototype.productPhotoRoute));
     }

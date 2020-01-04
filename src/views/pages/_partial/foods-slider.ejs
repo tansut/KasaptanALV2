@@ -1,35 +1,36 @@
-<div class="bg-secondary pb-2 mb-2 mb-md-4">
+<%
+
+  var mode = typeof(mode) == 'undefined' ? 'tarif': 'food';
+  var targetUrl = mode == 'tarif' ? 'et-yemek-tarifleri': 'et-yemekleri';
+  var subUrl = mode == 'tarif' ? 'yemek-tarifi': 'ile-yapin';
+
+%>
+
+<div class="bg-secondary pb-2 ">
   <div class="bg-secondary rounded-lg mb-2 p-2 d-flex flex-nowrap justify-content-between align-items-center">
-      <a class="media align-items-center align-self-center" href="/et-yemek-tarifleri">
-        <img class="rounded-circle" width="64" src="/img/logo-home.jpg" alt="">
+      <a class="media align-items-center align-self-center" href="/<%=targetUrl%>">
+        <img class="rounded-circle header-img d-none d-md-block"   src="<%= typeof(iconUrl) == 'undefined' ? '/img/logo-home.jpg': iconUrl%>" alt="<%=title%>">
       <div class="media-body pl-2">
         <h3 class="h5 mb-0 mr-2"><%= typeof(title) != 'undefined' ? title: 'Etler Bizden Tarifleri' %></h3>
         <span class="font-size-ms text-muted"><%= typeof(text) != 'undefined' ? text: ''%></span>
       </div></a>
-      <a class="align-self-center d-md-block btn btn-sm" href="/et-yemek-tarifleri"><i
+      <a class="align-self-center d-md-block btn btn-sm" href="/<%=targetUrl%>">Tümü<i
           class="czi-arrow-right font-size-xs align-middle ml-1"></i></a>                        
   </div>
 
 
 <div class="ml-2">
-  <div class="table-responsive " data-simplebar>
+  <div class="table-responsive cz-gallery" data-simplebar>
       <div class="d-flex pb-2 ">
               <% foods.forEach((resource, i)=> {%>
                  
               <div class="mr-2 ">
                   <div class="item-slider item-slider-sm">
-                      
-                      <div class="card h-100 shadow-lg product-card card-static item-card">
-                          <a class=" d-block overflow-hidden gallery-item video-item"
-                          href="/<%= `${resource.product.slug}/yemek-tarifi/${__helper.slugify(resource.title || 'tarif')}?r=${resource.id}`  %>">
-                            <!-- <img class="rounded" src="<%= `https://img.youtube.com/vi/${resource.contentUrl}/maxresdefault.jpg` %>" alt="<%= resource.title  %>"> -->
-                            <img class="" src="<%= `/${resource.product.slug}/resimler/thumbnail` %>" alt="<%= resource.title  %>">
-                          </a>
-                          <div class="card-body pl-0 text-center">
-                            <h3 class="product-title font-size-md"><a href="/<%= `${resource.product.slug}/yemek-tarifi/${__helper.slugify(resource.title || 'tarif')}?r=${resource.id}`  %>"><%= resource.title  %></a>
-                            </h3>
-                          </div>
-                        </div>
+                    
+                    <%- include(`./resource-item.ejs`, {resource: resource, subUrl: subUrl  }) %>
+               
+
+                 
 
                   </div>
 

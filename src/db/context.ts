@@ -13,6 +13,7 @@ import Category from './models/category';
 import { Order, OrderItem} from './models/order';
 import Product from './models/product';
 import ProductCategory from './models/productcategory';
+import ResourceCategory from './models/resourcecategory';
 import ButcherProduct from './models/butcherproduct';
 import Content from './models/content';
 import Dispatcher from './models/dispatcher';
@@ -32,7 +33,7 @@ let init = (params?: any) => {
         dialectOptions: { decimalNumbers: true }
     });
 
-    dbInstance.addModels([ButcherModel, Order, OrderItem, Dispatcher, User, RefreshToken, Resource, Area, SiteLog, Category, Product, ProductCategory, ButcherProduct, Content]);
+    dbInstance.addModels([ButcherModel, Order, OrderItem, Dispatcher, User, RefreshToken, Resource, Area, SiteLog, Category, Product, ProductCategory, ButcherProduct, Content, ResourceCategory]);
 
     return dbInstance.sync({
         alter: true,
