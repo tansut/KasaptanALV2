@@ -6,8 +6,8 @@
 
 %>
 
-<div class="bg-secondary pb-2 ">
-  <div class="bg-secondary rounded-lg p-2 d-flex flex-nowrap justify-content-between align-items-center">
+<div class="<%= typeof(noBorder) == 'undefined' ? 'border':'' %>">
+  <div class="bg-secondary p-2 d-flex flex-nowrap justify-content-between align-items-center">
       <a class="media align-items-center align-self-center" href="<%=targetUrl%>">
         <img class="rounded-circle header-img d-none d-md-block"   src="<%= typeof(iconUrl) == 'undefined' ? '/img/logo-home.jpg': iconUrl%>" alt="<%=title%>">
       <div class="media-body pl-2">

@@ -16,7 +16,7 @@
         <nav aria-label="breadcrumb">
           <ol class="breadcrumb breadcrumb-light flex-lg-nowrap justify-content-center justify-content-lg-star">
             <li class="breadcrumb-item"><a class="text-nowrap" href="/"><i class="czi-home"></i></a></li>
-            <li class="breadcrumb-item text-nowrap"><a href="/reyonlar">Lezzetler</a>
+            <li class="breadcrumb-item text-nowrap"><a href="/lezzetler">Lezzetler</a>
             </li>
             <li class="breadcrumb-item text-nowrap active" aria-current="page"><%= controller.category.name %></li>
           </ol>
@@ -40,7 +40,7 @@
 
 
   <div class="container px-0">
-    <div class="bg-light box-shadow-lg px-4 py-4 mb-2 mb-md-4">
+    <div class="bg-light box-shadow-lg px-4 py-4 mb-3 __xxx__">
       <div class="row">
         <% var foodsInserted = false %>
         <% for(var j=0; j< controller.products.length; j++) {%>
@@ -48,7 +48,7 @@
             <%- include('./_partial/product-view.ejs', {product: controller.products[j]}) %>
         </div>
         <% if (!foodsInserted && (controller.foods.length > 0) && (j == 11) && (controller.foods.length >= 4) && controller.category.tarifTitle) { foodsInserted = true; %>
-          <div class="mb-2 mb-md-4 col-12">
+          <div class="mb-3 __xxx__ col-12">
             <%- include('./_partial/foods-slider.ejs', {mode: 'yemek', foods: controller.foods, title: controller.category.tarifTitle || 'Yemekler'}) %>
 
           </div>
@@ -59,7 +59,7 @@
       <div>
 
         <% if (!foodsInserted && controller.category.tarifTitle && controller.foods.length > 0) { %>
-          <div class="mb-2 mb-md-4">
+          <div class="mb-3 __xxx__">
             <%- include('./_partial/foods-slider.ejs', {mode: 'yemek', foods: controller.foods, title: controller.category.tarifTitle || 'Yemekler'}) %>
 
           </div>
@@ -67,44 +67,8 @@
        
     </div>
 
-    <div class="">
-       <div class="d-flex flex-wrap justify-content-between align-items-center pt-1 border-bottom pb-1 mb-2">
-          <h3 class="h6 mb-0 mr-2">Lezzetler</h3>
-          <a class="btn btn-sm btn-light" href="/reyonlar"><i class="czi-arrow-right ml-1 mr-n1"></i></a>
-      </div>
+    <%- include('./_partial/category-slider', { viewCats: ['reyon', 'list'], title: 'Lezzetler', allUrl: '/lezzetler' }); %>
 
-
-
-      <div class="table-responsive" data-simplebar>
-          <div class="d-flex pb-2">
-                  <% var viewCats = ['reyon', 'list'] %>
-                  <% viewCats.forEach(cat => { %>
-                  <% var reyonlar = (__categories.filter(p=>p.type == cat)) %>
-                  <% for(var c=0; c< reyonlar.length; c++) {%>
-                  <div class="mr-2">
-
-                      <div class="item-slider item-slider-sm">
-                          
-                          <div class="card product-card card-static item-card">
-                              <a class="" href="<%= `/${reyonlar[c].slug}`%>"><img class="rounded shadow-lg"
-                                  src="<%=`/${reyonlar[c].slug}/resimler/thumbnail` %>" alt=""></a>
-
-                              <div class="card-body mb-0 pb-0 pl-0 text-center">
-                                  <h3 class="product-title mb-0 pb-0 font-size-md"><a href="<%= `/${reyonlar[c].slug}`%>"><%= reyonlar[c].name %></a>
-                                  </h3>
-                              </div>
-                            </div>
-
-                      </div>
-
-               
-
-                  </div>  
-                  <%}%>
-                  <%})%>                  
-          </div>
-  </div>
-</div>
 
     </div>
   </div>

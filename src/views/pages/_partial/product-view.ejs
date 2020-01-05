@@ -8,7 +8,7 @@
      <% if (product.badge == 'video') { %>
         <button class="btn-wishlist btn-sm" type="button" data-toggle="tooltip" data-placement="left" title="" data-original-title="Zengin içerik"><i class="czi-video"></i></button>
      <% } %>
-    <a class="card-img-top d-block overflow-hidden" href="/<%= product.slug  %><%= (butcher ? `/${butcher}`:'') %>"><img class="rounded"
+    <a class=" d-block overflow-hidden" href="/<%= product.slug  %><%= (butcher ? `/${butcher}`:'') %>"><img class="rounded-0"
             src="<%= `/${product.slug}/resimler/thumbnail` %>" alt="<%= product.title  %>"></a>
     <div class="card-body pl-0 text-center">
         <h3 class="product-title font-size-md"><a href="/<%= product.slug%> <%= (butcher ? `/${butcher}`:'') %>"><%= product.name  %></a>

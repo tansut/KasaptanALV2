@@ -1,6 +1,6 @@
 <% if (typeof (viewMode) == 'undefined' || viewMode == 'tab') { %>
 <div class="container-fluid">
-    <ul class="nav nav-tabs justify-content-center mb-2 mb-md-4" id="pills-tab" role="tablist">
+    <ul class="nav nav-tabs justify-content-center mb-3 __xxx__" id="pills-tab" role="tablist">
         <% for(var i=0; i< categories.length; i++) {%>
         <% var category = categories[i] %>
         <li class="nav-item">
@@ -17,7 +17,7 @@
             role="tabpanel" aria-labelledby="<%= category.slug %>-tab">
             <div class="mb-4">
                 <% var products = controller.filterProductsByCategory(category.slug) %>
-                <div class="container mb-2 mb-md-4">
+                <div class="container mb-3 __xxx__">
                     <%- include('./products-view', {viewId: "", viewMode:'tab', products: products}); %>
 
                 </div>

@@ -94,7 +94,7 @@ export default class Route extends ViewRouter {
 
     static SetRoutes(router: express.Router) {
         router.get("/tum-lezzetler", Route.BindRequest(Route.prototype.productsView));
-        router.get("/reyonlar", Route.BindRequest(Route.prototype.reyonView));
+        router.get("/lezzetler", Route.BindRequest(Route.prototype.reyonView));
 
     }
 }

@@ -15,7 +15,7 @@
         <div class="topbar-text dropdown d-none d-md-none"><a class="topbar-link dropdown-toggle" href="#"
             data-toggle="dropdown">Hızlı Erişim</a>
           <ul class="dropdown-menu">
-            <li><a class="dropdown-item" href="/reyonlar"><i class="czi-view-grid text-muted mr-2"></i>Lezzetler</a></li>
+            <li><a class="dropdown-item" href="/lezzetler"><i class="czi-view-grid text-muted mr-2"></i>Lezzetler</a></li>
           <li>
             <li><a class="dropdown-item" href="tel:8503054216"><i class="czi-support text-muted mr-2"></i>0 850
                 3054216</a></li>
@@ -137,7 +137,7 @@
   
             <!-- Departments menu-->
             <!-- <ul class="navbar-nav mega-nav pr-lg-2 mr-lg-2">
-              <li class="nav-item dropdown"><a class="nav-link dropdown-toggle pl-0" href="/reyonlar"
+              <li class="nav-item dropdown"><a class="nav-link dropdown-toggle pl-0" href="/lezzetler"
                   data-toggle="dropdown"><i class="czi-view-grid mr-2"></i>Reyonlar</a>
   
                 <div class="dropdown-menu px-2 pl-0 pb-4">
@@ -170,7 +170,7 @@
               </li>
             </ul> -->
           <ul class="d-none d-lg-block navbar-nav mega-nav">
-                <li class="nav-item dropdown"><a class="nav-link dropdown-toggle pl-0" href="/reyonlar"
+                <li class="nav-item dropdown"><a class="nav-link dropdown-toggle pl-0" href="/lezzetler"
                     data-toggle="dropdown"></i>LezzEtler</a>
     
                   <div class="dropdown-menu px-2 pl-0 pb-4">
@@ -181,7 +181,7 @@
                       <% for(var c=0; c < reyonlar.length; c++) {%>
                       <div class="pt-4 px-3" style="width: 8rem;">
                         <div class="widget widget-links"><a class="d-block overflow-hidden rounded-lg mb-3"
-                            href="<%= `/${reyonlar[c].slug}`%>"><img class="rounded" src="<%=`/${reyonlar[c].slug}/resimler/thumbnail` %>"
+                            href="<%= `/${reyonlar[c].slug}`%>"><img class="x" src="<%=`/${reyonlar[c].slug}/resimler/thumbnail` %>"
                               alt="<%=reyonlar[c].name%>" /></a>
                           <h6 class="font-size-base mb-2 text-center">
                             <a class="text-primary" href="<%= `/${reyonlar[c].slug}`%>"><%= reyonlar[c].name %></a>
@@ -197,7 +197,7 @@
                     </div>
                     <% }) %>
                     <div class="text-center mt-2 border-top pt-4">
-                      <a href="/reyonlar" class="btn btn-sm btn-primary">Tamamı</a>
+                      <a href="/lezzetler" class="btn btn-sm btn-primary">Tamamı</a>
                     </div>
                   </div>
     
@@ -207,7 +207,7 @@
 
            
                <ul class="d-none d-lg-block navbar-nav mega-nav">
-                <li class="nav-item dropdown"><a class="nav-link dropdown-toggle pl-0" href="/reyonlar"
+                <li class="nav-item dropdown"><a class="nav-link dropdown-toggle pl-0" href="/lezzetler"
                     data-toggle="dropdown">Yemekler</a>
     
                   <div class="dropdown-menu px-2 pl-0 pt-4 pb-4">
@@ -225,7 +225,7 @@
                       <% for(var c=0; c < reyonlar.length; c++) {%>
                       <div class="pb-4 px-3" style="width: 8rem;">
                         <div class="widget widget-links"><a class="d-block overflow-hidden rounded-lg mb-3"
-                            href="<%= `/${reyonlar[c].slug}`%>"><img class="rounded" src="<%=`/${reyonlar[c].slug}/resimler/thumbnail` %>"
+                            href="<%= `/${reyonlar[c].slug}`%>"><img class="rounde" src="<%=`/${reyonlar[c].slug}/resimler/thumbnail` %>"
                               alt="<%=reyonlar[c].name%>" /></a>
                           <h6 class="font-size-base mb-2 text-center">
                             <a class="text-primary" href="<%= `/${reyonlar[c].slug}`%>"><%= reyonlar[c].name %></a>
@@ -252,8 +252,8 @@
             <!-- Primary menu-->
             <ul class="navbar-nav reyon-navbar d-lg-none">
               <li class="d-lg-none nav-item d-flex flex-nowrap align-items-center justify-content-between ">
-                <a class="nav-link  pl-0" href="/reyonlar"><%= 'LezzEtler' %></a>
-                <a class="pl-0 font-size-xs nav-link" href="/reyonlar">
+                <a class="nav-link  pl-0" href="/lezzetler"><%= 'LezzEtler' %></a>
+                <a class="pl-0 font-size-xs nav-link" href="/lezzetler">
                  
                   
                   Tümü <i class="czi-arrow-right"></i>

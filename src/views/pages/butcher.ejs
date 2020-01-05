@@ -89,24 +89,38 @@
           class="czi-video mr-2"> </i>Yakından Tanıyın</button>
       <% } %>
     </div>
-    <div class="cz-carousel cz-gallery ">
-      <div class="cz-carousel-inner"
-        data-carousel-options='{"nav": false, "items": 5, "gutter": 15, "autoplay": true, "responsive": {"0":{"items":1.1},"500":{"items":2.2, "gutter": 18},"768":{"items":4.4, "gutter": 20}, "1100":{"gutter": 24}}}''>
-        <% for(var i=0; i<images.length; i++) {%>
-        <div>
-            <a class="gallery-item rounded-lg mb-grid-gutter" href="<%= `/${butcher.slug}/fotograf/${images[i].contentUrl}`  %>" data-sub-html="&lt;h6 class=&quot;font-size-sm text-light&quot;&gt;<%= butcher.name %>&lt;/h6&gt;"><img class="img-fluid" src="<%= `/${butcher.slug}/fotograf/${images[i].contentUrl}?thumbnail=1`  %>" /><span class="gallery-item-caption"><%= butcher.name %></span></a>
-          
-        </div>
-        <% } %>
 
+
+    <div class="table-responsive cz-gallery" data-simplebar>
+      <div class="d-flex mx-2 ">
+        <% for(var i=0; i<images.length; i++) {%>
+                 
+              <div class="mr-2 ">
+                  <div class="item-slider item-slider-sm">
+                    
+               
+                    
+                     
+                          <a class="gallery-item rounded-lg mb-grid-gutter" href="<%= `/${butcher.slug}/fotograf/${images[i].contentUrl}`  %>" data-sub-html="&lt;h6 class=&quot;font-size-sm text-light&quot;&gt;<%= butcher.name %>&lt;/h6&gt;"><img style="width: 8rem; height: auto;" class="" src="<%= `/${butcher.slug}/fotograf/${images[i].contentUrl}?thumbnail=1`  %>" /><span class="gallery-item-caption"><%= butcher.name %></span></a>
+                        
+                     
+                     
+                 
+
+                  </div>
+
+              </div>  
+             
+              <% } %>
       </div>
-    </div>
+</div>
+
 
 
   </div>
 
   <div class=" mb-5 pb-3">
-    <div class="bg-light box-shadow-lg rounded-lg overflow-hidden">
+    <div class="bg-light box-shadow-lg  overflow-hidden">
       <div class="row">
         <!-- Sidebar-->
         <aside class="col-md-3 mr-md-0 pr-md-0 order-md-1 order-2">
@@ -180,7 +194,7 @@
         
         <% var categories = __categories.filter(p=>p.type == 'reyon') %>
               <div class="containerx-fluid">
-                  <ul class="nav nav-tabs  nav-justified mt-2 mb-2 mb-md-4" id="pills-tab" role="tablist">
+                  <ul class="nav nav-tabs  nav-justified mt-2 mb-3 __xxx__" id="pills-tab" role="tablist">
                      <% if (vitrinProducts.length > 0) { %> 
                      <li class="nav-item">
                           <a class="nav-link active %>" id="vitrin-tab" data-toggle="tab"
@@ -203,7 +217,7 @@
                       </li>
                       <% } %> 
                   </ul>
-                  <div class="tab-content container-fluid mb-2 mb-md-4" id="pills-tabContent">
+                  <div class="tab-content container-fluid mb-3 __xxx__" id="pills-tabContent">
                       <div class="tab-pane fade show active" id="vitrin"
                         role="tabpanel" aria-labelledby="vitrin-tab">
                         <% if (vitrinProducts.length > 0) { %> 
@@ -248,14 +262,6 @@
 
 
 
-
-  <div class="container text-center bg-edark pt-4 pb-4 border">
-    <div class="mb-4">
-      <h4 class="display-6"><%= butcher.name %> Sipariş</h4>
-    </div>
-
-    <button type="button" class="btn btn-lg btn-success open-order-dialog-button">SİPARİŞ VER</button>
-  </div>
 
 
 
