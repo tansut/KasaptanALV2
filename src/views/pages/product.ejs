@@ -54,9 +54,9 @@
 %>
 
   <!-- Page Content-->
-  <div class="container cz-gallery">
+  <div class="container px-0 cz-gallery">
     <!-- Gallery + details-->
-    <div class="bg-light box-shadow-lg mb-3 pb-4 rounded-lg">
+    <div class="bg-light box-shadow-lg mb-3 pb-4 ">
       <div>
         <div class="row ">
           <!-- Product gallery-->
@@ -112,7 +112,7 @@
 
 
             <div id="productapp" v-cloak class="col-lg-5 ">
-              <div class=" pl-2  pl-lg-0 pr-lg-4 pr-2  pt-lg-3 pb-0">
+              <div class=" px-3 pl-lg-0 pr-lg-4   pt-lg-3 pb-0">
                 <% if (view.butcher) {%>
                 <div class="mb-3">
 
@@ -122,7 +122,7 @@
                       <%- include('./_partial/currency.ejs', {value: view.viewUnitPrice, unit: view.viewUnit}) %>
                     </span> -->
 
-                    <div class="bg-secondary rounded-lg border-bottom p-2 d-flex flex-nowrap justify-content-between align-items-center">
+                    <div class="bg-secondary  border-bottom p-2 d-flex flex-nowrap justify-content-between align-items-center">
                       <a class="media align-items-center" href="/<%=view.butcher.slug%>"><img class="rounded-circle header-img"
                          src="/<%=view.butcher.slug%>/fotograf/thumbnail" alt="<%=view.butcher.name%>">
                       <div class="media-body pl-2">
