@@ -167,7 +167,7 @@
  
                     <% } %>
                   <div>
-                    <% if (tarifs.length) { %>
+                    <% if (tarifsAndFoods.length) { %>
                       <div>
                         <div class="mb-3">
                          
@@ -193,7 +193,7 @@
   <a class="text-primary" href="javascript:openSlider(<%=t.id%>)"><i class="text-primary <%= t.contentType == 'video-youtube' ? 'czi-youtube': 'czi-camera' %> mr-1"></i><%=t.title%></a>
   
   <% if (t.note) { %>
-  <!-- <a class="text-primary" title="Eti Bizden" href="javascript:<%= include('./_partial/addtonote.ejs', {resource: t }) %>"><span class="color-primary"><i class=" czi-thumb-up"></i></span>  </a> -->
+   <a class="text-primary" title="Eti Bizden" href="javascript:<%= include('./_partial/addtonote.ejs', {resource: t }) %>"><span class="color-primary"><i class=" czi-check-circle"></i></span>  </a> 
   <% } %>
 </div>
                              
@@ -609,7 +609,9 @@
                   $(document).ready(function() {
                   
                     <% if (!__req.query.autoNote) { %>                    
-                      openSlider(<%=__req.query.r%>);                                  
+                       openSlider(<%=__req.query.r%>);    
+                      
+                      
                     setTimeout(() => {                
                       $(document.body).removeClass("d-none")
                     }, 100);
@@ -617,7 +619,9 @@
                     var t = product.resources.find(p=>p.id == parseInt(__req.query.r))
                     %>
                     <% if (!__req.query.disableSlider) { %>
-                      openSlider(<%=__req.query.r%>);    
+                      // openSlider(<%=__req.query.r%>);    
+                      openSlider($('a[data-resid').first().data('resid'));    
+
                      <% } %>  
                     
                     setTimeout(() => {                

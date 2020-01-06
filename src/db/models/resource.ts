@@ -65,7 +65,7 @@ class Resource extends BaseModel<Resource> {
     isdefault: boolean
 
     @Column
-    order: number
+    displayOrder: number
 
     @Column
     folder: string;

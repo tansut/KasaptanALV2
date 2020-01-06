@@ -27,10 +27,13 @@
                 </li>
                 <li class="nav-item">
                     <a class="nav-link " data-toggle="tab" href="#units">Birim ve Fiyat</a>
-                </li>                
+                </li>    
+                
+                <% if (__req.user.hasRole('admin')) { %>
                 <li class="nav-item">
                     <a class="nav-link" data-toggle="tab" href="#menu1">Resimler</a>
                 </li>
+                <%}%>
                 <li class="nav-item">
                     <a class="nav-link" data-toggle="tab" href="#menu2">Kategoriler</a>
                 </li>
@@ -176,6 +179,8 @@
                         <button type="submit" name="saveunits" value="true" class="btn btn-primary">Kaydet</button>
                     </form>
                 </div>
+
+                <% if (__req.user.hasRole('admin')) { %>
                 <div id="menu1" class="container-fluid tab-pane fade"><br>
                     <form name="saveimgform" method="POST">
                         <a href="<%= `/pages/admin/resource/product-photos/${product.id}?fileprefix=${product.slug}&title=${product.name}&videotype=product-videos` %>"
@@ -191,6 +196,8 @@
                         </div>
                     </form>
                 </div>
+
+                <%}%>
                 <div id="menu2" class="container-fluid tab-pane fade"><br>
 
                     <div class="">

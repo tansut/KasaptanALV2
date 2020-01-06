@@ -28,7 +28,7 @@ export default class Route extends ViewRouter {
                     all: true
                 }
             ]
-            , order: [["updatedOn", "DESC"]]
+            , order: [["type", "ASC"], ["displayOrder", "DESC"], ["updatedOn", "DESC"]]
         })
     }
 
@@ -170,6 +170,9 @@ export default class Route extends ViewRouter {
             let resource = resources.find((res) => res.id == id);
             resource.title = this.req.body['imgtitle' + id];
             resource.tag1 = this.req.body['imgtag1' + id];
+            resource.displayOrder = this.req.body['imgdisplayorder' + id] ? parseInt(this.req.body['imgdisplayorder' + id]): 0;
+
+            
             resource.tag2 = this.req.body['imgtag2' + id];
             resource.tag3 = this.req.body['imgtag3' + id];
             resource.description = this.req.body['imgdesc' + id];

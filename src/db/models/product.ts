@@ -407,7 +407,7 @@ class Product extends BaseModel<Product> {
                 type: ["product-photos", "product-videos"],
                 ref1: this.id
             },
-            order: [["type", "ASC"], ["updatedOn", "DESC"]]
+            order: [["type", "ASC"], ["displayOrder", "DESC"], ["updatedOn", "DESC"]]
         })
         this.resources.forEach(c=>c.product = this);
     }

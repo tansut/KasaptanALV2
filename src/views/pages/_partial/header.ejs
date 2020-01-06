@@ -91,7 +91,7 @@
           <div class="navbar-tool-icon-box"><i class="navbar-tool-icon czi-menu"></i></div>
           <div class="navbar-tool-text ml-n3"></div>
         </a>
-          <a class="navbar-brand d-none d-lg-block mr-3 flex-shrink-0" href="/"
+          <a class="navbar-brand d-none d-lg-block mr-3 flex-shrink-0" href="<%=homeUrl%>"
             style="min-width: 7rem;"><img style="width: 11rem;" src="/img/logo-nav.png" alt="kasaptanal.com" /></a><a
             class="navbar-brand d-lg-none mr-2" href="<%=homeUrl%>" style="min-width: 2.125rem;"><img style="width: 8rem;"
               src="/img/logo-nav.png" alt="kasaptanal.com" /></a>
@@ -214,13 +214,13 @@
                     data-toggle="dropdown">Yemekler</a>
     
                   <div class="dropdown-menu px-2 pl-0 pt-4 pb-4">
-                    <div class="px-3">
+                    <!-- <div class="px-3">
                       <a href="/et-yemekleri" class="btn btn-sm btn-primary mr-2"><i class=" czi-thumb-up mr-2">
             
-                      </i>Eti Bizden</a>seçeneği ile yapacağınız yemeğe uygun doğru eti hazırlıyoruz.</p>
+                      </i>Eti Bizden</a> <span> seçeneği ile yapacağınız yemeğe uygun doğru eti hazırlıyoruz.</span>
                      
           
-                    </div>
+                    </div> -->
                     <% var viewCats = ['resource'] %>
                     <% var chunks = _.chunk(__categories.filter(p=> viewCats.find(c=>(p.type == c)) != null), 5) %>
                     <% chunks.forEach(reyonlar => { %>

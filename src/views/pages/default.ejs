@@ -92,7 +92,7 @@
 
 
     <div class="container mb-3">
-        <%- include('./_partial/foods-slider.ejs', {mode: 'food', title: 'Siz Yemeği Seçin', text: 'Doğru eti biz hazırlıyoruz', foods: controller.foods}); %>
+        <%- include('./_partial/foods-slider.ejs', {mode: 'food', showDesc: true, title: 'Siz Yemeği Seçin', text: '', foods: controller.foods}); %>
     </div>
     
     <div class="container mb-3">
@@ -100,7 +100,7 @@
     <%- include('./_partial/category-products-slider', {category: 'populer-etler', reverse: true, img: 'img/category/premium.jpg'}); %>
     </div>
     <div class="container mb-3">
-        <%- include('./_partial/foods-slider.ejs', {title: 'Tarifler', text: '', foods: controller.tarifs}); %>
+        <%- include('./_partial/foods-slider.ejs', {showDesc: true, title: 'Tarifler', text: '', foods: controller.tarifs}); %>
     </div>
 
     <div class="container mb-3">
@@ -118,7 +118,55 @@
 
     </div>
 
+    <!-- Butchers -->
 
+    <section class="container  mb-3 ">
+        <div class="bg-secondary border">
+            <div class="pt-2 ">
+                <h3 class="h5 text-center pb-2 pt-2">Ustalara Saygı Kuşağı</h3>
+
+                <div class="table-responsive" data-simplebar>
+                        <div class="d-flex pl-2 pb-2">
+
+                                <% for(var i=0; i<recentButchers.length; i++) {%>
+                                <div class="mr-2">
+                                        <div class="card item-slider">
+                                                <a href="<%= `/${recentButchers[i].slug}` %>">
+                                                    <img src="<%= `/${recentButchers[i].slug}/fotograf/thumbnail` %>"
+                                                    class="card-img-top" alt="<%= `/${recentButchers[i].name}` %>">
+                                                </a>
+
+            
+            
+                                            <div class="card-body text-center">
+                                                <h5 class="card-title truncate"><%= recentButchers[i].name %></h5>
+            
+                                                <p class="card-text ">
+                                                    <%= recentButchers[i].areaLevel1 && recentButchers[i].areaLevel1.name%>
+                                                </p>
+            
+            
+                                            </div>
+            
+            
+            
+ 
+                                        </div>
+
+                                    </div>  
+
+                                    <%}%>
+
+                        </div>
+
+                </div>
+
+    
+
+            </div>
+
+        </div>
+    </section>
 
 
     <!-- Banners-->
@@ -159,6 +207,8 @@
         </div>
     </section>
 
+
+
     <div class="container mb-3">
         <!-- <div class="d-flex flex-wrap justify-content-between align-items-center pt-1 border-bottom pb-1 mb-2">
             <h2 class="h3 mb-0 mr-2">Reyonlar</h2>
@@ -170,7 +220,7 @@
             <div class="bg-secondary mb-2 p-2 d-flex flex-nowrap justify-content-between align-items-center">
                 <a class="media align-items-center align-self-center" href="/et-kulturu">
                 <div class="media-body pl-2">
-                  <h3 class="h5 mb-0 mr-2">Et Kültürü</h3>
+                  <h3 class="h6 mb-0 mr-2">Et Kültürü</h3>
                   <span class="font-size-ms text-muted"></span>
                 </div></a>
                 <a class="align-self-center d-md-block btn btn-sm" href="/et-kulturu"><i
@@ -214,56 +264,6 @@
         </div>
 
 </div>
-
-    <!-- Butchers -->
-
-    <section class="">
-        <div class="container-fluid bg-secondary">
-            <div class="pt-2 pb-2">
-                <h3 class="h4 text-center pb-2 pt-2">Ustalara Saygı Kuşağı</h3>
-
-                <div class="table-responsive" data-simplebar>
-                        <div class="d-flex pb-2">
-
-                                <% for(var i=0; i<recentButchers.length; i++) {%>
-                                <div class="mr-2">
-                                        <div class="card item-slider">
-                                                <a href="<%= `/${recentButchers[i].slug}` %>">
-                                                    <img src="<%= `/${recentButchers[i].slug}/fotograf/thumbnail` %>"
-                                                    class="card-img-top" alt="<%= `/${recentButchers[i].name}` %>">
-                                                </a>
-
-            
-            
-                                            <div class="card-body text-center">
-                                                <h5 class="card-title truncate"><%= recentButchers[i].name %></h5>
-            
-                                                <p class="card-text ">
-                                                    <%= recentButchers[i].areaLevel1 && recentButchers[i].areaLevel1.name%>
-                                                </p>
-            
-            
-                                            </div>
-            
-            
-            
- 
-                                        </div>
-
-                                    </div>  
-
-                                    <%}%>
-
-                        </div>
-
-                </div>
-
-    
-
-            </div>
-
-        </div>
-    </section>
 
 
 

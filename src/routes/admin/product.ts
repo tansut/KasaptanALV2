@@ -36,7 +36,7 @@ export default class Route extends ViewRouter {
                 type: "product-photos",
                 ref1: product.id
             },
-            order: [["updatedOn", "DESC"]]
+            order: [["displayOrder", "DESC"], ["updatedOn", "DESC"]]
         })
     }
 

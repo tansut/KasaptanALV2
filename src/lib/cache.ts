@@ -130,7 +130,7 @@ export class CacheManager {
         if (!resources) {
             let res = await Resource.findAll({
                 raw: true,
-                order: [["type", 'desc'], ["updatedOn", "DESC"]]
+                order: [["type", 'desc'], ["displayOrder", "DESC"], ["updatedOn", "DESC"]]
             })
             let result: { [key: string]: ResourceCacheItem []; } = {};
             res.forEach((ri, i) => {
