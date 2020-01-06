@@ -13,7 +13,7 @@
     %>
 
   <a data-resid="<%=resource.id%>" class="gallery-item <%= !note ? 'mb-grid-gutter':''%>  <%= resource.contentType == 'video-youtube' ? 'video-item':''%>"
-    <% if (resource.tag1 == 'yemek-tarifi' || resource.tag1 == 'yemek') { %>
+    <% if (resource.tag1 && (resource.tag1.includes('tarif') || resource.tag1.includes('yemek'))) { %>
       data-sub-html="<%= `<h6 class="font-size-normal text-light">${resource.title || ''}</h6><p class="font-size-md mb-2">${resource.description || ''}</p>`%> 
       <% if (resource.note) {%>
       <%=  '<button type="button" onclick="'%>  <%= include(`./addtonote.ejs`, {resource: resource }) %>   <%='"class="btn btn-block btn-primary btn-sm rounded-0"><i class=" czi-thumb-up mr-2"></i>'%><%= resource.tag3 || 'Eti Bizden' + '</button>' %>

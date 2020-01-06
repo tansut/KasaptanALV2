@@ -12,6 +12,7 @@ import * as _ from 'lodash';
 import Resource from '../../db/models/resource';
 import ResourceCategory from '../../db/models/resourcecategory';
 import Category from '../../db/models/category';
+import { Op } from 'sequelize';
 
 export default class Route extends ApiRouter {
     markdown = new MarkdownIt();
@@ -19,7 +20,9 @@ export default class Route extends ApiRouter {
     async getFoodResources(products4?: Product[], limit?: number, catids?: number[]) {
         return this.getResources({
             type: ['product-videos', 'product-photos'],
-            tag1: 'yemek'
+            tag1: {
+                [Op.like]: '%yemek%', 
+            }
         }, products4, limit, catids)
     }
 
@@ -36,7 +39,7 @@ export default class Route extends ApiRouter {
                 }
                 ]
             }],
-            order: [[{ model: ResourceCategory, as: 'categories' }, "displayOrder", "desc"], ["updatedOn", "desc"]]
+            order: [[{ model: ResourceCategory, as: 'categories' }, "displayOrder", "desc"], ["displayOrder", "desc"], ["updatedOn", "desc"]]
         }
         if (limit) params['limit'] = limit;
         let allresources = await Resource.findAll(<any>params);
@@ -81,7 +84,9 @@ export default class Route extends ApiRouter {
     async getTarifVideos(products4?: Product[], limit?: number, catids?: number[]) {
         return this.getResources({
             type: 'product-videos',
-            tag1: 'yemek-tarifi'
+            tag1: {
+                [Op.like]: '%tarif%', 
+            } 
         }, products4, limit, catids)
     }
 

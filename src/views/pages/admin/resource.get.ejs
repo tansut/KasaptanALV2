@@ -69,7 +69,9 @@
                                     <% if (images[i].contentType == 'image/jpeg') { %>
                                         <img width="300" class="image my-2 "
                                             src="<%= `/resource/${images[i].id}?thumbnail=1`  %>" />
+
                                         <% } else { %>
+                                            <span>VIDEO</span>
                                             <a target="_blank"  class="gallery-item video-item "
                                                 
                                                 href="<%= `${images[i].getFileUrl()}` %>">
@@ -113,6 +115,10 @@
                                             <input value="<%= images[i].badge %>" class="form-control" type="text" name="imgbadge<%= images[i].id %>"><br>
                                             <label>Note</label>
                                             <input class="form-control" readonly value="<%= images[i].note %>" type="text" name="imgnote<%= images[i].id %>"><br>
+                                            
+                                            <label>Thumbnail</label>
+                                            <input value="<%= images[i].getThumbnailFileUrl() %>" class="form-control" type="text" name="imgthumbnail<%= images[i].id %>"><br>
+                
                                             <label>JSON</label>
                                             
                                             <textarea rows="6" class="form-control" name="imgsettings<%= images[i].id %>"

@@ -42,13 +42,13 @@
   let resources = product.resources; 
   let images = resources.filter(p=>p.contentType == "image/jpeg");
   let videos = resources.filter(p=>p.contentType == "video-youtube");
-  let tarifs = resources.filter(p=>p.tag1 == "yemek-tarifi");
-  let tarifsAndFoods = resources.filter(p=>p.tag1 == "yemek-tarifi" || p.tag1=="yemek");
+  let tarifs = resources.filter(p=>p.tag1 && p.tag1.includes("tarif"));
+  let tarifsAndFoods = resources.filter(p=>p.tag1 && (p.tag1.includes("tarif") || p.tag1.includes("yemek")));
 
   
   let videoTarifs = tarifs.filter(p=>p.contentType == "video-youtube");
   let hazirlanisResources = resources.filter(p=>p.tag1 == "hazirlama-sekli");
-  let otherVideos = videos.filter(p=>(p.tag1 != "yemek-tarifi" && p.tag1 != "hazirlama-sekli" && p.tag1));
+  let otherVideos = videos.filter(p=>(p.tag1 && !p.tag1.includes( "tarif") && p.tag1 != "hazirlama-sekli" ));
   let firstImage = images.length ? images[0]: null;  
   let chunks = _.chunk(images.slice(1, images.length), 3) 
 %>
@@ -518,7 +518,7 @@
                               <% if (resource.badge) {%>
                                   <span class="badge badge-primary badge-shadow product-img-badge"><%= resource.badge%></span>
                                 <% } %>
-                                  <% if (resource.tag1 == 'yemek-tarifi') {%>
+                                  <% if (resource.tag1 == 'tarif') {%>
                                   <div class="text-center">
                                    
                                     <button type="button" @click='addToNote("<%= resource.note %>")'

@@ -49,6 +49,7 @@ export default class Route extends ViewRouter {
         return res;
     }
 
+
     async fillFoods(categoryid?: number, subcategory?: string) {
         if (subcategory) {
             let category = this.req.__categories.find(p => p.slug == subcategory);
@@ -120,7 +121,8 @@ export default class Route extends ViewRouter {
 
         else {
             this.products = await ProductManager.getProductsOfCategories([this.category.id]);
-            this.foods = Helper.shuffle(await new ProductsApi(this.constructorParams).getResources({tag1: ['yemek-tarifi', 'yemek']}, this.products));
+            // this.foods = Helper.shuffle(await new ProductsApi(this.constructorParams).getResources({tag1: ['tarif', 'yemek']}, this.products));
+            this.foods = await new ProductsApi(this.constructorParams).getFoodResources(this.products);
 
             this.renderPage('pages/category.ejs')
         

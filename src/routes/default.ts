@@ -21,7 +21,6 @@ export default class Route extends ViewRouter {
     products: Product[];
     tarifs: Resource[];
     foods: Resource[];
-    categories: Category[];
     blogItems: Content[];
 
     async getBlogItems() {
@@ -35,9 +34,7 @@ export default class Route extends ViewRouter {
         return allcontent;
     }
     
-    getCategory(type: string) {
-        return this.categories.find(p => p.type == type);
-    }
+
 
 
  
@@ -65,11 +62,8 @@ export default class Route extends ViewRouter {
         });
 
         this.products = await ProductManager.getProducts();
-        this.categories = await Category.findAll({
-            order: ["type", "displayorder"]
-        });
         this.tarifs = await new ProductsApi(this.constructorParams).getTarifVideos(null, 10);
-        this.foods = await new ProductsApi(this.constructorParams).getFoodResources(null, 10);
+        this.foods = await new ProductsApi(this.constructorParams).getFoodResources(null, 15);
         
         this.blogItems = await this.getBlogItems();
 

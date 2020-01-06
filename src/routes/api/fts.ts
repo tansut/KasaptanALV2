@@ -59,7 +59,7 @@ export default class Route extends ApiRouter {
         })
 
         let foodResources = await User.sequelize.query("select id, title, ref1, match(title, description) against (:search IN BOOLEAN MODE) as RELEVANCE " +
-            "from Resources where tag1 in ('yemek-tarifi', 'yemek') and match(title, description)  against (:search IN BOOLEAN MODE) ORDER BY  RELEVANCE DESC LIMIT 10",
+            "from Resources where tag1 in ('tarif', 'yemek') and match(title, description)  against (:search IN BOOLEAN MODE) ORDER BY  RELEVANCE DESC LIMIT 10",
             {
                 replacements: { search: search },
                 type: sq.QueryTypes.SELECT,

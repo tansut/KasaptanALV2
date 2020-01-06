@@ -97,14 +97,14 @@ class Resource extends BaseModel<Resource> {
     get note() {
         let productName = this.product ? this.product.name: 'et';
         let note = this.tag2;
-        if (this.tag1 == 'yemek-tarifi') {
+        if (this.tag1 && this.tag1.includes('tarif')) {
             note = this.tag2 || (`${this.title} yapacağım, lütfen uygun hazırlayın.`);
         } else if (this.tag1 == 'hazirlama-sekli') {
             note = this.tag2 ? (this.tag2) : (this.title + " olarak hazırlayın.")
-        } else  if (this.tag1 == 'yemek') {
+        } else  if (this.tag1 && this.tag1.includes('yemek')) {
             note = this.tag2 || (`${this.title} yapacağım, lütfen uygun hazırlayın.`);
         }
-        // if (this.tag1 == 'yemek-tarifi') {
+        // if (this.tag1 == 'tarif') {
         //     note = this.tag2 ? (this.tag2) : (this.title + " yapacağım, lütfen uygun hazırlayın.");
         // } else if (this.tag1 == 'hazirlama-sekli') {
         //     note = this.tag2 ? (this.tag2) : (this.title + " olarak hazırlayın.")
@@ -136,7 +136,7 @@ class Resource extends BaseModel<Resource> {
     getThumbnailFileUrl() {
         if (this.contentType == 'image/jpeg') {
             return `/${this.folder}/${this.thumbnailUrl}`
-        } else return `https://img.youtube.com/vi/${this.contentUrl}/maxresdefault.jpg`
+        } else  return `https://img.youtube.com/vi/${this.contentUrl}/maxresdefault.jpg`
     }
 }
 
