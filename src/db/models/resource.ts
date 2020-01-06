@@ -133,10 +133,12 @@ class Resource extends BaseModel<Resource> {
         else return `https://www.youtube.com/watch?v=${this.contentUrl}`;
     }
 
-    getThumbnailFileUrl() {
+    getThumbnailFileUrl(ignoreThumbnail: boolean = false) {
         if (this.contentType == 'image/jpeg') {
             return `/${this.folder}/${this.thumbnailUrl}`
-        } else  return `https://img.youtube.com/vi/${this.contentUrl}/maxresdefault.jpg`
+        } else if (this.thumbnailUrl && !ignoreThumbnail) {
+            return `${this.thumbnailUrl}`
+        } else return `https://img.youtube.com/vi/${this.contentUrl}/maxresdefault.jpg`
     }
 }
 
