@@ -14,6 +14,17 @@ import ButcherProduct from './butcherproduct';
 })
 
 class Content extends BaseModel<Content> {
+
+    @Column({
+        allowNull: true,
+    })
+    pageTitle: string;
+
+    @Column({
+        allowNull: true,
+    })
+    pageDescription: string;
+    
     @Column({
         allowNull: false,
     })

@@ -2,16 +2,44 @@
   <div class="modal-dialog modal-dialog-scrollable">
     <div class="modal-content">
       <div class="modal-header">
-        <h5 class="modal-title">{{options.title  || 'İhtiyacı belirleyelim'}} </h5>
+        <h6 class="modal-title">{{options.title  || 'İhtiyacı belirleyelim'}} </h6>
         <button class="close" type="button" data-dismiss="modal" aria-label="Close"><span
             aria-hidden="true">&times;</span></button>
       </div>
       <div class="modal-body p-0">
         <div class="" id="weightcalculatorapp">
+          <div v-if="foodName" class="px-4 py-2  d-flex border-bottom flex-nowrap bg-secondary justify-content-center align-items-center">
+            <div class="pr-2 w-50">
+              <img src="/img/butcher-default-thumbnail.jpg" class="figure rounded-circle" alt="">
+              </div>
+              <div class="font-size-sm">
+                <h6>{{productName}}</h6>
+                <span>
+                  Kasabımız 
+                </span>
+                <span class="font-weight-medium">
+                  {{foodName}}
+                </span>
+                <span>
+                  için
+                </span> 
+                <span class="font-weight-medium">
+                  {{productName}}
+                </span>
+                <span>
+                  önermektedir. 
+                </span>
+                  
+              </div>
+          </div>
+
           <div class="bg-secondary border-bottom  pt-2">
             <div class=" d-flex align-items-center justify-content-center mb-1">
               <span class="font-weight-medium">Kaç kişisiniz ?</span>
             </div>
+
+        
+
             <amount-input class="" :def="2" :min="1" :max="25" :step="1" v-model="personcount" unit="kişi"></amount-input>
   
           </div>

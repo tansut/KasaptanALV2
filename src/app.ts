@@ -143,8 +143,9 @@ class KasaptanAlApp {
 
         this.app.use('/api/v1', this.apiRouter);
         this.app.use('/pages/admin', (req: AppRequest, res, next) => {
-            if (!req.user || !req.user.hasRole('admin')) res.redirect('/login')
-            else next()
+            if (req.user && (req.user.hasRole('admin') || req.user.hasRole('seo'))) 
+                next();
+            else res.redirect('/login?r=' + req.originalUrl)
         }, this.adminPagesRouter);
 
         this.app.use('/user', (req: AppRequest, res, next) => {

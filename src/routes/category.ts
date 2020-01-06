@@ -26,7 +26,8 @@ export default class Route extends ViewRouter {
 
     renderPage(view: string) {
         this.res.render(view, this.viewData({
-            pageTitle: this.category.name + ' Et Lezzetleri'
+            pageTitle: this.category.pageTitle || this.category.name + ' Et Lezzetleri',
+            pageDescription: this.category.pageDescription 
         }))
     }
 

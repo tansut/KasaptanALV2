@@ -4,12 +4,11 @@
 <link rel="stylesheet" media="screen" href="/css/vendor.min.css">
 <link rel="stylesheet" media="screen" id="main-styles" href="/css/theme.min.css">
 
-
 <title>
     <%= typeof pageTitle == 'undefined' ? "Seçkin kasaplardan doğal, taze, güvenilir et siparişi.": (pageTitle + " | kasaptanal.com") %>
 </title>
 <meta name="description"
-    content="Birinci sınıf et ve et ürünleri kasaptanal.com&#39;da. Bir tıkla en lezzetli etler en seçkin kasaplardan kapına gelsin.">
+    content="<%= typeof pageDescription == 'undefined' ? 'Birinci sınıf et ve et ürünleri kasaptanal.com&#39;da. Bir tıkla en lezzetli etler en seçkin kasaplardan kapına gelsin.': (pageDescription) %>"
 
     <link rel="apple-touch-icon" sizes="180x180" href="/img/icon/apple-touch-icon.png">
     <link rel="icon" type="image/png" sizes="32x32" href="/img/icon/favicon-32x32.png">

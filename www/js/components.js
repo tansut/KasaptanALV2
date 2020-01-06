@@ -310,7 +310,9 @@ Vue.component('amount-input', {
                 perperson: null,
                 options: {},
                 cardnote: "",
-                cardnoteph: ""
+                cardnoteph: "",
+                productName: "",
+                foodName: ""
             }
 
         },
@@ -327,6 +329,8 @@ Vue.component('amount-input', {
                 this.note = options.note || "";
                 this.cardnote = options.cardnote || "";
                 this.cardnoteph = options.cardnoteph || "";
+                this.foodName = options.foodName;
+                this.productName = options.productName;
 
                 $('#size-chart').modal("show");       
                 return new Promise((resolve, reject) => {
@@ -401,7 +405,7 @@ Vue.component('amount-input', {
                 this.addToNote(this.note, unit.unit, null, 0, null, "", unit.notePlaceholder)
             },
 
-            addToNote(note, unit, title, perperson, personCount, ponote, noteph) {
+            addToNote(note, unit, title, perperson, personCount, ponote, noteph, productName, foodName) {
                 this.ensureUnitSelected();
                 
                 // var oldNote = this.note = "";
@@ -416,7 +420,10 @@ Vue.component('amount-input', {
 
                 window.App.WeightCalculatorApp.show({
                     unit: unit,
-                    title: window.App.ProductApp.product.name,
+                    title: title,
+                    // title: window.App.ProductApp.product.name,
+                    foodName: foodName,
+                    productName: productName,
                     personcount: personCount,
                     perperson: perperson,
                     note: ponote,

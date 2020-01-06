@@ -190,7 +190,9 @@ export default class Route extends ViewRouter {
 
         let view = await api.getProductView(product,  selectedButchers.best )
 
-        this.res.render('pages/product', this.viewData({ butchers: selectedButchers, pageTitle: product.name, product: product, view: view }))
+        
+
+        this.res.render('pages/product', this.viewData({ butchers: selectedButchers, pageTitle: product.pageTitle || product.name, pageDescription: product.pageDescription, product: product, view: view }))
     }
 
 

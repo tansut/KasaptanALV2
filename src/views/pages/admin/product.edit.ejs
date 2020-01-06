@@ -34,6 +34,10 @@
                 <li class="nav-item">
                     <a class="nav-link" data-toggle="tab" href="#menu2">Kategoriler</a>
                 </li>
+
+                <li class="nav-item">
+                    <a class="nav-link" data-toggle="tab" href="#seo">SEO</a>
+                </li>
             </ul>
 
 
@@ -216,6 +220,18 @@
                         <% } %>
                     </div>
 
+                </div>
+
+                <div id="seo" class="container-fluid tab-pane">
+
+                    <form name="saveform" method="POST">
+                        <%- include('./_partial/seo.ejs', { pageTitle: product.pageTitle, pageDescription: product.pageDescription  }) %>
+                
+                        <div class="">
+                            <button type="submit" name="saveseo" value="true" class="btn btn-primary">Kaydet</button>
+                        </div>
+                    </form>
+                  
                 </div>
             </div>
 

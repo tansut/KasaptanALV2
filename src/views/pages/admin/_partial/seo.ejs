@@ -1,0 +1,13 @@
+<% var namePref = typeof(namePref) == 'undefined' ? '': namePref %>
+
+<div class="form-group">
+    <label>Sayfa Başlığı</label>
+    <input type="text" class="form-control" name="<%=namePref%>pagetitle" id="<%=namePref%>pagetitle"
+        value="<%= pageTitle %>">
+</div>
+
+<div class="form-group">
+    <label>Sayfa Açıklaması</label>
+    <textarea rows="6" class="form-control" name="<%=namePref%>pagedesc"
+        id="<%=namePref%>pagedesc"><%= pageDescription %></textarea>
+</div>

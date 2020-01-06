@@ -5,11 +5,9 @@ export default class AppBase {
 
     static jq(selector?) {
         return selector ? <any>$(selector) : <any>$;
-
     }
 
     static shareFb() {
-       
         let url = 'https://work.facebook.com/sharer.php?display=popup&u=' + window.location.href;
         let options = 'toolbar=0,status=0,resizable=1,width=626,height=436';
         return window.open(url,'sharer',options);
@@ -41,7 +39,6 @@ export default class AppBase {
     static showLoginDlg(returnUrl?: string) {
         this.activaTab("signin-tab")
         this.RunConfig['returnUrl'] = returnUrl;
-                this.jq('#signin-modal').modal('show');
-
+        this.jq('#signin-modal').modal('show');
     }
 }

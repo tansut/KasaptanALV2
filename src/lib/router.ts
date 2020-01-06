@@ -186,8 +186,6 @@ export class ViewRouter extends BaseRouter {
     }
 
     viewData(data) {
-        // if (!this.categoryData)
-        //     this.categoryData = await this.createCategoryMenu();
         return {
             ...{
                 res: this.res,

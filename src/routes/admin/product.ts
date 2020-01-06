@@ -78,7 +78,9 @@ export default class Route extends ViewRouter {
         this.res.render('pages/admin/product.edit.ejs', this.viewData({ getProductCategory: this.getProductCategory, categories: categories, images: resources, product: product }))
     }
 
+    async saveSeoRoute() {
 
+    }
 
     @Auth.Anonymous()
     async saveRoute() {
@@ -93,17 +95,22 @@ export default class Route extends ViewRouter {
 
 
         if (this.req.body.save == "true") {
-            this.product.slug = this.req.body.slug;
-            this.product.name = this.req.body.name;
-            this.product.tag1 = this.req.body.tag1;
-            this.product.tag2 = this.req.body.tag2;
-            this.product.shortdesc = this.req.body.description;
+            if (this.req.user.hasRole('admin')) {
+                this.product.slug = this.req.body.slug;
+                this.product.name = this.req.body.name;
+                this.product.tag1 = this.req.body.tag1;
+                this.product.tag2 = this.req.body.tag2;
+                this.product.shortdesc = this.req.body.description;
+                this.product.notePlaceholder = this.req.body.notePlaceholder;
+                this.product.featuresText = this.req.body.featuresText;
+            }
             this.product.mddesc = this.req.body.mddesc;
-            this.product.notePlaceholder = this.req.body.notePlaceholder;
-            this.product.featuresText = this.req.body.featuresText;
-
             await this.product.save();
-        } else if (this.req.body.saveunits == "true") {
+        } else if (this.req.body.saveseo == "true") {
+            this.product.pageTitle = this.req.body.pagetitle;
+            this.product.pageDescription = this.req.body.pagedesc;
+            await this.product.save();
+        } else if (this.req.body.saveunits == "true" && this.req.user.hasRole('admin')) {
             this.product.unit1 = this.req.body.unit1;
             this.product.unit1desc = this.req.body.unit1desc;
             this.product.unit1note = this.req.body.unit1note;
@@ -145,9 +152,9 @@ export default class Route extends ViewRouter {
 
 
 
-            this.product.unit1Order = parseInt(this.req.body.unit1Order);            
-            this.product.unit2Order = parseInt(this.req.body.unit2Order);            
-            this.product.unit3Order = parseInt(this.req.body.unit3Order);            
+            this.product.unit1Order = parseInt(this.req.body.unit1Order);
+            this.product.unit2Order = parseInt(this.req.body.unit2Order);
+            this.product.unit3Order = parseInt(this.req.body.unit3Order);
 
             this.product.defaultUnit = parseInt(this.req.body.defaultUnit);
             this.product.defaultAmount = parseFloat(this.req.body.defaultAmount);
@@ -156,7 +163,7 @@ export default class Route extends ViewRouter {
 
 
             await this.product.save();
-        }  else if (this.req.body.updatecategory == "true") {
+        } else if (this.req.body.updatecategory == "true" && this.req.user.hasRole('admin')) {
             let categoryid = parseInt(this.req.body.categoryid);
             //let productCategory = this.getProductCategory(parseInt(this.req.body.categoryid));
             await ProductCategory.destroy({
@@ -185,6 +192,7 @@ export default class Route extends ViewRouter {
         router.get("/product/list", Route.BindRequest(Route.prototype.listViewRoute));
         router.get("/product/:product", Route.BindRequest(Route.prototype.editViewRoute));
         router.post("/product/:product", Route.BindRequest(Route.prototype.saveRoute));
+        router.post("/product/:product/saveseo", Route.BindRequest(Route.prototype.saveSeoRoute));
     }
 }
 

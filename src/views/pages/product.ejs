@@ -53,6 +53,10 @@
   let chunks = _.chunk(images.slice(1, images.length), 3) 
 %>
 
+
+
+
+
   <!-- Page Content-->
   <div class="container px-0 cz-gallery">
     <!-- Gallery + details-->
@@ -219,6 +223,7 @@
                      
                      <div class="">
 
+                      <a id="noteanchor"></a>
                    
                       <h5 class="h6 mb-2 text-accent "><i class="czi-thumb-up mr-2"></i>Kolayca satın alın</h5>
 <!--                     
@@ -303,7 +308,6 @@
                           </div>
     
                           <% } %>
-                          <a id="noteanchor"></a>
                         <div class="form-group" >
                           <label class="mb-2" for="note"><span
                               class="badge badge-accent font-size-xs mr-2">Notunuz</span><span class="font-size-sm"></span>
@@ -608,7 +612,7 @@
                       openSlider(<%=__req.query.r%>);                                  
                     setTimeout(() => {                
                       $(document.body).removeClass("d-none")
-                    }, 0);
+                    }, 100);
                     <% } else { 
                     var t = product.resources.find(p=>p.id == parseInt(__req.query.r))
                     %>
@@ -619,7 +623,7 @@
                     setTimeout(() => {                
                       $(document.body).removeClass("d-none");
                       <%- include('./_partial/addtonote.ejs', {resource: t }) %>
-                    }, 0);
+                    }, 100);
 
                    
                   

@@ -40,15 +40,18 @@ export default class Route extends ViewRouter {
         }]
     }
 
-    getHtmlContent() {
-        let md = new MarkdownIt();
-        let file = path.resolve(path.join(config.projectDir, "src/views/pages/content/" + this.content.slug + ".md"))
-        let content = fs.readFileSync(file, "utf8")
-        return md.render(content)
-    }
+    // getHtmlContent() {
+    //     let md = new MarkdownIt();
+    //     let file = path.resolve(path.join(config.projectDir, "src/views/pages/content/" + this.content.slug + ".md"))
+    //     let content = fs.readFileSync(file, "utf8")
+    //     return md.render(content)
+    // }
 
     renderPage() {
-        this.res.render(`pages/blog.view.ejs`, this.viewData({}))
+        this.res.render(`pages/blog.view.ejs`, this.viewData({
+            pageTitle: this.content.pageTitle || this.content.title,
+            pageDescription: this.content.pageDescription || this.content.description
+        }))
     }
 
     getthumbnailurl(content: Content) {
@@ -70,7 +73,7 @@ export default class Route extends ViewRouter {
         this.allcontent = allcontent;
         this.resources = await new ProductsApi(this.constructorParams).getInformationalVideos(25)
 
-        this.res.render('pages/blog.index.ejs', this.viewData({ allcontent: allcontent }))
+        this.res.render('pages/blog.index.ejs', this.viewData({ pageTitle: 'Et Kültürü', pageDescription: '',  allcontent: allcontent }))
     }
 
 

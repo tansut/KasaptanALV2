@@ -37,6 +37,16 @@ class Category extends BaseModel<Category> {
 
     @Column({
         allowNull: true,
+    })
+    pageTitle: string;
+
+    @Column({
+        allowNull: true,
+    })
+    pageDescription: string;
+
+    @Column({
+        allowNull: true,
         type: DataType.TEXT
     })
     shortdesc: string;

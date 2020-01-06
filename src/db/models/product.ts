@@ -76,6 +76,16 @@ class Product extends BaseModel<Product> {
 
     @Column({
         allowNull: true,
+    })
+    pageTitle: string;
+
+    @Column({
+        allowNull: true,
+    })
+    pageDescription: string;
+
+    @Column({
+        allowNull: true,
         type: DataType.TEXT
     })
     mddesc: string;    

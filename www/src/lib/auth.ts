@@ -61,7 +61,11 @@ export class Auth {
                     remember_me: rememberme == "on"
                 })
                 debugger;
-                window.location.href = App.RunConfig['returnUrl'] || '/'
+                var urlParams = new URLSearchParams(window.location.search);
+                if (urlParams.has('r')) {
+                    window.location.href = urlParams.get('r');
+                }
+                else window.location.href = App.RunConfig['returnUrl'] || '/'
             } catch (err) {
                 App.HandleError(err)
             }
