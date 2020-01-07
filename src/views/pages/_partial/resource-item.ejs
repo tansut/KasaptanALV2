@@ -1,7 +1,7 @@
 <div class="card h-100 shadow-sm pb-0 product-card card-static item-card rounded-0">
     <a class="gallery-item d-block overflow-hidden gallery-item <%= resource.contentType == 'video-youtube' ? 'video-item':''%>"
     href="<%= `${resource.getFileUrl()}`  %>"
-    <% if (resource.tag1 == 'tarif' || resource.tag1 == 'yemek') { %>
+    <% if (resource.tag1 && (resource.tag1.includes('tarif') || resource.tag1.includes('yemek'))) { %>
       data-sub-html="<%= `<h6 class="font-size-normal text-light">${resource.title || ''}</h6><p class="font-size-md mb-2">${resource.description || ''}</p>`%> 
       <% if (resource.note) {%>
       <%=  '<a href="'%>  <%= include(`./addtonotelink.ejs`, {resource: resource, subUrl: subUrl, disableSlider: true  }) %>   <%='"class="btn btn-block btn-primary btn-sm rounded-0"><i class=" czi-thumb-up mr-2"></i>'%><%= resource.tag3 || 'Eti Bizden' + '</button>' %>

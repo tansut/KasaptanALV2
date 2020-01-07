@@ -34,6 +34,18 @@
   </div>
 
 <% } %>
+
+<% if(typeof (desc) != 'undefined') {  %>
+  <div class="bg-secondary border-top">
+    <div class="p-1 font-size-sm text-muted">
+      <%=desc%>
+    
+    </div>
+     
+    </div>
+  
+  <% } %>
+
   <div class="table-responsive cz-gallery" data-simplebar>
       <div class="d-flex pb-2 ">
               <% foods.forEach((resource, i)=> {%>

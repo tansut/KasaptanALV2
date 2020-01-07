@@ -1,3 +1,19 @@
 <% var settings = resource.settings || {} %>
-window.App.ProductApp.addToNote('<%= resource.note %>', '<%= settings.po_unit %>', '<%=resource.product.name%>', <%= settings.po_perperson || 0 %>, <%= settings.po_personcount || 0 %>, '<%= settings.po_quantityNote || new String() %>', '', '<%=resource.product.name%>', '<%=resource.title%>' )
-
+<% options = typeof(options) == 'undefined' ? {}: options %>
+window.App.ProductApp.addToNote(
+{
+note: '<%= resource.note %>',
+unit: '<%= settings.po_unit %>',
+title: '<%=resource.product.name%>',
+perperson: <%= settings.po_perperson || 0 %>,
+personCount: <%= settings.po_personcount || 0 %>,
+ponote: '<%= settings.po_quantityNote || new String() %>',
+noteph:'',
+<%if (!options.encode) { %>
+productView: <%- options.hideProduct ? JSON.stringify(null):  JSON.stringify({ name: resource.product.name, slug: resource.product.slug }) %>,
+food: <%- JSON.stringify({ title: resource.title, url: resource.getThumbnailFileUrl(false) }) %>
+<% } else { %>
+productView: <%= options.hideProduct ? JSON.stringify(null):  JSON.stringify({ name: resource.product.name, slug: resource.product.slug }) %>,
+food: <%= JSON.stringify({ title: resource.title, url: resource.getThumbnailFileUrl(false) }) %>
+<% } %>
+});

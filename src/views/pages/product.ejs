@@ -193,7 +193,7 @@
   <a class="text-primary" href="javascript:openSlider(<%=t.id%>)"><i class="text-primary <%= t.contentType == 'video-youtube' ? 'czi-youtube': 'czi-camera' %> mr-1"></i><%=t.title%></a>
   
   <% if (t.note) { %>
-   <a class="text-primary" title="Eti Bizden" href="javascript:<%= include('./_partial/addtonote.ejs', {resource: t }) %>"><span class="color-primary"><i class=" czi-add-circle"></i></span>  </a> 
+   <a class="text-primary" title="Eti Bizden" href="javascript:<%= include('./_partial/addtonote.ejs', {resource: t, options: {hideProduct: true} }) %>"><span class="color-primary"><i class=" czi-add-circle"></i></span>  </a> 
   <% } %>
 </div>
                              
@@ -293,7 +293,7 @@
     <div class="d-flex mb-2 pb-1  flex-wrap justify-content-between border-bottom">
       <a href="javascript:openSlider(<%=t.id%>)"><i class=" czi-youtube mr-1"></i><%=t.title%></a>
       <% if (t.note) { %>
-      <a title="Bu şekilde hazırlayın" href="javascript:<%= include('./_partial/addtonote.ejs', {resource: t }) %>"><span class="color-primary"><i class=" czi-add-circle"></i></span>  </a>
+      <a title="Bu şekilde hazırlayın" href="javascript:<%= include('./_partial/addtonote.ejs', {resource: t, options: {hideProduct: true} }) %>"><span class="color-primary"><i class=" czi-add-circle"></i></span>  </a>
     <% } %>
     </div>
                                  
@@ -518,10 +518,10 @@
                               <% if (resource.badge) {%>
                                   <span class="badge badge-primary badge-shadow product-img-badge"><%= resource.badge%></span>
                                 <% } %>
-                                  <% if (resource.tag1 == 'tarif') {%>
+                                  <% if (resource.tag1 && resource.tag1.includes('tarif')) {%>
                                   <div class="text-center">
                                    
-                                    <button type="button" @click='addToNote("<%= resource.note %>")'
+                                    <button type="button" @click='addToNote({note: "<%= resource.note %>"})'
                                       class="btn btn-block btn-primary btn-sm rounded-0"><i class=" czi-add-circle mr-2">
                                       </i><%= resource.tag3 || 'Eti Bizden' %></button>
                                   </div>
@@ -620,13 +620,15 @@
                     %>
                     <% if (!__req.query.disableSlider) { %>
                       // openSlider(<%=__req.query.r%>);    
-                      openSlider($('a[data-resid').first().data('resid'));    
+                      //openSlider($('a[data-resid').first().data('resid'));    
 
                      <% } %>  
                     
                     setTimeout(() => {                
                       $(document.body).removeClass("d-none");
-                      <%- include('./_partial/addtonote.ejs', {resource: t }) %>
+                      <%- include('./_partial/addtonote.ejs', {resource: t, options: {
+                        hideProduct: false
+                      } }) %>
                     }, 100);
 
                    

@@ -304,6 +304,7 @@ Vue.component('amount-input', {
         data: function () {
             return {
                 product: null,
+                productView: null,
                 personcount: 4,
                 meal: 1,
                 note: null,
@@ -311,8 +312,7 @@ Vue.component('amount-input', {
                 options: {},
                 cardnote: "",
                 cardnoteph: "",
-                productName: "",
-                foodName: ""
+                food: {}
             }
 
         },
@@ -329,8 +329,8 @@ Vue.component('amount-input', {
                 this.note = options.note || "";
                 this.cardnote = options.cardnote || "";
                 this.cardnoteph = options.cardnoteph || "";
-                this.foodName = options.foodName;
-                this.productName = options.productName;
+                this.food = options.food || {};
+                this.productView = options.productView;
 
                 $('#size-chart').modal("show");       
                 return new Promise((resolve, reject) => {
@@ -401,34 +401,36 @@ Vue.component('amount-input', {
             },
 
             showCalculator(unit) {
-                // window.App.WeightCalculatorApp.show({unit: unit.unit})
-                this.addToNote(this.note, unit.unit, null, 0, null, "", unit.notePlaceholder)
+
+                this.addToNote({
+                    
+                    note: this.note, 
+                    unit: unit.unit, 
+                    noteph: unit.notePlaceholder
+
+                })
             },
 
-            addToNote(note, unit, title, perperson, personCount, ponote, noteph, productName, foodName) {
+            addToNote(options) {
                 this.ensureUnitSelected();
                 
-                // var oldNote = this.note = "";
-                // if (oldNote.indexOf(note)<0) {                    
-                //     window.App.ProductApp.note = oldNote ? (oldNote + "\n" + note): note;
-                // }
-
                 
-
+                
+                
                 
 
 
                 window.App.WeightCalculatorApp.show({
-                    unit: unit,
-                    title: title,
+                    unit: options.unit,
+                    title: options.title,
                     // title: window.App.ProductApp.product.name,
-                    foodName: foodName,
-                    productName: productName,
-                    personcount: personCount,
-                    perperson: perperson,
-                    note: ponote,
-                    cardnote: note,
-                    cardnoteph: noteph
+                    food: options.food,
+                    productView: options.productView,
+                    personcount: options.personCount,
+                    perperson: options.perperson,
+                    note: options.ponote,
+                    cardnote: options.note,
+                    cardnoteph: options.noteph
                 }).then(function(result) {
                     window.App.ProductApp.note = window.App.WeightCalculatorApp.cardnote;
                     if ( window.App.ProductApp.note) {

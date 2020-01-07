@@ -99,7 +99,8 @@ export default class Route extends ViewRouter {
             router.get("/adres-belirle/:slug", Route.BindRequest(this.prototype.setUserAddr))
             router.get("/hikayemiz", Route.BindToView("pages/content.kurumsal.ejs"))
             router.get("/iletisim", Route.BindToView("pages/content.contact.ejs"))
-            router.get("/kasap-basvuru", Route.BindToView("pages/content.kasap-secim.ejs"))
+            router.get("/kasap-secim-kriterleri", Route.BindToView("pages/content.kasap-secim.ejs"))
+            router.get("/kasap", Route.BindToView("pages/content.kasap-basvuru.ejs"))
             router.get("/kullanici-sozlesmesi", Route.BindToView("pages/content.kullanici-sozlesmesi.ejs"))
         
     }
