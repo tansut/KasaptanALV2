@@ -5,7 +5,8 @@ import User, { PreferredAddress } from '../db/models/user';
 import { ShopCard } from '../models/shopcard';
 import { RequestHelper } from './RequestHelper';
 import Category from '../db/models/category';
-import { ResourceCacheItem } from './cache';
+import { ResourceCacheItem, ProductCacheItem, CategoryProductItem } from './cache';
+import Content from '../db/models/content';
 
 export class ApplicationError extends Error {
     protected constructor(public name: string) {
@@ -65,4 +66,7 @@ export interface AppRequest extends express.Request {
     prefAddr: PreferredAddress;
     __categories: Category[];
     __resources: { [key: string]: [ResourceCacheItem]; }
+    __products: { [key: string]: ProductCacheItem; }
+    __recentBlogs: Content[];
+    __categoryProducts: { [key: string]: CategoryProductItem[]; }
 }

@@ -21,7 +21,7 @@
 
             </div>
       
-        <% var products = controller.filterProductsByCategory({slug: cat.slug}) %>
+        <% var products = controller.filterProductsByCategory(cat) %>
         <!-- Product grid (carousel)-->
         <div class=" <%= reverse ? 'order-2 order-md-1':'' %> ">
 

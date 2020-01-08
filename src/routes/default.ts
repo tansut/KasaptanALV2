@@ -14,39 +14,33 @@ import ProductManager from '../lib/productManager';
 import config from '../config';
 import ProductsApi from './api/product';
 import Content from '../db/models/content';
+import { ProductCacheItem } from '../lib/cache';
 let ellipsis = require('text-ellipsis');
 
 export default class Route extends ViewRouter {
 
-    products: Product[];
     tarifs: Resource[];
     foods: Resource[];
     blogItems: Content[];
 
     async getBlogItems() {
-
-        let allcontent = await Content.findAll({
-            attributes: ["title", "category", "description", "slug", "categorySlug"],
-            order: [["UpdatedOn", "DESC"]],
-            limit: 15
-        })
-
-        return allcontent;
+        return this.req.__recentBlogs;
     }
     
 
-
-
- 
-
-    filterProductsByCategory(filter = {}, chunk: number = 0) {
-        let products = ProductManager.filterProductsByCategory(this.products, filter, { productType: 'generic' }, { chunk: chunk })
-        return products.slice(0, 8);
+    filterProductsByCategory(category: Category) {
+        let result: ProductCacheItem[] = []
+        let prodSlugs = this.req.__categoryProducts[category.slug];
+        if (prodSlugs) {
+            for (let i = 0;i < prodSlugs.length; i++) {
+                let product = this.req.__products[prodSlugs[i].slug];
+                if (product) result.push(product);
+                if (result.length >= 8) break;
+            }
+        } 
+        return result; //.slice(0, 8);
     }
 
-    getProductCategoriesToView(product: Product) {
-        return product.categories.filter(p => ['reyon', 'amac'].indexOf(p.category.type) >= 0)
-    }
 
     @Auth.Anonymous()
     async defaultRoute() {
@@ -61,7 +55,7 @@ export default class Route extends ViewRouter {
             }
         });
 
-        this.products = await ProductManager.getProducts();
+        //this.products = await ProductManager.getProducts();
         this.tarifs = await new ProductsApi(this.constructorParams).getTarifVideos(null, 10);
         this.foods = await new ProductsApi(this.constructorParams).getFoodResources(null, 15);
         
@@ -69,7 +63,6 @@ export default class Route extends ViewRouter {
 
         this.res.render("pages/default.ejs", this.viewData({
             recentButchers: recentButchers,
-            // butcherCities: cities,
             ellipsis: ellipsis
         }));
     }

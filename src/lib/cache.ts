@@ -13,6 +13,7 @@ import config from "../config";
 import Helper from "./helper";
 import { RequestHelper } from "./RequestHelper";
 import Resource from "../db/models/resource";
+import Content from "../db/models/content";
 
 let cache: Cache;
 
@@ -21,6 +22,18 @@ export interface ResourceCacheItem {
     contentUrl: string;
     thumbnailUrl: string;
     folder: string;
+}
+
+export interface ProductCacheItem {
+    id: number;
+    slug: string;
+    tag2: string;
+    name: string;
+    badge: string;
+}
+
+export interface CategoryProductItem {
+    slug: string;
 }
 
 export class CacheManager {
@@ -38,7 +51,9 @@ export class CacheManager {
                 res.locals.__categories = p.categories;
                 req.__categories = p.categories;
                 req.__resources = p.resources;
-                //res.locals.__products = p.products;
+                req.__products = p.products;
+                req.__recentBlogs = p.recentBlogs;
+                req.__categoryProducts = p.categoryProducts;
                 res.locals._ = _;
                 res.locals.__cities = p.cities;
                 res.locals.__butcherCities = p.butcherCities
@@ -65,6 +80,20 @@ export class CacheManager {
             
         }
         return result;
+    }
+
+    static async fillRecentBlogs() {
+        let result = this.dataCache.get("recent-blogs");
+        if (!result) {
+            result = await Content.findAll({
+                raw: true,
+                attributes: ["title", "category", "description", "slug", "categorySlug"],
+                order: [["UpdatedOn", "DESC"]],
+                limit: 15
+            });
+            this.dataCache.set("recent-blogs", result);                    
+        }
+        return result
     }
 
     static async fillCities() {
@@ -98,32 +127,21 @@ export class CacheManager {
         return categories;
     }
 
-    // static async fillProducts(categories: Category[]) {
-    //     let cacheproducts = null;// this.dataCache.get("products")
-    //     if (!cacheproducts) {
-    //         let products = await Product.findAll({
-    //             order: ["displayOrder"],
-    //             include: [{
-    //                 model: ProductCategory,
-    //                 include: [Category]
-    //             },
-    //             ],
-    //         })
-    //         let productsByCategory = {}
-    //         categories.map(p => {
-    //             let prods = ProductManager.filterProductsByCategory(products, {
-    //                 slug: p.slug
-    //             })
-    //             productsByCategory[p.slug] = (<any>prods) // .map(p => p.toJSON())
-    //         });
-    //         cacheproducts = {
-    //             all: products, //.map(p => p.toJSON()),
-    //             byCategory: productsByCategory
-    //         }
-    //         //this.dataCache.set("products", cacheproducts);
-    //     }
-    //     return cacheproducts;
-    // }
+    static async fillProductsByCategory(categories: Category[]) {
+        let cacheproducts: {[key: string]:CategoryProductItem[]} =  this.dataCache.get("category-products")
+        if (!cacheproducts) {
+            cacheproducts = {}
+            for(let i = 0; i < categories.length; i++) {
+                let prods = await ProductManager.getProductsOfCategories([categories[i].id])
+                cacheproducts[categories[i].slug] = prods.map(pr=> <CategoryProductItem>{
+                    slug: pr.slug
+                }) 
+            }
+
+            this.dataCache.set("category-products", cacheproducts);
+        }
+        return cacheproducts;
+    }
 
     static async fillResources(): Promise<{ [key: string]: [ResourceCacheItem]; }>  {
         let resources = <any>this.dataCache.get("resources")
@@ -155,18 +173,45 @@ export class CacheManager {
         return resources;
     }
 
+    static async fillProducts(): Promise<{ [key: string]: [ProductCacheItem]; }>  {
+        let products = <any>this.dataCache.get("products")
+        if (!products) {
+            let res = await Product.findAll({
+                attributes: ['slug', 'id', 'tag2', 'badge', 'name'],
+                raw: true,
+                order: [["displayOrder", "DESC"]]
+            })
+            let result: { [key: string]: ProductCacheItem ; } = {};
+            res.forEach((ri, i) => {
+                result[ri.slug] = {
+                    id: ri.id,
+                    slug: ri.slug,
+                    name: ri.name,
+                    tag2: ri.tag2,
+                    badge: ri.badge
+                }
+            })
+            this.dataCache.set("products", result);
+        }
+        return products;
+    }
+
     static async generateDataCache() {
         let categories = await this.fillCategories();
-        //let products = <any>await this.fillProducts(categories);
+        let products = <any>await this.fillProducts();
         let cities = <any>await this.fillCities();
         let butcherCities = <any>await this.fillButcherCities(cities);
         let resources = <any>await this.fillResources();
+        let recentBlogs = <any>await this.fillRecentBlogs();
+        let categoryProducts = <any>await this.fillProductsByCategory(categories);
         return {
             categories: categories,
-            //products: products,
+            products: products,
             cities: cities,
             butcherCities: butcherCities,
-            resources: resources
+            resources: resources,
+            recentBlogs: recentBlogs,
+            categoryProducts: categoryProducts
         }
     }
 

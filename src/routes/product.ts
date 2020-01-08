@@ -21,7 +21,7 @@ import Dispatcher from '../db/models/dispatcher';
 import { PreferredAddress } from '../db/models/user';
 var MarkdownIt = require('markdown-it')
 import * as _  from "lodash";
-import { ResourceCacheItem } from '../lib/cache';
+import { ResourceCacheItem, ProductCacheItem } from '../lib/cache';
 import { ShopCard } from '../models/shopcard';
 
 interface ButcherSelection {
@@ -199,9 +199,11 @@ export default class Route extends ViewRouter {
     @Auth.Anonymous()
     async productPhotoRoute() {
         if (!this.req.params.product || !this.req.params.filename) return this.next();
-        let product = await ProductModel.findOne({
-            where: { slug: this.req.params.product }
-        });
+        let product = this.req.__products[this.req.params.product];
+        
+        // await ProductModel.findOne({
+        //     where: { slug: this.req.params.product }
+        // });
         if (!product) return this.next();
 
         let photo: ResourceCacheItem, thumbnail = this.req.query.thumbnail, url = "";
