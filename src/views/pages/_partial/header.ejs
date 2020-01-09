@@ -178,7 +178,7 @@
     
                   <div class="dropdown-menu px-2 pl-0 pb-2">
                     <% var viewCats = ['reyon', 'list'] %>
-                    <% var chunks = _.chunk(__categories.filter(p=> viewCats.find(c=>(p.type == c)) != null), 5) %>
+                    <% var chunks = _.chunk(__categories.filter(p=> viewCats.find(c=>(p.type.includes(c))) != null), 5) %>
                     <% chunks.forEach(reyonlar => { %>
                     <div class="d-flex flex-wrap flex-md-nowrap">
                       <% for(var c=0; c < reyonlar.length; c++) {%>
@@ -222,7 +222,7 @@
           
                     </div> -->
                     <% var viewCats = ['resource'] %>
-                    <% var chunks = _.chunk(__categories.filter(p=> viewCats.find(c=>(p.type == c)) != null), 5) %>
+                    <% var chunks = _.chunk(__categories.filter(p=> viewCats.find(c=>(p.type.includes(c))) != null), 5) %>
                     <% chunks.forEach(reyonlar => { %>
                     <div class="d-flex flex-wrap flex-md-nowrap">
                       <% for(var c=0; c < reyonlar.length; c++) {%>
@@ -273,7 +273,7 @@
   
    
                
-                  <% var reyonlar = __categories.filter(p=>p.type == cat).slice(0,6) %>
+                  <% var reyonlar = __categories.filter(p=>p.type.includes(cat)).slice(0,6) %>
                   <% for(var c=0; c< reyonlar.length; c++) {%>
                     <li class="<%= (cat == 'list' || cat == 'reyon') ?  'd-lg-none':'' %> nav-item ">
                         <a class="pl-0 nav-link d-md-flex  align-items-md-center" href="/<%= reyonlar[c].slug %>">

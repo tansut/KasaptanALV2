@@ -27,7 +27,19 @@ export default class Route extends ApiRouter {
     }
 
     async getResources(where, products4?: Product[], limit?: number, catids?: number[]) {
-        if (products4) where["ref1"] = products4.map(p => p.id);
+        if (products4) {
+            let ids = products4.map(p => p.id);
+            where = { ...{
+                [Op.or]: {
+                ref1: ids,
+                ref2: ids,
+                ref3: ids,
+                ref4: ids,
+                ref5: ids
+            }},
+            ...where
+        }
+        } 
         if (catids) where['$categories.category.id$'] = catids;
         let params = {
             where: where,
@@ -46,17 +58,37 @@ export default class Route extends ApiRouter {
 
         let products = products4 || await Product.findAll({
             where: {
-                id: allresources.map(p => p.ref1)
+                id: allresources.map(p => p.ref1).concat(allresources.filter(p => p.ref2).map(p => p.ref2)).concat(allresources.filter(p => p.ref3).map(p => p.ref3)).concat(allresources.filter(p => p.ref4).map(p => p.ref4)).concat(allresources.filter(p => p.ref5).map(p => p.ref5))
             }
         })
 
         let resources = [];
 
-        allresources.forEach(p => {
-            let product = products.find(r => r.id == p.ref1);
-            if (product) {
-                p.product = product;
-                resources.push(p);
+        allresources.forEach(res => {
+            let product1 = products.find(prod => prod.id == res.ref1);
+            let product2 = res.ref2 ? products.find(prod => prod.id == res.ref2): null;
+            let product3 = res.ref3 ? products.find(prod => prod.id == res.ref3): null;
+            let product4 = res.ref4 ? products.find(prod => prod.id == res.ref4): null;
+            let product5 = res.ref5 ? products.find(prod => prod.id == res.ref5): null;
+            if (product1) {
+                res.product = product1;
+                resources.push(res);
+            }
+            if (product2) {
+                res.otherProducts = res.otherProducts || []
+                res.otherProducts = [product2];
+            }
+            if (product3) {
+                res.otherProducts = res.otherProducts || []
+                res.otherProducts.push(product3);
+            }
+            if (product4) {
+                res.otherProducts = res.otherProducts || []
+                res.otherProducts.push(product4);
+            }
+            if (product5) {
+                res.otherProducts = res.otherProducts || []
+                res.otherProducts.push(product5);
             }
         })
 

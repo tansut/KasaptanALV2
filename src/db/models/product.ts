@@ -409,7 +409,9 @@ class Product extends BaseModel<Product> {
                 [Op.or]: {
                     ref1: this.id,
                     ref2: this.id,
-                    ref3: this.id
+                    ref3: this.id,
+                    ref4: this.id,
+                    ref5: this.id
                 }
             },
             order: [["type", "ASC"], ["displayOrder", "DESC"], ["updatedOn", "DESC"]]

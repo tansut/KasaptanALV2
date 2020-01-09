@@ -1,0 +1,28 @@
+<div class="modal fade" style="z-index: 10555;" id="food-alternative-meats">
+    <div class="modal-dialog modal-dialog-scrollable">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h6 class="modal-title">Tercih sizin, hepsiyle güzel</h6>
+          <button class="close" type="button" data-dismiss="modal" aria-label="Close"><span
+              aria-hidden="true">&times;</span></button>
+        </div>
+        <div class="modal-body">
+          <div class="" id="alternative-meats-for-food">
+              <div class="row">
+            <div class="col-6" v-for="item in list" >
+                <div class="card product-card card-static item-card">
+                <a class=" d-block overflow-hidden" :href="item.link"><img class="rounded-0" :src="item.src" :alt="item.name"></a>
+                <div class="card-body pl-0 text-center">
+                    <h3 class="product-title font-size-md"><a :href="item.link">{{item.name}}</a>
+                    </h3>
+                </div>
+            </div>
+            </div>  
+              </div>
+                             
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  

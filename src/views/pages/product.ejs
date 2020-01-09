@@ -627,7 +627,7 @@
                     setTimeout(() => {                
                       $(document.body).removeClass("d-none");
                       <%- include('./_partial/addtonote.ejs', {resource: t, options: {
-                        hideProduct: false
+                        hideProduct: __req.query.hideproduct
                       } }) %>
                     }, 100);
 

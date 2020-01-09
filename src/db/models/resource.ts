@@ -18,6 +18,16 @@ import ResourceCategory from './resourcecategory';
         name: "type_ref3_idx",
         fields: ["type", "ref3"]
     },    
+
+    {
+        name: "type_ref4_idx",
+        fields: ["type", "ref4"]
+    }, 
+
+    {
+        name: "type_ref5_idx",
+        fields: ["type", "ref5"]
+    },
     {
         name: "type_content_idx",
         fields: ["type", "contentUrl"]
@@ -30,6 +40,8 @@ class Resource extends BaseModel<Resource> {
 
 
     product: Product;
+
+    otherProducts: Product[] = [];
 
     @HasMany(() => ResourceCategory, {
         sourceKey: "id",
@@ -52,6 +64,12 @@ class Resource extends BaseModel<Resource> {
 
     @Column
     ref3: number;
+
+    @Column
+    ref4: number;
+
+    @Column
+    ref5: number;
 
     @Column
     contentType: string;
@@ -102,7 +120,6 @@ class Resource extends BaseModel<Resource> {
     description: string;
 
     get note() {
-        let productName = this.product ? this.product.name: 'et';
         let note = this.tag2;
         if (this.tag1 && this.tag1.includes('tarif')) {
             note = this.tag2 || (`${this.title} yapacağım, lütfen uygun hazırlayın.`);

@@ -79,7 +79,7 @@
             <div class="d-flex pb-2">
                     <% var viewCats = ['reyon', 'list'] %>
                     <% viewCats.forEach(cat => { %>
-                    <% var reyonlar = (__categories.filter(p=>p.type == cat)) %>
+                    <% var reyonlar = (__categories.filter(p=>p.type.includes(cat))) %>
                     <% for(var c=0; c< reyonlar.length; c++) {%>
                     <div class="mr-2">
 

@@ -6,6 +6,9 @@
 
 %>
 
+<%- include('./food-select-alternatives', {}) %>
+
+
 <div class="<%= typeof(noBorder) == 'undefined' ? 'border':'' %>">
   <div class="bg-secondary p-2 d-flex flex-nowrap justify-content-between align-items-center">
       <a class="media align-items-center align-self-center" href="<%=targetUrl%>">

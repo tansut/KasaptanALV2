@@ -21,7 +21,7 @@
                     <ul class="widget-list">
                         <% var viewCats = ['reyon', 'amac'] %>
                         <% viewCats.forEach(cat => { %>
-                        <% var reyonlar = __categories.filter(p=>p.type == cat) %>
+                        <% var reyonlar = __categories.filter(p=>p.type.includes(cat)) %>
                         <% for(var c=0; c< reyonlar.length; c++) {%>
                         <li class="widget-list-item"><a class="widget-list-link"
                                 href="<%= `/${reyonlar[c].slug}`%>"><%= reyonlar[c].name %></a></li>

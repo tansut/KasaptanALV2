@@ -50,11 +50,11 @@ export default class Route extends ViewRouter {
     }
 
 
-    async fillFoods(categoryid?: number, subcategory?: string) {
+    async fillFoods(categoryid?: number, subcategory?: string, discardFoodCategory: boolean = false) {
         if (subcategory) {
             let category = this.req.__categories.find(p => p.slug == subcategory);
             this.products = await ProductManager.getProductsOfCategories([category.id])
-            this.foods = await new ProductsApi(this.constructorParams).getFoodResources(this.products, null, categoryid ? [categoryid]: null);
+            this.foods = await new ProductsApi(this.constructorParams).getFoodResources(this.products, null, (categoryid && !discardFoodCategory) ? [categoryid]: null);
             this.foodsWithCats = this.generateFoodWithCats(this.foods)
         } else {
             this.foods = await new ProductsApi(this.constructorParams).getFoodResources(null, null, categoryid ? [categoryid]: null);
@@ -105,6 +105,30 @@ export default class Route extends ViewRouter {
         }))
     }
 
+    @Auth.Anonymous()
+    async viewAsFoodRoute(back: boolean = false) {
+        if (!this.req.params.category) {
+            return this.next();
+        }
+        this.category = this.req.__categories.find(p => p.slug == this.req.params.category);
+        if (!this.category) return this.next();
+
+        await this.fillFoods(this.category.id, this.category.slug, true);
+        this.renderPage('pages/category-food.ejs')
+    }
+
+    @Auth.Anonymous()
+    async viewAsTarifRoute(back: boolean = false) {
+        if (!this.req.params.category) {
+            return this.next();
+        }
+        this.category = this.req.__categories.find(p => p.slug == this.req.params.category);
+        if (!this.category) return this.next();
+
+        await this.fillFoods(this.category.id, this.req.params.subcategory);
+        this.renderPage('pages/category-food.ejs')
+    }
+
 
     @Auth.Anonymous()
     async viewRoute(back: boolean = false) {
@@ -127,9 +151,6 @@ export default class Route extends ViewRouter {
             this.renderPage('pages/category.ejs')
         
         }
-
-
-
     }
 
     @Auth.Anonymous()
@@ -161,6 +182,8 @@ export default class Route extends ViewRouter {
 
     static SetRoutes(router: express.Router) {
         router.get("/:category", Route.BindRequest(Route.prototype.viewRoute));
+        router.get("/:category/et-yemekleri", Route.BindRequest(Route.prototype.viewAsFoodRoute));
+        router.get("/:category/et-yemek-tarifleri", Route.BindRequest(Route.prototype.viewAsTarifRoute));
         router.get("/:category/alt/:subcategory", Route.BindRequest(Route.prototype.viewRoute));
         router.get("/et-yemek-tarifleri", Route.BindRequest(Route.prototype.viewTarifsRoute));
         router.get("/et-yemek-tarifleri/:category", Route.BindRequest(Route.prototype.viewTarifsRoute));

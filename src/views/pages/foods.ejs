@@ -39,7 +39,7 @@
     </div>
   </div>
 
-  <% var reyonlar = __categories.filter(p=>p.type == 'reyon').slice(0,2) %>
+  <% var reyonlar = __categories.filter(p=>p.type.includes('reyon')).slice(0,2) %>
   <div class="">
     <div class="bg-light container mb-3 box-shadow-lg ">
       <div class="mt-3">

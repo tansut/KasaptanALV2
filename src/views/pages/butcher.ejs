@@ -192,7 +192,7 @@
               aria-labelledby="butcherproducts-tab">
         
         
-        <% var categories = __categories.filter(p=>p.type == 'reyon') %>
+        <% var categories = __categories.filter(p=>p.type.includes('reyon')) %>
               <div class="containerx-fluid">
                   <ul class="nav nav-tabs  nav-justified mt-2 mb-3 __xxx__" id="pills-tab" role="tablist">
                      <% if (vitrinProducts.length > 0) { %> 

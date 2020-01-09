@@ -368,6 +368,23 @@ Vue.component('amount-input', {
         }
     })
 
+    window.App.FoodAlternativesApp = new Vue({
+        el: '#food-alternative-meats',
+
+        data: function () {
+            return {
+                list: []
+            }
+        },
+
+        methods: {
+            show(list) {
+                this.list = list;
+                $('#food-alternative-meats').modal("show");       
+            }
+        }
+    })
+
     window.App.ProductApp = new Vue({
         el: '#productapp',
 

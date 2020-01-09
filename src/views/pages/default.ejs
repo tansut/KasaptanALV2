@@ -16,7 +16,7 @@
 
     <% var viewCats = ['reyon', 'amac'] %>
     
-      <% var reyonlar = __categories.filter(p=>p.type == 'reyon').slice(0,4) %>
+      <% var reyonlar = __categories.filter(p=>p.type.includes('reyon')).slice(0,4) %>
 
 
     <section class="bg-faded-primary pt-2 mb-3">
