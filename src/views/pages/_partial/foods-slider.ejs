@@ -6,8 +6,13 @@
 
 %>
 
-<%- include('./food-select-alternatives', {}) %>
+<!-- <% if (!controller.__alternaveFoods) {  %>
+  <% controller.__alternaveFoods = true; %>
+ 
 
+<%- include('./food-select-alternatives', {}) %>
+  
+<%}%> -->
 
 <div class="<%= typeof(noBorder) == 'undefined' ? 'border':'' %>">
   <div class="bg-secondary p-2 d-flex flex-nowrap justify-content-between align-items-center">

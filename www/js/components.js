@@ -369,7 +369,7 @@ Vue.component('amount-input', {
     })
 
     window.App.FoodAlternativesApp = new Vue({
-        el: '#food-alternative-meats',
+        el: '#alternative-meats-for-food',
 
         data: function () {
             return {
