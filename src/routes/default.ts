@@ -41,6 +41,14 @@ export default class Route extends ViewRouter {
         return result; //.slice(0, 8);
     }
 
+    @Auth.Anonymous()
+    async kasapViewRoute() {
+        this.foods = await new ProductsApi(this.constructorParams).getFoodResources(null, 15);
+        this.res.render("pages/content.kasap-basvuru.ejs", this.viewData({
+
+        }))
+    }
+
 
     @Auth.Anonymous()
     async defaultRoute() {
@@ -82,19 +90,19 @@ export default class Route extends ViewRouter {
     }
 
     static SetRoutes(router: express.Router) {
-        if (config.nodeenv == 'production') {
-            router.get("/home", Route.BindRequest(this.prototype.defaultRoute))
-            router.get("/", Route.BindToView("pages/offline.ejs"))
-        }
-        else {
+        // if (config.nodeenv == 'production') {
+        //     router.get("/home", Route.BindRequest(this.prototype.defaultRoute))
+        //     router.get("/", Route.BindToView("pages/offline.ejs"))
+        // }
+        // else {
+            
+        // }
             router.get("/", Route.BindRequest(this.prototype.defaultRoute))
-        }
             router.get("/adres-belirle/:slug", Route.BindRequest(this.prototype.setUserAddr))
             router.get("/hikayemiz", Route.BindToView("pages/content.kurumsal.ejs"))
             router.get("/iletisim", Route.BindToView("pages/content.contact.ejs"))
             router.get("/kasap-secim-kriterleri", Route.BindToView("pages/content.kasap-secim.ejs"))
-            router.get("/kasap", Route.BindToView("pages/content.kasap-basvuru.ejs"))
-            router.get("/kullanici-sozlesmesi", Route.BindToView("pages/content.kullanici-sozlesmesi.ejs"))
-        
+            router.get("/kasap", Route.BindRequest(this.prototype.kasapViewRoute))
+            router.get("/kullanici-sozlesmesi", Route.BindToView("pages/content.kullanici-sozlesmesi.ejs"))        
     }
 }
