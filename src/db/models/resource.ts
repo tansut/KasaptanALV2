@@ -15,6 +15,10 @@ import ResourceCategory from './resourcecategory';
         fields: ["type", "ref2"]
     },
     {
+        name: "type_ref3_idx",
+        fields: ["type", "ref3"]
+    },    
+    {
         name: "type_content_idx",
         fields: ["type", "contentUrl"]
     },
@@ -44,7 +48,10 @@ class Resource extends BaseModel<Resource> {
     ref1: number;
 
     @Column
-    ref2: string;
+    ref2: number;
+
+    @Column
+    ref3: number;
 
     @Column
     contentType: string;

@@ -326,7 +326,7 @@ export default class Route extends ApiRouter {
                 Resource.create({
                     type: "butcher-google-photos",
                     ref1: model.id,
-                    ref2: photo.photo_reference,
+                    //ref2: photo.photo_reference,
                     contentType: ct,
                     contentLength: parseInt(photoContent.headers["content-length"]),
                     contentUrl: contentUrl,

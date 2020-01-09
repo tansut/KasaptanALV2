@@ -178,7 +178,9 @@ export default class Route extends ViewRouter {
             resource.description = this.req.body['imgdesc' + id];
             resource.badge = this.req.body['imgbadge' + id];
             resource.settings = this.req.body['imgsettings' + id] ? JSON.parse(this.req.body['imgsettings' + id]) : {};
-            //resource.note = this.req.body['imgnote' + id];
+            resource.ref2 = this.req.body['imgref2' + id] ? parseInt(this.req.body['imgref2' + id]): null;
+            resource.ref3 = this.req.body['imgref3' + id] ? parseInt(this.req.body['imgref3' + id]): null;
+
             if (resource.contentType != "image/jpeg") {
                 resource.thumbnailUrl = this.req.body['imgthumbnail' + id];
             }

@@ -5,6 +5,7 @@ import ProductCategory from './productcategory';
 import Category from './category';
 import ButcherProduct from './butcherproduct';
 import Resource from './resource';
+import { Op } from 'sequelize';
 
 @Table({
     tableName: "Products",
@@ -405,7 +406,11 @@ class Product extends BaseModel<Product> {
         this.resources = await Resource.findAll({
             where: {
                 type: ["product-photos", "product-videos"],
-                ref1: this.id
+                [Op.or]: {
+                    ref1: this.id,
+                    ref2: this.id,
+                    ref3: this.id
+                }
             },
             order: [["type", "ASC"], ["displayOrder", "DESC"], ["updatedOn", "DESC"]]
         })
