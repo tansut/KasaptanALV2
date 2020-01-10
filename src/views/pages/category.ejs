@@ -50,7 +50,7 @@
         </div>
         <% if (!foodsInserted && (controller.foods.length > 0) && (j == 11) && (controller.foods.length >= 4) && controller.category.tarifTitle) { foodsInserted = true; %>
           <div class="mb-3 __xxx__ col-12">
-            <%- include('./_partial/foods-slider.ejs', {allUrl: '/' + controller.category.slug + '/et-yemekleri', mode: 'yemek', foods: controller.foods, title: controller.category.tarifTitle || 'Yemekler'}) %>
+            <%- include('./_partial/foods-slider.ejs', {allUrl: '/' + controller.category.slug + '/et-yemekleri-ve-tarifleri', mode: 'yemek', foods: controller.foods, title: controller.category.tarifTitle || 'Yemekler'}) %>
 
           </div>
         <% } %>
@@ -61,7 +61,7 @@
 
         <% if (!foodsInserted && controller.category.tarifTitle && controller.foods.length > 0) { %>
           <div class="mb-3 __xxx__">
-            <%- include('./_partial/foods-slider.ejs', {allUrl: '/' + controller.category.slug + '/et-yemekleri' , mode: 'yemek', foods: controller.foods, title: controller.category.tarifTitle || 'Yemekler'}) %>
+            <%- include('./_partial/foods-slider.ejs', {allUrl: '/' + controller.category.slug + '/et-yemekleri-ve-tarifleri' , mode: 'yemek', foods: controller.foods, title: controller.category.tarifTitle || 'Yemekler'}) %>
 
           </div>
         <% } %>

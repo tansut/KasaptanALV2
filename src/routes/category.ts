@@ -15,6 +15,7 @@ import Product from '../db/models/product';
 import ProductManager from '../lib/productManager';
 import ProductsApi from './api/product';
 import { ResourceCacheItem } from '../lib/cache';
+import { Op } from 'sequelize';
 
 export default class Route extends ViewRouter {
 
@@ -47,6 +48,36 @@ export default class Route extends ViewRouter {
 
         })
         return res;
+    }
+
+    async fillFoodsAndTarifs(categoryid?: number, subcategory?: string, discardFoodCategory: boolean = false) {
+        if (subcategory) {
+            let category = this.req.__categories.find(p => p.slug == subcategory);
+            this.products = await ProductManager.getProductsOfCategories([category.id])
+            this.foods = await new ProductsApi(this.constructorParams).getResources({
+                type: ['product-videos', 'product-photos'],
+                tag1: {
+                    [Op.or]: {
+                        [Op.like]: '%yemek%',
+                        [Op.like]: '%tarif%'
+
+                    }
+                }
+            }, this.products, null, (categoryid && !discardFoodCategory) ? [categoryid]: null);
+            this.foodsWithCats = this.generateFoodWithCats(this.foods)
+        } else {
+            this.foods = await new ProductsApi(this.constructorParams).getResources({
+                type: ['product-videos', 'product-photos'],
+                tag1: {
+                    [Op.or]: {
+                        [Op.like]: '%yemek%',
+                        [Op.like]: '%tarif%'
+
+                    }
+                }
+            }, null, null, categoryid ? [categoryid]: null);
+            this.foodsWithCats = this.generateFoodWithCats(this.foods)
+        }
     }
 
 
@@ -118,6 +149,20 @@ export default class Route extends ViewRouter {
     }
 
     @Auth.Anonymous()
+    async viewAsFoodAndTarifRoute(back: boolean = false) {
+        if (!this.req.params.category) {
+            return this.next();
+        }
+        this.category = this.req.__categories.find(p => p.slug == this.req.params.category);
+        if (!this.category) return this.next();
+
+        await this.fillFoodsAndTarifs(this.category.id, this.category.slug, true);
+        this.renderPage('pages/category-food.ejs')
+    }
+
+    
+
+    @Auth.Anonymous()
     async viewAsTarifRoute(back: boolean = false) {
         if (!this.req.params.category) {
             return this.next();
@@ -146,7 +191,16 @@ export default class Route extends ViewRouter {
         else {
             this.products = await ProductManager.getProductsOfCategories([this.category.id]);
             // this.foods = Helper.shuffle(await new ProductsApi(this.constructorParams).getResources({tag1: ['tarif', 'yemek']}, this.products));
-            this.foods = await new ProductsApi(this.constructorParams).getFoodResources(this.products);
+            this.foods = await new ProductsApi(this.constructorParams).getResources({
+                type: ['product-videos', 'product-photos'],
+                tag1: {
+                    [Op.or]: {
+                        [Op.like]: '%yemek%',
+                        [Op.like]: '%tarif%'
+
+                    }
+                }
+            }, this.products);
 
             this.renderPage('pages/category.ejs')
         
@@ -184,6 +238,7 @@ export default class Route extends ViewRouter {
         router.get("/:category", Route.BindRequest(Route.prototype.viewRoute));
         router.get("/:category/et-yemekleri", Route.BindRequest(Route.prototype.viewAsFoodRoute));
         router.get("/:category/et-yemek-tarifleri", Route.BindRequest(Route.prototype.viewAsTarifRoute));
+        router.get("/:category/et-yemekleri-ve-tarifleri", Route.BindRequest(Route.prototype.viewAsFoodAndTarifRoute));
         router.get("/:category/alt/:subcategory", Route.BindRequest(Route.prototype.viewRoute));
         router.get("/et-yemek-tarifleri", Route.BindRequest(Route.prototype.viewTarifsRoute));
         router.get("/et-yemek-tarifleri/:category", Route.BindRequest(Route.prototype.viewTarifsRoute));
