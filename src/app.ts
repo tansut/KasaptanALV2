@@ -130,7 +130,7 @@ class KasaptanAlApp {
         RequestHelper.use(this.app);
         this.shopcard()
 
-        this.app.use("/", this.viewsRouter);
+        
         this.app.use('/', express.static(path.join(__dirname, '../public')));
         this.app.use('/', express.static(path.join(config.publicDir)));
         this.app.use('/js', express.static(path.join(__dirname, '../node_modules/bootstrap/dist/js')));
@@ -153,7 +153,7 @@ class KasaptanAlApp {
             else next()
         }, this.userRouter);
 
-
+this.app.use("/", this.viewsRouter);
         apiRoutes.use(this.apiRouter);
         adminPageRoutes.use(this.adminPagesRouter);
         ViewRoutes.use(this.viewsRouter);
