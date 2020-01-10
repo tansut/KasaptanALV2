@@ -53,8 +53,8 @@ class KasaptanAlApp {
                 list.push(req.user.save());
             } else if (req.user && req.user.shopcard && req.session.shopcard != null) {
             }
-                        
-            
+
+
             Promise.all(list).then(r => {
                 res.locals.__shopcard = () => (req.user ? req.user.shopcard : req.session.shopcard);
                 next();
@@ -125,14 +125,14 @@ class KasaptanAlApp {
         this.app.use(bp.raw());
         this.app.use(flash());
 
-        middlewares.use(this.app);        
+        middlewares.use(this.app);
         CacheManager.use(this.app);
         RequestHelper.use(this.app);
         this.shopcard()
 
-        
+
         this.app.use('/', express.static(path.join(__dirname, '../public')));
-        this.app.use('/', express.static(path.join(config.publicDir)));
+        //this.app.use('/', express.static(path.join(config.publicDir)));
         this.app.use('/js', express.static(path.join(__dirname, '../node_modules/bootstrap/dist/js')));
         this.app.use('/js', express.static(path.join(__dirname, '../node_modules/jquery/dist')));
         this.app.use('/js', express.static(path.join(__dirname, '../node_modules/vue/dist')));
@@ -143,7 +143,7 @@ class KasaptanAlApp {
 
         this.app.use('/api/v1', this.apiRouter);
         this.app.use('/pages/admin', (req: AppRequest, res, next) => {
-            if (req.user && (req.user.hasRole('admin') || req.user.hasRole('seo'))) 
+            if (req.user && (req.user.hasRole('admin') || req.user.hasRole('seo')))
                 next();
             else res.redirect('/login?r=' + req.originalUrl)
         }, this.adminPagesRouter);
@@ -153,7 +153,7 @@ class KasaptanAlApp {
             else next()
         }, this.userRouter);
 
-this.app.use("/", this.viewsRouter);
+        this.app.use("/", this.viewsRouter);
         apiRoutes.use(this.apiRouter);
         adminPageRoutes.use(this.adminPagesRouter);
         ViewRoutes.use(this.viewsRouter);

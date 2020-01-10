@@ -20,7 +20,7 @@ import ButcherProduct from '../db/models/butcherproduct';
 import Dispatcher from '../db/models/dispatcher';
 import { PreferredAddress } from '../db/models/user';
 var MarkdownIt = require('markdown-it')
-import * as _  from "lodash";
+import * as _ from "lodash";
 import { ResourceCacheItem, ProductCacheItem } from '../lib/cache';
 import { ShopCard } from '../models/shopcard';
 
@@ -37,29 +37,29 @@ export default class Route extends ViewRouter {
     foods: Resource[] = [];
 
 
-    async tryBestFromShopcard(serving:Butcher[], others: Butcher[]) {
+    async tryBestFromShopcard(serving: Butcher[], others: Butcher[]) {
         let shopcard = await ShopCard.createFromRequest(this.req);
-        let scButcher = (shopcard.items && shopcard.items.length) ? shopcard.items[0].product.butcher.id: null;
+        let scButcher = (shopcard.items && shopcard.items.length) ? shopcard.items[0].product.butcher.id : null;
         if (scButcher) {
-            let inServing = serving.find(p=>p.id == scButcher);
-            let inOther = others.find(p=>p.id == scButcher);
+            let inServing = serving.find(p => p.id == scButcher);
+            let inOther = others.find(p => p.id == scButcher);
             return inServing || inOther
-        }  else return null;      
+        } else return null;
     }
 
     async tryBestFromOrders(serving: Dispatcher[]) {
         let orderedByDate = _.orderBy(serving, 'updatedOn');
-        return orderedByDate.length ? orderedByDate[0].butcher: null;
-    }    
+        return orderedByDate.length ? orderedByDate[0].butcher : null;
+    }
 
     tryBestAsRandom(serving: Butcher[], others: Butcher[]) {
-        let res = (serving.length > 0 ? serving[0] :null);
-        res = res || (others.length > 0 ? others[0] :null);
+        let res = (serving.length > 0 ? serving[0] : null);
+        res = res || (others.length > 0 ? others[0] : null);
 
         return res;
-    }     
+    }
 
-    async bestButchersForProduct(pid, adr: PreferredAddress, userBest: Butcher): Promise<ButcherSelection> {     
+    async bestButchersForProduct(pid, adr: PreferredAddress, userBest: Butcher): Promise<ButcherSelection> {
         let api = new DispatcherApi(this.constructorParams);
 
         let sellingl3 = await Butcher.sellingButchers(pid, {
@@ -68,24 +68,24 @@ export default class Route extends ViewRouter {
 
         let sellingl2 = await Butcher.sellingButchers(pid, {
             level2Id: this.req.prefAddr.level2Id
-        });     
-        
+        });
+
         let sellingl1 = await Butcher.sellingButchers(pid, {
             level2Id: this.req.prefAddr.level1Id
-        });               
-        
+        });
+
         let servingDispatchers = await api.getButchersSelingAndDispatches(adr.level3Id, pid);
 
-        _.remove(sellingl1, p=> servingDispatchers.find(s=>s.butcherid == p.butcher.id));
-        _.remove(sellingl2, p=> servingDispatchers.find(s=>s.butcherid == p.butcher.id));
-        _.remove(sellingl3, p=> servingDispatchers.find(s=>s.butcherid == p.butcher.id));
+        _.remove(sellingl1, p => servingDispatchers.find(s => s.butcherid == p.butcher.id));
+        _.remove(sellingl2, p => servingDispatchers.find(s => s.butcherid == p.butcher.id));
+        _.remove(sellingl3, p => servingDispatchers.find(s => s.butcherid == p.butcher.id));
 
         let otherids = _.uniqBy(sellingl3.concat(sellingl2).concat(sellingl1), function (e) {
             return e.butcherid;
-          }); 
-        
-        let otherButchers = otherids.map(p=>p.butcher);
-        let servingButchers = servingDispatchers.map(p=>p.butcher);
+        });
+
+        let otherButchers = otherids.map(p => p.butcher);
+        let servingButchers = servingDispatchers.map(p => p.butcher);
 
         otherButchers = Helper.shuffle(otherButchers)
         servingButchers = Helper.shuffle(servingButchers)
@@ -132,22 +132,22 @@ export default class Route extends ViewRouter {
 
         //let butchersSelling = await Butcher.sellingButchers(product.id);
 
-        
+
         let selectedButchers: ButcherSelection;
-        
+
         if (!this.req.prefAddr) {
             selectedButchers = {
                 best: null,
                 serving: [],
                 others: []
             }
-        } else        
-        selectedButchers = await this.bestButchersForProduct(product.id, this.req.prefAddr, butcher);
+        } else
+            selectedButchers = await this.bestButchersForProduct(product.id, this.req.prefAddr, butcher);
 
-        
+
 
         if (this.req.prefAddr && !butcher) {
-            
+
 
 
             // let dispatcher = await dapi.bestDispatcher(this.req.prefAddr.level3Id, 3);
@@ -188,9 +188,9 @@ export default class Route extends ViewRouter {
 
 
 
-        let view = await api.getProductView(product,  selectedButchers.best )
+        let view = await api.getProductView(product, selectedButchers.best)
 
-        
+
 
         this.res.render('pages/product', this.viewData({ butchers: selectedButchers, pageTitle: product.pageTitle || product.name, pageDescription: product.pageDescription, product: product, view: view }))
     }
@@ -200,10 +200,7 @@ export default class Route extends ViewRouter {
     async productPhotoRoute() {
         if (!this.req.params.product || !this.req.params.filename) return this.next();
         let product = this.req.__products[this.req.params.product];
-        
-        // await ProductModel.findOne({
-        //     where: { slug: this.req.params.product }
-        // });
+
         if (!product) return this.next();
 
         let photo: ResourceCacheItem, thumbnail = this.req.query.thumbnail, url = "";
@@ -214,9 +211,9 @@ export default class Route extends ViewRouter {
         let defaultFile = "public/img/product-default-thumbnail.jpg"
         if (this.req.params.filename == "thumbnail") {
             thumbnail = true;
-            photo = this.req.helper.getResourcesOfType(type + product.id).find(p=>p.ref1 == product.id)
+            photo = this.req.helper.getResourcesOfType(type + product.id).find(p => p.ref1 == product.id)
         }
-        else photo = this.req.helper.getResourcesOfType(type + this.req.params.filename).find(p=>p.contentUrl == this.req.params.filename);
+        else photo = this.req.helper.getResourcesOfType(type + this.req.params.filename).find(p => p.contentUrl == this.req.params.filename);
         res.sendResource(photo, thumbnail, thumbnail ? defaultFile : null)
     }
 

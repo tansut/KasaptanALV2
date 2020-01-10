@@ -11,6 +11,7 @@ const Jimp = <Jimp2.default>require('jimp');
 import * as fs from "fs"
 import moment = require('moment');
 import { ResourceCacheItem } from '../lib/cache';
+import config from '../config';
 
 
 export default class Route extends ViewRouter {
@@ -85,10 +86,15 @@ export default class Route extends ViewRouter {
                 return this.sendDefaultFile(defaultPath)
             } else return this.next();
         }
-        let filePath = thumbnail ? `${this.publicDir}${pathprefix}/${resource.thumbnailUrl}` : `${this.publicDir}${pathprefix}/${resource.contentUrl}`
-        
+        //let filePath = thumbnail ? `${this.publicDir}${pathprefix}/${resource.thumbnailUrl}` : `${this.publicDir}${pathprefix}/${resource.contentUrl}`
+        let filePath = thumbnail ? `${pathprefix}/${resource.thumbnailUrl}` : `${pathprefix}/${resource.contentUrl}`
 
-        return this.sendFile(path.resolve(filePath), false).catch(e => { return defaultPath ? this.sendDefaultFile(defaultPath) : Promise.reject(e) })
+
+        return this.res.redirect(`http://static.kasaptanal.com/${filePath}`);
+
+        //if (config.nodeenv == 'developmen')
+
+        //return this.sendFile(path.resolve(filePath), false).catch(e => { return defaultPath ? this.sendDefaultFile(defaultPath) : Promise.reject(e) })
     }
 
     @Auth.Anonymous()

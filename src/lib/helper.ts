@@ -5,71 +5,74 @@ import * as numeral from 'numeral';
 import moment = require('moment');
 import { AppRequest } from './http';
 
-export default class Helper {    
+export default class Helper {
 
-
+    static imgUrl(resourceType: string, slug: string, thumbnail: boolean = false) {
+        //${product.slug}/resimler/thumbnail
+        return slug + "/resimler/thumbnail"
+    }
 
     static asCurrency(n: number) {
         return Number(n.toFixed(2));
     }
 
     static isToday(date): boolean {
-        return (Helper.Now().toDateString() === date.toDateString());        
+        return (Helper.Now().toDateString() === date.toDateString());
     }
 
     static Tomorrow(): Date {
-        return new Date(Helper.Now().getTime() + 24 * 60 * 60 * 1000)        
+        return new Date(Helper.Now().getTime() + 24 * 60 * 60 * 1000)
     }
 
     static NextDay(date) {
-        return new Date(date.getTime() + 24 * 60 * 60 * 1000)  
+        return new Date(date.getTime() + 24 * 60 * 60 * 1000)
     }
 
     static isTomorrow(date): boolean {
-        return (this.NextDay(Helper.Now()).toDateString() === date.toDateString());               
-    }    
+        return (this.NextDay(Helper.Now()).toDateString() === date.toDateString());
+    }
 
     static Now() {
         let date = new Date().toUTCString();
         let res = moment(date).utc().add('hour', 0)
 
         return res.toDate();
-        
-        
+
+
     }
 
     static shuffle(array) {
         var currentIndex = array.length, temporaryValue, randomIndex;
-      
+
         // While there remain elements to shuffle...
         while (0 !== currentIndex) {
-      
-          // Pick a remaining element...
-          randomIndex = Math.floor(Math.random() * currentIndex);
-          currentIndex -= 1;
-      
-          // And swap it with the current element.
-          temporaryValue = array[currentIndex];
-          array[currentIndex] = array[randomIndex];
-          array[randomIndex] = temporaryValue;
+
+            // Pick a remaining element...
+            randomIndex = Math.floor(Math.random() * currentIndex);
+            currentIndex -= 1;
+
+            // And swap it with the current element.
+            temporaryValue = array[currentIndex];
+            array[currentIndex] = array[randomIndex];
+            array[randomIndex] = temporaryValue;
         }
-      
+
         return array;
-      }
-      
+    }
+
 
     static boolStr(val: boolean) {
-        return val ? 'Evet': 'Hayır'
+        return val ? 'Evet' : 'Hayır'
     }
 
     static formatDate(date: Date, useTime: boolean = false) {
         const options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
-        return date.toLocaleDateString('tr-TR', options);        
+        return date.toLocaleDateString('tr-TR', options);
     }
 
     static UtcNow() {
         return moment.utc().toDate();
-    }    
+    }
 
     static splitCurrency(n: number) {
         let absn = Math.abs(n)
@@ -82,10 +85,10 @@ export default class Helper {
     static formatCurrency(n: number) {
         let split = Helper.splitCurrency(n)
         return {
-            val:  numeral(split.val).format('0,0'),
+            val: numeral(split.val).format('0,0'),
             krs: numeral(split.krs).format('00')
         }
-    }    
+    }
 
     static getPhoneNumber(phone: string) {
         //05326274151

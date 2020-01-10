@@ -2,16 +2,19 @@
 <% var badge = typeof(badge) != 'undefined' ? badge: product.tag2 %>
 <div class="card product-card card-static item-card">
     <% if (badge && typeof(hideBadge) == 'undefined') { %>
-    <span class="badge badge-danger badge-shadow"><%=badge%></span>    
+    <span class="badge badge-danger badge-shadow"><%=badge%></span>
 
     <% } %>
-     <% if (product.badge == 'video') { %>
-        <button class="btn-wishlist btn-sm" type="button" data-toggle="tooltip" data-placement="left" title="" data-original-title="Zengin içerik"><i class="czi-video"></i></button>
-     <% } %>
-    <a class=" d-block overflow-hidden" href="/<%= product.slug  %><%= (butcher ? `/${butcher}`:'') %>"><img class="rounded-0"
-            src="<%= `/${product.slug}/resimler/thumbnail` %>" alt="<%= product.name  %>"></a>
+    <% if (product.badge == 'video') { %>
+    <button class="btn-wishlist btn-sm" type="button" data-toggle="tooltip" data-placement="left" title=""
+        data-original-title="Zengin içerik"><i class="czi-video"></i></button>
+    <% } %>
+    <a class=" d-block overflow-hidden" href="/<%= product.slug  %><%= (butcher ? `/${butcher}`:'') %>"><img
+            class="rounded-0" src="<%= `${__helper.imgUrl('product', product.slug, true)}` %>"
+            alt="<%= product.name  %>"></a>
     <div class="card-body pl-0 text-center">
-        <h3 class="product-title font-size-md"><a href="/<%= product.slug%> <%= (butcher ? `/${butcher}`:'') %>"><%= product.name  %></a>
+        <h3 class="product-title font-size-md"><a
+                href="/<%= product.slug%> <%= (butcher ? `/${butcher}`:'') %>"><%= product.name  %></a>
         </h3>
     </div>
 </div>

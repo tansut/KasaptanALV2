@@ -3,6 +3,7 @@ import BaseModel from "./basemodel"
 import Helper from '../../lib/helper';
 import Product from './product';
 import ResourceCategory from './resourcecategory';
+import config from '../../config';
 
 @Table({
     tableName: "Resources",
@@ -17,12 +18,12 @@ import ResourceCategory from './resourcecategory';
     {
         name: "type_ref3_idx",
         fields: ["type", "ref3"]
-    },    
+    },
 
     {
         name: "type_ref4_idx",
         fields: ["type", "ref4"]
-    }, 
+    },
 
     {
         name: "type_ref5_idx",
@@ -47,7 +48,7 @@ class Resource extends BaseModel<Resource> {
         sourceKey: "id",
         foreignKey: "resourceid"
     })
-    categories: ResourceCategory[];    
+    categories: ResourceCategory[];
 
     @Column({
         allowNull: false,
@@ -125,7 +126,7 @@ class Resource extends BaseModel<Resource> {
             note = this.tag2 || (`${this.title} yapacağım, lütfen uygun hazırlayın.`);
         } else if (this.tag1 == 'hazirlama-sekli') {
             note = this.tag2 ? (this.tag2) : (this.title + " olarak hazırlayın.")
-        } else  if (this.tag1 && this.tag1.includes('yemek')) {
+        } else if (this.tag1 && this.tag1.includes('yemek')) {
             note = this.tag2 || (`${this.title} yapacağım, lütfen uygun hazırlayın.`);
         }
 
@@ -143,21 +144,22 @@ class Resource extends BaseModel<Resource> {
     }
 
     set settings(value: any) {
-        this.setDataValue('settingsjson',JSON.stringify(value));
+        this.setDataValue('settingsjson', JSON.stringify(value));
     }
 
 
     getFileUrl() {
+        config.staticDomain
         if (this.contentType == 'image/jpeg')
-            return `/${this.folder}/${this.contentUrl}`
+            return `${config.staticDomain}/${this.folder}/${this.contentUrl}`
         else return `https://www.youtube.com/watch?v=${this.contentUrl}`;
     }
 
     getThumbnailFileUrl(ignoreThumbnail: boolean = false) {
         if (this.contentType == 'image/jpeg') {
-            return `/${this.folder}/${this.thumbnailUrl}`
+            return `${config.staticDomain}/${this.folder}/${this.thumbnailUrl}`
         } else if (this.thumbnailUrl && !ignoreThumbnail) {
-            return `${this.thumbnailUrl}`
+            return `${config.staticDomain}${this.thumbnailUrl}`
         } else return `https://img.youtube.com/vi/${this.contentUrl}/maxresdefault.jpg`
     }
 }
