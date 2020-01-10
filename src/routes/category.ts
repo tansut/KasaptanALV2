@@ -54,28 +54,10 @@ export default class Route extends ViewRouter {
         if (subcategory) {
             let category = this.req.__categories.find(p => p.slug == subcategory);
             this.products = await ProductManager.getProductsOfCategories([category.id])
-            this.foods = await new ProductsApi(this.constructorParams).getResources({
-                type: ['product-videos', 'product-photos'],
-                tag1: {
-                    [Op.or]: {
-                        [Op.like]: '%yemek%',
-                        [Op.like]: '%tarif%'
-
-                    }
-                }
-            }, this.products, null, (categoryid && !discardFoodCategory) ? [categoryid]: null);
+            this.foods = await new ProductsApi(this.constructorParams).getFoodAndTarifResources(this.products, null, (categoryid && !discardFoodCategory) ? [categoryid]: null);
             this.foodsWithCats = this.generateFoodWithCats(this.foods)
         } else {
-            this.foods = await new ProductsApi(this.constructorParams).getResources({
-                type: ['product-videos', 'product-photos'],
-                tag1: {
-                    [Op.or]: {
-                        [Op.like]: '%yemek%',
-                        [Op.like]: '%tarif%'
-
-                    }
-                }
-            }, null, null, categoryid ? [categoryid]: null);
+            this.foods = await new ProductsApi(this.constructorParams).getFoodAndTarifResources(null, null, categoryid ? [categoryid]: null);
             this.foodsWithCats = this.generateFoodWithCats(this.foods)
         }
     }
@@ -191,16 +173,7 @@ export default class Route extends ViewRouter {
         else {
             this.products = await ProductManager.getProductsOfCategories([this.category.id]);
             // this.foods = Helper.shuffle(await new ProductsApi(this.constructorParams).getResources({tag1: ['tarif', 'yemek']}, this.products));
-            this.foods = await new ProductsApi(this.constructorParams).getResources({
-                type: ['product-videos', 'product-photos'],
-                tag1: {
-                    [Op.or]: {
-                        [Op.like]: '%yemek%',
-                        [Op.like]: '%tarif%'
-
-                    }
-                }
-            }, this.products);
+            this.foods = await new ProductsApi(this.constructorParams).getFoodAndTarifResources(this.products, 15);
 
             this.renderPage('pages/category.ejs')
         

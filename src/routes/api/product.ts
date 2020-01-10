@@ -26,6 +26,18 @@ export default class Route extends ApiRouter {
         }, products4, limit, catids)
     }
 
+    async getFoodAndTarifResources(products4?: Product[], limit?: number, catids?: number[]) {
+        return this.getResources({
+            type: ['product-videos', 'product-photos'],
+            tag1: {
+                [Op.or]: [{
+                    [Op.like]: '%yemek%'
+                             
+                }, {[Op.like]: '%tarif%'}]
+            }
+        }, products4, limit, catids)
+    }
+
     async getResources(where, products4?: Product[], limit?: number, catids?: number[]) {
         if (products4) {
             let ids = products4.map(p => p.id);
