@@ -18,23 +18,23 @@
 <div class="mt-4 border-top border-left border-right">
 
   <div class="bg-secondary p-3  mb-4"><a class="media align-items-center" href="/<%=butcher.slug%>"><img
-        class="rounded-circle header-img"  src="/<%=butcher.slug%>/fotograf/thumbnail" alt="<%=butcher.name%>">
+        class="rounded-circle header-img" src="/<%=butcher.slug%>/fotograf/thumbnail" alt="<%=butcher.name%>">
       <div class="media-body pl-2"><span class="font-size-ms text-muted">Siparişiniz</span>
         <h3 class="h4 mb-0 mr-2"><%= butchers[bi].name %></h3>
       </div>
     </a></div>
 
-    <ul class="px-4 list-unstyled font-size-sm">
-      <li><span class="text-muted">Teslimat:&nbsp;</span><%= shipment[bi].howToDesc %></li>
-      <li><span class="text-muted">Teslimat planı:&nbsp;</span><%= shipment[bi].desc %></li>
-      <% if (shipment[bi].type != 'callme') {%>
-      <li><span class="text-muted">Gün:&nbsp;</span><%= shipment[bi].daysText %></li>
-      <li><span class="text-muted">Saat Aralığı:&nbsp;</span><%= shipment[bi].hoursText%> </li>
-      <%}%>
+  <ul class="px-4 list-unstyled font-size-sm">
+    <li><span class="text-muted">Teslimat:&nbsp;</span><%= shipment[bi].howToDesc %></li>
+    <li><span class="text-muted">Teslimat planı:&nbsp;</span><%= shipment[bi].desc %></li>
+    <% if (shipment[bi].type != 'callme') {%>
+    <li><span class="text-muted">Gün:&nbsp;</span><%= shipment[bi].daysText %></li>
+    <li><span class="text-muted">Saat Aralığı:&nbsp;</span><%= shipment[bi].hoursText%> </li>
+    <%}%>
                 <li><span class="text-muted">Paketim çıkmadan bana haber ver:&nbsp;</span><%= __helper.boolStr(shipment[bi].informMe)%>
-      </li>
-      <li><span class="text-muted">Ödeme:&nbsp;</span><%= payment[bi].desc%> </li>
-    </ul>
+    </li>
+    <li><span class="text-muted">Ödeme:&nbsp;</span><%= payment[bi].desc%> </li>
+  </ul>
 
   <% butcher.products.forEach((pi, i) => { %>
   <% let item = items[pi] %>
@@ -43,18 +43,19 @@
     class="px-4 d-sm-flex justify-content-between align-items-center mt-2 pb-3 border-bottom">
     <div class="media media-ie-fix d-block d-sm-flex align-items-center text-center text-sm-left"><a
         class="d-inline-block mx-auto mr-sm-4" href="/<%=item.product.slug%>/<%=item.product.butcherSlug%>"
-        style="width: 10rem;"><img src="<%=`/${item.product.slug}/resimler/thumbnail`%>" class="roundedx"
-          alt="Product"></a>
+        style="width: 10rem;"><img src="<%=`${__req.helper.imgUrl('product-photos', item.product.slug)}`%>"
+          class="roundedx" alt="Product"></a>
       <div class="media-body pt-2">
         <h3 class="product-title font-size-base mb-2"><a
             href="/<%=item.product.slug%>/<%=item.butcher.slug%>"><%=item.product.name%></a>
         </h3>
-         <div class="font-size-normal"><span class="font-weight-medium"><%=item.quantity%></span> <span class="text-muted"><%=item.pounit%>/</span>
-                              <span class="font-size-sm">
-                                  <%- include('./currency.ejs', {value: item.price}) %>
-                              </span>
-                             
-                            </div> 
+        <div class="font-size-normal"><span class="font-weight-medium"><%=item.quantity%></span> <span
+            class="text-muted"><%=item.pounit%>/</span>
+          <span class="font-size-sm">
+            <%- include('./currency.ejs', {value: item.price}) %>
+          </span>
+
+        </div>
         <div class="text-nowrap">
 
         </div>
@@ -71,45 +72,45 @@
 
                   <% }) %>
       </div>
- 
+
 
       <div class="butcher-totals border-bottom border-right border-left p-2 bg-secondary">
-          <div class="d-flex justify-content-between mb-2 border-bottom">
-            <div class="">
-              <div class="font-size-sm">Lezzetler:</div>
-    
-            </div>
-            <div class="text-nowrap font-size-sm">
-              <%- include('./currency.ejs', {value: butcher.subTotal}) %>
-            </div>
-    
+        <div class="d-flex justify-content-between mb-2 border-bottom">
+          <div class="">
+            <div class="font-size-sm">Lezzetler:</div>
+
           </div>
-         
-          <% if (butcher.shippingTotal > 0) { %>
-          <div class="d-flex justify-content-between mb-2 border-bottom">
-            <div>
-              <div class="font-size-sm">Teslimat:</div>
-    
-            </div>
-            <div class="text-nowrap font-size-sm">
-              <%- include('./currency.ejs', {value: butcher.shippingTotal }) %>
-            </div>
-    
-          </div>     
-          
-          <%}%>
+          <div class="text-nowrap font-size-sm">
+            <%- include('./currency.ejs', {value: butcher.subTotal}) %>
+          </div>
+
+        </div>
+
+        <% if (butcher.shippingTotal > 0) { %>
+        <div class="d-flex justify-content-between mb-2 border-bottom">
+          <div>
+            <div class="font-size-sm">Teslimat:</div>
+
+          </div>
+          <div class="text-nowrap font-size-sm">
+            <%- include('./currency.ejs', {value: butcher.shippingTotal }) %>
+          </div>
+
+        </div>
+
+        <%}%>
          
           <% if (butcher.discountTotal != 0) { %>
-            <div class="d-flex justify-content-between mb-2 border-bottom">
-              <div>
-                <div class="font-size-sm">İndirimler</div>
-    
-              </div>
-              <div class="text-nowrap font-size-sm">
-                <%- include('./currency.ejs', {value: butcher.discountTotal}) %>
-              </div>
-            </div>   
-            <%}%>
+        <div class="d-flex justify-content-between mb-2 border-bottom">
+          <div>
+            <div class="font-size-sm">İndirimler</div>
+
+          </div>
+          <div class="text-nowrap font-size-sm">
+            <%- include('./currency.ejs', {value: butcher.discountTotal}) %>
+          </div>
+        </div>
+        <%}%>
     
             <div class="d-flex justify-content-between mb-2 font-weight-medium">
                 <div>
@@ -118,12 +119,12 @@
                 </div>
                 <div class="text-nowrap font-size-sm">
                   <%- include('./currency.ejs', {value: butcher.total}) %>
-                </div>
-      
-              </div>
       </div>
 
-      <%}%>  
+    </div>
+  </div>
+
+  <%}%>  
 
       <div class="order-totals border mt-4 p-2 bg-secondary">
           <div class="d-flex justify-content-between mb-2 border-bottom">
@@ -133,35 +134,35 @@
             </div>
             <div class="text-nowrap font-size-sm">
               <%- include('./currency.ejs', {value: order.subTotal}) %>
-            </div>
-    
-          </div>
-         
-          <% if (order.shippingTotal > 0) { %>
-          <div class="d-flex justify-content-between mb-2 border-bottom">
-            <div>
-              <div class="font-size-sm">Teslimat:</div>
-    
-            </div>
-            <div class="text-nowrap font-size-sm">
-              <%- include('./currency.ejs', {value: order.shippingTotal }) %>
-            </div>
-    
-          </div>     
-          
-          <%}%>
+</div>
+
+</div>
+
+<% if (order.shippingTotal > 0) { %>
+<div class="d-flex justify-content-between mb-2 border-bottom">
+  <div>
+    <div class="font-size-sm">Teslimat:</div>
+
+  </div>
+  <div class="text-nowrap font-size-sm">
+    <%- include('./currency.ejs', {value: order.shippingTotal }) %>
+  </div>
+
+</div>
+
+<%}%>
          
           <% if (order.discountTotal != 0) { %>
-            <div class="d-flex justify-content-between mb-2 border-bottom">
-              <div>
-                <div class="font-size-sm">İndirimler</div>
-    
-              </div>
-              <div class="text-nowrap font-size-sm">
-                <%- include('./currency.ejs', {value: order.discountTotal}) %>
-              </div>
-            </div>   
-            <%}%>
+<div class="d-flex justify-content-between mb-2 border-bottom">
+  <div>
+    <div class="font-size-sm">İndirimler</div>
+
+  </div>
+  <div class="text-nowrap font-size-sm">
+    <%- include('./currency.ejs', {value: order.discountTotal}) %>
+  </div>
+</div>
+<%}%>
     
             <div class="d-flex justify-content-between mb-2 font-weight-medium">
                 <div>
@@ -170,7 +171,7 @@
                 </div>
                 <div class="text-nowrap font-size-sm">
                   <%- include('./currency.ejs', {value: order.total}) %>
-                </div>
-      
-              </div>
-      </div>               
+</div>
+
+</div>
+</div>

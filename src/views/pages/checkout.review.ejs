@@ -62,24 +62,27 @@
             <% let shipment = shopcard.shipment[bi]%>
             <div class="border mb-4">
 
-            
-            <div class="bg-secondary p-3  mb-4"><a class="media align-items-center" href="/<%=shopcard.butchers[bi].slug%>"><img class="rounded-circle header-img"  src="/<%=shopcard.butchers[bi].slug%>/fotograf/thumbnail" alt="<%=shopcard.butchers[bi].name%>">
-              <div class="media-body pl-2"><span class="font-size-ms text-muted">Teslimat ve Ödeme</span>
-                <h3 class="h4 mb-0 mr-2"><%= shopcard.butchers[bi].name %></h3>
-              </div></a></div>
 
-            <ul class="px-4 list-unstyled font-size-sm">
-              <li><span class="text-muted">Teslimat:&nbsp;</span><%= shopcard.shipment[bi].howToDesc %></li>
-              <li><span class="text-muted">Teslimat planı:&nbsp;</span><%= shopcard.shipment[bi].desc %></li>
-              <% if (shopcard.shipment[bi].type != 'callme') {%>
-              <li><span class="text-muted">Gün:&nbsp;</span><%= shopcard.shipment[bi].daysText %></li>
-              <li><span class="text-muted">Saat Aralığı:&nbsp;</span><%= shopcard.shipment[bi].hoursText%> </li>
-              <%}%>
+              <div class="bg-secondary p-3  mb-4"><a class="media align-items-center"
+                  href="/<%=shopcard.butchers[bi].slug%>"><img class="rounded-circle header-img"
+                    src="/<%=shopcard.butchers[bi].slug%>/fotograf/thumbnail" alt="<%=shopcard.butchers[bi].name%>">
+                  <div class="media-body pl-2"><span class="font-size-ms text-muted">Teslimat ve Ödeme</span>
+                    <h3 class="h4 mb-0 mr-2"><%= shopcard.butchers[bi].name %></h3>
+                  </div>
+                </a></div>
+
+              <ul class="px-4 list-unstyled font-size-sm">
+                <li><span class="text-muted">Teslimat:&nbsp;</span><%= shopcard.shipment[bi].howToDesc %></li>
+                <li><span class="text-muted">Teslimat planı:&nbsp;</span><%= shopcard.shipment[bi].desc %></li>
+                <% if (shopcard.shipment[bi].type != 'callme') {%>
+                <li><span class="text-muted">Gün:&nbsp;</span><%= shopcard.shipment[bi].daysText %></li>
+                <li><span class="text-muted">Saat Aralığı:&nbsp;</span><%= shopcard.shipment[bi].hoursText%> </li>
+                <%}%>
                         <li><span class="text-muted">Paketim çıkmadan bana haber ver:&nbsp;</span><%= __helper.boolStr(shopcard.shipment[bi].informMe)%>
-              </li>
-              <li><span class="text-muted">Ödeme:&nbsp;</span><%= shopcard.payment[bi].desc%> </li>
-            </ul>
-          </div>
+                </li>
+                <li><span class="text-muted">Ödeme:&nbsp;</span><%= shopcard.payment[bi].desc%> </li>
+              </ul>
+            </div>
             <%}%>
           </div>
 
@@ -103,105 +106,107 @@
             <div class="widget">
               <h2 class="widget-title text-center">Siparişim</h2>
               <% for (let bi in shopcard.butchers) { %>
-                <% let butcher = shopcard.butchers[bi]%>
+            <% let butcher = shopcard.butchers[bi]%>
 
-                <div class="mb-4">
-                    <div class="d-flex flex-wrap justify-content-between align-items-center pt-1 border-bottom pb-1 mb-2">
-                        <h4 class="h5 mb-0 mr-2"><%=butcher.name%></h4>
+            <div class="mb-4">
+              <div class="d-flex flex-wrap justify-content-between align-items-center pt-1 border-bottom pb-1 mb-2">
+                <h4 class="h5 mb-0 mr-2"><%=butcher.name%></h4>
+              </div>
+
+              <% butcher.products.forEach((pi, i) => { %>
+              <% let item = shopcard.items[pi] %>
+              <div class="media align-items-top pt-2 pb-2"><a class="d-block mr-2"
+                  href="<%=`/${item.product.slug}/${butcher.slug}`%>">
+                  <img class="header-img" src="<%=`${__req.helper.imgUrl('product-photos', item.product.slug)}`%>"
+                    alt="<%=`${item.product.name}`%>" />
+
+                </a>
+                <div class="media-body">
+                  <h6 class="widget-product-title"><a
+                      href="<%=`/${item.product.slug}/${butcher.slug}`%>"><%=`${item.product.name}`%></a>
+                  </h6>
+                  <div class="d-flex justify-content-between mb-2">
+                    <div>
+                      <div class="font-size-sm"><span class="font-weight-medium"><%=item.quantity%></span> <span
+                          class="text-muted  mr-2"> <%=item.purchaseoption.unit%></span></div>
+
+                    </div>
+                    <div class="text-nowrap font-size-sm">
+                      <%- include('./_partial/currency.ejs', {value: item.price}) %>
                     </div>
 
-                    <% butcher.products.forEach((pi, i) => { %>
-                      <% let item = shopcard.items[pi] %>
-                      <div class="media align-items-top pt-2 pb-2"><a class="d-block mr-2"
-                          href="<%=`/${item.product.slug}/${butcher.slug}`%>">
-                          <img class="header-img" src="<%=`/${item.product.slug}/resimler/thumbnail`%>" alt="<%=`${item.product.name}`%>" />
-          
-                        </a>
-                        <div class="media-body">
-                          <h6 class="widget-product-title"><a href="<%=`/${item.product.slug}/${butcher.slug}`%>"><%=`${item.product.name}`%></a>
-                          </h6>
-                          <div class="d-flex justify-content-between mb-2">
-                            <div>
-                              <div class="font-size-sm"><span class="font-weight-medium"><%=item.quantity%></span> <span
-                                  class="text-muted  mr-2"> <%=item.purchaseoption.unit%></span></div>
-          
-                            </div>
-                            <div class="text-nowrap font-size-sm">
-                              <%- include('./_partial/currency.ejs', {value: item.price}) %>
-                            </div>
-          
-                          </div>
-                          <% if (item.purchaseoption.desc && item.purchaseoption.unit != 'kg') {%>
-                          <!-- <div class="mb-2 font-size-sm text-muted"><%=item.purchaseoption.desc%></div> -->
-                          <%}%>     
+                  </div>
+                  <% if (item.purchaseoption.desc && item.purchaseoption.unit != 'kg') {%>
+                  <!-- <div class="mb-2 font-size-sm text-muted"><%=item.purchaseoption.desc%></div> -->
+                  <%}%>     
                               <!-- <div class="d-flex ">
                                
                                   <div class="text-accent font-size-sm"><span class="mr-2"> <%- include('./_partial/currency.ejs', {value: item.product.viewUnitPrice, unit: item.product.viewUnit}) %></span>
-                        </div>
-                      </div> -->
-          
-                    
+                </div>
+              </div> -->
 
-                      </div>
-                    </div>
-                     <% }) %>     
-                     <div class="d-flex justify-content-between mb-2 border-bottom">
-                        <div class="">
-                          <div class="font-size-sm">Lezzetler:</div>
-      
-                        </div>
-                        <div class="text-nowrap font-size-sm">
-                          <%- include('./_partial/currency.ejs', {value: butcher.subTotal}) %>
-                        </div>
-      
-                      </div>
-                     
-                      <% if (shopcard.getShippingCost(bi) > 0) { %>
-                      <div class="d-flex justify-content-between mb-2 border-bottom">
-                        <div>
-                          <div class="font-size-sm">Teslimat:</div>
-      
-                        </div>
-                        <div class="text-nowrap font-size-sm">
-                          <%- include('./_partial/currency.ejs', {value: shopcard.getShippingCost(bi)}) %>
-                        </div>
-      
-                      </div>     
-                      
-                      <%}%>
+
+
+            </div>
+          </div>
+          <% }) %>
+          <div class="d-flex justify-content-between mb-2 border-bottom">
+            <div class="">
+              <div class="font-size-sm">Lezzetler:</div>
+
+            </div>
+            <div class="text-nowrap font-size-sm">
+              <%- include('./_partial/currency.ejs', {value: butcher.subTotal}) %>
+            </div>
+
+          </div>
+
+          <% if (shopcard.getShippingCost(bi) > 0) { %>
+          <div class="d-flex justify-content-between mb-2 border-bottom">
+            <div>
+              <div class="font-size-sm">Teslimat:</div>
+
+            </div>
+            <div class="text-nowrap font-size-sm">
+              <%- include('./_partial/currency.ejs', {value: shopcard.getShippingCost(bi)}) %>
+            </div>
+
+          </div>
+
+          <%}%>
                      
                        <% let discounts = shopcard.butcherDiscounts[bi] || [] %>
-                       <% discounts.forEach(d=> { %>
-                        <div class="d-flex justify-content-between mb-2 border-bottom">
-                          <div>
-                            <div class="font-size-sm"><%=d.name%></div>
-        
-                          </div>
-                          <div class="text-nowrap font-size-sm">
-                            <%- include('./_partial/currency.ejs', {value: d.calculated}) %>
-                          </div>
-        
-                        </div>     
-                        <%})%>
-                      
-                        
-                        <div class="d-flex justify-content-between mb-2 font-weight-medium">
-                          <div>
-                            <div class="font-size-sm">Toplam:</div>
-        
-                          </div>
-                          <div class="text-nowrap font-size-sm">
-                            <%- include('./_partial/currency.ejs', {value: shopcard.getButcherTotal(bi)}) %>
-                          </div>
-        
-                        </div>
-                </div>
-               
-          
-      
-                  
+          <% discounts.forEach(d=> { %>
+          <div class="d-flex justify-content-between mb-2 border-bottom">
+            <div>
+              <div class="font-size-sm"><%=d.name%></div>
 
-                <%}%>
+            </div>
+            <div class="text-nowrap font-size-sm">
+              <%- include('./_partial/currency.ejs', {value: d.calculated}) %>
+            </div>
+
+          </div>
+          <%})%>
+
+
+          <div class="d-flex justify-content-between mb-2 font-weight-medium">
+            <div>
+              <div class="font-size-sm">Toplam:</div>
+
+            </div>
+            <div class="text-nowrap font-size-sm">
+              <%- include('./_partial/currency.ejs', {value: shopcard.getButcherTotal(bi)}) %>
+            </div>
+
+          </div>
+      </div>
+
+
+
+
+
+      <%}%>
 
   <ul class="list-unstyled font-size-sm mt-4 pt-4 border-top">
     <!-- <li class="d-flex justify-content-between align-items-center"><span class="mr-2">Lezzetler:</span><span
@@ -209,18 +214,18 @@
         <%- include('./_partial/currency.ejs', {value: shopcard.subTotal}) %>
 
       </span></li> -->
-    <% shopcard.discounts.forEach(d=>{ %>
-    <li class="d-flex justify-content-between align-items-center"><span class="mr-2">
-        <%=d.name %></span><span class="text-right">
-        <%- include('./_partial/currency.ejs', {value: d.calculated}) %>
-      </span></li>
-    <%})%>
-    <li class="font-weight-bolder d-flex justify-content-between align-items-center"><span class="mr-2">
-        Genel Toplam:</span><span class="font-size-normal ">
-        <%- include('./_partial/currency.ejs', {value: shopcard.total}) %>
-      </span></li>
+      <% shopcard.discounts.forEach(d=>{ %>
+      <li class="d-flex justify-content-between align-items-center"><span class="mr-2">
+          <%=d.name %></span><span class="text-right">
+          <%- include('./_partial/currency.ejs', {value: d.calculated}) %>
+        </span></li>
+      <%})%>
+      <li class="font-weight-bolder d-flex justify-content-between align-items-center"><span class="mr-2">
+          Genel Toplam:</span><span class="font-size-normal ">
+          <%- include('./_partial/currency.ejs', {value: shopcard.total}) %>
+        </span></li>
 
-  </ul>
+      </ul>
 
   </div>
 

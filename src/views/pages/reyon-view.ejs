@@ -40,30 +40,31 @@
 
             <div class="card product-card card-static item-card">
               <a class="card-img-top d-block overflow-hidden" href="<%= `/${reyonlar[c].slug}`%>">
-                <img class="rounded"
-                src="<%=`/${reyonlar[c].slug}/resimler/thumbnail` %>" alt="<%= reyonlar[c].name %>"></a>
+                <img class="rounded" src="<%=`${__req.helper.imgUrl('category-photos', reyonlar[c].slug)}`%>"
+                  alt="<%= reyonlar[c].name %>"></a>
               <div class="card-body pl-0 text-center">
-                  <h3 class="product-title font-size-md"><a href="<%= `/${reyonlar[c].slug}`%>"><%= reyonlar[c].name %></a>
-                  </h3>
+                <h3 class="product-title font-size-md"><a
+                    href="<%= `/${reyonlar[c].slug}`%>"><%= reyonlar[c].name %></a>
+                </h3>
               </div>
-          </div>
+            </div>
 
           </div>
           <%}%>
         </div>
               <%})%>
-        
 
 
+
+        </div>
       </div>
     </div>
-  </div>
 
 
 
 
-  <% include ./_partial/footer %>
-  <% include ./_partial/scripts %>
+    <% include ./_partial/footer %>
+    <% include ./_partial/scripts %>
 
 </body>
 

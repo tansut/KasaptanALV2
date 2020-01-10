@@ -96,15 +96,15 @@
         </h3>
         <ul class="nav justify-content-center mb-4">
           <% var categories = controller.getCategories() %>
-    
+
           <% Object.keys(categories).forEach(function(key){ %>
           <li class="nav-item">
             <a class="nav-link active" href="/et-kulturu/<%= key %>"><%=categories[key] %></a>
           </li>
           <% }); %>
-    
-    
-        </ul> 
+
+
+        </ul>
 
       </div>
 
@@ -114,43 +114,46 @@
 
   <div class="p-2 bg-light">
 
-    <div class="bg-secondary border-bottom rounded-lg mb-2 p-2 d-flex flex-nowrap justify-content-between align-items-center">
-         <a class="media align-items-center align-self-center" href="/et-yemek-tarifleri">
-         <div class="media-body pl-2">
-           <h3 class="h4 mb-0 mr-2">Video Kültür</h3>
-           <span class="font-size-ms text-muted">Kısa ve öz izlemelikler</span>
-         </div></a>
-         <a class="align-self-center d-md-block btn btn-sm" href="/et-yemek-tarifleri"><i
-             class="czi-arrow-right font-size-xs align-middle ml-1"></i></a>                        
-     </div> 
- 
-     <div class="table-responsive" data-simplebar>
-             <div class="d-flex pb-2 ">
-                     <% controller.resources.forEach((resource, i)=> {%>
-                        
-                     <div class="mr-2 ">
-                         <div class="item-slider item-slider-sm">
-                             
-                             <div class="card product-card card-static item-card">
-                                 <a class="card-img-top d-block overflow-hidden gallery-item video-item"
-                                 href="/<%=`${resource.product.slug}?r=${resource.id}`  %>">
-                                   <!-- <img class="rounded" src="<%= `https://img.youtube.com/vi/${resource.contentUrl}/maxresdefault.jpg` %>" alt="<%= resource.title  %>"> -->
-                                   <img class="roundedx" src="<%= `/${resource.product.slug}/resimler/thumbnail` %>" alt="<%= resource.title  %>">
-                                 </a>
-                                 <div class="card-body pl-0 text-center">
-                                   <h3 class="product-title font-size-md"><a href="/<%= resource.product.slug%>"><%= resource.title  %></a>
-                                   </h3>
-                                 </div>
-                               </div>
+    <div
+      class="bg-secondary border-bottom rounded-lg mb-2 p-2 d-flex flex-nowrap justify-content-between align-items-center">
+      <a class="media align-items-center align-self-center" href="/et-yemek-tarifleri">
+        <div class="media-body pl-2">
+          <h3 class="h4 mb-0 mr-2">Video Kültür</h3>
+          <span class="font-size-ms text-muted">Kısa ve öz izlemelikler</span>
+        </div>
+      </a>
+      <a class="align-self-center d-md-block btn btn-sm" href="/et-yemek-tarifleri"><i
+          class="czi-arrow-right font-size-xs align-middle ml-1"></i></a>
+    </div>
 
-                         </div>
- 
-                     </div>  
-                    
-                     <%})%>
-             </div>
-     </div> 
- </div>
+    <div class="table-responsive" data-simplebar>
+      <div class="d-flex pb-2 ">
+        <% controller.resources.forEach((resource, i)=> {%>
+
+        <div class="mr-2 ">
+          <div class="item-slider item-slider-sm">
+
+            <div class="card product-card card-static item-card">
+              <a class="card-img-top d-block overflow-hidden gallery-item video-item"
+                href="/<%=`${resource.product.slug}?r=${resource.id}`  %>">
+                <!-- <img class="rounded" src="<%= `https://img.youtube.com/vi/${resource.contentUrl}/maxresdefault.jpg` %>" alt="<%= resource.title  %>"> -->
+                <img class="roundedx" src="<%=`${__req.helper.imgUrl('product-photos', resource.product.slug)}`%>"
+                  alt="<%= resource.title  %>">
+              </a>
+              <div class="card-body pl-0 text-center">
+                <h3 class="product-title font-size-md"><a href="/<%= resource.product.slug%>"><%= resource.title  %></a>
+                </h3>
+              </div>
+            </div>
+
+          </div>
+
+        </div>
+
+        <%})%>
+      </div>
+    </div>
+  </div>
 
   <!-- <div class="container">
 

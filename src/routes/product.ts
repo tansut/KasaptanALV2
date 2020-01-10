@@ -224,6 +224,6 @@ export default class Route extends ViewRouter {
         router.get("/:product/yemek-tarifi/:tarif", Route.BindRequest(Route.prototype.productRoute));
         router.get("/:product/ile-yapin/:tarif", Route.BindRequest(Route.prototype.productRoute));
         router.get("/:product/:butcher", Route.BindRequest(Route.prototype.productRoute));
-        router.get("/:product/resimler/:filename", Route.BindRequest(Route.prototype.productPhotoRoute));
+        //router.get("/:product/resimler/:filename", Route.BindRequest(Route.prototype.productPhotoRoute));
     }
 }

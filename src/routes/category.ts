@@ -28,7 +28,7 @@ export default class Route extends ViewRouter {
     renderPage(view: string) {
         this.res.render(view, this.viewData({
             pageTitle: this.category.pageTitle || this.category.name + ' Et Lezzetleri',
-            pageDescription: this.category.pageDescription 
+            pageDescription: this.category.pageDescription
         }))
     }
 
@@ -54,10 +54,10 @@ export default class Route extends ViewRouter {
         if (subcategory) {
             let category = this.req.__categories.find(p => p.slug == subcategory);
             this.products = await ProductManager.getProductsOfCategories([category.id])
-            this.foods = await new ProductsApi(this.constructorParams).getFoodAndTarifResources(this.products, null, (categoryid && !discardFoodCategory) ? [categoryid]: null);
+            this.foods = await new ProductsApi(this.constructorParams).getFoodAndTarifResources(this.products, null, (categoryid && !discardFoodCategory) ? [categoryid] : null);
             this.foodsWithCats = this.generateFoodWithCats(this.foods)
         } else {
-            this.foods = await new ProductsApi(this.constructorParams).getFoodAndTarifResources(null, null, categoryid ? [categoryid]: null);
+            this.foods = await new ProductsApi(this.constructorParams).getFoodAndTarifResources(null, null, categoryid ? [categoryid] : null);
             this.foodsWithCats = this.generateFoodWithCats(this.foods)
         }
     }
@@ -67,10 +67,10 @@ export default class Route extends ViewRouter {
         if (subcategory) {
             let category = this.req.__categories.find(p => p.slug == subcategory);
             this.products = await ProductManager.getProductsOfCategories([category.id])
-            this.foods = await new ProductsApi(this.constructorParams).getFoodResources(this.products, null, (categoryid && !discardFoodCategory) ? [categoryid]: null);
+            this.foods = await new ProductsApi(this.constructorParams).getFoodResources(this.products, null, (categoryid && !discardFoodCategory) ? [categoryid] : null);
             this.foodsWithCats = this.generateFoodWithCats(this.foods)
         } else {
-            this.foods = await new ProductsApi(this.constructorParams).getFoodResources(null, null, categoryid ? [categoryid]: null);
+            this.foods = await new ProductsApi(this.constructorParams).getFoodResources(null, null, categoryid ? [categoryid] : null);
             this.foodsWithCats = this.generateFoodWithCats(this.foods)
         }
     }
@@ -142,7 +142,7 @@ export default class Route extends ViewRouter {
         this.renderPage('pages/category-food.ejs')
     }
 
-    
+
 
     @Auth.Anonymous()
     async viewAsTarifRoute(back: boolean = false) {
@@ -176,7 +176,7 @@ export default class Route extends ViewRouter {
             this.foods = await new ProductsApi(this.constructorParams).getFoodAndTarifResources(this.products, 15);
 
             this.renderPage('pages/category.ejs')
-        
+
         }
     }
 
@@ -217,7 +217,7 @@ export default class Route extends ViewRouter {
         router.get("/et-yemek-tarifleri/:category", Route.BindRequest(Route.prototype.viewTarifsRoute));
         router.get("/et-yemekleri", Route.BindRequest(Route.prototype.viewFoodsRoute));
         router.get("/et-yemekleri/:category", Route.BindRequest(Route.prototype.viewFoodsRoute));
-        router.get("/:category/resimler/:filename", Route.BindRequest(Route.prototype.categoryPhotoRoute));
+        //router.get("/:category/resimler/:filename", Route.BindRequest(Route.prototype.categoryPhotoRoute));
 
     }
 }

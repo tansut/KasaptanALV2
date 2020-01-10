@@ -16,78 +16,94 @@
 
 
     <% var viewCats = ['reyon', 'amac'] %>
-    
-      <% var reyonlar = __categories.filter(p=>p.type.includes('reyon')).slice(0,4) %>
+
+    <% var reyonlar = __categories.filter(p=>p.type.includes('reyon')).slice(0,4) %>
 
 
     <section class="bg-faded-primary pt-2 mb-3">
-      <div class="container">
-        <div class="row">
-          <!-- Slider     -->
+        <div class="container">
+            <div class="row">
+                <!-- Slider     -->
 
- 
 
-          <div class="col-xl-12 pt-xl-4 order-xl-2">
-            <div class="cz-carousel">
-              <div class="cz-carousel-inner" data-carousel-options='{"items": 1, "autoplay": true, "controls": false, "loop": false}'>
-                
-            
-                <div>
-                  <div class="row align-items-center">
-                    <div class="col-md-6 order-md-2"><img class="d-none d-md-block mx-auto" src="img/content/home-slider-01.jpg" alt=""></div>
-                    <div class="col-lg-5 col-md-6 offset-lg-1 order-md-1 pt-4 pb-md-4 text-center text-md-left">
-                      <h2 class="font-weight-light pb-1 from-bottom">seçkin kasaplardan</h2>
-                      <h1 class="display-4  from-bottom delay-1">doğal, taze, güvenilir</h1>
-                      <h5 class="font-weight-light pb-3 from-bottom delay-2">birinci sınıf et siparişi.</h5> 
-                      <a class="btn btn-primary btn-shadow scale-up delay-4" href="/lezzetler">Keşfet<i class="czi-arrow-right ml-2 mr-n1"></i></a>
+
+                <div class="col-xl-12 pt-xl-4 order-xl-2">
+                    <div class="cz-carousel">
+                        <div class="cz-carousel-inner"
+                            data-carousel-options='{"items": 1, "autoplay": true, "controls": false, "loop": false}'>
+
+
+                            <div>
+                                <div class="row align-items-center">
+                                    <div class="col-md-6 order-md-2"><img class="d-none d-md-block mx-auto"
+                                            src="img/content/home-slider-01.jpg" alt=""></div>
+                                    <div
+                                        class="col-lg-5 col-md-6 offset-lg-1 order-md-1 pt-4 pb-md-4 text-center text-md-left">
+                                        <h2 class="font-weight-light pb-1 from-bottom">seçkin kasaplardan</h2>
+                                        <h1 class="display-4  from-bottom delay-1">doğal, taze, güvenilir</h1>
+                                        <h5 class="font-weight-light pb-3 from-bottom delay-2">birinci sınıf et
+                                            siparişi.</h5>
+                                        <a class="btn btn-primary btn-shadow scale-up delay-4"
+                                            href="/lezzetler">Keşfet<i class="czi-arrow-right ml-2 mr-n1"></i></a>
+                                    </div>
+                                </div>
+                            </div>
+                            <div>
+                                <div class="row align-items-center">
+                                    <div class="col-md-6 order-md-2"><img class="d-none d-md-block mx-auto"
+                                            src="img/content/home-slider-02.jpg" alt=""></div>
+                                    <div
+                                        class="col-lg-5 col-md-6 offset-lg-1 order-md-1 pt-4 pb-md-4 text-center text-md-left">
+                                        <h2 class="font-weight-light pb-1 scale-up">ilk siparişinize özel</h2>
+                                        <h1 class="display-4 scale-up delay-1 ">%5 indirim</h1>
+                                        <h5 class="font-weight-light pb-3 from-bottom delay-2">anında kazanın.</h5>
+
+                                        <a class="btn btn-primary btn-shadow scale-up delay-4"
+                                            href="/lezzetler">Keşfet<i class="czi-arrow-right ml-2 mr-n1"></i></a>
+                                    </div>
+                                </div>
+
+                            </div>
+
+                            <div>
+                                <div class="row align-items-center">
+                                    <div class="col-md-6 order-md-2"><img class="d-none d-md-block mx-auto"
+                                            src="img/content/home-slider-4.jpg" alt=""></div>
+                                    <div
+                                        class="col-lg-5 col-md-6 offset-lg-1 order-md-1 pt-4 pb-md-4 text-center text-md-left">
+                                        <h2 class="font-weight-light pb-1 scale-up">en doğalını sunuyoruz</h2>
+                                        <h1 class="display-4 scale-up delay-1 ">çünkü usta kasaplarla</h1>
+                                        <h5 class="font-weight-light pb-3 scale-up delay-2">çalışıyoruz.</h5>
+
+                                        <a class="btn btn-primary btn-shadow scale-up delay-4"
+                                            href="/kasap-secim-kriterleri">Daha Fazlası<i
+                                                class="czi-arrow-right ml-2 mr-n1"></i></a>
+                                    </div>
+                                </div>
+
+                            </div>
+
+                            <div>
+                                <div class="row align-items-center">
+                                    <div class="col-md-6 order-md-2"><img class="d-none d-md-block mx-auto"
+                                            src="img/content/home-slider-3.jpg" alt=""></div>
+                                    <div
+                                        class="col-lg-5 col-md-6 offset-lg-1 order-md-1 pt-4 pb-md-4 text-center text-md-left">
+                                        <h2 class="font-weight-light pb-1 scale-up">kırmızı et ile ilgili</h2>
+                                        <h1 class="display-4 scale-up delay-1 ">kısa ve öz içerikler</h1>
+                                        <h5 class="font-weight-light pb-3 scale-up delay-2">&amp; dahası et kültür
+                                            magazinde.</h5>
+
+                                        <a class="btn btn-primary btn-shadow scale-up delay-4" href="/et-kulturu">Göz
+                                            at<i class="czi-arrow-right ml-2 mr-n1"></i></a>
+                                    </div>
+                                </div>
+
+                            </div>
+                        </div>
                     </div>
-                  </div>
                 </div>
-                <div>
-                  <div class="row align-items-center">
-                    <div class="col-md-6 order-md-2"><img class="d-none d-md-block mx-auto" src="img/content/home-slider-02.jpg" alt=""></div>
-                    <div class="col-lg-5 col-md-6 offset-lg-1 order-md-1 pt-4 pb-md-4 text-center text-md-left">
-                      <h2 class="font-weight-light pb-1 scale-up">ilk siparişinize özel</h2>
-                      <h1 class="display-4 scale-up delay-1 ">%5 indirim</h1>
-                      <h5 class="font-weight-light pb-3 from-bottom delay-2">anında kazanın.</h5> 
-                       
-                       <a class="btn btn-primary btn-shadow scale-up delay-4" href="/lezzetler">Keşfet<i class="czi-arrow-right ml-2 mr-n1"></i></a>
-                    </div>
-                  </div>
-
-              </div>
-
-              <div>
-                <div class="row align-items-center">
-                  <div class="col-md-6 order-md-2"><img class="d-none d-md-block mx-auto" src="img/content/home-slider-4.jpg" alt=""></div>
-                  <div class="col-lg-5 col-md-6 offset-lg-1 order-md-1 pt-4 pb-md-4 text-center text-md-left">
-                    <h2 class="font-weight-light pb-1 scale-up">en doğalını sunuyoruz</h2>
-                    <h1 class="display-4 scale-up delay-1 ">çünkü usta kasaplarla</h1>
-                      <h5 class="font-weight-light pb-3 scale-up delay-2">çalışıyoruz.</h5> 
-                     
-                     <a class="btn btn-primary btn-shadow scale-up delay-4" href="/kasap-secim-kriterleri">Daha Fazlası<i class="czi-arrow-right ml-2 mr-n1"></i></a>
-                  </div>
-                </div>
-
             </div>
-
-              <div>
-                <div class="row align-items-center">
-                  <div class="col-md-6 order-md-2"><img class="d-none d-md-block mx-auto" src="img/content/home-slider-3.jpg" alt=""></div>
-                  <div class="col-lg-5 col-md-6 offset-lg-1 order-md-1 pt-4 pb-md-4 text-center text-md-left">
-                    <h2 class="font-weight-light pb-1 scale-up">kırmızı et ile ilgili</h2>
-                    <h1 class="display-4 scale-up delay-1 ">kısa ve öz içerikler</h1>
-                     <h5 class="font-weight-light pb-3 scale-up delay-2">&amp; dahası et kültür magazinde.</h5> 
-                     
-                     <a class="btn btn-primary btn-shadow scale-up delay-4" href="/et-kulturu">Göz at<i class="czi-arrow-right ml-2 mr-n1"></i></a>
-                  </div>
-                </div>
-
-            </div>
-            </div>
-          </div>
-        </div>
-      </div>
 
     </section>
 
@@ -95,10 +111,10 @@
     <div class="container mb-3">
         <%- include('./_partial/foods-slider.ejs', {mode: 'food', showDesc: true, title: 'Siz Yemeği Seçin', text: '', foods: controller.foods}); %>
     </div>
-    
+
     <div class="container mb-3">
 
-    <%- include('./_partial/category-products-slider', {category: 'populer-etler', reverse: true, img: 'img/category/premium.jpg'}); %>
+        <%- include('./_partial/category-products-slider', {category: 'populer-etler', reverse: true, img: 'img/category/premium.jpg'}); %>
     </div>
     <div class="container mb-3">
         <%- include('./_partial/foods-slider.ejs', {showDesc: true, title: 'Tarifler', text: '', foods: controller.tarifs}); %>
@@ -109,7 +125,7 @@
     </div>
 
 
-    
+
     <div class="container mb-3">
 
         <%- include('./_partial/category-slider', { viewCats: ['reyon', 'list'], title: 'Lezzetler', allUrl: '/lezzetler' }); %>
@@ -127,36 +143,36 @@
                 <h3 class="h5 text-center pb-2 pt-2">Ustalara Saygı Kuşağı</h3>
 
                 <div class="table-responsive" data-simplebar>
-                        <div class="d-flex pl-2 pb-2">
+                    <div class="d-flex pl-2 pb-2">
 
-                                <% for(var i=0; i<recentButchers.length; i++) {%>
-                                <div class="mr-2">
-                                        <div class="card item-slider">
-                                                <a href="<%= `/${recentButchers[i].slug}` %>">
-                                                    <img src="<%= `/${recentButchers[i].slug}/fotograf/thumbnail` %>"
-                                                    class="card-img-top" alt="<%= `/${recentButchers[i].name}` %>">
-                                                </a>
+                        <% for(var i=0; i<recentButchers.length; i++) {%>
+                        <div class="mr-2">
+                            <div class="card item-slider">
+                                <a href="<%= `/${recentButchers[i].slug}` %>">
+                                    <img src="<%= `/${recentButchers[i].slug}/fotograf/thumbnail` %>"
+                                        class="card-img-top" alt="<%= `/${recentButchers[i].name}` %>">
+                                </a>
 
-            
-            
-                                            <div class="card-body text-center">
-                                                <h5 class="card-title truncate"><%= recentButchers[i].name %></h5>
-            
-                                                <p class="card-text ">
-                                                    <%= recentButchers[i].areaLevel1 && recentButchers[i].areaLevel1.name%>
-                                                </p>
-            
-            
-                                            </div>
-            
-            
-            
- 
-                                        </div>
 
-                                    </div>  
 
-                                    <%}%>
+                                <div class="card-body text-center">
+                                    <h5 class="card-title truncate"><%= recentButchers[i].name %></h5>
+
+                                    <p class="card-text ">
+                                        <%= recentButchers[i].areaLevel1 && recentButchers[i].areaLevel1.name%>
+                                    </p>
+
+
+                                </div>
+
+
+
+
+                            </div>
+
+                        </div>
+
+                        <%}%>
 
                         </div>
 
@@ -220,51 +236,54 @@
         <div class="border">
             <div class="bg-secondary mb-2 p-2 d-flex flex-nowrap justify-content-between align-items-center">
                 <a class="media align-items-center align-self-center" href="/et-kulturu">
-                <div class="media-body pl-2">
-                  <h3 class="h6 mb-0 mr-2">Et Kültürü</h3>
-                  <span class="font-size-ms text-muted"></span>
-                </div></a>
+                    <div class="media-body pl-2">
+                        <h3 class="h6 mb-0 mr-2">Et Kültürü</h3>
+                        <span class="font-size-ms text-muted"></span>
+                    </div>
+                </a>
                 <a class="align-self-center d-md-block btn btn-sm" href="/et-kulturu"><i
-                    class="czi-arrow-right font-size-xs align-middle ml-1"></i></a>                        
+                        class="czi-arrow-right font-size-xs align-middle ml-1"></i></a>
             </div>
             <div class="ml-2 mt-2">
                 <div class="table-responsive " data-simplebar>
                     <div class="d-flex pb-2">
-                            
-                            
-                            <% var items =  controller.blogItems %>
-                            <% items.forEach((item, i) => {%>
-                            <div class="mr-2">
-        
-                                <div class="item-slider item-slider-sm">
-                                    
-                                    <div class="card h-100 shadow-sm product-card card-static item-card">
-                                        <a class="" href="<%= `/et-kulturu/${item.categorySlug}/${item.slug}` %>">
-                                            <img class=""
-                                            src="<%=`/content-resimleri/${item.slug}-thumbnail.jpg` %>" alt=""></a>
-        
-                                        <div class="card-body pb-0 mb-0 pl-0 text-center">
-                                            <h3 class="product-title pb-0 mb-0 font-size-md"><a href="<%= `/et-kulturu/${item.categorySlug}/${item.slug}` %>"><%= item.title %></a>
-                                            </h3>
-                                        </div>
-                                      </div>
-        
+
+
+                        <% var items =  controller.blogItems %>
+                        <% items.forEach((item, i) => {%>
+                        <div class="mr-2">
+
+                            <div class="item-slider item-slider-sm">
+
+                                <div class="card h-100 shadow-sm product-card card-static item-card">
+                                    <a class="" href="<%= `/et-kulturu/${item.categorySlug}/${item.slug}` %>">
+                                        <img class=""
+                                            src="<%=`${__config.staticDomain}/content-resimleri/${item.slug}-thumbnail.jpg` %>"
+                                            alt=""></a>
+
+                                    <div class="card-body pb-0 mb-0 pl-0 text-center">
+                                        <h3 class="product-title pb-0 mb-0 font-size-md"><a
+                                                href="<%= `/et-kulturu/${item.categorySlug}/${item.slug}` %>"><%= item.title %></a>
+                                        </h3>
+                                    </div>
                                 </div>
-        
-                         
-        
-                            </div>  
-                            <%})%>
-                                         
+
+                            </div>
+
+
+
+                        </div>
+                        <%})%>
+
                     </div>
+                </div>
             </div>
-            </div>
-    
-          
+
+
 
         </div>
 
-</div>
+    </div>
 
 
 
@@ -275,12 +294,12 @@
     <section class="container-fluid px-0">
         <div class="row no-gutters">
             <div class="col-md-6"><a class="card border-0 rounded-0 text-decoration-none py-md-4 bg-faded-accent"
-                target="_blank" href="https://www.instagram.com/kasapburada/">
-                <div class="card-body text-center"><i class="czi-instagram h3 mt-2 mb-4 text-accent"></i>
-                    <h3 class="h5 mb-1">Instagram'dayız</h3>
-                    <p class="text-muted font-size-sm">#kasapburada</p>
-                </div>
-            </a></div>
+                    target="_blank" href="https://www.instagram.com/kasapburada/">
+                    <div class="card-body text-center"><i class="czi-instagram h3 mt-2 mb-4 text-accent"></i>
+                        <h3 class="h5 mb-1">Instagram'dayız</h3>
+                        <p class="text-muted font-size-sm">#kasapburada</p>
+                    </div>
+                </a></div>
 
             <div class="col-md-6"><a class="card border-0 rounded-0 text-decoration-none py-md-4 bg-faded-primary"
                     href="/et-kulturu">
@@ -289,7 +308,7 @@
                         <p class="text-muted font-size-sm">Kırmızı et hakkında kısa ve öz içeriklere ulaşın.</p>
                     </div>
                 </a></div>
-         
+
         </div>
     </section>
     <% include ./_partial/footer %>

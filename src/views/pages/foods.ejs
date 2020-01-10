@@ -27,15 +27,15 @@
       <div class="order-lg-1 pr-lg-4 text-center text-lg-left">
         <h1 class="h3 text-light">
           <%=controller.category ? 'Siz Yemeği Seçin':'Siz Yemeği Seçin'%> </h1>
-          <p class="lead text-light">
+        <p class="lead text-light">
 
-            <span class="badge badge-light mr-1 "><i class=" czi-thumb-up mr-1">
-            
-            </i>Eti Bizden</span><span class="">seçeneği ile yemeğinize uygun eti ihtiyacınız kadar hazırlıyoruz.</span> 
+          <span class="badge badge-light mr-1 "><i class=" czi-thumb-up mr-1">
 
-            
-  
-          </p>
+            </i>Eti Bizden</span><span class="">seçeneği ile yemeğinize uygun eti ihtiyacınız kadar hazırlıyoruz.</span>
+
+
+
+        </p>
       </div>
     </div>
   </div>
@@ -67,8 +67,9 @@
           <% var foods = controller.getFoods(cat) %>
           <% if (foods.length) { %>
           <div class="pt-3 dborder-bottom">
-            <%- include('./_partial/foods-slider.ejs', {title: cat.name, desc: cat.shortdesc ? cat.shortdesc: undefined, text: '', iconUrl: ('/' + cat.slug + '/resimler/thumbnail'), allUrl: '/' + cat.slug, foods: foods}); %>
-  
+            <%- include('./_partial/foods-slider.ejs', {title: cat.name, desc: cat.shortdesc ? cat.shortdesc: undefined, text: '', iconUrl: `${__req.helper.imgUrl('category-photos', cat.slug)}`%>,
+            allUrl: '/' + cat.slug, foods: foods}); %>
+
           </div>
           <%} %>
           <%})%>

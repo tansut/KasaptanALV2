@@ -23,7 +23,7 @@ export default class Route extends ViewRouter {
 
     content: Content;
     allcontent: Content[];
-    resources: Resource [] = [];
+    resources: Resource[] = [];
 
     getCategories() {
         let result = {};
@@ -36,7 +36,7 @@ export default class Route extends ViewRouter {
 
     getContentImages() {
         return [{
-            url: `/content-resimleri/${this.content.slug}.jpg`
+            url: `${config.staticDomain}/content-resimleri/${this.content.slug}.jpg`
         }]
     }
 
@@ -73,7 +73,7 @@ export default class Route extends ViewRouter {
         this.allcontent = allcontent;
         this.resources = await new ProductsApi(this.constructorParams).getInformationalVideos(25)
 
-        this.res.render('pages/blog.index.ejs', this.viewData({ pageTitle: 'Et Kültürü', pageDescription: '',  allcontent: allcontent }))
+        this.res.render('pages/blog.index.ejs', this.viewData({ pageTitle: 'Et Kültürü', pageDescription: '', allcontent: allcontent }))
     }
 
 

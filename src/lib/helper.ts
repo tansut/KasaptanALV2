@@ -4,13 +4,11 @@ import * as path from "path"
 import * as numeral from 'numeral';
 import moment = require('moment');
 import { AppRequest } from './http';
+import config from '../config';
 
 export default class Helper {
 
-    static imgUrl(resourceType: string, slug: string, thumbnail: boolean = false) {
-        //${product.slug}/resimler/thumbnail
-        return slug + "/resimler/thumbnail"
-    }
+
 
     static asCurrency(n: number) {
         return Number(n.toFixed(2));

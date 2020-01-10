@@ -4,13 +4,46 @@ import Area from "../db/models/area";
 import * as express from 'express';
 import { reject, resolve } from "bluebird";
 import { ResourceCacheItem } from "./cache";
+import config from "../config";
 
 export class RequestHelper {
+
     constructor(public req: AppRequest) {
 
     }
 
-    getResourcesOfType(type: string): ResourceCacheItem [] {
+    _generateUrl(resource: ResourceCacheItem, thumbnail: boolean, defaultPath: string) {
+        let pathprefix = resource ? resource.folder : "";
+        if (!resource) {
+            if (defaultPath) {
+                return defaultPath
+            }
+        }
+        let filePath = thumbnail ? `${pathprefix}/${resource.thumbnailUrl}` : `${pathprefix}/${resource.contentUrl}`
+
+        return `${config.staticDomain}/${filePath}`;
+    }
+
+    imgUrl(resourceType: string, slug: string, filename: string = 'thumbnail') {
+        let thumbnail = filename == 'thumbnail';
+        let defaultFile = '';
+        let ref1 = 0;
+        if (resourceType == 'product-photos') {
+            ref1 = this.req.__products[slug].id;
+            defaultFile = "/img/product-default-thumbnail.jpg"
+
+        } else if (resourceType == 'category-photos') {
+            let category = this.req.__categories.find(p => p.slug == slug);
+            ref1 = category.id;
+            defaultFile = "/img/category-default-thumbnail.jpg";
+        }
+
+        let photo = thumbnail ? this.req.helper.getResourcesOfType(resourceType + ref1).find(p => p.ref1 == ref1) :
+            this.req.helper.getResourcesOfType(resourceType + filename).find(p => p.contentUrl == filename);
+        return this._generateUrl(photo, thumbnail, defaultFile)
+    }
+
+    getResourcesOfType(type: string): ResourceCacheItem[] {
         return this.req.__resources[type] || [];
     }
 
@@ -52,7 +85,7 @@ export class RequestHelper {
                     } else {
                         this.req.session.prefAddr = adr;
                         await new Promise((resolve, reject) => {
-                            this.req.session.save(err=> (err ? reject(err): resolve()))
+                            this.req.session.save(err => (err ? reject(err) : resolve()))
                         })
                     }
                 }
@@ -65,8 +98,8 @@ export class RequestHelper {
     static use(app: express.Application) {
         app.use((req: AppRequest, res, next) => {
             req.helper = new RequestHelper(req);
-            req.helper.fillPreferredAddress().then(r=>next()).catch(next)
-        })        
+            req.helper.fillPreferredAddress().then(r => next()).catch(next)
+        })
     }
 
     async fillPreferredAddress() {
@@ -90,6 +123,6 @@ export class RequestHelper {
         } else if (req.session.prefAddr) {
             adr = req.session.prefAddr
         }
-        await this.setPreferredAddress(adr)        
+        await this.setPreferredAddress(adr)
     }
 }

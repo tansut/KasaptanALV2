@@ -1,60 +1,65 @@
-
-              <% for (let bi in shopcard.butchers) { %>
-                <% let butcher = shopcard.butchers[bi]%>
-                <div class="mt-4 border-top border-left border-right mb-2">
-                  <!-- <div class="d-flex flex-nowrap justify-content-between align-items-center pt-1 border-bottom pb-1 mb-2">
+<% for (let bi in shopcard.butchers) { %>
+<% let butcher = shopcard.butchers[bi]%>
+<div class="mt-4 border-top border-left border-right mb-2">
+  <!-- <div class="d-flex flex-nowrap justify-content-between align-items-center pt-1 border-bottom pb-1 mb-2">
                       <h4 class="h5 mb-0 mr-2"><%=butcher.name%></h4>
                       <a href="/<%= butcher.slug %>" class="btn btn-sm btn-light">Ürünler<i
                         class="czi-arrow-right ml-1 mr-n1"></i></a>
                   </div> -->
 
-                  <div class="bg-secondary p-3  mb-4"><a class="media align-items-center" href="/<%=shopcard.butchers[bi].slug%>"><img class="rounded-circle header-img" src="/<%=shopcard.butchers[bi].slug%>/fotograf/thumbnail" alt="<%=shopcard.butchers[bi].name%>">
-                    <div class="media-body pl-2"><span class="font-size-ms text-muted">Sepetiniz</span>
-                      <h3 class="h4 mb-0 mr-2"><%= shopcard.butchers[bi].name %></h3>
-                    </div></a></div>
+  <div class="bg-secondary p-3  mb-4"><a class="media align-items-center" href="/<%=shopcard.butchers[bi].slug%>"><img
+        class="rounded-circle header-img" src="/<%=shopcard.butchers[bi].slug%>/fotograf/thumbnail"
+        alt="<%=shopcard.butchers[bi].name%>">
+      <div class="media-body pl-2"><span class="font-size-ms text-muted">Sepetiniz</span>
+        <h3 class="h4 mb-0 mr-2"><%= shopcard.butchers[bi].name %></h3>
+      </div>
+    </a></div>
 
 
-                  <% butcher.products.forEach((pi, i) => { %>
-                    <% let item = shopcard.items[pi] %>
+  <% butcher.products.forEach((pi, i) => { %>
+  <% let item = shopcard.items[pi] %>
 
-                    <div id="shop-card-item-<%=i%>"
-                        class="px-4 d-sm-flex justify-content-between align-items-center my-4 pb-3 border-bottom">
-                        <div class="media media-ie-fix d-block d-sm-flex align-items-center text-center text-sm-left"><a
-                            class="d-inline-block mx-auto mr-sm-4" href="/<%=item.product.slug%>/<%=item.product.butcherSlug%>" style="width: 10rem;"><img
-                              src="<%=`/${item.product.slug}/resimler/thumbnail`%>" class="roundedx" alt="Product"></a>
-                          <div class="media-body pt-2">
-                            <h3 class="product-title font-size-base mb-2"><a href="/<%=item.product.slug%>/<%=item.product.butcher.slug%>"><%=item.product.name%></a>
-                            </h3>
-                            <div class="font-size-normal"><span class="font-weight-medium"><%=item.quantity%></span> <span class="text-muted"><%=item.purchaseoption.unit%>/</span>
-                              <span class="font-size-sm">
-                                  <%- include('./currency.ejs', {value: item.price}) %>
-                              </span>
-                             
-                            </div>
-                             <div class="text-nowrap">
-                                
-                            </div>
-                             <% if (item.note) {%>
-                            <div class="font-size-sm text-muted"><%=item.note%></div>
-                            <%}%> 
+  <div id="shop-card-item-<%=i%>"
+    class="px-4 d-sm-flex justify-content-between align-items-center my-4 pb-3 border-bottom">
+    <div class="media media-ie-fix d-block d-sm-flex align-items-center text-center text-sm-left"><a
+        class="d-inline-block mx-auto mr-sm-4" href="/<%=item.product.slug%>/<%=item.product.butcherSlug%>"
+        style="width: 10rem;"><img src="<%=`${__req.helper.imgUrl('product-photos', item.product.slug)}`%>"
+          class="roundedx" alt="Product"></a>
+      <div class="media-body pt-2">
+        <h3 class="product-title font-size-base mb-2"><a
+            href="/<%=item.product.slug%>/<%=item.product.butcher.slug%>"><%=item.product.name%></a>
+        </h3>
+        <div class="font-size-normal"><span class="font-weight-medium"><%=item.quantity%></span> <span
+            class="text-muted"><%=item.purchaseoption.unit%>/</span>
+          <span class="font-size-sm">
+            <%- include('./currency.ejs', {value: item.price}) %>
+          </span>
+
+        </div>
+        <div class="text-nowrap">
+
+        </div>
+        <% if (item.note) {%>
+        <div class="font-size-sm text-muted"><%=item.note%></div>
+        <%}%> 
                            <!-- <div>
                              <%= item.product.butcher ? item.product.butcher.name:''%>
-                           </div> -->
-                            <!-- <div class="font-size-sm text-accent pt-2">
+      </div> -->
+      <!-- <div class="font-size-sm text-accent pt-2">
                                 <%- include('./currency.ejs', {value: item.product.viewUnitPrice, unit: item.product.viewUnit}) %>
                               </div> -->
-                          </div>
-                        </div>
-                        <div class="pt-2 pt-sm-0 pl-sm-3 mx-auto mx-sm-0 text-center text-sm-left" style="max-width: 9rem;">
-                          <% if (enableRemove) { %>
-                          <button class="btn btn-link px-0 text-muted" onclick="App.ShopCard.remove('<%=i%>')" type="button"><i
-                              class="czi-close-circle mr-2"></i><span class="font-size-sm">Çıkar</span></button>
-                          <% } %>
-                        </div>
-                      </div>
+    </div>
+  </div>
+  <div class="pt-2 pt-sm-0 pl-sm-3 mx-auto mx-sm-0 text-center text-sm-left" style="max-width: 9rem;">
+    <% if (enableRemove) { %>
+    <button class="btn btn-link px-0 text-muted" onclick="App.ShopCard.remove('<%=i%>')" type="button"><i
+        class="czi-close-circle mr-2"></i><span class="font-size-sm">Çıkar</span></button>
+    <% } %>
+  </div>
+</div>
 
-                  <% }) %>
-                </div>
-              <%}%>  
+<% }) %>
+</div>
+<%}%>  
 
                

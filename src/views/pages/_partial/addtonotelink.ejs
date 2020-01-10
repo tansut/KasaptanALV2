@@ -6,18 +6,18 @@ var alternatives = [];
 
 %><% res.forEach(p=> { %>
 
-    <% var baseUrl = `/${p.slug}/${subUrl}/${__helper.slugify(resource.title || 'tarif')}?r=${resource.id}&autoNote=1&hideproduct=1`  %>
-    <% if (typeof(disableSlider) != 'undefined') baseUrl += '&disableSlider=1' %>
+<% var baseUrl = `/${p.slug}/${subUrl}/${__helper.slugify(resource.title || 'tarif')}?r=${resource.id}&autoNote=1&hideproduct=1`  %>
+<% if (typeof(disableSlider) != 'undefined') baseUrl += '&disableSlider=1' %>
 
-    <% alternatives.push({ 
-        src:  '/'+ p.slug + '/resimler/thumbnail' , 
+<% alternatives.push({ 
+        src: `${__req.helper.imgUrl('product-photos', p.slug)}`,
         name:  p.name ,
         link: baseUrl
       }) %>
 
 <% }) %>javascript:window.App.FoodAlternativesApp.show(<%=JSON.stringify(alternatives)%>)
 <%} else {%>
-    <% var baseUrl = `/${resource.product.slug}/${subUrl}/${__helper.slugify(resource.title || 'tarif')}?r=${resource.id}&autoNote=1`  %>
-    <% if (typeof(disableSlider) != 'undefined') baseUrl += '&disableSlider=1' %>
-    <%=baseUrl %>
+<% var baseUrl = `/${resource.product.slug}/${subUrl}/${__helper.slugify(resource.title || 'tarif')}?r=${resource.id}&autoNote=1`  %>
+<% if (typeof(disableSlider) != 'undefined') baseUrl += '&disableSlider=1' %>
+<%=baseUrl %>
 <%}%>
