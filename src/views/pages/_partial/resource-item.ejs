@@ -7,7 +7,7 @@
       <% } %>
       " <% } %>>
     <img class="" <% if (resource.contentType == 'video-youtube') { %>
-      src="<%= resource.getThumbnailFileUrl() ||  `${__req.helper.imgUrl('product-photos', resource.product.slug)}` %>"
+      src="<%= (resource.thumbnailUrl ? resource.getThumbnailFileUrl(): null) ||  `${__req.helper.imgUrl('product-photos', resource.product.slug)}` %>"
       <% } else { %> src="<%= `${resource.getThumbnailFileUrl()}` %>" <% } %> alt="<%= resource.title  %>">
   </a>
   <div class="card-body pl-0 text-center">

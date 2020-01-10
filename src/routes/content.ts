@@ -55,7 +55,7 @@ export default class Route extends ViewRouter {
     }
 
     getthumbnailurl(content: Content) {
-        return `/content-resimleri/${content.slug}-thumbnail.jpg`;
+        return `${config.staticDomain}/content-resimleri/${content.slug}-thumbnail.jpg`;
     }
 
     @Auth.Anonymous()
