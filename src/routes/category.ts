@@ -16,6 +16,7 @@ import ProductManager from '../lib/productManager';
 import ProductsApi from './api/product';
 import { ResourceCacheItem } from '../lib/cache';
 import { Op } from 'sequelize';
+import config from '../config';
 
 export default class Route extends ViewRouter {
 
@@ -217,7 +218,7 @@ export default class Route extends ViewRouter {
         router.get("/et-yemek-tarifleri/:category", Route.BindRequest(Route.prototype.viewTarifsRoute));
         router.get("/et-yemekleri", Route.BindRequest(Route.prototype.viewFoodsRoute));
         router.get("/et-yemekleri/:category", Route.BindRequest(Route.prototype.viewFoodsRoute));
-        //router.get("/:category/resimler/:filename", Route.BindRequest(Route.prototype.categoryPhotoRoute));
+        config.nodeenv == 'development' ? router.get("/:category/resimler/:filename", Route.BindRequest(Route.prototype.categoryPhotoRoute)) : null;
 
     }
 }

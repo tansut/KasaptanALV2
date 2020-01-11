@@ -21,7 +21,7 @@ browserSync = require('browser-sync').create();
 reload = browserSync.reload;
 autoprefixer = require('gulp-autoprefixer');
 
-var baseDist = '/wwwpublic/kasapburada';
+var baseDist = 'public';
 
 var webRoot = exports.WEBROOT = __dirname + '/';
 

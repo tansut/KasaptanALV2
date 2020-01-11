@@ -23,6 +23,7 @@ var MarkdownIt = require('markdown-it')
 import * as _ from "lodash";
 import { ResourceCacheItem } from '../lib/cache';
 import Dispatcher from '../db/models/dispatcher';
+import config from '../config';
 
 
 
@@ -60,7 +61,7 @@ export default class Route extends ViewRouter {
             }], where: { slug: this.req.params.butcher }
         });
         if (!butcher) return this.next();
-        butcher.products = butcher.products.filter(p=> {
+        butcher.products = butcher.products.filter(p => {
             return p.kgPrice > 0 || p.unit1price > 0 || p.unit2price > 0 || p.unit3price > 0
         })
         butcher.products = _.sortBy(butcher.products, ["displayOrder", "updatedOn"]).reverse()
@@ -96,7 +97,7 @@ export default class Route extends ViewRouter {
             ]
         })
 
-        for(let i = 0; i < this.dispatchers.length; i++) {
+        for (let i = 0; i < this.dispatchers.length; i++) {
             this.dispatchers[i].address = await this.dispatchers[i].toarea.getPreferredAddress()
         }
 
@@ -129,17 +130,17 @@ export default class Route extends ViewRouter {
 
         if (this.req.params.filename == "thumbnail") {
             thumbnail = true;
-            photo = this.req.helper.getResourcesOfType(type + butcher.id).find(p=>p.ref1 == butcher.id)
+            photo = this.req.helper.getResourcesOfType(type + butcher.id).find(p => p.ref1 == butcher.id)
         }
-        else photo = this.req.helper.getResourcesOfType(type + this.req.params.filename).find(p=>p.contentUrl == this.req.params.filename);
+        else photo = this.req.helper.getResourcesOfType(type + this.req.params.filename).find(p => p.contentUrl == this.req.params.filename);
 
-        res.sendResource(photo, thumbnail, thumbnail ? defaultFile: null)
+        res.sendResource(photo, thumbnail, thumbnail ? defaultFile : null)
     }
 
 
 
     static SetRoutes(router: express.Router) {
         router.get("/:butcher", Route.BindRequest(Route.prototype.butcherRoute));
-        router.get("/:butcher/fotograf/:filename", Route.BindRequest(Route.prototype.butcherPhotoRoute));
+        config.nodeenv == 'development' ? router.get("/:butcher/fotograf/:filename", Route.BindRequest(Route.prototype.butcherPhotoRoute)) : null;
     }
 }

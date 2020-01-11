@@ -23,6 +23,7 @@ var MarkdownIt = require('markdown-it')
 import * as _ from "lodash";
 import { ResourceCacheItem, ProductCacheItem } from '../lib/cache';
 import { ShopCard } from '../models/shopcard';
+import config from '../config';
 
 interface ButcherSelection {
     best: Butcher,
@@ -224,6 +225,6 @@ export default class Route extends ViewRouter {
         router.get("/:product/yemek-tarifi/:tarif", Route.BindRequest(Route.prototype.productRoute));
         router.get("/:product/ile-yapin/:tarif", Route.BindRequest(Route.prototype.productRoute));
         router.get("/:product/:butcher", Route.BindRequest(Route.prototype.productRoute));
-        //router.get("/:product/resimler/:filename", Route.BindRequest(Route.prototype.productPhotoRoute));
+        config.nodeenv == 'development' ? router.get("/:product/resimler/:filename", Route.BindRequest(Route.prototype.productPhotoRoute)) : null;
     }
 }
