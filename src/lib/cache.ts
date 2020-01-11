@@ -32,6 +32,12 @@ export interface ProductCacheItem {
     badge: string;
 }
 
+export interface ButcherCacheItem {
+    id: number;
+    //slug: string;
+    name: string;
+}
+
 export interface CategoryProductItem {
     slug: string;
 }
@@ -54,13 +60,14 @@ export class CacheManager {
                 req.__products = p.products;
                 req.__recentBlogs = p.recentBlogs;
                 req.__categoryProducts = p.categoryProducts;
+                req.__butchers = p.butchers;
                 res.locals._ = _;
                 res.locals.__cities = p.cities;
                 res.locals.__butcherCities = p.butcherCities
                 res.locals.__req = req
                 res.locals.__viewRoot = path.join(__dirname, '../src/views')
                 res.locals.__config = config;
-                res.locals.__helper = Helper;               
+                res.locals.__helper = Helper;
             }))
             Promise.all(list).then(r => {
                 next();
@@ -77,7 +84,7 @@ export class CacheManager {
                 (<any>result).push(cities[citiesOfButchers[i]['DISTINCT']])
             }
             this.dataCache.set("butcher-cities", result);
-            
+
         }
         return result;
     }
@@ -91,7 +98,7 @@ export class CacheManager {
                 order: [["UpdatedOn", "DESC"]],
                 limit: 15
             });
-            this.dataCache.set("recent-blogs", result);                    
+            this.dataCache.set("recent-blogs", result);
         }
         return result
     }
@@ -128,14 +135,14 @@ export class CacheManager {
     }
 
     static async fillProductsByCategory(categories: Category[]) {
-        let cacheproducts: {[key: string]:CategoryProductItem[]} =  this.dataCache.get("category-products")
+        let cacheproducts: { [key: string]: CategoryProductItem[] } = this.dataCache.get("category-products")
         if (!cacheproducts) {
             cacheproducts = {}
-            for(let i = 0; i < categories.length; i++) {
+            for (let i = 0; i < categories.length; i++) {
                 let prods = await ProductManager.getProductsOfCategories([categories[i].id])
-                cacheproducts[categories[i].slug] = prods.map(pr=> <CategoryProductItem>{
+                cacheproducts[categories[i].slug] = prods.map(pr => <CategoryProductItem>{
                     slug: pr.slug
-                }) 
+                })
             }
 
             this.dataCache.set("category-products", cacheproducts);
@@ -143,14 +150,14 @@ export class CacheManager {
         return cacheproducts;
     }
 
-    static async fillResources(): Promise<{ [key: string]: [ResourceCacheItem]; }>  {
+    static async fillResources(): Promise<{ [key: string]: [ResourceCacheItem]; }> {
         let resources = <any>this.dataCache.get("resources")
         if (!resources) {
             let res = await Resource.findAll({
                 raw: true,
                 order: [["type", 'desc'], ["displayOrder", "DESC"], ["updatedOn", "DESC"]]
             })
-            let result: { [key: string]: ResourceCacheItem []; } = {};
+            let result: { [key: string]: ResourceCacheItem[]; } = {};
             res.forEach((ri, i) => {
                 if (!result[ri.type])
                     result[ri.type] = [];
@@ -173,7 +180,7 @@ export class CacheManager {
         return resources;
     }
 
-    static async fillProducts(): Promise<{ [key: string]: [ProductCacheItem]; }>  {
+    static async fillProducts(): Promise<{ [key: string]: [ProductCacheItem]; }> {
         let products = <any>this.dataCache.get("products")
         if (!products) {
             let res = await Product.findAll({
@@ -181,7 +188,7 @@ export class CacheManager {
                 raw: true,
                 order: [["displayOrder", "DESC"]]
             })
-            let result: { [key: string]: ProductCacheItem ; } = {};
+            let result: { [key: string]: ProductCacheItem; } = {};
             res.forEach((ri, i) => {
                 result[ri.slug] = {
                     id: ri.id,
@@ -196,9 +203,30 @@ export class CacheManager {
         return products;
     }
 
+    static async fillButchers(): Promise<{ [key: string]: [ButcherCacheItem]; }> {
+        let butchers = <any>this.dataCache.get("butchers")
+        if (!butchers) {
+            let res = await Butcher.findAll({
+                attributes: ['name', 'id', 'slug'],
+                raw: true,
+                order: [['updatedon', 'DESC']]
+            })
+            let result: { [key: string]: ButcherCacheItem; } = {};
+            res.forEach((ri, i) => {
+                result[ri.slug] = {
+                    id: ri.id,
+                    name: ri.name
+                }
+            })
+            this.dataCache.set("butchers", result);
+        }
+        return butchers;
+    }
+
     static async generateDataCache() {
         let categories = await this.fillCategories();
         let products = <any>await this.fillProducts();
+        let butchers = <any>await this.fillButchers();
         let cities = <any>await this.fillCities();
         let butcherCities = <any>await this.fillButcherCities(cities);
         let resources = <any>await this.fillResources();
@@ -211,7 +239,8 @@ export class CacheManager {
             butcherCities: butcherCities,
             resources: resources,
             recentBlogs: recentBlogs,
-            categoryProducts: categoryProducts
+            categoryProducts: categoryProducts,
+            butchers: butchers
         }
     }
 

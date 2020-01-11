@@ -10,10 +10,14 @@ personCount: <%= settings.po_personcount || 0 %>,
 ponote: '<%= settings.po_quantityNote || new String() %>',
 noteph:'',
 <%if (!options.encode) { %>
-productView: <%- options.hideProduct ? JSON.stringify(null):  JSON.stringify({ name: resource.product.name, slug: resource.product.slug }) %>,
-food: <%- JSON.stringify({ title: resource.title, url: resource.getThumbnailFileUrl(false) }) %>
+productView:
+<%- options.hideProduct ? JSON.stringify(null):  JSON.stringify({ name: resource.product.name, slug: resource.product.slug }) %>,
+food:
+<%- JSON.stringify({ title: resource.title, url: (resource.thumbnailUrl ? resource.getThumbnailFileUrl(): null) ||  `${__req.helper.imgUrl('product-photos', resource.product.slug)}` }) %>
 <% } else { %>
-productView: <%= options.hideProduct ? JSON.stringify(null):  JSON.stringify({ name: resource.product.name, slug: resource.product.slug }) %>,
-food: <%= JSON.stringify({ title: resource.title, url: resource.getThumbnailFileUrl(false) }) %>
+productView:
+<%= options.hideProduct ? JSON.stringify(null):  JSON.stringify({ name: resource.product.name, slug: resource.product.slug }) %>,
+food:
+<%= JSON.stringify({ title: resource.title, url: (resource.thumbnailUrl ? resource.getThumbnailFileUrl(): null) ||  `${__req.helper.imgUrl('product-photos', resource.product.slug)}`  }) %>
 <% } %>
 });

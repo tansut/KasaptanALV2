@@ -131,12 +131,18 @@ class KasaptanAlApp {
         this.shopcard()
 
 
-        this.app.use('/', express.static(path.join(__dirname, '../public')));
-        //this.app.use('/', express.static(path.join(config.publicDir)));
-        this.app.use('/js', express.static(path.join(__dirname, '../node_modules/bootstrap/dist/js')));
-        this.app.use('/js', express.static(path.join(__dirname, '../node_modules/jquery/dist')));
-        this.app.use('/js', express.static(path.join(__dirname, '../node_modules/vue/dist')));
-        this.app.use('/css', express.static(path.join(__dirname, '../node_modules/bootstrap/dist/css')));
+        this.app.use('/robots.txt', function (req, res, next) {
+            res.sendFile(config.publicDir + '/robots.txt');
+        });
+
+        if (config.nodeenv == 'development') {
+            this.app.use('/', express.static(config.publicDir));
+        } else {
+        }
+        // this.app.use('/js', express.static(path.join(__dirname, '../node_modules/bootstrap/dist/js')));
+        // this.app.use('/js', express.static(path.join(__dirname, '../node_modules/jquery/dist')));
+        // this.app.use('/js', express.static(path.join(__dirname, '../node_modules/vue/dist')));
+        // this.app.use('/css', express.static(path.join(__dirname, '../node_modules/bootstrap/dist/css')));
 
         this.app.set('view engine', 'ejs');
         this.app.set('views', path.join(__dirname, '../src/views'));

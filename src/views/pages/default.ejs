@@ -149,7 +149,7 @@
                         <div class="mr-2">
                             <div class="card item-slider">
                                 <a href="<%= `/${recentButchers[i].slug}` %>">
-                                    <img src="<%= `/${recentButchers[i].slug}/fotograf/thumbnail` %>"
+                                    <img src="<%= `${__req.helper.imgUrl('butcher-google-photos', recentButchers[i].slug)}` %>"
                                         class="card-img-top" alt="<%= `/${recentButchers[i].name}` %>">
                                 </a>
 

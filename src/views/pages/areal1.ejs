@@ -70,7 +70,8 @@
         <div class="col-md-3 col-12 mb-3 __xxx__">
 
           <div class="card h-100">
-            <img src="<%= `/${butchers[i].slug}/fotograf/thumbnail` %>" class="card-img-top" alt="...">
+            <img src="<%= `${__req.helper.imgUrl('butcher-google-photos', butchers[i].slug)}` %>" class="card-img-top"
+              alt="...">
             <div class="card-body text-center ">
               <h5 class="card-title"><%= butchers[i].name %></h5>
               <div class="card-text-container">

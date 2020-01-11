@@ -17,50 +17,54 @@ import { Op } from 'sequelize';
 export default class Route extends ApiRouter {
     markdown = new MarkdownIt();
 
-    async getFoodResources(products4?: Product[], limit?: number, catids?: number[]) {
+    async getFoodResources(products4?: Product[], limit?: number, catids?: number[], options = {}) {
         return this.getResources({
             type: ['product-videos', 'product-photos'],
             tag1: {
-                [Op.like]: '%yemek%', 
+                [Op.like]: '%yemek%',
             }
-        }, products4, limit, catids)
+        }, products4, limit, catids, options)
     }
 
-    async getFoodAndTarifResources(products4?: Product[], limit?: number, catids?: number[]) {
+    async getFoodAndTarifResources(products4?: Product[], limit?: number, catids?: number[], options = {}) {
         return this.getResources({
             type: ['product-videos', 'product-photos'],
             tag1: {
                 [Op.or]: [{
                     [Op.like]: '%yemek%'
-                             
-                }, {[Op.like]: '%tarif%'}]
+
+                }, { [Op.like]: '%tarif%' }]
             }
-        }, products4, limit, catids)
+        }, products4, limit, catids, options)
     }
 
-    async getResources(where, products4?: Product[], limit?: number, catids?: number[]) {
+    async getResources(where, products4?: Product[], limit?: number, catids?: number[], options = <any>{}) {
         if (products4) {
             let ids = products4.map(p => p.id);
-            where = { ...{
-                [Op.or]: {
-                ref1: ids,
-                ref2: ids,
-                ref3: ids,
-                ref4: ids,
-                ref5: ids
-            }},
-            ...where
+            where = {
+                ...{
+                    [Op.or]: {
+                        ref1: ids,
+                        ref2: ids,
+                        ref3: ids,
+                        ref4: ids,
+                        ref5: ids
+                    }
+                },
+                ...where
+            }
         }
-        } 
         if (catids) where['$categories.category.id$'] = catids;
         let params = {
             where: where,
+            raw: options.raw,
             include: [{
                 model: ResourceCategory,
                 as: 'categories',
                 include: [{
                     model: Category
-                }
+                },
+
                 ]
             }],
             order: [[{ model: ResourceCategory, as: 'categories' }, "displayOrder", "desc"], ["displayOrder", "desc"], ["updatedOn", "desc"]]
@@ -78,10 +82,10 @@ export default class Route extends ApiRouter {
 
         allresources.forEach(res => {
             let product1 = products.find(prod => prod.id == res.ref1);
-            let product2 = res.ref2 ? products.find(prod => prod.id == res.ref2): null;
-            let product3 = res.ref3 ? products.find(prod => prod.id == res.ref3): null;
-            let product4 = res.ref4 ? products.find(prod => prod.id == res.ref4): null;
-            let product5 = res.ref5 ? products.find(prod => prod.id == res.ref5): null;
+            let product2 = res.ref2 ? products.find(prod => prod.id == res.ref2) : null;
+            let product3 = res.ref3 ? products.find(prod => prod.id == res.ref3) : null;
+            let product4 = res.ref4 ? products.find(prod => prod.id == res.ref4) : null;
+            let product5 = res.ref5 ? products.find(prod => prod.id == res.ref5) : null;
             if (product1) {
                 res.product = product1;
                 resources.push(res);
@@ -125,13 +129,13 @@ export default class Route extends ApiRouter {
     }
 
 
-    async getTarifVideos(products4?: Product[], limit?: number, catids?: number[]) {
+    async getTarifVideos(products4?: Product[], limit?: number, catids?: number[], options = {}) {
         return this.getResources({
             type: 'product-videos',
             tag1: {
-                [Op.like]: '%tarif%', 
-            } 
-        }, products4, limit, catids)
+                [Op.like]: '%tarif%',
+            }
+        }, products4, limit, catids, options)
     }
 
 

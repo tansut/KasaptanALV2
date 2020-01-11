@@ -21,20 +21,20 @@ browserSync = require('browser-sync').create();
 reload = browserSync.reload;
 autoprefixer = require('gulp-autoprefixer');
 
-
+var baseDist = '/wwwpublic/kasapburada';
 
 var webRoot = exports.WEBROOT = __dirname + '/';
 
 var path = {
     src: 'www',
-    dist: 'public',
+    dist: baseDist,
+    dist_js: `${baseDist}/js`,
+    dist_css: `${baseDist}/css`,
     src_pug: 'www/templates',
     src_scss: 'www/css',
     src_js: 'www/js',
     src_js_vendor: 'www/vendor/js',
     src_css_vendor: 'www/vendor/css',
-    dist_js: 'public/js',
-    dist_css: 'public/css',
     src_img: 'www/img',
     src_resource: 'www/downloads',
     src_ts: 'www/src',
@@ -98,9 +98,9 @@ gulp.task('concat:css', () => {
 
 gulp.task('concat:js', () => {
     return gulp.src([
-         path.src_js_vendor + '/jquery.min.js',
-         path.src_js_vendor + '/popper.min.js',
-         path.src_js_vendor + '/lightgallery.min.js',
+        path.src_js_vendor + '/jquery.min.js',
+        path.src_js_vendor + '/popper.min.js',
+        path.src_js_vendor + '/lightgallery.min.js',
         path.src_js_vendor + '/*.js'
     ])
         .pipe(concat('vendor.min.js'))
@@ -155,12 +155,14 @@ gulp.task('uglify:js', () => {
 gulp.task('clean', () => {
     return del([
         path.dist_css,
+        path.dist + '/img',
         path.dist_js,
         path.dist + '/components',
         path.dist + '/docs',
-        path.dist + '/*.html',
         path.dist + '/fonts'
-    ]);
+    ], {
+        force: true
+    });
 });
 
 
@@ -181,33 +183,33 @@ gulp.task('watch', () => {
 
 
 gulp.task("compile:tsc:admin", () => {
-    let admin = () => tsc(path.src_ts + "/**/admin.run.ts", 'public/js', 'admin');
+    let admin = () => tsc(path.src_ts + "/**/admin.run.ts", `${path.dist_js}`, 'admin');
     return admin()
 })
 
 gulp.task("compile:tsc:app", () => {
-    let app = () => tsc(path.src_ts + "/**/app.run.ts", 'public/js', 'app');
+    let app = () => tsc(path.src_ts + "/**/app.run.ts", `${path.dist_js}`, 'app');
     return app()
 })
 
 gulp.task("copy:images", () => {
     return gulp.src([path.src_img + '/**/*'])
-        .pipe(gulp.dest("public/img"))
+        .pipe(gulp.dest(`${path.dist}/img`))
 })
 
 gulp.task("copy:topublic", () => {
     return gulp.src([path.src_topublic + '/**/*'])
-        .pipe(gulp.dest("public"))
+        .pipe(gulp.dest(`${path.dist}`))
 })
 
 gulp.task("copy:fonts", () => {
     return gulp.src([path.src_font + '/**/*'])
-        .pipe(gulp.dest("public/fonts"))
+        .pipe(gulp.dest(`${path.dist}/fonts`))
 })
 
 gulp.task("copy:resources", () => {
     return gulp.src([path.src_resource + "/**/*"])
-        .pipe(gulp.dest("public/downloads"))
+        .pipe(gulp.dest(`${path.dist}/downloads`))
 })
 
 

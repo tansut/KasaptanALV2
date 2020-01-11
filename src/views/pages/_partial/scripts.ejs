@@ -2,27 +2,27 @@
   integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script> -->
 
 <% if (config.nodeenv == "production") { %>
-  <script async src="https://www.googletagmanager.com/gtag/js?id=UA-146976156-1"></script>
-  <script>
-    window.dataLayer = window.dataLayer || [];
-    function gtag(){dataLayer.push(arguments);}
-    gtag('js', new Date());
-  
-    gtag('config', 'UA-146976156-1');
-  </script>
+<script async src="https://www.googletagmanager.com/gtag/js?id=UA-146976156-1"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag() { dataLayer.push(arguments); }
+  gtag('js', new Date());
+
+  gtag('config', 'UA-146976156-1');
+</script>
 
 
 <% } %>
 
-<script src="/js/vendor.min.js"></script>
+<script src="<%=__config.staticDomain%>/js/vendor.min.js"></script>
 
 <% if (__config.nodeenv == 'development') { %>
-<script src="/js/vue.js"></script>
+<script src="<%=__config.staticDomain%>/js/vue.js"></script>
 <% } else { %>
-<script src="/js/vue.min.js"></script>
+<script src="<%=__config.staticDomain%>/js/vue.min.js"></script>
 <%} %>
-<script src="/js/site.min.js"></script>
-<script src="/js/app.js"></script>
+<script src="<%=__config.staticDomain%>/js/site.min.js"></script>
+<script src="<%=__config.staticDomain%>/js/app.js"></script>
 
 
 
@@ -32,7 +32,7 @@
 
   window.shopcard = {
     card: {
-      data: <%-JSON.stringify(__shopcard() || { items: [] }) %>,
+      data: <% -JSON.stringify(__shopcard() || { items: [] }) %>,
     }
   };
 
@@ -49,7 +49,7 @@
     },
     events: {
       searchPost: function (res) {
-         window.__searchResult = res;
+        window.__searchResult = res;
         return res.map(function (p) {
           return {
             id: p.id,
@@ -63,7 +63,7 @@
   });
 
   $('.searchBox').on('autocomplete.select', function (evt, item) {
-    let go = window.__searchResult.find(function(result) {
+    let go = window.__searchResult.find(function (result) {
       return result.id == item.id
     });
     window.location.href = go.url;
@@ -152,14 +152,14 @@
     }
 
 
-    $(".select-area-action").click(function() {
-            window.kb.selectArea(function (sender, ul) {
-            window.location.href = "/adres-belirle/" + ul.selectedDistrict.slug + '?r=' + window.location.href;
-            //window.location.reload(true) // = "/" + window.App.ProductApp.product.slug + "?semt=" + ul.selectedDistrict.slug
+    $(".select-area-action").click(function () {
+      window.kb.selectArea(function (sender, ul) {
+        window.location.href = "/adres-belirle/" + ul.selectedDistrict.slug + '?r=' + window.location.href;
+        //window.location.reload(true) // = "/" + window.App.ProductApp.product.slug + "?semt=" + ul.selectedDistrict.slug
 
       });
-        })
-        
+    })
+
     $(".explore-area-action").click(function () {
       window.kb.selectArea(function (sender, ul) {
         window.location.href = "/" + ul.selectedDistrict.slug + "?save=1"
@@ -187,27 +187,26 @@
 
 
 <script>
-$(document).ready(function()
-{
-  var allImages = document.querySelectorAll(".gallery-item");
-  allImages.forEach((value)=>{
-    value.oncontextmenu = (e)=>{
-      e.preventDefault()
+  $(document).ready(function () {
+    var allImages = document.querySelectorAll(".gallery-item");
+    allImages.forEach((value) => {
+      value.oncontextmenu = (e) => {
+        e.preventDefault()
         return false;
-    }
-})
-});
+      }
+    })
+  });
 
 
-  </script>
+</script>
 
 <% if (!__req.user) { %>
 
-  <script>
-      window.App.User = {
-        isAuthenticated: false        
-      }
-    </script>
+<script>
+  window.App.User = {
+    isAuthenticated: false
+  }
+</script>
 
 <!-- <script type="text/javascript">
   var _j = document.createElement("script");
@@ -218,15 +217,15 @@ $(document).ready(function()
 
 <% } else { %>
 
-  <script>
-      window.App.User = {
-        isAuthenticated: <%=__req.user ? true: false%>,
-        
-        prefAdr: <%- JSON.stringify(__req.prefAddr || {}) %>
-      }
-    </script>
+<script>
+  window.App.User = {
+    isAuthenticated: <%=__req.user ? true : false %>,
 
-  <!-- <script type="text/javascript">
+    prefAdr: <% - JSON.stringify(__req.prefAddr || {}) %>
+      }
+</script>
+
+<!-- <script type="text/javascript">
     var _j = document.createElement("script");
     _j.setAttribute("src", "https://public.jetlink.io/Sdk/Jetlink.js?j=" + new Date(Date()).getTime() / 1000);
     _j.onload = function () { 

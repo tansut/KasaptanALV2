@@ -5,7 +5,7 @@ import User, { PreferredAddress } from '../db/models/user';
 import { ShopCard } from '../models/shopcard';
 import { RequestHelper } from './RequestHelper';
 import Category from '../db/models/category';
-import { ResourceCacheItem, ProductCacheItem, CategoryProductItem } from './cache';
+import { ResourceCacheItem, ProductCacheItem, CategoryProductItem, ButcherCacheItem } from './cache';
 import Content from '../db/models/content';
 
 export class ApplicationError extends Error {
@@ -69,4 +69,6 @@ export interface AppRequest extends express.Request {
     __products: { [key: string]: ProductCacheItem; }
     __recentBlogs: Content[];
     __categoryProducts: { [key: string]: CategoryProductItem[]; }
+    __butchers: { [key: string]: ButcherCacheItem; }
+
 }

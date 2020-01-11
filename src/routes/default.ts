@@ -14,7 +14,7 @@ import ProductManager from '../lib/productManager';
 import config from '../config';
 import ProductsApi from './api/product';
 import Content from '../db/models/content';
-import { ProductCacheItem } from '../lib/cache';
+import { ProductCacheItem, CacheManager } from '../lib/cache';
 let ellipsis = require('text-ellipsis');
 
 export default class Route extends ViewRouter {
@@ -26,18 +26,18 @@ export default class Route extends ViewRouter {
     async getBlogItems() {
         return this.req.__recentBlogs;
     }
-    
+
 
     filterProductsByCategory(category: Category) {
         let result: ProductCacheItem[] = []
         let prodSlugs = this.req.__categoryProducts[category.slug];
         if (prodSlugs) {
-            for (let i = 0;i < prodSlugs.length; i++) {
+            for (let i = 0; i < prodSlugs.length; i++) {
                 let product = this.req.__products[prodSlugs[i].slug];
                 if (product) result.push(product);
                 if (result.length >= 8) break;
             }
-        } 
+        }
         return result; //.slice(0, 8);
     }
 
@@ -52,21 +52,33 @@ export default class Route extends ViewRouter {
 
     @Auth.Anonymous()
     async defaultRoute() {
-        let recentButchers = await ButcherModel.findAll({
-            order: [["updatedon", "DESC"]],
-            limit: 15,
-            include: [
-                { all: true }
-            ],
-            where: {
-                approved: true
-            }
-        });
+        let recentButchers: ButcherModel[] = CacheManager.dataCache["recent-butchers"];
+        if (!recentButchers) {
+            recentButchers = await ButcherModel.findAll({
+                order: [["updatedon", "DESC"]],
+                limit: 15,
+                include: [
+                    { all: true }
+                ],
+                raw: true,
+                where: {
+                    approved: true
+                }
+            });
+            CacheManager.dataCache["recent-butchers"] = recentButchers;
+        }
 
-        //this.products = await ProductManager.getProducts();
-        this.tarifs = await new ProductsApi(this.constructorParams).getTarifVideos(null, 10);
-        this.foods = await new ProductsApi(this.constructorParams).getFoodResources(null, 15);
-        
+        this.tarifs = CacheManager.dataCache["home-tarifs"];
+        if (!this.tarifs) {
+            this.tarifs = await new ProductsApi(this.constructorParams).getTarifVideos(null, 10, null);
+            CacheManager.dataCache["home-tarifs"] = this.tarifs;
+        }
+        this.foods = CacheManager.dataCache["home-foods"];
+        if (!this.foods) {
+            this.foods = await new ProductsApi(this.constructorParams).getFoodResources(null, 15, null);
+            CacheManager.dataCache["home-foods"] = this.foods;
+        }
+
         this.blogItems = await this.getBlogItems();
 
         this.res.render("pages/default.ejs", this.viewData({
@@ -95,14 +107,14 @@ export default class Route extends ViewRouter {
         //     router.get("/", Route.BindToView("pages/offline.ejs"))
         // }
         // else {
-            
+
         // }
-            router.get("/", Route.BindRequest(this.prototype.defaultRoute))
-            router.get("/adres-belirle/:slug", Route.BindRequest(this.prototype.setUserAddr))
-            router.get("/hikayemiz", Route.BindToView("pages/content.kurumsal.ejs"))
-            router.get("/iletisim", Route.BindToView("pages/content.contact.ejs"))
-            router.get("/kasap-secim-kriterleri", Route.BindToView("pages/content.kasap-secim.ejs"))
-            router.get("/kasap", Route.BindRequest(this.prototype.kasapViewRoute))
-            router.get("/kullanici-sozlesmesi", Route.BindToView("pages/content.kullanici-sozlesmesi.ejs"))        
+        router.get("/", Route.BindRequest(this.prototype.defaultRoute))
+        router.get("/adres-belirle/:slug", Route.BindRequest(this.prototype.setUserAddr))
+        router.get("/hikayemiz", Route.BindToView("pages/content.kurumsal.ejs"))
+        router.get("/iletisim", Route.BindToView("pages/content.contact.ejs"))
+        router.get("/kasap-secim-kriterleri", Route.BindToView("pages/content.kasap-secim.ejs"))
+        router.get("/kasap", Route.BindRequest(this.prototype.kasapViewRoute))
+        router.get("/kullanici-sozlesmesi", Route.BindToView("pages/content.kullanici-sozlesmesi.ejs"))
     }
 }

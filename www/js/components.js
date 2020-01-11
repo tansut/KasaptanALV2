@@ -42,8 +42,8 @@ window.initComponents = function initComponents() {
 
 
 
-Vue.component('amount-input', {
-    template: `
+    Vue.component('amount-input', {
+        template: `
              <div>
                 <slot />
                     <div class="d-flex align-items-center justify-content-center">
@@ -61,71 +61,71 @@ Vue.component('amount-input', {
                     </div>    
             </div>
               `,
-    props: {
-        unit: { type: String, default: "" },
-        min: { type: Number },
-        max: { type: Number },
-        step: { type: Number },
-        def: { type: Number },
-        value: { type: Number }
-    },
+        props: {
+            unit: { type: String, default: "" },
+            min: { type: Number },
+            max: { type: Number },
+            step: { type: Number },
+            def: { type: Number },
+            value: { type: Number }
+        },
 
-    mounted: function () {
-        this.$nextTick(function () {
-            this.updateView();
-        })
-    },
+        mounted: function () {
+            this.$nextTick(function () {
+                this.updateView();
+            })
+        },
 
-    data: function () {
-        return {
-            value: 1
-        }
-    },
-
-
-    methods: {
-
-        increment() {
-            let newVal = this.value + this.step;
-            if (newVal <= this.max) {
-                this.value = newVal;
+        data: function () {
+            return {
+                value: 1
             }
-            //this.$emit('input', this.value)            
         },
 
-        decrement() {
-            let newVal = this.value - this.step;
-            if (newVal >= this.min) {
-                this.value = newVal;
+
+        methods: {
+
+            increment() {
+                let newVal = this.value + this.step;
+                if (newVal <= this.max) {
+                    this.value = newVal;
+                }
+                //this.$emit('input', this.value)            
+            },
+
+            decrement() {
+                let newVal = this.value - this.step;
+                if (newVal >= this.min) {
+                    this.value = newVal;
+                }
+                //this.$emit('input', this.value)     
+            },
+
+            updateView: function () {
+                // if (this.adets.length == 0) {
+                //     for (var i = this.min; i < this.max + 1; i += this.step) {
+                //         this.adets.push({
+                //             val: i,
+                //             text: `${i}`
+                //         })
+                //         this.adet = this.def
+                //     }
+                //     this.$emit('input', this.adet)
+                // }
+
             }
-            //this.$emit('input', this.value)     
         },
 
-        updateView: function () {
-            // if (this.adets.length == 0) {
-            //     for (var i = this.min; i < this.max + 1; i += this.step) {
-            //         this.adets.push({
-            //             val: i,
-            //             text: `${i}`
-            //         })
-            //         this.adet = this.def
-            //     }
-            //     this.$emit('input', this.adet)
-            // }
+        watch: {
+            value: function (newVal, oldVal) {
+                this.$emit('input', this.value)
+            },
 
+            def: function (newVal, oldVal) {
+                this.value = newVal
+            }
         }
-    },
-
-    watch: {
-        value: function (newVal, oldVal) {
-            this.$emit('input', this.value)
-        },
-
-        def: function (newVal, oldVal) {
-            this.value = newVal
-        }
-    }
-})
+    })
 
 
 
@@ -266,7 +266,7 @@ Vue.component('amount-input', {
                         i = Number(i.toFixed(2));
                         if (i.toFixed(2) == '0.50') {
                             this.kgs.push({ val: i, text: weighToText(i) });
-                        } 
+                        }
                         if (i.toFixed(2) == '1.50') {
                             this.kgs.push({ val: i, text: weighToText(i) });
                         } else if (Math.floor(i).toFixed(2) == i.toFixed(2)) {
@@ -332,7 +332,7 @@ Vue.component('amount-input', {
                 this.food = options.food || {};
                 this.productView = options.productView;
 
-                $('#size-chart').modal("show");       
+                $('#size-chart').modal("show");
                 return new Promise((resolve, reject) => {
                     $(window).on('wc.setunit', function (e, option) {
                         resolve(option);
@@ -347,7 +347,7 @@ Vue.component('amount-input', {
         computed: {
 
             result: function () {
-                let res = []; 
+                let res = [];
                 if (this.product) {
                     for (var i = 0; i < this.product.purchaseOptions.length; i++) {
                         if (this.options.unit && this.options.unit != this.product.purchaseOptions[i].unit)
@@ -380,7 +380,7 @@ Vue.component('amount-input', {
         methods: {
             show(list) {
                 this.list = list;
-                $('#food-alternative-meats').modal("show");       
+                $('#food-alternative-meats').modal("show");
             }
         }
     })
@@ -414,15 +414,15 @@ Vue.component('amount-input', {
                 window.kb.selectArea(function (sender, ul) {
                     window.location.href = "/adres-belirle/" + ul.selectedDistrict.slug + '?r=' + window.location.href;
                     //window.location.reload(true) // = "/" + window.App.ProductApp.product.slug + "?semt=" + ul.selectedDistrict.slug
-              });                
+                });
             },
 
             showCalculator(unit) {
 
                 this.addToNote({
-                    
-                    note: this.note, 
-                    unit: unit.unit, 
+
+                    note: this.note,
+                    unit: unit.unit,
                     noteph: unit.notePlaceholder
 
                 })
@@ -430,11 +430,11 @@ Vue.component('amount-input', {
 
             addToNote(options) {
                 this.ensureUnitSelected();
-                
-                
-                
-                
-                
+
+
+
+
+
 
 
                 window.App.WeightCalculatorApp.show({
@@ -448,27 +448,27 @@ Vue.component('amount-input', {
                     note: options.ponote,
                     cardnote: options.note,
                     cardnoteph: options.noteph
-                }).then(function(result) {
+                }).then(function (result) {
                     window.App.ProductApp.note = window.App.WeightCalculatorApp.cardnote;
-                    if ( window.App.ProductApp.note) {
-                    $('#note').css({'background-color':'#fde9e8'});
-                    setTimeout(() => {
-                      $('#note').css({'background-color':'initial'});
-                      
-                    }, 1000); 
+                    if (window.App.ProductApp.note) {
+                        $('#note').css({ 'background-color': '#fde9e8' });
+                        setTimeout(() => {
+                            $('#note').css({ 'background-color': 'initial' });
+
+                        }, 1000);
                     }
                     window.lgData.lg0.destroy();
                     window.App.scrollToAnchor("#noteanchor");
-                })
+                }).catch(err => console.log(err))
 
                 //$('#size-chart').modal("show");                
-              },            
+            },
 
             ensureUnitSelected() {
                 if (!this.selectedUnit) {
-                    this.selectedUnit = this.product.purchaseOptions[0]                
+                    this.selectedUnit = this.product.purchaseOptions[0]
                 }
-                
+
             },
 
 
@@ -484,7 +484,7 @@ Vue.component('amount-input', {
                         //App.alert("Eklendi.", "info")
                         debugger;
                         $('#shopcard-added-toast').toast('show')
-                        
+
                         return window.shopcard.card.data = result
                     }
                     ).catch(err => App.HandleError(err));
@@ -495,7 +495,7 @@ Vue.component('amount-input', {
         watch: {
             product: function (newVal, oldVal) {
                 if (newVal) {
-                    this.selectedUnit = (this.product.purchaseOptions.length > 1) ? null: this.product.purchaseOptions[0]
+                    this.selectedUnit = (this.product.purchaseOptions.length > 1) ? null : this.product.purchaseOptions[0]
                     this.quantity = this.product.viewUnitAmount;
                     //this.note = product.note;
                 }

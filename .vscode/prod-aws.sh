@@ -9,3 +9,4 @@ export EMAILHOST=mail.kasaptanal.com
 export EMAILPORT=8889
 export EMAILUSERNAME=noreply@kasaptanal.com
 export EMAILPASS=Deneme987@.
+export PUBLICDIR=/wwwpublic/kasapburada/
