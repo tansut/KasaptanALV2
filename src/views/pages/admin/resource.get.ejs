@@ -68,7 +68,7 @@
                                 <div class="col-md-2">
                                     <% if (images[i].contentType == 'image/jpeg') { %>
                                         <img width="300" class="image my-2 "
-                                            src="<%= `/resource/${images[i].id}?thumbnail=1`  %>" />
+                                            src="<%= `${images[i].getThumbnailFileUrl()}`  %>" />
 
                                         <% } else { %>
                                             <span>VIDEO</span>
