@@ -78,8 +78,6 @@ class Area extends BaseModel<Area> {
     @BelongsTo(() => Area)
     parent: Area;
 
-    static Cities: AreaDict = {};
-
     async getPreferredAddress() {
         let res: PreferredAddress;
         if (this.level == 1)  {
@@ -129,18 +127,19 @@ class Area extends BaseModel<Area> {
         return res;
     }
 
-    static async fillCities() {
-        await Area.findAll({
-            where: {
-                level: 1
-            },
-            raw: true
-        }).then(data => {
-            for (let i = 0; i < data.length; i++) {
-                Area.Cities[data[i].id] = data[i]
-            }
-        })
-    }
+    // static async fillCities() {
+    //     await Area.findAll({
+    //         where: {
+    //             level: 1
+    //         },
+            
+    //         raw: true
+    //     }).then(data => {
+    //         for (let i = 0; i < data.length; i++) {
+    //             Area.Cities[data[i].id] = data[i]
+    //         }
+    //     })
+    // }
 
 }
 

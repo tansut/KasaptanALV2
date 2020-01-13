@@ -41,6 +41,7 @@
   </div>
 
   <% var reyonlar = __categories.filter(p=>p.type.includes('reyon')).slice(0,2) %>
+
   <div class="">
     <div class="bg-light container mb-3 box-shadow-lg ">
       <div class="mt-3">
@@ -67,7 +68,7 @@
           <% var foods = controller.getFoods(cat) %>
           <% if (foods.length) { %>
           <div class="pt-3 dborder-bottom">
-            <%- include('./_partial/foods-slider.ejs', {title: cat.name, desc: cat.shortdesc ? cat.shortdesc: undefined, text: '', iconUrl: `${__req.helper.imgUrl('category-photos', cat.slug)}`%>,
+            <%- include('./_partial/foods-slider.ejs', {title: cat.name, desc: cat.shortdesc ? cat.shortdesc: undefined, text: '', iconUrl: `${__req.helper.imgUrl('category-photos', cat.slug)}`,
             allUrl: '/' + cat.slug, foods: foods}); %>
 
           </div>
@@ -84,7 +85,6 @@
       </div>
     </div>
   </div>
-
 
 
   <% include ./_partial/footer %>

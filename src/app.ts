@@ -68,8 +68,7 @@ class KasaptanAlApp {
 
     async bootstrap() {
 
-        let dbinstance = await db.init();
-        await Area.fillCities();
+        let dbinstance = await db.init();        
         this.app = express();
         this.app.use(fileUpload())
         this.app.use(cors({
@@ -130,26 +129,18 @@ class KasaptanAlApp {
         RequestHelper.use(this.app);
         this.shopcard()
 
-
-        this.app.use('/', express.static(path.join(__dirname, '../public')));
-
         this.app.use('/robots.txt', function (req, res, next) {
-            res.sendFile(config.publicDir + '/robots.txt');
+            res.sendFile(path.join(__dirname, '../public/robots.txt'));
         });
 
         if (config.nodeenv == 'development') {
-            this.app.use('/', express.static(path.join(config.publicDir)));
+            this.app.use('/static', express.static(path.join(__dirname, '../public')));            
         } else {
 
         }
-        // this.app.use('/js', express.static(path.join(__dirname, '../node_modules/bootstrap/dist/js')));
-        // this.app.use('/js', express.static(path.join(__dirname, '../node_modules/jquery/dist')));
-        // this.app.use('/js', express.static(path.join(__dirname, '../node_modules/vue/dist')));
-        // this.app.use('/css', express.static(path.join(__dirname, '../node_modules/bootstrap/dist/css')));
-
         this.app.set('view engine', 'ejs');
         this.app.set('views', path.join(__dirname, '../src/views'));
-
+ 
         this.app.use('/api/v1', this.apiRouter);
         this.app.use('/pages/admin', (req: AppRequest, res, next) => {
             if (req.user && (req.user.hasRole('admin') || req.user.hasRole('seo')))

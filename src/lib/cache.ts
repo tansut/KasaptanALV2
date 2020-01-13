@@ -51,9 +51,8 @@ export class CacheManager {
     }
 
     static use(app: express.Application) {
-        app.use((req: AppRequest, res, next) => {
-            let list = [];
-            list.push(CacheManager.generateDataCache().then(p => {
+        app.use((req: AppRequest, res, next) => {          
+            CacheManager.generateDataCache().then(p => {
                 res.locals.__categories = p.categories;
                 req.__categories = p.categories;
                 req.__resources = p.resources;
@@ -68,8 +67,6 @@ export class CacheManager {
                 res.locals.__viewRoot = path.join(__dirname, '../src/views')
                 res.locals.__config = config;
                 res.locals.__helper = Helper;
-            }))
-            Promise.all(list).then(r => {
                 next();
             }).catch(next)
         })
@@ -175,7 +172,8 @@ export class CacheManager {
                 result[ri.type + ri.ref1].push(obj)
                 result[ri.type + ri.contentUrl].push(obj)
             })
-            this.dataCache.set("resources", result);
+            resources = result;
+            this.dataCache.set("resources", resources);
         }
         return resources;
     }
@@ -198,6 +196,7 @@ export class CacheManager {
                     badge: ri.badge
                 }
             })
+            products = result;
             this.dataCache.set("products", result);
         }
         return products;
@@ -218,6 +217,7 @@ export class CacheManager {
                     name: ri.name
                 }
             })
+            butchers = result;
             this.dataCache.set("butchers", result);
         }
         return butchers;
