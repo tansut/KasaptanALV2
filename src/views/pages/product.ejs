@@ -621,6 +621,8 @@
                     if (defaultImg && r && (r != defaultImg)) {
                       r.thumbnailUrl = defaultImg.thumbnailUrl;
                       r.contentUrl = defaultImg.contentUrl;
+                      r.contentType = defaultImg.contentType;
+                      r.folder = defaultImg.folder;
                     } 
                     %>
                     <% if (!__req.query.disableSlider) { %>

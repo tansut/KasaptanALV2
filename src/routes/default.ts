@@ -68,12 +68,12 @@ export default class Route extends ViewRouter {
             CacheManager.dataCache["recent-butchers"] = recentButchers;
         }
 
-        this.tarifs = CacheManager.dataCache["home-tarifs"];
+        this.tarifs = null; // CacheManager.dataCache["home-tarifs"];
         if (!this.tarifs) {
             this.tarifs = await new ProductsApi(this.constructorParams).getTarifVideos(null, 10, null);
             CacheManager.dataCache["home-tarifs"] = this.tarifs;
         }
-        this.foods = CacheManager.dataCache["home-foods"];
+        this.foods = null;//  CacheManager.dataCache["home-foods"];
         if (!this.foods) {
             this.foods = await new ProductsApi(this.constructorParams).getFoodResources(null, 15, null);
             CacheManager.dataCache["home-foods"] = this.foods;

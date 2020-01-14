@@ -92,7 +92,7 @@ export default class Route extends ApiRouter {
             }
             if (product2) {
                 res.otherProducts = res.otherProducts || []
-                res.otherProducts = [product2];
+                res.otherProducts.push(product2);
             }
             if (product3) {
                 res.otherProducts = res.otherProducts || []
