@@ -27,14 +27,16 @@
 
             init: function (options, done) {
                 this.options = options || {};
-                options.cityDomSelector = options.cityDomSelector || "#cityselectpicker";
-                options.districtDomSelector = options.districtDomSelector || "#districtselectpicker";
+                this.options.cityDomSelector = options.cityDomSelector || "#cityselectpicker";
+                this.options.ilceDomSelector = options.ilceDomSelector || "#ilceselectpicker";
+                this.options.districtDomSelector = options.districtDomSelector || "#districtselectpicker";
                 var defaultProps = {
                     style: "",
                     styleBase: "form-control",
                     width: "100%"
                 }
                 $(this.options.cityDomSelector).selectpicker(defaultProps);
+                $(this.options.ilceDomSelector).selectpicker(defaultProps);
                 $(options.districtDomSelector).selectpicker(defaultProps);
                 $(options.districtDomSelector).on('changed.bs.select', function (e, clickedIndex, isSelected, previousValue) {
                     let district = self.districtsloaded[clickedIndex];

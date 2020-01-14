@@ -511,6 +511,13 @@ window.initComponents = function initComponents() {
         }
     })
 
+    window.App.LocationSelectorApp = new Vue(
+        {
+            el: '#locationselect'
+
+        }
+    )
+
     window.App.ShopcardShipmentApp = new Vue({
         el: '#shopcardshipment',
 

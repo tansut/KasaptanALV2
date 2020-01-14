@@ -14,6 +14,7 @@ import Helper from "./helper";
 import { RequestHelper } from "./RequestHelper";
 import Resource from "../db/models/resource";
 import Content from "../db/models/content";
+import WebPage from "../db/models/webpage";
 
 let cache: Cache;
 
@@ -38,6 +39,11 @@ export interface ButcherCacheItem {
     name: string;
 }
 
+export interface WebPageCacheItem {
+    pageTitle: string;
+    pageDescription: string;
+}
+
 export interface CategoryProductItem {
     slug: string;
 }
@@ -60,6 +66,7 @@ export class CacheManager {
                 req.__recentBlogs = p.recentBlogs;
                 req.__categoryProducts = p.categoryProducts;
                 req.__butchers = p.butchers;
+                req.__webpages = p.webPages;
                 res.locals._ = _;
                 res.locals.__cities = p.cities;
                 res.locals.__butcherCities = p.butcherCities
@@ -96,6 +103,24 @@ export class CacheManager {
                 limit: 15
             });
             this.dataCache.set("recent-blogs", result);
+        }
+        return result
+    }
+
+    static async fillWebPages() {        
+        let result:  { [key: string]: WebPageCacheItem }  = this.dataCache.get("web-pages");
+        if (!result) {
+            result = {}
+            let list = await WebPage.findAll({
+                raw: true
+            });
+            list.forEach(item=>{
+                result[item.slug] = {
+                    pageTitle: item.pageTitle,
+                    pageDescription: item.pageDescription
+                }
+            })
+            this.dataCache.set("web-pages", result);
         }
         return result
     }
@@ -231,6 +256,7 @@ export class CacheManager {
         let butcherCities = <any>await this.fillButcherCities(cities);
         let resources = <any>await this.fillResources();
         let recentBlogs = <any>await this.fillRecentBlogs();
+        let webPages = <any>await this.fillWebPages();
         let categoryProducts = <any>await this.fillProductsByCategory(categories);
         return {
             categories: categories,
@@ -240,7 +266,8 @@ export class CacheManager {
             resources: resources,
             recentBlogs: recentBlogs,
             categoryProducts: categoryProducts,
-            butchers: butchers
+            butchers: butchers,
+            webPages: webPages
         }
     }
 

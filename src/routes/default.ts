@@ -44,7 +44,7 @@ export default class Route extends ViewRouter {
     @Auth.Anonymous()
     async kasapViewRoute() {
         this.foods = await new ProductsApi(this.constructorParams).getFoodResources(null, 15);
-        this.res.render("pages/content.kasap-basvuru.ejs", this.viewData({
+        this.sendView("pages/content.kasap-basvuru.ejs", this.viewData({
 
         }))
     }
@@ -117,4 +117,4 @@ export default class Route extends ViewRouter {
         router.get("/kasap", Route.BindRequest(this.prototype.kasapViewRoute))
         router.get("/kullanici-sozlesmesi", Route.BindToView("pages/content.kullanici-sozlesmesi.ejs"))
     }
-}
+} 

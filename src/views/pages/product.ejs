@@ -317,7 +317,7 @@
                              
                             </label>
                           <textarea v-model="note"
-                            :placeholder="(selectedUnit && selectedUnit.notePlaceholder) || (product && product.notePlaceholder) || 'iletmek istediğiniz notunuz varsa burayı kullanabilirsiniz.'"
+                            :placeholder="(selectedUnit && selectedUnit.notePlaceholder) || (product && product.notePlaceholder) || 'bizlere iletmek istediğiniz notunuz varsa burayı kullanabilirsiniz.'"
                             class="form-control font-size-sm" rows="3" name="note" id="note">
 
                                                             <%=view.note%>
@@ -616,7 +616,12 @@
                       $(document.body).removeClass("d-none")
                     }, 100);
                     <% } else { 
-                    var t = product.resources.find(p=>p.id == parseInt(__req.query.r))
+                    var r = product.resources.find(p=>p.id == parseInt(__req.query.r))
+                    var defaultImg = product.resources.find(p=>p.contentType == 'image/jpeg');
+                    if (defaultImg && r && (r != defaultImg)) {
+                      r.thumbnailUrl = defaultImg.thumbnailUrl;
+                      r.contentUrl = defaultImg.contentUrl;
+                    } 
                     %>
                     <% if (!__req.query.disableSlider) { %>
                       // openSlider(<%=__req.query.r%>);    
@@ -626,7 +631,7 @@
                     
                     setTimeout(() => {                
                       $(document.body).removeClass("d-none");
-                      <%- include('./_partial/addtonote.ejs', {resource: t, options: {
+                      <%- include('./_partial/addtonote.ejs', {resource: r, options: {
                         hideProduct: __req.query.hideproduct
                       } }) %>
                     }, 100);

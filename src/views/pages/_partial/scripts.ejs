@@ -32,7 +32,7 @@
 
   window.shopcard = {
     card: {
-      data: <% -JSON.stringify(__shopcard() || { items: [] }) %>,
+      data: <%- JSON.stringify(__shopcard() || { items: [] }) %>,
     }
   };
 
@@ -221,8 +221,8 @@
   window.App.User = {
     isAuthenticated: <%=__req.user ? true : false %>,
 
-    prefAdr: <% - JSON.stringify(__req.prefAddr || {}) %>
-      }
+    prefAdr: <%- JSON.stringify(__req.prefAddr || {}) %>
+  }
 </script>
 
 <!-- <script type="text/javascript">

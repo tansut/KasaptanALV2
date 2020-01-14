@@ -198,14 +198,16 @@ export class ViewRouter extends BaseRouter {
     }
 
     @Auth.Anonymous()
-    protected sendView(view: string) {
-        this.res.render(view, this.viewData({}))
+    protected sendView(view: string, vdata = {}) {
+        let dbViewData = this.req.__webpages[view] || {};        
+        let result = { ...dbViewData, ...vdata };
+        this.res.render(view, this.viewData(result))
     }
 
 
-    protected static BindToView(view: string) {
+    protected static BindToView(view: string, viewData = {}) {
         var self = this;
-        return (req, res, next) => BaseRouter.CreateRouterInstance(req, res, next, self, "sendView", [view]);
+        return (req, res, next) => BaseRouter.CreateRouterInstance(req, res, next, self, "sendView", [view, viewData]);
     }
 
 
