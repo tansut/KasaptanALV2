@@ -353,6 +353,7 @@ window.initComponents = function initComponents() {
                         if (this.options.unit && this.options.unit != this.product.purchaseOptions[i].unit)
                             continue;
                         var q = this.meal * this.personcount * (this.perperson || this.product.purchaseOptions[i].perPerson);
+                        q = Number(q.toFixed(2));
                         if (q < this.product.purchaseOptions[i].min) q = this.product.purchaseOptions[i].min;
                         else if (q > this.product.purchaseOptions[i].max) q = this.product.purchaseOptions[i].max
                         q = Math.ceil(q / this.product.purchaseOptions[i].step) * this.product.purchaseOptions[i].step;
