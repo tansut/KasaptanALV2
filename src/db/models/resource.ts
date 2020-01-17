@@ -73,6 +73,9 @@ class Resource extends BaseModel<Resource> {
     ref5: number;
 
     @Column
+    ref6: number;    
+
+    @Column
     contentType: string;
 
     @Column

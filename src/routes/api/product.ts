@@ -250,6 +250,7 @@ export default class Route extends ApiRouter {
                 default: product[`${col}def`],
                 perPerson: product[`${col}perPerson`],
                 step: product[`${col}step`],
+                weigthNote: product[`${col}WeigthNote`]
             })
         })
 

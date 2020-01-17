@@ -81,13 +81,21 @@
         </div>
 
         <div class="row">
-            <div class="col-md-12 mb-3">
+            <div class="col-md-6 mb-3">
                 <div class="form-group">
                     <label>Varsayılan not</label>
                     <textarea rows="5" type="text" class="form-control" name="<%=unit%>note" id="<%=unit%>note"><%= product[unit + 'note'] %></textarea>
                 </div>
             </div>  
+            <div class="col-md-6 mb-3">
+                <div class="form-group">
+                    <label>Ağırlık notu</label>
+                    <textarea rows="5" type="text" class="form-control" name="<%=unit%>WeigthNote" id="<%=unit%>WeigthNote"><%= product[unit + 'WeigthNote'] %></textarea>
+                </div>
+            </div>  
         </div>
+
+
 
     </div>
 </div>

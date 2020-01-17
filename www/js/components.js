@@ -423,8 +423,8 @@ window.initComponents = function initComponents() {
 
                     note: this.note,
                     unit: unit.unit,
-                    noteph: unit.notePlaceholder
-
+                    noteph: unit.notePlaceholder,
+                    ponote: unit.weigthNote
                 })
             },
 

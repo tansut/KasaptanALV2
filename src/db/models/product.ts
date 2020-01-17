@@ -196,6 +196,31 @@ class Product extends BaseModel<Product> {
     unit5desc: string;
 
     @Column({
+        allowNull: true
+    })
+    unit1WeigthNote: string;
+
+    @Column({
+        allowNull: true
+    })
+    unit2WeigthNote: string;    
+
+    @Column({
+        allowNull: true
+    })
+    unit3WeigthNote: string;
+
+    @Column({
+        allowNull: true
+    })
+    unit4WeigthNote: string;
+
+    @Column({
+        allowNull: true
+    })
+    unit5WeigthNote: string;    
+
+    @Column({
         allowNull: false,
         defaultValue: 1
     })
