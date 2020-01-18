@@ -1,10 +1,10 @@
 <% if (typeof(forceLink) == 'undefined' && resource.otherProducts.length > 0) { %>
 <% 
 
-var res = [resource.product].concat(resource.otherProducts); 
+var products = [resource.product].concat(resource.otherProducts); 
 var alternatives = [];
 
-%><% res.forEach(p=> { %>
+%><% products.forEach(p=> { %>
 
 <% var baseUrl = `/${p.slug}/${subUrl}/${__helper.slugify(resource.title || 'tarif')}?r=${resource.id}&autoNote=1&hideproduct=1`  %>
 <% if (typeof(disableSlider) != 'undefined') baseUrl += '&disableSlider=1' %>
@@ -12,10 +12,11 @@ var alternatives = [];
 <% alternatives.push({ 
         src: `${__req.helper.imgUrl('product-photos', p.slug)}`,
         name:  p.name ,
+        desc: (resource.getSettingsByRefId(p.id) || {}).desc,
         link: baseUrl
       }) %>
 
-<% }) %>javascript:window.App.FoodAlternativesApp.show(<%=JSON.stringify(alternatives)%>)
+<% }) %>javascript:window.App.FoodAlternativesApp.show(<%=JSON.stringify(alternatives)%>, <%='"' + resource.title + '"'%>)
 <%} else {%>
 <% var baseUrl = `/${resource.product.slug}/${subUrl}/${__helper.slugify(resource.title || 'tarif')}?r=${resource.id}&autoNote=1`  %>
 <% if (typeof(disableSlider) != 'undefined') baseUrl += '&disableSlider=1' %>

@@ -155,22 +155,25 @@ class Resource extends BaseModel<Resource> {
         this.setDataValue('settingsjson', JSON.stringify(value));
     }
 
-    get productRef(): number {
+     getRef(id: number): number {
         if (this.product) {
-            if (this.ref1 == this.product.id) return 1;
-            if (this.ref2 == this.product.id) return 2;
-            if (this.ref3 == this.product.id) return 3;
-            if (this.ref4 == this.product.id) return 4;
-            if (this.ref5 == this.product.id) return 5;
-            if (this.ref6 == this.product.id) return 6;
+            if (this.ref1 == id) return 1;
+            if (this.ref2 == id) return 2;
+            if (this.ref3 == id) return 3;
+            if (this.ref4 == id) return 4;
+            if (this.ref5 == id) return 5;
+            if (this.ref6 == id) return 6;
         } else return 0;
+    }
+
+    getSettingsByRefId(id: number) {
+            let settings = this.settings || {};
+            return settings[`ref${this.getRef(id)}`]
     }
 
     get settingsByRef(): any {
         if (this.product) {
-            let settings = this.settings || {};
-            return settings[`ref${this.productRef}`] || this.settings || {}
-
+            return this.getSettingsByRefId(this.product.id) || this.settings || {}
         } else return {};
     }
 

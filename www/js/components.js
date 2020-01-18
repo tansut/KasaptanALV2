@@ -370,17 +370,19 @@ window.initComponents = function initComponents() {
     })
 
     window.App.FoodAlternativesApp = new Vue({
-        el: '#alternative-meats-for-food',
+        el: '#food-alternative-meats',
 
         data: function () {
             return {
-                list: []
+                list: [],
+                title: ''
             }
         },
 
         methods: {
-            show(list) {
+            show(list, title) {
                 this.list = list;
+                this.title = title
                 $('#food-alternative-meats').modal("show");
             }
         }

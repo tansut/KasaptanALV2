@@ -2,19 +2,29 @@
     <div class="modal-dialog modal-dialog-scrollable">
       <div class="modal-content">
         <div class="modal-header">
-          <h6 class="modal-title">Tercih sizin, hepsiyle güzel</h6>
+          <h6 class="modal-title">{{title}}, hepsiyle güzel</h6>
           <button class="close" type="button" data-dismiss="modal" aria-label="Close"><span
               aria-hidden="true">&times;</span></button>
         </div>
         <div class="modal-body">
           <div class="" id="alternative-meats-for-food">
               <div class="row">
-            <div class="col-6" v-for="item in list" >
-                <div class="card product-card card-static item-card">
+            <div class="col-6 mb-3" v-for="item in list" >
+                <div class="card border rounded-0 product-card card-static h-100 item-card">
                 <a class=" d-block overflow-hidden" :href="item.link"><img class="rounded-0" :src="item.src" :alt="item.name"></a>
                 <div class="card-body pl-0 text-center">
-                    <h3 class="product-title font-size-md"><a :href="item.link">{{item.name}}</a>
+                    <h3 class="product-title font-size-md mb-1"><a :href="item.link">{{item.name}}</a>
                     </h3>
+                    <p v-if="item && item.desc" class="mb-0 text-muted font-size-sm">
+                      {{item.desc}}
+                    </p>
+                    
+                </div>
+                <div class="px-2 py-2">
+                  <a :href="item.link"
+                    class="btn btn-sm btn-block  btn-primary font-size-xs"><i class=" czi-thumb-up mr-1">
+                    </i>Seç</a>
+                  </small>
                 </div>
             </div>
             </div>  
