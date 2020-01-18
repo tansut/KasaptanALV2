@@ -188,116 +188,7 @@ window.initComponents = function initComponents() {
         }
     })
 
-    Vue.component('weight-input', {
-        template: `<div class="row">
-                        <div class="col-6">
-                            <select required v-model="kgSelected" class="custom-select" required>
-                            <option  v-for="option in kgs" v-bind:value="option.val" >{{ option.text }}</option>               </select>                            
-                        </div>
-                       <div class="col-6">
-                            <select required v-if="Math.trunc(kgSelected) == kgSelected" v-model="grSelected" class="custom-select" required>
-                            <option  v-for="option in grs" v-bind:value="option.val" >{{ option.text }}</option></select>
-                        </div>
-                   </div>`,
-        props: {
-            value: { type: Number, default: 0 },
-            min: { type: Number },
-            max: { type: Number },
-            step: { type: Number },
-            def: { type: Number }
-
-        },
-
-        mounted: function () {
-            this.$nextTick(function () {
-                this.updateView();
-            })
-        },
-
-        data: function () {
-            return {
-                kgSelected: 0,
-                grSelected: 0,
-
-                kgs: [
-
-                ],
-                grs: [
-                    // {val: 0, text: "-",},
-                    // {val: 250, text: "250gr"},
-                    // {val: 500, text: "500gr"},
-                    // {val: 750, text: "750gr"}                                    
-                ]
-            }
-        },
-
-
-        methods: {
-
-            calculateQuantity() {
-                var n = this.kgSelected + (this.grSelected || 0) / 1000
-                return Number(n.toFixed(2));
-            },
-
-            syncUi(value) {
-                var kgt = value;
-                if (value != 0.50 && value != 1.5) {
-                    kgt = Number(Math.floor(value).toFixed(2));
-                }
-                var grt = Number(Math.round((value - kgt) * 1000).toFixed(2));
-                var grneares = Math.ceil(grt / (this.step * 1000)) * (this.step * 1000);
-                let foundkg = this.kgs.find(p => p.val == kgt);
-                if (foundkg) {
-                    this.kgSelected = kgt;
-                    this.grSelected = grneares;
-
-                } else {
-                    this.kgSelected = kgt;
-                    this.grSelected = grneares;
-                }
-            },
-
-            updateView: function () {
-                if (this.kgs.length == 0) {
-                    if (this.min < 1) {
-                        this.kgs.push({ val: 0, text: '-' });
-                    }
-                    for (var i = this.min; i <= this.max; i += this.step) {
-                        i = Number(i.toFixed(2));
-                        if (i.toFixed(2) == '0.50') {
-                            this.kgs.push({ val: i, text: weighToText(i) });
-                        }
-                        if (i.toFixed(2) == '1.50') {
-                            this.kgs.push({ val: i, text: weighToText(i) });
-                        } else if (Math.floor(i).toFixed(2) == i.toFixed(2)) {
-                            this.kgs.push({ val: i, text: weighToText(i) });
-                        }
-                    }
-                    this.grs.push({ val: 0, text: "-", });
-
-                    for (var i = this.step; i < 1; i += this.step) {
-                        i = Number(i.toFixed(2));
-                        this.grs.push({ val: i * 1000, text: i * 1000 + 'gr' });
-                    }
-                }
-                this.syncUi(this.value)
-            }
-        },
-
-        watch: {
-            kgSelected: function (newVal, oldVal) {
-                this.$emit('input', this.calculateQuantity())
-            },
-
-            grSelected: function (newVal, oldVal) {
-                this.$emit('input', this.calculateQuantity())
-            },
-
-            value: function (newVal, oldVal) {
-                this.syncUi(newVal)
-            }
-        }
-    })
+    
 
     window.App.WeightCalculatorApp = new Vue({
         el: '#size-chart',
@@ -353,7 +244,7 @@ window.initComponents = function initComponents() {
                         if (this.options.unit && this.options.unit != this.product.purchaseOptions[i].unit)
                             continue;
                         var q = this.meal * this.personcount * (this.perperson || this.product.purchaseOptions[i].perPerson);
-                        q = Number(q.toFixed(2));
+                        q = Number(q.toFixed(3));
                         if (q < this.product.purchaseOptions[i].min) q = this.product.purchaseOptions[i].min;
                         else if (q > this.product.purchaseOptions[i].max) q = this.product.purchaseOptions[i].max
                         q = Math.ceil(q / this.product.purchaseOptions[i].step) * this.product.purchaseOptions[i].step;

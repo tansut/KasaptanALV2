@@ -229,7 +229,7 @@ class Product extends BaseModel<Product> {
     @Column({
         allowNull: false,
         defaultValue: 1,
-        type: DataType.DECIMAL(5, 2)
+        type: DataType.DECIMAL(8, 3)
     })
     defaultAmount: number;
 
@@ -238,105 +238,105 @@ class Product extends BaseModel<Product> {
     @Column({
         allowNull: false,
         defaultValue: 1,
-        type: DataType.DECIMAL(5, 2)
+        type: DataType.DECIMAL(8, 3)
     })
     unit1def: number;
 
     @Column({
         allowNull: false,
         defaultValue: 1,
-        type: DataType.DECIMAL(5, 2)
+        type: DataType.DECIMAL(8, 3)
     })
     unit2def: number;    
 
     @Column({
         allowNull: false,
         defaultValue: 1,
-        type: DataType.DECIMAL(5, 2)
+        type: DataType.DECIMAL(8, 3)
     })
     unit3def: number;
 
     @Column({
         allowNull: false,
         defaultValue: 1,
-        type: DataType.DECIMAL(5, 2)
+        type: DataType.DECIMAL(8, 3)
     })
     unit1min: number;        
 
     @Column({
         allowNull: false,
         defaultValue: 1,
-        type: DataType.DECIMAL(5, 2)
+        type: DataType.DECIMAL(8, 3)
     })
     unit2min: number;   
     
     @Column({
         allowNull: false,
         defaultValue: 1,
-        type: DataType.DECIMAL(5, 2)
+        type: DataType.DECIMAL(8, 3)
     })
     unit3min: number;       
 
     @Column({
         allowNull: false,
         defaultValue: 5,
-        type: DataType.DECIMAL(5, 2)
+        type: DataType.DECIMAL(8, 3)
     })
     unit1max: number;        
 
     @Column({
         allowNull: false,
-        defaultValue: 5,
-        type: DataType.DECIMAL(5, 2)
+        defaultValue: 5, 
+        type: DataType.DECIMAL(8, 3)
     })
     unit2max: number;   
     
-    @Column({
+    @Column({ 
         allowNull: false,
         defaultValue: 5,
-        type: DataType.DECIMAL(5, 2)
+        type: DataType.DECIMAL(8, 3)
     })
     unit3max: number; 
     
     @Column({
         allowNull: false,
         defaultValue: 1,
-        type: DataType.DECIMAL(5, 2)
+        type: DataType.DECIMAL(8, 3)
     })
     unit1step: number;        
 
     @Column({
         allowNull: false,
         defaultValue: 1,
-        type: DataType.DECIMAL(5, 2)
+        type: DataType.DECIMAL(8, 3)
     })
     unit2step: number;   
     
     @Column({
         allowNull: false,
         defaultValue: 1,
-        type: DataType.DECIMAL(5, 2)
+        type: DataType.DECIMAL(8, 3)
     })
     unit3step: number;   
     
     @Column({
         allowNull: false,
         defaultValue: 0.25,
-        type: DataType.DECIMAL(5, 2)
+        type: DataType.DECIMAL(8, 3)
     })
     unit1perPerson: number;        
 
     @Column({
         allowNull: false,
         defaultValue: 0.25,
-        type: DataType.DECIMAL(5, 2)
+        type: DataType.DECIMAL(8, 3)
     })
     unit2perPerson: number;   
     
     @Column({
         allowNull: false,
         defaultValue: 0.25,
-        type: DataType.DECIMAL(5, 2)
+        type: DataType.DECIMAL(8, 3)
     })
     unit3perPerson: number;      
     
@@ -373,28 +373,28 @@ class Product extends BaseModel<Product> {
     @Column({
         allowNull: false,
         defaultValue: 0,
-        type: DataType.DECIMAL(5, 2)
+        type: DataType.DECIMAL(8, 3)
     })
     unit1kgRatio: number;     
     
     @Column({
         allowNull: false,
         defaultValue: 0,
-        type: DataType.DECIMAL(5, 2)
+        type: DataType.DECIMAL(8, 3)
     })
     unit2kgRatio: number;     
     
     @Column({
         allowNull: false,
         defaultValue: 0,
-        type: DataType.DECIMAL(5, 2)
+        type: DataType.DECIMAL(8, 3)
     })
     unit3kgRatio: number;    
 
     @Column({
         allowNull: false,
         defaultValue: 0.25,
-        type: DataType.DECIMAL(5, 2)
+        type: DataType.DECIMAL(8, 3)
     })
     perPersonKg: number; 
 

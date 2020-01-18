@@ -56,14 +56,14 @@ class Dispatcher extends BaseModel<Dispatcher> {
     @Column({
         allowNull: false,
         defaultValue: 0,
-        type: DataType.DECIMAL(5, 2)
+        type: DataType.DECIMAL(13, 2)
     })
     fee: number;    
 
     @Column({
         allowNull: false,
         defaultValue: 0,
-        type: DataType.DECIMAL(5, 2)
+        type: DataType.DECIMAL(13, 2)
     })
     totalForFree: number;     
 
