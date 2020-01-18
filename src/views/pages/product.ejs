@@ -181,8 +181,8 @@
                           
                           </h5>
                         </a>
-                          <a class="align-self-center mb-2  text-dark font-size-xs" href="#tarifVideos"> <i
-                            class="czi-arrow-right font-size-xs align-middle"></i></a>    
+                          <!-- <a class="align-self-center mb-2  text-dark font-size-xs" href="#tarifVideos"> <i
+                            class="czi-arrow-right font-size-xs align-middle"></i></a>     -->
                         </div>
                           <!-- <label class=""><span
                             class="badge badge-primary font-size-xs mr-2">Bu yemekler için uygun:</span><span class=""></span></label> -->
@@ -192,9 +192,17 @@
 <div class="d-flex mb-2 pb-1 align-items-center flex-nowrap justify-content-between border-bottom">
   <a class="text-primary" href="javascript:openSlider(<%=t.id%>)"><i class="text-primary <%= t.contentType == 'video-youtube' ? 'czi-youtube': 'czi-camera' %> mr-1"></i><%=t.title%></a>
   
-  <% if (t.note) { %>
-   <a class="text-primary" title="Eti Bizden" href="javascript:<%= include('./_partial/addtonote.ejs', {resource: t, options: {hideProduct: true} }) %>"><span class="color-primary"><i class=" czi-add-circle"></i></span>  </a> 
-  <% } %>
+  
+   <a class="text-primary" title="Eti Bizden" 
+   href="javascript:<%= include('./_partial/addtonote.ejs', {resource: t, options: {hideProduct: true} }) %>"><span class="color-primary">
+     <i class=" czi-add-circle"></i></span>  </a> 
+
+        <!-- <a  title="Eti Bizden" 
+   href="javascript:<%= include('./_partial/addtonote.ejs', {resource: t, options: {hideProduct: true} }) %>"
+    class="btn btn-sm  btn-primary font-size-xs"><i class=" czi-thumb-up mr-1">
+    </i>
+    </a>  -->
+  
 </div>
                              
                          
@@ -292,9 +300,9 @@
                                 
     <div class="d-flex mb-2 pb-1  flex-wrap justify-content-between border-bottom">
       <a href="javascript:openSlider(<%=t.id%>)"><i class=" czi-youtube mr-1"></i><%=t.title%></a>
-      <% if (t.note) { %>
+      
       <a title="Bu şekilde hazırlayın" href="javascript:<%= include('./_partial/addtonote.ejs', {resource: t, options: {hideProduct: true} }) %>"><span class="color-primary"><i class=" czi-add-circle"></i></span>  </a>
-    <% } %>
+    
     </div>
                                  
                              
@@ -406,7 +414,7 @@
                   <% tarifsAndFoods.forEach((resource,i) => {%>
                     <% if (resource.contentType == "video-youtube") { %>
                   <div class="col-md-4 col-sm-6">
-                      <%- include('./_partial/product-resource-view.ejs', {first: false, note: resource.note, resource: resource}) %>
+                      <%- include('./_partial/product-resource-view.ejs', {first: false, note: true, resource: resource}) %>
                    
                                              
                   </div>
