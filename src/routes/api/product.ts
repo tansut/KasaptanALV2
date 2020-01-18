@@ -48,7 +48,8 @@ export default class Route extends ApiRouter {
                         ref2: ids,
                         ref3: ids,
                         ref4: ids,
-                        ref5: ids
+                        ref5: ids,
+                        ref6: ids,
                     }
                 },
                 ...where
@@ -86,6 +87,7 @@ export default class Route extends ApiRouter {
             let product3 = res.ref3 ? products.find(prod => prod.id == res.ref3) : null;
             let product4 = res.ref4 ? products.find(prod => prod.id == res.ref4) : null;
             let product5 = res.ref5 ? products.find(prod => prod.id == res.ref5) : null;
+            let product6 = res.ref6 ? products.find(prod => prod.id == res.ref6) : null;
             if (product1) {
                 res.product = product1;
                 resources.push(res);
@@ -105,6 +107,10 @@ export default class Route extends ApiRouter {
             if (product5) {
                 res.otherProducts = res.otherProducts || []
                 res.otherProducts.push(product5);
+            }
+            if (product6) {
+                res.otherProducts = res.otherProducts || []
+                res.otherProducts.push(product6);
             }
         })
 

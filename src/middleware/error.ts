@@ -40,7 +40,7 @@ class ErrorMiddleware extends Middleware {
         else
         new ErrorRoute({
             req: req, res: res, next: next
-        }).renderPage(new Error(), "pages/error.404.ejs")
+        }).renderPage(new Error(), "pages/error.404.ejs", 404)
     }
 
 

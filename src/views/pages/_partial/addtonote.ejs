@@ -1,8 +1,8 @@
-<% var settings = resource.settings || {} %>
+<% var settings = resource.settingsByRef || resource.settings || {} %>
 <% options = typeof(options) == 'undefined' ? {}: options %>
 window.App.ProductApp.addToNote(
 {
-note: '<%= resource.note %>',
+note: '<%= settings.defaultNote %>',
 unit: '<%= settings.po_unit %>',
 title: '<%=resource.product.name%>',
 perperson: <%= settings.po_perperson || 0 %>,

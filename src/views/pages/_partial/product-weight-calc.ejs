@@ -57,15 +57,24 @@
           <div class="pt-2 mb-2" v-if="personcount > 0">
 
             <div class="form-group px-4 mt-2 mb-2">
+              <!-- <label class="mb-2" for="wanote"><span
+                class="badge badge-accent font-size-xs mr-2">Notunuz</span><span class="font-size-sm"></span>
+                
+            
 
+               
+              </label> -->
               <textarea v-model="cardnote" :placeholder="cardnoteph || 'bizlere iletmek istediğiniz notunuz varsa burayı kullanabilirsiniz.'"
                 class="form-control font-size-sm" rows="4" name="wanote" id="wanote">
 
 
                                               </textarea>
             </div>
-            <div class="mb-2 text-center font-size-xs px-4" v-if="note"><i
-                class="czi-announcement mr-1"></i>{{note}}</div>
+            <div class="mb-2 font-size-xs px-4" v-if="note">
+              <span
+                class="badge badge-accent font-size-xs mr-2">Bilginize</span><span class="font-size-sm">{{note}}</span>
+
+             </div>
 
             <div class="d-flex align-items-center justify-content-center">
               <button v-for="(option, index) in result" data-dismiss="modal" @click="setUnit(option)"

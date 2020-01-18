@@ -184,7 +184,7 @@ export default class Route extends ViewRouter {
             resource.ref5 = this.req.body['imgref5' + id] ? parseInt(this.req.body['imgref5' + id]): null;
             resource.ref6 = this.req.body['imgref6' + id] ? parseInt(this.req.body['imgref6' + id]): null;
 
-            if (resource.contentType != "image/jpeg") {
+            if (resource.contentType != "image/jpeg" && (resource.thumbnailUrl != this.req.body['imgthumbnail' + id])) {
                 resource.thumbnailUrl = this.req.body['imgthumbnail' + id];
             }
             await resource.save();

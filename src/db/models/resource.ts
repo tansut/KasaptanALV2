@@ -29,6 +29,11 @@ import config from '../../config';
         name: "type_ref5_idx",
         fields: ["type", "ref5"]
     },
+
+    {
+        name: "type_ref6_idx",
+        fields: ["type", "ref6"]
+    },
     {
         name: "type_content_idx",
         fields: ["type", "contentUrl"]
@@ -123,19 +128,19 @@ class Resource extends BaseModel<Resource> {
     @Column
     description: string;
 
-    get note() {
-        let note = this.tag2;
-        if (this.tag1 && this.tag1.includes('tarif')) {
-            note = this.tag2 || (`${this.title} yapacağım, lütfen uygun hazırlayın.`);
-        } else if (this.tag1 == 'hazirlama-sekli') {
-            note = this.tag2 ? (this.tag2) : (this.title + " olarak hazırlayın.")
-        } else if (this.tag1 && this.tag1.includes('yemek')) {
-            note = this.tag2 || (`${this.title} yapacağım, lütfen uygun hazırlayın.`);
-        }
+    // get note() {
+    //     let note = this.tag2;
+    //     if (this.tag1 && this.tag1.includes('tarif')) {
+    //         note = this.tag2 || (`${this.title} yapacağım, lütfen uygun hazırlayın.`);
+    //     } else if (this.tag1 == 'hazirlama-sekli') {
+    //         note = this.tag2 ? (this.tag2) : (this.title + " olarak hazırlayın.")
+    //     } else if (this.tag1 && this.tag1.includes('yemek')) {
+    //         note = this.tag2 || (`${this.title} yapacağım, lütfen uygun hazırlayın.`);
+    //     }
 
 
-        return note
-    }
+    //     return note
+    // }
 
     @Column({
         type: DataType.TEXT
@@ -148,6 +153,25 @@ class Resource extends BaseModel<Resource> {
 
     set settings(value: any) {
         this.setDataValue('settingsjson', JSON.stringify(value));
+    }
+
+    get productRef(): number {
+        if (this.product) {
+            if (this.ref1 == this.product.id) return 1;
+            if (this.ref2 == this.product.id) return 2;
+            if (this.ref3 == this.product.id) return 3;
+            if (this.ref4 == this.product.id) return 4;
+            if (this.ref5 == this.product.id) return 5;
+            if (this.ref6 == this.product.id) return 6;
+        } else return 0;
+    }
+
+    get settingsByRef(): any {
+        if (this.product) {
+            let settings = this.settings || {};
+            return settings[`ref${this.productRef}`] || this.settings || {}
+
+        } else return {};
     }
 
 

@@ -19,10 +19,10 @@ var MarkdownIt = require('markdown-it')
 
 export default class Route extends ViewRouter {
 
-    renderPage(err, page) {
+    renderPage(err, page, status = 500) {
         let httpErr = err instanceof HttpError ? null : <HttpError>err;
         //this.res.status(httpErr && httpErr.statusCode ? httpErr.statusCode : 500).send({ error: httpErr ? httpErr.message : err.message })
-        this.res.status(404)
+        this.res.status(status)
         this.res.render(page, this.viewData({
             error: err
         }))

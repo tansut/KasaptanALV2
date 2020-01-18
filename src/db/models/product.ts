@@ -436,7 +436,8 @@ class Product extends BaseModel<Product> {
                     ref2: this.id,
                     ref3: this.id,
                     ref4: this.id,
-                    ref5: this.id
+                    ref5: this.id,
+                    ref6: this.id                
                 }
             },
             order: [["type", "ASC"], ["displayOrder", "DESC"], ["updatedOn", "DESC"]]
