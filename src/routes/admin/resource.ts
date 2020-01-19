@@ -12,10 +12,12 @@ import Helper from '../../lib/helper';
 import * as fs from "fs"
 import Category from '../../db/models/category';
 import ResourceCategory from '../../db/models/resourcecategory';
+var beautify = require("json-beautify");
 
 export default class Route extends ViewRouter {
 
     categories: Category[] = [];
+    beautify = beautify;
 
     async getResources() {
         return await Resource.findAll({
