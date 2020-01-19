@@ -156,13 +156,14 @@
                 <form id="product-form" class="" @submit.prevent="addToShopcard">
                   <% if (product.featuresText) { %>
                     <% var notes = product.featuresText.split('\n') %>
-                    <div class="border-bottom mb-3">
+                    <div class="border-bottom mb-3  ">
                       <!-- <h5 class="h6 font-size-md mb-2">Şu şekilde hazırlıyoruz</h5> -->
                       <ul class="list-unstyled mb-2">
                         <%notes.forEach((note, i) => { %>
                             <li><i class="czi-check text-primary mr-1"></i> <%=note%></li>
                         <%})%>
                         </ul>
+                      
                     </div>
  
                     <% } %>
@@ -232,8 +233,17 @@
                      <div class="">
 
                       <a id="noteanchor"></a>
+                   <div class="d-flex  justify-content-between">
+                    <h5 class="h6 mb-2 text-accent "><i class="czi-thumb-up mr-2"></i>Kolayca satın alın</h5>
+
+                    
+                      
+                      <a target="_blank" href="https://wa.me/908503054216?text=<%-`Merhaba, kasaptanal.com üzerinden size ulaşıyorum. ${product.name} ile ilgili whatsapp üzerinden yardımcı olabilir misiniz?`%>" class="font-size-sm font-weight-medium  text-success">
+                        <i class="czi-chat"></i> 
+                        WhatsApp</a>
+
                    
-                      <h5 class="h6 mb-2 text-accent "><i class="czi-thumb-up mr-2"></i>Kolayca satın alın</h5>
+                   </div>
 <!--                     
                       <p v-if="product && product.purchaseOptions.length > 1" class="font-size-sm mb-1">
                         İşinizi kolaylaştıran seçenekleri kullanın.
@@ -348,6 +358,7 @@
                           <% } %>
                         </div>
                       </div>
+                     
                     </div>
 
 
