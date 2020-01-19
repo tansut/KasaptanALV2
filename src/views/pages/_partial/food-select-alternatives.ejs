@@ -6,20 +6,20 @@
         <button class="close" type="button" data-dismiss="modal" aria-label="Close"><span
             aria-hidden="true">&times;</span></button>
       </div>
-      <div class="modal-body pl-1 py-1 pr-0">
+      <div class="modal-body p-0">
         <div class="p-2">
-          <p class="p-0">
-            <span class="font-weight-medium">{{title}}</span> yapmak için kasaplarımız aşağıdaki lezzetleri önermektedir.
+          <p class="p-0 text-center">
+            <span class="font-weight-medium">{{title}}</span> için kasaplarımız size aşağıdaki lezzetlerimizi önermekte.
           </p>
           <div class="row no-gutters">
-            <div class="col-6 mb-1 pr-1" v-for="item in list">
-              <div class="card border rounded-0 product-card card-static h-100 item-card">
-                <a class=" d-block overflow-hidden" :href="item.link"><img class="rounded-0" :src="item.src"
+            <div class="col-12 mb-3" v-for="item in list">
+              <div class="card border-bottom rounded-0 product-card card-static h-100 item-card">
+                <a class=" d-flex overflow-hidden justify-content-center" :href="item.link"><img class="rounded-0" :src="item.src"
                     :alt="item.name"></a>
                 <div class="card-body pl-0 text-center">
-                  <h3 class="product-title font-size-md mb-1"><a :href="item.link">{{item.name}}</a>
+                  <h3 v-if="item && item.name" class="product-title font-size-md mb-1"><a :href="item.link">{{item.name}}</a>
                   </h3>
-                  <p v-if="item && item.desc" class="mb-0 text-muted font-size-sm">
+                  <p v-if="item && item.desc" class="card-text mb-0 text-muted font-size-sm">
                     {{item.desc}}
                   </p>
 

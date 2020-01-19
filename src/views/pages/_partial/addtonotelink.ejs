@@ -16,7 +16,22 @@ var alternatives = [];
         link: baseUrl
       }) %>
 
-<% }) %>javascript:window.App.FoodAlternativesApp.show(<%=JSON.stringify(alternatives)%>, <%='"' + resource.title + '"'%>)
+<% }) %>
+
+<% resource.categories.forEach(c=> { %>
+
+<%
+alternatives.push({ 
+  src: `${__req.helper.imgUrl('category-photos', c.category.slug)}`,
+  name:   c.category.name ,
+  desc: 'Benzer yemek alternatiflerine göz atın',
+  link: `/${c.category.slug}`
+})
+%>
+
+<% }) %>
+
+javascript:window.App.FoodAlternativesApp.show(<%=JSON.stringify(alternatives)%>, <%='"' + resource.title + '"'%>)
 <%} else {%>
 <% var baseUrl = `/${resource.product.slug}/${subUrl}/${__helper.slugify(resource.title || 'tarif')}?r=${resource.id}&autoNote=1`  %>
 <% if (typeof(disableSlider) != 'undefined') baseUrl += '&disableSlider=1' %>
