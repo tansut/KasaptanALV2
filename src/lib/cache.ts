@@ -16,6 +16,7 @@ import Resource from "../db/models/resource";
 import Content from "../db/models/content";
 import WebPage from "../db/models/webpage";
 
+
 let cache: Cache;
 
 export interface ResourceCacheItem {
@@ -150,7 +151,8 @@ export class CacheManager {
             categories = await Category.findAll({
                 raw: true,
                 order: [["type", 'desc'], ["displayOrder", 'desc']]
-            })
+            });
+
             this.dataCache.set("categories", categories);
         }
         return categories;

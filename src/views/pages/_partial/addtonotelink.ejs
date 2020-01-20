@@ -21,12 +21,7 @@ var alternatives = [];
 <% resource.categories.forEach(c=> { %>
 
 <%
-alternatives.push({ 
-  src: `${__req.helper.imgUrl('category-photos', c.category.slug)}`,
-  name:   c.category.name ,
-  desc: 'Benzer yemek alternatiflerine göz atın',
-  link: `/${c.category.slug}`
-})
+
 %>
 
 <% }) %>

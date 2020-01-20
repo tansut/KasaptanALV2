@@ -64,49 +64,14 @@
             <a class="btn btn-sm btn-light" href="/lezzetler">Tümü<i class="czi-arrow-right ml-1 mr-n1"></i></a>
         </div> -->
 
-        <div
-          class="bg-secondary border-bottom rounded-lg mb-2 p-2 d-flex flex-nowrap justify-content-between align-items-center">
-          <a class="media align-items-center align-self-center" href="/lezzetler">
-            <div class="media-body pl-2">
-              <h3 class="h5 mb-0 mr-2">Lezzetlerimizi Keşfedin</h3>
-              <span class="font-size-ms text-muted"></span>
-            </div>
-          </a>
-          <a class="align-self-center d-md-block btn btn-sm" href="/lezzetler"><i
-              class="czi-arrow-right font-size-xs align-middle ml-1"></i></a>
-        </div>
+        <div class="container mb-3">
 
-
-        <div class="table-responsive" data-simplebar>
-          <div class="d-flex pb-2">
-            <% var viewCats = ['reyon', 'list'] %>
-            <% viewCats.forEach(cat => { %>
-            <% var reyonlar = (__categories.filter(p=>p.type.includes(cat))) %>
-            <% for(var c=0; c< reyonlar.length; c++) {%>
-            <div class="mr-2">
-
-              <div class="item-slider item-slider-sm">
-
-                <div class="card product-card card-static item-card">
-                  <a class="" href="<%= `/${reyonlar[c].slug}`%>"><img class="rounded shadow-lg"
-                      src="<%=`${__req.helper.imgUrl('category-photos', reyonlar[c].slug)}`%>" alt=""></a>
-
-                  <div class="card-body pb-0 mb-0 pl-0 text-center">
-                    <h3 class="product-title pb-0 mb-0 font-size-md"><a
-                        href="<%= `/${reyonlar[c].slug}`%>"><%= reyonlar[c].name %></a>
-                    </h3>
-                  </div>
-                </div>
-
-              </div>
-
-
-
-            </div>
-            <%}%>
-                    <%})%>
-          </div>
-        </div>
+          <%- include('./_partial/category-slider', { viewCats: ['reyon', 'list'], title: 'Lezzetler', allUrl: '/lezzetler' }); %>
+  
+  
+  
+  
+      </div>
       </div>
 
 

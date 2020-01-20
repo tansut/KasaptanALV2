@@ -16,6 +16,7 @@ import Product from '../db/models/product';
 import { where } from 'sequelize';
 let ellipsis = require('text-ellipsis');
 import { PreferredAddress } from '../db/models/user';
+var MarkdownIt = require('markdown-it')
 
 import * as fs from "fs"
 
@@ -45,11 +46,14 @@ export default class BaseRouter {
     protected req: http.AppRequest;
     protected res: express.Response;
     protected next: Function;
-    
+    private _markdown = null;
 
     protected constructorParams: any;
 
-
+    get Markdown() {
+        this._markdown = this._markdown || new MarkdownIt();
+        return this._markdown;
+    }
 
     forceAuthenticate(req, res, next) {
         return auth.force(req, res, next);

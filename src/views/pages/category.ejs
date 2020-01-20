@@ -42,7 +42,7 @@
 
 
   <div class="container px-0">
-    <div class="bg-light box-shadow-lg px-4 py-4 mb-3 __xxx__">
+    <div class="bg-light box-shadow-lg px-4 py-4 mb-3 ">
       <div class="row">
         <% var foodsInserted = false %>
         <% for(var j=0; j< controller.products.length; j++) {%>
@@ -50,7 +50,7 @@
           <%- include('./_partial/product-view.ejs', {product: controller.products[j]}) %>
         </div>
         <% if (!foodsInserted && (controller.foods.length > 0) && (j == 11) && (controller.foods.length >= 4) && controller.category.tarifTitle) { foodsInserted = true; %>
-        <div class="mb-3 __xxx__ col-12">
+        <div class="mb-3  col-12">
           <%- include('./_partial/foods-slider.ejs', {allUrl: '/' + controller.category.slug + '/et-yemekleri-ve-tarifleri', mode: 'yemek', foods: controller.foods, title: controller.category.tarifTitle || 'Yemekler'}) %>
 
         </div>
@@ -61,15 +61,26 @@
       <div>
 
         <% if (!foodsInserted && controller.category.tarifTitle && controller.foods.length > 0) { %>
-        <div class="mb-3 __xxx__">
+        <div class="mb-3 ">
           <%- include('./_partial/foods-slider.ejs', {allUrl: '/' + controller.category.slug + '/et-yemekleri-ve-tarifleri' , mode: 'yemek', foods: controller.foods, title: controller.category.tarifTitle || 'Yemekler'}) %>
 
         </div>
         <% } %>
 
       </div>
+<div class="mb-3">
+  <%- include('./_partial/category-slider', { viewCats: ['reyon', 'list'], title: 'Lezzetler', allUrl: '/lezzetler' }); %>
 
-      <%- include('./_partial/category-slider', { viewCats: ['reyon', 'list'], title: 'Lezzetler', allUrl: '/lezzetler' }); %>
+</div>
+
+<div class="collapse-container">
+  <div class="collapse" id="collapseSummary">
+    <%- controller.category.mddesc && controller.Markdown.render(controller.category.mddesc) %>
+
+  </div>
+  <a class="collapsed text-dark" data-toggle="collapse" href="#collapseSummary" aria-expanded="false" aria-controls="collapseSummary"></a>
+</div>
+
 
 
     </div>
