@@ -87,6 +87,6 @@ export default class Route extends ViewRouter {
     static SetRoutes(router: express.Router) {
         // router.get("/:areal1-:areal2-:area3", Route.BindRequest(Route.prototype.areal3Route));
         // router.get("/:areal1-:areal2", Route.BindRequest(Route.prototype.areal2Route));
-        router.get("/:area", Route.BindRequest(Route.prototype.arealRoute));
+        router.get("/:area-kasap", Route.BindRequest(Route.prototype.arealRoute));
     }
 }

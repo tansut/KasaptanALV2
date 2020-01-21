@@ -32,7 +32,7 @@
         <h1 class="h3 text-light mb-0"><%= view.name %></h1>
         <p class="lead text-light"><%= view.shortDesc %></p>
         <% if (__req.user && __req.user.hasRole('admin')) {%>
-          <a target="_blank" class="btn btn-dark btn-sm" href="/pages/admin/product/<%=product.slug%>">Düzenle</a>
+          <a target="_blank" class="btn btn-dark btn-sm" href="/pages/admin/product/<%=product.slug%>">Düzenle <%=product.id%></a>
         <%}%>
       </div>
     </div>

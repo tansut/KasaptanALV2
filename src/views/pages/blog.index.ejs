@@ -95,11 +95,11 @@
           Kategoriler
         </h3>
         <ul class="nav justify-content-center mb-4">
-          <% var categories = controller.getCategories() %>
+          <% var categories = controller.categories %>
 
-          <% Object.keys(categories).forEach(function(key){ %>
+          <% categories.forEach(function(cat){ %>
           <li class="nav-item">
-            <a class="nav-link active" href="/et-kulturu/<%= key %>"><%=categories[key] %></a>
+            <a class="nav-link active" href="/et-kulturu/<%= cat.categorySlug %>"><%=cat.category %></a>
           </li>
           <% }); %>
 
@@ -157,17 +157,6 @@
 
   <!-- <div class="container">
 
-    <ul class="nav justify-content-center mb-4">
-      <% var categories = controller.getCategories() %>
-
-      <% Object.keys(categories).forEach(function(key){ %>
-      <li class="nav-item">
-        <a class="nav-link active" href="/et-kulturu/<%= key %>"><%=categories[key] %></a>
-      </li>
-      <% }); %>
-
-
-    </ul>
 
 
     <div class="card-columns mx-3">

@@ -70,7 +70,7 @@
                                 <% for(var i=0; i<chunk.length; i++) {%>
                                     <% if (chunk[i].name == 'Ankara') {%>
                                 <li class="widget-list-item"><a class="widget-list-link"
-                                        href="<%= `/${chunk[i].slug}` %>"><%= chunk[i].name %></a></li>
+                                        href="<%= `/${chunk[i].slug}-kasap` %>"><%= chunk[i].name %></a></li>
                                 <%}%>
 
                                 <%}%>
@@ -172,7 +172,7 @@
                 <div class="row pb-2">
                     <div class="col-md-6 text-center text-md-left mb-4">
                         <div class="text-nowrap mb-4"><a class="d-inline-block align-middle mt-n1 mr-3" href="#"><img
-                                    class="d-block" style="width: 8rem;" src="/static/img/logo-nav.png" alt="kasaptanal.com" /></a>
+                                    class="d-block" title="KasaptanAl.com" style="width: 8rem;" src="/static/img/logo-nav.png" alt="kasaptanal.com" /></a>
 
                         </div>
                          <!-- <div class="widget widget-links widget-light">
@@ -230,8 +230,5 @@
         </div>
     </div>
 </div>
-
-<!-- START Bootstrap-Cookie-Alert -->
-
 
 <% include ../_partial/meat-guide-dialog %>

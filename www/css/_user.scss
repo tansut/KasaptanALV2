@@ -33,6 +33,22 @@
     content: '- Devamını Gizle';
 }
 
+.product-card, .touch-support {
+  a {
+    touch-action: manipulation;
+    user-select: none;
+    -ms-touch-action: manipulation;
+    touch-action: manipulation;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+
+
+    img {
+      touch-action: manipulation;
+    }
+  }
+}
 
 img{
   

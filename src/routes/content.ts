@@ -17,6 +17,7 @@ import Resource from '../db/models/resource';
 let ellipsis = require('text-ellipsis');
 var MarkdownIt = require('markdown-it')
 import ProductsApi from './api/product';
+import { Sequelize, QueryTypes } from 'sequelize';
 
 
 export default class Route extends ViewRouter {
@@ -24,14 +25,17 @@ export default class Route extends ViewRouter {
     content: Content;
     allcontent: Content[];
     resources: Resource[] = [];
+    categories: any;
 
-    getCategories() {
-        let result = {};
-        for (let i = 0; i < this.allcontent.length; i++) {
-            if (!result[this.allcontent[i].categorySlug])
-                result[this.allcontent[i].categorySlug] = this.allcontent[i].category
-        }
-        return result;
+    async loadCategories() {
+
+        let catdata = await Content.sequelize.query("SELECT distinct category, categorySlug from Contents", {
+            raw: true  ,
+            type: QueryTypes.SELECT       
+        } )
+
+        this.categories = catdata;
+
     }
 
     getContentImages() {
@@ -72,7 +76,7 @@ export default class Route extends ViewRouter {
         })
         this.allcontent = allcontent;
         this.resources = await new ProductsApi(this.constructorParams).getInformationalVideos(25)
-
+        await this.loadCategories();
         this.res.render('pages/blog.index.ejs', this.viewData({ pageTitle: 'Et Kültürü', pageDescription: '', allcontent: allcontent }))
     }
 
@@ -90,6 +94,8 @@ export default class Route extends ViewRouter {
         })
 
         if (!this.content) return this.next();
+
+        await this.loadCategories();
 
         this.renderPage()
 
