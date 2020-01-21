@@ -54,9 +54,9 @@
 
 
 
-          <div class="pt-2 mb-2" v-if="personcount > 0">
+          <div class="pt-2 mb-3" v-if="personcount > 0">
 
-            <div class="form-group px-4 mt-2 mb-2">
+            <div class="form-group px-4 mt-2 mb-3">
               <!-- <label class="mb-2" for="wanote"><span
                 class="badge badge-accent font-size-xs mr-2">Notunuz</span><span class="font-size-sm"></span>
                 
@@ -70,11 +70,13 @@
 
                                               </textarea>
             </div>
-            <div class="mb-2 font-size-xs px-4" v-if="note">
-              <span
-                class="badge badge-accent font-size-xs mr-2">Bilginize</span><span class="font-size-sm text-muted">{{note}}</span>
 
-             </div>
+            <div v-if="note" class="alert rounded-0 alert-info alert-with-icon font-size-sm mb-3" role="alert">
+              <div class="alert-icon-box rounded-0"><i class="alert-icon czi-announcement"></i></div>
+              
+              {{note}}
+            </div>
+
 
             <div class="d-flex align-items-center justify-content-center">
               <button v-for="(option, index) in result" data-dismiss="modal" @click="setUnit(option)"

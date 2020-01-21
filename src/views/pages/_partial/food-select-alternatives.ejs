@@ -7,10 +7,13 @@
             aria-hidden="true">&times;</span></button>
       </div>
       <div class="modal-body p-0">
-        <div class="pt-2">
-          <p class="p-0 text-center">
-            <span class="font-weight-medium">{{title}}</span> için kasaplarımız aşağıdaki lezzetlerimizi önermekteler.
-          </p>
+        <div class="p-0">
+          <div class="border-bottom mb-3 p-3 alert-info">
+            <p class="mb-0 px-2 text-center font-size-sm">
+              <span class="font-weight-medium">{{title}}</span> için kasaplarımız aşağıdaki {{list.length}} alternatifi tercihinize sunmaktalar.
+            </p>
+          </div>
+
           <div class="row no-gutters">
             <div class="col-12 mb-3" v-for="item in list">
               <div class="card border-bottom rounded-0 product-card card-static h-100 item-card">
@@ -19,10 +22,10 @@
                 <div class="card-body pl-0 text-center">
                   <h3 v-if="item && item.name" class="product-title font-size-md mb-1"><a :href="item.link">{{item.name}}</a>
                   </h3>
-                  <p v-if="item && item.desc" class="card-text mb-0 text-muted font-size-sm">
+                  <p v-if="item && item.desc" class="px-2 mb-2 card-text text-muted font-size-sm ">
                     {{item.desc}}
                   </p>
-
+                  <a :href="item.link" class="btn btn-sm btn-accent">Satın Al</a>
                 </div>
       
               </div>
