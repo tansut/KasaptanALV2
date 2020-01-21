@@ -50,6 +50,18 @@ class Area extends BaseModel<Area> {
     name: string;
 
     @Column({
+        allowNull: false,
+        defaultValue: 0
+    })
+    displayOrder: number;
+
+    @Column({
+        allowNull: false,
+        defaultValue: 'generic'
+    })
+    status: string;    
+
+    @Column({
         allowNull: true,
     })
     code: string;

@@ -14,7 +14,7 @@ import { PreferredAddress } from './user';
         fields: ['fromareaid']
     }, {
         name: 'frombutcherid_idx',
-        fields:['frombutcherid']
+        fields: ['frombutcherid']
     }, {
         name: 'toareaid_idx',
         fields: ['toareaid']
@@ -31,16 +31,16 @@ class Dispatcher extends BaseModel<Dispatcher> {
     @Column({
         allowNull: true,
     })
-    fromarealevel: number;    
+    fromarealevel: number;
 
     @BelongsTo(() => Area, "fromareaid")
     fromarea: Area;
-   
+
     @ForeignKey(() => Butcher)
     frombutcherid: number
 
     @BelongsTo(() => Butcher, "frombutcherid")
-    frombutcher: Butcher;    
+    frombutcher: Butcher;
 
     @ForeignKey(() => Area)
     toareaid: number;
@@ -48,7 +48,7 @@ class Dispatcher extends BaseModel<Dispatcher> {
     @Column({
         allowNull: true,
     })
-    toarealevel: number;    
+    toarealevel: number;
 
     @BelongsTo(() => Area, "toareaid")
     toarea: Area;
@@ -58,14 +58,14 @@ class Dispatcher extends BaseModel<Dispatcher> {
         defaultValue: 0,
         type: DataType.DECIMAL(13, 2)
     })
-    fee: number;    
+    fee: number;
 
     @Column({
         allowNull: false,
         defaultValue: 0,
         type: DataType.DECIMAL(13, 2)
     })
-    totalForFree: number;     
+    totalForFree: number;
 
     @Column({
         allowNull: false,
@@ -76,24 +76,31 @@ class Dispatcher extends BaseModel<Dispatcher> {
     @Column({
         allowNull: false,
     })
-    name: string;        @ForeignKey(() => Butcher)
+    name: string; 
+    
+    @ForeignKey(() => Butcher)
     butcherid: number
 
-    @BelongsTo(() => Butcher, "butcherid") 
-    butcher: Butcher;    
+    @BelongsTo(() => Butcher, "butcherid")
+    butcher: Butcher;
 
     @ForeignKey(() => OrderItem)
     lastorderitemid: number
 
-    @BelongsTo(() => OrderItem, "lastorderitemid") 
-    lastOrderItem: OrderItem;    
+    @BelongsTo(() => OrderItem, "lastorderitemid")
+    lastOrderItem: OrderItem;
 
     @Column({
         allowNull: false,
     })
-    typeid: number;    
+    typeid: number;
 
     address: PreferredAddress;
+
+    @Column({
+        allowNull: true,
+    })
+    note: string;    
 
 }
 

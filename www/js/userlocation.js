@@ -16,8 +16,8 @@
                         self.selectedIlce = list[0];
                         setTimeout(function () {
                             self.ilcesloaded = list;
-                             $(options.ilceDomSelector).selectpicker('toggle');
-                            //self.loadDistricts(self.selectedIlce);
+                            //$(options.ilceDomSelector).selectpicker('toggle');
+                            self.loadDistricts(self.selectedIlce);
                         });
 
                     }
@@ -78,7 +78,6 @@
                 });
 
                 $(this.options.ilceDomSelector).on('changed.bs.select', function (e, clickedIndex, isSelected, previousValue) {
-
                     var ilce = self.ilcesloaded[clickedIndex];
                     if (ilce) {
                         self.selectedIlce = ilce;

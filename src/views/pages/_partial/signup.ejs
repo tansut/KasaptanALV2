@@ -1,15 +1,27 @@
 <div class="tab-pane fade show active" id="signup-tab">
     <form class="needs-validation " autocomplete="off" onsubmit="App.Auth.signup()" novalidate id="signup-form-1">
 
-        <div class="alert alert-success" role="alert">
-            Sadece 30sn'de kaydolun, sonu gelmeyen formlar yok.
+
+        <div v-if="note" class="alert rounded-0 alert-info alert-with-icon font-size-sm mb-3" role="alert">
+            <div class="alert-icon-box rounded-0"><i class="alert-icon czi-announcement"></i></div>
+
+            <b>30sn</b>'de kaydolun, daha önce kayıt olduysanız <a class="font-size-sm text-decoration-none alert-link" href="javascript:window.App.activaTab('signin-tab')">giriş yapın</a> veya <a class="font-size-sm text-decoration-none alert-link" href="/reset-password">yeni şifre</a> alın.
         </div>
+
         <div class="form-group">
             <label for="su-tel">Cep Telefonu</label>
-            <input class="form-control" minlength="10" maxlength="15" type="tel" id="su-tel" placeholder="53xxxxxxxx"
+            <input class="form-control" minlength="10" maxlength="15" type="tel" id="su-tel" placeholder="5xxxxxxxxx"
                 required>
             <div class="invalid-feedback">Geçersiz telefon numarası.</div>
         </div>
+        <div class="form-group d-flex flex-wrap justify-content-between">
+            <div class="custom-control custom-checkbox mb-2">
+                <input class="custom-control-input" type="checkbox" checked >
+                <label class="custom-control-label" for="si-remember">Gizlilik sözleşmesini okudum ve kabul ediyorum.</label>
+            </div>
+        </div>
+
+
         <button class="btn btn-primary btn-block btn-shadow" type="submit">Şifremi Gönder</button>
     </form>
 

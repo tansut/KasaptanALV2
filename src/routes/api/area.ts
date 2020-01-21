@@ -30,8 +30,10 @@ export default class Route extends ApiRouter {
             promise = Area.findAll({
                 where: {
                     parentid: parseInt(this.req.params.parentid),
-                    level: parseInt(this.req.query.parentLevel) + 1
-                }
+                    level: parseInt(this.req.query.parentLevel) + 1,
+                    status: 'generic'
+                },
+                order: [["displayOrder", "DESC"], ["Name", "ASC"]]
             }).then((parentSubs => {
                 let ids = parentSubs.map(i => i.id);
                 return {
@@ -42,12 +44,13 @@ export default class Route extends ApiRouter {
             let where = <any>{};
             this.req.query.level ? (where["level"] = parseInt(this.req.query.level)) : where["level"] = 1;
             this.req.params.parentid ? (where["parentid"] = this.req.params.parentid) : null;
+            where['status'] = 'generic';
             promise = Promise.resolve(where)
         }
         return promise.then(where => {
             return Area.findAll({
                 where: where,
-                order: where["level"] != 1 ? ["name"] : []
+                order: [["displayOrder", "DESC"], ["Name", "ASC"]]
             }
             ).then(areas => areas.map(area => {
                 if (where["level"] == 1) {

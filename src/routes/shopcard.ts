@@ -29,7 +29,7 @@ export default class Route extends ViewRouter {
     shipmentDays = ShipmentDays;
     moment = moment
     Shipment = Shipment;
-
+    Butchers: ButcherModel[] = null;
     renderPage(page: string) {
         this.res.render(page, this.viewData({
             shopcard: this.shopcard,
@@ -166,7 +166,15 @@ export default class Route extends ViewRouter {
         this.shopcard.arrangeButchers();
         this.setDispatcher();
         this.shopcard.calculateShippingCosts();
-        await this.shopcard.saveToRequest(this.req)
+        await this.shopcard.saveToRequest(this.req);
+        this.Butchers =  await ButcherModel.findAll({
+            include: [            {
+                model: Area,
+                all: true,
+                as: "areaLevel1Id"
+
+            }], where: { id: Object.keys(this.shopcard.butchers) }
+        });          
         this.renderPage("pages/checkout.review.ejs");
     }
 
@@ -176,7 +184,8 @@ export default class Route extends ViewRouter {
         this.shopcard.arrangeButchers();
         this.setDispatcher();
         this.shopcard.calculateShippingCosts();
-        await this.shopcard.saveToRequest(this.req)        
+        await this.shopcard.saveToRequest(this.req);
+      
         this.renderPage("pages/checkout.review.ejs");
     }  
 

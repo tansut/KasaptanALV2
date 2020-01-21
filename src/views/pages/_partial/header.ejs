@@ -239,7 +239,7 @@
             <% for(var c=0; c< reyonlar.length; c++) {%>
             <li class="<%= (cat == 'list' || cat == 'reyon') ?  'd-lg-none':'' %> nav-item ">
               <a class="pl-0 nav-link d-md-flex  align-items-md-center" href="/<%= reyonlar[c].slug %>">
-                <img class="d-md-block rounded-circle mr-2"
+                <img class="d-md-block rounded mr-2"
                   src="<%=`${__req.helper.imgUrl('category-photos', reyonlar[c].slug)}`%>"
                   alt="<%= reyonlar[c].name %>">
                 <span><%= reyonlar[c].name %></span>
@@ -280,7 +280,7 @@
             <% for(var c=0; c< reyonlar.length; c++) {%>
             <li class="<%= (cat == 'list' || cat == 'reyon') ?  'd-lg-none':'' %> nav-item ">
               <a class="pl-0 nav-link d-md-flex  align-items-md-center" href="/<%= reyonlar[c].slug %>">
-                <img class="d-md-block rounded-circle mr-2"
+                <img class="d-md-block rounded mr-2"
                   src="<%=`${__req.helper.imgUrl('category-photos', reyonlar[c].slug)}`%>"
                   alt="<%= reyonlar[c].name %>">
                 <span><%= reyonlar[c].name %></span>
@@ -307,6 +307,7 @@
                 <li class="nav-item"><a class="nav-link" href="/et-yemek-tarifleri">Tarifler</a>
   
                 </li> -->
+           
 
             <li class="nav-item"><a class="nav-link" href="/et-yemek-tarifleri">Tarifler</a>
 
@@ -315,9 +316,15 @@
             <li class="nav-item"><a class="nav-link" href="/et-kulturu">Et Kültürü</a>
 
             </li>
+
+
+            <%if (__req.user) { %>
             <li class="d-lg-none nav-item"><a class="nav-link" href="/user"><i class=" czi-user mr-2"></i>Profilim</a>
             </li>
-
+          <%} else {%>
+            <li class="d-lg-none nav-item"><a class="nav-link" data-toggle="modal" href="#signin-modal"><i class=" czi-user mr-2"></i>Kullanıcı Girişi/Kayıt</a>
+            </li>
+            <%}%>
             <% if ( __req.prefAddr ) { %>
 
             <li class="d-lg-none nav-item"><a class="select-area-action nav-link" href="#"><i
@@ -335,7 +342,9 @@
           </ul>
 
           <ul class="nav navbar-nav ml-auto">
-            <li class="nav-item"><a class="nav-link" target="_blank" href="https://wa.me/908503054216">WhatsApp Destek</a></li>
+            <li class="nav-item"><a class="nav-link" target="_blank" href="https://wa.me/908503054216?text=<%-`Merhaba, kasaptanal.com üzerinden size ulaşıyorum.`%>">
+              <img src="/static/img/messaging-whatsapp.svg" width="24">
+              WhatsApp Destek</a></li>
        
             <li class="nav-item  d-lg-none">
               

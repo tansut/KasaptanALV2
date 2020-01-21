@@ -65,7 +65,7 @@ export default class UserRoute extends ApiRouter {
     async completesignupRoute() {
         let user = await UserModel.findOne({
             where: {
-                mphone: this.req.body.phone
+                mphone: this.req.body.phone                
             }
         });
         if (!user) throw new http.ValidationError("invalid phone");
@@ -126,11 +126,16 @@ export default class UserRoute extends ApiRouter {
     }
 
     async sendPassword(pwd: string, phoneNumber: string) {
-        await Sms.send('90' + phoneNumber, `kasaptanAl giris sifreniz ve onay kodunuz: ${pwd}.`);
+        await Sms.send('90' + phoneNumber, `kasaptanal.com giris sifreniz ve onay kodunuz: ${pwd}.`);
         return pwd;
     }
 
-
+    async sendNewPassword(user: UserModel) {
+        let pwd = await this.generatePwd()
+        user.setPassword(pwd);
+        await user.save();
+        await this.sendPassword(pwd, user.mphone);        
+    }
 
 
     async create(model: SignupModel): Promise<UserModel> {

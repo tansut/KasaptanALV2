@@ -18,6 +18,10 @@ class Butcher extends BaseModel<Butcher> {
     @Column
     name: string;
 
+    @AllowNull(false)
+    @Column
+    legalName: string;
+
     @Unique({ name: "slug_idx", msg: "" })
     @AllowNull(false)
     @Column

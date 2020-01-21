@@ -128,7 +128,7 @@
 
                     <div class="bg-secondary  border-bottom p-2 d-flex flex-nowrap justify-content-between align-items-center">
                       <a class="media align-items-center" href="/<%=view.butcher.slug%>"><img class="rounded-circle header-img"
-                         src="/<%=view.butcher.slug%>/fotograf/thumbnail" alt="<%=view.butcher.name%>">
+                         src="<%= `${__req.helper.imgUrl('butcher-google-photos', view.butcher.slug)}` %>" alt="<%=view.butcher.name%>">
                       <div class="media-body pl-2">
                         <h6 class="h5 mb-0 mr-2"><%= view.butcher.name %></h6>
                         <span class="font-size-ms text-muted">sağlamaktadır.</span>
@@ -240,8 +240,8 @@
                       
                       <a title="WhatsApp Canlı Destek" 
                       target="_blank" href="https://wa.me/908503054216?text=<%-`Merhaba, kasaptanal.com üzerinden size ulaşıyorum. ${product.name} ile ilgili whatsapp üzerinden yardımcı olabilir misiniz?`%>" class="font-size-sm font-weight-medium  text-success">
-                        <i class="czi-chat"></i> 
-                        WhatsApp</a>
+                      <img src="/static/img/messaging-whatsapp.svg" width="24">
+                        Destek</a>
 
                    
                    </div>
@@ -479,7 +479,7 @@
                    
                       <div class="bg-secondary border-bottom p-3">
                         <a class="media align-items-center" href="<%=`/${product.slug}/${b.slug}`%>"><img
-                            class="rounded-circle header-img"  src="/<%=b.slug%>/fotograf/thumbnail" alt="<%=b.name%>">
+                            class="rounded-circle header-img"  src="<%= `${__req.helper.imgUrl('butcher-google-photos', b.slug)}` %>" alt="<%=b.name%>">
                           <div class="media-body pl-2"><span class="font-size-ms text-muted"></span>
                             <h5 class="h6 mb-0 mr-2"><%= b.name %></h5>
                           </div>
@@ -504,7 +504,7 @@
                     <li class="list-group-item p-0">
                       <div class="bg-secondary p-3">
                         <a class="media align-items-center" href="<%=`/${product.slug}/${b.slug}`%>"><img
-                            class="rounded-circle header-img"  src="/<%=b.slug%>/fotograf/thumbnail" alt="<%=b.name%>">
+                            class="rounded-circle header-img"  src="<%= `${__req.helper.imgUrl('butcher-google-photos', b.slug)}` %>" alt="<%=b.name%>">
                           <div class="media-body pl-2"><span class="font-size-ms text-muted"></span>
                             <h5 class="h6 mb-0 mr-2"><%= b.name %></h5>
                           </div>

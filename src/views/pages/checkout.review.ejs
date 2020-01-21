@@ -65,7 +65,7 @@
 
               <div class="bg-secondary p-3  mb-4"><a class="media align-items-center"
                   href="/<%=shopcard.butchers[bi].slug%>"><img class="rounded-circle header-img"
-                    src="/<%=shopcard.butchers[bi].slug%>/fotograf/thumbnail" alt="<%=shopcard.butchers[bi].name%>">
+                    src="<%= `${__req.helper.imgUrl('butcher-google-photos', shopcard.butchers[bi].slug)}` %>" alt="<%=shopcard.butchers[bi].name%>">
                   <div class="media-body pl-2"><span class="font-size-ms text-muted">Teslimat ve Ödeme</span>
                     <h3 class="h4 mb-0 mr-2"><%= shopcard.butchers[bi].name %></h3>
                   </div>
@@ -82,6 +82,25 @@
                 </li>
                 <li><span class="text-muted">Ödeme:&nbsp;</span><%= shopcard.payment[bi].desc%> </li>
               </ul>
+              <div class="px-4">
+                <h6 class="h6">
+                  Mesafeli Satış Sözleşmesi
+                </h6>
+                <div class="form-group">
+                  <textarea style="font-family: 'Courier New', Courier, monospace;" class="font-size-xs form-control" rows="5" readonly><%= include('./_partial/user-butcher-agreement.ejs', {
+                      user: shopcard,
+                      butcher: controller.Butchers.find(b=>b.id == bi)
+                    }) %>
+                  </textarea>
+                  <div class="custom-control custom-checkbox mb-2">
+                    <input class="custom-control-input" type="checkbox" checked >
+                    <label class="custom-control-label" for="si-remember">Mesafeli Satış Sözleşmesini okudum ve kabul ediyorum.</label>
+                </div>
+    
+                </div>
+              </div>
+
+
             </div>
             <%}%>
           </div>

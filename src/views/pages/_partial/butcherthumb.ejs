@@ -1,4 +1,5 @@
-<div class="bg-secondary rounded p-3"><a class="media align-items-center" href="/<%=butcher.slug%>"><img class="rounded-circle header-img "  src="/<%=butcher.slug%>/fotograf/thumbnail" alt="<%=butcher.name%>">
+<div class="bg-secondary rounded p-3"><a class="media align-items-center" href="/<%=butcher.slug%>"><img class="rounded-circle header-img "  
+  src="<%= `${__req.helper.imgUrl('butcher-google-photos', butcher.slug)}` %>" alt="<%=butcher.name%>">
     <div class="media-body pl-2"><span class="font-size-ms text-muted"><%=typeof(text) != 'undefined' ? text:''%>></span>
       <h6 class="font-size-sm mb-0"><%=butcher.name%></h6>
     </div></a></div>

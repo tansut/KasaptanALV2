@@ -13,6 +13,7 @@ import config from '../config';
 import * as path from 'path';
 import * as fs from 'fs';
 import { readFileSync } from 'fs';
+import UserRoute from './api/user';
 let ellipsis = require('text-ellipsis');
 var MarkdownIt = require('markdown-it')
 
@@ -20,16 +21,30 @@ export default class Route extends ViewRouter {
 
 
 
-    renderPage() {
-        this.res.render(`pages/resetpassword.ejs`, this.viewData({}))
+    renderPage(msg: any = undefined) {        
+        this.res.render(`pages/resetpassword.ejs`, this.viewData({
+            _usrmsg: msg
+        }))
     }
 
 
 
     @Auth.Anonymous()
     async resetRoute() {
-        this.renderPage();
-
+        let email = this.req.body["recover-email"];
+        let phone = this.req.body["recover-tel"];
+        if (email && phone) {
+            let userRoute = new UserRoute(this.constructorParams);
+            let user = await userRoute.retrieveByEMailOrPhone(phone);
+            if (user) {
+                if (user.email == email) {
+                    await userRoute.sendNewPassword(user);
+                    this.renderPage({text: "Yeni şifreniz telefonunuza gönderildi.", type: "info"});    
+                } else {
+                    this.renderPage({text: "Geçersiz e-posta adresi/telefon numarası.",type: "danger"}); 
+                }
+            } else this.renderPage({text: "Geçersiz e-posta adresi.",type: "danger"});
+        } else this.renderPage({text: "Geçersiz e-posta adresi veya telefon numarası.", type: "danger"});
     }
 
 
