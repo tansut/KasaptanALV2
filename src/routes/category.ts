@@ -131,6 +131,7 @@ export default class Route extends ViewRouter {
         this.renderPage('pages/category-food.ejs')
     }
 
+
     @Auth.Anonymous()
     async viewAsFoodAndTarifRoute(back: boolean = false) {
         if (!this.req.params.category) {
@@ -215,9 +216,9 @@ export default class Route extends ViewRouter {
         router.get("/:category/et-yemekleri-ve-tarifleri", Route.BindRequest(Route.prototype.viewAsFoodAndTarifRoute));
         router.get("/:category/alt/:subcategory", Route.BindRequest(Route.prototype.viewRoute));
         router.get("/et-yemek-tarifleri", Route.BindRequest(Route.prototype.viewTarifsRoute));
-        router.get("/et-yemek-tarifleri/:category", Route.BindRequest(Route.prototype.viewTarifsRoute));
+        router.get("/et-yemek-tarifleri/kategori/:category", Route.BindRequest(Route.prototype.viewTarifsRoute));
         router.get("/et-yemekleri", Route.BindRequest(Route.prototype.viewFoodsRoute));
-        router.get("/et-yemekleri/:category", Route.BindRequest(Route.prototype.viewFoodsRoute));
+        router.get("/et-yemekleri/kategori/:category", Route.BindRequest(Route.prototype.viewFoodsRoute));
         config.nodeenv == 'development' ? router.get("/:category/resimler/:filename", Route.BindRequest(Route.prototype.categoryPhotoRoute)) : null;
 
     }

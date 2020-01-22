@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="tr-TR" prefix="og: http://ogp.me/ns#">
+<html lang="en">
 
 <head>
     <% include ./_partial/head %>
@@ -80,11 +80,16 @@
                                                   </a>
         
                                             <% } %>
-
+                                                <span><%= images[i].id %></span>
                                             <div class="form-group">
                                                 <button class="btn btn-danger" onclick="this.form.submit()" name="delimage"
                                                     value="<%= images[i].id %>">sil</button>
                                             </div>
+                                            <div class="form-group">
+                                                <button class="btn btn-success" onclick="this.form.submit()" name="resizeimage"
+                                                    value="<%= images[i].id %>">boyut ayar</button>
+                                            </div>
+                                            
                                             <div class="form-group">
                                                 <button class="btn btn-success" onclick="this.form.submit()" name="pritimage"
                                                         value="<%= images[i].id %>">Öne Al</button>
@@ -96,6 +101,10 @@
                                         <div class="form-group">
                                             <label>Başlık</label>
                                             <input value="<%= images[i].title %>" class="form-control" type="text" name="imgtitle<%= images[i].id %>"><br>
+
+                                            <label>Slug</label>
+                                            <input value="<%= images[i].slug %>" class="form-control" type="text" name="imgslug<%= images[i].id %>"><br>
+
 
                                             <label>Sıra</label>
                                             <input value="<%= images[i].displayOrder %>" class="form-control" type="text" name="imgdisplayorder<%= images[i].id %>"><br>

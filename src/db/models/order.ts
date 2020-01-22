@@ -244,7 +244,8 @@ class OrderItem extends BaseModel<Order> {
     pounit: string;
 
     @Column({
-        allowNull: false
+        allowNull: false,
+        type: DataType.TEXT
     })
     pounitdesc: string;
 

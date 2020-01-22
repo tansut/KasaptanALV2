@@ -34,6 +34,12 @@ import config from '../../config';
         name: "type_ref6_idx",
         fields: ["type", "ref6"]
     },
+
+    {
+        name: "slug_idx",
+        fields: ["slug"],
+        unique: true
+    },
     {
         name: "type_content_idx",
         fields: ["type", "contentUrl"]
@@ -59,6 +65,12 @@ class Resource extends BaseModel<Resource> {
         allowNull: false,
     })
     type: string;
+
+    @Column({
+        allowNull: true
+    })
+    slug: string;
+
 
     @Column({
         allowNull: false,

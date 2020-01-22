@@ -55,7 +55,7 @@
           <%reyonlar.forEach((category,i) => { %>
           <li class="nav-item">
             <a class="nav-link nav-link-shrink <%= controller.category ? (controller.category.id == category.id ? 'active':''): '' %>" id="<%= category.slug %>-tab" 
-              href="/et-yemek-tarifleri/<%=`${category.slug}`%>" role="tab" aria-controls="<%= category.name %>"
+              href="/et-yemek-tarifleri/kategori/<%=`${category.slug}`%>" role="tab" aria-controls="<%= category.name %>"
               ><%= category.name %></a>
           </li>
           <% }) %>

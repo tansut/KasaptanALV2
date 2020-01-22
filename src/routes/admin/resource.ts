@@ -72,6 +72,15 @@ export default class Route extends ViewRouter {
         return res;
     }
 
+    async normalizeResourcePhoto(id) {
+        let resource = await Resource.findByPk(id);
+        let filedest = Helper.ResourcePaths[this.req.params.type];
+
+        await Helper.normalizePhoto(this.publicDir + `${filedest}/${resource.contentUrl}`, this.publicDir + `${filedest}/${resource.thumbnailUrl}`);
+
+
+    }
+
     async addPhoto(photofile) {
         let resources = await this.getResources();
 
@@ -98,7 +107,7 @@ export default class Route extends ViewRouter {
                     thumbnailUrl: thumbnailName,
                     folder: filedest
                 }).then((res) => {
-                    Helper.normalizePhoto(this.publicDir + `${filedest}/${fileName}`, this.publicDir + `${filedest}/${thumbnailName}`).then(() => resolve(res)).catch((e) => reject(e))
+                    return Helper.normalizePhoto(this.publicDir + `${filedest}/${fileName}`, this.publicDir + `${filedest}/${thumbnailName}`).then(() => resolve(res)).catch((e) => reject(e))
                 }).catch(err => reject(err))
             });
         })
@@ -167,10 +176,15 @@ export default class Route extends ViewRouter {
             let resource = resources.find((res) => res.id == id);
             resource.changed('type', true)
             await resource.save();
+        } else if (this.req.body.resizeimage) {
+            let id = parseInt(this.req.body.resizeimage);
+            await this.normalizeResourcePhoto(id)
+            
         } else if (this.req.body.saveimage) {
             let id = parseInt(this.req.body.saveimage);
             let resource = resources.find((res) => res.id == id);
             resource.title = this.req.body['imgtitle' + id];
+            resource.slug = this.req.body['imgslug' + id];
             resource.tag1 = this.req.body['imgtag1' + id];
             resource.displayOrder = this.req.body['imgdisplayorder' + id] ? parseInt(this.req.body['imgdisplayorder' + id]): 0;
 

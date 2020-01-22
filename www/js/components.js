@@ -85,8 +85,15 @@ window.initComponents = function initComponents() {
 
         methods: {
 
+            normalized(val) {
+                if (this.unit == 'kg') {
+                    val = Number(val.toFixed(3))
+                }
+                return val;
+            },
+
             increment() {
-                let newVal = this.value + this.step;
+                let newVal = this.normalized(this.value + this.step);
                 if (newVal <= this.max) {
                     this.value = newVal;
                 }
@@ -94,7 +101,7 @@ window.initComponents = function initComponents() {
             },
 
             decrement() {
-                let newVal = this.value - this.step;
+                let newVal = this.normalized(this.value - this.step);
                 if (newVal >= this.min) {
                     this.value = newVal;
                 }

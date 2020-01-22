@@ -11,4 +11,4 @@ export EMAILUSERNAME=noreply@kasaptanal.com
 export EMAILPASS=Deneme987@.
 export BLUEBIRD_W_FORGOTTEN_RETURN=0
 export STATICDOMAIN=/static
-export PUBLICDIR=/wwwpublic/kasapburada/
+#export PUBLICDIR=/wwwpublic/kasapburada/

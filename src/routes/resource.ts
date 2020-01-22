@@ -12,6 +12,8 @@ import * as fs from "fs"
 import moment = require('moment');
 import { ResourceCacheItem } from '../lib/cache';
 import config from '../config';
+import ProductsApi from './api/product';
+import { Op } from 'sequelize';
 
 
 export default class Route extends ViewRouter {
@@ -100,12 +102,97 @@ export default class Route extends ViewRouter {
     @Auth.Anonymous()
     async viewRoute() {
         if (!this.req.params.id) return this.next();
-        let id = parseInt(this.req.params.id)
+        let id = parseInt(this.req.params.id);
         let resource = await Resource.findByPk(id);
         return this.sendResource(resource, this.req.query.thumbnail ? true : false, null)
     }
 
+
+    @Auth.Anonymous()
+    async fillSlugs() {
+        let resources = await Resource.findAll({
+            where: {
+                type: ['product-videos', 'product-photos'],
+                tag1: {
+                    [Op.or]: [{
+                        [Op.like]: '%yemek%'
+    
+                    }, { [Op.like]: '%tarif%' }]
+                }
+                ,
+                title:
+                {
+                    [Op.ne]: null
+                },
+                slug:
+                {
+                    [Op.eq]: null
+                }
+            }
+        })
+
+        let result = ""
+
+        for(let i = 0; i < resources.length;i++) {
+            if (resources[i].title && !resources[i].slug) {
+                (resources[i].slug = Helper.slugify(resources[i].title));
+                try {
+                    await resources[i].save();
+    
+                } catch(err) {
+                    result += err.message;
+                }
+            }
+        }
+
+        this.res && this.res.send(result)
+    }
+
+    @Auth.Anonymous()
+    async viewTarifFoodRoute() {
+        if (!this.req.params.item) {
+            return this.next();
+        }
+
+
+        let where = {
+            type: ['product-videos', 'product-photos'],
+            tag1: {
+                [Op.or]: [{
+                    [Op.like]: '%yemek%'
+
+                }, { [Op.like]: '%tarif%' }]
+            }
+        }
+
+        if (isNaN(parseInt(this.req.params.item))) where['slug'] = this.req.params.item;
+        else where['id'] = parseInt(this.req.params.item)
+
+        let resources = await new ProductsApi(this.constructorParams).getResources(where, null);
+        if (resources.length == 0) return this.next();
+        let resource = resources[0];
+
+        var products = [resource.product].concat(resource.otherProducts);
+
+        var defaultDesc = resource.tag1 ?
+        (resource.tag1.includes('tarif') ? `${resource.title} nasıl yapılır tarif videosu`:`${resource.title} için hangi etler uygundur?`):
+        "";
+      
+
+        this.res.render('pages/food-tarif-view.ejs', this.viewData({
+            resource: resource,
+            products: products,
+            defaultDesc: defaultDesc,
+            pageTitle: resource.title + (resource.tag1.includes('tarif') ? ' Tarifi': ' Yemeği'),
+            pageDescription: defaultDesc
+        }))
+    }
+
+
     static SetRoutes(router: express.Router) {
+        router.get("/resource/fill", Route.BindRequest(Route.prototype.fillSlugs));
         router.get("/resource/:id", Route.BindRequest(Route.prototype.viewRoute));
+        router.get("/et-yemek-tarifleri/:item", Route.BindRequest(Route.prototype.viewTarifFoodRoute));
+        router.get("/et-yemekleri/:item", Route.BindRequest(Route.prototype.viewTarifFoodRoute));
     }
 }

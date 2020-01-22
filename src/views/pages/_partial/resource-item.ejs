@@ -1,3 +1,10 @@
+<%
+
+var mode = resource.tag1.includes('tarif')  ? 'tarif': 'food';
+var targetUrl = (mode == 'tarif' ? '/et-yemek-tarifleri': '/et-yemekleri');
+var resourceUrl = targetUrl + '/' + (resource.slug || resource.id)  + (mode=='tarif' ? '':'')
+
+%>
 <div class="card h-100 shadow-sm pb-0 product-card card-static item-card rounded-0">
 
   <% if (typeof(showAll) != 'undedined') { %>
@@ -14,7 +21,7 @@
     </a>
     <div class="card-body pl-0 text-center">
       <h3 class="product-title font-size-md"><a
-          href="/<%= `${resource.product.slug}?r=${resource.id}`  %>"><%= resource.title  %></a>
+          href="<%= `${resourceUrl}`  %>"><%= resource.title  %></a>
       </h3>
       <!-- <p class="text-muted font-size-sm">(<%=resource.product.name%>)</p> -->
     </div>
@@ -22,7 +29,7 @@
       <a href="<%- include(`./addtonotelink.ejs`, {resource: resource, subUrl: subUrl, auto: false  }) %>"
         class="btn btn-sm btn-block  btn-primary font-size-xs"><i class=" czi-thumb-up mr-1">
         </i>Eti Bizden</a>
-      </small>
+     
     </div>
   <% } else { %>
 
