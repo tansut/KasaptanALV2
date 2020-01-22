@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="tr-TR" prefix="og: http://ogp.me/ns#">
 
 <head>
   <% include ./_partial/head %>
@@ -28,7 +28,7 @@
           <img class="img-fluid " src="<%= `${__req.helper.imgUrl('butcher-google-photos', butcher.slug)}` %>" />
 
           <% } %>
-          
+
         </div>
       </div>
     </div>
@@ -181,7 +181,19 @@
 
               <% controller.dispatchers.forEach((d,i) => { %>
               <li>
-                <span><%=d.address.display%></span>
+                <div>
+                  <span class="d-block font-weight-medium"><%=d.address.display%></span>
+                  <% if (d.fee == 0.00) { %>
+                  <span>Tamamen Ücretsiz Gönderim</span>
+                  <%} else if (d.fee > 0.00 && d.totalForFree == 0.00) { %>
+                  <span><%- include('./_partial/currency.ejs', {value: d.totalForFree}) %> gönderim ücreti</span>
+                  <%} else if (d.fee > 0.00) { %>
+                  <span><%- include('./_partial/currency.ejs', {value: d.totalForFree}) %> ve üzeri ücretsiz gönderim, altı siparişlerde <%- include('./_partial/currency.ejs', {value: d.fee}) %> gönderim ücreti.</span>
+                  <%}%>
+                </div>
+
+               
+                
               </li>
 
               <% }) %>
@@ -278,11 +290,9 @@
   <script>
 
     App.Ready.then(function () {
-      $(' #videomodal').modal().show()
+      $('#videomodal').modal().show()
     }) </script>
-  <script>
 
-  </script>
   <%}%>
   
 
@@ -293,36 +303,7 @@
       $(this).data('bs.modal', null);
     });
 
-    $(function () {
-      var sessionid = "<%= req.session.id %>"
-
-      $(window).on(' kb.userloction.districtselected', function (e) { debugger });
-      $(".open-order-dialog-button").click(function () {
-        var ul = window.kb.userlocation(); var
-          inited = false; //window.Intercom('showNewMessage', "<%= butcher.name %> sipariş verebilir miyim?" ) if
-        (!inited)
-        {
-          inited = true; ul.init({ defaultCity: parseInt("<%= butcher.areaLevel1Id %>"), openDistricts: false }, function
-            () {
-            $('#orderModal').modal(); $("#order-close-modal").click(function () {
-              f = $("#order-form")[0]
-                (f.checkValidity()) {
-                $.ajax({
-                  type: "POST", url: "/api/v1/sitelog/create", data: { //district:
-                    ul.selectedDistrict.name, city: ul.selectedCity.name, email: $("#user-email").val(),
-                    logtype: "anonymous-user-location-email"
-                  }, success: function () {
-                    $('#orderModal').modal("hide");
-                    alert("Teşekkürler")
-                  }
-                })
-              }
-            }); $('#orderModal').on('shown.bs.modal', function () { })
-          });
-        } else
-        $('#orderModal').modal("show")
-      })
-    }); </script>
+  </script>
 </body>
 
 </html>

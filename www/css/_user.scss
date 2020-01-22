@@ -33,6 +33,16 @@
     content: '- Devamını Gizle';
 }
 
+.page-footer-text {
+  h2 {
+    font-size: 1.25rem;
+  }
+
+  h3 {
+    font-size: 1.0625rem;
+  }
+}
+
 .product-card, .touch-support {
   a {
     touch-action: manipulation;

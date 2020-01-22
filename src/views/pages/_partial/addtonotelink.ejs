@@ -6,7 +6,7 @@ var alternatives = [];
 
 %><% products.forEach(p=> { %>
 
-<% var baseUrl = `/${p.slug}/${subUrl}/${__helper.slugify(resource.title || 'tarif')}?r=${resource.id}&autoNote=1&hideproduct=1`  %>
+<% var baseUrl = `/${p.slug}?r=${resource.id}&autoNote=1&hideproduct=1`  %>
 <% if (typeof(disableSlider) != 'undefined') baseUrl += '&disableSlider=1' %>
 
 <% alternatives.push({ 
@@ -28,7 +28,7 @@ var alternatives = [];
 
 javascript:window.App.FoodAlternativesApp.show(<%=JSON.stringify(alternatives)%>, <%='"' + resource.title + '"'%>)
 <%} else {%>
-<% var baseUrl = `/${resource.product.slug}/${subUrl}/${__helper.slugify(resource.title || 'tarif')}?r=${resource.id}&autoNote=1`  %>
+<% var baseUrl = `/${resource.product.slug}?r=${resource.id}&autoNote=1`  %>
 <% if (typeof(disableSlider) != 'undefined') baseUrl += '&disableSlider=1' %>
 <%=baseUrl %>
 <%}%>

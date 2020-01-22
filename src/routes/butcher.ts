@@ -90,6 +90,7 @@ export default class Route extends ViewRouter {
             where: {
                 butcherId: this.butcher.id
             },
+            order: [["toarealevel", "DESC"], ["fee", "ASC"]],
             include: [
                 {
                     all: true
