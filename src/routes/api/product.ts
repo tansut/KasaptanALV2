@@ -203,20 +203,20 @@ export default class Route extends ApiRouter {
 
 
         let kgPrice = butcherProduct ? butcherProduct.kgPrice : product.kgPrice;
-        let defaultUnitCol = `unit${product.defaultUnit}`
-        let defaultUnitPrice = 0.0;
-        let defaultUnitText = "";
-        let kgRatio = 0.00;
-        let defaultUnit = "";
-        if (product.defaultUnit == 0) {
-            kgRatio = 1.00;
-            defaultUnit = 'kg'
-        } else {
-            kgRatio = product[`${defaultUnitCol}kgRatio`]
-            defaultUnit = product[`${defaultUnitCol}`]
-        }
-        defaultUnitPrice = Helper.asCurrency(Helper.asCurrency(kgRatio * kgPrice) * product.defaultAmount);
-        defaultUnitText = defaultUnit == 'kg' ? (product.defaultAmount < 1 ? `${product.defaultAmount * 1000}gr` : "kg") : product[`${defaultUnitCol}`]
+        // let defaultUnitCol = `unit${product.defaultUnit}`
+        // let defaultUnitPrice = 0.0;
+        // let defaultUnitText = "";
+        //let kgRatio = 0.00;
+        //let defaultUnit = "";
+        //if (product.defaultUnit == 0) {
+        //    kgRatio = 1.00;
+        //    defaultUnit = 'kg'
+        //} else {
+            //kgRatio = product[`${defaultUnitCol}kgRatio`]
+            //defaultUnit = product[`${defaultUnitCol}`]
+        //}
+        // defaultUnitPrice = Helper.asCurrency(Helper.asCurrency(kgRatio * kgPrice) * product.defaultAmount);
+        // defaultUnitText = defaultUnit == 'kg' ? (product.defaultAmount < 1 ? `${product.defaultAmount * 1000}gr` : "kg") : product[`${defaultUnitCol}`]
 
         let view: ProductView;
         view = {
@@ -231,11 +231,11 @@ export default class Route extends ApiRouter {
             kgPrice: kgPrice,
             shortDesc: product.shortdesc,
             notePlaceholder: product.notePlaceholder,
-            viewUnitPrice: defaultUnitPrice,
-            viewUnit: defaultUnitText,
-            viewUnitDesc: product[`${defaultUnitCol}desc`] || (defaultUnit == 'kg' ? 'kg' : ''),
-            defaultUnit: product.defaultUnit,
-            viewUnitAmount: product.defaultAmount,
+            // viewUnitPrice: defaultUnitPrice,
+            // viewUnit: defaultUnitText,
+            // viewUnitDesc: product[`${defaultUnitCol}desc`] || (defaultUnit == 'kg' ? 'kg' : ''),
+            // defaultUnit: product.defaultUnit,
+            // viewUnitAmount: product.defaultAmount,
             purchaseOptions: []
         }
 
@@ -247,7 +247,13 @@ export default class Route extends ApiRouter {
                 notePlaceholder: product[`${col}note`],
                 desc: this.markdown.render(product[`${col}desc`] || ""),
                 kgRatio: product[`${col}kgRatio`],
-                unitPrice: Helper.asCurrency(product[`${col}kgRatio`] * kgPrice),
+                unitPrice: butcherProduct ?
+                     (
+                         Helper.asCurrency(butcherProduct[`${col}price`]) > 0 ?
+                         Helper.asCurrency(butcherProduct[`${col}price`]):
+                         Helper.asCurrency(product[`${col}kgRatio`] * kgPrice)
+                     ):
+                     0.00,
                 unit: p,
                 unitTitle: product[`${col}title`],
                 displayOrder: product[`${col}Order`],

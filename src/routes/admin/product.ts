@@ -163,10 +163,10 @@ export default class Route extends ViewRouter {
             this.product.unit3WeigthNote = this.req.body.unit3WeigthNote;
         
 
-            this.product.defaultUnit = parseInt(this.req.body.defaultUnit);
-            this.product.defaultAmount = parseFloat(this.req.body.defaultAmount);
+            // this.product.defaultUnit = parseInt(this.req.body.defaultUnit);
+            // this.product.defaultAmount = parseFloat(this.req.body.defaultAmount);
 
-            this.product.perPersonKg = parseFloat(this.req.body.perPersonKg);
+            //this.product.perPersonKg = parseFloat(this.req.body.perPersonKg);
 
 
             await this.product.save();

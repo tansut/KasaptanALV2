@@ -33,12 +33,12 @@ export interface ProductView {
     slug: string;
     kgPrice: number;
     name: string;
-    viewUnitPrice: number;
-    viewUnit: string;
-    viewUnitDesc: string;
-    viewUnitAmount: number;
+    // viewUnitPrice: number;
+    // viewUnit: string;
+    // viewUnitDesc: string;
+    // viewUnitAmount: number;
     shortDesc: string;
     notePlaceholder: string;
     purchaseOptions: PurchaseOption[];
-    defaultUnit: number
+    //defaultUnit: number
 }

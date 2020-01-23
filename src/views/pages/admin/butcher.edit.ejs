@@ -192,79 +192,93 @@
                 <div id="menu3" class="container-fluid tab-pane fade"><br>
                     <div class="">
                         <% var products = controller.products %>
-                        <% for(var i=0; i<products.length; i++) {%>
-                        <form name="saveproductform" method="POST" class="bg-light mb-2 p-2">
-                            <% var prodinfo = controller.getButcherProductInfo(products[i].id) %>
-                            <input type="hidden" name="productid" value="<%= products[i].id %>">
-
-                            <div class="form-group">
-
-                                <div class="form-check">
-                                    <input class="form-check-input" type="checkbox" name="productenabled"
-                                        <%= prodinfo.enabled ? "checked" : "" %> aria-label="Checkbox">
-                                    <label class="form-check-label font-weight-bold" for="defaultCheck1">
-                                        <%= products[i].name %>
-                                    </label>
-                                </div>
-
-
-
-
-                            </div>
-
-                            <div class="row">
-
-                                <% var productunits = controller.getProductUnits(products[i]) %>
-                                <% for(var k=0; k<productunits.length; k++) {%>
-
-                                <div class="col">
-
-
-                                    <div class="form-group">
-                                        <label><%= productunits[k] %></label>
-                                        <input type="text" class="form-control" name="<%=`unit${k+1}price` %>"
-                                            id="<%=`unit${k+1}price` %>" value="<%= prodinfo[`unit${k+1}price`] %>">
-                                    </div>
-                                </div>
-                                <% } %>
-                                <div class="col">
-                                    <div class="form-group">
-                                        <label>Ürün Sırası</label>
-                                        <input type="text" class="form-control" value="<%= prodinfo.displayOrder %>"
-                                            name="productdisplayorder">
-
-
-                                    </div>
-                                </div>
-                                <div class="col">
+                        <div class="row">
+                            <% for(var i=0; i<products.length; i++) {%>
+                            
+                                <div class="col-sm-6">
+                                    <% var prodinfo = controller.getButcherProductInfo(products[i].id) %>
+                                    <form name="saveproductform" method="POST" class="border <%=prodinfo.enabled ? 'bg-light' : 'bg-white'%> mb-2 p-2">
+                                        <% var prodinfo = controller.getButcherProductInfo(products[i].id) %>
+                                        <input type="hidden" name="productid" value="<%= products[i].id %>">
+            
                                         <div class="form-group">
-                                            <label>KG Fiyatı</label>
-                                            <input type="text" class="form-control" value="<%= prodinfo.kgPrice %>"
-                                                name="productkgPrice">
-    
-    
+            
+                                            <div class="form-check">
+                                                <input class="form-check-input" type="checkbox" name="productenabled"
+                                                    <%= prodinfo.enabled ? "checked" : "" %> aria-label="Checkbox">
+                                                <label class="form-check-label font-weight-bold" for="defaultCheck1">
+                                                    <%= products[i].name %>
+                                                </label>
+                                            </div>
+            
+            
+            
+            
                                         </div>
-                                    </div>                                
-                            </div>
-                            <div class="form-group">
+            
+                                        <div class="row">
+            
+                                            <div class="col">
+                                                <div class="form-group">
+                                                    <label>KG Fiyatı</label>
+                                                    <input type="text" class="form-control" value="<%= prodinfo.kgPrice %>"
+                                                        name="productkgPrice">
+            
+            
+                                                </div>
+                                            </div>   
+            
+            
+                                            <% var productunits = controller.getProductUnits(products[i]) %>
+                                            <% for(var k=0; k<productunits.length; k++) {%>
+            
+                                            <div class="col">
+            
+            
+                                                <div class="form-group">
+                                                    <label><%= productunits[k] %> fiyatı</label>
+                                                    <input type="text" class="form-control" name="<%=`unit${k+1}price` %>"
+                                                        id="<%=`unit${k+1}price` %>" value="<%= prodinfo[`unit${k+1}price`] %>">
+                                                </div>
+                                            </div>
+                                            <% } %>
+                                            <div class="col">
+                                                <div class="form-group">
+                                                    <label>Ürün Sırası</label>
+                                                    <input type="text" class="form-control" value="<%= prodinfo.displayOrder %>"
+                                                        name="productdisplayorder">
+            
+            
+                                                </div>
+                                            </div>
+                                                                      
+                                        </div>
+                                        <div class="form-group">
+            
+                                            <div class="form-check">
+                                                <input id="productvitrin" class="form-check-input" type="checkbox"
+                                                    name="productvitrin" <%= prodinfo.vitrin ? "checked" : "" %>
+                                                    aria-label="Checkbox">
+                                                <label class="form-check-label font-weight-bold" for="defaultCheck1">
+                                                    Vitrin
+                                                </label>
+                                            </div>
+            
+            
+            
+            
+                                        </div>
+                                        <button type="submit" name="updateproduct" value="true"
+                                            class="btn btn-primary">Kaydet</button>
+                                    </form>
 
-                                <div class="form-check">
-                                    <input id="productvitrin" class="form-check-input" type="checkbox"
-                                        name="productvitrin" <%= prodinfo.vitrin ? "checked" : "" %>
-                                        aria-label="Checkbox">
-                                    <label class="form-check-label font-weight-bold" for="defaultCheck1">
-                                        Vitrin
-                                    </label>
                                 </div>
+                           
+                      
+                                <% } %>
 
-
-
-
-                            </div>
-                            <button type="submit" name="updateproduct" value="true"
-                                class="btn btn-primary">Kaydet</button>
-                        </form>
-                        <% } %>
+                        </div>
+             
                     </div>
                 </div>
             </div>

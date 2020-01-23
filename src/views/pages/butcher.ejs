@@ -147,18 +147,11 @@
             </p>
 
             <%  } %>
-            <p>
-              <%= butcher.areaLevel2.name %> bölgesinde yerleşik <%= butcher.name %> sipariş için lütfen <a
-                class="open-order-dialog-button" href="#">
-                tıklayın
-              </a>
-
-            </p>
 
             <hr class="my-4">
             <h6>İletişim</h6>
             <p><%= butcher.address %>, <%= butcher.areaLevel2.name %>/<%= butcher.areaLevel1.name %></p>
-            <ul class="list-unstyled font-size-sm">
+            <!-- <ul class="list-unstyled font-size-sm">
               <% if(butcher.email){ %>
 
               <li><a class="nav-link-style d-flex align-items-center font-size-xs" href="mailto:<%= butcher.email %>"><i
@@ -174,7 +167,7 @@
               <% } %>
 
 
-            </ul>
+            </ul> -->
             <% if (controller.dispatchers.length) {%>
             <h6>Hizmet Bölgeleri</h6>
             <ul class="list-unstyled font-size-sm">

@@ -54,15 +54,17 @@ export default class Route extends ViewRouter {
             include: [{
                 all: true
             }
-            ], where: {}
+            ], 
+            order: ["Tag1", "Name"],
+            where: {}
         });
     }
 
     getProductUnits(product: Product) {
         let result = [];
-        (product.unit1 && product.unit1 != "") ? result.push(product.unit1) : null;
-        (product.unit2 && product.unit2 != "") ? result.push(product.unit2) : null;
-        (product.unit3 && product.unit3 != "") ? result.push(product.unit3) : null;
+        (product.unit1 && product.unit1 != "" && product.unit1 != 'kg') ? result.push(product.unit1) : null;
+        (product.unit2 && product.unit2 != "" && product.unit2 != 'kg') ? result.push(product.unit2) : null;
+        (product.unit3 && product.unit3 != "" && product.unit3 != 'kg') ? result.push(product.unit3) : null;
         return result;
     }
 

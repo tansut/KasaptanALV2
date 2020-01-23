@@ -220,18 +220,18 @@ class Product extends BaseModel<Product> {
     })
     unit5WeigthNote: string;    
 
-    @Column({
-        allowNull: false,
-        defaultValue: 1
-    })
-    defaultUnit: number;  
+    // @Column({
+    //     allowNull: false,
+    //     defaultValue: 1
+    // })
+    // defaultUnit: number;  
     
-    @Column({
-        allowNull: false,
-        defaultValue: 1,
-        type: DataType.DECIMAL(8, 3)
-    })
-    defaultAmount: number;
+    // @Column({
+    //     allowNull: false,
+    //     defaultValue: 1,
+    //     type: DataType.DECIMAL(8, 3)
+    // })
+    // defaultAmount: number;
 
 
 
@@ -390,13 +390,6 @@ class Product extends BaseModel<Product> {
         type: DataType.DECIMAL(8, 3)
     })
     unit3kgRatio: number;    
-
-    @Column({
-        allowNull: false,
-        defaultValue: 0.25,
-        type: DataType.DECIMAL(8, 3)
-    })
-    perPersonKg: number; 
 
     @Column({
         allowNull: false,
