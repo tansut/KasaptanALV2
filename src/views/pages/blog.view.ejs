@@ -54,7 +54,7 @@
           </div>
         </div>
       </div>
-      <div class="col-sm-6 pt-2">
+      <div class="col-sm-6 pt-2 user-content">
         <%- include(`./content.${controller.content.slug}.ejs`) %>
       </div>
 
@@ -72,6 +72,13 @@
   
   
       </div>
+
+      <div class="container mb-3">
+        <%- include('./_partial/category-slider', { viewCats: ['resource'], title: 'Yemekler', allUrl: '/et-yemekleri' }); %>
+
+    </div>
+
+
       </div>
 
 

@@ -183,9 +183,9 @@ export default class Route extends ViewRouter {
         } else if (this.req.body.saveimage) {
             let id = parseInt(this.req.body.saveimage);
             let resource = resources.find((res) => res.id == id);
-            resource.title = this.req.body['imgtitle' + id];
-            resource.slug = this.req.body['imgslug' + id];
-            resource.tag1 = this.req.body['imgtag1' + id];
+            resource.title = this.req.body['imgtitle' + id] || null;
+            resource.slug = this.req.body['imgslug' + id] || null;
+            resource.tag1 = this.req.body['imgtag1' + id] || null;
             resource.displayOrder = this.req.body['imgdisplayorder' + id] ? parseInt(this.req.body['imgdisplayorder' + id]): 0;
 
             

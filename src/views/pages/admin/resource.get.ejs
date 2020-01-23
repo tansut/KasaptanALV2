@@ -99,54 +99,147 @@
 
                                     <div class="col-md-10 mt-4">
                                         <div class="form-group">
-                                            <label>Başlık</label>
-                                            <input value="<%= images[i].title %>" class="form-control" type="text" name="imgtitle<%= images[i].id %>"><br>
+                                            <div class="row">
 
-                                            <label>Slug</label>
-                                            <input value="<%= images[i].slug %>" class="form-control" type="text" name="imgslug<%= images[i].id %>"><br>
+                                                <div class="col-sm-3">
+                                                    <label>Başlık</label>
+                                                    <input value="<%= images[i].title %>" class="form-control" type="text" name="imgtitle<%= images[i].id %>"><br>
+        
+                                          
+        
+                                              
+                                                </div>
 
+                                                <div class="col-sm-3">
+                                                    <label>Slug</label>
+                                                    <input value="<%= images[i].slug %>" class="form-control" type="text" name="imgslug<%= images[i].id %>"><br>
+        
+                                                </div>
+                                                
+                                                <div class="col-sm-3">
+                                                    <label>Sıra</label>
+                                                    <input value="<%= images[i].displayOrder %>" class="form-control" type="text" name="imgdisplayorder<%= images[i].id %>"><br>
+        
+                                                </div>
+                                            </div>
 
-                                            <label>Sıra</label>
-                                            <input value="<%= images[i].displayOrder %>" class="form-control" type="text" name="imgdisplayorder<%= images[i].id %>"><br>
+                                            <div class="row">
 
-                                            <label>Tag1</label>
-                                            <input value="<%= images[i].tag1 %>" class="form-control" type="text" name="imgtag1<%= images[i].id %>"><br>
-                                            <label>Tag2</label>
-                                            <input value="<%= images[i].tag2 %>" class="form-control" type="text" name="imgtag2<%= images[i].id %>"><br>
+                                                <div class="col-sm-3">
+                                                    <label>Tag1</label>
+                                                    <input value="<%= images[i].tag1 %>" class="form-control" type="text" name="imgtag1<%= images[i].id %>"><br>
+                                             
+                                                </div>
+                                            
+                                                         <div class="col-sm-3">
+                                                            <label>Tag2</label>
+                                                            <input value="<%= images[i].tag2 %>" class="form-control" type="text" name="imgtag2<%= images[i].id %>"><br>
+                
+                                                </div>
 
-                                            <label>Tag3</label>
-                                            <input value="<%= images[i].tag3 %>" class="form-control" type="text" name="imgtag3<%= images[i].id %>"><br>
+                                                <div class="col-sm-3">
+                                                    <label>Tag3</label>
+                                                    <input value="<%= images[i].tag3 %>" class="form-control" type="text" name="imgtag3<%= images[i].id %>"><br>
+        
+                                                </div>
 
-                                            <label>açıklama</label>
-                                            <input value="<%= images[i].description %>"  class="form-control" type="text" name="imgdesc<%= images[i].id %>"><br>
+                                            </div>
+                           
+                                           
 
+                                            <div class="row">
+
+                                                <div class="col-sm-3">
+                                                    <label>açıklama</label>
+                                                    <input value="<%= images[i].description %>"  class="form-control" type="text" name="imgdesc<%= images[i].id %>"><br>
+        
+                                                </div>
+
+                                                <div class="col-sm-3">
+                                                    
                                             <label>Badge</label>
                                             <input value="<%= images[i].badge %>" class="form-control" type="text" name="imgbadge<%= images[i].id %>"><br>
                                             
-                                            <label>Ref2</label>
-                                            <input value="<%= images[i].ref2 %>" class="form-control" type="text" name="imgref2<%= images[i].id %>"><br>
+                                                </div>
 
+
+                                                <div class="col-sm-3">
+                                                    
+                                                </div>
+                                            </div>
+
+                                                <div class="row">
+
+                                                    <div class="col-sm-2">
+    
+                                                        <label>Ref2</label>
+                                                        <input value="<%= images[i].ref2 %>" class="form-control" type="text" name="imgref2<%= images[i].id %>"><br>
+            
+                                                    </div>
+    
+                                                    <div class="col-sm-2">
+                                                        
                                             <label>Ref3</label>
                                             <input value="<%= images[i].ref3 %>" class="form-control" type="text" name="imgref3<%= images[i].id %>"><br>
 
+                                                    </div>
+    
+    
+                                                    <div class="col-sm-2">
+                                                        
                                             <label>Ref4</label>
                                             <input value="<%= images[i].ref4 %>" class="form-control" type="text" name="imgref4<%= images[i].id %>"><br>
 
+                                                    </div>
 
+                                                    <div class="col-sm-2">
+                                                        
                                             <label>Ref5</label>
                                             <input value="<%= images[i].ref5 %>" class="form-control" type="text" name="imgref5<%= images[i].id %>"><br>
 
-                                            <label>Ref6</label>
-                                            <input value="<%= images[i].ref6 %>" class="form-control" type="text" name="imgref6<%= images[i].id %>"><br>
+                                                    </div>
+
+                                                    <div class="col-sm-2">
+                                                        <label>Ref6</label>
+                                                        <input value="<%= images[i].ref6 %>" class="form-control" type="text" name="imgref6<%= images[i].id %>"><br>
+            
+                                                    </div>
+
+                                                    <div class="col-sm-2">
+                                                        
+                                                    </div>
+                                                    
+                                                </div>
+
+                                                
+                                         
+
+                                        
+                                  
+
+                                            <div class="row">
+
+                                                <div class="col-sm-3">
+                                                    <label>Note</label>
+                                                    <input class="form-control" readonly value="<%= images[i].note %>" type="text" name="imgnote<%= images[i].id %>"><br>
+                                                    
+                                                </div>
+
+                                                <div class="col-sm-3">
+                                                    <label>Thumbnail</label>
+                                                    <input value="<%= images[i].thumbnailUrl %>" class="form-control" type="text" name="imgthumbnail<%= images[i].id %>"><br>
+                        
+                                                </div>
+
+                                                <div class="col-sm-3">
+                                                    
+                                                </div>
+
+                                            </div>
 
 
-
-                                            <label>Note</label>
-                                            <input class="form-control" readonly value="<%= images[i].note %>" type="text" name="imgnote<%= images[i].id %>"><br>
-                                            
-                                            <label>Thumbnail</label>
-                                            <input value="<%= images[i].thumbnailUrl %>" class="form-control" type="text" name="imgthumbnail<%= images[i].id %>"><br>
-                
+                                      
+                                      
                                             <label>JSON</label>
                                             
                                             <textarea rows="10" class="form-control" name="imgsettings<%= images[i].id %>"
