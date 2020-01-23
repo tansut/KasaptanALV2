@@ -378,10 +378,10 @@ class OrderItem extends BaseModel<Order> {
         c.status = OrderItemStatus.supplying;
         c.productName = i.product.name;
         c.kgPrice = i.product.kgPrice;
-        c.viewUnit = i.product.viewUnit;
-        c.viewUnitAmount = i.product.viewUnitAmount;
-        c.viewUnitDesc = i.product.viewUnitDesc;
-        c.viewUnitPrice = i.product.viewUnitPrice;
+        // c.viewUnit = i.product.viewUnit;
+        // c.viewUnitAmount = i.product.viewUnitAmount;
+        // c.viewUnitDesc = i.product.viewUnitDesc;
+        // c.viewUnitPrice = i.product.viewUnitPrice;
         c.butcherid = i.product.butcher.id;
         c.shipmentHowTo = sc.shipment[c.butcherid].howTo;
         c.shipmentHowToText = sc.shipment[c.butcherid].howToDesc;
