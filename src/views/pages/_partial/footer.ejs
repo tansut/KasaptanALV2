@@ -17,9 +17,9 @@
         <div class="row pb-2">
             <div class="col-md-4 col-sm-6">
                 <div class="widget widget-links widget-light pb-2 mb-4">
-                    <h3 class="widget-title text-light">Reyonlar</h3>
+                    <h3 class="widget-title text-light">LezzEtler</h3>
                     <ul class="widget-list">
-                        <% var viewCats = ['reyon', 'amac'] %>
+                        <% var viewCats = ['reyon', 'list'] %>
                         <% viewCats.forEach(cat => { %>
                         <% var reyonlar = __categories.filter(p=>p.type.includes(cat)) %>
                         <% for(var c=0; c< reyonlar.length; c++) {%>
@@ -35,9 +35,9 @@
                     </ul>
                 </div>                
                 <div class="widget widget-links widget-light pb-2 mb-4">
-                    <h3 class="widget-title text-light">Listeler</h3>
+                    <h3 class="widget-title text-light">Yemekler</h3>
                     <ul class="widget-list">
-                        <% var viewCats = ['list', 'amac'] %>
+                        <% var viewCats = ['resource'] %>
                         <% viewCats.forEach(cat => { %>
                         <% var reyonlar = __categories.filter(p=>p.type == cat) %>
                         <% for(var c=0; c< reyonlar.length; c++) {%>
@@ -46,7 +46,7 @@
                         <%}%>
                         <% }) %>
                         <li class="widget-list-item">
-                            <a class="widget-list-link" href="<%= `/lezzetler`%>"><i
+                            <a class="widget-list-link" href="<%= `/et-yemekleri`%>"><i
                                     class="czi-arrow-right-circle mr-2"></i>Tümü</a>
                         </li>
 

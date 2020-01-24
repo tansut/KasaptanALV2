@@ -3,6 +3,9 @@
 
 <head>
   <% include ./_partial/head %>
+  <% if (Object.keys(__req.query).length != 0 ) {%>
+    <meta name="robots" content="noindex,follow">
+    <%}%>
 </head>
 
 <body>
@@ -17,16 +20,14 @@
         <nav aria-label="breadcrumb">
           <ol class="breadcrumb breadcrumb-light flex-lg-nowrap justify-content-center justify-content-lg-star">
             <li class="breadcrumb-item"><a class="text-nowrap" href="/"><i class="czi-home"></i></a></li>
-            <li class="breadcrumb-item text-nowrap"><a href="/et-yemekleri">Siz Yemeği Seçin</a>
+            <li class="breadcrumb-item text-nowrap active" aria-current="page">Yemekler
             </li>
-            <li class="breadcrumb-item text-nowrap active" aria-current="page">
-              <%=controller.category? controller.category.name: 'Tümü'%></li>
           </ol>
         </nav>
       </div>
       <div class="order-lg-1 pr-lg-4 text-center text-lg-left">
         <h1 class="h3 text-light">
-          <%=controller.category ? 'Siz Yemeği Seçin':'Siz Yemeği Seçin'%> </h1>
+          <%='Yemekler'%> </h1>
         <p class="lead text-light">
 
           <span class="badge badge-light mr-1 "><i class=" czi-thumb-up mr-1">
@@ -44,10 +45,10 @@
 
 
   <div class="">
-    <div class="bg-light container mb-3 box-shadow-lg ">
+    <div class="bg-light container px-0 mb-3 box-shadow-lg ">
       <div class="mt-3">
 
-        <ul class="nav nav-tabs  nav-justified mb-3 " id="pills-tab" role="tablist">
+        <ul class="nav nav-tabs  nav-justified mb-0 " id="pills-tab" role="tablist">
           <li class="nav-item">
             <a class="nav-link nav-link-shrink nav-link-shrink <%= controller.foodCategory ? '': 'active' %>" id=all-tab" 
               href="/et-yemekleri" role="tab" aria-controls="Tümü"
@@ -56,8 +57,8 @@
   
           <%reyonlar.forEach((category,i) => { %>
           <li class="nav-item">
-            <a class="nav-link nav-link-shrink <%= controller.category ? (controller.foodCategory == category.slug ? 'active':''): '' %>" id="<%= category.slug %>-tab" 
-              href="<%=`/et-yemekleri/${category.slug}`%>" role="tab" aria-controls="<%= category.name %>"
+            <a class="nav-link nav-link-shrink <%= controller.foodCategory == category.slug ? 'active':'' %>" id="<%= category.slug %>-tab" 
+              href="<%=`/et-yemekleri?tab=${category.slug}`%>" role="tab" aria-controls="<%= category.name %>"
               ><%= category.name %></a>
           </li>
           <% }) %>
@@ -69,9 +70,9 @@
           <% foodCats.forEach((cat, i) => { %>
           <% var foods = controller.getFoods(cat) %>
           <% if (foods.length) { %>
-          <div class="pt-3 dborder-bottom">
+          <div class="px-3 pt-3 dborder-bottom">
             <%- include('./_partial/foods-slider.ejs', {title: cat.name, desc: cat.shortdesc ? cat.shortdesc: undefined, text: '', iconUrl: `${__req.helper.imgUrl('category-photos', cat.slug)}`,
-            allUrl: '/' + cat.slug, foods: foods}); %>
+            allUrl: '/et-yemekleri/' + cat.slug, foods: foods}); %>
 
           </div>
           <%} %>

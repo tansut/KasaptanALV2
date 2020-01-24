@@ -80,6 +80,12 @@ class ButcherProduct extends BaseModel<ButcherProduct> {
         defaultValue: false
     })
     vitrin: boolean;
+
+    @Column({
+        allowNull: true,
+        type: DataType.TEXT
+    })
+    mddesc: string;   
 }
 
 export default ButcherProduct;

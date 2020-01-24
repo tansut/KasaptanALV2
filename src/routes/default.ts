@@ -19,7 +19,7 @@ let ellipsis = require('text-ellipsis');
 
 export default class Route extends ViewRouter {
 
-    tarifs: Resource[];
+    //tarifs: Resource[];
     foods: Resource[];
     blogItems: Content[];
 
@@ -52,7 +52,7 @@ export default class Route extends ViewRouter {
 
     @Auth.Anonymous()
     async defaultRoute() {
-        let recentButchers: ButcherModel[] = CacheManager.dataCache["recent-butchers"];
+        let recentButchers: ButcherModel[] = CacheManager.dataCache.get("recent-butchers");
         if (!recentButchers) {
             recentButchers = await ButcherModel.findAll({
                 order: [["updatedon", "DESC"]],
@@ -60,25 +60,20 @@ export default class Route extends ViewRouter {
                 include: [
                     { all: true }
                 ],
-                raw: true,
                 where: {
                     approved: true
                 }
             });
-            CacheManager.dataCache["recent-butchers"] = recentButchers;
+            CacheManager.dataCache.set("recent-butchers", recentButchers.map(b => b.get({ plain: true })));
         }
 
-        this.tarifs = null; // CacheManager.dataCache["home-tarifs"];
-        if (!this.tarifs) {
-            this.tarifs = await new ProductsApi(this.constructorParams).getTarifVideos(null, 10, null);
-            CacheManager.dataCache["home-tarifs"] = this.tarifs;
-        }
-        this.foods = null;//  CacheManager.dataCache["home-foods"];
+        this.foods = CacheManager.dataCache.get("recent-foods");
         if (!this.foods) {
-            this.foods = await new ProductsApi(this.constructorParams).getFoodResources(null, 15, null);
-            CacheManager.dataCache["home-foods"] = this.foods;
+            this.foods = await new ProductsApi(this.constructorParams).getFoodAndTarifResources(null, 15, null, {
+                raw: false
+            });
+            //CacheManager.dataCache.set("recent-foods", this.foods.map(b => b.get({ plain: true })));
         }
-
         this.blogItems = await this.getBlogItems();
 
         this.res.render("pages/default.ejs", this.viewData({

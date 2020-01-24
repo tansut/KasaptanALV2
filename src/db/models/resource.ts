@@ -189,9 +189,15 @@ class Resource extends BaseModel<Resource> {
         } else return {};
     }
 
+    get fileUrl() {
+        return this.getFileUrl()
+    }
+
+    get thumbnailFileUrl() {
+        return this.getThumbnailFileUrl();
+    }
 
     getFileUrl() {
-        config.staticDomain
         if (this.contentType == 'image/jpeg')
             return `${config.staticDomain}/${this.folder}/${this.contentUrl}`
         else return `https://www.youtube.com/watch?v=${this.contentUrl}`;

@@ -195,11 +195,11 @@
                   <% for(var c=0; c < reyonlar.length; c++) {%>
                   <div class="pt-3 px-3" style="width: 7rem;">
                     <div class="widget widget-links"><a class="d-block overflow-hidden rounded-lg mb-3"
-                        href="<%= `/${reyonlar[c].slug}`%>"><img class="rounde"
+                        href="<%= `/et-yemekleri/${reyonlar[c].slug}`%>"><img class="rounde"
                           src="<%=`${__req.helper.imgUrl('category-photos', reyonlar[c].slug)}`%>"
                           alt="<%=reyonlar[c].name%>" /></a>
                       <h6 class="font-size-base mb-2 text-center">
-                        <a class="text-primary" href="<%= `/${reyonlar[c].slug}`%>"><%= reyonlar[c].name %></a>
+                        <a class="text-primary" href="<%= `/et-yemekleri/${reyonlar[c].slug}`%>"><%= reyonlar[c].name %></a>
 
                       </h6>
 
@@ -308,10 +308,10 @@
   
                 </li> -->
            
-
+<!-- 
             <li class="nav-item"><a class="nav-link" href="/et-yemek-tarifleri">Tarifler</a>
 
-            </li>
+            </li> -->
 
             <li class="nav-item"><a class="nav-link" href="/et-kulturu">Et Kültürü</a>
 
