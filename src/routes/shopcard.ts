@@ -57,7 +57,7 @@ export default class Route extends ViewRouter {
             this.shopcard.address.email = this.req.user.email;
             this.shopcard.address.phone = this.req.user.mphone;
         }
-
+        await this.setDispatcher();
         await this.shopcard.saveToRequest(this.req)
         this.renderPage("pages/checkout.ship.ejs");
     }
