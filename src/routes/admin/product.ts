@@ -170,6 +170,16 @@ export default class Route extends ViewRouter {
 
 
             await this.product.save();
+        } else if (this.req.body.CopyUnit &&  this.req.user.hasRole('admin')) {
+            let productToCopyId = parseInt(this.req.body['copy' + this.req.body.CopyUnit]);
+            let productToCopy = await ProductModel.findByPk(productToCopyId);
+            Object.getOwnPropertyNames(productToCopy["rawAttributes"]).forEach(pn => {
+                if (pn && pn.includes(this.req.body.CopyUnit)) {
+                    this.product[pn] = productToCopy[pn];
+                }
+            })
+            await this.product.save();
+
         } else if (this.req.body.updatecategory == "true" && this.req.user.hasRole('admin')) {
             let categoryid = parseInt(this.req.body.categoryid);
             //let productCategory = this.getProductCategory(parseInt(this.req.body.categoryid));
