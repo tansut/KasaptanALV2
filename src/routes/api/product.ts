@@ -26,6 +26,15 @@ export default class Route extends ApiRouter {
         }, products4, limit, catids, options)
     }
 
+    async getTarifResources(products4?: Product[], limit?: number, catids?: number[], options = {}) {
+        return this.getResources({
+            type: ['product-videos', 'product-photos'],
+            tag1: {
+                [Op.like]: '%tarif%',
+            }
+        }, products4, limit, catids, options)
+    }
+
     async getFoodAndTarifResources(products4?: Product[], limit?: number, catids?: number[], options = {}) {
         return this.getResources({
             type: ['product-videos', 'product-photos'],

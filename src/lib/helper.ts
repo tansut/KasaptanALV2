@@ -8,7 +8,13 @@ import config from '../config';
 
 export default class Helper {
 
-
+    static foodCategories = [{
+        slug: 'yemekler',
+        name: 'Yemekler'
+    }, {
+        slug: 'tarifler',
+        name: 'Tarifler'
+    }]
 
     static asCurrency(n: number) {
         return Number(n.toFixed(2));

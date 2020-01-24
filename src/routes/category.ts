@@ -24,7 +24,10 @@ export default class Route extends ViewRouter {
     products: Product[];
     foods: Resource[];
     foodsWithCats = {}
+    foodCategory = ""
     //categories: Category[];
+
+    
 
     renderPage(view: string) {
         this.res.render(view, this.viewData({
@@ -76,26 +79,26 @@ export default class Route extends ViewRouter {
         }
     }
 
-    async fillTarifs(subcategory?: string) {
+    async fillTarifs(categoryid?: number, subcategory?: string, discardFoodCategory: boolean = false) {
         if (subcategory) {
             let category = this.req.__categories.find(p => p.slug == subcategory);
             this.products = await ProductManager.getProductsOfCategories([category.id])
-            this.foods = await new ProductsApi(this.constructorParams).getTarifVideos(this.products);
+            this.foods = await new ProductsApi(this.constructorParams).getTarifResources(this.products, null, (categoryid && !discardFoodCategory) ? [categoryid] : null);
             this.foodsWithCats = this.generateFoodWithCats(this.foods)
         } else {
-            this.foods = await new ProductsApi(this.constructorParams).getTarifVideos();
+            this.foods = await new ProductsApi(this.constructorParams).getTarifResources(null, null, categoryid ? [categoryid] : null);
             this.foodsWithCats = this.generateFoodWithCats(this.foods)
         }
     }
 
     @Auth.Anonymous()
-    async viewFoodsRoute() {
+    async fillFoodsAndTarifsRoute() {
         if (this.req.params.category) {
             this.category = this.req.__categories.find(p => p.slug == this.req.params.category);
             if (!this.category) return this.next();
-            await this.fillFoods(null, this.req.params.category)
+            await this.fillFoodsAndTarifs(null, this.req.params.category)
         } else {
-            await this.fillFoods();
+            await this.fillFoodsAndTarifs();
         }
 
         this.res.render('pages/foods.ejs', this.viewData({
@@ -109,7 +112,7 @@ export default class Route extends ViewRouter {
             this.category = this.req.__categories.find(p => p.slug == this.req.params.category);
 
             if (!this.category) return this.next();
-            await this.fillTarifs(this.req.params.category)
+            //await this.fillTarifs(this.req.params.category)
         } else {
             await this.fillTarifs();
         }
@@ -119,17 +122,18 @@ export default class Route extends ViewRouter {
         }))
     }
 
-    @Auth.Anonymous()
-    async viewAsFoodRoute(back: boolean = false) {
-        if (!this.req.params.category) {
-            return this.next();
-        }
-        this.category = this.req.__categories.find(p => p.slug == this.req.params.category);
-        if (!this.category) return this.next();
+    // @Auth.Anonymous()
+    // async viewAsFoodRoute(back: boolean = false) {
+    //     if (!this.req.params.category) {
+    //         return this.next();
+    //     }
+    //     this.category = this.req.__categories.find(p => p.slug == this.req.params.category);
+    //     if (!this.category) return this.next();
 
-        await this.fillFoods(this.category.id, this.category.slug, true);
-        this.renderPage('pages/category-food.ejs')
-    }
+    //     await this.fillFoods(this.category.id, this.category.slug, true);
+    //     this.foodCategory = "yemekler";
+    //     this.renderPage('pages/category-sub-food.ejs')
+    // }
 
 
     @Auth.Anonymous()
@@ -140,25 +144,31 @@ export default class Route extends ViewRouter {
         this.category = this.req.__categories.find(p => p.slug == this.req.params.category);
         if (!this.category) return this.next();
 
-        await this.fillFoodsAndTarifs(this.category.id, this.category.slug, true);
-        this.renderPage('pages/category-food.ejs')
+        this.foodCategory = this.req.query.tab;
+        if (this.foodCategory == 'tarifler') {
+            await this.fillTarifs(this.category.id, this.category.slug, true);
+        } else if (this.foodCategory == 'yemekler') {
+            await this.fillFoods(this.category.id, this.category.slug, true);
+        } else  await this.fillFoodsAndTarifs(this.category.id, this.category.slug, true);
+        this.renderPage('pages/category-sub-food.ejs')
     }
 
 
 
-    @Auth.Anonymous()
-    async viewAsTarifRoute(back: boolean = false) {
-        if (!this.req.params.category) {
-            return this.next();
-        }
-        this.category = this.req.__categories.find(p => p.slug == this.req.params.category);
-        if (!this.category) return this.next();
+    // @Auth.Anonymous()
+    // async viewAsTarifRoute(back: boolean = false) {
+    //     if (!this.req.params.category) {
+    //         return this.next();
+    //     }
+    //     this.category = this.req.__categories.find(p => p.slug == this.req.params.category);
+    //     if (!this.category) return this.next();
 
-        await this.fillFoods(this.category.id, this.req.params.subcategory);
-        this.renderPage('pages/category-food.ejs')
-    }
+    //     await this.fillTarifs(this.category.id, this.category.slug, true);
+    //     this.foodCategory = "tarifler";
+    //     this.renderPage('pages/category-sub-food.ejs')
+    // }
 
-
+   
     @Auth.Anonymous()
     async viewRoute(back: boolean = false) {
         if (!this.req.params.category) {
@@ -211,14 +221,15 @@ export default class Route extends ViewRouter {
 
     static SetRoutes(router: express.Router) {
         router.get("/:category", Route.BindRequest(Route.prototype.viewRoute));
-        router.get("/:category/et-yemekleri", Route.BindRequest(Route.prototype.viewAsFoodRoute));
-        router.get("/:category/et-yemek-tarifleri", Route.BindRequest(Route.prototype.viewAsTarifRoute));
-        router.get("/:category/et-yemekleri-ve-tarifleri", Route.BindRequest(Route.prototype.viewAsFoodAndTarifRoute));
-        router.get("/:category/alt/:subcategory", Route.BindRequest(Route.prototype.viewRoute));
+        router.get("/:category/et-yemekleri", Route.BindRequest(Route.prototype.viewAsFoodAndTarifRoute));
+        
         router.get("/et-yemek-tarifleri", Route.BindRequest(Route.prototype.viewTarifsRoute));
+        
         router.get("/et-yemek-tarifleri/kategori/:category", Route.BindRequest(Route.prototype.viewTarifsRoute));
-        router.get("/et-yemekleri", Route.BindRequest(Route.prototype.viewFoodsRoute));
-        router.get("/et-yemekleri/kategori/:category", Route.BindRequest(Route.prototype.viewFoodsRoute));
+        router.get("/et-yemekleri", Route.BindRequest(Route.prototype.viewAsFoodAndTarifRoute));
+        
+        
+        //router.get("/et-yemekleri/kategori/:category", Route.BindRequest(Route.prototype.viewFoodsRoute));
         config.nodeenv == 'development' ? router.get("/:category/resimler/:filename", Route.BindRequest(Route.prototype.categoryPhotoRoute)) : null;
 
     }

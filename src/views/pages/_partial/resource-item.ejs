@@ -1,7 +1,7 @@
 <%
 
 var mode = resource.tag1.includes('tarif')  ? 'tarif': 'food';
-var targetUrl = (mode == 'tarif' ? '/et-yemek-tarifleri': '/et-yemekleri');
+var targetUrl = (mode == 'tarif' ? '/et-yemekleri': '/et-yemekleri');
 var resourceUrl = targetUrl + '/' + (resource.slug || resource.id)  + (mode=='tarif' ? '':'')
 
 %>
