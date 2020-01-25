@@ -135,14 +135,14 @@
               <% butcher.products.forEach((pi, i) => { %>
               <% let item = shopcard.items[pi] %>
               <div class="media align-items-top pt-2 pb-2"><a class="d-block mr-2"
-                  href="<%=`/${item.product.slug}/${butcher.slug}`%>">
+                  href="<%=`/${item.product.slug}?butcher=${butcher.slug}`%>">
                   <img class="header-img" src="<%=`${__req.helper.imgUrl('product-photos', item.product.slug)}`%>"
                     alt="<%=`${item.product.name}`%>" />
 
                 </a>
                 <div class="media-body">
                   <h6 class="widget-product-title"><a
-                      href="<%=`/${item.product.slug}/${butcher.slug}`%>"><%=`${item.product.name}`%></a>
+                      href="<%=`/${item.product.slug}?butcher=${butcher.slug}`%>"><%=`${item.product.name}`%></a>
                   </h6>
                   <div class="d-flex justify-content-between mb-2">
                     <div>

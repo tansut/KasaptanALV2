@@ -27,7 +27,7 @@
           class="roundedx" alt="Product"></a>
       <div class="media-body pt-2">
         <h3 class="product-title font-size-base mb-2"><a
-            href="/<%=item.product.slug%>/<%=item.product.butcher.slug%>"><%=item.product.name%></a>
+            href="/<%=item.product.slug%>?butcher=<%=item.product.butcher.slug%>"><%=item.product.name%></a>
         </h3>
         <div class="font-size-normal"><span class="font-weight-medium"><%=item.quantity%></span> <span
             class="text-muted"><%=item.purchaseoption.unit%>/</span>

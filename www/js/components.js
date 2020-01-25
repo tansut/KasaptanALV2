@@ -401,6 +401,8 @@ window.initComponents = function initComponents() {
 
             addToShopcard(event) {
                 if (event.target.checkValidity()) {
+                    $('#addtoscbtn').attr("disabled", true)
+
                     return App.Backend.post('shopcard/add', {
                         id: this.product.id,
                         butcher: this.product.butcher,
@@ -408,13 +410,14 @@ window.initComponents = function initComponents() {
                         purchaseoption: this.selectedUnit,
                         note: this.note
                     }).then(result => {
-                        //App.alert("Eklendi.", "info")
-                        debugger;
                         $('#shopcard-added-toast').toast('show')
-
                         return window.shopcard.card.data = result
                     }
-                    ).catch(err => App.HandleError(err));
+                    ).finally(()=>{
+                        $('#addtoscbtn').attr("disabled", false)
+                    })
+                    
+                    .catch(err =>  App.HandleError(err));
                 }
             }
         },
