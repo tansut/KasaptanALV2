@@ -129,73 +129,73 @@ window.initComponents = function initComponents() {
             },
 
             def: function (newVal, oldVal) {
-                this.value = newVal
+                this.value = this.value || newVal;
             }
         }
     })
 
 
 
-    Vue.component('adet-input', {
-        template: `<div class="row">
-                        <div class="col-6">
-                            <select v-model="adet" class="custom-select" required>
-                            <option v-for="option in adets" v-bind:value="option.val" >{{ option.text }}</option>               </select>                            
-                        </div>
-                   </div>`,
-        props: {
-            unit: { type: String, default: "" },
-            min: { type: Number },
-            max: { type: Number },
-            step: { type: Number },
-            def: { type: Number }
-        },
+    // Vue.component('adet-input', {
+    //     template: `<div class="row">
+    //                     <div class="col-6">
+    //                         <select v-model="adet" class="custom-select" required>
+    //                         <option v-for="option in adets" v-bind:value="option.val" >{{ option.text }}</option>               </select>                            
+    //                     </div>
+    //                </div>`,
+    //     props: {
+    //         unit: { type: String, default: "" },
+    //         min: { type: Number },
+    //         max: { type: Number },
+    //         step: { type: Number },
+    //         def: { type: Number }
+    //     },
 
-        mounted: function () {
-            this.$nextTick(function () {
-                this.updateView();
-            })
-        },
+    //     mounted: function () {
+    //         this.$nextTick(function () {
+    //             this.updateView();
+    //         })
+    //     },
 
-        data: function () {
-            return {
-                adet: 1,
+    //     data: function () {
+    //         return {
+    //             adet: 1,
 
-                adets: [
+    //             adets: [
 
-                ]
-            }
-        },
+    //             ]
+    //         }
+    //     },
 
 
-        methods: {
-            updateView: function () {
-                if (this.adets.length == 0) {
-                    for (var i = this.min; i < this.max + 1; i += this.step) {
-                        this.adets.push({
-                            val: i,
-                            text: `${i}`
-                        })
-                        this.adet = this.def
-                    }
-                    this.$emit('input', this.adet)
-                }
+    //     methods: {
+    //         updateView: function () {
+    //             if (this.adets.length == 0) {
+    //                 for (var i = this.min; i < this.max + 1; i += this.step) {
+    //                     this.adets.push({
+    //                         val: i,
+    //                         text: `${i}`
+    //                     })
+    //                     this.adet = this.def
+    //                 }
+    //                 this.$emit('input', this.adet)
+    //             }
 
-            }
-        },
+    //         }
+    //     },
 
-        watch: {
-            adet: function (newVal, oldVal) {
-                this.$emit('input', this.adet)
-            },
+    //     watch: {
+    //         adet: function (newVal, oldVal) {
+    //             this.$emit('input', this.adet)
+    //         },
 
-            def: function (newVal, oldVal) {
-                this.adet = newVal
-            }
-        }
-    })
+    //         def: function (newVal, oldVal) {
+    //             this.adet = newVal
+    //         }
+    //     }
+    // })
 
-    
+
 
     window.App.WeightCalculatorApp = new Vue({
         el: '#size-chart',
@@ -305,15 +305,41 @@ window.initComponents = function initComponents() {
                     self.quantity = option.quantity;
                 })
             })
+           
         },
         methods: {
             onChange(event) {
 
             },
 
-            selectArea() {
+            loadFromUrl() {
+
+                var urlParams = new URLSearchParams(window.location.search);
+                if (this.product && urlParams.has('selectedUnit')) {
+                   this.selectedUnit = this.product.purchaseOptions.find(function(po) { return po.unit == urlParams.get('selectedUnit') })
+                }
+
+
+                if (this.product && urlParams.has('quantity')) {
+                    this.quantity = parseFloat(urlParams.get('quantity'))
+                 }
+
+                 if (this.product && urlParams.has('note')) {
+                    this.note = urlParams.get('note')
+                 }
+
+            },
+
+            selectArea(returnUrl) {
+                var self = this;
                 window.kb.selectArea(function (sender, ul) {
-                    window.location.href = "/adres-belirle/" + ul.selectedDistrict.slug + '?r=' + window.location.href;
+                    if (!returnUrl) {
+                        returnUrl = '/' + self.product.slug + '?action=add2sc';
+                        self.selectedUnit && (returnUrl += '&selectedUnit=' + encodeURIComponent(self.selectedUnit.unit))
+                        self.quantity && (returnUrl += '&quantity=' + encodeURIComponent(self.quantity))
+                        self.note && (returnUrl += '&note=' + encodeURIComponent(self.note))
+                    }
+                    window.location.href = "/adres-belirle/" + ul.selectedDistrict.slug + '?r=' + (encodeURIComponent(returnUrl));
                     //window.location.reload(true) // = "/" + window.App.ProductApp.product.slug + "?semt=" + ul.selectedDistrict.slug
                 });
             },
@@ -396,14 +422,20 @@ window.initComponents = function initComponents() {
         watch: {
             product: function (newVal, oldVal) {
                 if (newVal) {
-                    this.selectedUnit = (this.product.purchaseOptions.length > 1) ? null : this.product.purchaseOptions[0]
-                    this.quantity = this.product.viewUnitAmount;
-                    //this.note = product.note;
+                    this.quantity = null;
+                    this.$nextTick(function () {
+                        this.loadFromUrl();
+                        this.selectedUnit = this.selectedUnit || ((this.product.purchaseOptions.length > 1) ? null : this.product.purchaseOptions[0])
+                    })
+
+                    
                 }
             },
             selectedUnit: function (newVal, oldVal) {
-                if (newVal) {
+                if (newVal && oldVal) {
                     this.quantity = newVal.default;
+                } else if (newVal) {
+                    this.quantity = this.quantity || newVal.default
                 }
             },
         },

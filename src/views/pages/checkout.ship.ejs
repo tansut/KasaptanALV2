@@ -44,11 +44,22 @@
                   <h3 class="h4 mb-0 mr-2"><%= shopcard.butchers[bi].name %></h3>
                 </div></a></div>
 
-            
-            <nav class="text-center pl-4 pr-4 nav nav-pills nav-pills-dark nav-fill mb-4">
-              <a class="nav-item shadow-none nav-link" @click="card.shipment[<%=bi%>].howTo = 'ship'" v-bind:class="{ active: card && card.shipment['<%=bi%>'].howTo == 'ship' }">Adresime Gönderin</a>
-              <a class="nav-item shadow-none nav-link" @click="card.shipment[<%=bi%>].howTo = 'take'" v-bind:class="{ active: card && card.shipment['<%=bi%>'].howTo == 'take' }">Ben Gelip Alacağım</a>
-            </nav>
+            <div class="px-3">
+              <p class="font-size-md text-center"></p>
+              <nav class="text-center pl-1 pr-1 nav nav-pills nav-pills-dark nav-fill mb-4">
+                <div class="row w-100">
+                  <div class="col-sm-6">
+                    <a class="nav-item shadow-none nav-link" @click="card.shipment[<%=bi%>].howTo = 'ship'" v-bind:class="{ active: card && card.shipment['<%=bi%>'].howTo == 'ship' }">Adresime Gönderin</a>
+
+                  </div>
+                  <div class="col-sm-6">
+                    <a class="nav-item shadow-none nav-link" @click="card.shipment[<%=bi%>].howTo = 'take'" v-bind:class="{ active: card && card.shipment['<%=bi%>'].howTo == 'take' }">Ben Gelip Alacağım</a>
+
+                  </div>
+                </div>
+              </nav>
+            </div>
+     
             
              <input type="hidden" v-bind:value="card && card.shipment['<%=bi%>'].howTo" name="howto<%=bi%>" id="howto<%=bi%>"> 
           

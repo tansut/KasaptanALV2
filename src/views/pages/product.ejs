@@ -350,8 +350,36 @@
                           <button @click="selectArea()" type="button" class="btn btn-accent btn-block"><i
                               class="czi-cart font-size-lg mr-2"></i>Sepete Ekle</button>
                           <% if (__req.prefAddr) { %>
-                          <p><small><%=__req.prefAddr.level1Text%>/<%=__req.prefAddr.level3Text%> için bu ürün
-                              ulaşılabilir değil.<br> [<a href="#" @click="selectArea()">Değiştir</a>]</small> </p>
+
+                            <div class="toast-container toast-top-center">
+                              <div id="shopcard-productnotavailable-toast" class="toast mb-3" id="accent-toast" data-delay="10000" role="alert" aria-live="assertive" aria-atomic="true">
+                                <div class="toast-header bg-accent text-white">
+                                  <h6 class="font-size-sm text-white mb-0 mr-auto">Üzgünüz</h6>
+                                  <button class="close text-white ml-2 mb-1" type="button" data-dismiss="toast" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                                </div>
+                                <div class="toast-body text-accent text-center">
+                                    <p id="productnotavailable-msg">
+                                       
+                                    </p>
+                                    <div>
+                                      <div class="d-flex d-flex justify-content-around">
+                                       
+
+                                        <a href="#" @click="selectArea()" class="btn btn-sm btn-accent">Semt Seç</a>
+                                        <a href="/lezzetler" class="btn btn-sm btn-primary">Alışverişe Devam<i class="czi-arrow-right"></i></a>
+                                      
+                                      </div>
+                                    </div>
+                                    <div>
+                        
+                                    </div>
+                              
+                              </div>
+                              </div>
+                        </div>
+
+             
+                         
                           <%}%>
                       </div>
                       <%} %>
@@ -570,7 +598,7 @@
 
 
     </div>
-    <div  class="toast-container toast-top-center">
+    <div class="toast-container toast-top-center">
             <div id="shopcard-added-toast" class="toast mb-3" id="accent-toast" data-delay="10000" role="alert" aria-live="assertive" aria-atomic="true">
               <div class="toast-header bg-accent text-white"><i
                 class="czi-cart  mr-2"></i>
@@ -626,10 +654,25 @@
                     }
                    })
                   }
+
+                  <% if (!view.butcher && __req.prefAddr && __req.query.action == 'add2sc') {%>
+
+               
+                              
+$(document).ready(function() {
+  $('#productnotavailable-msg').html("<%=__req.prefAddr.level1Text%>/<%=__req.prefAddr.level3Text%> için bu ürün ulaşılabilir değil.")
+  $('#shopcard-productnotavailable-toast').toast('show');                   
+})
+
+
+<% } %>
+
                   
                 <% if (__req.query.r) { %>
                   
                   $(document).ready(function() {
+
+   
                   
                     <% if (!__req.query.autoNote) { %>                    
                        openSlider(<%=__req.query.r%>);    

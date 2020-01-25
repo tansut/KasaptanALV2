@@ -9,20 +9,20 @@ import { ResourceCacheItem, ProductCacheItem, CategoryProductItem, ButcherCacheI
 import Content from '../db/models/content';
 
 export class ApplicationError extends Error {
-    protected constructor(public name: string) {
-        super();
+    protected constructor(message?: string) {
+        super(message);
     }
 }
 
 export class BusinessError extends ApplicationError {
-    protected constructor(public name: string) {
-        super(name);
+    protected constructor(message?: string) {
+        super(message);
     }
 }
 
 export class TehnicalError extends ApplicationError {
-    protected constructor(public name: string) {
-        super(name);
+    protected constructor(message?: string) {
+        super(message);
     }
 }
 
@@ -30,8 +30,8 @@ export class HttpError extends ApplicationError {
     static dbErrorCodes = {
         11000: 'It seems there already exists a record with this id'
     }
-    protected constructor(public statusCode: number, public name: string) {
-        super(name);
+    protected constructor(public statusCode: number, message?: string) {
+        super(message);
     }
 
     static createFromDbError(err: any, overides: { [key: number]: string }) {
@@ -42,20 +42,20 @@ export class HttpError extends ApplicationError {
 
 
 export class PermissionError extends HttpError {
-    constructor(msg: string = null) {
+    constructor(msg?: string) {
         super(401, msg || 'unauthorized');
     }
 }
 
 export class NotFoundError extends HttpError {
-    constructor(msg: string = null) {
+    constructor(msg?: string) {
         super(404, msg || 'notfound');
     }
 }
 
 export class ValidationError extends HttpError {
-    constructor(msg: string = null) {
-        super(422, msg || 'invaliddata');
+    constructor(msg: string, code: number=422) {
+        super(code, msg || 'invaliddata');
     }
 }
 

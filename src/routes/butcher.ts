@@ -70,7 +70,7 @@ export default class Route extends ViewRouter {
                 type: "butcher-google-photos",
                 ref1: butcher.id
             },
-            order: [["updatedOn", "DESC"]]
+            order: [["displayOrder", "DESC"], ["updatedOn", "DESC"]]
         })
 
         let productCategories = await ProductCategory.findAll({

@@ -25,6 +25,13 @@ export class Auth {
                 $("#signup-form-2").removeClass('d-none');
                 $("#signup-form-1").addClass('d-none');
             } catch (err) {
+                debugger
+                if (err && err.response && err.response.status == 400) {
+                    $('#si-email').val(tel);
+                    $('#si-password').focus();
+                    App.activaTab("signin-tab");
+
+                }
                 App.HandleError(err)
             }
         }
@@ -67,6 +74,7 @@ export class Auth {
                 }
                 else window.location.href = App.RunConfig['returnUrl'] || '/'
             } catch (err) {
+     
                 App.HandleError(err)
             }
         }

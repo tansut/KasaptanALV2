@@ -116,6 +116,8 @@ export default class Route extends ViewRouter {
 
     async shipViewRoute() {
         this.shopcard = await ShopCard.createFromRequest(this.req);
+        this.setDispatcher();
+        await this.shopcard.saveToRequest(this.req);
         this.renderPage("pages/checkout.ship.ejs");
     }    
 

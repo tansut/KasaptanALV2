@@ -15,7 +15,8 @@ class ErrorMiddleware extends Middleware {
 
     clientErrorHandler(err, req, res, next) {
         if (ErrorMiddleware.isXhr(req)) {
-            let httpErr = err instanceof HttpError ? null : <HttpError>err;
+            let isHttpErr = err instanceof HttpError
+            let httpErr = isHttpErr ? <HttpError>err: null;
             res.status((httpErr && httpErr.statusCode) ? httpErr.statusCode : 500).send({ msg: httpErr ? httpErr.message : err.name || err.message })
         } else {
             next(err)

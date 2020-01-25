@@ -100,7 +100,7 @@ export default class UserRoute extends ApiRouter {
             if (err.original && err.original.code == 'ER_DUP_ENTRY') {
                 let existingUser = await this.retrieveByEMailOrPhone(model.phone);
                 if (existingUser.mphoneverified)
-                    throw new http.ValidationError('Bu telefon numarası ile hesabınız mevcut. Giriş yapabilirsiniz veya şifrenizi hatırlamıyorsanız Şifremi Unuttum sayfasını ziyaret edebilirsiniz.');
+                    throw new http.ValidationError('Bu telefon numarası ile hesabınız mevcut. Giriş yapabilirsiniz veya şifrenizi hatırlamıyorsanız Şifremi Unuttum sayfasını ziyaret edebilirsiniz.', 400);
                 else {
                     let pwd = await this.sendPassword(this.generatePwd(), existingUser.mphone)
                     existingUser.setPassword(pwd);
