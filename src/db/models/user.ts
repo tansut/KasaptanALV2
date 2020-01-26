@@ -5,7 +5,7 @@ import BaseModel from "./basemodel"
 import { AppUser } from '../../models/user';
 import * as bcrypt from 'bcryptjs';
 import Helper from '../../lib/helper';
-import * as validator from 'validator';
+import validator from 'validator';
 
 
 export enum UserRole {

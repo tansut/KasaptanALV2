@@ -6,7 +6,6 @@ import config from '../../config';
 import * as um from '../../db/models/user';
 import * as http from '../../lib/http';
 import * as bcrypt from 'bcryptjs';
-import * as validator from 'validator';
 import * as moment from 'moment';
 import * as crypto from 'crypto';
 //import emailmanager from '../../lib/email';
@@ -15,10 +14,11 @@ import { Auth, UserRoles } from '../../lib/common';
 import { SignupModel, AppUser, LoginResult } from '../../models/user';
 import Helper from '../../lib/helper';
 import { Sms } from '../../lib/sms';
+var validator = require("validator");
 var generator = require('generate-password');
 let passport = require("passport")
 
-
+ 
 interface GeneratedTokenData {
     accessToken: authorization.IEncryptedAccessTokenData;
     refreshToken: string;
@@ -48,6 +48,7 @@ export default class UserRoute extends ApiRouter {
     // }
     @Auth.Anonymous()
     async verifysignupRoute() {
+        
         let user = await UserModel.findOne({
             where: {
                 mphone: this.req.body.phone
@@ -68,6 +69,8 @@ export default class UserRoute extends ApiRouter {
                 mphone: this.req.body.phone                
             }
         });
+
+        
         if (!user) throw new http.ValidationError("invalid phone");
         if (!user.verifyPassword(this.req.body.password))
             throw new http.ValidationError("SMS kodu hatalıdır");

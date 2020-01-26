@@ -56,7 +56,7 @@ class AuthMiddleware extends Middleware {
         else next();
     }
 
-    constructor(app: express.IRouter<any>) {
+    constructor(app: express.IRouter) {
         super(app);
         app.use(passport.initialize());
         app.use(passport.session());

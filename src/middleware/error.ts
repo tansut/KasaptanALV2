@@ -45,7 +45,7 @@ class ErrorMiddleware extends Middleware {
     }
 
 
-    constructor(app: express.IRouter<any>) {
+    constructor(app: express.IRouter) {
         super(app);
         app.use(this.logErrors)
         app.use(this.clientErrorHandler)
