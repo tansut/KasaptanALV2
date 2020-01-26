@@ -196,7 +196,7 @@ export default class Route extends ApiRouter {
     async getProductViewByProduct(product: Product, butcherproduct: ButcherProduct) {
     }
 
-    async getProductView(product: Product, butcher?: Butcher, butcherProduct?: ButcherProduct) {
+    async getProductView(product: Product, butcher?: Butcher, butcherProduct?: ButcherProduct, loadResources: boolean = false) {
         if (!butcherProduct && butcher && !butcher.products) {
             butcherProduct = await ButcherProduct.findOne({
                 where: {
@@ -246,6 +246,11 @@ export default class Route extends ApiRouter {
             // defaultUnit: product.defaultUnit,
             // viewUnitAmount: product.defaultAmount,
             purchaseOptions: []
+        }
+
+        if (loadResources) {
+            view.resources = [];
+            product.resources.forEach(r=>view.resources.push(r.asView()))
         }
 
         this.getProductUnits(product).forEach((p, i) => {

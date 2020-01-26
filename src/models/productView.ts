@@ -27,6 +27,14 @@ export interface DispatcherView {
     name: string;
 }
 
+export interface ResourceView {
+    id: number,
+    title: string,
+    thumbnailUrl: string,
+    tag1: string,
+    settings: any
+}
+
 export interface ProductView {
     id: number;
     butcher?: ProductButcherView;
@@ -41,4 +49,5 @@ export interface ProductView {
     notePlaceholder: string;
     purchaseOptions: PurchaseOption[];
     //defaultUnit: number
+    resources?: ResourceView[];
 }

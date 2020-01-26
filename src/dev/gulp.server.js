@@ -5,7 +5,7 @@ var del = require('del');
 var buffer = require('gulp-buffer');
 var uglify = require('gulp-uglify');
 minifyejs = require('gulp-minify-ejs')
-
+var bump = require('gulp-bump');
 
 const deployDir = "";
 
@@ -25,6 +25,12 @@ let tsc = (dest, debug) => {
     tsResult = tsResult.pipe(gulp.dest(dest))
     return tsResult;
 }
+
+gulp.task('bump', function(){
+    return gulp.src('./version.json')
+    .pipe(bump({version: "1.2.3", key: "version"}))
+    .pipe(gulp.dest('./', {overwrite: true}));
+  });
 
 function cleanBin() {
     return del("bin")

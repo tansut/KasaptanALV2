@@ -189,7 +189,7 @@ export default class Route extends ViewRouter {
 
 
 
-        let view = await api.getProductView(product, selectedButchers.best)
+        let view = await api.getProductView(product, selectedButchers.best, null, true)
 
 
 

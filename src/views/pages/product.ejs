@@ -47,8 +47,7 @@
   let videos = resources.filter(p=>p.contentType == "video-youtube");
   let tarifs = resources.filter(p=>p.tag1 && p.tag1.includes("tarif"));
   let tarifsAndFoods = resources.filter(p=>p.tag1 && (p.tag1.includes("tarif") || p.tag1.includes("yemek")));
-
-  
+  nonDisplayedResources  = resources.filter(resource=> (resource.tag1 && resource.tag1.includes('yemek') && resource.ref1 != product.id))
   let videoTarifs = tarifs.filter(p=>p.contentType == "video-youtube");
   let hazirlanisResources = resources.filter(p=>p.tag1 == "hazirlama-sekli");
   let otherVideos = videos.filter(p=>(p.tag1 && !p.tag1.includes( "tarif") && p.tag1 != "hazirlama-sekli" ));
@@ -85,20 +84,14 @@
                 <div class="row justify-content-center">
                   <% group.forEach((resource, i) => { %>
 
-                  <div class="col-4">
-                    <%if (resource != null) {%>
+                  
+                    <%if (!nonDisplayedResources.find(n=>n == resource)) {%>
 
-
+                      <div class="col-4">
                       <%- include('./_partial/product-resource-view.ejs', {first: false, note: false, resource: resource}) %>
-
-                    <% if (resource.contentType == "image/jpeg") { %>
-                 
-                    <%} else {  %>
-                        
-
-                    <% } %>
+                    </div>
                     <%}%>
-                                          </div>
+                                         
                                         
                                         <%})%>
 
@@ -463,7 +456,21 @@
                   </div>
                   <% } %>
                   <%})%>
+
+
+                  
                 </div>
+              <%}%>
+
+              <% if (nonDisplayedResources.length) { %>
+                <% nonDisplayedResources.forEach((resource,i) => {%>
+                  <div class="d-none">
+                    <%- include('./_partial/product-resource-view.ejs', {first: false, note: false, resource: resource}) %>
+                 
+                                           
+                </div>
+                  <%})%>
+
               <%}%>
 
               <% if (otherVideos.length) {%>

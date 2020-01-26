@@ -1,5 +1,6 @@
 {
   "name": "kasaptanal",
+  "ooo":"1.2.3",
   "version": "1.0.0.0",
   "description": "kasapbkasaptanalurada.com",
   "main": "bin/kasaptanal.js",

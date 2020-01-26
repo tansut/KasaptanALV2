@@ -2,7 +2,7 @@
   <div class="modal-dialog modal-dialog-scrollable">
     <div class="modal-content">
       <div class="modal-header">
-        <h6 class="modal-title">{{options.title  || 'İhtiyacı belirleyelim'}} </h6>
+        <h6 class="modal-title">{{title  || 'İhtiyacı belirleyelim'}} </h6>
         <button class="close" type="button" data-dismiss="modal" aria-label="Close"><span
             aria-hidden="true">&times;</span></button>
       </div>
@@ -22,7 +22,7 @@
                 {{food.title}}
               </span>
               <span>
-                için kasabımız
+                için kasaplarımız
               </span>
               <span class="font-weight-medium text-nowrap">
                 {{product.name}}
@@ -46,64 +46,97 @@
 
 
 
-            <amount-input class="" :def="2" :min="1" :max="25" :step="1" v-model="personcount" unit="kişi">
+            <amount-input  :def="2" :min="1" :max="25" :step="1" v-model="personcount" unit="kişi">
             </amount-input>
 
+            <div v-if="foodResources().length && (personcount > 0)" >
+              <div class=" d-flex align-items-center justify-content-center mb-1">
+                <span class="font-weight-medium">Ne yapmak istersiniz ?</span>
+              </div>
+              <div class=" table-responsive bg-secondary pb-1 " data-simplebar>
+                <div class="d-flex ">
+                  <div class="d-flex w-100 justify-content-center">
+                    <div class="mx-2  btn-group btn-group-sm" role="group" aria-label="">
+    
+                      <button class="btn btn-secondary btn" v-for="(r, index) in foodResources().concat([{title:'Diğer Yemekler'}])" @click="setResource(r)">{{r.title || 'Diğer Yemekler'}}</button>
+                      
+                    </div>
+                  </div>
+              
+                </div>
+              </div>
+           
+          
+        
+            </div>
+
           </div>
+<div class="px-2 pt-2" v-if="personcount > 0 && ((!foodResources().length) || (foodResources().length && selectedResource))">
+  <div v-if="note " class="mt-1 alert border-none rounded-0 alert-info alert-with-icon font-size-sm mb-2" role="alert">
+
+
+    <div class="alert-icon-box rounded-0"><i class="alert-icon czi-announcement"></i></div> 
+    <h6 class="h6 text-info">{{noteHeader || (food && food.title) || 'Usta Kasaplarımızından'}}</h6>
+    {{note}}
+  </div>
 
 
 
 
-          <div class="pt-2 mb-3" v-if="personcount > 0">
-
-            <div class="form-group px-4 mt-2 mb-3">
-              <!-- <label class="mb-2" for="wanote"><span
-                class="badge badge-accent font-size-xs mr-2">Notunuz</span><span class="font-size-sm"></span>
-                
-            
-
-               
-              </label> -->
-              <textarea v-model="cardnote" :placeholder="cardnoteph || 'İletmek istediğiniz notunuz varsa burayı kullanabilirsiniz.'"
-                class="form-control font-size-sm" rows="4" name="wanote" id="wanote">
 
 
-                                              </textarea>
-            </div>
-
-            <div v-if="note" class="alert rounded-0 alert-info alert-with-icon font-size-sm mb-3" role="alert">
-              <div class="alert-icon-box rounded-0"><i class="alert-icon czi-announcement"></i></div>
-              <h6 class="h6 text-info">Usta Kasaplarımızından</h6>
-              {{note}}
-            </div>
 
 
-            <div class="d-flex align-items-center justify-content-center">
-              <button v-for="(option, index) in result" data-dismiss="modal" @click="setUnit(option)"
-                class="btn mr-2 btn-primary">
-                <i class="czi-check mr-1"></i>
-                <span v-if="option.unit != 'kg'">
-                  {{option.quantity}} {{option.unit}}
-                </span>
-
-                <weight-view v-if="option.unit == 'kg'" :kg=option.quantity></weight-view>
-
-              </button>
-            </div>
 
 
-            <!-- <ul class="list-unstyled font-weight-medium">
-                <li v-for="(option, index) in result" class="pb-1 pt-1 d-flex align-items-center justify-content-between">
-                  <a v-if="option.unit != 'kg'" class="">
-                    {{option.quantity}} {{option.unit}}
-                  </a>
+  <div class=" mb-3">
 
-                  <weight-view v-if="option.unit == 'kg'" :kg=option.quantity></weight-view>
-                  <button data-dismiss="modal" @click="setUnit(option)" class="btn btn-sm btn-primary">Seç</button>
-                </li>
-              </ul> -->
-          </div>
+    <div class="form-group mb-3">
+       <label class="mb-2" for="wanote"><span
+        class="badge badge-accent font-size-xs mr-2">Sipariş Notunuz</span><span class="font-size-sm"></span>
+        
+    
 
+       
+      </label> 
+      <textarea v-model="cardnote" :placeholder="cardnoteph || 'İletmek istediğiniz notunuz varsa burayı kullanabilirsiniz.'"
+        class="form-control font-size-sm" rows="4" name="wanote" id="wanote">
+
+
+                                      </textarea>
+    </div>
+
+   
+
+
+    <div class="d-flex align-items-center justify-content-center">
+      <button v-for="(option, index) in result" data-dismiss="modal" @click="setUnit(option)"
+        class="btn mr-2 btn-primary">
+        <i class="czi-check mr-1"></i>
+        <span v-if="option.unit != 'kg'">
+          {{option.quantity}} {{option.unit}}
+        </span>
+
+        <weight-view v-if="option.unit == 'kg'" :kg=option.quantity></weight-view>
+        <span></span>
+      </button>
+    </div>
+
+
+    <!-- <ul class="list-unstyled font-weight-medium">
+        <li v-for="(option, index) in result" class="pb-1 pt-1 d-flex align-items-center justify-content-between">
+          <a v-if="option.unit != 'kg'" class="">
+            {{option.quantity}} {{option.unit}}
+          </a>
+
+          <weight-view v-if="option.unit == 'kg'" :kg=option.quantity></weight-view>
+          <button data-dismiss="modal" @click="setUnit(option)" class="btn btn-sm btn-primary">Seç</button>
+        </li>
+      </ul> -->
+  </div>
+
+</div>
+   
 
 
 

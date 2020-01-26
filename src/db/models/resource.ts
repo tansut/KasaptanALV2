@@ -4,6 +4,7 @@ import Helper from '../../lib/helper';
 import Product from './product';
 import ResourceCategory from './resourcecategory';
 import config from '../../config';
+import { ResourceView } from '../../models/productView';
 
 @Table({
     tableName: "Resources",
@@ -165,6 +166,17 @@ class Resource extends BaseModel<Resource> {
 
     set settings(value: any) {
         this.setDataValue('settingsjson', JSON.stringify(value));
+    }
+
+    asView(): ResourceView {
+        return {
+            id: this.id,
+            title: this.title,
+            tag1: this.tag1,
+            // thumbnailUrl: (this.thumbnailUrl ? this.thumbnailFileUrl: null) ||  `${Helper.imgUrl('product-photos', this.product.slug)}` ,
+            thumbnailUrl: this.thumbnailFileUrl,
+            settings: this.settingsByRef
+        }
     }
 
      getRef(id: number): number {

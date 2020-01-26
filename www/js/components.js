@@ -207,10 +207,14 @@ window.initComponents = function initComponents() {
                 meal: 1,
                 note: null,
                 perperson: null,
-                options: {},
+                unit: null,
                 cardnote: "",
                 cardnoteph: "",
-                food: {}
+                food: {},
+                title: '',
+                resources: null,
+                noteHeader:'',
+                selectedResource: null
             }
 
         },
@@ -220,15 +224,53 @@ window.initComponents = function initComponents() {
                 //console.log(this.selected)
             },
 
+            foodResources() {
+                var list = this.resources || [];
+                return list.filter(function(item) {
+                    return item.tag1 && (
+                         (item.tag1.includes('yemek') || item.tag1.includes('tarif')) && item.settings && item.settings.po_perperson
+                    )
+                })
+            },
+
+            setResource(r) {
+                r.settings = r.settings || {};
+                this.personcount = this.personcount || (r.settings.po_personcount && Number(r.settings.po_personcount)) || this.defaultOptions.personcount || 4;
+                this.cardnote = r.settings.defaultNote || this.defaultOptions.cardnote;
+                this.perperson = (r.settings.po_perperson && Number(r.settings.po_perperson)) || this.defaultOptions.perperson;
+                this.note = r.settings.po_quantityNote || this.defaultOptions.note;
+                this.unit = r.settings.po_unit || this.defaultOptions.unit;
+                //this.title = r.title || this.defaultOptions.title;
+                this.noteHeader = r.title;
+                // this.productView = r.thumbnailUrl;
+                // if (this.productView) {
+                //     this.food = {
+                //         title: r.title,
+                //         url: r.thumbnailUrl
+                //     }
+                // } else {
+                //     this.food = null;
+                // }
+                this.selectedResource = r;
+            },
+
             show(options) {
-                this.options = options || {};
-                this.personcount = options.personcount || 0;
+                options.personcount = options.personcount || 0;
+                options.note = options.note || "";
+                options.cardnote = options.cardnote || "";
+                options.cardnoteph = options.cardnoteph || "";
+                options.perperson = options.perperson || null;
+                this.defaultOptions = options;
+                this.unit = options.unit,
+                this.title = options.title,
+                this.personcount = options.personcount;
                 this.perperson = options.perperson || null;
-                this.note = options.note || "";
+                this.note = options.note;
                 this.cardnote = options.cardnote || "";
                 this.cardnoteph = options.cardnoteph || "";
                 this.food = options.food || {};
                 this.productView = options.productView;
+                this.resources = options.resources;
 
                 $('#size-chart').modal("show");
                 return new Promise((resolve, reject) => {
@@ -248,7 +290,7 @@ window.initComponents = function initComponents() {
                 let res = [];
                 if (this.product) {
                     for (var i = 0; i < this.product.purchaseOptions.length; i++) {
-                        if (this.options.unit && this.options.unit != this.product.purchaseOptions[i].unit)
+                        if (this.unit && this.unit != this.product.purchaseOptions[i].unit)
                             continue;
                         var q = this.meal * this.personcount * (this.perperson || this.product.purchaseOptions[i].perPerson);
                         q = Number(q.toFixed(3));
@@ -294,7 +336,7 @@ window.initComponents = function initComponents() {
                 product: null,
                 quantity: 0,
                 selectedUnit: null,
-                note: '',
+                note: ''
             }
         },
         mounted: function () {
@@ -347,11 +389,12 @@ window.initComponents = function initComponents() {
             showCalculator(unit) {
 
                 this.addToNote({
-
+                    title: this.product.name,
                     note: this.note,
                     unit: unit.unit,
                     noteph: unit.notePlaceholder,
-                    ponote: unit.weigthNote
+                    ponote: unit.weigthNote,
+                    resources: this.product.resources
                 })
             },
 
@@ -374,7 +417,8 @@ window.initComponents = function initComponents() {
                     perperson: options.perperson,
                     note: options.ponote,
                     cardnote: options.note,
-                    cardnoteph: options.noteph
+                    cardnoteph: options.noteph,
+                    resources: options.resources
                 }).then(function (result) {
                     window.App.ProductApp.note = window.App.WeightCalculatorApp.cardnote;
                     if (window.App.ProductApp.note) {
