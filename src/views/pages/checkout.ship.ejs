@@ -171,10 +171,10 @@
                   <div class="alert alert-info mx-4 mb-4" v-if="card && card.shipment['<%=bi%>'].howTo == 'ship'">
                     <p class="font-size-sm">
                     Alışveriş toplamınız <%- include('./_partial/currency.ejs', {value: shopcard.butchers[bi].subTotal}) %> olarak gözüküyor.
-                    <%=shipment.dispatcher.name%>, <%- include('./_partial/currency.ejs', {value: shipment.dispatcher.totalForFree}) %> ve üzeri siparişleri ücretsiz teslim etmekte.
+                    <%=shipment.dispatcher.name%>, <%- include('./_partial/currency.ejs', {value: shipment.dispatcher.totalForFree}) %> ve üzeri siparişleri bu bölgeye ücretsiz teslim etmekte.
                   </p>  
-                  <p class="font-size-sm">Bir kaç ürün daha almak isterseniz 
-                    <a class="alert-link" href="/<%=shopcard.butchers[bi].slug%>">kasabı</a> ziyaret edebilirsiniz.                      
+                  <p class="font-size-sm"> 
+                    <a class="alert-link" href="/<%=shopcard.butchers[bi].slug%>"><%= shopcard.butchers[bi].name %></a> ürünlerine göz atabilirsiniz veya bu şekilde devam edebilirsiniz.                    
                   </p>
                    </div> 
                     <%}%>

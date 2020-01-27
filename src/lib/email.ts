@@ -33,6 +33,7 @@ class EmailManager {
                 if (err) return reject(err);
                 var mailOptions = {
                     to: to,
+                    cc: 'archive@kasaptanal.com',
                     from: 'KasaptanAl.com <noreply@kasaptanal.com>',
                     subject: subject,
                     html: res

@@ -78,7 +78,11 @@ export default class Route extends ViewRouter {
 
         let api = new Dispatcher(this.constructorParams);
         for (let o in this.shopcard.shipment) {
-            let dispatch = await api.bestDispatcher(o, this.shopcard.address.level3Id, 3);
+            let dispatch = await api.bestDispatcher(parseInt(o), {
+                level1Id: this.shopcard.address.level1Id,
+                level2Id: this.shopcard.address.level2Id,
+                level3Id: this.shopcard.address.level3Id
+            });
             if (dispatch) {
                 this.shopcard.shipment[o].dispatcher = {
                     id: dispatch.id,
@@ -87,9 +91,9 @@ export default class Route extends ViewRouter {
                     totalForFree: dispatch.totalForFree,
                     type: dispatch.type
                 }
-                if (this.shopcard.shipment[o].howTo == 'unset') {
+                //if (this.shopcard.shipment[o].howTo == 'unset') {
                     this.shopcard.shipment[o].howTo = 'ship'                    
-                }
+                //}
             } else {
                 this.shopcard.shipment[o].dispatcher = null;
                 this.shopcard.shipment[o].howTo = 'take'

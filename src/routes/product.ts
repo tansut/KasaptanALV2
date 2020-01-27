@@ -75,7 +75,7 @@ export default class Route extends ViewRouter {
             level2Id: this.req.prefAddr.level1Id
         });
 
-        let servingDispatchers = await api.getButchersSelingAndDispatches(adr.level3Id, pid);
+        let servingDispatchers = await api.getButchersSelingAndDispatches(adr, pid);
 
         _.remove(sellingl1, p => servingDispatchers.find(s => s.butcherid == p.butcher.id));
         _.remove(sellingl2, p => servingDispatchers.find(s => s.butcherid == p.butcher.id));
