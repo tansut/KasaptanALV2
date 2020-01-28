@@ -10,7 +10,7 @@ import Butcher from '../../db/models/butcher';
 import Area from '../../db/models/area';
 import Dispatcher from '../../db/models/dispatcher';
 import ButcherProduct from '../../db/models/butcherproduct';
-import {Op}  from "sequelize";
+import {Op, Sequelize}  from "sequelize";
 import { PreferredAddress } from '../../db/models/user';
 
 export default class Route extends ApiRouter {
@@ -91,10 +91,17 @@ export default class Route extends ApiRouter {
                     ]
                 },                
             ],
-            order: [['lastorderitemid', 'DESC']]
+            order: [['lastorderitemid', 'DESC'], ["toarealevel", "DESC"]]
             //limit: 10
         })
-        return res;
+        let ugly = {}, result = [];
+        res.forEach(r=>{
+            if (!ugly[r.butcherid]) {
+                ugly[r.butcherid] = r;
+                result.push(r)
+            }
+        })
+        return result;
     }    
 
 
