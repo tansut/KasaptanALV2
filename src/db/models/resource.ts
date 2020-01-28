@@ -72,6 +72,12 @@ class Resource extends BaseModel<Resource> {
     })
     slug: string;
 
+    @Column({
+        allowNull: false,
+        defaultValue: true
+    })
+    list: boolean;
+
 
     @Column({
         allowNull: false,

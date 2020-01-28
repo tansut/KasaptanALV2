@@ -37,7 +37,7 @@ export default class Route extends ViewRouter {
     butcherProducts: ButcherProduct[] = [];
     markdown = new MarkdownIt();
     foods: Resource[] = [];
-
+    butcherResources: Resource [] = [];
 
     async tryBestFromShopcard(serving: Butcher[], others: Butcher[]) {
         let shopcard = await ShopCard.createFromRequest(this.req);
@@ -211,6 +211,15 @@ export default class Route extends ViewRouter {
                         model: ProductModel
                     }
                 ]
+            })
+
+            this.butcherResources = await Resource.findAll({
+                where: {
+                    type: ["butcher-google-photos", "butcher-videos"],
+                    ref1: view.butcher.id,
+                    list: true
+                },
+                order: [["displayOrder", "DESC"], ["updatedOn", "DESC"]]
             })
         }
         this.res.render('pages/product', this.viewData({ butcherProducts: this.butcherProducts.map(p => p.product), butchers: selectedButchers, pageTitle: product.pageTitle || product.name, pageDescription: product.pageDescription, product: product, view: view }))

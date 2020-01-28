@@ -347,7 +347,7 @@ window.initComponents = function initComponents() {
                     self.quantity = option.quantity;
                 })
             })
-           
+            //lightGallery(document.getElementById('butcher-video-link')); 
         },
         methods: {
             onChange(event) {
