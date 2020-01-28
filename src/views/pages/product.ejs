@@ -415,10 +415,10 @@
                     </li> -->
 
 
-          <% if (false) {%>
+          <% if (view.butcher) {%>
             <li class="nav-item">
-              <a class="nav-link" id="foods-tab" data-toggle="tab" href="#foods" role="tab" aria-controls="contact"
-                aria-selected="false">Tarifler</a>
+              <a class="nav-link" id="butcherproductstab" data-toggle="tab" href="#butcherproducts" role="tab" 
+                aria-selected="false">Kasabın Ürünleri</a>
             </li>
           <%}%>
 
@@ -557,45 +557,18 @@
                            
             
 
-                    </div>
+          </div>
           <%}%>
-
-                    <% if (false) {%>
-                      <div class="tab-pane fade cz-gallery" id="foods" role="tabpanel" aria-labelledby="food-tab">
-                        <div class="row">
-                          <% videos.forEach((resource,i) => {%>
-                          
-                          <div class="col-md-4 col-6">
-                            <div class="card product-card card-static item-card">
-                              <a data-resid="<%=resource.id%>" class="gallery-item video-item "
-                                data-sub-html='<h6 class="font-size-normal text-light"><%=resource.title%></h6>'
-                                href="<%= `https://www.youtube.com/watch?v=${resource.contentUrl}?autoplay=1` %>">
-                                <img class="rounded-top"
-                                  src="<%= `https://img.youtube.com/vi/${resource.contentUrl}/maxresdefault.jpg` %>"
-                                  alt="<%=product.name%>" /><span class="gallery-item-caption"><%=resource.title%></span></a>
-                              <% if (resource.badge) {%>
-                                  <span class="badge badge-primary badge-shadow product-img-badge"><%= resource.badge%></span>
-                                <% } %>
-                                  <% if (resource.tag1 && resource.tag1.includes('tarif')) {%>
-                                  <div class="text-center">
-                                   
-                                    <button type="button" @click='addToNote({note: "<%= resource.note %>"})'
-                                      class="btn btn-block btn-primary btn-sm rounded-0"><i class=" czi-add-circle mr-2">
-                                      </i><%= resource.tag3 || 'Eti Bizden' %></button>
-                                  </div>
-                              <% } %>
-                              <% if (resource.tag1 == 'bilgi') {%>
-                                <div class="text-center">
-                                  <button type="button" onclick=''
-                                    class="btn btn-block btn-primary btn-sm rounded-0 "><i class=" czi-info mr-2">
-                                    </i><%= resource.badge %></button>
-                                </div>
-                            <% } %>
-                            </div>                            
-                          </div>
-                          <%})%>
-                        </div>
-                      <%}%>
+          <% if (view.butcher) { %>
+            <div class="tab-pane fade" id="butcherproducts" role="tabpanel" aria-labelledby="butcherproducts-tab">
+              
+              <%- include('./_partial/products-view', {butcher: view.butcher.slug,  viewMode:'tab', products: butcherProducts}); %>
+              <div>
+                <a class="font-size-sm" href="/<%=view.butcher.slug%>">Tüm Ürünler<i
+                  class="czi-arrow-right ml-1"></i></a>
+              </div>
+            </div>  
+          <%}%>
 
                            
 

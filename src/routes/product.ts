@@ -24,6 +24,7 @@ import * as _ from "lodash";
 import { ResourceCacheItem, ProductCacheItem } from '../lib/cache';
 import { ShopCard } from '../models/shopcard';
 import config from '../config';
+import { Op } from 'sequelize';
 
 interface ButcherSelection {
     best: Butcher,
@@ -192,8 +193,27 @@ export default class Route extends ViewRouter {
         let view = await api.getProductView(product, selectedButchers.best, null, true)
 
 
-
-        this.res.render('pages/product', this.viewData({ butchers: selectedButchers, pageTitle: product.pageTitle || product.name, pageDescription: product.pageDescription, product: product, view: view }))
+        if (view.butcher) {
+            this.butcherProducts = await ButcherProduct.findAll({
+                where: {
+                    butcherid: view.butcher.id,
+                    vitrin: true,
+                    [Op.or]: [
+                        {
+                            kgPrice: {
+                                [Op.gt]: 0
+                            }
+                        }
+                    ]
+                },
+                include: [
+                    {
+                        model: ProductModel
+                    }
+                ]
+            })
+        }
+        this.res.render('pages/product', this.viewData({ butcherProducts: this.butcherProducts.map(p => p.product), butchers: selectedButchers, pageTitle: product.pageTitle || product.name, pageDescription: product.pageDescription, product: product, view: view }))
     }
 
 
