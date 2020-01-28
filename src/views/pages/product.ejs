@@ -655,7 +655,7 @@
                   function openSlider(i) {
                     var node = $('a[data-resid=' + i + ']')[0];
                     window.lgData.lg0.items.forEach(function (item, i) {
-                   if (item == node || item.id == node.id) {
+                   if (item == node || ((item.id && node.id) && (item.id == node.id))) {
                      window.location.hash = "lg=1&slide=" + i;
                      window.lgData.lg0.init()
                     }
