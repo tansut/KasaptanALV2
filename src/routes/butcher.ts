@@ -51,31 +51,31 @@ export default class Route extends ViewRouter {
             include: [{
                 model: ButcherProduct,
                 include: [Product],
-                where: {
-                    [Op.or]: [{
-                        '$products.kgPrice$': {
-                            [Op.gt]: 0.0
-                        }
-                    },
+                // where: {
+                //     [Op.or]: [{
+                //         '$products.kgPrice$': {
+                //             [Op.gt]: 0.0
+                //         }
+                //     },
 
-                    {
-                        '$products.unit1price$': {
-                            [Op.gt]: 0.0
-                        }
-                    },
+                //     {
+                //         '$products.unit1price$': {
+                //             [Op.gt]: 0.0
+                //         }
+                //     },
 
-                    {
-                        '$products.unit2price$': {
-                            [Op.gt]: 0.0
-                        }
-                    },
-                    {
-                        '$products.unit3price$': {
-                            [Op.gt]: 0.0
-                        }
-                    }
-                    ]                    
-                }
+                //     {
+                //         '$products.unit2price$': {
+                //             [Op.gt]: 0.0
+                //         }
+                //     },
+                //     {
+                //         '$products.unit3price$': {
+                //             [Op.gt]: 0.0
+                //         }
+                //     }
+                //     ]                    
+                // }
             },
             {
                 model: Area,
