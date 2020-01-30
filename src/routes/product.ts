@@ -24,7 +24,7 @@ import * as _ from "lodash";
 import { ResourceCacheItem, ProductCacheItem } from '../lib/cache';
 import { ShopCard } from '../models/shopcard';
 import config from '../config';
-import { Op } from 'sequelize';
+import { Op, Sequelize, where } from 'sequelize';
 
 interface ButcherSelection {
     best: Butcher,
@@ -37,7 +37,7 @@ export default class Route extends ViewRouter {
     butcherProducts: ButcherProduct[] = [];
     markdown = new MarkdownIt();
     foods: Resource[] = [];
-    butcherResources: Resource [] = [];
+    butcherResources: Resource[] = [];
 
     async tryBestFromShopcard(serving: Butcher[], others: Butcher[]) {
         let shopcard = await ShopCard.createFromRequest(this.req);
@@ -193,15 +193,33 @@ export default class Route extends ViewRouter {
         let view = await api.getProductView(product, selectedButchers.best, null, true)
 
 
+
+
         if (view.butcher) {
             this.butcherProducts = await ButcherProduct.findAll({
                 where: {
                     butcherid: view.butcher.id,
                     vitrin: true,
+
                     [Op.or]: [
                         {
                             kgPrice: {
                                 [Op.gt]: 0
+                            }
+                        },
+                        {
+                            unit1price: {
+                                gt: 0.0
+                            }
+                        },
+                        {
+                            unit2price: {
+                                [Op.gt]: 0.0
+                            }
+                        },
+                        {
+                            unit3price: {
+                                [Op.gt]: 0.0
                             }
                         }
                     ]

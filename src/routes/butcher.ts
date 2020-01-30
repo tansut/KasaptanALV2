@@ -24,7 +24,7 @@ import * as _ from "lodash";
 import { ResourceCacheItem } from '../lib/cache';
 import Dispatcher from '../db/models/dispatcher';
 import config from '../config';
-
+import {Op} from "sequelize";
 
 
 export default class Route extends ViewRouter {
@@ -51,14 +51,41 @@ export default class Route extends ViewRouter {
             include: [{
                 model: ButcherProduct,
                 include: [Product],
+                where: {
+                    [Op.or]: [{
+                        '$products.kgPrice$': {
+                            [Op.gt]: 0.0
+                        }
+                    },
 
+                    {
+                        '$products.unit1price$': {
+                            [Op.gt]: 0.0
+                        }
+                    },
+
+                    {
+                        '$products.unit2price$': {
+                            [Op.gt]: 0.0
+                        }
+                    },
+                    {
+                        '$products.unit3price$': {
+                            [Op.gt]: 0.0
+                        }
+                    }
+                    ]                    
+                }
             },
             {
                 model: Area,
                 all: true,
                 as: "areaLevel1Id"
 
-            }], where: { slug: this.req.params.butcher }
+            }], where: { slug: this.req.params.butcher,
+            
+            
+            }
         });
         if (!butcher) return this.next();
         butcher.products = butcher.products.filter(p => {

@@ -213,7 +213,7 @@ window.initComponents = function initComponents() {
                 food: {},
                 title: '',
                 resources: null,
-                noteHeader:'',
+                noteHeader: '',
                 selectedResource: null
             }
 
@@ -226,9 +226,9 @@ window.initComponents = function initComponents() {
 
             foodResources() {
                 var list = this.resources || [];
-                return list.filter(function(item) {
+                return list.filter(function (item) {
                     return item.tag1 && (
-                         (item.tag1.includes('yemek') || item.tag1.includes('tarif')) && item.settings && item.settings.po_perperson
+                        (item.tag1.includes('yemek') || item.tag1.includes('tarif')) && item.settings && item.settings.po_perperson
                     )
                 })
             },
@@ -262,8 +262,8 @@ window.initComponents = function initComponents() {
                 options.perperson = options.perperson || null;
                 this.defaultOptions = options;
                 this.unit = options.unit,
-                this.title = options.title,
-                this.personcount = options.personcount;
+                    this.title = options.title,
+                    this.personcount = options.personcount;
                 this.perperson = options.perperson || null;
                 this.note = options.note;
                 this.cardnote = options.cardnote || "";
@@ -347,7 +347,7 @@ window.initComponents = function initComponents() {
                     self.quantity = option.quantity;
                 })
             })
-            //lightGallery(document.getElementById('butcher-video-link')); 
+
         },
         methods: {
             onChange(event) {
@@ -358,17 +358,17 @@ window.initComponents = function initComponents() {
 
                 var urlParams = new URLSearchParams(window.location.search);
                 if (this.product && urlParams.has('selectedUnit')) {
-                   this.selectedUnit = this.product.purchaseOptions.find(function(po) { return po.unit == urlParams.get('selectedUnit') })
+                    this.selectedUnit = this.product.purchaseOptions.find(function (po) { return po.unit == urlParams.get('selectedUnit') })
                 }
 
 
                 if (this.product && urlParams.has('quantity')) {
                     this.quantity = parseFloat(urlParams.get('quantity'))
-                 }
+                }
 
-                 if (this.product && urlParams.has('note')) {
+                if (this.product && urlParams.has('note')) {
                     this.note = urlParams.get('note')
-                 }
+                }
 
             },
 
@@ -444,7 +444,7 @@ window.initComponents = function initComponents() {
 
 
             addToShopcard(event) {
-                if (event.target.checkValidity()) {
+                if ((!event) || event.target.checkValidity()) {
                     $('#addtoscbtn').attr("disabled", true)
 
                     return App.Backend.post('shopcard/add', {
@@ -457,11 +457,11 @@ window.initComponents = function initComponents() {
                         $('#shopcard-added-toast').toast('show')
                         return window.shopcard.card.data = result
                     }
-                    ).finally(()=>{
+                    ).finally(() => {
                         $('#addtoscbtn').attr("disabled", false)
                     })
-                    
-                    .catch(err =>  App.HandleError(err));
+
+                        .catch(err => App.HandleError(err));
                 }
             }
         },
@@ -472,10 +472,11 @@ window.initComponents = function initComponents() {
                     this.quantity = null;
                     this.$nextTick(function () {
                         this.loadFromUrl();
-                        this.selectedUnit = this.selectedUnit || ((this.product.purchaseOptions.length > 1) ? null : this.product.purchaseOptions[0])
+                        this.selectedUnit = this.selectedUnit || ((this.product.purchaseOptions.length > 1) ? null : this.product.purchaseOptions[0]);
+
                     })
 
-                    
+
                 }
             },
             selectedUnit: function (newVal, oldVal) {
@@ -483,6 +484,13 @@ window.initComponents = function initComponents() {
                     this.quantity = newVal.default;
                 } else if (newVal) {
                     this.quantity = this.quantity || newVal.default
+                }
+                if (this.selectedUnit && this.quantity && window.App.ProductApp.add2ScOnce) {
+                    window.App.ProductApp.add2ScOnce = false;
+
+
+                    this.addToShopcard()
+
                 }
             },
         },

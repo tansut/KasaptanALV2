@@ -672,7 +672,11 @@ $(document).ready(function() {
 })
 
 
-<% } %>
+<% } else if (view.butcher && __req.prefAddr && __req.query.action == 'add2sc') { %>
+ 
+    window.App.ProductApp.add2ScOnce = true;
+ 
+<% } %> 
 
                   
                 <% if (__req.query.r) { %>

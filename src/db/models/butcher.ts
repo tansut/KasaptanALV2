@@ -116,7 +116,7 @@ class Butcher extends BaseModel<Butcher> {
         allowNull: true,
         type: DataType.TEXT
     })
-    mddesc: string;        
+    mddesc: string;
 
     @Column
     videoinstagram: Buffer;
@@ -148,15 +148,35 @@ class Butcher extends BaseModel<Butcher> {
     static async sellingButchers(productid: number, areas?: AreaLevels) {
         let where = {
             productid: productid,
-            kgPrice: {
-                [Op.gt]: 0.0
-            },
+            [Op.or]: [
+                {
+                    kgPrice: {
+                        [Op.gt]: 0.0
+                    }
+                },
+                {
+                    unit1price: {
+                        [Op.gt]: 0.0
+                    }
+                },
+                {
+                    unit2price: {
+                        [Op.gt]: 0.0
+                    }
+                },
+                {
+                    unit3price: {
+                        [Op.gt]: 0.0
+                    }
+                }
+
+            ],
             enabled: true
         }
         if (areas) {
-            areas.level1Id ? where['$butcher.areaLevel1Id$'] = areas.level1Id:null;
-            areas.level2Id ? where['$butcher.areaLevel2Id$'] = areas.level2Id:null;;
-            areas.level3Id ? where['$butcher.areaLevel3Id$'] = areas.level3Id:null;
+            areas.level1Id ? where['$butcher.areaLevel1Id$'] = areas.level1Id : null;
+            areas.level2Id ? where['$butcher.areaLevel2Id$'] = areas.level2Id : null;;
+            areas.level3Id ? where['$butcher.areaLevel3Id$'] = areas.level3Id : null;
         }
         return await ButcherProduct.findAll({
             where: where,
@@ -171,18 +191,18 @@ class Butcher extends BaseModel<Butcher> {
         return await Butcher.findAll(
             {
                 include: [{
-                  all: true  
+                    all: true
                 }],
                 where: where
             }
-        )        
+        )
     }
 
-     static async getBySlug(slug: string) {
+    static async getBySlug(slug: string) {
         return await Butcher.findOne(
             {
                 include: [{
-                  all: true  
+                    all: true
                 }],
                 where: {
                     slug: slug

@@ -10,13 +10,13 @@ import Butcher from '../../db/models/butcher';
 import Area from '../../db/models/area';
 import Dispatcher from '../../db/models/dispatcher';
 import ButcherProduct from '../../db/models/butcherproduct';
-import {Op, Sequelize}  from "sequelize";
+import { Op, Sequelize } from "sequelize";
 import { PreferredAddress } from '../../db/models/user';
 
 export default class Route extends ApiRouter {
 
     _where(where: any, address: PreferredAddress) {
-        where[Op.or] =  where[Op.or] || [];
+        where[Op.or] = where[Op.or] || [];
         if (address.level1Id) {
             where[Op.or].push({
                 toareaid: address.level1Id
@@ -31,23 +31,23 @@ export default class Route extends ApiRouter {
             where[Op.or].push({
                 toareaid: address.level3Id
             })
-        }   
+        }
         return where
     }
 
     async bestDispatcher(butcherId, address: PreferredAddress) {
         let where = {
             type: 'butcher',
-            butcherid: butcherId,          
+            butcherid: butcherId,
             [Op.or]: []
         };
         where = this._where(where, address);
-                     
+
         let res = await Dispatcher.findOne({
             where: where,
             order: [["toarealevel", "DESC"]]
         })
-        return res;        
+        return res;
     }
 
     // async bestDispatcher(butcherId, toAreaId, tolevel) {
@@ -74,11 +74,37 @@ export default class Route extends ApiRouter {
 
     async getButchersSelingAndDispatches(address: PreferredAddress, pid) {
         let where = {
-            type: 'butcher'       
+            type: 'butcher'
         }
         where = this._where(where, address);
         where['$butcher.products.productid$'] = pid;
-        where['$butcher.products.kgPrice$'] = {[Op.gt]: 0.0 }
+
+        let w = [{
+            '$butcher.products.kgPrice$': {
+                [Op.gt]: 0.0
+            }
+        },
+
+        {
+            '$butcher.products.unit1price$': {
+                [Op.gt]: 0.0
+            }
+        },
+
+        {
+            '$butcher.products.unit2price$': {
+                [Op.gt]: 0.0
+            }
+        },
+        {
+            '$butcher.products.unit3price$': {
+                [Op.gt]: 0.0
+            }
+        }
+        ]
+        where[Op.or].push(w);
+
+
         let res = await Dispatcher.findAll({
             where: where,
             include: [
@@ -86,23 +112,23 @@ export default class Route extends ApiRouter {
                     model: Butcher,
                     as: 'butcher',
                     include: [{
-                        model: ButcherProduct                        
-                        }
+                        model: ButcherProduct
+                    }
                     ]
-                },                
+                },
             ],
             order: [['lastorderitemid', 'DESC'], ["toarealevel", "DESC"]]
             //limit: 10
         })
         let ugly = {}, result = [];
-        res.forEach(r=>{
+        res.forEach(r => {
             if (!ugly[r.butcherid]) {
                 ugly[r.butcherid] = r;
                 result.push(r)
             }
         })
         return result;
-    }    
+    }
 
 
 
