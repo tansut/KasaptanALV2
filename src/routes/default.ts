@@ -22,6 +22,7 @@ export default class Route extends ViewRouter {
     //tarifs: Resource[];
     foods: Resource[];
     blogItems: Content[];
+    foodsTitle = "Yemekler";
 
     async getBlogItems() {
         return this.req.__recentBlogs;
@@ -67,11 +68,19 @@ export default class Route extends ViewRouter {
             CacheManager.dataCache.set("recent-butchers", recentButchers.map(b => b.get({ plain: true })));
         }
 
-        this.foods = CacheManager.dataCache.get("recent-foods");
+        //this.foods = CacheManager.dataCache.get("recent-foods");
         if (!this.foods) {
+            let sub14 = this.req.__categories.find(c=>c.slug == '14-subat-yemekleri');
+            if (!sub14) {
             this.foods = await new ProductsApi(this.constructorParams).getFoodAndTarifResources(null, 15, null, {
                 raw: false
             });
+            } else {
+                this.foodsTitle = sub14.name;
+                this.foods = await new ProductsApi(this.constructorParams).getFoodAndTarifResources(null, null, [sub14.id], {
+                    raw: false
+                });                
+            }
             //CacheManager.dataCache.set("recent-foods", this.foods.map(b => b.get({ plain: true })));
         }
         this.blogItems = await this.getBlogItems();
