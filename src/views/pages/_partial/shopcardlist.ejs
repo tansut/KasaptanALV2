@@ -7,7 +7,7 @@
                         class="czi-arrow-right ml-1 mr-n1"></i></a>
                   </div> -->
 
-  <div class="bg-secondary p-3  mb-4"><a class="media align-items-center" href="/<%=shopcard.butchers[bi].slug%>"><img
+  <div class="bg-secondary p-3  mb-3"><a class="media align-items-center" href="/<%=shopcard.butchers[bi].slug%>"><img
         class="rounded-circle header-img" src="<%= `${__req.helper.imgUrl('butcher-google-photos', shopcard.butchers[bi].slug)}` %>"
         alt="<%=shopcard.butchers[bi].name%>">
       <div class="media-body pl-2"><span class="font-size-ms text-muted">Sepetiniz</span>
@@ -18,9 +18,19 @@
 
   <% butcher.products.forEach((pi, i) => { %>
   <% let item = shopcard.items[pi] %>
-
+  <% var totalDiscount = shopcard.getButcherDiscountTotal(bi) %>
+  <% if (totalDiscount < 0 ) { %>
+    <div class="mx-3 alert alert-info rounded-0 ">
+      
+        <span>Tebrikler, <%=shopcard.butcherDiscounts[bi].map(cdd=>cdd.name).join('+') %> </span>
+        <strong><%- include('./currency.ejs', {value: -totalDiscount}) %></strong> indirim kazandınız. İndirimi yakalamak için Alışverişimi Tamamla butonu ile devam edin.
+    
+  
+     
+    </div>
+    <% } %>
   <div id="shop-card-item-<%=i%>"
-    class="px-4 d-sm-flex justify-content-between align-items-center my-4 pb-3 border-bottom">
+    class="px-3 d-sm-flex justify-content-between align-items-center my-3 pb-3 border-bottom">
     <div class="media media-ie-fix d-block d-sm-flex align-items-center text-center text-sm-left"><a
         class="d-inline-block mx-auto mr-sm-4" href="/<%=item.product.slug%>/<%=item.product.butcherSlug%>"
         style="width: 10rem;"><img src="<%=`${__req.helper.imgUrl('product-photos', item.product.slug)}`%>"
@@ -56,9 +66,14 @@
         class="czi-close-circle mr-2"></i><span class="font-size-sm">Çıkar</span></button>
     <% } %>
   </div>
+
+
 </div>
 
 <% }) %>
+
+
+
 </div>
 <%}%>  
 

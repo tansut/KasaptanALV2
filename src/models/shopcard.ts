@@ -50,6 +50,13 @@ export let firstOrderDiscount = Object.assign(new Discount(), {
     net: 0
 })
 
+export let sub14OrderDiscount = Object.assign(new Discount(), {
+    code: '14subat',
+    name: '14 Şubat indirimi',
+    percent: 5,
+    net: 0
+})
+
 export interface ShopcardButcherView {
     slug: string;
     name: string;
@@ -299,7 +306,7 @@ export class ShopCard {
 
     removeButcherDiscount(bi, code: string) {
         if (this.butcherDiscounts[bi]) {
-            _.remove(this.butcherDiscounts[bi], p => p.code == firstOrderDiscount.code)            
+            _.remove(this.butcherDiscounts[bi], p => p.code == firstOrderDiscount.code)                    
         }
         this.butcherDiscounts[bi].length == 0 && delete this.butcherDiscounts[bi];
         
@@ -310,7 +317,21 @@ export class ShopCard {
         if (!this.butcherDiscounts[bi])
             return null;
         return this.butcherDiscounts[bi].find(p=>p.code == code)
-    }    
+    }   
+    
+    async manageDiscounts() {
+        for(let b in this.butchers) {                
+            let applied = this.getButcherDiscount(b, sub14OrderDiscount.code);
+            if (!applied) {
+                this.addButcherDiscount(b, Object.assign(new Discount(), {
+                    code: sub14OrderDiscount.code,
+                    percent: sub14OrderDiscount.percent,
+                    name: sub14OrderDiscount.name,
+                    subTotal: this.butchers[b].subTotal
+                }))    
+            }
+        }        
+    }
 
     async manageFirstOrderDiscount(hasFirstOrder: Order) {
         firstOrderDiscount.subTotal = this.subTotal;
@@ -373,8 +394,8 @@ export class ShopCard {
             }
         })        
 
-        result.manageFirstOrderDiscount(firstOrder);
-
+        await result.manageFirstOrderDiscount(firstOrder);
+        await result.manageDiscounts();
         return result;
     }
 }
