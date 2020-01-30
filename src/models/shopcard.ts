@@ -96,7 +96,7 @@ export class ShopCard {
         if (!this.butcherDiscounts[bi])
             return 0.00;            
         this.butcherDiscounts[bi].forEach(d=>(totalPrice+=d.calculated));
-        return totalPrice;
+        return Helper.asCurrency(totalPrice);
     }
 
     getButcherTotal(bi) {
@@ -306,7 +306,7 @@ export class ShopCard {
 
     removeButcherDiscount(bi, code: string) {
         if (this.butcherDiscounts[bi]) {
-            _.remove(this.butcherDiscounts[bi], p => p.code == firstOrderDiscount.code)                    
+            _.remove(this.butcherDiscounts[bi], p => p.code == code)                    
         }
         this.butcherDiscounts[bi].length == 0 && delete this.butcherDiscounts[bi];
         
@@ -322,6 +322,11 @@ export class ShopCard {
     async manageDiscounts() {
         for(let b in this.butchers) {                
             let applied = this.getButcherDiscount(b, sub14OrderDiscount.code);
+            if (applied) {
+                this.removeButcherDiscount(b, sub14OrderDiscount.code)  
+                applied = null;
+             }
+
             if (!applied) {
                 this.addButcherDiscount(b, Object.assign(new Discount(), {
                     code: sub14OrderDiscount.code,

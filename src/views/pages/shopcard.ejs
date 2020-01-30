@@ -70,20 +70,30 @@
                   <h2 class="h6 mb-3 pb-1">Subtotal</h2>
                   <h3 class="font-weight-normal"><%=shopcard.totalFormatted%><small>00</small></h3>
                 </div> -->
-                <% if (shopcard.discountTotal != 0) { %>
+                <% if (true) { %>
             <div class="accordion mb-4" id="order-options">
                 
               <div class="card">
                 <div class="card-header ">
                   <h3 class="accordion-heading"><a class="" href="#order-discounts" role="button"
-                      data-toggle="collapse" aria-expanded="true" aria-controls="order-discounts">Kazandınız!<span
+                      data-toggle="collapse" aria-expanded="true" aria-controls="order-discounts">Toplam Tutar<span
                         class="accordion-indicator"></span></a></h3>
                 </div>
                 <div class="collapse show" id="order-discounts" data-parent="#order-options">
                   <div class="card-body">
- 
-                        <p>Siparişinize özel indirimler mevcut.</p>
-                        <p>Alışverişimi Tamamla butonu ile devam edin.</p>
+                    <div class="text-center font-weight-medium">
+                      
+                      <%- include('./_partial/currency.ejs', {value: shopcard.total}) %> 
+                      <% if (shopcard.discountTotal != 0) { %>
+                      <br>
+                      <span class="text-muted">
+                        <del><%- include('./_partial/currency.ejs', {value: shopcard.subTotal}) %> </del>
+
+                      </span>
+                      <% } %>
+                    </div>
+
+                        <!-- <p>Alışverişimi Tamamla butonu ile devam edin.</p> -->
 
                   </div>
                 </div>

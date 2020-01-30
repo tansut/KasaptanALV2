@@ -14,21 +14,21 @@
         <h3 class="h4 mb-0 mr-2"><%= shopcard.butchers[bi].name %></h3>
       </div>
     </a></div>
-
+    <% var totalDiscount = shopcard.getButcherDiscountTotal(bi) %>
+    <% if (totalDiscount < 0 ) { %>
+      <div class="mx-3 alert alert-info rounded-0 ">
+        
+          <span>Tebrikler, <%=shopcard.butcherDiscounts[bi].map(cdd=>cdd.name).join('+') %> </span>
+          <strong><%- include('./currency.ejs', {value: -totalDiscount}) %></strong> indirim kazandınız. İndirimi yakalamak için Alışverişimi Tamamla butonu ile devam edin.
+      
+    
+       
+      </div>
+      <% } %>
 
   <% butcher.products.forEach((pi, i) => { %>
   <% let item = shopcard.items[pi] %>
-  <% var totalDiscount = shopcard.getButcherDiscountTotal(bi) %>
-  <% if (totalDiscount < 0 ) { %>
-    <div class="mx-3 alert alert-info rounded-0 ">
-      
-        <span>Tebrikler, <%=shopcard.butcherDiscounts[bi].map(cdd=>cdd.name).join('+') %> </span>
-        <strong><%- include('./currency.ejs', {value: -totalDiscount}) %></strong> indirim kazandınız. İndirimi yakalamak için Alışverişimi Tamamla butonu ile devam edin.
-    
-  
-     
-    </div>
-    <% } %>
+
   <div id="shop-card-item-<%=i%>"
     class="px-3 d-sm-flex justify-content-between align-items-center my-3 pb-3 border-bottom">
     <div class="media media-ie-fix d-block d-sm-flex align-items-center text-center text-sm-left"><a
