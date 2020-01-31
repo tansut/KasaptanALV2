@@ -1,7 +1,7 @@
 import * as express from "express";
 
 let appRoutes = [
-    './butcher',
+    './butcherview',
     './area',
     './resource',
     './product',

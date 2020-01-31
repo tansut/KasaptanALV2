@@ -9,6 +9,7 @@ import Product from "../../db/models/product";
 import Area from "../../db/models/area";
 import { ButcherRouter } from "./home";
 import * as _ from "lodash";
+import Helper from "../../lib/helper";
 
 
 export default class Route extends ButcherRouter {
@@ -17,15 +18,16 @@ export default class Route extends ButcherRouter {
     otherProducts = [];
     goto: string;
 
+
     async getProducts() {
         return await Product.findAll({
             include: [{
                 all: true
             }
-            ], 
+            ],
             order: ["Tag1", "Name"],
             where: {
-                
+
             }
         });
     }
@@ -85,27 +87,27 @@ export default class Route extends ButcherRouter {
 
     async setProducts() {
         let selling = this.butcher.products.filter(p => {
-            return p.enabled 
-        })        
-        selling = _.sortBy(selling, ["displayOrder", "updatedOn"]).reverse();
+            return p.enabled
+        })
+        selling = _.sortBy(selling, ["displayOrder"]).reverse();
 
         let allproducts = await this.getProducts()
 
         let others = allproducts.filter(p => {
-            let bp = this.butcher.products.find(bp=> {
+            let bp = this.butcher.products.find(bp => {
                 return bp.enabled == true && bp.productid == p.id
             })
             return !bp
-        })        
-        others = _.sortBy(others, ["displayOrder", "updatedOn"]).reverse();
+        })
+        others = _.sortBy(others, ["displayOrder"]).reverse();
 
-        this.sellingProducts = selling.map(p=>this.getButcherProductInfo(p));
-        this.otherProducts = others.map(p=>this.getButcherProductInfo(null, p));
+        this.sellingProducts = selling.map(p => this.getButcherProductInfo(p));
+        this.otherProducts = others.map(p => this.getButcherProductInfo(null, p));
     }
 
     async saveProductRoute() {
-        await this.setButcher(); 
-        
+        await this.setButcher();
+
         let productid = parseInt(this.req.body.productid);
         let newItem: ButcherProduct = await ButcherProduct.findOne({
             where: {
@@ -121,26 +123,41 @@ export default class Route extends ButcherRouter {
         newItem.vitrin = this.req.body.productvitrin == "on";
         newItem.butcherid = this.butcher.id;
         newItem.productid = productid;
-        newItem.displayOrder = (this.req.body.productdisplayorder ? parseInt(this.req.body.productdisplayorder) : 0)
+        newItem.displayOrder = (this.req.body.productdisplayorder ? parseInt(this.req.body.productdisplayorder) : newItem.displayOrder)
         newItem.unit1price = this.req.body.unit1price ? parseFloat(this.req.body.unit1price) : 0;
         newItem.unit2price = this.req.body.unit2price ? parseFloat(this.req.body.unit2price) : 0;
         newItem.unit3price = this.req.body.unit3price ? parseFloat(this.req.body.unit3price) : 0;
         newItem.kgPrice = this.req.body.productkgPrice ? parseFloat(this.req.body.productkgPrice) : 0;
         newItem.mddesc = this.req.body.productmddesc;
-        await newItem.save();
-        await this.setButcher(); 
-        await this.setProducts();
-        this.goto = "p" +  productid.toString();
-        this.res.render("pages/butcher.products.ejs", this.viewData({
+        if (newItem.enabled && !(Helper.nvl(newItem.kgPrice) || Helper.nvl(newItem.unit1price) || Helper.nvl(newItem.unit2price) || Helper.nvl(newItem.unit3price))) {
+            this.goto = "p" + productid.toString();
+            await this.setProducts();
+            this.res.render("pages/butcher.products.ejs", this.viewData({
+                _usrmsg: {
+                    text: "Geçerli satış değerleri girmeden ürün satılamaz",
+                    type: 'danger'
+                }
+            }))
+        } else {
+            await newItem.save();
+            await this.setButcher();
+            await this.setProducts();
+            this.goto = "p" + productid.toString();
 
-        }))        
+            this.res.render("pages/butcher.products.ejs", this.viewData({
+
+            }))
+
+        }
+
+
     }
 
     async viewRoute() {
-        await this.setButcher();    
+        await this.setButcher();
         await this.setProducts();
         // (p.kgPrice > 0 || p.unit1price > 0 || p.unit2price > 0 || p.unit3price > 0)
-        
+
 
         this.res.render("pages/butcher.products.ejs", this.viewData({
 
@@ -148,9 +165,9 @@ export default class Route extends ButcherRouter {
     }
 
     static SetRoutes(router: express.Router) {
-        router.get("/products", Route.BindRequest(this.prototype.viewRoute));                
-        router.get("/product/save", Route.BindRequest(this.prototype.viewRoute));                
-        router.post("/product/save", Route.BindRequest(this.prototype.saveProductRoute));                
+        router.get("/products", Route.BindRequest(this.prototype.viewRoute));
+        router.get("/product/save", Route.BindRequest(this.prototype.viewRoute));
+        router.post("/product/save", Route.BindRequest(this.prototype.saveProductRoute));
     }
 }
 

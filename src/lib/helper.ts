@@ -16,6 +16,10 @@ export default class Helper {
         name: 'Tarifler'
     }]
 
+    static nvl(val, def = 0) {
+        return parseInt(val) == NaN ? def: parseInt(val);
+    }
+
     static asCurrency(n: number) {
         return Number(n.toFixed(2));
     }
