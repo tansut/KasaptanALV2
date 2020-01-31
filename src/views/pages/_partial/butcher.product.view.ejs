@@ -1,0 +1,86 @@
+
+    
+    <form name="saveproductform" action="/pages/butcher/product/save" method="POST" class="border <%=prodinfo.enabled ? 'bg-secondary' : 'bg-white'%> mb-2 p-2">
+       
+        <input type="hidden" name="productid" value="<%= prodinfo.product.id %>">
+
+        <div class="form-group">
+
+            <div class="form-check">
+                <input class="form-check-input" type="checkbox" name="productenabled"
+                    <%= prodinfo.enabled ? "checked" : "" %> aria-label="Checkbox">
+                <label class="form-check-label font-weight-bold" for="defaultCheck1">
+                    <%= prodinfo.product.name %>
+                </label>
+            </div>
+
+
+
+
+        </div>
+
+        <div class="row">
+
+            <div class="col-12">
+                <div class="form-group">
+                    <label>Kilogram Fiyatı</label>
+                    <input type="text" class="form-control" value="<%= prodinfo.kgPrice %>"
+                        name="productkgPrice">
+
+
+                </div>
+            </div>   
+
+
+            <% var productunits = controller.getProductUnits(prodinfo.product) %>
+            <% for(var k=0; k<productunits.length; k++) {%>
+
+            <div class="col-12">
+
+
+                <div class="form-group">
+                    <label><%= productunits[k].unit %> Fiyatı <%= `(${productunits[k].kgRatio * 1000} gram ortalama)` %>  </label>
+                    <input type="text" class="form-control" name="<%=`unit${k+1}price` %>"
+                        id="<%=`unit${k+1}price` %>" value="<%= prodinfo[`unit${k+1}price`] %>">
+                </div>
+            </div>
+            <% } %>
+            <div class="col">
+                <div class="form-group">
+                    <label>Ürün Sırası</label>
+                    <input type="text" class="form-control" value="<%= prodinfo.displayOrder %>"
+                        name="productdisplayorder">
+
+
+                </div>
+            </div>
+                                      
+        </div>
+        <div class="form-group">
+
+            <div class="form-check">
+                <input id="productvitrin" class="form-check-input" type="checkbox"
+                    name="productvitrin" <%= prodinfo.vitrin ? "checked" : "" %>
+                    aria-label="Checkbox">
+                <label class="form-check-label font-weight-bold" for="defaultCheck1">
+                    Vitrin
+                </label>
+            </div>
+
+
+
+
+        </div>
+
+        <div class="form-group">
+
+            <textarea name="productmddesc" id="productmddesc" class="form-control" rows="5"><%= prodinfo.mddesc %></textarea>
+
+
+
+
+        </div>
+        <button type="submit" name="updateproduct" value="true"
+            class="btn btn-primary">Kaydet</button>
+    </form>
+

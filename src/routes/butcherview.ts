@@ -19,7 +19,7 @@ import ButcherProduct from '../db/models/butcherproduct';
 import Area from '../db/models/area';
 import ProductCategory from '../db/models/productcategory';
 import { pbkdf2 } from 'crypto';
-var MarkdownIt = require('markdown-it')
+var MarkdownIt = require('markdown-it') 
 import * as _ from "lodash";
 import { ResourceCacheItem } from '../lib/cache';
 import Dispatcher from '../db/models/dispatcher';
@@ -89,8 +89,9 @@ export default class Route extends ViewRouter {
         });
         if (!butcher) return this.next();
         butcher.products = butcher.products.filter(p => {
-            return p.kgPrice > 0 || p.unit1price > 0 || p.unit2price > 0 || p.unit3price > 0
+            return p.enabled && (p.kgPrice > 0 || p.unit1price > 0 || p.unit2price > 0 || p.unit3price > 0)
         })
+        
         butcher.products = _.sortBy(butcher.products, ["displayOrder", "updatedOn"]).reverse()
         let images = await Resource.findAll({
             where: {

@@ -69,6 +69,9 @@ export default class User extends BaseModel<User> {
     @Column
     lastLogin: Date
 
+    @Column
+    butcherid: number;
+
     static retrieveByEMailOrPhone(email: string) {
         let where = validator.isEmail(email) ? {
             email: email

@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="tr-TR" prefix="og: http://ogp.me/ns#">
+
+<head>
+  <% include ./_partial/head %>
+</head>
+
+<body>
+  <% include ./_partial/header %>
+
+  <div class="page-title-overlap bg-primary pt-4">
+    <div class="container d-lg-flex justify-content-between py-2 py-lg-3">
+      <div class="order-lg-2 mb-3 mb-lg-0 pt-lg-2">
+        <nav aria-label="breadcrumb">
+          <ol class="breadcrumb breadcrumb-light flex-lg-nowrap justify-content-center justify-content-lg-star">
+            <li class="breadcrumb-item"><a class="text-nowrap" href="/pages/butcher"><i class="czi-home"></i></a></li>
+            <li class="breadcrumb-item text-nowrap active" aria-current="page"><%= controller.butcher ? controller.butcher.name: "Kasap" %></li>
+          </ol>
+        </nav>
+      </div>
+
+    </div>
+  </div>
+
+
+
+  <div class="container px-0">
+    <div class="bg-light box-shadow-lg px-4 py-4 mb-3 ">
+      <% if (controller.butcher) { %>
+      <ul class="list-group">
+        <li class="list-group-item">
+          <a href="/pages/butcher/products">Ürünler</a>
+        </li>
+      </ul>
+<%}%>
+    <% if (__req.user.hasRole('admin')) { %>
+    <div>
+<form method="POST" action="/pages/butcher/setbutcher">
+  <table class="table table-hover">
+    <thead>
+        <tr>
+            <th>Adı</th>
+            <th>Onaylı</th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+
+<% controller.adminButchers.forEach(b=>{  %>
+
+  <tr>
+    <td><a href="<%= `/pages/admin/butcher/${b.slug}` %>"><%= b.name %> </a>
+    </td>
+    <td><%= b.approved %></td>
+    <td>
+      <button class="btn btn-sm btn-primary" name="butcherid" type="submit" value="<%=b.id%>">Set</button>
+
+    </td>
+</tr> 
+
+
+<%})%>
+</tbody>
+</table>
+
+</form>
+    </div>
+    <% } %>
+
+    </div>
+  </div>
+
+
+
+  <% include ./_partial/footer %>
+  <% include ./_partial/scripts %>
+
+</body>
+
+</html>

@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="tr-TR" prefix="og: http://ogp.me/ns#">
+
+<head>
+  <% include ./_partial/head %>
+</head>
+
+<body>
+  <% include ./_partial/header %>
+
+
+  <div class="page-title-overlap bg-primary pt-4">
+    <div class="container d-lg-flex justify-content-between py-2 py-lg-3">
+      <div class="order-lg-2 mb-3 mb-lg-0 pt-lg-2">
+        <nav aria-label="breadcrumb">
+          <ol class="breadcrumb breadcrumb-light flex-lg-nowrap justify-content-center justify-content-lg-star">
+            <li class="breadcrumb-item"><a class="text-nowrap" href="/pages/butcher"><i class="czi-home"></i></a></li>
+            <li class="breadcrumb-item text-nowrap active" aria-current="page"><%= controller.butcher ? controller.butcher.name: "Kasap" %></li>
+          </ol>
+        </nav>
+      </div>
+
+    </div>
+  </div>
+
+
+
+  <div class="container px-0">
+    <div class="bg-light box-shadow-lg px-4 py-4 mb-3 ">
+      <div class="row mb-grid-gutter">
+        <div class="col-sm-6">
+          <h3 class="h5 border-bottom">Sattığım Ürünler (<%=controller.sellingProducts.length%> adet)</h3>
+          <!--  -->
+          <% controller.sellingProducts.forEach(p=>{ %>
+            <%- include('./_partial/butcher.product.view.ejs', {
+              prodinfo: p
+            })%>
+          <%})%>
+        </div>
+
+        <div class="col-sm-6">
+          <h3 class="h5 border-bottom">Diğer Ürünler (<%=controller.otherProducts.length%> adet)</h3>
+          <% controller.otherProducts.forEach(p=>{ %>
+            <%- include('./_partial/butcher.product.view.ejs', {
+              prodinfo: p
+            })%>
+          <%})%>          
+        </div>
+      </div>
+    
+    </div>
+  </div>
+
+
+
+  <% include ./_partial/footer %>
+  <% include ./_partial/scripts %>
+
+</body>
+
+</html>
