@@ -30,8 +30,9 @@
       <div class="row mb-grid-gutter">
         <div class="col-sm-6">
           <h3 class="h5 border-bottom">Sattığım Ürünler (<%=controller.sellingProducts.length%> adet)</h3>
-          <!--  -->
+
           <% controller.sellingProducts.forEach(p=>{ %>
+          
             <%- include('./_partial/butcher.product.view.ejs', {
               prodinfo: p
             })%>
@@ -55,6 +56,12 @@
 
   <% include ./_partial/footer %>
   <% include ./_partial/scripts %>
+
+  <script>
+  <% if (controller.goto) {  %>
+    window.App.scrollToAnchor("#<%= controller.goto %>");
+  <% } %>
+  </script>
 
 </body>
 

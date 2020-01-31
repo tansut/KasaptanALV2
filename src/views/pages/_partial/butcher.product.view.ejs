@@ -1,6 +1,6 @@
 
-    
-    <form name="saveproductform" action="/pages/butcher/product/save" method="POST" class="border <%=prodinfo.enabled ? 'bg-secondary' : 'bg-white'%> mb-2 p-2">
+    <a id="<%= ('p' + prodinfo.product.id) %>"></a>
+    <form  name="saveproductform" action="/pages/butcher/product/save" method="POST" class="border <%=prodinfo.enabled ? 'bg-secondary' : 'bg-white'%> mb-2 p-2">
        
         <input type="hidden" name="productid" value="<%= prodinfo.product.id %>">
 

@@ -15,6 +15,7 @@ export default class Route extends ButcherRouter {
 
     sellingProducts = [];
     otherProducts = [];
+    goto: string;
 
     async getProducts() {
         return await Product.findAll({
@@ -129,7 +130,7 @@ export default class Route extends ButcherRouter {
         await newItem.save();
         await this.setButcher(); 
         await this.setProducts();
-
+        this.goto = "p" +  productid.toString();
         this.res.render("pages/butcher.products.ejs", this.viewData({
 
         }))        
@@ -148,6 +149,7 @@ export default class Route extends ButcherRouter {
 
     static SetRoutes(router: express.Router) {
         router.get("/products", Route.BindRequest(this.prototype.viewRoute));                
+        router.get("/product/save", Route.BindRequest(this.prototype.viewRoute));                
         router.post("/product/save", Route.BindRequest(this.prototype.saveProductRoute));                
     }
 }
