@@ -9,19 +9,25 @@
 <% } %>
 
 
+
+
 <% var homeUrl = (config.nodeenv == 'production') ? '/': '/' %>
-<header class="box-shadow-sm">
+
+<header class="box-shadow-sm d-print-none">
   <!-- Topbar-->
 
-  <div class="topbar topbar-dark bg-primary-darkest d-none d-lg-block">
+  <div class="topbar topbar-dark bg-primary-darkest d-none d-lg-block ">
     <div class="container">
+
+
+
       <div class="topbar-text dropdown d-none d-md-none"><a class="topbar-link dropdown-toggle" href="#"
           data-toggle="dropdown">Hızlı Erişim</a>
         <ul class="dropdown-menu">
           <li><a class="dropdown-item" href="/lezzetler"><i class="czi-view-grid text-muted mr-2"></i>Lezzetler</a></li>
           <li>
           <li><a class="dropdown-item" href="tel:8503054216"><i class="czi-support text-muted mr-2"></i>
-            0 850 305 4216</a></li>
+              0 850 305 4216</a></li>
           <li>
 
             <% if ( __req.prefAddr) { %>
@@ -199,7 +205,8 @@
                           src="<%=`${__req.helper.imgUrl('category-photos', reyonlar[c].slug)}`%>"
                           alt="<%=reyonlar[c].name%>" /></a>
                       <h6 class="font-size-base mb-2 text-center">
-                        <a class="text-primary" href="<%= `/et-yemekleri/${reyonlar[c].slug}`%>"><%= reyonlar[c].name %></a>
+                        <a class="text-primary"
+                          href="<%= `/et-yemekleri/${reyonlar[c].slug}`%>"><%= reyonlar[c].name %></a>
 
                       </h6>
 
@@ -307,8 +314,8 @@
                 <li class="nav-item"><a class="nav-link" href="/et-yemek-tarifleri">Tarifler</a>
   
                 </li> -->
-           
-<!-- 
+
+            <!-- 
             <li class="nav-item"><a class="nav-link" href="/et-yemek-tarifleri">Tarifler</a>
 
             </li> -->
@@ -321,8 +328,9 @@
             <%if (__req.user) { %>
             <li class="d-lg-none nav-item"><a class="nav-link" href="/user"><i class=" czi-user mr-2"></i>Profilim</a>
             </li>
-          <%} else {%>
-            <li class="d-lg-none nav-item"><a class="nav-link" data-toggle="modal" href="#signin-modal"><i class=" czi-user mr-2"></i>Kullanıcı Girişi/Kayıt</a>
+            <%} else {%>
+            <li class="d-lg-none nav-item"><a class="nav-link" data-toggle="modal" href="#signin-modal"><i
+                  class=" czi-user mr-2"></i>Kullanıcı Girişi/Kayıt</a>
             </li>
             <%}%>
             <% if ( __req.prefAddr ) { %>
@@ -342,16 +350,16 @@
           </ul>
 
           <ul class="nav navbar-nav ml-auto">
-            <li class="nav-item"><a class="nav-link" target="_blank" href="https://wa.me/908503054216?text=<%-`Merhaba, kasaptanal.com üzerinden size ulaşıyorum.`%>">
-              <img src="/static/img/messaging-whatsapp.svg" width="24">
-              WhatsApp Destek</a></li>
-       
+            <li class="nav-item"><a class="nav-link" target="_blank"
+                href="https://wa.me/908503054216?text=<%-`Merhaba, kasaptanal.com üzerinden size ulaşıyorum.`%>">
+                <img src="/static/img/messaging-whatsapp.svg" width="24">
+                WhatsApp Destek</a></li>
+
             <li class="nav-item  d-lg-none">
-              
-                <a class="nav-link" href="tel:08503054216"><i
-                  class="text-light czi-support mr-2"></i>0 850 305 4216</a>
-             
-            
+
+              <a class="nav-link" href="tel:08503054216"><i class="text-light czi-support mr-2"></i>0 850 305 4216</a>
+
+
             </li>
           </ul>
         </div>
