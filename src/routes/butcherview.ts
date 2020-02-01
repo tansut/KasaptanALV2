@@ -89,7 +89,7 @@ export default class Route extends ViewRouter {
         });
         if (!butcher) return this.next();
         butcher.products = butcher.products.filter(p => {
-            return p.enabled && (p.kgPrice > 0 || p.unit1price > 0 || p.unit2price > 0 || p.unit3price > 0)
+            return p.enabled && (p.kgPrice > 0 || (p.unit1price > 0 && p.unit1enabled) || (p.unit2price > 0 && p.unit2enabled) || (p.unit3price > 0 && p.unit1enabled))
         })
         
         butcher.products = _.sortBy(butcher.products, ["displayOrder", "updatedOn"]).reverse()

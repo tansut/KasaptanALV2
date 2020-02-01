@@ -19,7 +19,6 @@ export interface ProductButcherView {
     slug: string;
     name: string;
     id: number;
-    
 }
 
 export interface DispatcherView {
@@ -38,6 +37,7 @@ export interface ResourceView {
 export interface ProductView {
     id: number;
     butcher?: ProductButcherView;
+    butcherNote?: string;
     slug: string;
     kgPrice: number;
     name: string;

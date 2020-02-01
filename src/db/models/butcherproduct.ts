@@ -65,6 +65,36 @@ class ButcherProduct extends BaseModel<ButcherProduct> {
 
     @Column({
         allowNull: false,
+        defaultValue: true
+    })
+    unit1enabled: boolean;    
+
+    @Column({
+        allowNull: false,
+        defaultValue: true
+    })
+    unit2enabled: boolean;     
+
+    @Column({
+        allowNull: false,
+        defaultValue: true
+    })
+    unit3enabled: boolean;     
+
+    @Column({
+        allowNull: false,
+        defaultValue: true
+    })
+    unit4enabled: boolean;    
+    
+    @Column({
+        allowNull: false,
+        defaultValue: true
+    })
+    unit5enabled: boolean;     
+
+    @Column({
+        allowNull: false,
         defaultValue: 0,
         type: DataType.DECIMAL(13, 2)        
     })

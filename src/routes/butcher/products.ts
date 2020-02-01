@@ -35,19 +35,19 @@ export default class Route extends ButcherRouter {
 
     getProductUnits(product: Product) {
         let result = [];
-        (product.unit1 && product.unit1 != "" && product.unit1 != 'kg') ? result.push({
+        (product.unit1 && product.unit1 != "" ) ? result.push({
             unit: product.unit1,
             kgRatio: product.unit1kgRatio,
-            desc: product.unit1desc
+            desc: product.unit1desc        
         }) : null;
-        (product.unit2 && product.unit2 != "" && product.unit2 != 'kg') ? result.push(
+        (product.unit2 && product.unit2 != "") ? result.push(
             {
                 unit: product.unit2,
                 kgRatio: product.unit2kgRatio,
                 desc: product.unit2desc
             }
         ) : null;
-        (product.unit3 && product.unit3 != "" && product.unit3 != 'kg') ? result.push(
+        (product.unit3 && product.unit3 != "") ? result.push(
             {
                 unit: product.unit3,
                 kgRatio: product.unit3kgRatio,
@@ -66,9 +66,12 @@ export default class Route extends ButcherRouter {
             enabled: butcherProduct.enabled,
             bp: butcherProduct,
             product: product || butcherProduct.product,
-            unit1price: butcherProduct.unit1price,
+            unit1price: butcherProduct.unit1price,            
             unit2price: butcherProduct.unit2price,
             unit3price: butcherProduct.unit3price,
+            unit1enabled: butcherProduct.unit1enabled,
+            unit2enabled: butcherProduct.unit2enabled,
+            unit3enabled: butcherProduct.unit3enabled,
             vitrin: butcherProduct.vitrin,
             kgPrice: butcherProduct.kgPrice,
             mddesc: butcherProduct.mddesc
@@ -78,6 +81,9 @@ export default class Route extends ButcherRouter {
                 unit1price: 0,
                 unit2price: 0,
                 unit3price: 0,
+                unit1enabled: true,
+                unit2enabled: true,
+                unit3enabled: true,
                 vitrin: false,
                 kgPrice: 0,
                 mddesc: "",
@@ -129,7 +135,16 @@ export default class Route extends ButcherRouter {
         newItem.unit3price = this.req.body.unit3price ? parseFloat(this.req.body.unit3price) : 0;
         newItem.kgPrice = this.req.body.productkgPrice ? parseFloat(this.req.body.productkgPrice) : 0;
         newItem.mddesc = this.req.body.productmddesc;
-        if (newItem.enabled && !(Helper.nvl(newItem.kgPrice) || Helper.nvl(newItem.unit1price) || Helper.nvl(newItem.unit2price) || Helper.nvl(newItem.unit3price))) {
+
+        newItem.unit1enabled = this.req.body.unit1enabled =="on";
+        newItem.unit2enabled = this.req.body.unit2enabled =="on";
+        newItem.unit3enabled = this.req.body.unit3enabled =="on";
+
+        if (
+            newItem.enabled && ( 
+            !(Helper.nvl(newItem.kgPrice) || Helper.nvl(newItem.unit1price) || Helper.nvl(newItem.unit2price) || Helper.nvl(newItem.unit3price)) ||
+            !(newItem.unit1enabled || newItem.unit2enabled || newItem.unit3enabled))
+        ) {
             this.goto = "p" + productid.toString();
             await this.setProducts();
             this.res.render("pages/butcher.products.ejs", this.viewData({

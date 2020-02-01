@@ -48,6 +48,11 @@
       <% if (__req.user && __req.user.hasRole('admin')) {%>
         <a target="_blank" class=" btn btn-dark btn-sm" href="/pages/admin/butcher/<%=butcher.slug%>">Düzenle</a>
       <%}%>
+
+      <% if (__req.user && (__req.user.hasRole('admin') || __req.user.hasRole('butcher'))) {%>
+        <a target="_blank" class=" btn btn-dark btn-sm" href="/pages/butcher">Kasap Sayfam</a>
+      <%}%>
+
       <p class="lead text-light"><%= butcher.areaLevel2.name %>/<%= butcher.areaLevel1.name %></p>
       <% if(butcher.videoInstagramStr) { %>
       <button onclick="$('#videomodal').modal().show()" type="button" class="btn btn btn-dark mb-4"><i

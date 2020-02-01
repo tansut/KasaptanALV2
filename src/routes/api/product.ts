@@ -235,6 +235,7 @@ export default class Route extends ApiRouter {
                 name: butcher.name,
                 id: butcher.id
             } : null,
+            butcherNote: (butcherProduct && butcherProduct.mddesc) ? butcherProduct.mddesc: '',
             slug: product.slug,
             name: product.name,
             kgPrice: kgPrice,
@@ -255,8 +256,8 @@ export default class Route extends ApiRouter {
 
         this.getProductUnits(product).forEach((p, i) => {
             let col = `unit${i + 1}`
-
-            view.purchaseOptions.push({
+            let add = !butcherProduct ? true: (butcherProduct[`${col}enabled`]);
+            add && view.purchaseOptions.push({
                 id: i + 1,
                 notePlaceholder: product[`${col}note`],
                 desc: this.markdown.render(product[`${col}desc`] || ""),

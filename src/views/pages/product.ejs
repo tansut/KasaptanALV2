@@ -127,8 +127,8 @@
                     <!-- <span class="h3 font-weight-normal text-accent mr-1">
                       <%- include('./_partial/currency.ejs', {value: view.viewUnitPrice, unit: view.viewUnit}) %>
                     </span> -->
-              
-                    <div class="bg-secondary  border-bottom  d-flex flex-nowrap justify-content-between align-items-center">
+                    <div class="bg-secondary">
+                    <div class="   d-flex flex-nowrap justify-content-between align-items-center">
                       <div class="d-flex">
 
                      
@@ -149,13 +149,22 @@
                       <div class="media-body  p-2">
                         <h6 class="h5 mb-0 mr-2"><%= view.butcher.name %></h6>
                         <span class="font-size-ms text-muted">sağlamaktadır.</span>
+
+                   
                       </div></a>
                     </div>
                       <a class="align-self-center d-md-block btn btn-sm" href="/<%=view.butcher.slug%>"><i
                           class="czi-arrow-right font-size-xs align-middle ml-1"></i></a>                        
                   </div>
-                  <div>
-             
+                  
+                    <% if (view.butcherNote) { %>
+                      <div class="font-size-sm p-3">
+                        <!-- <span class="badge badge-accent font-size-xs mr-1">Kasabımızdan</span> -->
+                        <span class="font-size-sm text-muted">"<%= view.butcherNote %>"</span>
+                        
+
+                      </div>
+                    <% } %>
                   </div>
                   <%if (otherButcherAlternatives) {%>
                     <div class="mt-2">
@@ -274,9 +283,10 @@
                       <div class="xform-group">
                         <div v-if="product && product.purchaseOptions.length > 1">
                           <ul class="nav nav-pills nav-pills-dark nav-fill mb-2">
-                            <li v-for="(option, index) in product.purchaseOptions" class="nav-item">
-                              <a class="nav-link  shadow-none " href="#t" v-bind:class="{ active: option == selectedUnit }"
-                                @click="selectedUnit = option">{{option.unitTitle}} {{selectedUnit ? '': ''}}</a>
+                            <li v-for="(option, index) in product.purchaseOptions" class="nav-item h-100">
+                              <a class="nav-link h-100 shadow-none " href="#t" v-bind:class="{ active: option == selectedUnit }"
+                                @click="selectedUnit = option">{{option.unitTitle}}</a>
+                                
                             </li>
 
                           </ul>
@@ -287,6 +297,10 @@
                       </div>
                       <div v-if="selectedUnit" class="">
                         <div>
+                          <!-- <div v-if="selectedUnit.unit != 'kg' && selectedUnit.kgRatio > 0">
+                            <span v-if="option.unit == 'kg'">&nbsp;</span>  <weight-view class="text-muted font-size-xs" v-if="option.unit != 'kg'" :kg="option.kgRatio"></weight-view>
+
+                          </div> -->
                           <div class="md-content mb-3" v-html="selectedUnit.desc" v-if="selectedUnit.desc">
                              
                           </div>

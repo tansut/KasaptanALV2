@@ -86,20 +86,43 @@ export default class Route extends ApiRouter {
         },
 
         {
-            '$butcher.products.unit1price$': {
-                [Op.gt]: 0.0
-            }
+            [Op.and]: [
+                {
+                    '$butcher.products.unit1price$': {
+                        [Op.gt]: 0.0
+                    }
+                },
+                {
+                    '$butcher.products.unit1enabled$': true
+                }
+            ]
+
+
         },
 
         {
-            '$butcher.products.unit2price$': {
-                [Op.gt]: 0.0
-            }
+            [Op.and]: [
+                {
+                    '$butcher.products.unit2price$': {
+                        [Op.gt]: 0.0
+                    }
+                },
+                {
+                    '$butcher.products.unit2enabled$': true
+                }
+            ]
         },
         {
-            '$butcher.products.unit3price$': {
-                [Op.gt]: 0.0
-            }
+            [Op.and]: [
+                {
+                    '$butcher.products.unit3price$': {
+                        [Op.gt]: 0.0
+                    }
+                },
+                {
+                    '$butcher.products.unit3enabled$': true
+                }
+            ]
         }
         ]
         where[Op.or].push(w);

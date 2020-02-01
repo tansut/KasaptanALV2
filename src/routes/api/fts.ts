@@ -58,8 +58,8 @@ export default class Route extends ApiRouter {
             }
         })
 
-        let foodResources = await User.sequelize.query("select id, title, ref1, match(title, description) against (:search IN BOOLEAN MODE) as RELEVANCE " +
-            "from Resources where tag1 in ('tarif', 'yemek') and match(title, description)  against (:search IN BOOLEAN MODE) ORDER BY  RELEVANCE DESC LIMIT 10",
+        let foodResources = await User.sequelize.query("select id, title, ref1, slug, match(title, description) against (:search IN BOOLEAN MODE) as RELEVANCE " +
+            "from Resources where (tag1 like '%tarif%' or tag1 like '%yemek%') and match(title, description)  against (:search IN BOOLEAN MODE) ORDER BY  RELEVANCE DESC LIMIT 10",
             {
                 replacements: { search: search },
                 type: sq.QueryTypes.SELECT,
@@ -69,21 +69,31 @@ export default class Route extends ApiRouter {
 
         );
 
-        let foodProds = await Product.findAll({
-            where: {
-                id: foodResources.map(p=> p['ref1'])
-            }
-        })
+        // let foodProds = await Product.findAll({
+        //     where: {
+        //         id: foodResources.map(p=> p['ref1'])
+        //     }
+        // })
         
+        // let foods = foodResources.map((p, i) => {
+        //     let px = <any>p;
+        //     return {
+        //         id: 'f' + i,
+        //         name: px.title,
+        //         url: '/' + foodProds.find(fp=>fp.id == px.ref1).slug + '?r=' + px.id,
+        //         type: 'food'
+        //     }
+        // })
+
         let foods = foodResources.map((p, i) => {
             let px = <any>p;
             return {
                 id: 'f' + i,
                 name: px.title,
-                url: '/' + foodProds.find(fp=>fp.id == px.ref1).slug + '?r=' + px.id,
+                url: '/et-yemekleri/' + px.slug,
                 type: 'food'
             }
-        })
+        })        
 
         this.res.send(prods.concat(butchers.concat(foods)))
     }

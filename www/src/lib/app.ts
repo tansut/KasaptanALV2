@@ -37,6 +37,12 @@ export class App extends AppBase {
         $('html,body').animate({scrollTop: aTag.offset().top},'slow');
     }
 
+    static jump(h){
+        var url = location.href;               //Save down the URL without hash.
+        location.href = ""+h;                 //Go to the target element.
+        //history.replaceState(null,null,url);   //Don't like hashes. Changing it back.
+    }
+
     static HandleError(err) {
         if (err.response && err.response.data) {
             let msg = err.response.data.msg || err.response.data;
