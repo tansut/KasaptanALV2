@@ -194,6 +194,22 @@
 
 </script>
 
+<script>
+$('#__whatsup').floatingWhatsApp({
+    phone: '908503054216',
+    popupMessage: 'Nasıl yardımcı olabilirim ?',
+    showPopup: false,
+    showOnIE: false,
+    headerTitle: 'Hoşgeldiniz!',
+    position: 'right',
+    zIndex: '20000',
+    message: '<%= typeof(__supportMessage) == "undefined" ? '': __supportMessage %>',
+    size: '3.2rem',
+    //buttonImage: '<img src="/static/img/logo-home.png" />'
+    
+  });
+
+</script>
 <% if (!__req.user) { %>
 
 <script>
