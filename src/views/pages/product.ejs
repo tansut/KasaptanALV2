@@ -17,7 +17,9 @@
 
   <% otherButcherAlternatives = butchers.serving.length + butchers.others.length - 1 %>
 
-
+  <% if (view.butcher) {%>
+    <%- include('./_partial/butcher-alternatives.ejs', {butchersTakeaway: butchers.others, butchersServing: butchers.serving.filter(p=>p.id != view.butcher.id)}) %>
+<%}%>
 
   <div class="page-title-overlap bg-primary pt-4">
     <div class="container d-lg-flex justify-content-between py-2 py-lg-3">
@@ -462,10 +464,10 @@
           <%}%>
 
           <% if (otherButcherAlternatives > 0) { %>
-          <li class="nav-item">
+          <!-- <li class="nav-item">
             <a class="nav-link" id="vendors-tab" data-toggle="tab" href="#vendors" role="tab" aria-controls="contact"
               aria-selected="false">Diğer Kasaplar</a>
-          </li>  
+          </li>   -->
          <% } %>        
         </ul>
         <div class="tab-content px-4" id="myTabContent">
@@ -542,7 +544,7 @@
           </div>
           <!-- <div class="tab-pane fade" id="profile" role="tabpanel" aria-labelledby="profile-tab">...</div> -->
           <% if (otherButcherAlternatives > 0) { %>
-          <div class="tab-pane fade" id="vendors" role="tabpanel" aria-labelledby="vendors-tab">
+          <!-- <div class="tab-pane fade" id="vendors" role="tabpanel" aria-labelledby="vendors-tab">
 
             <div class="row">
               <div class="col-md-6">
@@ -600,7 +602,7 @@
                            
             
 
-          </div>
+          </div> -->
           <%}%>
           <% if (view.butcher) { %>
             <div class="tab-pane fade" id="butcherproducts" role="tabpanel" aria-labelledby="butcherproducts-tab">
@@ -667,8 +669,9 @@
                   window.App.WeightCalculatorApp.product = window.App.ProductApp.product;
 
                   function showOtherButchers() {
-                    window.App.scrollToAnchor("#tabpc");
-                    window.App.activaTab("vendors");
+                    $('#butcher-alternatives').modal();
+                     //window.App.scrollToAnchor("#tabpc");
+                     //window.App.activaTab("vendors");
                     
                   }
 

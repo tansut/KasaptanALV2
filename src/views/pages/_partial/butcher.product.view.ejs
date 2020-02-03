@@ -21,7 +21,7 @@
                 
             </div>
         </div>
-        <% var productunits = controller.getProductUnits(prodinfo.product) %>
+        <% var productunits = controller.getProductUnits(prodinfo.product, prodinfo) %>
         <% var kgUnit = productunits.find(p=>p.unit == 'kg') %>
         <div class="py-2">
 

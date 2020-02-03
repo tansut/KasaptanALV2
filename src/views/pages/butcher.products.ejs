@@ -5,6 +5,12 @@
   <% include ./_partial/head %>
 </head>
 
+<% var isPrinting = __req.query.view=="my" 
+   var printingProducts = controller._.sortBy(controller.sellingProducts, ["product.tag1"]).reverse() ;
+%>
+
+
+
 <body>
   <% include ./_partial/header %>
 
@@ -15,19 +21,124 @@
         <nav aria-label="breadcrumb">
           <ol class="breadcrumb breadcrumb-light flex-lg-nowrap justify-content-center justify-content-lg-star">
             <li class="breadcrumb-item"><a class="text-nowrap" href="/pages/butcher"><i class="czi-home"></i></a></li>
-            <li class="breadcrumb-item text-nowrap active" aria-current="page"><%= controller.butcher ? controller.butcher.name: "Kasap" %></li>
+            <li class="breadcrumb-item text-nowrap active" aria-current="page">
+              <%= controller.butcher ? controller.butcher.name: "Kasap" %></li>
           </ol>
         </nav>
       </div>
 
+
+    </div>
+    <div class="d-print-none text-center">
+      <button onclick="javascript:window.print()" class="btn btn-dark btn-sm">Yazdır</button>
     </div>
   </div>
 
 
   <div class="d-none d-print-block text-center">
-<h1><%= controller.butcher ? controller.butcher.name: "Kasap" %></h1>
+    <h1><%= controller.butcher ? controller.butcher.name: "Kasap" %></h1>
+    <h3>kasaptanal.com ürün listesi</h3>
+    <hr>
   </div>
 
+
+
+  <% if (isPrinting) { %>
+    <div class="container px-0">
+      <div class="bg-light box-shadow-lg px-4 py-4 mb-3 ">
+<h6 class="text-center">
+  Ürünlerim (<%=printingProducts.length%> adet)
+</h6>
+    <table class="table table-striped">
+      <thead>
+          <tr>
+              <th></th>
+              <th></th>
+          </tr>
+      </thead>
+      <tbody>
+    <% printingProducts.forEach((p, i)=> { %>
+      <% var productunits = controller.getProductUnits(p.product, p) %>
+      <% var kgUnit = productunits.find(p=>p.unit == 'kg') %>
+      <% var newRow = (i % 2 == 0) %>
+<% if (newRow) { %> 
+  
+  <tr> 
+    
+    
+<% } %>
+  <td style="width: 5rem;" class="">
+
+    <div class="text-center">
+      <%- include('./_partial/product-view.ejs', {butcher: controller.butcher.slug, product: p.product, hideName: true}); %>
+      <a class="font-size-sm d-print-none" target="_blank" href="/<%=p.product.slug%><%=`?butcher=${controller.butcher.slug}` %>">Ürüne Git</a>
+
+    </div>
+
+  </td>
+
+  <td>
+    <div>
+      <h6><%=p.product.name%></h6>
+      <% if (p.kgPrice > 0 && false) { %>
+        <div>
+          <%- include('./_partial/currency.ejs', {value: p.kgPrice, unit: 'KG'}) %>
+        </div>
+      <% } %>
+      <% if (p.product.butcherNote) { %>
+      <div>
+        <span
+        class="badge badge-accent font-size-xs">Dikkat</span>
+        <span class="font-size-sm">
+          <%=p.product.butcherNote%>
+
+        </span>
+      </div>
+      <% } %>
+      <ul>
+        <% productunits.forEach(pu=>{ %>
+          <% var unitDesc = pu == kgUnit ? '': `${(pu.kgRatio > 0 && pu.kgRatio != 1) ? ('(' + pu.kgRatio * 1000 + ' gram)'): ''}`  %>
+  
+          <% if (pu.enabled) {%>
+               <li>
+                <%- include('./_partial/currency.ejs', {value: pu.price, unit: pu.unit  + ' ' + unitDesc}) %> 
+                <% if (pu.butcherNote) { %>
+                  <div>
+                    <span
+                    class="badge badge-accent font-size-xs">Dikkat</span>
+                    <span class="font-size-sm">
+                      <%=pu.butcherNote%>
+            
+                    </span>
+                  </div>
+                  <% } %>
+
+
+               </li>
+          <% } %>
+  
+  
+        <%})%>
+      </ul>
+
+    </div>
+  </td>
+  <% if (newRow) { %> 
+  
+  </tr> 
+  <%}%>
+
+
+
+
+
+    <%})%>
+
+  </tbody>
+
+</table>
+      </div></div>
+  <% } else {%>
   <div class="container px-0">
     <div class="bg-light box-shadow-lg px-4 py-4 mb-3 ">
       <div class="row mb-grid-gutter d-print-table">
@@ -35,8 +146,8 @@
           <h3 class="h5 border-bottom">Sattığım Ürünler (<%=controller.sellingProducts.length%> adet)</h3>
 
           <% controller.sellingProducts.forEach(p=>{ %>
-          
-            <%- include('./_partial/butcher.product.view.ejs', {
+
+          <%- include('./_partial/butcher.product.view.ejs', {
               prodinfo: p
             })%>
           <%})%>
@@ -46,16 +157,16 @@
         <div class="col-sm-6">
           <h3 class="h5 border-bottom">Diğer Ürünler (<%=controller.otherProducts.length%> adet)</h3>
           <% controller.otherProducts.forEach(p=>{ %>
-            <%- include('./_partial/butcher.product.view.ejs', {
+          <%- include('./_partial/butcher.product.view.ejs', {
               prodinfo: p
             })%>
-          <%})%>          
+          <%})%>
         </div>
       </div>
-    
+
     </div>
   </div>
-
+  <% } %>
 
 
   <% include ./_partial/footer %>
@@ -63,10 +174,16 @@
 
   <script>
   <% if (controller.goto) {  %>
-    window.App.jump("#<%= controller.goto %>");
+      window.App.jump("#<%= controller.goto %>");
   <% } %>
   </script>
 
 </body>
+
+<script>
+<% if (isPrinting) { %>
+    //window.print();
+<%}%>
+</script>
 
 </html>

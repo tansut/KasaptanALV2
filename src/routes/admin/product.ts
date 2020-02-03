@@ -105,6 +105,7 @@ export default class Route extends ViewRouter {
                 this.product.shortdesc = this.req.body.description;
                 this.product.notePlaceholder = this.req.body.notePlaceholder;
                 this.product.featuresText = this.req.body.featuresText;
+                this.product.butcherNote = this.req.body.butcherNote;
             }
             this.product.mddesc = this.req.body.mddesc;
             await this.product.save();
@@ -161,6 +162,11 @@ export default class Route extends ViewRouter {
             this.product.unit1WeigthNote = this.req.body.unit1WeigthNote;
             this.product.unit2WeigthNote = this.req.body.unit2WeigthNote;
             this.product.unit3WeigthNote = this.req.body.unit3WeigthNote;
+
+            this.product.unit1ButcherNote = this.req.body.unit1ButcherNote;
+            this.product.unit2ButcherNote = this.req.body.unit2ButcherNote;
+            this.product.unit3ButcherNote = this.req.body.unit3ButcherNote;
+
         
 
             // this.product.defaultUnit = parseInt(this.req.body.defaultUnit);

@@ -93,6 +93,13 @@ class Product extends BaseModel<Product> {
 
     @Column({
         allowNull: true,
+        type: DataType.TEXT
+    })
+    butcherNote: string;
+
+
+    @Column({
+        allowNull: true,
     })
     displayOrder: number;
 
@@ -169,6 +176,37 @@ class Product extends BaseModel<Product> {
         type: DataType.TEXT
     })
     unit1note: string;
+
+    @Column({
+        allowNull: true,
+        type: DataType.TEXT
+    })
+    unit1ButcherNote: string;
+
+    @Column({
+        allowNull: true,
+        type: DataType.TEXT
+    })
+    unit2ButcherNote: string;
+
+    @Column({
+        allowNull: true,
+        type: DataType.TEXT
+    })
+    unit3ButcherNote: string;
+
+    @Column({
+        allowNull: true,
+        type: DataType.TEXT
+    })
+    unit4ButcherNote: string;
+
+    @Column({
+        allowNull: true,
+        type: DataType.TEXT
+    })
+    unit5ButcherNote: string;
+
 
     @Column({
         allowNull: true,

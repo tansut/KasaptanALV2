@@ -17,7 +17,7 @@ export default class Route extends ButcherRouter {
     sellingProducts = [];
     otherProducts = [];
     goto: string;
-
+    _ = _;
 
     async getProducts() {
         return await Product.findAll({
@@ -33,25 +33,41 @@ export default class Route extends ButcherRouter {
     }
 
 
-    getProductUnits(product: Product) {
+    getProductUnits(product: Product, bp) {
         let result = [];
         (product.unit1 && product.unit1 != "" ) ? result.push({
             unit: product.unit1,
+            unitTitle: product.unit1title,
             kgRatio: product.unit1kgRatio,
-            desc: product.unit1desc        
+            desc: product.unit1desc,
+            enabled: bp.unit1enabled,
+            butcherNote: product.unit1ButcherNote,
+            price: Helper.asCurrency(bp.unit1price > 0 ? bp.unit1price: product.unit1kgRatio * bp.kgPrice)
+    
         }) : null;
         (product.unit2 && product.unit2 != "") ? result.push(
             {
                 unit: product.unit2,
+                unitTitle: product.unit2title,
                 kgRatio: product.unit2kgRatio,
-                desc: product.unit2desc
+                desc: product.unit2desc,
+                enabled: bp.unit2enabled,
+                butcherNote: product.unit2ButcherNote,
+
+                price: Helper.asCurrency(bp.unit2price > 0 ? bp.unit2price: product.unit2kgRatio * bp.kgPrice)
+
             }
         ) : null;
         (product.unit3 && product.unit3 != "") ? result.push(
             {
                 unit: product.unit3,
+                unitTitle: product.unit3title,
                 kgRatio: product.unit3kgRatio,
-                desc: product.unit3desc
+                desc: product.unit3desc,
+                enabled: bp.unit3enabled,
+                butcherNote: product.unit3ButcherNote,
+                price: Helper.asCurrency(bp.unit3price > 0 ? bp.unit3price: product.unit3kgRatio * bp.kgPrice)
+
             }
         ) : null;
         return result;
