@@ -17,6 +17,7 @@ export class ButcherRouter extends ViewRouter {
             include: [{
                 model: ButcherProduct,
                 include: [Product],
+                order: [['id', "DESC"]]
                                     
             },
             {

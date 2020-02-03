@@ -176,9 +176,17 @@
 
 
                                 <div class="card-body touch-support text-center">
-                                    <h5 class="card-title truncate"><%= recentButchers[i].name %></h5>
+
+                                    <h5 class="card-title truncate ">
+                                        <a href="<%= `/${recentButchers[i].slug}` %>" class="text-dark">
+                                            <%= recentButchers[i].name %>
+                                        </a>
+
+                                    </h5>
 
                                     <p class="card-text ">
+
+                                            
                                         <%= recentButchers[i].areaLevel1 && recentButchers[i].areaLevel1.name%>
                                     </p>
 

@@ -203,6 +203,7 @@ export class ShopCard {
     }
 
     addProduct(product: ProductView, quantity: number, purchaseoption: PurchaseOption, note: string) {
+        quantity = Number(quantity.toFixed(quantity)); 
         let price = ShopCard.calculatePrice(product, quantity, purchaseoption);
         let found = this.items.find(p => p.note == note && p.product.id == product.id && p.purchaseoption.id == purchaseoption.id && p.product.butcher.id == product.butcher.id);
         if (found) {

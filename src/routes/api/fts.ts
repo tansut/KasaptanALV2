@@ -69,11 +69,11 @@ export default class Route extends ApiRouter {
 
         );
 
-        // let foodProds = await Product.findAll({
-        //     where: {
-        //         id: foodResources.map(p=> p['ref1'])
-        //     }
-        // })
+         let foodProds = await Product.findAll({
+             where: {
+                 id: foodResources.map(p=> p['ref1'])
+             }
+         })
         
         // let foods = foodResources.map((p, i) => {
         //     let px = <any>p;
@@ -90,7 +90,7 @@ export default class Route extends ApiRouter {
             return {
                 id: 'f' + i,
                 name: px.title,
-                url: '/et-yemekleri/' + px.slug,
+                url: px.slug ? ('/et-yemekleri/' + px.slug): '/' + foodProds.find(fp=>fp.id == px.ref1).slug + '?r=' + px.id,
                 type: 'food'
             }
         })        

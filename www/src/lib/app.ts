@@ -43,6 +43,16 @@ export class App extends AppBase {
         //history.replaceState(null,null,url);   //Don't like hashes. Changing it back.
     }
 
+    static openSlider(i) {
+        var node = $('a[data-resid=' + i + ']')[0];
+        window['lgData'].lg0.items.forEach(function (item, i) {
+       if (item == node || ((item.id && node.id) && (item.id == node.id))) {
+         window.location.hash = "lg=1&slide=" + i;
+         window['lgData'].lg0.init()
+        }
+       })
+      }
+
     static HandleError(err) {
         if (err.response && err.response.data) {
             let msg = err.response.data.msg || err.response.data;

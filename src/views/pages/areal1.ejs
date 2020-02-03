@@ -12,28 +12,29 @@
 
   <!-- Page Content -->
 
-  <!-- Page Title (Light)-->
-  <div class="bg-secondary py-4 mb-3 ">
+  <div class="page-title-overlap bg-accent pt-4">
     <div class="container d-lg-flex justify-content-between py-2 py-lg-3">
       <div class="order-lg-2 mb-3 mb-lg-0 pt-lg-2">
         <nav aria-label="breadcrumb">
-          <ol class="breadcrumb flex-lg-nowrap justify-content-center justify-content-lg-star">
-
-
-
-            <li class="breadcrumb-item active" aria-current="page"><%= area.name %></li>
-
-
+          <ol class="breadcrumb breadcrumb-light flex-lg-nowrap justify-content-center justify-content-lg-star">
+            <li class="breadcrumb-item"><a class="text-nowrap" href="/"><i class="czi-home"></i></a></li>
+            <li class="breadcrumb-item active" aria-current="page"><%= area.name %> Kasapları</li>
           </ol>
         </nav>
       </div>
       <div class="order-lg-1 pr-lg-4 text-center text-lg-left">
-        <h1 class="h2"><%= area.name  %></h1>
-        <p class="lead">
+
+        <h1 class="h3 text-light mb-0"><%= area.name  %></h1>
+        <p class="lead text-light">
           <%= area.name %>, en seçkin kasapların lezzetleriyle dolu.</p>
+
       </div>
+
+
     </div>
   </div>
+
+
 
 
 
@@ -52,10 +53,18 @@
         <div class="col-md-3 col-12 mb-3 ">
 
           <div class="card h-100">
-            <img src="<%= `${__req.helper.imgUrl('butcher-google-photos', butchers[i].slug)}` %>" class="card-img-top"
-              alt="...">
+            <a href="<%= `/${butchers[i].slug}` %>">
+              <img src="<%= `${__req.helper.imgUrl('butcher-google-photos', butchers[i].slug)}` %>"
+                  class="card-img-top" alt="<%= `/${butchers[i].name}` %>">
+          </a>
+
             <div class="card-body text-center ">
-              <h5 class="card-title"><%= butchers[i].name %></h5>
+              <h5 class="card-title">
+                <a href="<%= `/${butchers[i].slug}` %>" class="text-dark">
+                  <%= butchers[i].name %>
+                </a>
+
+                </h5>
               <div class="card-text-container">
 
                 <p class="card-text text-muted"><%= butchers[i].areaLevel2.name %>/<%= butchers[i].areaLevel1.name %>
@@ -63,11 +72,6 @@
 
 
               </div>
-            </div>
-            <div class="card-footer text-center">
-              <small class="text-center"></small>
-              <a href="<%= `/${butchers[i].slug}` %>" class="btn btn-sm btn-dark">Keşfet</a>
-              </small>
             </div>
           </div>
 

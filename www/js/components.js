@@ -298,7 +298,7 @@ window.initComponents = function initComponents() {
                         else if (q > this.product.purchaseOptions[i].max) q = this.product.purchaseOptions[i].max
                         q = Math.ceil(q / this.product.purchaseOptions[i].step) * this.product.purchaseOptions[i].step;
                         res.push({
-                            quantity: q,
+                            quantity: Number(q.toFixed(3)),
                             unit: this.product.purchaseOptions[i].unit,
                             po: this.product.purchaseOptions[i]
                         })
