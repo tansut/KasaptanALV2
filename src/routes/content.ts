@@ -53,7 +53,7 @@ export default class Route extends ViewRouter {
 
     renderPage() {
         this.res.render(`pages/blog.view.ejs`, this.viewData({
-            pageTitle: this.content.pageTitle || this.content.title,
+            pageTitle: (this.content.pageTitle || this.content.title),
             pageDescription: this.content.pageDescription || this.content.description
         }))
     }

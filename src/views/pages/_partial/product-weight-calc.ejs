@@ -109,9 +109,10 @@
    
 
 
-    <div class="d-flex align-items-center justify-content-center">
+    <div class=" px-3 flex-wrap d-flex align-items-center justify-content-center">
+      <p class="text-center font-size-sm" v-if="result && result.length > 1">Şu şekillerde güvenle satın alabilirsiniz.</p>
       <button v-for="(option, index) in result" data-dismiss="modal" @click="setUnit(option)"
-        class="btn mr-2 btn-primary">
+        class="btn mb-2 mr-2 btn-primary">
         <i class="czi-check mr-1"></i>
         <span v-if="option.unit != 'kg'">
           {{option.quantity}} {{option.unit}}

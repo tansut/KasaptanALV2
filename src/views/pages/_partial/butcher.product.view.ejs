@@ -8,7 +8,7 @@
 
 
             <div class="d-flex justify-content-center d-print-w-50">
-                <%- include('./product-view.ejs', {butcher: controller.butcher.slug, product: prodinfo.product}); %>
+                <%- include('./product-view.ejs', {hideBadge: true, butcher: controller.butcher.slug, product: prodinfo.product}); %>
 
             </div>
 

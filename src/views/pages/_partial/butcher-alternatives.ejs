@@ -14,21 +14,21 @@
               <a class="nav-link active" id="serving-tab" data-toggle="tab" href="#serving" role="tab"
                  aria-selected="true">
 
-                Semt Kasapları</a>
+                Adrese Teslim</a>
             </li>
             <% } %>
             <li class="nav-item">
               <a class="nav-link" id="takeaway-tab" data-toggle="tab" href="#takeaway" role="tab"
                  aria-selected="true">
 
-                Gel-Al Kasapları</a>
+                Gel-Al</a>
             </li>
           </ul>
           <div class="tab-content p-0 m-0 " id="butchers-serving-tabContent">
             <div class="tab-pane fade show active" id="serving" role="tabpanel">
               <% butchersServing.forEach(b=> { %>
                 <div class="bg-secondary border-bottom p-3">
-                  <a class="media align-items-center" href="<%=`/${product.slug}?butcher=${b.slug}`%>"><img
+                  <a class="media align-items-center" href="<%=`/${product.slug}?butcher=${b.slug}#butchervendor`%>"><img
                       class="rounded-circle header-img"  src="<%= `${__req.helper.imgUrl('butcher-google-photos', b.slug)}` %>" alt="<%=b.name%>">
                     <div class="media-body pl-2"><span class="font-size-ms text-muted"></span>
                       <h5 class="h6 mb-0 mr-2"><%= b.name %></h5>
@@ -40,7 +40,7 @@
             <div class="tab-pane fade" id="takeaway" role="tabpanel">
               <% butchersTakeaway.forEach(b=> { %>
                 <div class="bg-secondary border-bottom p-3">
-                  <a class="media align-items-center" href="<%=`/${product.slug}?butcher=${b.slug}`%>"><img
+                  <a class="media align-items-center" href="<%=`/${product.slug}?butcher=${b.slug}#butchervendor`%>"><img
                       class="rounded-circle header-img"  src="<%= `${__req.helper.imgUrl('butcher-google-photos', b.slug)}` %>" alt="<%=b.name%>">
                     <div class="media-body pl-2"><span class="font-size-ms text-muted"></span>
                       <h5 class="h6 mb-0 mr-2"><%= b.name %></h5>

@@ -5,7 +5,7 @@
     <span class="badge badge-danger badge-shadow d-print-none"><%=badge%></span>
 
     <% } %>
-    <% if (product.badge == 'video') { %>
+    <% if (product.badge == 'video' && typeof(hideBadge) == 'undefined') { %>
     <button class="btn-wishlist btn-sm d-print-none" type="button" data-toggle="tooltip" data-placement="left" title=""
         data-original-title="Zengin içerik"><i class="czi-video"></i></button>
     <% } %>

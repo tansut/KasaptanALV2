@@ -5,7 +5,8 @@
   <% include ./_partial/head %>
 </head>
 
-<% var isPrinting = __req.query.view=="my" 
+<% var isViewMyProducts = __req.query.view=="my"
+   var isPrinting = __req.query.print=="1"
    var printingProducts = controller._.sortBy(controller.sellingProducts, ["product.tag1"]).reverse() ;
 %>
 
@@ -30,7 +31,7 @@
 
     </div>
     <div class="d-print-none text-center">
-      <button onclick="javascript:window.print()" class="btn btn-dark btn-sm">Yazdır</button>
+      <button onclick="javascript:doPrint()" class="btn btn-dark btn-sm">Yazdır</button>
     </div>
   </div>
 
@@ -43,7 +44,7 @@
 
 
 
-  <% if (isPrinting) { %>
+  <% if (isViewMyProducts) { %>
     <div class="container px-0">
       <div class="bg-light box-shadow-lg px-4 py-4 mb-3 ">
 <h6 class="text-center">
@@ -70,7 +71,7 @@
   <td style="width: 5rem;" class="">
 
     <div class="text-center">
-      <%- include('./_partial/product-view.ejs', {butcher: controller.butcher.slug, product: p.product, hideName: true}); %>
+      <%- include('./_partial/product-view.ejs', {hideBadge: true, butcher: controller.butcher.slug, product: p.product, hideName: true}); %>
       <a class="font-size-sm d-print-none" target="_blank" href="/<%=p.product.slug%><%=`?butcher=${controller.butcher.slug}` %>">Ürüne Git</a>
 
     </div>
@@ -123,8 +124,7 @@
 
     </div>
   </td>
-  <% if (newRow) { %> 
-  
+  <% if (!newRow || !isPrinting) { %> 
   </tr> 
   <%}%>
 
@@ -181,8 +181,12 @@
 </body>
 
 <script>
+
+  function doPrint() {
+    window.location.href = '/pages/butcher/products?view=my&print=1';
+  }
 <% if (isPrinting) { %>
-    //window.print();
+    window.print();
 <%}%>
 </script>
 

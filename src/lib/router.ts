@@ -205,6 +205,9 @@ export class ViewRouter extends BaseRouter {
     protected sendView(view: string, vdata = {}) {
         let dbViewData = this.req.__webpages[view] || {};        
         let result = { ...dbViewData, ...vdata };
+        if (result['pageTitle']) {
+           
+        }
         this.res.render(view, this.viewData(result))
     }
 
