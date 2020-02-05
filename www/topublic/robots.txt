@@ -3,3 +3,5 @@ Disallow: /
 
 User-agent: SemrushBot-SA
 Allow: /
+
+Sitemap: https://www.kasaptanal.com/sitemap.xml

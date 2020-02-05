@@ -28,15 +28,15 @@ export class RequestHelper {
         let defaultFile = '';
         let ref1 = 0;
         if (resourceType == 'product-photos') {
-            ref1 = this.req.__products[slug].id;
+            ref1 = this.req.__products[slug] ? this.req.__products[slug].id: 0;
             defaultFile = "/static/img/product-default-thumbnail.jpg"
 
         } else if (resourceType == 'category-photos') {
             let category = this.req.__categories.find(p => p.slug == slug);
-            ref1 = category.id;
+            ref1 = category ? category.id: 0;
             defaultFile = "/static/img/category-default-thumbnail.jpg";
         } else if (resourceType == 'butcher-google-photos') {
-            ref1 = this.req.__butchers[slug].id;
+            ref1 = this.req.__butchers[slug] ? this.req.__butchers[slug].id: 0;
             defaultFile = "/static/img/butcher-default-thumbnail.jpg";
         }
         let photo = filename == "thumbnail" ? this.req.helper.getResourcesOfType(resourceType + ref1).find(p => p.ref1 == ref1) :

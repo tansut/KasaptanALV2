@@ -38,6 +38,13 @@
         <h1 class="h3 mb-2 text-light mb-0"><%= resource.title %></h1>
 
         <h2 class="h4 lead text-light"><%= resource.description || defaultDesc %></h2>
+        <% if (__req.user && __req.user.hasRole('admin')) {%>
+
+        <a class="btn btn-sm btn-dark" href="<%= `/pages/admin/resource/product-photos/${resource.product.id}?fileprefix=${resource.product.slug}&title=${resource.product.name}&videotype=product-videos#res${resource.id}` %>"
+          target="_blank">Düzenle</a>
+
+        <% } %>
+
       </div>
     </div>
   </div>
@@ -101,13 +108,22 @@
                   </li>
                 <% }) %>
               </ul>
-              <p>
-                Eti Bizden seçeneğini kullanın, hangi yemeğe hangi eti ne kadar almalısınız biz hesaplayalım.
-              </p>
+              <% if (resource.mddesc) { %>
+              <div>
+                <h4 class="h5">Tarifi</h4>
+                  <%- controller.Markdown.render(resource.mddesc) %>
+              </div>
+              <% } %>
+              <div class="alert alert-secondary ">
+                <p class="font-size-sm">
+                  Eti Bizden seçeneğini kullanın, hangi yemeğe hangi eti ne kadar almalısınız biz hesaplayalım.
+                </p>
+                <a href="<%- include(`./_partial/addtonotelink.ejs`, {resource: resource, auto: false  }) %>"
+                  class="btn btn-sm btn-block  btn-primary font-size-xs"><i class=" czi-thumb-up mr-1">
+                  </i>Eti Bizden</a>
+              </div>
 
-              <a href="<%- include(`./_partial/addtonotelink.ejs`, {resource: resource, auto: false  }) %>"
-                class="btn btn-sm btn-block  btn-primary font-size-xs"><i class=" czi-thumb-up mr-1">
-                </i>Eti Bizden</a>
+
             </div>
           </div>
         </div>

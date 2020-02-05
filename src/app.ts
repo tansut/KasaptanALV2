@@ -41,7 +41,7 @@ class KasaptanAlApp {
     userRouter: express.Router;
     adminPagesRouter: express.Router;
     butcherPagesRouter: express.Router;
-
+    sitemap: any;
 
 
     async shopcard() {

@@ -8,6 +8,10 @@ import AreaModel from '../db/models/area';
 import Helper from '../lib/helper';
 import Area from '../db/models/area';
 import { PreferredAddress } from '../db/models/user';
+import Dispatcher from '../db/models/dispatcher';
+
+import DispatcherApi from './api/dispatcher';
+
 let ellipsis = require('text-ellipsis');
 
 
@@ -46,16 +50,15 @@ export default class Route extends ViewRouter {
         }
         let areas = this.req.params.area.split("-");
         let areaSlug = this.req.params.area;
-        if (back) {
-            areas.splice(areas.length - 1, 1);
-            areaSlug = areas.join("-");
-            this.req.params.area = areaSlug;
-        }
+        // if (back) {
+        //     areas.splice(areas.length - 1, 1);
+        //     areaSlug = areas.join("-");
+        //     this.req.params.area = areaSlug;
+        // }
         let area = await AreaModel.findOne({ where: { slug: areaSlug }, include: [{
             all:true
         }] });
         if (!area) return this.next();
-
         await this.checkSave(area);
 
         let field = `areaLevel${areas.length}Id`;
@@ -71,13 +74,20 @@ export default class Route extends ViewRouter {
             }]
         })
 
-        if (butchers.length == 0 && (area.level != 1)) {
+        //butchers.length == 0 && (area.level != 1
+
+        // let dpapi = new DispatcherApi(this.constructorParams);
+        // let address = await area.getPreferredAddress();
+        // let res = await dpapi.getButchersSeling(address);
+        // let butchers = res.map(p=>p.butcher)
+        if (false) {
             return this.arealRoute(true)
         } else
             if (area.level != 3) {
                 return Area.findAll({
                     where: {
-                        parentid: area.id
+                        parentid: area.id,
+                        status: 'active'
                     }
                 }).then(subs => this.renderPage(area, butchers, subs))
             }

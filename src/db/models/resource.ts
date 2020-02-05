@@ -45,7 +45,8 @@ import { ResourceView } from '../../models/productView';
         name: "type_content_idx",
         fields: ["type", "contentUrl"]
     },
-    { type: 'FULLTEXT', name: 'resource_fts', fields: ['title', 'description'] }]
+    
+    { type: 'FULLTEXT', name: 'resource_fts', fields: ['title', 'description', 'mddesc'] }]
 
 
 })
@@ -77,6 +78,12 @@ class Resource extends BaseModel<Resource> {
         defaultValue: true
     })
     list: boolean;
+
+    @Column({
+        allowNull: true,
+        type: DataType.TEXT
+    })
+    mddesc: string;    
 
 
     @Column({

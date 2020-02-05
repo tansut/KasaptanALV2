@@ -15,16 +15,25 @@ import { PreferredAddress } from '../../db/models/user';
 
 export default class Route extends ApiRouter {
 
-    _where(where: any, address: PreferredAddress) {
+    async _where(where: any, address: PreferredAddress) {
+
+        // .concat(await Area.findAll({
+        //     where: {
+        //         parentId: address.level1Id
+        //     },
+        //     attributes: ["id"],
+        //     raw: true
+        // }).map(p=>p.id))
+
         where[Op.or] = where[Op.or] || [];
         if (address.level1Id) {
             where[Op.or].push({
-                toareaid: address.level1Id
+                toareaid: [address.level1Id]
             })
         }
         if (address.level2Id) {
             where[Op.or].push({
-                toareaid: address.level2Id
+                toareaid: [address.level2Id]
             })
         }
         if (address.level3Id) {
@@ -41,7 +50,7 @@ export default class Route extends ApiRouter {
             butcherid: butcherId,
             [Op.or]: []
         };
-        where = this._where(where, address);
+        where = await this._where(where, address);
 
         let res = await Dispatcher.findOne({
             where: where,
@@ -72,11 +81,38 @@ export default class Route extends ApiRouter {
     //     return res;
     // }
 
+    async getButchersSeling(address: PreferredAddress) {
+        let where = {
+            type: 'butcher'
+        }
+        where['$butcher.approved$'] = true;
+        where = await this._where(where, address);
+        let res = await Dispatcher.findAll({
+            where: where,
+            include: [
+                {
+                    model: Butcher,
+                    as: 'butcher'
+                },
+            ],
+            order: [["toarealevel", "DESC"]]
+            //limit: 10
+        })
+        let ugly = {}, result = [];
+        res.forEach(r => {
+            if (!ugly[r.butcherid]) {
+                ugly[r.butcherid] = r;
+                result.push(r)
+            }
+        })
+        return result;
+    }
+
     async getButchersSelingAndDispatches(address: PreferredAddress, pid) {
         let where = {
             type: 'butcher'
         }
-        where = this._where(where, address);
+        where = await this._where(where, address);
         where['$butcher.products.productid$'] = pid;
 
         let w = [{
