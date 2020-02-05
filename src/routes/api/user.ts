@@ -129,7 +129,7 @@ export default class UserRoute extends ApiRouter {
     }
 
     async sendPassword(pwd: string, phoneNumber: string) {
-        await Sms.send('90' + phoneNumber, `kasaptanal.com giris sifreniz ve onay kodunuz: ${pwd}.`);
+        await Sms.send('90' + phoneNumber, `kasaptanal.com giris sifreniz ve onay kodunuz: ${pwd}`);
         return pwd;
     }
 

@@ -35,27 +35,55 @@ export default class SiteMapManager {
 
     static async fillButchers(stream: SitemapStream) {
         let items = await Butcher.findAll({
-            attributes: ['slug'],
-            raw: true,
+            include: [
+                {
+                    model: Area,
+                    all: true,
+                    as: "areaLevel1Id"
+    
+                }
+            ],
             where: {
                 approved: true
             }
         });
-        items.forEach(item=>{
-            stream.write({
-                url: `${this.baseUrl}/${item.slug}`
+
+        for(let i = 0; i < items.length; i++) {
+            let item = items[i];
+            let resources = await Resource.findAll({
+                where: {
+                    ref1: item.id,
+                    type: 'butcher-google-photos'
+                }
             })
-        })
+            stream.write({
+                url: `${this.baseUrl}/${item.slug}`,
+                img: resources.map(r=> {
+                    return {
+                        url: r.getFileUrl(),
+                        title: r.title,
+                        caption: `${item.name}`,
+                                geoLocation: item.areaLevel1 && (item.areaLevel1.name + ',' + 'Turkey')
+
+                    }
+                })
+            })            
+        }
+
     }
 
     static async fillBlog(stream: SitemapStream) {
         let items = await Content.findAll({
-            attributes: ['slug', 'categorySlug'],
             raw: true
         });
         items.forEach(item=>{
             stream.write({
-                url: `${this.baseUrl}/et-kulturu/${item.categorySlug}/${item.slug}`
+                url: `${this.baseUrl}/et-kulturu/${item.categorySlug}/${item.slug}`,
+                img: [{
+                    url: `${config.staticDomain}/content-resimleri/${item.slug}.jpg`,
+                    title: item.title,
+                    caption: item.description
+                }]
             })
         })
 
@@ -64,8 +92,6 @@ export default class SiteMapManager {
 
     static async fillFoods(stream: SitemapStream) {
         let items = await Resource.findAll({
-            attributes: ["id", "slug"],
-            raw: true,
             where: {
                 type: ['product-videos', 'product-photos'],
                 tag1: {
@@ -77,39 +103,92 @@ export default class SiteMapManager {
             }})
             items.forEach(item=>{
                 stream.write({
-                    url:  `${this.baseUrl}/et-yemekleri/${item.slug || item.id}`
+                    url:  `${this.baseUrl}/et-yemekleri/${item.slug || item.id}`,
+                    img: item.contentType == 'image/jpeg' ? [ {
+                        url: item.getFileUrl(),
+                        title: item.title,
+                        caption: item.description
+                    }
+                        
+                    ]: []
                 })
             })
     }
 
     static async fillCategories(stream: SitemapStream) {
         let items = await Category.findAll({
-            attributes: ['slug', 'type', 'tarifTitle'],
+            attributes: ['name', 'slug', 'type', 'id', 'tarifTitle'],
             raw: true
         });
-        items.forEach(item=>{
-            stream.write({
-                url: item.type == 'resource' ? `${this.baseUrl}/et-yemekleri/${item.slug}`: `${this.baseUrl}/${item.slug}`
+
+        for(let i = 0; i < items.length; i++) {
+            let item = items[i];
+            let resources = await Resource.findAll({
+                where: {
+                    ref1: item.id,
+                    type: 'category-photos'
+                }
             })
+            stream.write({
+                url: item.type == 'resource' ? `${this.baseUrl}/et-yemekleri/${item.slug}`: `${this.baseUrl}/${item.slug}`,
+                img: resources.map(r=> {
+                    return {
+                        url: r.getFileUrl(),
+                        title: r.title || item.name,
+                        caption: `${item.shortdesc} || ${item.name}`
+                    }
+                })
+            })    
+            
             if (item.type != 'resource' && item.tarifTitle) {
                 stream.write({
                     url:  `${this.baseUrl}/${item.slug}/et-yemekleri`
                 })
             } 
-        })
+
+        }
+
+
     } 
 
 
     static async fillProducts(stream: SitemapStream) {
         let items = await Product.findAll({
-            attributes: ['slug'],
+            attributes: ['slug', 'name', 'id'],
             raw: true
         });
-        items.forEach(item=>{
-            stream.write({
-                url: `${this.baseUrl}/${item.slug}`
+
+        for(let i = 0; i < items.length; i++) {
+            let item = items[i];
+            let resources = await Resource.findAll({
+                where: {
+                    ref1: item.id,
+                    type: 'product-photos',
+                    [Op.or]: [{
+                        tag1: ''
+                    }, {
+                        tag1: null
+                    }]
+                }
             })
-        })
+
+
+
+            stream.write({
+                url: `${this.baseUrl}/${item.slug}`,
+                img: resources.map(r=> {
+                    return {
+                        url: r.getFileUrl(),
+                        title: r.title || item.name,
+                        caption: `${item.name}`
+                    }
+                })
+            })    
+            
+
+            
+        }
+
     } 
 
     static async fill(stream: SitemapStream) {
