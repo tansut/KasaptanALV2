@@ -146,8 +146,13 @@
                   </h6>
                   <div class="d-flex justify-content-between mb-2">
                     <div>
-                      <div class="font-size-sm"><span class="font-weight-medium"><%=item.quantity%></span> <span
-                          class="text-muted  mr-2"> <%=item.purchaseoption.unit%></span></div>
+                      <div class="font-size-sm"><span class="font-weight-medium"><%=item.quantity%></span> 
+                        <span
+                          class="text-muted  mr-2"> <%=item.purchaseoption.unitTitle%> </span>
+                          <% if (item.purchaseoption.unitWeight) { %>
+                            <span class="d-block text-muted font-size-xs"><%=item.purchaseoption.unitWeight%>/ adet</span>
+                          <% } %>
+                        </div>
 
                     </div>
                     <div class="text-nowrap font-size-sm">

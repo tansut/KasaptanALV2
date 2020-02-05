@@ -262,6 +262,7 @@ export default class Route extends ApiRouter {
                 notePlaceholder: product[`${col}note`],
                 desc: this.markdown.render(product[`${col}desc`] || ""),
                 kgRatio: product[`${col}kgRatio`],
+                unitWeight: product[`${col}weight`],
                 unitPrice: butcherProduct ?
                      (
                          Helper.asCurrency(butcherProduct[`${col}price`]) > 0 ?

@@ -312,7 +312,7 @@
                             <div class="mb-3 bg-secondary border">
 
                               <div class="mt-2 d-flex align-items-center justify-content-center mb-1">
-                                <span v-if="selectedUnit.unit != 'kg'">Kaç <b>{{ selectedUnit.unit }}</b> hazırlayalım?</span>
+                                <span v-if="selectedUnit.unit != 'kg'">Kaç <b>{{ selectedUnit.unitTitle }}</b> hazırlayalım?</span>
                                 <span v-if="selectedUnit.unit == 'kg'"><b>Ne kadar</b> hazırlayalım?</span>
                              
                                 
@@ -321,7 +321,7 @@
                               
                             <amount-input :def="quantity || selectedUnit.default" :min="selectedUnit.min"
                             :max="selectedUnit.max" :step="selectedUnit.step" v-model="quantity"
-                            :unit="selectedUnit.unit">
+                            :unit="selectedUnit.unitTitle">
                        
                           </amount-input>
                         </div>

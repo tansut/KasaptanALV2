@@ -2,6 +2,7 @@ export interface PurchaseOption {
     id: number;
     unit: string,
     unitTitle: string,
+    unitWeight: string;
     desc: string,
     notePlaceholder: string;
     kgRatio: number,

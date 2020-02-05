@@ -45,18 +45,27 @@
                     <input class="form-check-input" type="checkbox" name="<%=`unit${k+1}enabled` %>"
                     <%= prodinfo[`unit${k+1}enabled`] ? "checked" : "" %>>
                 <label class="form-check-label font-weight-bold" for="defaultCheck1">
-                    <%= productunits[k].unit %> <%= `${unitDesc + ' olarak satarım'}` %>  
+                    <%= productunits[k].unitTitle %> <%= `${unitDesc + ' olarak satarım'}` %>  
                 </label>
 
+                    <% if (productunits[k].unitWeight) {%>
+                        <div>
+                            <span class="badge badge-accent">Not</span>
+                            <span class="font-size-sm">
+                                Kullanıcıya ağırlık <strong class="text-accent"><%=productunits[k].unitWeight%></strong> olarak gösterilmektedir.
+                            </span>
+                            
 
+                        </div>
+                    <%}%>
                     <div class="text-muted font-size-sm mb-2">
-                       <%= productunits[k].desc %>
+                       <%= productunits[k].butcherNote %>
                     </div>
                     <% if (productunits[k].unit != 'kg') { %>
                    
-                <span class="font-size-sm font-weight-medium">1 <%= productunits[k].unit %> fiyatı (ayrıca isterseniz)</span>
+                <span class="font-size-sm font-weight-medium">1 <%= productunits[k].unitTitle %> fiyatı (isteğe bağlı)</span>
                     <input type="text" class="form-control" name="<%=`unit${k+1}price` %>"
-                        id="<%=`unit${k+1}price` %>" placeholder="Bedel girmezseniz gramaja göre otomatik hesaplanır" value="<%= prodinfo[`unit${k+1}price`] == 0 ? '': prodinfo[`unit${k+1}price`] %>">
+                        id="<%=`unit${k+1}price` %>" placeholder="Bedel girmezseniz <%=unitDesc%> üzerinden hesaplanır" value="<%= prodinfo[`unit${k+1}price`] == 0 ? '': prodinfo[`unit${k+1}price`] %>">
                     <% } %>
                 </div>
             </div>

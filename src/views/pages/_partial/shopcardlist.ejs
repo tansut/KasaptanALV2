@@ -40,11 +40,17 @@
             href="/<%=item.product.slug%>?butcher=<%=item.product.butcher.slug%>"><%=item.product.name%></a>
         </h3>
         <div class="font-size-normal"><span class="font-weight-medium"><%=item.quantity%></span> <span
-            class="text-muted"><%=item.purchaseoption.unit%>/</span>
+            class="text-muted"><%=item.purchaseoption.unitTitle%> 
+
+          </span>
+      
+            <span>/</span>
           <span class="font-size-sm">
             <%- include('./currency.ejs', {value: item.price}) %>
           </span>
-
+          <% if (item.purchaseoption.unitWeight) { %>
+            <span class="d-block text-muted font-size-xs"><%=item.purchaseoption.unitWeight%>/ adet</span>
+          <% } %>
         </div>
         <div class="text-nowrap">
 

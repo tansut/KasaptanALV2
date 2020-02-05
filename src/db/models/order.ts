@@ -244,6 +244,16 @@ class OrderItem extends BaseModel<Order> {
     pounit: string;
 
     @Column({
+        allowNull: true
+    })
+    pounitTitle: string;    
+
+    @Column({
+        allowNull: true
+    })
+    pounitWeight: string;       
+
+    @Column({
         allowNull: false,
         type: DataType.TEXT
     })
@@ -404,6 +414,8 @@ class OrderItem extends BaseModel<Order> {
 
         c.quantity = i.quantity;
         c.pounit = i.purchaseoption.unit;
+        c.pounitTitle = i.purchaseoption.unitTitle;
+        c.pounitWeight = i.purchaseoption.unitWeight;
         c.pounitdesc = i.purchaseoption.desc;
         c.pounitPrice = i.purchaseoption.unitPrice;
         c.pounitkgRatio = i.purchaseoption.kgRatio;

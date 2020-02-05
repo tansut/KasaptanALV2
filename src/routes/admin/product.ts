@@ -117,9 +117,16 @@ export default class Route extends ViewRouter {
             this.product.unit1 = this.req.body.unit1;
             this.product.unit1desc = this.req.body.unit1desc;
             this.product.unit1note = this.req.body.unit1note;
+
             this.product.unit1title = this.req.body.unit1title;
             this.product.unit2title = this.req.body.unit2title;
             this.product.unit3title = this.req.body.unit3title;
+
+            this.product.unit1weight = this.req.body.unit1weight;
+            this.product.unit2weight = this.req.body.unit2weight;
+            this.product.unit3weight = this.req.body.unit3weight;
+
+
             this.product.unit2note = this.req.body.unit2note;
             this.product.unit3note = this.req.body.unit3note;
             this.product.unit2 = this.req.body.unit2;

@@ -98,7 +98,7 @@
                 </h3>
               </div>
               <p>
-                <strong><%=resource.title%></strong> için aşağıdaki etler uygundur.
+                <strong><%=resource.title%></strong> için aşağıdaki ürünlerimizi güvenle tercih edebilirsiniz.
 
               </p>
               <ul>
@@ -108,13 +108,8 @@
                   </li>
                 <% }) %>
               </ul>
-              <% if (resource.mddesc) { %>
-              <div>
-                <h4 class="h5">Tarifi</h4>
-                  <%- controller.Markdown.render(resource.mddesc) %>
-              </div>
-              <% } %>
               <div class="alert alert-secondary ">
+                <h5 class="h6"><%=resource.title%> için hangi etler uygundur?</h5>
                 <p class="font-size-sm">
                   Eti Bizden seçeneğini kullanın, hangi yemeğe hangi eti ne kadar almalısınız biz hesaplayalım.
                 </p>
@@ -122,6 +117,13 @@
                   class="btn btn-sm btn-block  btn-primary font-size-xs"><i class=" czi-thumb-up mr-1">
                   </i>Eti Bizden</a>
               </div>
+              <% if (resource.mddesc) { %>
+              <div>
+                <h4 class="h5">Tarifi</h4>
+                  <%- controller.Markdown.render(resource.mddesc) %>
+              </div>
+              <% } %>
+ 
 
 
             </div>

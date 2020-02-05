@@ -38,6 +38,7 @@ export default class Route extends ButcherRouter {
         (product.unit1 && product.unit1 != "" ) ? result.push({
             unit: product.unit1,
             unitTitle: product.unit1title,
+            unitWeight: product.unit1weight,
             kgRatio: product.unit1kgRatio,
             desc: product.unit1desc,
             enabled: bp.unit1enabled,
@@ -49,6 +50,7 @@ export default class Route extends ButcherRouter {
             {
                 unit: product.unit2,
                 unitTitle: product.unit2title,
+                unitWeight: product.unit2weight,
                 kgRatio: product.unit2kgRatio,
                 desc: product.unit2desc,
                 enabled: bp.unit2enabled,
@@ -62,6 +64,8 @@ export default class Route extends ButcherRouter {
             {
                 unit: product.unit3,
                 unitTitle: product.unit3title,
+                                unitWeight: product.unit3weight,
+
                 kgRatio: product.unit3kgRatio,
                 desc: product.unit3desc,
                 enabled: bp.unit3enabled,

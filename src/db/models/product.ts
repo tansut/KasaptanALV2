@@ -155,6 +155,32 @@ class Product extends BaseModel<Product> {
 
     @Column({
         allowNull: true,
+    })
+    unit1weight: string;
+
+    @Column({
+        allowNull: true,
+    })
+    unit2weight: string;
+
+    @Column({
+        allowNull: true,
+    })
+    unit3weight: string;
+
+    @Column({
+        allowNull: true,
+    })
+    unit4weight: string;
+
+    @Column({
+        allowNull: true,
+    })
+    unit5weight: string;
+
+
+    @Column({
+        allowNull: true,
         type: DataType.TEXT
     })
     unit1desc: string;
