@@ -226,7 +226,7 @@
   <a class="text-primary" href="javascript:openSlider(<%=t.id%>)"><i class="text-primary <%= t.contentType == 'video-youtube' ? 'czi-youtube': 'czi-camera' %> mr-1"></i><%=t.title%></a>
   
   
-   <a class="text-primary" title="Eti Bizden" 
+   <a class="text-primary" title="Eti Bizden" data-food="<%= t.slug%>"
    href="javascript:<%= include('./_partial/addtonote.ejs', {resource: t, options: {hideProduct: true} }) %>"><span class="color-primary">
      <i class=" czi-add-circle"></i></span>  </a> 
 

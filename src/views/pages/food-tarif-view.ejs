@@ -113,7 +113,7 @@
                 <p class="font-size-sm">
                   Eti Bizden seçeneğini kullanın, hangi yemeğe hangi eti ne kadar almalısınız biz hesaplayalım.
                 </p>
-                <a href="<%- include(`./_partial/addtonotelink.ejs`, {resource: resource, auto: false  }) %>"
+                <a data-product="/<%=resource.product.slug%>" href="<%- include(`./_partial/addtonotelink.ejs`, {resource: resource, auto: false  }) %>"
                   class="btn btn-sm btn-block  btn-primary font-size-xs"><i class=" czi-thumb-up mr-1">
                   </i>Eti Bizden</a>
               </div>
