@@ -114,6 +114,7 @@ export default class Route extends ApiRouter {
         }
         where = await this._where(where, address);
         where['$butcher.products.productid$'] = pid;
+        where['$butcher.products.enabled$'] = true;
 
         let w = [{
             '$butcher.products.kgPrice$': {
