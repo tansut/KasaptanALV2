@@ -78,6 +78,11 @@ export default class Route extends ViewRouter {
             }]
         })
 
+        if (this.req.query.save && butchers.length == 0) {
+            this.res.redirect('/lezzetler');
+            return;
+        }
+
         //butchers.length == 0 && (area.level != 1
 
         // let dpapi = new DispatcherApi(this.constructorParams);

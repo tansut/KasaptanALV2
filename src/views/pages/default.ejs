@@ -139,6 +139,51 @@
 
     <div class="container mb-3">
 
+        <%- include('./_partial/category-products-slider', {category: 'ustasindan-etler', reverse: true, img: 'img/category/premium.jpg'}); %>
+    </div>
+
+       <section class="container">
+
+        <div class="row">
+
+            <div class="col-md-6 mb-3">
+                <div class="d-flex flex-column h-100 justify-content-center bg-size-cover bg-position-center rounded-lg"
+                    style="background-image: url(/static/img/banner-bg.jpg);">
+                    <div class="py-4 my-2 my-md-0 py-md-5 px-4 ml-md-3 text-center text-sm-left">
+                        <h4 class="h6 font-size-lg font-weight-light mb-2">Ücretsiz iyi et rehberini indirin</h4>
+                        <h3 class="h5 mb-4">Bir tıkla e-posta
+                            adresinizde.</h3>
+
+                        <a href="#" class="btn btn btn-primary get-userguide-action">İyi Et Rehberi</a>
+                    </div>
+                </div>
+            </div>
+
+
+            <div class="col-md-6 mb-3">
+                <div class="d-flex flex-column h-100 justify-content-center bg-size-cover bg-position-center rounded-lg"
+                    style="background-image: url(/static/img/banner-bg.jpg);">
+                    <div class="py-4 my-2 my-md-0 py-md-5 px-4 ml-md-3 text-center text-sm-left">
+                        <h4 class="h6 font-size-lg font-weight-light mb-2">Şehrinizdeki en seçkin kasapları keşfedin.</h4>
+                        <h3 class="mb-4 h5">Yeni kasaplar keşfedin.</h3>
+                        <% if ( typeof controller.req.session.areal1 != 'undefined') { %>
+                        <a href="<%= `/${controller.req.session.areal1.slug}` %>" class="btn btn btn-primary">Şehrinizdeki
+                            Kasaplar</a>
+                        <% } else { %>
+                        <a href="#" class="btn btn btn-primary explore-area-action">Semtinizi Seçin</a>
+                        <% } %>
+                    </div>
+                </div>
+            </div>
+
+        
+
+
+        </div>
+    </section>
+
+    <div class="container mb-3">
+
         <%- include('./_partial/category-products-slider', {category: 'premium-etler', reverse: true, img: 'img/category/premium.jpg'}); %>
     </div>
 
@@ -146,7 +191,7 @@
 
     <div class="container mb-3">
 
-        <%- include('./_partial/category-slider', { viewCats: ['reyon', 'list'], title: 'Lezzetler', allUrl: '/lezzetler' }); %>
+        <%- include('./_partial/category-slider', { viewCats: ['reyon', 'list'], title: 'Tüm Lezzetler', allUrl: '/lezzetler' }); %>
 
 
 
@@ -154,7 +199,7 @@
     </div>
 
     <div class="container mb-3">
-        <%- include('./_partial/category-slider', { viewCats: ['resource'], title: 'Yemekler', allUrl: '/et-yemekleri' }); %>
+        <%- include('./_partial/category-slider', { viewCats: ['resource'], title: 'Yemek Kategorileri', allUrl: '/et-yemekleri' }); %>
 
     </div>
 
@@ -218,42 +263,7 @@
 
 
     <!-- Banners-->
-    <section class="container">
-
-        <div class="row">
-            <div class="col-md-6 mb-3">
-                <div class="d-flex flex-column h-100 justify-content-center bg-size-cover bg-position-center rounded-lg"
-                    style="background-image: url(/static/img/banner-bg.jpg);">
-                    <div class="py-4 my-2 my-md-0 py-md-5 px-4 ml-md-3 text-center text-sm-left">
-                        <h4 class="font-size-lg font-weight-light mb-2">Şehrindeki kasaplara hızlıca ulaş.</h4>
-                        <h3 class="mb-4 h3">Yeni kasaplar keşfet.</h3>
-                        <% if ( typeof controller.req.session.areal1 != 'undefined') { %>
-                        <a href="<%= `/${controller.req.session.areal1.slug}` %>" class="btn btn btn-primary">Şehrindeki
-                            Kasaplar</a>
-                        <% } else { %>
-                        <a href="#" class="btn btn btn-primary explore-area-action">Semtinizi Seçin</a>
-                        <% } %>
-                    </div>
-                </div>
-            </div>
-
-            <div class="col-md-6 mb-3">
-                <div class="d-flex flex-column h-100 justify-content-center bg-size-cover bg-position-center rounded-lg"
-                    style="background-image: url(/static/img/banner-bg.jpg);">
-                    <div class="py-4 my-2 my-md-0 py-md-5 px-4 ml-md-3 text-center text-sm-left">
-                        <h4 class="font-size-lg font-weight-light mb-2">Ücretsiz iyi et rehberini indir.</h4>
-                        <h3 class="h3 mb-4">Bir tıkla e-posta
-                            adresinde.</h3>
-
-                        <a href="#" class="btn btn btn-primary get-userguide-action">İyi Et Rehberi</a>
-                    </div>
-                </div>
-            </div>
-
-
-
-        </div>
-    </section>
+ 
 
 
 
