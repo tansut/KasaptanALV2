@@ -22,7 +22,7 @@ export default class Route extends ViewRouter {
 
     category: Category;
     products: Product[];
-    foods: Resource[];
+    foods: Resource[] = [];
     foodsWithCats = {}
     foodCategory = ""
     //categories: Category[];
@@ -195,10 +195,14 @@ export default class Route extends ViewRouter {
 
         else {
             this.products = await ProductManager.getProductsOfCategories([this.category.id]);
-            this.foods = await new ProductsApi(this.constructorParams).getFoodAndTarifResources(this.products, 15);
+            if (this.category.relatedFoodCategory) {                 
+                this.foods = await new ProductsApi(this.constructorParams).getFoodAndTarifResources(null, null, [this.category.relatedFoodCategory]);
 
+            } else if (this.category.tarifTitle) {
+                this.foods = await new ProductsApi(this.constructorParams).getFoodAndTarifResources(this.products, 15);
+            }
+            
             this.renderPage('pages/category.ejs')
-
         }
     }
 

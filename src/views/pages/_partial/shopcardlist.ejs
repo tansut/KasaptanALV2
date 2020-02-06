@@ -68,7 +68,7 @@
   </div>
   <div class="pt-2 pt-sm-0 pl-sm-3 mx-auto mx-sm-0 text-center text-sm-left" style="max-width: 9rem;">
     <% if (enableRemove) { %>
-    <button class="btn btn-link px-0 text-muted" onclick="App.ShopCard.remove('<%=i%>')" type="button"><i
+    <button id="rmshopcardbtn" data-product="/<%=item.product.slug%>" class="btn btn-link px-0 text-muted" onclick="App.ShopCard.remove('<%=i%>')" type="button"><i
         class="czi-close-circle mr-2"></i><span class="font-size-sm">Çıkar</span></button>
     <% } %>
   </div>

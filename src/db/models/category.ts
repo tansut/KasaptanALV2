@@ -36,6 +36,11 @@ class Category extends BaseModel<Category> {
     tarifTitle: string;
 
     @Column({
+        allowNull: true
+    })
+    relatedFoodCategory: number;    
+
+    @Column({
         allowNull: true,
     })
     pageTitle: string;

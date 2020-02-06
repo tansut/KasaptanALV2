@@ -399,7 +399,7 @@ export class ShopCard {
                 userid: req.user.id
             }
         })        
-
+        result.butcherDiscounts = {}
         await result.manageFirstOrderDiscount(firstOrder);
         await result.manageDiscounts();
         return result;

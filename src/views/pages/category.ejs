@@ -10,6 +10,11 @@
 
   <%-include('./_partial/food-select-alternatives.ejs', {}) %>
 
+  <%
+    var relatedFoodCategory = controller.category.relatedFoodCategory ? __req.__categories.find(p => p.id == controller.category.relatedFoodCategory): 0;          
+
+    var foodCategoryParams = {allUrl: relatedFoodCategory ? '/et-yemekleri/' + relatedFoodCategory.slug: '/' + controller.category.slug + '/et-yemekleri', mode: 'yemek', foods: controller.foods, title: relatedFoodCategory ? relatedFoodCategory.name: controller.category.tarifTitle || 'Yemekler'}    
+  %>
 
   <div class="page-title-overlap bg-primary pt-4">
     <div class="container d-lg-flex justify-content-between py-2 py-lg-3">
@@ -49,9 +54,9 @@
         <div class="col-md-3 col-6 ">
           <%- include('./_partial/product-view.ejs', {product: controller.products[j]}) %>
         </div>
-        <% if (!foodsInserted && (controller.foods.length > 0) && (j == 11) && (controller.foods.length >= 4) && controller.category.tarifTitle) { foodsInserted = true; %>
+        <% if (!foodsInserted && (controller.foods.length) && (j == 11)) { foodsInserted = true; %>
         <div class="mb-3  col-12">
-          <%- include('./_partial/foods-slider.ejs', {allUrl: '/' + controller.category.slug + '/et-yemekleri', mode: 'yemek', foods: controller.foods, title: controller.category.tarifTitle || 'Yemekler'}) %>
+          <%- include('./_partial/foods-slider.ejs', foodCategoryParams) %>
 
         </div>
         <% } %>
@@ -60,9 +65,9 @@
 
       <div>
 
-        <% if (!foodsInserted && controller.category.tarifTitle && controller.foods.length > 0) { %>
+        <% if (!foodsInserted && controller.foods.length > 0) { %>
         <div class="mb-3 ">
-          <%- include('./_partial/foods-slider.ejs', {allUrl: '/' + controller.category.slug + '/et-yemekleri' , mode: 'yemek', foods: controller.foods, title: controller.category.tarifTitle || 'Yemekler'}) %>
+          <%- include('./_partial/foods-slider.ejs', foodCategoryParams) %>
 
         </div>
         <% } %>
