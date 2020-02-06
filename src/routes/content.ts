@@ -74,6 +74,8 @@ export default class Route extends ViewRouter {
             order: [["displayOrder", "DESC"], ["UpdatedOn", "DESC"]],
             where: where
         })
+        if (this.req.params.category && allcontent.length == 0)
+            return this.next();
         this.allcontent = allcontent;
         this.resources = await new ProductsApi(this.constructorParams).getInformationalVideos(25)
         await this.loadCategories();
@@ -107,6 +109,6 @@ export default class Route extends ViewRouter {
     static SetRoutes(router: express.Router) {
         router.get("/et-kulturu", Route.BindRequest(Route.prototype.indexRoute));
         router.get("/et-kulturu/:category", Route.BindRequest(Route.prototype.indexRoute));
-        router.get("/et-kulturu/:category/:content", Route.BindRequest(Route.prototype.viewRoute));
+        router.get("/et-kulturu/:content", Route.BindRequest(Route.prototype.viewRoute));
     }
 }

@@ -17,6 +17,8 @@ let ellipsis = require('text-ellipsis');
 
 export default class Route extends ViewRouter {
 
+    address: PreferredAddress;
+
     async checkSave(area: AreaModel) {
         if (this.req.query.save) {
             var adr: PreferredAddress = {
@@ -39,8 +41,9 @@ export default class Route extends ViewRouter {
 
     async renderPage(area: AreaModel, butchers: ButcherModel[], subs?: AreaModel[]) {
         
-
-        this.res.render('pages/areal1.ejs', this.viewData({ subs: subs, ellipsis: ellipsis, pageTitle: `${area.name} kasapları`, area: area, butchers: butchers }))
+        this.res.render('pages/areal1.ejs', this.viewData({ 
+            
+            subs: subs, ellipsis: ellipsis, pageDescription: `${this.address.display} online et ve et ürünleri siparişi verebileceğiniz kasaplarımız.`, pageTitle: `${this.address.display} online sipariş verebileceğiniz kasaplar`, area: area, butchers: butchers }))
     }
 
     @Auth.Anonymous()
@@ -60,6 +63,7 @@ export default class Route extends ViewRouter {
         }] });
         if (!area) return this.next();
         await this.checkSave(area);
+        this.address = await area.getPreferredAddress();
 
         let field = `areaLevel${areas.length}Id`;
         let where = (<any>{})

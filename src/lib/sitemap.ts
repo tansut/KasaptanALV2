@@ -78,7 +78,7 @@ export default class SiteMapManager {
         });
         items.forEach(item=>{
             stream.write({
-                url: `${this.baseUrl}/et-kulturu/${item.categorySlug}/${item.slug}`,
+                url: `${this.baseUrl}/et-kulturu/${item.slug}`,
                 img: [{
                     url: `${config.staticDomain}/content-resimleri/${item.slug}.jpg`,
                     title: item.title,

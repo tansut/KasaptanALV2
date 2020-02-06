@@ -69,14 +69,14 @@
         <article class="blog-list pb-2 mb-2">
           <div class="left-column">
             <h2 class="h5 blog-entry-title"><a
-                href="<%= `/et-kulturu/${controller.allcontent[i].categorySlug}/${controller.allcontent[i].slug}` %>"><%= controller.allcontent[i].title %></a>
+                href="<%= `/et-kulturu/${controller.allcontent[i].slug}` %>"><%= controller.allcontent[i].title %></a>
             </h2>
             <p class="font-size-sm"><%= controller.allcontent[i].description %><a
-                href='<%= `/et-kulturu/${controller.allcontent[i].categorySlug}/${controller.allcontent[i].slug}` %>'
+                href='<%= `/et-kulturu/${controller.allcontent[i].slug}` %>'
                 class='blog-entry-meta-link font-weight-medium'>[Devamı]</a></p>
           </div>
           <div class="right-column"><a class="blog-entry-thumb mb-3"
-              href="<%= `/et-kulturu/${controller.allcontent[i].categorySlug}/${controller.allcontent[i].slug}` %>">
+              href="<%= `/et-kulturu/${controller.allcontent[i].slug}` %>">
               <img src="<%= `${controller.getthumbnailurl(controller.allcontent[i])}` %>"
                 alt="<%= controller.allcontent[i].category.title %>"></a>
             <div class="d-flex justify-content-between mb-1">

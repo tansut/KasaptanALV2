@@ -178,8 +178,8 @@ export default class Route extends ViewRouter {
         (resource.tag1.includes('tarif') ? `${resource.title} nasıl yapılır tarif videosu`:`${resource.title} için hangi etler uygundur?`):
         "";
       
-        let pageDesc = `${defaultDesc} ${resource.title} yapmak için 
-            ${products.map(p=>p.name).join(',')} uygun etlerdendir. KasaptanAl.com ile hangi yemeğe hangi etin uygun olduğunu bulabilir ve güvenle online et siparişi verebilirsiniz.`
+        let pageDesc = `${resource.title} yapmak için 
+            ${products.map(p=>p.name).join(',')} uygun etlerdendir. kasaptanAl.com ile güvenle online sipariş verebilirsiniz.`
 
         this.res.render('pages/food-tarif-view.ejs', this.viewData({
             resource: resource,
