@@ -132,7 +132,7 @@ export default class Route extends ViewRouter {
         }
 
 
-        this.res.render('pages/butcher', this.viewData({ pageTitle: butcher.name, butcher: butcher, images: images }));
+        this.res.render('pages/butcher', this.viewData({ pageTitle: (butcher.pageTitle || butcher.name), pageDescription: butcher.pageDescription, butcher: butcher, images: images }));
         this.req.session['butcher' + butcher.id + 'videodisplayed'] = true;
         this.req.session.save();
     }

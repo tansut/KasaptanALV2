@@ -30,8 +30,8 @@
                         <th>Adı</th>
                         <th>slug</th>
                         <th>kategori</th>
-                        <th>tag1</th>
-                        <th>tag2</th>
+                        <th>pagetitle</th>
+                        <th>pagedesc</th>
                         <th>detaylı</th>
                         <th>resimler</th>
                     </tr>
@@ -43,8 +43,8 @@
                         </td>
                         <td><%= products[i].slug %></td>
                         <td><%= products[i].getCategories().map(p=>p.name).join(',') %></td>
-                        <td><%= products[i].tag1 %></td>
-                        <td><%= products[i].tag2 %></td>
+                        <td><%= products[i].pageTitle ? "": "yok" %></td>
+                        <td><%= products[i].pageDescription ? "": "yok" %></td>
                         <td><%= products[i].mddesc ? "":"yok" %></td>
                         <td><a
                                 href="<%= `/pages/admin/resource/product-photos/${products[i].id}?fileprefix=${products[i].slug}&title=${products[i].name}` %>">Düzenle</a>

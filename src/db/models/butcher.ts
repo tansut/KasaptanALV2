@@ -101,6 +101,13 @@ class Butcher extends BaseModel<Butcher> {
     postal: string;
 
     @Column
+    pageTitle: string;
+
+    @Column
+    pageDescription: string;
+
+
+    @Column
     instagram: string;
 
     @Column
