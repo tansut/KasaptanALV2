@@ -44,7 +44,7 @@
   </div>
 
   <%
-  let resources = product.resources; 
+  let resources = product.resources.filter(r=>r.list == true); 
   let images = resources.filter(p=>p.contentType == "image/jpeg");
   let videos = resources.filter(p=>p.contentType == "video-youtube");
   let tarifs = resources.filter(p=>p.tag1 && p.tag1.includes("tarif"));

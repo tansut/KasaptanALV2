@@ -91,24 +91,26 @@
 
 
           <div class="col-lg-6 ">
-            <div class=" px-3 pl-lg-0 pr-lg-4   pt-lg-3 pb-0">
+            <div class=" px-3 pl-lg-0 pr-lg-4 mt-3   pt-lg-3 pb-0">
  
-    
-              <div class="alert mt-2 alert-secondary mb-3">
-                <h3 class="h5"><%=resource.title%> için hangi etler uygundur?</h3>
-                <p>
-                  <strong><%=resource.title%></strong> için aşağıdaki ürünlerimizi güvenle tercih edebilirsiniz.
-  
-                </p>
-                <ul>
-                  <% products.forEach(p=> { %>
-                    <li>                  
-                    <a class="alert-link" href="/<%=`${p.slug}`%>"><%=p.name%></a>
-                    </li>
-                  <% }) %>
-                </ul> 
+              <h3 class="h5"><%=resource.title%> için hangi etler uygundur?</h3>
+              <p>
+                <strong><%=resource.title%></strong> için aşağıdaki ürünlerimizi güvenle tercih edebilirsiniz.
 
+              </p>
+              <ul>
+                <% products.forEach(p=> { %>
+                  <li>
+                  <a class="alert-link" href="/<%=`${p.slug}?r=${resource.id}&autoNote=1`%>"><%=p.name%></a>
+                  </li>
+                <% }) %>
+              </ul> 
+
+              <div class="alert mt-2 alert-secondary mb-3">
+
+                <h4 class="h6">Hangi yemeğe hangi et</h4>
                 <p class="font-size-sm">
+                  <i class="czi-announcement mr-1"></i>
                   Eti Bizden seçeneğini kullanın, hangi yemeğe hangi eti ne kadar almalısınız biz hesaplayalım.
                 </p>
                 <a data-product="/<%=resource.product.slug%>" href="<%- include(`./_partial/addtonotelink.ejs`, {resource: resource, auto: false  }) %>"

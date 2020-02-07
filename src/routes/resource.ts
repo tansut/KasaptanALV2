@@ -175,7 +175,7 @@ export default class Route extends ViewRouter {
         var products = [resource.product].concat(resource.otherProducts);
 
         var defaultDesc = resource.tag1 ?
-        (resource.tag1.includes('tarif') ? `${resource.title} nasıl yapılır tarif videosu`:`${resource.title} için hangi etler uygundur?`):
+        (resource.tag1.includes('tarif') ? `${resource.title} nasıl yapılır tarif videosu`:``):
         "";
       
         let pageDesc = `${resource.title} yapmak için 
