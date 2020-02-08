@@ -31,13 +31,13 @@
           <li>
 
             <% if ( __req.prefAddr) { %>
-            <a class="dropdown-item select-area-action"><i class=" czi-location text-muted mr-2">
+            <a data-tag="true" data-category="general" data-action="location/open" data-label=""  class="dropdown-item select-area-action"><i class=" czi-location text-muted mr-2">
 
               </i><%= __req.prefAddr.level1Text + '/' + __req.prefAddr.level3Text %> (değiştir)</a>
 
 
             <% } else { %>
-            <a class="dropdown-item select-area-action"><i class=" czi-location text-muted mr-2">
+            <a data-tag="true" data-category="general" data-action="location/open" data-label="" class="dropdown-item select-area-action"><i class=" czi-location text-muted mr-2">
 
               </i>Semtinizi Seçin</a>
 
@@ -66,12 +66,12 @@
 
         <% if ( __req.prefAddr ) { %>
 
-        <a class="select-area-action topbar-link  d-md-inline-block" href="#"><i
+        <a data-tag="true" data-category="general" data-action="location/open" data-label="" class="select-area-action topbar-link  d-md-inline-block" href="#"><i
             class="text-light czi-location"></i><%= __req.prefAddr.level1Text + '/' + __req.prefAddr.level3Text %></a>
 
 
         <% } else { %>
-        <a class="select-area-action topbar-link d-md-inline-block" href="#"><i
+        <a data-tag="true" data-category="general" data-action="location/open" data-label="" class="select-area-action topbar-link d-md-inline-block" href="#"><i
             class="text-light czi-location"></i>Semtinizi Seçin</a>
 
 
@@ -113,7 +113,7 @@
             <div class="navbar-tool-text ml-n2"><small><%= req.user.name %></small>Hesabım</div>
           </a>
           <% } else { %>
-          <a class="d-none d-lg-flex  text-dark navbar-tool ml-1 ml-lg-0 mr-n1 mr-lg-2" href="#signin-modal"
+          <a data-category="account" data-tag="true" data-action="login/open" data-label="" class="d-none d-lg-flex  text-dark navbar-tool ml-1 ml-lg-0 mr-n1 mr-lg-2" href="#signin-modal"
             data-toggle="modal">
             <div class="navbar-tool-icon-box bg-primary"><i class="navbar-tool-icon czi-user"></i></div>
             <div class="navbar-tool-text ml-n2"><small>Giriş veya</small>Kayıt</div>
@@ -329,18 +329,18 @@
             <li class="d-lg-none nav-item"><a class="nav-link" href="/user"><i class=" czi-user mr-2"></i>Profilim</a>
             </li>
             <%} else {%>
-            <li class="d-lg-none nav-item"><a class="nav-link" data-toggle="modal" href="#signin-modal"><i
+            <li class="d-lg-none nav-item"><a data-category="account" data-tag="true" data-action="login/open" data-label="" class="nav-link" data-toggle="modal" href="#signin-modal"><i
                   class=" czi-user mr-2"></i>Kullanıcı Girişi/Kayıt</a>
             </li>
             <%}%>
             <% if ( __req.prefAddr ) { %>
 
-            <li class="d-lg-none nav-item"><a class="select-area-action nav-link" href="#"><i
+            <li class="d-lg-none nav-item"><a data-tag="true" data-category="general" data-action="location/open" data-label="" class="select-area-action nav-link" href="#"><i
                   class="text-light czi-location mr-2"></i><%= __req.prefAddr.level1Text + '/' + __req.prefAddr.level3Text %></a>
             </li>
 
             <% } else { %>
-            <li class="d-lg-none nav-item"><a class="select-area-action nav-link" href="#"><i
+            <li class="d-lg-none nav-item"><a data-tag="true" data-category="general" data-action="location/open" data-label="" class="select-area-action nav-link" href="#"><i
                   class="text-light czi-location mr-2"></i>Semtinizi Seçin</a></li>
 
 

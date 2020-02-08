@@ -78,7 +78,8 @@
                   href="<%= `${resource.getFileUrl()}`  %>"
                   <% if (resource.tag1 && (resource.tag1.includes('tarif') || resource.tag1.includes('yemek'))) { %> data-sub-html="<%= `<h6 class="font-size-normal text-light">${resource.title || ''}</h6><p class="font-size-md mb-2">${resource.description || ''}</p>`%> 
                     <% if (true) {%>
-                    <%=  '<a href="'%>  <%= include(`./_partial/addtonotelink.ejs`, {resource: resource, disableSlider: true  }) %>   <%='"class="btn btn-block btn-primary btn-sm rounded-0"><i class=" czi-thumb-up mr-2"></i>'%><%= resource.tag3 || 'Eti Bizden' + '</button>' %>
+                    <%=  '<a data-tag="true" data-category="food" data-action="eti-bizden" data-label="'%><%=resource.slug%><%='" href="'%><%= include(`./_partial/addtonotelink.ejs`, {resource: resource, disableSlider: true  }) %>   <%='"class="btn btn-block btn-primary btn-sm rounded-0"><i class=" czi-thumb-up mr-2"></i>'%><%= 'Eti Bizden' + '</button>' %>
+
                     <% } %>
                     " <% } %>>
                   <img class="" <% if (resource.contentType == 'video-youtube') { %>
@@ -119,7 +120,7 @@
                   <i class="czi-announcement mr-1"></i>
                   Eti Bizden seçeneğini kullanın, hangi yemeğe hangi eti ne kadar almalısınız biz hesaplayalım.
                 </p>
-                <a data-product="/<%=resource.product.slug%>" href="<%- include(`./_partial/addtonotelink.ejs`, {resource: resource, auto: false  }) %>"
+                <a data-tag="true" data-category="food" data-action="eti-bizden" data-label="/<%=resource.slug%>" href="<%- include(`./_partial/addtonotelink.ejs`, {resource: resource, auto: false  }) %>"
                   class="btn btn-sm btn-block  btn-primary font-size-xs"><i class=" czi-thumb-up mr-1">
                   </i>Eti Bizden</a>
               </div>
@@ -184,7 +185,7 @@ function openSlider(i) {
                    })
                   }
         $(document).ready(function() {
-          openSlider(<%=resource.id%>);   
+          //openSlider(<%=resource.id%>);   
         })
 </script>
 

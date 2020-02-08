@@ -228,15 +228,11 @@
   <a class="text-primary" href="javascript:openSlider(<%=t.id%>)"><i class="text-primary <%= t.contentType == 'video-youtube' ? 'czi-youtube': 'czi-camera' %> mr-1"></i><%=t.title%></a>
   
   
-   <a class="text-primary" title="Eti Bizden" data-food="<%= t.slug%>"
+   <a class="text-primary" title="Eti Bizden" data-tag="true" data-category="food" data-action="eti-bizden" data-label="<%= t.slug%>"
    href="javascript:<%= include('./_partial/addtonote.ejs', {resource: t, options: {hideProduct: true} }) %>"><span class="color-primary">
      <i class=" czi-add-circle"></i></span>  </a> 
 
-        <!-- <a  title="Eti Bizden" 
-   href="javascript:<%= include('./_partial/addtonote.ejs', {resource: t, options: {hideProduct: true} }) %>"
-    class="btn btn-sm  btn-primary font-size-xs"><i class=" czi-thumb-up mr-1">
-    </i>
-    </a>  -->
+
   
 </div>
                              
@@ -383,7 +379,7 @@
                         </div>
                         <% if (!view.butcher) {%>
                         <div class="text-center">
-                          <button @click="selectArea()" type="button" data-product="/<%=product.slug%>" id="add2scSetAddrBtn" class="btn btn-accent btn-block"><i
+                          <button @click="selectArea()" type="button" data-tag="true" data-category="general" data-action="location/open" data-label="/<%=product.slug%>" id="add2scSetAddrBtn" class="btn btn-accent btn-block"><i
                               class="czi-cart font-size-lg mr-2"></i>Sepete Ekle</button>
                           <% if (__req.prefAddr) { %>
 
@@ -477,7 +473,7 @@
 
                     
                           </div>
-                            <button data-product="<%=product.slug%>" id="addtoscbtn" class="btn btn-accent btn-block" type="submit"><i
+                            <button data-tag="true" data-category="ecommerce" data-action="shopcard/add" data-label="<%=product.slug%>" id="addtoscbtn" class="btn btn-accent btn-block" type="submit"><i
                               class="czi-cart font-size-lg mr-2"></i>Sepete Ekle</button>
                           
                           
@@ -485,7 +481,7 @@
 
                       <%}%>
                           <% if (view.butcher && __req.prefAddr && __req.query.action != 'add2sc') { %>
-                            <button data-product="<%=product.slug%>" id="addtoscbtn" class="btn btn-accent btn-block" type="submit"><i
+                            <button data-tag="true" data-category="ecommerce" data-action="shopcard/add" data-label="<%=product.slug%>" id="addtoscbtn" class="btn btn-accent btn-block" type="submit"><i
                               class="czi-cart font-size-lg mr-2"></i>Sepete Ekle</button>
                           
                           <% } %>

@@ -16,7 +16,7 @@
     <% if (resource.tag1 && (resource.tag1.includes('tarif') || resource.tag1.includes('yemek'))) { %>
       data-sub-html="<%= `<h6 class="font-size-normal text-light">${resource.title || ''}</h6><p class="font-size-md mb-2">${resource.description || ''}</p>`%> 
       <% if (true) {%>
-      <%=  '<button  type="button" data-food="'%><%=resource.slug%><%='" onclick="'%>   <%= include(`./addtonote.ejs`, {resource: resource, options: {hideProduct: true, encode: true} }) %>   <%='"class="btn btn-block btn-primary btn-sm "><i class=" czi-thumb-up mr-2"></i>'%><%= resource.tag3 || 'Eti Bizden' + '</button>' %>
+      <%=  '<button data-tag="true" data-category="food" data-action="eti-bizden"  type="button" data-label="'%><%=resource.slug%><%='" onclick="'%>   <%= include(`./addtonote.ejs`, {resource: resource, options: {hideProduct: true, encode: true} }) %>   <%='"class="btn btn-block btn-primary btn-sm "><i class=" czi-thumb-up mr-2"></i>'%><%= 'Eti Bizden' + '</button>' %>
       <% } %>
       "
     
@@ -37,9 +37,9 @@
   <% if (note) { %>
   <div class="text-center mb-3 mt-1">
                        
-    <button data-food="<%=resource.slug%>" type="button" onclick="<%= include('./addtonote.ejs', {resource: resource, options: {hideProduct: true} }) %>"
+    <button data-tag="true" data-category="food" data-action="eti-bizden" data-label="<%=resource.slug%>" type="button" onclick="<%= include('./addtonote.ejs', {resource: resource, options: {hideProduct: true} }) %>"
       class="btn btn-primary btn-sm "><i class=" czi-thumb-up mr-2">
-      </i><%= resource.tag3 || 'Eti Bizden' %></button>
+      </i><%= 'Eti Bizden' %></button>
   </div>
   <%}%>
 
