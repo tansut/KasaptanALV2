@@ -34,7 +34,7 @@ class EmailManager {
                 var mailOptions = {
                     to: to,
                     cc: 'archive@kasaptanal.com',
-                    from: 'KasaptanAl.com <noreply@kasaptanal.com>',
+                    from: 'kasaptanAl.com <noreply@kasaptanal.com>',
                     subject: subject,
                     html: res
                 }
