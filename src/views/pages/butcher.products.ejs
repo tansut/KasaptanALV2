@@ -101,8 +101,10 @@
 </head>
 
 <% var isViewMyProducts = __req.query.view=="my"
-   var isPrinting = __req.query.print=="1"
-   var printingProducts = controller._.sortBy(controller.sellingProducts, ["product.tag1"]).reverse() ;
+   var isPrinting = __req.query.print=="1" || __req.query.print=="2"
+   var selling = controller._.sortBy(controller.sellingProducts, ["product.tag1"]).reverse() ;
+   var others = controller._.sortBy(controller.otherProducts, ["product.tag1"]).reverse() ;
+   var printingProducts = __req.query.print=="2" ? selling.concat(others): selling
 %>
 
 
@@ -126,7 +128,13 @@
 
     </div>
     <div class="d-print-none text-center">
-      <button onclick="javascript:doPrint()" class="btn btn-dark btn-sm">Yazdır</button>
+      <div class="">
+          <div class="d-flex justify-content-center">
+            <button onclick="javascript:doPrint(1)" class="btn btn-dark btn-sm mr-3 mb-3 ">Sattığım Ürünler</button>
+            <button onclick="javascript:doPrint(2)" class="btn btn-dark btn-sm mr-3 mb-3">Tüm Ürünler</button>
+
+          </div>
+      </div>
     </div>
   </div>
 
@@ -143,7 +151,7 @@
     <div class="container px-0">
       <div class="bg-light box-shadow-lg px-4 py-4 mb-3 ">
 <h6 class="text-center">
-  Ürünlerim (<%=printingProducts.length%> adet)
+  Ürünler (<%=printingProducts.length%> adet)
 </h6>
     <table class="table table-striped">
       <thead>
@@ -288,8 +296,8 @@
 
 <script>
 
-  function doPrint() {
-    window.location.href = '/pages/butcher/products?view=my&print=1';
+  function doPrint(n) {
+    window.location.href = '/pages/butcher/products?view=my&print=' + n;
   }
 <% if (isPrinting) { %>
     window.print();
