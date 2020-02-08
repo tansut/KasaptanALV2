@@ -147,8 +147,12 @@ export default class Route extends ViewRouter {
                 }
             })
 
-            fs.existsSync(this.publicDir + resource.getFileUrl()) ? fs.unlinkSync(this.publicDir + resource.getFileUrl()) : null;
-            (resource.thumbnailUrl && fs.existsSync(this.publicDir + resource.getThumbnailFileUrl())) ? fs.unlinkSync(this.publicDir + resource.getThumbnailFileUrl()) : null;
+            if (resource.contentType == 'image/jpeg') {
+                fs.existsSync(this.publicDir + resource.getFileUrl()) ? fs.unlinkSync(this.publicDir + resource.getFileUrl()) : null;
+                (resource.thumbnailUrl && fs.existsSync(this.publicDir + resource.getThumbnailFileUrl())) ? fs.unlinkSync(this.publicDir + resource.getThumbnailFileUrl()) : null;
+    
+            }
+
 
 
 

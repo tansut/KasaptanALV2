@@ -1,5 +1,5 @@
 /
 /kasap
 /et-yemekleri
-/lezzetler
+/kasap-urunleri
 /et-kulturu

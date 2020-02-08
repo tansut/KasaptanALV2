@@ -79,7 +79,7 @@ export default class Route extends ViewRouter {
         })
 
         if (this.req.query.save && butchers.length == 0) {
-            this.res.redirect('/lezzetler');
+            this.res.redirect('/kasap-urunleri');
             return;
         }
 

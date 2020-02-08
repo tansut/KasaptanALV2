@@ -21,7 +21,7 @@
         <nav aria-label="breadcrumb">
           <ol class="breadcrumb breadcrumb-light flex-lg-nowrap justify-content-center justify-content-lg-star">
             <li class="breadcrumb-item"><a class="text-nowrap" href="/"><i class="czi-home"></i></a></li>
-            <li class="breadcrumb-item text-nowrap"><a href="/lezzetler">Lezzetler</a>
+            <li class="breadcrumb-item text-nowrap"><a href="/kasap-urunleri">Lezzetler</a>
             </li>
             <li class="breadcrumb-item text-nowrap"><a href="<%= controller.category.slug %>"><%= controller.category.name %></a>
             </li>
@@ -40,8 +40,8 @@
         <div class="media-body pt-2">
 
 
-          <h1 class="h3 text-light mb-0"><%= controller.category.tarifTitle %></h1>
-          <!-- <p class="lead text-light"><%= controller.category.shortdesc %></p> -->
+          <h1 class="h3 text-light "><%= controller.category.tarifTitle %></h1>
+          <h2 class="lead text-light h4"><%= controller.category.tarifDesc %></h2> 
 
         </div>
       </div>
@@ -83,13 +83,13 @@
         </div>
         
         
-        <div class="collapse-container page-footer-text">
+        <!-- <div class="collapse-container page-footer-text">
           <div class="collapse" id="collapseSummary">
             <%- controller.category.mddesc && controller.Markdown.render(controller.category.mddesc) %>
         
           </div>
           <a class="collapsed text-dark" data-toggle="collapse" href="#collapseSummary" aria-expanded="false" aria-controls="collapseSummary"></a>
-        </div>
+        </div> -->
       </div>
 
 

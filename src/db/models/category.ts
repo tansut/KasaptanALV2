@@ -38,6 +38,22 @@ class Category extends BaseModel<Category> {
     @Column({
         allowNull: true
     })
+    tarifDesc: string;    
+
+    @Column({
+        allowNull: true
+    })
+    tarifPageTitle: string;
+
+    @Column({
+        allowNull: true
+    })
+    tarifPageDesc: string;   
+
+
+    @Column({
+        allowNull: true
+    })
     relatedFoodCategory: number;    
 
     @Column({

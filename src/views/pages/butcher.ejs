@@ -44,7 +44,7 @@
 
   <div class="bg-primary pt-4">
     <div class="text-center container ">
-      <h1 class="display-5 text-light"><%= butcher.name %></h1>
+      <h1 class="h3 text-light"><%= butcher.name %></h1>
       <% if (__req.user && __req.user.hasRole('admin')) {%>
         <a target="_blank" class=" btn btn-dark btn-sm" href="/pages/admin/butcher/<%=butcher.slug%>">Düzenle</a>
       <%}%>
@@ -53,7 +53,7 @@
         <a target="_blank" class=" btn btn-dark btn-sm" href="/pages/butcher">Kasap Sayfam</a>
       <%}%>
 
-      <p class="lead text-light"><%= butcher.areaLevel2.name %>/<%= butcher.areaLevel1.name %></p>
+      <h2 class="lead text-light h4"><%= butcher.areaLevel3.name %>/<%= butcher.areaLevel1.name %></h2>
       
       <% var butcherVideo = images.find(br=>br.type == 'butcher-videos') %>
       

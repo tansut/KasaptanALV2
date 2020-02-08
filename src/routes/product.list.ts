@@ -90,11 +90,17 @@ export default class Route extends ViewRouter {
         this.res.render('pages/reyon-view.ejs', this.viewData({ ellipsis: ellipsis, products: this.products }))
     }
 
+    @Auth.Anonymous()
+    async redirectedReyon() {
+        this.res.redirect('/kasap-urunleri', 301);
+    }
+
 
 
     static SetRoutes(router: express.Router) {
-        router.get("/tum-lezzetler", Route.BindRequest(Route.prototype.productsView));
-        router.get("/lezzetler", Route.BindRequest(Route.prototype.reyonView));
+        //router.get("/tum-lezzetler", Route.BindRequest(Route.prototype.productsView));
+        router.get("/lezzetler", Route.BindRequest(Route.prototype.redirectedReyon));
+        router.get("/kasap-urunleri", Route.BindRequest(Route.prototype.reyonView));
 
     }
 }

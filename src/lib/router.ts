@@ -63,6 +63,8 @@ export default class BaseRouter {
         return (config.publicDir == '') ? "public/" : config.publicDir
     }
 
+    
+
     protected static BindRequest(method: string | Function) {
 
         var self = this;

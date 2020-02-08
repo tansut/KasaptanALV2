@@ -24,7 +24,7 @@
           <ol class="breadcrumb breadcrumb-light flex-lg-nowrap justify-content-center justify-content-lg-star">
             <li class="breadcrumb-item"><a class="text-nowrap" href="/"><i class="czi-home"></i></a></li>
             <% if (resource.tag1 && resource.tag1.includes('tarif')) { %>
-            <li class="breadcrumb-item text-nowrap"><a href="/et-yemek-tarifleri">Tarifler</a>
+            <li class="breadcrumb-item text-nowrap"><a href="/et-yemekleri">Yemekler</a>
             </li>
             <% } else { %>
               <li class="breadcrumb-item text-nowrap"><a href="/et-yemekleri">Yemekler</a>
@@ -38,6 +38,9 @@
         <h1 class="h3 mb-2 text-light mb-0"><%= resource.title %></h1>
 
         <h2 class="h4 lead text-light"><%= resource.description || defaultDesc %></h2>
+
+
+          
         <% if (__req.user && __req.user.hasRole('admin')) {%>
 
         <a class="btn btn-sm btn-dark" href="<%= `/pages/admin/resource/product-photos/${resource.product.id}?fileprefix=${resource.product.slug}&title=${resource.product.name}&videotype=product-videos#res${resource.id}` %>"
@@ -93,9 +96,9 @@
           <div class="col-lg-6 ">
             <div class=" px-3 pl-lg-0 pr-lg-4 mt-3   pt-lg-3 pb-0">
  
-              <h3 class="h5"><%=resource.title%> için hangi etler uygundur?</h3>
+              <h3 class="h5">Hangi etler uygundur?</h3>
               <p>
-                <strong><%=resource.title%></strong> için aşağıdaki ürünlerimizi güvenle tercih edebilirsiniz.
+                <strong><%=resource.title%></strong> yapmak için aşağıdaki ürünlerimizi güvenle satın alabilirsiniz.
 
               </p>
               <ul>
@@ -178,7 +181,7 @@ function openSlider(i) {
                    })
                   }
         $(document).ready(function() {
-          //openSlider(<%=resource.id%>);   
+          openSlider(<%=resource.id%>);   
         })
 </script>
 

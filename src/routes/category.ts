@@ -29,10 +29,13 @@ export default class Route extends ViewRouter {
 
 
 
-    renderPage(view: string) {
+    renderPage(view: string, viewAsTarif: boolean = false) {
+        let pageTitle = viewAsTarif ? (this.category.tarifPageTitle || this.category.tarifTitle): this.category.pageTitle;
+        let pageDescription = viewAsTarif ? this.category.tarifPageDesc : this.category.pageDescription;
+
         this.res.render(view, this.viewData({
-            pageTitle: (this.category.pageTitle || this.category.name + ' Et Lezzetleri') + ' | Online Sipariş',
-            pageDescription: this.category.pageDescription
+            pageTitle: (pageTitle || this.category.name + ' Et Lezzetleri') + ' | Online Sipariş',
+            pageDescription: pageDescription
         }))
     }
 
@@ -122,18 +125,7 @@ export default class Route extends ViewRouter {
         }))
     }
 
-    // @Auth.Anonymous()
-    // async viewAsFoodRoute(back: boolean = false) {
-    //     if (!this.req.params.category) {
-    //         return this.next();
-    //     }
-    //     this.category = this.req.__categories.find(p => p.slug == this.req.params.category);
-    //     if (!this.category) return this.next();
 
-    //     await this.fillFoods(this.category.id, this.category.slug, true);
-    //     this.foodCategory = "yemekler";
-    //     this.renderPage('pages/category-sub-food.ejs')
-    // }
 
 
     @Auth.Anonymous()
@@ -160,24 +152,12 @@ export default class Route extends ViewRouter {
                 await this.fillFoods(this.category.id, this.category.slug, true);
             } else await this.fillFoodsAndTarifs(this.category.id, this.category.slug, true);
 
-            this.renderPage('pages/category-sub-food.ejs')
+            this.renderPage('pages/category-sub-food.ejs', true)
         }
     }
 
 
 
-    // @Auth.Anonymous()
-    // async viewAsTarifRoute(back: boolean = false) {
-    //     if (!this.req.params.category) {
-    //         return this.next();
-    //     }
-    //     this.category = this.req.__categories.find(p => p.slug == this.req.params.category);
-    //     if (!this.category) return this.next();
-
-    //     await this.fillTarifs(this.category.id, this.category.slug, true);
-    //     this.foodCategory = "tarifler";
-    //     this.renderPage('pages/category-sub-food.ejs')
-    // }
 
 
     @Auth.Anonymous()

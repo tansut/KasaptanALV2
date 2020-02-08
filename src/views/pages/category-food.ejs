@@ -34,8 +34,8 @@
         <div class="media-body pt-2">
 
 
-          <h1 class="h3 text-light mb-0"><%= controller.category.name %></h1>
-          <p class="lead text-light"><%= controller.category.shortdesc %></p>
+          <h1 class="h3 text-light "><%= controller.category.name %></h1>
+          <h2 class="lead h4 text-light"><%= controller.category.shortdesc %></h2>
 
         </div>
       </div>
@@ -76,7 +76,7 @@
         
         </div>
         
-        
+        <% if (controller.category.mddesc) { %>
         <div class="collapse-container page-footer-text">
           <div class="collapse" id="collapseSummary">
             <%- controller.category.mddesc && controller.Markdown.render(controller.category.mddesc) %>
@@ -84,6 +84,7 @@
           </div>
           <a class="collapsed text-dark" data-toggle="collapse" href="#collapseSummary" aria-expanded="false" aria-controls="collapseSummary"></a>
         </div>
+        <%}%>
       </div>
 
 

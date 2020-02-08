@@ -175,17 +175,18 @@ export default class Route extends ViewRouter {
         var products = [resource.product].concat(resource.otherProducts);
 
         var defaultDesc = resource.tag1 ?
-        (resource.tag1.includes('tarif') ? `${resource.title} nasıl yapılır tarif videosu`:``):
+        (resource.tag1.includes('tarif') ? `Nasıl yapılır tarif videosu`:``):
         "";
       
-        let pageDesc = `${resource.title} yapmak için 
-            ${products.map(p=>p.name).join(',')} uygun etlerdendir. kasaptanAl.com ile güvenle online sipariş verebilirsiniz.`
+        let pageDesc = resource.tag1.includes('tarif') ?
+         `En kısa ve net ${resource.title} tarifi. Uygun etler ${products.map(p=>p.name).join(',')}.`:
+         `${resource.title} yapmak için ${products.map(p=>p.name).join(',')} uygun etlerdendir.`
 
         this.res.render('pages/food-tarif-view.ejs', this.viewData({
             resource: resource,
             products: products,
             defaultDesc: defaultDesc,
-            pageTitle: resource.title + (resource.tag1.includes('tarif') ? ' Tarifi': ' Yemeği'),
+            pageTitle: resource.title + (resource.tag1.includes('tarif') ? ' Tarifi': ''),
             pageDescription: pageDesc
         }))
     }
