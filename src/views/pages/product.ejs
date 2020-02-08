@@ -6,6 +6,7 @@
   <% if (Object.keys(__req.query).length != 0 ) {%>
   <meta name="robots" content="noindex,follow">
   <%}%>
+  <link href="https://www.kasaptanal.com<%=__req.path%>" rel="canonical">
 </head>
 
 <body class="d-none">
@@ -399,8 +400,8 @@
                                       <div class="d-flex d-flex justify-content-around">
                                        
 
-                                        <a href="#" @click="selectArea()" class="btn btn-sm btn-accent">Semt Seç</a>
-                                        <a href="/kasap-urunleri" class="btn btn-sm btn-primary">Alışverişe Devam<i class="czi-arrow-right"></i></a>
+                                        <a href="#" @click="selectArea()" class="btn btn-sm btn-primary">Semt Seç <i class="ml-1 czi-arrow-right"></i></a>
+                                        <a href="/kasap-urunleri" class="btn btn-sm btn-accent">Alışverişe Devam</a>
                                       
                                       </div>
                                     </div>
@@ -414,14 +415,81 @@
 
              
                          
-                          <%}%>
+                          <%} %>
+                          
+                          
                       </div>
                       <%} %>
 
-                          <% if (view.butcher && __req.prefAddr) { %>
-                          <button data-product="<%=product.slug%>" id="addtoscbtn" class="btn btn-accent btn-block" type="submit"><i
+                      <% if (false) {%>
+
+                        <div class="toast-container toast-top-center">
+                          <div id="shopcard-available-toast" class="toast mb-3" id="accent-toast" data-delay="25000" role="alert" aria-live="assertive" aria-atomic="true">
+                            <div class="toast-header bg-accent text-white">
+                              <h6 class="font-size-sm text-white mb-0 mr-auto">Tebrikler</h6>
+                              <button class="close text-white ml-2 mb-1" type="button" data-dismiss="toast" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                            </div>
+                            <div class="toast-body text-accent text-center">
+                                <p>
+                                  Ürünümüz mevcut. Alışveriş sepetinize ekleyebilir ve alışverişe devam edebilirsiniz.
+                                </p>
+                                <div>
+                                  <div class="d-flex d-flex justify-content-around">
+                                   
+
+                                    <button class="btn btn-sm btn-accent" type="button" data-dismiss="toast" aria-label="Close">OK</button>
+
+                                  
+                                  </div>
+                                </div>
+                                <div>
+                    
+                                </div>
+                          
+                          </div>
+                          </div>
+                    </div>
+
+                       <%}%>
+                       <% if (view.butcher && __req.prefAddr && __req.query.action == 'add2sc') { %>
+                        <div class="mb-3 alert alert-success">
+                          <div class="mb-3">
+                   <p class="font-weight-bold">
+                     Ürünümüz Mevcut
+                   </p>
+                            <!-- <p>
+                              <%=view.butcher.name %> tarafından sağlanmaktadır.
+                            </p> -->
+
+                            <p>
+                              Satın almak için alışveriş sepetinize ekleyebilirsiniz.
+
+                              <%if (false) {%>
+                                <span>
+                                  veya <a class="alert-link" href="javascript:showOtherButchers()">bir başka kasap</a>  seçebilirsiniz.
+                                </span>
+                                <%}%>
+                            </p>
+                            
+                    
+                           
+
+                    
+                          </div>
+                            <button data-product="<%=product.slug%>" id="addtoscbtn" class="btn btn-accent btn-block" type="submit"><i
                               class="czi-cart font-size-lg mr-2"></i>Sepete Ekle</button>
+                          
+                          
+                        </div>
+
+                      <%}%>
+                          <% if (view.butcher && __req.prefAddr && __req.query.action != 'add2sc') { %>
+                            <button data-product="<%=product.slug%>" id="addtoscbtn" class="btn btn-accent btn-block" type="submit"><i
+                              class="czi-cart font-size-lg mr-2"></i>Sepete Ekle</button>
+                          
                           <% } %>
+
+
                         </div>
                       </div>
                      
@@ -634,8 +702,13 @@ $(document).ready(function() {
 
 
 <% } else if (view.butcher && __req.prefAddr && __req.query.action == 'add2sc') { %>
- 
-    window.App.ProductApp.add2ScOnce = true;
+
+  $(document).ready(function() {
+    window.App.scrollToAnchor("#noteanchor")
+    //$('#shopcard-available-toast').toast('show'); 
+  })      
+
+    //window.App.ProductApp.add2ScOnce = true;
  
 <% } %> 
 

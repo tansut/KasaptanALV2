@@ -91,26 +91,29 @@
 
   <div class=" mb-3">
 
-    <div class="form-group mb-3">
-       <label class="mb-2" for="wanote"><span
-        class="badge badge-accent font-size-xs mr-2">Sipariş Notunuz</span><span class="font-size-sm"></span>
-        
-    
 
-       
-      </label> 
-      <textarea v-model="cardnote" :placeholder="cardnoteph || 'İletmek istediğiniz notunuz varsa burayı kullanabilirsiniz.'"
-        class="form-control font-size-sm" rows="4" name="wanote" id="wanote">
-
-
-                                      </textarea>
-    </div>
 
    
+<div class="alert alert-info rounded-0 pt-1">
 
+  <div class="form-group mb-0">
+    <label class="mb-2" for="wanote"><span
+     class="badge badge-accent font-size-xs mr-2">Sipariş Notunuz</span><span class="font-size-sm"></span>
+     
+ 
+
+    
+   </label> 
+   <textarea v-model="cardnote" :placeholder="cardnoteph || 'İletmek istediğiniz notunuz varsa burayı kullanabilirsiniz.'"
+     class="form-control font-size-sm" rows="4" name="wanote" id="wanote">
+
+
+                                   </textarea>
+ </div>
+
+  <div class="text-center border-bottom pt-2 mb-3 font-size-md font-weight-medium" v-if="result && result.length > 0">Miktar seçin ve sepete ekleyin</div>
 
     <div class=" px-3 flex-wrap d-flex align-items-center justify-content-center">
-      <p class="text-center font-size-sm" v-if="result && result.length > 1">Şu şekillerde güvenle satın alabilirsiniz.</p>
       <button v-for="(option, index) in result" data-dismiss="modal" @click="setUnit(option)"
         class="btn mb-2 mr-2 btn-primary">
         <i class="czi-check mr-1"></i>
@@ -122,6 +125,8 @@
         <span></span>
       </button>
     </div>
+</div>
+    
 
 
     <!-- <ul class="list-unstyled font-weight-medium">
