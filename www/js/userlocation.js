@@ -123,6 +123,14 @@
             ul.init({}, function () {
                 $('#areaModal').modal();
                 $("#exploreAreaButton").click(function () {
+                    debugger;
+                    window.dataLayer = window.dataLayer || [];
+                    window.dataLayer.push({
+                    'event': 'custom',
+                    'category': 'general',
+                    'action':'location/set',
+                    'label': ul.selectedCity.name + '/' + ul.selectedIlce.name + '/' + ul.selectedDistrict.name
+                    });
                     $(window).trigger('kb.selectArea.selected', [self, ul]);
                     done && done(self, ul)
                 })

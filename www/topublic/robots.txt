@@ -1,4 +1,4 @@
-User-agent: *
-Allow: /
-
 Sitemap: https://www.kasaptanal.com/sitemap.xml
+
+User-agent: *
+Disallow:

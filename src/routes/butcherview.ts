@@ -47,6 +47,9 @@ export default class Route extends ViewRouter {
         if (!this.req.params.butcher) {
             return this.next();
         }
+        if (this.req.params.butcher == 'dukkan-kasap') {
+            return this.res.redirect('/dukkankasap', 301)
+        }
         let butcher = this.butcher = await ButcherModel.findOne({
             include: [{
                 model: ButcherProduct,
@@ -87,7 +90,9 @@ export default class Route extends ViewRouter {
             
             }
         });
-        if (!butcher) return this.next();
+        if (!butcher) {
+            return this.next();
+        } 
         butcher.products = butcher.products.filter(p => {
             return p.enabled && (p.kgPrice > 0 || (p.unit1price > 0 && p.unit1enabled) || (p.unit2price > 0 && p.unit2enabled) || (p.unit3price > 0 && p.unit1enabled))
         })

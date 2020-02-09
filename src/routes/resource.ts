@@ -195,7 +195,7 @@ export default class Route extends ViewRouter {
     static SetRoutes(router: express.Router) {
         router.get("/resource/fill", Route.BindRequest(Route.prototype.fillSlugs));
         router.get("/resource/:id", Route.BindRequest(Route.prototype.viewRoute));
-        router.get("/et-yemek-tarifleri/:item", Route.BindRequest(Route.prototype.viewTarifFoodRoute));
+        //router.get("/et-yemek-tarifleri/:item", Route.BindRequest(Route.prototype.viewTarifFoodRoute));
         router.get("/et-yemekleri/:item", Route.BindRequest(Route.prototype.viewTarifFoodRoute));
     }
 }

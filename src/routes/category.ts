@@ -222,9 +222,9 @@ export default class Route extends ViewRouter {
 
 
 
-        router.get("/et-yemek-tarifleri", Route.BindRequest(Route.prototype.viewTarifsRoute));
+        // router.get("/et-yemek-tarifleri", Route.BindRequest(Route.prototype.viewTarifsRoute));
 
-        router.get("/et-yemek-tarifleri/kategori/:category", Route.BindRequest(Route.prototype.viewTarifsRoute));
+        // router.get("/et-yemek-tarifleri/kategori/:category", Route.BindRequest(Route.prototype.viewTarifsRoute));
 
 
 
