@@ -1,6 +1,11 @@
-<% var _pageTitle = (typeof pageTitle == 'undefined') ? "Seçkin kasaplardan doğal ve taze online et siparişi | kasaptanAl.com": (pageTitle + " | kasaptanAl.com") %>
+<% var _pageTitle = (typeof pageTitle == 'undefined') ? "Seçkin kasaplardan doğal ve taze online et siparişi -kasaptanAl.com": (pageTitle + " - kasaptanAl.com") %>
 <% var _pageDescription = (typeof pageDescription == 'undefined') ? 'Birinci sınıf et ve et ürünleri kasaptanal.com&#39;da. Bir tıkla en lezzetli etler en seçkin kasaplardan kapına gelsin.': (pageDescription) %>
+<%
 
+  _pageTitle = _pageTitle.trim();
+  _pageDescription = _pageDescription.trim()
+
+%>
 <title>
     <%= _pageTitle %>
 </title>
@@ -16,6 +21,7 @@
 <meta property="og:title" content="<%= _pageTitle %>">
 <meta property="og:description" content="<%= _pageDescription %>">
 <meta property="og:site_name" content="kasaptanal.com">
+<meta property="og:url" content="https://www.kasaptanal.com<%=__req.path%>">
 <meta name="description" content="<%= _pageDescription  %>">
 
 <link rel="apple-touch-icon" sizes="57x57" href="/static/img/icon/apple-icon-57x57.png">
