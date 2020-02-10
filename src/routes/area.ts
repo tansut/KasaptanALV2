@@ -43,7 +43,9 @@ export default class Route extends ViewRouter {
         
         this.res.render('pages/areal1.ejs', this.viewData({ 
             
-            subs: subs, ellipsis: ellipsis, pageDescription: `En seçkin ${this.address.display} kasaplarından kasaptanAl.com ile online et ve et ürünleri siparişi verebilirsiniz.`, pageTitle: `${this.address.display} kasapları`, area: area, butchers: butchers }))
+            subs: subs, ellipsis: ellipsis, 
+            pageDescription: `${this.address.display} kasaplarının en doğal ve lezzetli et ürünleri kasaptanAl.com'da. Şimdi kasaplarımızdan online sipariş verin, kapınıza gelsin!`, 
+            pageTitle: `${this.address.display} kasapları`, area: area, butchers: butchers }))
     }
 
     @Auth.Anonymous()
