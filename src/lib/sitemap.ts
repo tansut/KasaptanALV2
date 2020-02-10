@@ -5,7 +5,7 @@ import * as path from "path";
 import Product from "../db/models/product";
 import Category from "../db/models/category";
 import Resource from "../db/models/resource";
-import {Op} from "sequelize";
+import {Op, QueryTypes} from "sequelize";
 import Content from "../db/models/content";
 import Butcher from "../db/models/butcher";
 import Area from "../db/models/area";
@@ -73,9 +73,22 @@ export default class SiteMapManager {
     }
 
     static async fillBlog(stream: SitemapStream) {
+        let catdata = await Content.sequelize.query("SELECT distinct category, categorySlug from Contents", {
+            raw: true  ,
+            type: QueryTypes.SELECT       
+        } )
+
+        catdata.forEach(item=>{
+            stream.write({
+                url: `${this.baseUrl}/et-kulturu/${item['categorySlug']}`,
+                img: []
+            })
+        })
+        
         let items = await Content.findAll({
             raw: true
         });
+
         items.forEach(item=>{
             stream.write({
                 url: `${this.baseUrl}/et-kulturu/${item.slug}`,
@@ -86,7 +99,6 @@ export default class SiteMapManager {
                 }]
             })
         })
-
     }
 
 

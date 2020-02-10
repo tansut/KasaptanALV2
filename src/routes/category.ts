@@ -169,8 +169,9 @@ export default class Route extends ViewRouter {
         if (!this.category) return this.next();
 
         if (this.category.type == 'resource') {
-            await this.fillFoods(this.category.id, this.req.params.subcategory);
-            this.renderPage('pages/category-food.ejs')
+            this.res.redirect('/et-yemekleri/' + this.category.slug, 301);
+            //await this.fillFoods(this.category.id, this.req.params.subcategory);
+            //this.renderPage('pages/category-food.ejs')
         }
 
         else {
