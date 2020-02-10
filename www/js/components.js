@@ -49,16 +49,16 @@ window.initComponents = function initComponents() {
                     <div class="d-flex align-items-center justify-content-center">
                         <button type="button" @click="decrement()" class="no-zoom btn btn-lg btn-outline mr-4"><i class="czi-arrow-left-circle"></i></button>
                         <div class="d-inline text-nowrap text-center" style="min-width:5rem">
-                            <div class="font-size-lg text-accent " v-if="unit!='kg'">
+                            <div class="font-size-lg text-accent " v-if="unit.toLowerCase()!='kg'">
                                 <span class="mb-1 font-weight-medium">{{value || '?'}}</span>
                                 <small>{{unit}}</small>
                             </div>
                             <div class="text-accent font-size-lg font-weight-medium">
-                                <weight-view v-if="unit=='kg'" :kg="value"></weight-view>
+                                <weight-view v-if="unit.toLowerCase()=='kg'" :kg="value"></weight-view>
                             </div>
                         </div>
                         <button type="button" @click="increment()" class="no-zoom btn btn-lg btn-outline ml-4"><i class="czi-arrow-right-circle"></i></button>
-                    </div>    
+                    </div>     
             </div>
               `,
         props: {
@@ -86,7 +86,7 @@ window.initComponents = function initComponents() {
         methods: {
 
             normalized(val) {
-                if (this.unit == 'kg') {
+                if (this.unit.toLowerCase() == 'kg') {
                     val = Number(val.toFixed(3))
                 }
                 return val;

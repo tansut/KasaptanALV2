@@ -4,17 +4,20 @@ import Helper from '../../lib/helper';
 
 @Table({
     tableName: "Redirects",
-    indexes: []
+    indexes: [{
+        name: "fromUrl_idx",
+        fields: ["fromUrl"],
+        unique: true
+    }]
 })
 class Redirect extends BaseModel<Redirect> {
 
     @Column({
-        allowNull: false,
-        unique: true
+        allowNull: false
     })
     fromUrl: string;
 
-    @Column({
+    @Column({ 
         allowNull: false
     })
     toUrl: string;
