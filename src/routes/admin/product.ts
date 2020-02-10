@@ -11,6 +11,8 @@ import { threadId } from 'worker_threads';
 import Helper from '../../lib/helper';
 import Category from '../../db/models/category';
 import ProductCategory from '../../db/models/productcategory';
+import Redirect from '../../db/models/redirect';
+import { CacheManager } from '../../lib/cache';
 
 export default class Route extends ViewRouter {
 
@@ -94,7 +96,7 @@ export default class Route extends ViewRouter {
         this.product = await this.getProduct(this.req.params.product);
         let resources = await this.getResources(this.product)
         let categories = await this.getCategories();
-
+        let pSlug = this.product.slug;
 
         if (this.req.body.save == "true") {
             if (this.req.user.hasRole('admin')) {
@@ -108,7 +110,33 @@ export default class Route extends ViewRouter {
                 this.product.butcherNote = this.req.body.butcherNote;
             }
             this.product.mddesc = this.req.body.mddesc;
+            
+            if (pSlug != this.product.slug) {
+                let redirToOld = this.req.__redirects['/' + pSlug];
+                let redirToNew = this.req.__redirects['/' + this.product.slug];
+                if (redirToNew)
+                    throw new Error(this.product.slug + ' yönlendirmede, eklenemez');
+                if (redirToOld) {
+                    let r = await Redirect.findOne({
+                        where: {
+                            fromUrl: '/' + pSlug
+                        }
+                    });
+                    r.toUrl = '/' + this.product.slug;
+                    r.desc = 'updated for ' + this.product.name;
+                    await r.save();  
+                } else {
+                    let r = new Redirect({
+                        fromUrl: '/' + pSlug,
+                        toUrl: '/' + this.product.slug,
+                        enabled: true,
+                        desc: 'added for ' + this.product.name
+                    })
+                    await r.save();
+                }
+            }
             await this.product.save();
+            
         } else if (this.req.body.saveseo == "true") {
             this.product.pageTitle = this.req.body.pagetitle;
             this.product.pageDescription = this.req.body.pagedesc;
@@ -212,8 +240,10 @@ export default class Route extends ViewRouter {
             }
             this.product = await this.getProduct(this.req.params.product);
         }
-
-        this.res.render('pages/admin/product.edit.ejs', this.viewData({ categories: categories, images: resources, product: this.product }))
+        CacheManager.clear();
+        if (pSlug != this.product.slug) {
+            this.res.redirect("/pages/admin/product/" + this.product.slug)
+        } else  this.res.render('pages/admin/product.edit.ejs', this.viewData({ categories: categories, images: resources, product: this.product }))
     }
 
 
