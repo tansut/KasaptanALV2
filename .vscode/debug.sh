@@ -1,5 +1,5 @@
 export NODE_ENV=development
-export PAGETRACK=true
+export PAGETRACK=false
 export DBNAME=kasap
 export PORT=3000
 export DBADDRESS=localhost

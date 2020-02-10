@@ -35,6 +35,7 @@
           <!-- Steps-->
 
           <%- include('./_partial/checkout-steps.ejs', {   step: 4        }); %>
+          <% if (shopcard.address.name) { %>
           <div>
             <div class="d-flex flex-nowrap justify-content-between align-items-center pt-1 pb-1 mb-2">
               <h3 class="h4 mb-0 mr-2">Adres</h3>
@@ -44,12 +45,14 @@
 
             </div>
             <ul class="list-unstyled font-size-sm">
+              
               <li><span class="text-muted">İsim:&nbsp;</span><%= shopcard.address.name %></li>
               <li><span class="text-muted">Adres:&nbsp;</span><%= shopcard.address.adres%>
                 <%= shopcard.address.level3Text%>/<%= shopcard.address.level1Text%></li>
               <li><span class="text-muted">Telefon:&nbsp;</span><%= shopcard.address.phone%></li>
             </ul>
           </div>
+          <%}%>
           <div>
             <div class="d-flex flex-nowrap justify-content-between align-items-center pt-1  pb-1 mb-2">
               <h3 class="h4 mb-0 mr-2">Teslimat ve Ödeme</h3>
@@ -78,8 +81,13 @@
                 <li><span class="text-muted">Gün:&nbsp;</span><%= shopcard.shipment[bi].daysText %></li>
                 <li><span class="text-muted">Saat Aralığı:&nbsp;</span><%= shopcard.shipment[bi].hoursText%> </li>
                 <%}%>
+                <%if (shopcard.shipment[bi].howTo == 'ship') { %>
+
                         <li><span class="text-muted">Paketim çıkmadan bana haber ver:&nbsp;</span><%= __helper.boolStr(shopcard.shipment[bi].informMe)%>
+                         
                 </li>
+
+                <% } %>
                 <li><span class="text-muted">Ödeme:&nbsp;</span><%= shopcard.payment[bi].desc%> </li>
               </ul>
               <div class="px-4">

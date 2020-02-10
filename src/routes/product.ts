@@ -73,7 +73,7 @@ export default class Route extends ViewRouter {
         });
 
         let sellingl1 = await Butcher.sellingButchers(pid, {
-            level2Id: this.req.prefAddr.level1Id
+            level1Id: this.req.prefAddr.level1Id
         });
 
         let servingDispatchers = await api.getButchersSelingAndDispatches(adr, pid);
@@ -100,7 +100,6 @@ export default class Route extends ViewRouter {
             others: otherButchers
         }
 
-        return null;
 
     }
 
@@ -190,7 +189,7 @@ export default class Route extends ViewRouter {
 
 
 
-        let view = await api.getProductView(product, selectedButchers.best, null, true)
+        let view = await api.getProductView(product, selectedButchers.best || (selectedButchers.others.length ? selectedButchers.others[0]: null), null, true)
 
 
 
@@ -240,7 +239,7 @@ export default class Route extends ViewRouter {
                 order: [["displayOrder", "DESC"], ["updatedOn", "DESC"]]
             })
         }
-        this.res.render('pages/product', this.viewData({ butcherProducts: this.butcherProducts.map(p => p.product), butchers: selectedButchers, pageTitle: (product.pageTitle || product.name) + ' | Online Sipariş', pageDescription: product.pageDescription, product: product, view: view, 
+        this.res.render('pages/product', this.viewData({ butcherProducts: this.butcherProducts.map(p => p.product), butchers: selectedButchers, pageTitle: (product.pageTitle || product.name) + '', pageDescription: product.pageDescription, product: product, view: view, 
             __supportMessage: `${`Merhaba, kasaptanal.com üzerinden size ulaşıyorum. ${product.name} ile ilgili whatsapp üzerinden yardımcı olabilir misiniz?`}` }))
     }
 

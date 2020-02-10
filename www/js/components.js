@@ -372,7 +372,7 @@ window.initComponents = function initComponents() {
 
             },
 
-            selectArea(returnUrl) {
+            selectArea(returnUrl, msg) {
                 var self = this;
                 window.kb.selectArea(function (sender, ul) {
                     if (!returnUrl) {
@@ -383,6 +383,8 @@ window.initComponents = function initComponents() {
                     }
                     window.location.href = "/adres-belirle/" + ul.selectedDistrict.slug + '?r=' + (encodeURIComponent(returnUrl));
                     //window.location.reload(true) // = "/" + window.App.ProductApp.product.slug + "?semt=" + ul.selectedDistrict.slug
+                }, {
+                    msg: msg
                 });
             },
 

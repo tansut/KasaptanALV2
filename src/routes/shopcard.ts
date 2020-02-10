@@ -52,11 +52,11 @@ export default class Route extends ViewRouter {
         this.shopcard = await ShopCard.createFromRequest(this.req);
         this.shopcard.note = this.req.body["order-comments"] || "";
 
-        if (!this.shopcard.address.name) {
-            this.shopcard.address.name = this.req.user.name;
-            this.shopcard.address.email = this.req.user.email;
-            this.shopcard.address.phone = this.req.user.mphone;
-        }
+        // if (!this.shopcard.address.name) {
+        //     this.shopcard.address.name = this.req.user.name;
+        //     this.shopcard.address.email = this.req.user.email;
+        //     this.shopcard.address.phone = this.req.user.mphone;
+        // }
         await this.setDispatcher();
         await this.shopcard.saveToRequest(this.req)
         this.renderPage("pages/checkout.ship.ejs");
@@ -75,7 +75,6 @@ export default class Route extends ViewRouter {
     }
 
     async setDispatcher() {
-
         let api = new Dispatcher(this.constructorParams);
         for (let o in this.shopcard.shipment) {
             let dispatch = await api.bestDispatcher(parseInt(o), {
@@ -127,11 +126,12 @@ export default class Route extends ViewRouter {
 
     async saveshipRoute() {
         this.shopcard = await ShopCard.createFromRequest(this.req);
+        await this.setDispatcher();
         let needAddress = false;
         for(let k in this.shopcard.butchers) {
             let butcher = this.shopcard.butchers[k];
             this.shopcard.shipment[k].type = this.req.body[`shipping-method${k}`];
-            this.shopcard.shipment[k].howTo = this.req.body[`howto${k}`];
+            this.shopcard.shipment[k].dispatcher && (this.shopcard.shipment[k].howTo = this.req.body[`howto${k}`]);
             needAddress = !needAddress ? (this.shopcard.shipment[k].howTo == 'ship'): true;
             // this.shopcard.shipment[k].desc = ShipmentTypeDesc[this.shopcard.shipment[k].type];
             // this.shopcard.shipment[k].howToDesc = ShipmentHowToDesc[this.shopcard.shipment[k].howTo];

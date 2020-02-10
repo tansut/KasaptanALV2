@@ -79,7 +79,7 @@ export default class Route extends ViewRouter {
         this.allcontent = allcontent;
         this.resources = await new ProductsApi(this.constructorParams).getInformationalVideos(25)
         await this.loadCategories();
-        this.sendView('pages/blog.index.ejs', {
+        this.renderView('pages/blog.index.ejs', this.req.params.category ? `blog/${this.req.params.category}`: null, {
             allcontent: allcontent
         })
     }

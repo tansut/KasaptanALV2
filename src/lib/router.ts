@@ -203,14 +203,18 @@ export class ViewRouter extends BaseRouter {
         }
     }
 
+
+    protected renderView(view: string, pageKey: string = null, vdata = {}) {
+        pageKey = pageKey || view;
+        let dbViewData = this.req.__webpages[pageKey] || {};        
+        let result = { ...dbViewData, ...vdata };
+        this.res.render(view, this.viewData(result))
+    }
+
+
     @Auth.Anonymous()
     protected sendView(view: string, vdata = {}) {
-        let dbViewData = this.req.__webpages[view] || {};        
-        let result = { ...dbViewData, ...vdata };
-        if (result['pageTitle']) {
-           
-        }
-        this.res.render(view, this.viewData(result))
+        this.renderView(view, view, vdata)
     }
 
 

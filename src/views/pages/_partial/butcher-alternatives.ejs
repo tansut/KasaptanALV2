@@ -18,13 +18,14 @@
             </li>
             <% } %>
             <li class="nav-item">
-              <a class="nav-link" id="takeaway-tab" data-toggle="tab" href="#takeaway" role="tab"
+              <a class="nav-link <%= butchersServing.length == 0 ? 'active':''%>" id="takeaway-tab" data-toggle="tab" href="#takeaway" role="tab"
                  aria-selected="true">
 
                 Gel-Al</a>
             </li>
           </ul>
           <div class="tab-content p-0 m-0 " id="butchers-serving-tabContent">
+            <% if (butchersServing.length > 0) { %>
             <div class="tab-pane fade show active" id="serving" role="tabpanel">
               <% butchersServing.forEach(b=> { %>
                 <div class="bg-secondary border-bottom p-3">
@@ -36,8 +37,9 @@
                   </a></div> 
               <% }) %>
             </div>
-  
-            <div class="tab-pane fade" id="takeaway" role="tabpanel">
+            <% } %>
+            
+            <div class="tab-pane fade <%= butchersServing.length == 0 ? 'show active':''%>" id="takeaway" role="tabpanel">
               <% butchersTakeaway.forEach(b=> { %>
                 <div class="bg-secondary border-bottom p-3">
                   <a class="media align-items-center" href="<%=`/${product.slug}?butcher=${b.slug}#butchervendor`%>"><img

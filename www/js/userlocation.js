@@ -115,15 +115,16 @@
         return self;
     }
 
-    window.kb.selectArea = function (done) {
+    window.kb.selectArea = function (done, options) {
         var self = this;
+        options = options || {}
         if (!self.areainited) {
             var ul = window.kb.userlocation();
             self.areainited = true;
             ul.init({}, function () {
+                $('#exploreAreaMsg').html(options.msg || '')
                 $('#areaModal').modal();
                 $("#exploreAreaButton").click(function () {
-                    debugger;
                     window.dataLayer = window.dataLayer || [];
                     window.dataLayer.push({
                     'event': 'custom',

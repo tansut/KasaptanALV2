@@ -20,7 +20,7 @@
   <% otherButcherAlternatives = butchers.serving.length + butchers.others.length - 1 %>
 
   <% if (view.butcher) {%>
-    <%- include('./_partial/butcher-alternatives.ejs', {butchersTakeaway: butchers.others, butchersServing: butchers.serving.filter(p=>p.id != view.butcher.id)}) %>
+    <%- include('./_partial/butcher-alternatives.ejs', {butchersTakeaway: butchers.others.filter(p=>p.id != view.butcher.id), butchersServing: butchers.serving.filter(p=>p.id != view.butcher.id)}) %>
 <%}%>
 
   <div class="page-title-overlap bg-primary pt-4">
@@ -262,7 +262,7 @@
                      
                      <div class="">
 
-                      <a id="noteanchor"></a>
+                     
                    <div class="d-flex  justify-content-between">
                     <h5 class="h6 mb-2 text-accent "><i class="czi-thumb-up mr-2"></i>Kolayca satın alın</h5>
 
@@ -362,6 +362,7 @@
                           </div>
     
                           <% } %>
+                          <a id="noteanchor"></a>
                         <div class="form-group" >
                           <label class="mb-2" for="note"><span
                               class="badge badge-accent font-size-xs mr-2">Notunuz</span><span class="font-size-sm"></span>
@@ -379,7 +380,7 @@
                         </div>
                         <% if (!view.butcher) {%>
                         <div class="text-center">
-                          <button @click="selectArea()" type="button" data-tag="true" data-category="general" data-action="location/open" data-label="/<%=product.slug%>" id="add2scSetAddrBtn" class="btn btn-accent btn-block"><i
+                          <button @click="selectArea(null, '<%=__req.prefAddr ? `Maalesef ürünümüz ${__req.prefAddr.level1Text}/${__req.prefAddr.level3Text} için ulaşılabilir değil. Lütfen bir başka adres seçin.`: ``%>')" type="button" data-tag="true" data-category="general" data-action="location/open" data-label="<%=product.slug%>" id="add2scSetAddrBtn" class="btn btn-accent btn-block"><i
                               class="czi-cart font-size-lg mr-2"></i>Sepete Ekle</button>
                           <% if (__req.prefAddr) { %>
 

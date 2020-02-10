@@ -32,7 +32,7 @@ export default class Route extends ViewRouter {
     renderPage(view: string, viewAsTarif: boolean = false) {
         let pageTitle = viewAsTarif ? (this.category.tarifPageTitle || this.category.tarifTitle): this.category.pageTitle;
         let pageDescription = viewAsTarif ? this.category.tarifPageDesc : this.category.pageDescription;
-        let append = (viewAsTarif || this.category.type == 'resource') ? '': ' | Online Sipariş';
+        let append = (viewAsTarif || this.category.type == 'resource') ? '': '';
         this.res.render(view, this.viewData({
             pageTitle: (pageTitle || this.category.name + ' Et Lezzetleri') + append,
             pageDescription: pageDescription
