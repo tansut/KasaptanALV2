@@ -125,13 +125,7 @@
                 $('#exploreAreaMsg').html(options.msg || '')
                 $('#areaModal').modal();
                 $("#exploreAreaButton").click(function () {
-                    window.dataLayer = window.dataLayer || [];
-                    window.dataLayer.push({
-                    'event': 'custom',
-                    'category': 'general',
-                    'action':'location/set',
-                    'label': ul.selectedCity.name + '/' + ul.selectedIlce.name + '/' + ul.selectedDistrict.name
-                    });
+                    window.App.gTag('general', 'location/set', ul.selectedCity.name + '/' + ul.selectedIlce.name + '/' + ul.selectedDistrict.name)
                     $(window).trigger('kb.selectArea.selected', [self, ul]);
                     done && done(self, ul)
                 })
