@@ -38,8 +38,17 @@
       url: '/api/v1/fts'
     },
     events: {
-      searchPost: function (res) {
+      searchPost: function (res, el) {
+        debugger;
         window.__searchResult = res;
+        window.dataLayer = window.dataLayer || [];
+                    window.dataLayer.push({
+                    'event': 'custom',
+                    'category': 'general',
+                    'action':'search/autocomplete',
+                    'label': el.val()
+                    });
+
         return res.map(function (p) {
           return {
             id: p.id,

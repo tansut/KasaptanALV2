@@ -47,9 +47,6 @@ export default class Route extends ViewRouter {
         if (!this.req.params.butcher) {
             return this.next();
         }
-        if (this.req.params.butcher == 'dukkan-kasap') {
-            return this.res.redirect('/dukkankasap', 301)
-        }
         let butcher = this.butcher = await ButcherModel.findOne({
             include: [{
                 model: ButcherProduct,

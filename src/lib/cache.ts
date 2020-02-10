@@ -15,6 +15,7 @@ import { RequestHelper } from "./RequestHelper";
 import Resource from "../db/models/resource";
 import Content from "../db/models/content";
 import WebPage from "../db/models/webpage";
+import Redirect from "../db/models/redirect";
 
 
 let cache: Cache;
@@ -45,6 +46,11 @@ export interface WebPageCacheItem {
     pageDescription: string;
 }
 
+export interface RedirectCacheItem {
+    toUrl: string;
+    permanent: boolean;
+}
+
 export interface CategoryProductItem {
     slug: string;
 }
@@ -68,6 +74,7 @@ export class CacheManager {
                 req.__categoryProducts = p.categoryProducts;
                 req.__butchers = p.butchers;
                 req.__webpages = p.webPages;
+                req.__redirects = p.redirects;
                 res.locals._ = _;
                 res.locals.__cities = p.cities;
                 res.locals.__butcherCities = p.butcherCities
@@ -107,6 +114,28 @@ export class CacheManager {
         }
         return result
     }
+
+    static async fillRedirects() {        
+        let result:  { [key: string]: RedirectCacheItem }  = this.dataCache.get("redirects");
+        if (!result) {
+            result = {}
+            let list = await Redirect.findAll({
+                where: {
+                    enabled: true
+                },
+                raw: true
+            });
+            list.forEach(item=>{
+                result[item.fromUrl] = {
+                    toUrl: item.toUrl,
+                    permanent: item.permanent
+                }
+            })
+            this.dataCache.set("redirects", result);
+        }
+        return result
+    }
+
 
     static async fillWebPages() {        
         let result:  { [key: string]: WebPageCacheItem }  = this.dataCache.get("web-pages");
@@ -259,6 +288,7 @@ export class CacheManager {
         let resources = <any>await this.fillResources();
         let recentBlogs = <any>await this.fillRecentBlogs();
         let webPages = <any>await this.fillWebPages();
+        let redirects = <any>await this.fillRedirects();
         let categoryProducts = <any>await this.fillProductsByCategory(categories);
         return {
             categories: categories,
@@ -269,7 +299,8 @@ export class CacheManager {
             recentBlogs: recentBlogs,
             categoryProducts: categoryProducts,
             butchers: butchers,
-            webPages: webPages
+            webPages: webPages,
+            redirects: redirects
         }
     }
 

@@ -1,4 +1,4 @@
-import { HttpError } from "../lib/http"
+import { HttpError, AppRequest } from "../lib/http"
 import ErrorRoute from "../routes/error";
 import * as express from "express";
 import * as moment from 'moment';
@@ -35,7 +35,12 @@ class ErrorMiddleware extends Middleware {
         return req.xhr || (req.headers.accept && req.headers.accept.indexOf('json') > -1);
     }
 
-    error404Handler(req, res, next) {
+    error404Handler(req: AppRequest, res, next) {
+        let redirect = req.__redirects[req.path];
+        if (redirect) {
+            let q = req.originalUrl.replace(req.path,'')
+            return res.redirect(redirect.toUrl + (q), redirect.permanent ? 301: 302)
+        }
         if (ErrorMiddleware.isXhr(req))
             res.res.status(404).send("Sorry can't find that!")
         else
