@@ -53,7 +53,7 @@ export class App extends AppBase {
        })
       }
 
-    static gTag(category, action, label, value) {
+    static gTag(category, action, label, value?) {
         window['dataLayer'] = window['dataLayer'] || [];
         window['dataLayer'].push({
             event: 'custom',

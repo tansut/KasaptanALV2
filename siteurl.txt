@@ -3,3 +3,4 @@
 /et-yemekleri
 /kasap-urunleri
 /et-kulturu
+/hikayemiz
