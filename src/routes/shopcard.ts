@@ -30,10 +30,12 @@ export default class Route extends ViewRouter {
     moment = moment
     Shipment = Shipment;
     Butchers: ButcherModel[] = null;
+    
+    
     renderPage(page: string) {
-        this.res.render(page, this.viewData({
+        this.sendView(page, {
             shopcard: this.shopcard,
-        }))        
+        })      
     }
 
 

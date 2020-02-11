@@ -22,9 +22,9 @@ export default class Route extends ViewRouter {
 
 
     renderPage(msg: any = undefined) {        
-        this.res.render(`pages/resetpassword.ejs`, this.viewData({
+        this.sendView(`pages/resetpassword.ejs`, {
             _usrmsg: msg
-        }))
+        })
     }
 
 

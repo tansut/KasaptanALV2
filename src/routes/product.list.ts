@@ -87,7 +87,7 @@ export default class Route extends ViewRouter {
         // this.products =  await ProductManager.getProducts();
         // this.categories = this.req.__categories;
         this.products = await this.fillProducts(this.req.__categories);
-        this.res.render('pages/reyon-view.ejs', this.viewData({ ellipsis: ellipsis, products: this.products }))
+        this.sendView('pages/reyon-view.ejs', { ellipsis: ellipsis, products: this.products })
     }
 
     @Auth.Anonymous()
