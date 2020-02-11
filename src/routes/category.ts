@@ -104,9 +104,9 @@ export default class Route extends ViewRouter {
         } else await this.fillFoodsAndTarifs();
 
 
-        this.res.render('pages/foods.ejs', this.viewData({
+        this.sendView('pages/foods.ejs', {
             pageTitle: 'Et Yemekleri'
-        }))
+        })
     }
 
     @Auth.Anonymous()
