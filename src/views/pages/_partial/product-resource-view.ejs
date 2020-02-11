@@ -31,7 +31,7 @@
     <% } %>
     href="<%= `${resource.getFileUrl()}` %>">
     <img class="<%=first ? '': ''%>" src="<%=  `${first ? resource.getFileUrl(): resource.getThumbnailFileUrl(true)}` %>"
-      alt="<%= resource.title %>" /><span class="gallery-item-caption"><%=resource.title || ''%></span></a>
+      alt="<%= resource.title || resource.product.name %>" /><span class="gallery-item-caption"><%=resource.title || ''%></span></a>
 
 
   <% if (note) { %>

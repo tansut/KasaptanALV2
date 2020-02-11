@@ -297,10 +297,10 @@
                             <div class="item-slider item-slider-sm">
 
                                 <div class="card h-100 shadow-sm product-card card-static item-card">
-                                    <a class="" href="<%= `/et-kulturu/${item.slug}` %>">
+                                    <a  href="<%= `/et-kulturu/${item.slug}` %>">
                                         <img class=""
                                             src="<%=`${__config.staticDomain}/content-resimleri/${item.slug}-thumbnail.jpg` %>"
-                                            alt=""></a>
+                                            alt="<%=item.title%>"></a>
 
                                     <div class="card-body pb-0 mb-0 pl-0 text-center">
                                         <h3 class="product-title pb-0 mb-0 font-size-md"><a

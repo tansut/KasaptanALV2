@@ -24,7 +24,7 @@
                         <%subUrl = reyonlar[c].type == 'resource' ? 'et-yemekleri/':'' %>
                         <div class="card product-card card-static item-card">
                             <a class="" href="<%= `/${subUrl}${reyonlar[c].slug}`%>"><img class="rounded shadow-lg"
-                                    src="<%=`${__req.helper.imgUrl('category-photos', reyonlar[c].slug)}`%>" alt=""></a>
+                                    src="<%=`${__req.helper.imgUrl('category-photos', reyonlar[c].slug)}`%>" alt="<%=reyonlar[c].name%>"></a>
 
                             <div class="card-body pb-0 mb-0 pl-0 text-center">
                                 <h3 class="product-title pb-0 mb-0 font-size-md"><a

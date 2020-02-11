@@ -141,7 +141,7 @@
               href="<%= `${butcherVideo.fileUrl}`  %>"
               data-sub-html="&lt;h6 class=&quot;font-size-sm text-light&quot;&gt;<%= butcherVideo.title %>&lt;/h6&gt;"><img
                  class=""
-                src="<%= `${butcherVideo.thumbnailFileUrl}` %>" /><span
+                src="<%= `${butcherVideo.thumbnailFileUrl}` %>" alt="<%= `${view.butcher.name}`  %>" /><span
                 class="gallery-item-caption"><%= butcherVideo.title %></span></a>
                 <a class="media align-items-center" href="/<%=view.butcher.slug%>">
                 <%} else { %>
@@ -380,7 +380,7 @@
                         </div>
                         <% if (!view.butcher) {%>
                         <div class="text-center">
-                          <button @click="selectArea(null, '<%=__req.prefAddr ? `Maalesef ürünümüz ${__req.prefAddr.level1Text}/${__req.prefAddr.level3Text} için ulaşılabilir değil. Lütfen bir başka adres seçin.`: ``%>')" type="button" data-tag="true" data-category="general" data-action="location/open" data-label="<%=product.slug%>" id="add2scSetAddrBtn" class="btn btn-accent btn-block"><i
+                          <button @click="selectArea(null, '<%=__req.prefAddr ? `Maalesef ürünümüz ${__req.prefAddr.level1Text}/${__req.prefAddr.level3Text} için ulaşılabilir değil. Lütfen bir başka adres seçin.`: ``%>')" type="button" data-tag="true" data-category="location" data-action="location/open" data-label="<%=product.slug%>" id="add2scSetAddrBtn" class="btn btn-accent btn-block"><i
                               class="czi-cart font-size-lg mr-2"></i>Sepete Ekle</button>
                           <% if (__req.prefAddr) { %>
 
@@ -474,7 +474,7 @@
 
                     
                           </div>
-                            <button data-tag="true" data-category="ecommerce" data-action="shopcard/add" data-label="<%=product.slug%>" id="addtoscbtn" class="btn btn-accent btn-block" type="submit"><i
+                            <button data-tag="true" data-category="shopcard/add" data-action="<%=view.butcher.slug%>" data-label="<%=product.slug%>" id="addtoscbtn" class="btn btn-accent btn-block" type="submit"><i
                               class="czi-cart font-size-lg mr-2"></i>Sepete Ekle</button>
                           
                           
@@ -482,7 +482,7 @@
 
                       <%}%>
                           <% if (view.butcher && __req.prefAddr && __req.query.action != 'add2sc') { %>
-                            <button data-tag="true" data-category="ecommerce" data-action="shopcard/add" data-label="<%=product.slug%>" id="addtoscbtn" class="btn btn-accent btn-block" type="submit"><i
+                            <button data-tag="true" data-category="shopcard/add" data-action="<%=view.butcher.slug%>" data-label="<%=product.slug%>" id="addtoscbtn" class="btn btn-accent btn-block" type="submit"><i
                               class="czi-cart font-size-lg mr-2"></i>Sepete Ekle</button>
                           
                           <% } %>

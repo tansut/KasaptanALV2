@@ -31,13 +31,13 @@
           <li>
 
             <% if ( __req.prefAddr) { %>
-            <a data-tag="true" data-category="general" data-action="location/open" data-label=""  class="dropdown-item select-area-action"><i class=" czi-location text-muted mr-2">
+            <a data-tag="true" data-category="location" data-action="location/open" data-label=""  class="dropdown-item select-area-action"><i class=" czi-location text-muted mr-2">
 
               </i><%= __req.prefAddr.level1Text + '/' + __req.prefAddr.level3Text %> (değiştir)</a>
 
 
             <% } else { %>
-            <a data-tag="true" data-category="general" data-action="location/open" data-label="" class="dropdown-item select-area-action"><i class=" czi-location text-muted mr-2">
+            <a data-tag="true" data-category="location" data-action="location/open" data-label="" class="dropdown-item select-area-action"><i class=" czi-location text-muted mr-2">
 
               </i>Semtinizi Seçin</a>
 
@@ -66,12 +66,12 @@
 
         <% if ( __req.prefAddr ) { %>
 
-        <a data-tag="true" data-category="general" data-action="location/open" data-label="" class="select-area-action topbar-link  d-md-inline-block" href="#"><i
+        <a data-tag="true" data-category="location" data-action="location/open" data-label="" class="select-area-action topbar-link  d-md-inline-block" href="#"><i
             class="text-light czi-location"></i><%= __req.prefAddr.level1Text + '/' + __req.prefAddr.level3Text %></a>
 
 
         <% } else { %>
-        <a data-tag="true" data-category="general" data-action="location/open" data-label="" class="select-area-action topbar-link d-md-inline-block" href="#"><i
+        <a data-tag="true" data-category="location" data-action="location/open" data-label="" class="select-area-action topbar-link d-md-inline-block" href="#"><i
             class="text-light czi-location"></i>Semtinizi Seçin</a>
 
 
@@ -324,12 +324,12 @@
             <%}%>
             <% if ( __req.prefAddr ) { %>
 
-            <li class="d-lg-none nav-item"><a data-tag="true" data-category="general" data-action="location/open" data-label="" class="select-area-action nav-link" href="#"><i
+            <li class="d-lg-none nav-item"><a data-tag="true" data-category="location" data-action="location/open" data-label="" class="select-area-action nav-link" href="#"><i
                   class="text-light czi-location mr-2"></i><%= __req.prefAddr.level1Text + '/' + __req.prefAddr.level3Text %></a>
             </li>
 
             <% } else { %>
-            <li class="d-lg-none nav-item"><a data-tag="true" data-category="general" data-action="location/open" data-label="" class="select-area-action nav-link" href="#"><i
+            <li class="d-lg-none nav-item"><a data-tag="true" data-category="location" data-action="location/open" data-label="" class="select-area-action nav-link" href="#"><i
                   class="text-light czi-location mr-2"></i>Semtinizi Seçin</a></li>
 
 

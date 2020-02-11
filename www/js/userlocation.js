@@ -125,7 +125,7 @@
                 $('#exploreAreaMsg').html(options.msg || '')
                 $('#areaModal').modal();
                 $("#exploreAreaButton").click(function () {
-                    window.App.gTag('general', 'location/set', ul.selectedCity.name + '/' + ul.selectedIlce.name + '/' + ul.selectedDistrict.name)
+                    window.App.gTag('location', 'location/set', ul.selectedCity.name + '/' + ul.selectedIlce.name + '/' + ul.selectedDistrict.name)
                     $(window).trigger('kb.selectArea.selected', [self, ul]);
                     done && done(self, ul)
                 })

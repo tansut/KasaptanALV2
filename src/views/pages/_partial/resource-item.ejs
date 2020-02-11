@@ -15,7 +15,7 @@ var resourceUrl = targetUrl + '/' + (resource.slug || resource.id)  + (mode=='ta
         <%=  '<a data-tag="true" data-category="food" data-action="eti-bizden" data-label="'%><%=resource.slug%><%='" href="'%><%= include(`./addtonotelink.ejs`, {resource: resource, subUrl: subUrl, disableSlider: true  }) %>   <%='"class="btn btn-block btn-primary btn-sm rounded-0"><i class=" czi-thumb-up mr-2"></i>'%><%= 'Eti Bizden' + '</button>' %>
         <% } %>
         " <% } %>>
-      <img class="" <% if (resource.contentType == 'video-youtube') { %>
+      <img <% if (resource.contentType == 'video-youtube') { %>
         src="<%= (resource.thumbnailUrl ? resource.thumbnailFileUrl: null) ||  `${__req.helper.imgUrl('product-photos', resource.product.slug)}` %>"
         <% } else { %> src="<%= `${resource.thumbnailFileUrl}` %>" <% } %> alt="<%= resource.title  %>">
     </a>
