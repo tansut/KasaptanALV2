@@ -51,7 +51,7 @@
           </p>
           <div class="text-center">
             <% if (shopcard.items.length) { %>   
-              <button class="btn btn-primary btn-sm  " type="submit" value="true" name="checkout"
+              <button data-tag="true" data-category="checkout" data-action="start" data-label="<%=__req.user ? __req.user.mphone: ''  %>" class="btn btn-primary btn-sm  " type="submit" value="true" name="checkout"
               id="checkout"><i class="czi-check mr-1"></i></i>Alışverişimi Tamamla</button>
             <%} else { %>
               <!-- <a href="/kasap-urunleri" class="btn btn-sm btn-primary ">Alışverişe Başla</a> -->
@@ -179,7 +179,7 @@
 
             </ul>         -->
             
-          <button class="btn btn-primary btn-block mt-4" type="submit" value="true" name="checkout"
+          <button data-tag="true" data-category="checkout" data-action="start" data-label="<%=__req.user ? __req.user.mphone: ''  %>" class="btn btn-primary btn-block mt-4" type="submit" value="true" name="checkout"
           id="checkout"><i class="czi-check mr-1"></i>Alışverişimi Tamamla</button>
 
            <% } %>
