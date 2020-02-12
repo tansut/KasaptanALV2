@@ -17,14 +17,14 @@ export class Auth {
         if ((<HTMLFormElement>$("#signup-form-1")[0]).checkValidity()) {
             event.preventDefault();
             var tel = $('#su-tel').val();
-            App.gTag('account', 'signup/try-send-sms-code', tel);
+            App.gTag('signup', 'try-send-sms-code', tel);
 
             try {
                 let result = await Backend.post('user/signup', {
                     phone: tel
                 });
                 Auth.phone = <string>tel;
-                App.gTag('account', 'signup/send-sms-code', tel);
+                App.gTag('signup', 'send-sms-code', tel);
                 $("#signup-form-2").removeClass('d-none');
                 $("#signup-form-1").addClass('d-none');
             } catch (err) {
@@ -33,7 +33,7 @@ export class Auth {
                     $('#si-password').focus();
                     App.activaTab("signin-tab");
                 } else {
-                    App.gTag('account', 'signup/error-send-sms-code', tel);
+                    App.gTag('signup', 'error-send-sms-code', tel);
                 }
                 App.HandleError(err)
             }
@@ -44,19 +44,19 @@ export class Auth {
         if ((<HTMLFormElement>$("#signup-form-2")[0]).checkValidity()) {
             event.preventDefault();
             let sms = $('#su-sms').val();
-            App.gTag('account', 'signup/try-verify-sms-code', Auth.phone);
+            App.gTag('signup', 'try-verify-sms-code', Auth.phone);
             try {
                 let result = await Backend.post('user/signupverify', {
                     phone: Auth.phone,
                     password: sms
                 })
                 Auth.sms = <string>sms;
-                App.gTag('account', 'signup/verify-sms-code',  Auth.phone);
+                App.gTag('signup', 'verify-sms-code',  Auth.phone);
 
                 $("#signup-form-3").removeClass('d-none');
                 $("#signup-form-2").addClass('d-none');
             } catch (err) {
-                App.gTag('account', 'signup/error-verify-sms-code',  Auth.phone);
+                App.gTag('signup', 'error-verify-sms-code',  Auth.phone);
                 App.HandleError(err)
             }
         }
@@ -67,21 +67,21 @@ export class Auth {
             let email = $('#si-email').val();
             let password = $('#si-password').val();
             let rememberme = $('#si-remember').val();
-            App.gTag('account', 'signin/try', email);
+            App.gTag('signin', 'try', email);
             try {
                 let result = await Backend.post('authenticate', {
                     password: password,
                     email: email,
                     remember_me: rememberme == "on"
                 })
-                App.gTag('account', 'signin/success', email);
+                App.gTag('signin', 'success', email);
                 var urlParams = new URLSearchParams(window.location.search);
                 if (urlParams.has('r')) {
                     window.location.href = urlParams.get('r');
                 }
                 else window.location.href = App.RunConfig['returnUrl'] || '/'
             } catch (err) {
-                App.gTag('account', 'signin/error', email);
+                App.gTag('signin', 'error', email);
                 App.HandleError(err)
             }
         }
@@ -94,7 +94,7 @@ export class Auth {
             event.preventDefault();
             let name = $('#su-name').val();
             let email = $('#su-email').val();
-            App.gTag('account', 'signup/try-complete', Auth.phone);
+            App.gTag('signup', 'try-complete', Auth.phone);
             try {
                 let result = await Backend.post('user/signupcomplete', {
                     phone: Auth.phone,
@@ -102,13 +102,13 @@ export class Auth {
                     name: name,
                     email: email
                 })
-                App.gTag('account', 'signup/complete', Auth.phone);
+                App.gTag('signup', 'signup/complete', Auth.phone);
                 window.location.href = App.RunConfig['returnUrl'] || '/'
                 //$("#signup-form-4").removeClass('d-none');
                 //$("#signup-form-3").addClass('d-none');
                 //App.setCookie("auth", JSON.stringify(result.token))
             } catch (err) {
-                App.gTag('account', 'signup/error-complete', Auth.phone);
+                App.gTag('signup', 'error-complete', Auth.phone);
                 App.HandleError(err)
             }
         }

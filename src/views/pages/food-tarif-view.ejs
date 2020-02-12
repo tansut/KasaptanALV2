@@ -83,7 +83,7 @@
                     <% } %>
                     " <% } %>>
                   <img class="" <% if (resource.contentType == 'video-youtube') { %>
-                    src="<%= (resource.thumbnailUrl ? resource.getThumbnailFileUrl(): null) ||  `${__req.helper.imgUrl('product-photos', resource.product.slug)}` %>"
+                    src="<%= (resource.thumbnailUrl ? resource.getThumbnailFileUrl().replace('-thumbnail',''): null) ||  `${__req.helper.imgUrl('product-photos', resource.product.slug)}` %>"
                     <% } else { %> src="<%= `${resource.getFileUrl()}` %>" <% } %> alt="<%= resource.title  %>">
                 </a>
 
