@@ -49,6 +49,19 @@ export default class Route extends ViewRouter {
     }
 
     @Auth.Anonymous()
+    async arealRouteOld() {
+        if (!this.req.params.area) {
+            return this.next();
+        }
+        let areaSlug = this.req.params.area;
+        let area = await AreaModel.findOne({ where: { slug: areaSlug }, include: [{
+            all:true
+        }] });
+        if (!area) return this.next();
+         this.res.redirect('/' + areaSlug + '-kasap', 301);
+    }
+
+    @Auth.Anonymous()
     async arealRoute(back: boolean = false) {
         if (!this.req.params.area) {
             return this.next();
@@ -109,5 +122,6 @@ export default class Route extends ViewRouter {
         // router.get("/:areal1-:areal2-:area3", Route.BindRequest(Route.prototype.areal3Route));
         // router.get("/:areal1-:areal2", Route.BindRequest(Route.prototype.areal2Route));
         router.get("/:area-kasap", Route.BindRequest(Route.prototype.arealRoute));
+        router.get("/:area", Route.BindRequest(Route.prototype.arealRouteOld));
     }
 }

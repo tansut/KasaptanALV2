@@ -74,7 +74,7 @@
 
               <div class="">
                
-                <a data-gtrack="1" data-restype="<%=resource.tag1 %>" data-resref="<%= resource.slug %>" data-restitle="<%= resource.title %>" data-resid="<%=resource.id%>" class="gallery-item d-block overflow-hidden gallery-item <%= resource.contentType == 'video-youtube' ? 'video-item':''%>"
+                <a data-gtrack="1" data-restype="<%= resource.tag1 %>" data-resref="<%= resource.slug %>" data-restitle="<%= resource.title %>" data-resid="<%=resource.id%>" class="gallery-item d-block overflow-hidden gallery-item <%= resource.contentType == 'video-youtube' ? 'video-item':''%>"
                   href="<%= `${resource.getFileUrl()}`  %>"
                   <% if (resource.tag1 && (resource.tag1.includes('tarif') || resource.tag1.includes('yemek'))) { %> data-sub-html="<%= `<h6 class="font-size-normal text-light">${resource.title || ''}</h6><p class="font-size-md mb-2">${resource.description || ''}</p>`%> 
                     <% if (true) {%>
