@@ -206,11 +206,22 @@
       });
     }
 
- 
 
+    
+
+
+     $('#areaModal').on('shown.bs.modal', function () {
+            window.App.gTag('dialogs', 'open', 'location')
+    
+          })
+
+    $('#meatGuideModal').on('shown.bs.modal', function () {
+            window.App.gTag('dialogs', 'open', 'meat-guide')
+    
+          })
 
     $('#signin-modal').on('shown.bs.modal', function () {
-            window.App.gTag('general', 'login/open')
+            window.App.gTag('dialogs', 'open', 'login')
     
           })
         

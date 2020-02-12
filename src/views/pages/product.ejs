@@ -452,7 +452,7 @@
                         </div>
                         <% if (!view.butcher) {%>
                         <div class="text-center">
-                          <button @click="selectArea(null, '<%=__req.prefAddr ? `Maalesef ürünümüz ${__req.prefAddr.level1Text}/${__req.prefAddr.level3Text} için ulaşılabilir değil. Lütfen bir başka adres seçin.`: ``%>')" type="button" data-tag="true" data-category="location" data-action="location/open" data-label="<%=product.slug%>" id="add2scSetAddrBtn" class="btn btn-accent btn-block"><i
+                          <button @click="selectArea(null, '<%=__req.prefAddr ? `Maalesef ürünümüz ${__req.prefAddr.level1Text}/${__req.prefAddr.level2Text}/${__req.prefAddr.level3Text} için ulaşılabilir değil. Lütfen bir başka adres seçin.`: ``%>')" type="button"  id="add2scSetAddrBtn" class="btn btn-accent btn-block"><i
                               class="czi-cart font-size-lg mr-2"></i>Sepete Ekle</button>
                           <% if (__req.prefAddr) { %>
 
