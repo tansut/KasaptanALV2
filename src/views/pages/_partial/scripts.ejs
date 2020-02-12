@@ -124,6 +124,7 @@
             $("#meat-guide-close-button").click(function () {
               f = $("#meat-guide-form")[0]
               if (f.checkValidity()) {
+                
                 $.ajax({
                   type: "POST",
                   url: "/api/v1/sitelog/create",
@@ -134,6 +135,7 @@
                     logtype: "anonymous-user-download-meat-guide"
                   },
                   success: function () {
+                    window.App.gTag('meat-guide', ulg.selectedCity.name, $("#user-email").val())
                     $('#meatGuideModal').modal("hide");
                     alert("Teşekkürler")
                   }

@@ -29,6 +29,8 @@
     </div>
   </div>
 
+  <form method="POST" onsubmit="return App.Auth.checkAuthentication('/alisveris-sepetim/ship')" novalidate
+  class="needs-validation" action="/alisveris-sepetim/savecard">
   <div class="container pb-5 mb-3 ">
     <div class="row">
       <!-- List of items-->
@@ -41,6 +43,23 @@
           <% } %>           
         </div>
 
+        <div class="alert alert-info">
+
+          <h4 class="h5">İndirimleri kaçırmayın</h4>
+          <p>
+            Şimdi sipariş verin, %10 indirim fırsatını kaçırmayın.
+          </p>
+          <div class="text-center">
+            <% if (shopcard.items.length) { %>   
+              <button class="btn btn-primary btn-sm  " type="submit" value="true" name="checkout"
+              id="checkout"><i class="czi-check mr-1"></i></i>Alışverişimi Tamamla</button>
+            <%} else { %>
+              <!-- <a href="/kasap-urunleri" class="btn btn-sm btn-primary ">Alışverişe Başla</a> -->
+
+              <%}%>
+          </div>
+
+        </div>
         
          <% if (!shopcard.items.length) { %>   
           <div class="text-center alert alert-secondary">
@@ -63,8 +82,7 @@
       <!-- Sidebar-->
       <aside class="col-lg-4 pt-4 pt-lg-0">
 
-        <form method="POST" onsubmit="return App.Auth.checkAuthentication('/alisveris-sepetim/ship')" novalidate
-          class="needs-validation" action="/alisveris-sepetim/savecard">
+       
           <div class="cz-sidebar-static rounded-lg box-shadow-lg ml-lg-auto">
             <!-- <div class="text-center mb-4 pb-3 border-bottom">
                   <h2 class="h6 mb-3 pb-1">Subtotal</h2>
@@ -162,16 +180,16 @@
             </ul>         -->
             
           <button class="btn btn-primary btn-block mt-4" type="submit" value="true" name="checkout"
-          id="checkout"><i class="font-size-lg mr-2"></i>Alışverişimi Tamamla</button>
+          id="checkout"><i class="czi-check mr-1"></i>Alışverişimi Tamamla</button>
 
            <% } %>
           </div>
-        </form>
+       
 
       </aside>
     </div>
   </div>
-
+</form>
   <% include ./_partial/footer %>
   <% include ./_partial/scripts %>
 

@@ -336,7 +336,8 @@ window.initComponents = function initComponents() {
                 product: null,
                 quantity: 0,
                 selectedUnit: null,
-                note: ''
+                note: '',
+                newlyAddedItem: null
             }
         },
         mounted: function () {
@@ -347,11 +348,17 @@ window.initComponents = function initComponents() {
                     self.quantity = option.quantity;
                 })
             })
-
+            $('#shopcard-added-toast').on('hidden.bs.toast', function () {
+                self.newlyAddedItem = null;
+              })
         },
         methods: {
             onChange(event) {
 
+            },
+
+            formatCurrency(v) {
+                return window.App.formatCurrency(v);
             },
 
             loadFromUrl() {
@@ -456,7 +463,11 @@ window.initComponents = function initComponents() {
                         purchaseoption: this.selectedUnit,
                         note: this.note
                     }).then(result => {
-                        $('#shopcard-added-toast').toast('show')
+                        this.newlyAddedItem = result.items[result.items.length-1];
+                        this.$nextTick(function () {
+                            $('#shopcard-added-toast').toast('show')
+                        })
+
                         return window.shopcard.card.data = result
                     }
                     ).finally(() => {

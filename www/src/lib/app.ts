@@ -5,7 +5,7 @@ import { Backend } from './backend'
 import { Auth } from "./auth";
 import { ShopCard } from "./shopcard";
 import AppBase from "./appbase";
-
+import numeral from "numeral";
 
 declare global {
     interface Window { App: App; }
@@ -98,6 +98,23 @@ export class App extends AppBase {
     static eraseCookie(name) {
         document.cookie = name + '=; Max-Age=-99999999;';
     }
+
+    static splitCurrency(n: number) {
+        let absn = Math.abs(n)
+        return {
+            val: Math.trunc(n),
+            krs: (Number(absn.toFixed(2)) - Math.trunc(absn)) * 100
+        }
+    }
+
+    static formatCurrency(n: number) {
+        let split = App.splitCurrency(n)
+        return {
+            val: numeral(split.val).format('0,0'),
+            krs: numeral(split.krs).format('00')
+        }
+    }
+
 
     static run(config: IAppconfig) {
         this.Config = config;
