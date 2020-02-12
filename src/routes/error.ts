@@ -14,6 +14,7 @@ import * as path from 'path';
 import * as fs from 'fs';
 import { readFileSync } from 'fs';
 import { HttpError } from '../lib/http';
+import email from '../lib/email';
 let ellipsis = require('text-ellipsis');
 var MarkdownIt = require('markdown-it')
 
@@ -21,6 +22,7 @@ export default class Route extends ViewRouter {
 
     renderPage(err, page, status = 500) {
         let httpErr = err instanceof HttpError ? null : <HttpError>err;
+
         //this.res.status(httpErr && httpErr.statusCode ? httpErr.statusCode : 500).send({ error: httpErr ? httpErr.message : err.message })
         this.res.status(status)
         this.res.render(page, this.viewData({

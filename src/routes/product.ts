@@ -25,6 +25,7 @@ import { ResourceCacheItem, ProductCacheItem } from '../lib/cache';
 import { ShopCard } from '../models/shopcard';
 import config from '../config';
 import { Op, Sequelize, where } from 'sequelize';
+import { ProductLd } from '../models/ProductLd';
 
 interface ButcherSelection {
     best: Butcher,
@@ -38,6 +39,7 @@ export default class Route extends ViewRouter {
     markdown = new MarkdownIt();
     foods: Resource[] = [];
     butcherResources: Resource[] = [];
+    productLd: ProductLd;
 
     async tryBestFromShopcard(serving: Butcher[], others: Butcher[]) {
         let shopcard = await ShopCard.createFromRequest(this.req);
@@ -239,6 +241,7 @@ export default class Route extends ViewRouter {
                 order: [["displayOrder", "DESC"], ["updatedOn", "DESC"]]
             })
         }
+        this.productLd = await api.getProductLd(product);
         this.res.render('pages/product', this.viewData({ butcherProducts: this.butcherProducts.map(p => p.product), butchers: selectedButchers, 
             pageTitle: product.name + ' Siparişi ve Fiyatları', 
             // pageDescription: product.pageDescription + ' ', 

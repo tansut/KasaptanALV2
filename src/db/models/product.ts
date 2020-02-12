@@ -5,7 +5,7 @@ import ProductCategory from './productcategory';
 import Category from './category';
 import ButcherProduct from './butcherproduct';
 import Resource from './resource';
-import { Op } from 'sequelize';
+import { Op, QueryTypes } from 'sequelize';
 
 @Table({
     tableName: "Products",
@@ -483,6 +483,28 @@ class Product extends BaseModel<Product> {
     }
 
     resources: Resource[];
+
+    async getPriceStats() {
+        let q = `select count(*) as count, 
+        min(kgPrice) as kgmin, avg(kgPrice) as kgavg, max(kgPrice) as kgmax, 
+        min(unit1price) as unit1min, avg(unit1price) as unit1avg, max(unit1price) as unit1max,
+        min(unit2price)  as unit2min, avg(unit1price)  as unit2avg, max(unit2price) as unit2max,
+        min(unit3price)  as unit3min, avg(unit1price)  as unit2avg, max(unit3price) as unit3max
+        from ButcherProducts, Butchers 
+        where 
+        ButcherProducts.productid=${this.id} and 
+        ButcherProducts.enabled=true and 
+        ButcherProducts.butcherid = Butchers.id 
+        and Butchers.approved=true`
+
+        let res = await Product.sequelize.query(q, {
+            raw: true  ,
+            plain: true,
+            type: QueryTypes.SELECT       
+        } )        
+
+        return res;
+    }
 
     async loadResources() {
         this.resources = await Resource.findAll({

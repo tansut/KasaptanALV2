@@ -18,7 +18,9 @@ export class Auth {
             event.preventDefault();
             var tel = $('#su-tel').val();
             App.gTag('signup', 'try-send-sms-code', tel);
+            $('#btn-signup-sendsms').attr("disabled", "true");
 
+            
             try {
                 let result = await Backend.post('user/signup', {
                     phone: tel
@@ -36,6 +38,9 @@ export class Auth {
                     App.gTag('signup', 'error-send-sms-code', tel);
                 }
                 App.HandleError(err)
+            } finally {
+            $('#btn-signup-sendsms').removeAttr("disabled");
+                
             }
         }
     }
@@ -45,6 +50,9 @@ export class Auth {
             event.preventDefault();
             let sms = $('#su-sms').val();
             App.gTag('signup', 'try-verify-sms-code', Auth.phone);
+            $('#signup-btn-verifysms').attr("disabled", "true");
+
+            
             try {
                 let result = await Backend.post('user/signupverify', {
                     phone: Auth.phone,
@@ -58,6 +66,9 @@ export class Auth {
             } catch (err) {
                 App.gTag('signup', 'error-verify-sms-code',  Auth.phone);
                 App.HandleError(err)
+            } finally {
+            $('#signup-btn-verifysms').removeAttr("disabled");
+
             }
         }
     }
@@ -68,6 +79,7 @@ export class Auth {
             let password = $('#si-password').val();
             let rememberme = $('#si-remember').val();
             App.gTag('signin', 'try', email);
+            $('#signin-btn').attr("disabled", "true");
             try {
                 let result = await Backend.post('authenticate', {
                     password: password,
@@ -83,6 +95,8 @@ export class Auth {
             } catch (err) {
                 App.gTag('signin', 'error', email);
                 App.HandleError(err)
+            } finally {
+                $('#signin-btn').removeAttr("disabled");
             }
         }
     }
@@ -95,6 +109,9 @@ export class Auth {
             let name = $('#su-name').val();
             let email = $('#su-email').val();
             App.gTag('signup', 'try-complete', Auth.phone);
+            $('#signup-btn-complete').attr("disabled", "true");
+
+            
             try {
                 let result = await Backend.post('user/signupcomplete', {
                     phone: Auth.phone,
@@ -110,6 +127,9 @@ export class Auth {
             } catch (err) {
                 App.gTag('signup', 'error-complete', Auth.phone);
                 App.HandleError(err)
+            } finally {
+            $('#signup-btn-complete').removeAttr("disabled");
+
             }
         }
     }

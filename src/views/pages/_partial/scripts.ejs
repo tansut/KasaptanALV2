@@ -189,6 +189,22 @@
 
 <script>
   $(document).ready(function () {
+
+
+    $('#signin-modal').on('shown.bs.modal', function () {
+            window.App.gTag('general', 'login/open')
+    
+          })
+        
+
+    $('#signup-tab-a').on('shown.bs.tab', function (e) {
+      $('#su-tel').focus();
+    })
+
+    $('#signin-tab-a').on('shown.bs.tab', function (e) {
+      $('#si-email').focus();
+    })
+
     var allImages = document.querySelectorAll(".gallery-item");
     allImages.forEach((value) => {
       value.oncontextmenu = (e) => {

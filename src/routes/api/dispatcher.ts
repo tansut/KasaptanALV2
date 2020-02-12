@@ -26,17 +26,17 @@ export default class Route extends ApiRouter {
         // }).map(p=>p.id))
 
         where[Op.or] = where[Op.or] || [];
-        if (address.level1Id) {
+        if (address && address.level1Id) {
             where[Op.or].push({
                 toareaid: [address.level1Id]
             })
         }
-        if (address.level2Id) {
+        if (address && address.level2Id) {
             where[Op.or].push({
                 toareaid: [address.level2Id]
             })
         }
-        if (address.level3Id) {
+        if (address && address.level3Id) {
             where[Op.or].push({
                 toareaid: address.level3Id
             })

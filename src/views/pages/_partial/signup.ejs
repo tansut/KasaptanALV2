@@ -5,7 +5,7 @@
         <div v-if="note" class="alert rounded-0 alert-info alert-with-icon font-size-sm mb-3" role="alert">
             <div class="alert-icon-box rounded-0"><i class="alert-icon czi-announcement"></i></div>
 
-            <b>30sn</b>'de kaydolun, daha önce kayıt olduysanız <a class="font-size-sm text-decoration-none alert-link" href="javascript:window.App.activaTab('signin-tab')">giriş yapın</a> veya <a class="font-size-sm text-decoration-none alert-link" href="/reset-password">yeni şifre</a> alın.
+            <b>Sadece 30sn</b>'de kaydolun.
         </div>
 
         <div class="form-group">
@@ -22,7 +22,7 @@
         </div>
 
 
-        <button class="btn btn-primary btn-block btn-shadow" type="submit">Şifremi Gönder</button>
+        <button id="btn-signup-sendsms" class="btn btn-primary btn-block" type="submit">Şifremi Gönder</button>
     </form>
 
     <form class="needs-validation d-none" autocomplete="off" onsubmit="App.Auth.signup_verify()" novalidate
@@ -44,7 +44,7 @@
 
 
 
-        <button  class="btn btn-primary btn-block btn-shadow" type="submit">Doğrula</button>
+        <button id="signup-btn-verifysms"  class="btn btn-primary btn-block btn-shadow" type="submit">Doğrula</button>
     </form>
 
     <form class="needs-validation d-none" autocomplete="off" onsubmit="App.Auth.signup_complete()" novalidate
@@ -63,13 +63,6 @@
             <div class="invalid-feedback">Geçersiz e-posta adresi.</div>
         </div>
 
-        <button class="btn btn-primary btn-block btn-shadow" type="submit">Tamamla</button>
-    </form>
-
-    <form class="needs-validation d-none" autocomplete="off" onsubmit="App.Auth.signup_complete()" novalidate
-        id="signup-form-4">
-        thanks
-
-        <button class="btn btn-primary btn-block btn-shadow" type="submit">Tamamla</button>
+        <button id="signup-btn-complete" class="btn btn-primary btn-block btn-shadow" type="submit">Tamamla</button>
     </form>
 </div>

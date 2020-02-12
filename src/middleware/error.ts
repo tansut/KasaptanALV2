@@ -3,6 +3,7 @@ import ErrorRoute from "../routes/error";
 import * as express from "express";
 import * as moment from 'moment';
 import Middleware from "./base";
+import email from "../lib/email";
 
 var errormw: ErrorMiddleware;
 
@@ -17,7 +18,13 @@ class ErrorMiddleware extends Middleware {
         if (ErrorMiddleware.isXhr(req)) {
             let isHttpErr = err instanceof HttpError
             let httpErr = isHttpErr ? <HttpError>err: null;
-            res.status((httpErr && httpErr.statusCode) ? httpErr.statusCode : 500).send({ msg: httpErr ? httpErr.message : err.name || err.message })
+            let msg = httpErr ? httpErr.message : err.name || err.message
+            email.send('tansut@gmail.com', 'hata: kasaptanAl.com', "error.ejs", {
+                text: msg,
+                stack: err.stack
+            })
+            
+            res.status((httpErr && httpErr.statusCode) ? httpErr.statusCode : 500).send({ msg: msg })
         } else {
             next(err)
         }
@@ -26,6 +33,12 @@ class ErrorMiddleware extends Middleware {
     errorHandler(err, req, res, next) {
         let httpErr = err instanceof HttpError ? null : <HttpError>err;
         res.status((httpErr && httpErr.statusCode) ? httpErr.statusCode : 500);
+
+        email.send('tansut@gmail.com', 'hata: kasaptanAl.com', "error.ejs", {
+            text: err.message || err,
+            stack: err.stack
+        })
+
         new ErrorRoute({
             req: req, res: res, next: next
         }).renderPage(err, `pages/error.ejs`)

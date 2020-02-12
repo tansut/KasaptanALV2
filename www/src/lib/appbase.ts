@@ -34,11 +34,21 @@ export default class AppBase {
         this.activaTab("signup-tab");
         this.RunConfig['returnUrl'] = returnUrl;
         this.jq('#signin-modal').modal('show');
+        $('#signin-modal').one('shown.bs.modal', function () {
+            $('#su-tel').focus();
+    
+          })
+
+
     }    
 
     static showLoginDlg(returnUrl?: string) {
         this.activaTab("signin-tab")
         this.RunConfig['returnUrl'] = returnUrl;
         this.jq('#signin-modal').modal('show');
+
+        $('#signin-modal').one('shown.bs.modal', function () {
+            $('#si-email').focus();
+          })
     }
 }

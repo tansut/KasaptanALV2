@@ -3,10 +3,12 @@
 
 <head>
   <% include ./_partial/head %>
+  <script type="application/ld+json">
+    <%- JSON.stringify(controller.productLd) %>
+  </script>
   <% if (Object.keys(__req.query).length != 0 ) {%>
   <meta name="robots" content="noindex,follow">
   <link href="https://www.kasaptanal.com<%=__req.path%>" rel="canonical">
-
   <%}%>
 </head>
 
@@ -122,6 +124,7 @@
             
 
             <div id="productapp" v-cloak class="col-lg-5 ">
+              <% if (view.butcher) { %>
               <div class="toast-container toast-top-center">
                 <div id="shopcard-added-toast" class="toast mb-3" id="accent-toast" data-delay="25000" role="alert" aria-live="assertive" aria-atomic="true">
                   <div class="toast-header bg-accent text-white"><i
@@ -187,6 +190,8 @@
                 </div>
                 </div>
         </div>
+
+        <%} %>
               <div class=" px-3 pl-lg-0 pr-lg-4   pt-lg-3 pb-0">
                 <% if (view.butcher) {%>
 

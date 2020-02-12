@@ -70,7 +70,7 @@ export default class Route extends ViewRouter {
         if (!this.shopcard.address.name) {
             this.shopcard.address.name = this.req.user.name;
             this.shopcard.address.email = this.req.user.email;
-            this.shopcard.address.phone = this.req.user.email;
+            this.shopcard.address.phone = this.req.user.mphone;
         }
 
         this.renderPage("pages/checkout.adres.ejs");
@@ -152,6 +152,11 @@ export default class Route extends ViewRouter {
             }            
         }
         this.shopcard.calculateShippingCosts();        
+        if (needAddress && !this.shopcard.address.name) {
+            this.shopcard.address.name = this.req.user.name;
+            this.shopcard.address.email = this.req.user.email;
+            this.shopcard.address.phone = this.req.user.mphone;
+        }
         await this.shopcard.saveToRequest(this.req);
 
         needAddress ? this.renderPage("pages/checkout.adres.ejs"): this.renderPage("pages/checkout.payment.ejs");

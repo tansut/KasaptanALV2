@@ -13,6 +13,8 @@ import Resource from '../../db/models/resource';
 import ResourceCategory from '../../db/models/resourcecategory';
 import Category from '../../db/models/category';
 import { Op } from 'sequelize';
+import { ProductLd, IProductLd } from '../../models/ProductLd';
+import DispatcherApi from './dispatcher';
 
 export default class Route extends ApiRouter {
     markdown = new MarkdownIt();
@@ -179,7 +181,46 @@ export default class Route extends ApiRouter {
     }
 
 
+    async getProductLd(product: Product): Promise<IProductLd> {
+        let res = new ProductLd(product)
+        let price = await product.getPriceStats();
+        let units = ['kg', 'unit1', 'unit2', 'unit3'];
+        let usedUnit = null;
+        if (price) {
+            for(let i = 0; i < units.length;i++) {
+                let avgPrice = price[`${units[i]}avg`];
+                if (avgPrice > 0)  {
+                    usedUnit = units[i];
+                    break;
+                }
+            }
+            if (usedUnit) {
+                res.offers = {
+                    '@type': "AggregateOffer",
+                    offerCount: price['count'],
+                    highPrice: Number(price[`${usedUnit}max`].toFixed(2)) ,
+                    lowPrice: Number(price[`${usedUnit}min`].toFixed(2)),
+                    priceCurrency: "TRY",
+                    availability: "InStock"
+                }
+            }
+        }
 
+        return res;
+  }
+
+    @Auth.Anonymous()
+    async getProductLdById(id: number) {
+        let product = await Product.findOne({
+            include: [{
+                all: true 
+            }], where: { slug: this.req.params.product }
+        });
+        if (!product) return this.res.sendStatus(404);
+
+        await product.loadResources();
+        return this.getProductLd(product);
+    }
 
 
     getProductUnits(product: Product) {
