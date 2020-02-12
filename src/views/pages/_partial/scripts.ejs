@@ -190,6 +190,24 @@
 <script>
   $(document).ready(function () {
 
+    if (window.lgData && window.lgData.lg0) {
+      $(window.lgData.lg0.el).on('onAfterSlide.lg',function(event){
+        var node = window.lgData.lg0.items[event.detail.index];
+        if (node) {
+          if ($(node).data('gtrack')) {
+            var href = $(node).attr('href');
+            var type = $(node).data('restype');
+            var ref = $(node).data('resref');
+            var title = $(node).data('restitle');
+            //console.log(type, ref + '/' + title, href)
+            window.App.gTag('gallery/' + type, ref + '/' + title, href)
+          }
+        }
+      });
+    }
+
+ 
+
 
     $('#signin-modal').on('shown.bs.modal', function () {
             window.App.gTag('general', 'login/open')

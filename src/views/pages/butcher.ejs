@@ -84,7 +84,7 @@
 
 
 
-            <a data-resid="<%=images[i].id%>" class="gallery-item <%= images[i].contentType == 'video-youtube' ? 'video-item':''%>"
+            <a data-gtrack="1" data-restype="<%=images[i].type%>" data-resref="<%= butcher.slug %>" data-restitle="<%= images[i].title || butcher.name %>"  data-resid="<%=images[i].id%>" class="gallery-item <%= images[i].contentType == 'video-youtube' ? 'video-item':''%>"
               href="<%= `${images[i].fileUrl}`  %>"
               data-sub-html="&lt;h6 class=&quot;font-size-sm text-light&quot;&gt;<%= images[i].title %>&lt;/h6&gt;"><img
                 style="width: 8rem; height: auto;" class=""

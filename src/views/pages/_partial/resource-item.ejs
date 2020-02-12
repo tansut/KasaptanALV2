@@ -8,7 +8,7 @@ var resourceUrl = targetUrl + '/' + (resource.slug || resource.id)  + (mode=='ta
 <div class="card h-100 shadow-sm pb-0 product-card card-static item-card rounded-0">
 
   <% if (typeof(showAll) != 'undedined') { %>
-    <a class="gallery-item d-block overflow-hidden gallery-item <%= resource.contentType == 'video-youtube' ? 'video-item':''%>"
+    <a data-gtrack="1" data-restype="<%=resource.tag1 %>" data-resref="<%= resource.slug %>" data-restitle="<%= resource.title %>" class="gallery-item d-block overflow-hidden gallery-item <%= resource.contentType == 'video-youtube' ? 'video-item':''%>"
       href="<%= `${resource.fileUrl}`  %>"
       <% if (resource.tag1 && (resource.tag1.includes('tarif') || resource.tag1.includes('yemek'))) { %> data-sub-html="<%= `<h6 class="font-size-normal text-light">${resource.title || ''}</h6><p class="font-size-md mb-2">${resource.description || ''}</p>`%> 
         <% if (true) {%>

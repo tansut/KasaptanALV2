@@ -209,7 +209,7 @@
 
                      
                      <% if (butcherVideo) {%>
-                      <a onclick="javascript:openSlider(<%=butcherVideo.id%>);return false" data-resid="<%=butcherVideo.id%>" id="butcher-video-link" class="w-25 gallery-item <%= butcherVideo.contentType == 'video-youtube' ? 'video-item':''%>"
+                      <a data-gtrack="1" data-restype="<%= butcherVideo.type %>" data-resref="<%= view.butcher.slug %>" data-restitle="<%= product.slug %>" onclick="javascript:openSlider(<%=butcherVideo.id%>);return false" data-resid="<%=butcherVideo.id%>" id="butcher-video-link" class="w-25 gallery-item <%= butcherVideo.contentType == 'video-youtube' ? 'video-item':''%>"
               href="<%= `${butcherVideo.fileUrl}`  %>"
               data-sub-html="&lt;h6 class=&quot;font-size-sm text-light&quot;&gt;<%= butcherVideo.title %>&lt;/h6&gt;"><img
                  class=""

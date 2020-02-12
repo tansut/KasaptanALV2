@@ -426,6 +426,8 @@
           lightGallery(gallery[i], {
             selector: '.gallery-item',
             download: false,
+            showAfterLoad: true,
+            
             videojs: true,
             youtubePlayerParams: {
               modestbranding: 1,
