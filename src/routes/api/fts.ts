@@ -15,16 +15,16 @@ export default class Route extends ApiRouter {
     @Auth.Anonymous()
     async searchRoute() {
 
-        let user = new User({
+        // let user = new User({
             
-        });
+        // });
 
-        user.mphone = '5326274151';
-        user.name = 'xxx';
-        user.password = 'uu';
-        user.email = 'esdfasf';
+        // user.mphone = '5326274151';
+        // user.name = 'xxx';
+        // user.password = 'uu';
+        // user.email = 'esdfasf';
 
-        await user.save();
+        // await user.save();
 
         if (!this.req.query.q || this.req.query.length < 2)
             return this.res.send([])
