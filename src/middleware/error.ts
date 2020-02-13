@@ -19,8 +19,8 @@ class ErrorMiddleware extends Middleware {
             let isHttpErr = err instanceof HttpError
             let httpErr = isHttpErr ? <HttpError>err: null;
             let msg = httpErr ? httpErr.message : err.name || err.message
-            email.send('tansut@gmail.com', 'hata: kasaptanAl.com', "error.ejs", {
-                text: msg,
+            email.send('tansut@gmail.com', 'hata/XHR: kasaptanAl.com', "error.ejs", {
+                text: err + '/' + err.sql,
                 stack: err.stack
             })
             
@@ -35,7 +35,7 @@ class ErrorMiddleware extends Middleware {
         res.status((httpErr && httpErr.statusCode) ? httpErr.statusCode : 500);
 
         email.send('tansut@gmail.com', 'hata: kasaptanAl.com', "error.ejs", {
-            text: err.message || err,
+            text: err + '/' + err.sql,
             stack: err.stack
         })
 
