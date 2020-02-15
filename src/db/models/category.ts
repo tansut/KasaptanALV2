@@ -83,6 +83,12 @@ class Category extends BaseModel<Category> {
     })
     displayOrder: number;
 
+    @Column({
+        allowNull: false,
+        defaultValue: 'active'
+    })
+    status: string;
+
     @HasMany(() => ProductCategory, {
         sourceKey: "id",
         foreignKey: "categoryid",

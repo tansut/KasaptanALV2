@@ -32,23 +32,8 @@
                         <div class="cz-carousel-inner"
                             data-carousel-options='{"items": 1, "autoplay": false, "controls": false, "loop": false}'>
 
-                            <div>
-                                <div class="row align-items-center">
-                                    <div class="col-md-6 order-md-2"><img class="d-none d-md-block mx-auto"
-                                            src="/static/img/content/home-slider-14sub.png" alt=""></div>
-                                    <div
-                                        class="col-lg-5 col-md-6 offset-lg-1 order-md-1 pt-4 pb-md-4 text-center text-md-left">
-                                        <span class="h2 d-block font-weight-light pb-1 scale-up">14 Şubat'a özel</span>
-                                        <span class="h1 d-block display-4 scale-up delay-1 ">%10 indirim</span>
-                                        <span class="h5 d-block font-weight-light pb-3 scale-up delay-2">sizi bekliyor.</span>
-
-                                        <a class="btn btn-primary btn-shadow scale-up delay-4"
-                                            href="/14-subat-lezzetleri">Alışverişe Başla<i
-                                                class="czi-arrow-right ml-2 mr-n1"></i></a>
-                                    </div>
-                                </div>
-
-                            </div>
+                  
+                            
 
                             <div>
                                 <div class="row align-items-center">
@@ -129,12 +114,12 @@
 
 
     <div class="container mb-3">
-        <%- include('./_partial/foods-slider.ejs', {mode: 'food', allUrl:'/14-subat-lezzetleri', showDesc: true, title: controller.foodsTitle, text: '', foods: controller.foods}); %>
+        <%- include('./_partial/foods-slider.ejs', {mode: 'food', allUrl:'/et-yemekleri', showDesc: true, title: controller.foodsTitle, text: '', foods: controller.foods}); %>
     </div>
 
     <div class="container mb-3">
 
-        <%- include('./_partial/category-products-slider', {category: '14-subat-lezzetleri', reverse: true, img: 'img/category/premium.jpg'}); %>
+        <%- include('./_partial/category-products-slider', {category: 'populer-etler', reverse: true, img: 'img/category/premium.jpg'}); %>
     </div>
 
     <div class="container mb-3">

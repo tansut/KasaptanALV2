@@ -68,6 +68,11 @@ export default class Route extends ViewRouter {
             CacheManager.dataCache.set("recent-butchers", recentButchers.map(b => b.get({ plain: true })));
         }
 
+        this.foods = await new ProductsApi(this.constructorParams).getFoodAndTarifResources(null, 15, null, {
+            raw: false
+        });
+        this.foodsTitle = 'Yemekler ve Tarifler'
+
         //this.foods = CacheManager.dataCache.get("recent-foods");
         if (!this.foods) {
             let sub14 = this.req.__categories.find(c=>c.slug == '14-subat-yemekleri');

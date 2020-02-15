@@ -150,7 +150,7 @@
 
               <div class="dropdown-menu px-2 pl-0 pb-2">
                 <% var viewCats = ['reyon', 'list'] %>
-                <% var chunks = _.chunk(__categories.filter(p=> viewCats.find(c=>(p.type.includes(c))) != null), 5) %>
+                <% var chunks = _.chunk(__categories.filter(p=> viewCats.find(c=>(p.type.includes(c))) != null && p.status == 'active'), 5) %>
                 <% chunks.forEach(reyonlar => { %>
                 <div class="d-flex flex-wrap flex-md-nowrap">
                   <% for(var c=0; c < reyonlar.length; c++) {%>
@@ -195,7 +195,7 @@
           
                     </div> -->
                 <% var viewCats = ['resource'] %>
-                <% var chunks = _.chunk(__categories.filter(p=> viewCats.find(c=>(p.type.includes(c))) != null), 5) %>
+                <% var chunks = _.chunk(__categories.filter(p=> viewCats.find(c=>(p.type.includes(c))) != null && p.status == 'active'), 5) %>
                 <% chunks.forEach(reyonlar => { %>
                 <div class="d-flex flex-wrap flex-md-nowrap">
                   <% for(var c=0; c < reyonlar.length; c++) {%>
