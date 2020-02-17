@@ -67,7 +67,7 @@
         </ul>  -->
 
         <div class="colx">
-          <% var foodCats = __categories.filter(p=>p.type == 'resource'); %>
+          <% var foodCats = __categories.filter(p=>p.type == 'resource' && p.status == 'active'); %>
 
           <% foodCats.forEach((cat, i) => { %>
           <% var foods = controller.getFoods(cat) %>

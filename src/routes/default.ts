@@ -15,6 +15,8 @@ import config from '../config';
 import ProductsApi from './api/product';
 import Content from '../db/models/content';
 import { ProductCacheItem, CacheManager } from '../lib/cache';
+import { Op } from 'sequelize';
+
 let ellipsis = require('text-ellipsis');
 
 export default class Route extends ViewRouter {
@@ -68,26 +70,19 @@ export default class Route extends ViewRouter {
             CacheManager.dataCache.set("recent-butchers", recentButchers.map(b => b.get({ plain: true })));
         }
 
-        this.foods = await new ProductsApi(this.constructorParams).getFoodAndTarifResources(null, 15, null, {
-            raw: false
-        });
+        this.foods = await new ProductsApi(this.constructorParams).getResources({
+            type: ['product-videos', 'product-photos'],
+            list: true,
+            tag1: {
+                [Op.or]: [{
+                    [Op.like]: '%yemek%'
+
+                }, { [Op.like]: '%tarif%' }]
+            }
+        }, null, 15);
         this.foodsTitle = 'Yemekler ve Tarifler'
 
         //this.foods = CacheManager.dataCache.get("recent-foods");
-        if (!this.foods) {
-            let sub14 = this.req.__categories.find(c=>c.slug == '14-subat-yemekleri');
-            if (!sub14) {
-            this.foods = await new ProductsApi(this.constructorParams).getFoodAndTarifResources(null, 15, null, {
-                raw: false
-            });
-            } else {
-                this.foodsTitle = sub14.name;
-                this.foods = await new ProductsApi(this.constructorParams).getFoodAndTarifResources(null, null, [sub14.id], {
-                    raw: false
-                });                
-            }
-            //CacheManager.dataCache.set("recent-foods", this.foods.map(b => b.get({ plain: true })));
-        }
         this.blogItems = await this.getBlogItems();
 
         this.res.render("pages/default.ejs", this.viewData({

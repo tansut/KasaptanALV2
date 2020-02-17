@@ -53,7 +53,7 @@ export default class Route extends ApiRouter {
         if (products4) {
             let ids = products4.map(p => p.id);
             where = {
-                ...{
+                ...{                    
                     [Op.or]: {
                         ref1: ids,
                         ref2: ids,
