@@ -383,7 +383,11 @@ window.initComponents = function initComponents() {
                 var self = this;
                 window.kb.selectArea(function (sender, ul) {
                     if (!returnUrl) {
-                        returnUrl = '/' + self.product.slug + '?action=add2sc';
+                        var urlParams = new URLSearchParams(window.location.search);
+                        if (urlParams.has('butcher')) {
+                            returnUrl = '/' + self.product.slug + '?butcher=' + urlParams.get('butcher') + '&action=add2sc';
+                        }
+                        else returnUrl = '/' + self.product.slug + '?action=add2sc';
                         self.selectedUnit && (returnUrl += '&selectedUnit=' + encodeURIComponent(self.selectedUnit.unit))
                         self.quantity && (returnUrl += '&quantity=' + encodeURIComponent(self.quantity))
                         self.note && (returnUrl += '&note=' + encodeURIComponent(self.note))

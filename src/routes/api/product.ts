@@ -21,6 +21,7 @@ export default class Route extends ApiRouter {
 
     async getFoodResources(products4?: Product[], limit?: number, catids?: number[], options = {}) {
         return this.getResources({
+            list: true,
             type: ['product-videos', 'product-photos'],
             tag1: {
                 [Op.like]: '%yemek%',
@@ -30,6 +31,7 @@ export default class Route extends ApiRouter {
 
     async getTarifResources(products4?: Product[], limit?: number, catids?: number[], options = {}) {
         return this.getResources({
+            list: true,
             type: ['product-videos', 'product-photos'],
             tag1: {
                 [Op.like]: '%tarif%',
@@ -40,6 +42,7 @@ export default class Route extends ApiRouter {
     async getFoodAndTarifResources(products4?: Product[], limit?: number, catids?: number[], options = {}) {
         return this.getResources({
             type: ['product-videos', 'product-photos'],
+            list: true,
             tag1: {
                 [Op.or]: [{
                     [Op.like]: '%yemek%'
@@ -86,7 +89,7 @@ export default class Route extends ApiRouter {
 
         let products = products4 || await Product.findAll({
             where: {
-                id: allresources.map(p => p.ref1).concat(allresources.filter(p => p.ref2).map(p => p.ref2)).concat(allresources.filter(p => p.ref3).map(p => p.ref3)).concat(allresources.filter(p => p.ref4).map(p => p.ref4)).concat(allresources.filter(p => p.ref5).map(p => p.ref5))
+                id: allresources.map(p => p.ref1).concat(allresources.filter(p => p.ref2).map(p => p.ref2)).concat(allresources.filter(p => p.ref3).map(p => p.ref3)).concat(allresources.filter(p => p.ref4).map(p => p.ref4)).concat(allresources.filter(p => p.ref5).map(p => p.ref5)).concat(allresources.filter(p => p.ref6).map(p => p.ref6))
             }
         })
 

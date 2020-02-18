@@ -106,12 +106,14 @@ export default class SiteMapManager {
         let items = await Resource.findAll({
             where: {
                 type: ['product-videos', 'product-photos'],
-                tag1: {
-                    [Op.or]: [{
-                        [Op.like]: '%yemek%'
-    
-                    }, { [Op.like]: '%tarif%' }]
-                }
+                [Op.or]: [{
+                    tag1: {
+                        [Op.or]: [{
+                            [Op.like]: '%yemek%'
+        
+                        }, { [Op.like]: '%tarif%' }]
+                    }
+                }]
             }})
             items.forEach(item=>{
                 stream.write({

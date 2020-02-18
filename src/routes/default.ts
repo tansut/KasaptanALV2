@@ -24,7 +24,7 @@ export default class Route extends ViewRouter {
     //tarifs: Resource[];
     foods: Resource[];
     blogItems: Content[];
-    foodsTitle = "Yemekler";
+    foodsTitle = "Et Yemekleri";
 
     async getBlogItems() {
         return this.req.__recentBlogs;
@@ -80,7 +80,7 @@ export default class Route extends ViewRouter {
                 }, { [Op.like]: '%tarif%' }]
             }
         }, null, 15);
-        this.foodsTitle = 'Yemekler ve Tarifler'
+        //this.foodsTitle = 'Yemekler ve Tarifler'
 
         //this.foods = CacheManager.dataCache.get("recent-foods");
         this.blogItems = await this.getBlogItems();

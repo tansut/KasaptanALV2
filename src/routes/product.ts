@@ -94,10 +94,13 @@ export default class Route extends ViewRouter {
         otherButchers = Helper.shuffle(otherButchers)
         servingButchers = Helper.shuffle(servingButchers)
 
-        let best = userBest || await this.tryBestFromShopcard(servingButchers, otherButchers) || await this.tryBestFromOrders(servingDispatchers) || this.tryBestAsRandom(servingButchers, otherButchers);
+        let mybest = await this.tryBestFromShopcard(servingButchers, otherButchers) || await this.tryBestFromOrders(servingDispatchers) || this.tryBestAsRandom(servingButchers, otherButchers);
+
+        if (mybest)
+            mybest = userBest || mybest;
 
         return {
-            best: best,
+            best: mybest,
             serving: servingButchers,
             others: otherButchers
         }

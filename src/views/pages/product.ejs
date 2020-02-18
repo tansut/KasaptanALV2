@@ -126,7 +126,7 @@
             <div id="productapp" v-cloak class="col-lg-5 ">
               <% if (view.butcher) { %>
               <div class="toast-container toast-top-center">
-                <div id="shopcard-added-toast" class="toast mb-3" id="accent-toast" data-delay="25000" role="alert" aria-live="assertive" aria-atomic="true">
+                <div id="shopcard-added-toast" class="toast mb-3" id="accent-toast" data-delay="50000" role="alert" aria-live="assertive" aria-atomic="true">
                   <div class="toast-header bg-accent text-white"><i
                     class="czi-cart  mr-2"></i>
                     <h6 class="font-size-sm text-white mb-0 mr-auto">Sepetinize eklendi</h6>
@@ -158,15 +158,15 @@
                   
                             </span>
                         
-                              <!-- <span>/</span>
+                              <span>/</span>
                             <span class="font-size-sm">
                               {{ formatCurrency(newlyAddedItem.price).val}}.<small>{{formatCurrency(newlyAddedItem.price).krs}}</small> TL
                               
     
                                
-                            </span> -->
+                            </span> 
     
-                              <span v-if="newlyAddedItem.purchaseoption.unitWeight" class="d-block text-muted font-size-xs">{{newlyAddedItem.purchaseoption.unitWeight}}/ adet</span>
+                              <span v-if="newlyAddedItem.purchaseoption.unitWeight" class="d-block text-muted font-size-xs">1 {{newlyAddedItem.purchaseoption.unit}} {{newlyAddedItem.purchaseoption.unitWeight}}</span>
                     
                           </div>                        
                             </div>
