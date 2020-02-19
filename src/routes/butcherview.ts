@@ -133,7 +133,7 @@ export default class Route extends ViewRouter {
             this.dispatchers[i].address = await this.dispatchers[i].toarea.getPreferredAddress()
         }
 
-        let pageTitle = butcher.pageTitle || `${butcher.name}/${butcher.areaLevel1.name} Adres - Telefon - Sipariş` ;
+        let pageTitle = butcher.pageTitle || `${butcher.name}` ;
         let pageDescription = butcher.pageDescription || `${butcher.name}, ${butcher.address} ${butcher.areaLevel1.name}/${butcher.areaLevel2.name} adresinde hizmet vermekte olup ${butcher.phone} numarası ile ulaşabilirsiniz.`
 
         this.res.render('pages/butcher', this.viewData({ pageTitle: pageTitle, pageDescription: pageDescription, butcher: butcher, images: images }));
