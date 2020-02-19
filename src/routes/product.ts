@@ -248,7 +248,7 @@ export default class Route extends ViewRouter {
         this.res.render('pages/product', this.viewData({ butcherProducts: this.butcherProducts.map(p => p.product), butchers: selectedButchers, 
             pageTitle: product.name + ' Siparişi ve Fiyatları', 
             // pageDescription: product.pageDescription + ' ', 
-            pageDescription: `${product.name} en lezzetli haliyle kasaptanAl.com'da. Doğal ve taze et ürünlerini en iyi fiyatlarla kasaptanAl.com'dan şimdi sipariş verin, kapınıza gelsin!`,
+            pageDescription: `${product.name} en lezzetli haliyle kasaptanAl.com'da. Doğal ve taze et ürünlerini en iyi fiyatlarla kasaptanAl.com'dan şimdi online sipariş verin, kapınıza gelsin!`,
             product: product, view: view, 
             __supportMessage: `${`Merhaba, kasaptanal.com üzerinden size ulaşıyorum. ${product.name} ile ilgili whatsapp üzerinden yardımcı olabilir misiniz?`}` }))
     }
