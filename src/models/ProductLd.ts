@@ -23,6 +23,8 @@ export interface IProductLd {
     sku: string;
     brand: IBrand;
     offers?: IOffer
+    aggregateRating: IAggregateRating;
+
 }
 
 export interface IAggregateRating {

@@ -299,6 +299,9 @@ class Product extends BaseModel<Product> {
 
 
 
+
+
+
     @Column({
         allowNull: false,
         defaultValue: 1,
@@ -472,6 +475,8 @@ class Product extends BaseModel<Product> {
         allowNull: true
     })
     badge: string;
+
+    
     
 
     getCategories(): Category[] {
