@@ -25,6 +25,13 @@ export interface IProductLd {
     offers?: IOffer
 }
 
+export interface IAggregateRating {
+    '@type': string;
+    ratingValue: number;
+    ratingCount: number;
+    reviewCount: number;
+}
+
 export class ProductLd implements IProductLd {
     '@context': string = 'https://schema.org/';
     '@type': string = "Product";
@@ -34,10 +41,11 @@ export class ProductLd implements IProductLd {
     sku: string;
     brand: IBrand;
     offers?: IOffer
+    aggregateRating: IAggregateRating;
 
     constructor(product: Product) {
         this.name = product.name;
-        this.description = product.shortdesc;
+        this.description = product.shortdesc || '';
         this.image = [];
         this.sku = product.slug;
         product.resources.forEach(r=> {
@@ -45,6 +53,12 @@ export class ProductLd implements IProductLd {
                 this.image.push('https://www.kasaptanal.com' + r.getFileUrl())
             }
         })
+        this.aggregateRating = {
+            "@type": "AggregateRating",
+            reviewCount: 0,
+            ratingCount: 0,
+            ratingValue: 0
+        }
         this.brand = {
             '@type': 'Thing',
             name: 'kasaptanAl.com'
