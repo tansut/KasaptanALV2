@@ -45,7 +45,7 @@ export class ProductLd implements IProductLd {
 
     constructor(product: Product) {
         this.name = product.name;
-        this.description = product.shortdesc || '';
+        this.description = product.shortdesc || product.name;
         this.image = [];
         this.sku = product.slug;
         product.resources.forEach(r=> {
