@@ -26,7 +26,7 @@ class Product extends BaseModel<Product> {
     get generatedDesc() {
         let start = "";
         if (this.shortdesc)
-        start = `${this.name}; ${this.shortdesc}.`
+        start = `${this.name}: ${this.shortdesc}.`
         else start = `${this.name} en lezzetli haliyle kasaptanAl.com'da.` ;
         let availUnits = this.availableUnits;
 
@@ -34,7 +34,7 @@ class Product extends BaseModel<Product> {
         this.availableUnits.slice(0, -1).join(', ').toLocaleLowerCase() + ' veya ' + this.availableUnits[this.availableUnits.length-1].toLocaleLowerCase()
         ;
 
-        let result = `${start} En iyi ${units} fiyatlarıyla şimdi online sipariş verin, kapınıza gelsin!`
+        let result = `${start} En iyi ${units} fiyatlarıyla kasaplarımızdan online sipariş verin.`
 
         return result;
     }
