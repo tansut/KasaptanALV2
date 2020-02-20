@@ -102,10 +102,10 @@
 
               <div class=" mb-3">
 
-                <h3 class="h5">Hangi yemeğe hangi et</h3>
-                <p class="font-size-sm">
+                <h3 class="h5">Hangi yemeği hangi et ile yapmalısınız ?</h3>
+                <p class="font-size-md">
                   <i class="czi-announcement mr-1"></i>
-                  Eti Bizden seçeneğini kullanın, hangi yemeğe hangi eti ne kadar almalısınız biz hesaplayalım.
+                  Eti Bizden seçeneğini ile <strong><%=resource.title%></strong> yapmak için en uygun eti kişi sayısına göre doğru miktarda biz hesaplıyoruz.
                 </p>
                 <a data-tag="true" data-category="food" data-action="eti-bizden" data-label="<%=resource.slug%>" href="<%- include(`./_partial/addtonotelink.ejs`, {resource: resource, auto: false  }) %>"
                   class="btn btn-block  btn-primary"><i class=" czi-thumb-up mr-1">
@@ -113,10 +113,27 @@
               </div>
 
  
-              <h3 class="h5">Hangi etler uygundur?</h3>
-              <p>
-                <strong><%=resource.title%></strong> yapmak için aşağıdaki ürünlerimizi güvenle seçebilirsiniz.
+           
 
+
+
+                   
+
+              <% if (resource.mddesc) { %>
+              <div>
+                <h3 class="h5">Tarifi</h3>
+                  <%- controller.Markdown.render(resource.mddesc) %>
+              </div>
+              <% } %>
+     <h3 class="h5">Hangi etler uygundur?</h3>
+              <p>
+                <strong><%=resource.title%></strong> yapmak için 
+
+                <% if (products.length <= 1) { %>
+                aşağıdaki ürünümüzü güvenle seçebilirsiniz.
+                <% } else { %>
+                kasaplarımız aşağıdaki alternatifleri önermekteler.
+                <% } %>
               </p>
               <ul class="list-unstyled">
                 <% products.forEach(p=> { %>
@@ -129,19 +146,7 @@
                   
                   </li>
                 <% }) %>
-              </ul> 
-
-
-
-                   
-
-              <% if (resource.mddesc) { %>
-              <div>
-                <h3 class="h5">Tarifi</h3>
-                  <%- controller.Markdown.render(resource.mddesc) %>
-              </div>
-              <% } %>
- 
+              </ul>  
 
 
             </div>
