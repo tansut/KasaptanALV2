@@ -133,23 +133,35 @@
             <hr class="my-4">
             <h6>İletişim</h6>
             <p><%= butcher.address %>, <%= butcher.areaLevel2.name %>/<%= butcher.areaLevel1.name %></p>
-            <!-- <ul class="list-unstyled font-size-sm">
-              <% if(butcher.email){ %>
 
-              <li><a class="nav-link-style d-flex align-items-center font-size-xs" href="mailto:<%= butcher.email %>"><i
-                    class="czi-mail opacity-60 mr-2"></i><%= butcher.email %></a></li>
-              <% } %>
+            <% if (!butcher.approved) { %>
+              <ul class="list-unstyled font-size-sm">
+                <% if(butcher.email){ %>
+  
+                <li><a class="nav-link-style d-flex align-items-center font-size-xs" href="mailto:<%= butcher.email %>"><i
+                      class="czi-mail opacity-60 mr-2"></i><%= butcher.email %></a></li>
+                <% } %>
+  
+                <% if(butcher.website) { %>
+  
+                <li><a target="_blank" class="font-size-xs nav-link-style d-flex align-items-center"
+                    href="<%= butcher.website %>"><i class="czi-globe opacity-60 mr-2"></i><%= butcher.website %></a></li>
+  
+  
+                <% } %>
 
-              <% if(butcher.website){"" %>
-
-              <li><a target="_blank" class="font-size-xs nav-link-style d-flex align-items-center"
-                  href="<%= butcher.website %>"><i class="czi-globe opacity-60 mr-2"></i><%= butcher.website %></a></li>
-
-
-              <% } %>
-
-
-            </ul> -->
+                <% if(butcher.phone) { %>
+  
+                  <li><a target="_blank" class="font-size-xs nav-link-style d-flex align-items-center"
+                      href="tel: <%= butcher.phone %>"><i class="czi-phone opacity-60 mr-2"></i><%= butcher.phone %></a></li>
+    
+    
+                  <% } %> 
+  
+  
+              </ul>
+            <% } %>
+   
             <% if (controller.dispatchers.length) {%>
             <h6>Hizmet Bölgeleri</h6>
             <ul class="list-unstyled font-size-sm">
