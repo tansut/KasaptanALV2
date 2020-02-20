@@ -23,6 +23,32 @@ class Product extends BaseModel<Product> {
     })
     name: string;
 
+    get generatedDesc() {
+        let start = "";
+        if (this.shortdesc)
+        start = `${this.name}; ${this.shortdesc}.`
+        else start = `${this.name} en lezzetli haliyle kasaptanAl.com'da.` ;
+        let availUnits = this.availableUnits;
+
+        let units = availUnits.length < 3 ? this.availableUnits.join(' veya ').toLocaleLowerCase():
+        this.availableUnits.slice(0, -1).join(', ').toLocaleLowerCase() + ' veya ' + this.availableUnits[this.availableUnits.length-1].toLocaleLowerCase()
+        ;
+
+        let result = `${start} En iyi ${units} fiyatlarıyla şimdi online sipariş verin, kapınıza gelsin!`
+
+        return result;
+    }
+
+    get availableUnits() {
+        let res = [];
+        this.unit1 && res.push(this.unit1title || this.unit1);
+        this.unit2 && res.push(this.unit2title || this.unit2);
+        this.unit3 && res.push(this.unit3title || this.unit3);
+        this.unit4 && res.push(this.unit4title || this.unit4);
+        this.unit5 && res.push(this.unit5title || this.unit5);
+        return res;
+    }
+
     @HasMany(() => ProductCategory, {
         sourceKey: "id",
         foreignKey: "productid"
@@ -476,7 +502,7 @@ class Product extends BaseModel<Product> {
     })
     badge: string;
 
-    
+
     
 
     getCategories(): Category[] {
