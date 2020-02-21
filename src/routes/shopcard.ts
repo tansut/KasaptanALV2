@@ -213,8 +213,9 @@ export default class Route extends ViewRouter {
 
         let order = await api.create(this.shopcard);
         await ShopCard.empty(this.req);
+        
         this.res.render("pages/checkout.complete.ejs", this.viewData({
-            order: order
+            order: order            
         }));
 
     }    
