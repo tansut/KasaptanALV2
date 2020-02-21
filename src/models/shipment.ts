@@ -3,7 +3,7 @@ import moment = require("moment");
 import Dispatcher from "../db/models/dispatcher";
 
 export let ShipmentHours = {
-    0: 'Herhangi bir saat olabilir',
+    //0: 'Herhangi bir saat olabilir',
     812: 'Sabah 8-10 arası',
     1012: 'Sabah 10-12 arası',
     1214: 'Öğlen 12-2 arası',
@@ -71,8 +71,8 @@ export class Shipment {
         if (isToday) {
             let res = {}
             Object.keys(ShipmentHours).forEach(k=>{
-                if (currentHour < 18) {
-                    if (parseInt(k) > (currentHour * 100 + 200)) res[k] = ShipmentHours[k]
+                if (currentHour < 19) {
+                    if (parseInt(k) > (currentHour * 100 + 100)) res[k] = ShipmentHours[k]
                 }
             })
             return res;

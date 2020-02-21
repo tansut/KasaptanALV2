@@ -17,12 +17,12 @@
         <nav aria-label="breadcrumb">
           <ol class="breadcrumb breadcrumb-light flex-lg-nowrap justify-content-center justify-content-lg-star">
             <li class="breadcrumb-item"><a class="text-nowrap" href="/"><i class="czi-home"></i></a></li>
-            <li class="breadcrumb-item text-nowrap active" aria-current="page">Alışverişimi Tamamla</li>
+            <li class="breadcrumb-item text-nowrap active" aria-current="page">Teslimatı Planlayalım</li>
           </ol>
         </nav>
       </div>
       <div class="order-lg-1 pr-lg-4 text-center text-lg-left">
-        <h1 class="h3 text-light mb-0">Alışverişimi Tamamla</h1>
+        <h1 class="h3 text-light mb-0">Teslimatı Planlayalım</h1>
       </div>
     </div>
   </div>
@@ -94,14 +94,26 @@
                           <label class="custom-control-label" for="callme<%=bi%>"></label>
                         </div>
                       </td>
-                      <td class="align-middle"><span class="text-dark font-weight-medium">Beni arayın</span><br><span class="text-muted">
-                        Telefonda teslimat gün ve saatini hızlıca planlayalım.
-  
-                      </span>
+                      <td class="align-middle">
+
+                          <div v-if="card && card.shipment[<%=bi%>].dispatcher && (card.shipment[<%=bi%>].howTo == 'ship')">
+                            <span class="text-dark font-weight-medium">En hızlı şekilde</span><br><span class="text-muted">
+                              Sizi arayalım ve teslimatı planlayalım.  Çoğu ürünümüzü 1-2 saat içerisinde gönderiyoruz.
+        
+                            </span>
+                          </div>
+
+                          <div v-if="card &&  (card.shipment[<%=bi%>].howTo == 'take')">
+                            <span class="text-dark font-weight-medium">Telefonda planlayalım</span><br><span class="text-muted">
+                              Sizi arayalım ve geliş saatinizi planlayalım. Çoğu ürünümüzü 1-2 saat içerisinde hazırlıyoruz.
+        
+                            </span>
+                          </div>
                       
                     </td>
                     </tr>
-                    <% if (controller.shipmentHours.length > 0) {%>
+                    
+                    <% if (controller.shipPossibleToday() > 0) {%>
                       <tr>
 
                           <td>

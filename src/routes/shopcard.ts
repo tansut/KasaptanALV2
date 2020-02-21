@@ -50,6 +50,10 @@ export default class Route extends ViewRouter {
     }
 
 
+    shipPossibleToday(): boolean {
+        return Object.keys(this.Shipment.availableTimes()).length > 0;
+    }
+
     async savecardRoute() {
         this.shopcard = await ShopCard.createFromRequest(this.req);
         this.shopcard.note = this.req.body["order-comments"] || "";
