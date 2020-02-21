@@ -41,12 +41,9 @@ export default class Helper {
     }
 
     static Now() {
-        let date = new Date().toUTCString();
-        let res = moment(date).utc().add('hour', 0)
-
+        let now = new Date();
+        let res = moment(now).add('minutes', now.getTimezoneOffset()).add('hour', 3);
         return res.toDate();
-
-
     }
 
     static shuffle(array) {
