@@ -65,11 +65,11 @@ export default class BaseRouter {
 
     
 
-    protected static BindRequest(method: string | Function) {
+    protected static BindRequest(method: string | Function, methodParams?: any) {
 
         var self = this;
 
-        return (req, res, next) => BaseRouter.CreateRouterInstance(req, res, next, self, method);
+        return (req, res, next) => BaseRouter.CreateRouterInstance(req, res, next, self, method, methodParams);
     }
 
     protected static AuthenticateRequest() {

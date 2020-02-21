@@ -80,7 +80,7 @@ export default class SiteMapManager {
 
         catdata.forEach(item=>{
             stream.write({
-                url: `${this.baseUrl}/et-kulturu/${item['categorySlug']}`,
+                url: `${this.baseUrl}/blog/${item['categorySlug']}`,
                 img: []
             })
         })
@@ -91,7 +91,7 @@ export default class SiteMapManager {
 
         items.forEach(item=>{
             stream.write({
-                url: `${this.baseUrl}/et-kulturu/${item.slug}`,
+                url: `${this.baseUrl}/blog/${item.slug}`,
                 img: [{
                     url: `${config.staticDomain}/content-resimleri/${item.slug}.jpg`,
                     title: item.title,

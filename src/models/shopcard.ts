@@ -149,6 +149,7 @@ export class ShopCard {
     remove(i) {
         this.items.splice(i, 1);
         this.arrangeButchers();
+        this.calculateShippingCosts();
     }
 
     static calculatePrice(product: ProductView, quantity: number, purchaseoption: PurchaseOption) {
@@ -162,6 +163,7 @@ export class ShopCard {
     }
 
     calculateShippingCosts() {
+        this.shippingCosts = {};
         for(let k in this.butchers) {
             let butcher = this.butchers[k];
             let shipment = this.shipment[k];
@@ -212,6 +214,7 @@ export class ShopCard {
         // }
         found || this.items.push(new ShopcardItem(product, quantity, price, purchaseoption, note));
         this.arrangeButchers();
+        this.calculateShippingCosts();
     }
 
     constructor(values: any) {

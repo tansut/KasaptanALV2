@@ -53,7 +53,7 @@ class Content extends BaseModel<Content> {
     @Column({
         allowNull: true,
     })
-    displayOrder: string;
+    displayOrder: number;
 
     @Column
     markdown: Buffer;

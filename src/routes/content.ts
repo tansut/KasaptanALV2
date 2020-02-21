@@ -72,10 +72,14 @@ export default class Route extends ViewRouter {
         let allcontent = await Content.findAll({
             attributes: ["title", "category", "description", "slug", "categorySlug"],
             order: [["displayOrder", "DESC"], ["UpdatedOn", "DESC"]],
-            where: where
+            where: where,
+            limit: 25
         })
         if (this.req.params.category && allcontent.length == 0)
             return this.next();
+        if (this.req.path.toLowerCase().startsWith('/et-kulturu')) {
+            return this.res.redirect(this.req.originalUrl.toLowerCase().replace('/et-kulturu', '/blog'), 301)
+        }
         this.allcontent = allcontent;
         this.resources = await new ProductsApi(this.constructorParams).getInformationalVideos(25)
         await this.loadCategories();
@@ -91,6 +95,8 @@ export default class Route extends ViewRouter {
             return this.next();
         }
 
+
+
         this.content = await Content.findOne({
             where: {
                 slug: this.req.params.content
@@ -98,6 +104,10 @@ export default class Route extends ViewRouter {
         })
 
         if (!this.content) return this.next();
+
+        if (this.req.path.toLowerCase().startsWith('/et-kulturu')) {
+            return this.res.redirect(this.req.originalUrl.toLowerCase().replace('/et-kulturu', '/blog'), 301)
+        }
 
         await this.loadCategories();
 
@@ -109,8 +119,13 @@ export default class Route extends ViewRouter {
 
 
     static SetRoutes(router: express.Router) {
-        router.get("/et-kulturu", Route.BindRequest(Route.prototype.indexRoute));
-        router.get("/et-kulturu/:category", Route.BindRequest(Route.prototype.indexRoute));
-        router.get("/et-kulturu/:content", Route.BindRequest(Route.prototype.viewRoute));
+        router.get("/blog", Route.BindRequest(Route.prototype.indexRoute));
+        router.get("/blog/:category", Route.BindRequest(Route.prototype.indexRoute));
+        router.get("/blog/:content", Route.BindRequest(Route.prototype.viewRoute));
+
+        router.get("/et-kulturu", Route.BindRequest(Route.prototype.indexRoute, [true]));
+        router.get("/et-kulturu/:category", Route.BindRequest(Route.prototype.indexRoute, [true]));
+        router.get("/et-kulturu/:content", Route.BindRequest(Route.prototype.viewRoute, [true]));
+
     }
 }

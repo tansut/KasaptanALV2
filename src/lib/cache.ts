@@ -107,7 +107,7 @@ export class CacheManager {
             result = await Content.findAll({
                 raw: true,
                 attributes: ["title", "category", "description", "slug", "categorySlug"],
-                order: [["UpdatedOn", "DESC"]],
+                order: [["DisplayOrder", "DESC"], ["UpdatedOn", "DESC"]],
                 limit: 15
             });
             this.dataCache.set("recent-blogs", result);

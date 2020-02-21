@@ -18,7 +18,7 @@
 
             <% if(controller.req.params.category){ %>
 
-            <li class="breadcrumb-item text-nowrap"><a href="/et-kulturu">Et Kültürü</a>
+            <li class="breadcrumb-item text-nowrap"><a href="/blog">Et Kültürü</a>
             </li>
             <li class="breadcrumb-item text-nowrap">
               <%= controller.allcontent.length > 0 ? controller.allcontent[0].category: "" %></li>
@@ -69,14 +69,14 @@
         <article class="blog-list pb-2 mb-2">
           <div class="left-column">
             <h2 class="h5 blog-entry-title"><a
-                href="<%= `/et-kulturu/${controller.allcontent[i].slug}` %>"><%= controller.allcontent[i].title %></a>
+                href="<%= `/blog/${controller.allcontent[i].slug}` %>"><%= controller.allcontent[i].title %></a>
             </h2>
             <p class="font-size-sm"><%= controller.allcontent[i].description %><a
-                href='<%= `/et-kulturu/${controller.allcontent[i].slug}` %>'
-                class='blog-entry-meta-link font-weight-medium'>[Devamı]</a></p>
+                href='<%= `/blog/${controller.allcontent[i].slug}` %>'
+                class='blog-entry-meta-link font-weight-medium'> [Devamı]</a></p>
           </div>
           <div class="right-column"><a class="blog-entry-thumb mb-3"
-              href="<%= `/et-kulturu/${controller.allcontent[i].slug}` %>">
+              href="<%= `/blog/${controller.allcontent[i].slug}` %>">
               <img src="<%= `${controller.getthumbnailurl(controller.allcontent[i])}` %>"
                 alt="<%= controller.allcontent[i].title %>"></a>
             <div class="d-flex justify-content-between mb-1">
@@ -99,7 +99,7 @@
 
           <% categories.forEach(function(cat){ %>
           <li class="nav-item">
-            <a class="nav-link active" href="/et-kulturu/<%= cat.categorySlug %>"><%=cat.category %></a>
+            <a class="nav-link active" href="/blog/<%= cat.categorySlug %>"><%=cat.category %></a>
           </li>
           <% }); %>
 
@@ -171,7 +171,7 @@
 
           </div>
           <div class="text-center my-4">
-            <a href="<%= `/et-kulturu/${controller.allcontent[i].categorySlug}/${controller.allcontent[i].slug}` %>"
+            <a href="<%= `/blog/${controller.allcontent[i].categorySlug}/${controller.allcontent[i].slug}` %>"
               class="btn btn-primary">Devamı</a>
 
           </div>

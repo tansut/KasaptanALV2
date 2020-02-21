@@ -2,5 +2,5 @@
 /kasap
 /et-yemekleri
 /kasap-urunleri
-/et-kulturu
+/blog
 /hikayemiz
