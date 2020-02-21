@@ -190,7 +190,8 @@
 <script>
 
         $(document).ready(function() {
-          //window.App.openSlider(<%=resource.id%>);   
+          <%= __req.query.watch ? `window.App.openSlider(${resource.id});`:"" %>
+          
         })
 </script>
 
