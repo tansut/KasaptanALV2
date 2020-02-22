@@ -31,7 +31,7 @@ export interface IAggregateRating {
     '@type': string;
     ratingValue: number;
     ratingCount: number;
-    reviewCount: number;
+    // reviewCount: number;
 }
 
 export class ProductLd implements IProductLd {
@@ -44,7 +44,7 @@ export class ProductLd implements IProductLd {
     brand: IBrand;
     offers?: IOffer
     aggregateRating: IAggregateRating;
-
+ 
     constructor(product: Product) {
         this.name = product.name;
         this.description = product.generatedDesc;
@@ -57,9 +57,8 @@ export class ProductLd implements IProductLd {
         })
         this.aggregateRating = {
             "@type": "AggregateRating",
-            reviewCount: 0,
-            ratingCount: 0,
-            ratingValue: 0
+            ratingCount: product.reviewCount,
+            ratingValue: product.ratingValue
         }
         this.brand = {
             '@type': 'Thing',

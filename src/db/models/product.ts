@@ -39,6 +39,8 @@ class Product extends BaseModel<Product> {
         return result;
     }
 
+    
+
     get availableUnits() {
         let res = [];
         this.unit1 && res.push(this.unit1title || this.unit1);
@@ -326,7 +328,19 @@ class Product extends BaseModel<Product> {
 
 
 
-
+    @Column({
+        allowNull: false,
+        defaultValue: 4.7,
+        type: DataType.DECIMAL(4, 2)
+    })
+    ratingValue: number;    
+    
+    @Column({
+        allowNull: false,
+        defaultValue: 1
+    })
+    reviewCount: number;     
+    
 
     @Column({
         allowNull: false,
