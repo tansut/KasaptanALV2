@@ -152,7 +152,7 @@ export default class Route extends ViewRouter {
                 this.shopcard.shipment[k].days = [Helper.Now().toDateString()];    
                 this.shopcard.shipment[k].hours = [this.req.body[`samedaytime${k}`]];    
                 this.shopcard.shipment[k].daysText = ['Bugün - ' + Helper.formatDate(Helper.Now())];    
-                this.shopcard.shipment[k].hoursText = [this.shipmentHours[parseInt(this.req.body[`plantime${k}`])]];                
+                this.shopcard.shipment[k].hoursText = [this.shipmentHours[parseInt(this.req.body[`samedaytime${k}`])]];                
             }            
         }
         this.shopcard.calculateShippingCosts();        
