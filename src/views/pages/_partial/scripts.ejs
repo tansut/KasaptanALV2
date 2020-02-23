@@ -266,7 +266,7 @@ $('#__whatsup').floatingWhatsApp({
 
 <% if (__req.user && !__req.user.hasRole('admin')) {%>
 <script>  
-  window.App.gTag('pageView', '<%=__req.path%>',  '<%=__req.user.phone%>' )
+  window.App.gTag('pageView', '<%=__req.path%>',  '<%=__req.user.mphone%>' )
 </script>
 
   <% } %>
