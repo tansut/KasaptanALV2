@@ -1,17 +1,31 @@
 <div class="tab-pane fade show active" id="signup-tab">
     <form class="needs-validation " autocomplete="off" onsubmit="App.Auth.signup()" novalidate id="signup-form-1">
 
-
-        <div v-if="note" class="alert rounded-0 alert-info alert-with-icon font-size-sm mb-3" role="alert">
+<!-- 
+         <div v-if="note" class="alert rounded-0 alert-info alert-with-icon font-size-sm mb-3" role="alert">
             <div class="alert-icon-box rounded-0"><i class="alert-icon czi-announcement"></i></div>
 
             <b>Sadece 30sn</b>'de kaydolun, kapıda ödeyin.
-        </div>
+        </div>  -->
 
         <div class="form-group">
-            <label for="su-tel">Cep Telefonu</label>
+            <label for="su-tel">Cep Telefonunuz [<a data-toggle="tooltip" title="Siparişinizi kapıda ödeme şeklinde adresinize göndermekteyiz. Güvenlik gereksinimleri geçerli bir cep telefon numarasını zorunlu kılmaktadır." href="#">Neden ?</a>]</label>
             <input class="form-control" minlength="10" maxlength="15" type="tel" id="su-tel" placeholder="5xxxxxxxxx"
                 required>
+                <ul>
+                    <li>
+                        <small  class="form-text text-muted">Kayıt işlemini kolaylaştırdık. Şifrenizi SMS olarak gönderiyoruz ve işlemi bitiriyoruz.</small>
+
+                    </li>
+
+                    <li>
+                        
+                        <small  class="form-text text-muted">Telefon numaranız hiçbir şekilde paylaşmıyoruz.</small>
+
+
+                        
+                    </li>
+                </ul>
             <div class="invalid-feedback">Geçersiz telefon numarası.</div>
         </div>
         <div class="form-group d-flex flex-wrap justify-content-between">
