@@ -261,8 +261,15 @@ $('#__whatsup').floatingWhatsApp({
 
     prefAdr: <%- JSON.stringify(__req.prefAddr || {}) %>
   }
+
 </script>
 
+<% if (__req.user && !__req.user.hasRole('admin')) {%>
+<script>  
+  window.App.gTag('pageView', '<%=__req.path%>',  '<%=__req.user.phone%>' )
+</script>
+
+  <% } %>
 
 
 <%}%>
