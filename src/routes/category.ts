@@ -35,7 +35,8 @@ export default class Route extends ViewRouter {
         let append = (viewAsTarif || this.category.type == 'resource') ? '': '';
         this.res.render(view, this.viewData({
             pageTitle: (pageTitle || this.category.name + ' Et Lezzetleri') + append,
-            pageDescription: pageDescription
+            pageDescription: pageDescription,
+            pageThumbnail: this.req.helper.imgUrl('category-photos', this.category.slug)
         }))
     }
 

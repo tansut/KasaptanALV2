@@ -18,6 +18,8 @@ import { Op } from 'sequelize';
 
 export default class Route extends ViewRouter {
 
+
+
     sendCachedPhoto(url) {
         //Get the image from filesystem
         let file = path.resolve(url);
@@ -182,9 +184,14 @@ export default class Route extends ViewRouter {
          `${resource.title} yapmak için ${products.map(p=>p.name).join(', ')} ${products.length == 1 ? 'ürünümüzü':'ürünlerimizi'} şimdi sipariş verin, kapınıza gelsin. ${resource.title} en kısa ve net tarifi kasaptanAl.com'da!`:
          `${resource.title} yapmak için ${products.map(p=>p.name).join(', ')} uygun etlerdendir. En lezzetli halleriyle kasaptanAl.com'dan şimdi sipariş verin, kapınıza gelsin!`
 
+        let thumbnail = resource.contentType == 'video-youtube' ? (resource.thumbnailUrl ? resource.getThumbnailFileUrl(): null): resource.getThumbnailFileUrl();
+
+
+        
         this.res.render('pages/food-tarif-view.ejs', this.viewData({
             resource: resource,
             products: products,
+            pageThumbnail: thumbnail,
             defaultDesc: defaultDesc,
             pageTitle: resource.tag1.includes('tarif') ? `${resource.title} en kısa ve net tarifi`: `${resource.title} uygun et ve malzemeler`,
             pageDescription: pageDesc
