@@ -3,7 +3,9 @@
 
 <head>
   <% include ./_partial/head %>
-
+  <% if (!butcher.approved) {%>
+    <meta name="robots" content="noindex,follow">
+  <%}%>
 
 </head>
 

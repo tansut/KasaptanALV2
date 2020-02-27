@@ -53,6 +53,7 @@ export default class Route extends ViewRouter {
 
     renderPage() {
         this.res.render(`pages/blog.view.ejs`, this.viewData({
+            pageThumbnail: `${config.staticDomain}/content-resimleri/${this.content.slug}-thumbnail.jpg`,
             pageTitle: (this.content.pageTitle || this.content.title),
             pageDescription: this.content.pageDescription || this.content.description
         }))
