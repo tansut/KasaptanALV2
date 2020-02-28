@@ -117,15 +117,18 @@ img{
 }
 
 .md-content {
-  p {
-    margin-bottom: 0.35rem;
+
+  h1,h2,h3,h4,h5,h6 {
+    color: $accent;
   }
+
   b, strong {
     font-weight: 500;
   }
 
   table {
     width: 100%;
+    margin-bottom: 1rem;
   }
 }
 .navbar-dark .navbar-nav .nav-link {
