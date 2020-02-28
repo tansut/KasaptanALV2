@@ -242,7 +242,7 @@
             <% viewCats = ['reyon', 'list'] %>
             <% catTitles = {list: 'Listeler', reyon:'Reyonlar'}%>
             <% viewCats.forEach(cat => { %>
-            <% var reyonlar = __categories.filter(p=>p.type.includes(cat)).slice(0,15) %>
+            <% var reyonlar = __categories.filter(p=>p.type.includes(cat) &&  p.status == 'active').slice(0,15) %>
             <% for(var c=0; c< reyonlar.length; c++) {%>
             <li class="<%= (cat == 'list' || cat == 'reyon') ?  'd-lg-none':'' %> nav-item ">
               <a class="pl-0 nav-link d-md-flex  align-items-md-center" href="/<%= reyonlar[c].slug %>">
@@ -283,7 +283,7 @@
 
 
 
-            <% var reyonlar = __categories.filter(p=>p.type.includes(cat)).slice(0,4) %>
+            <% var reyonlar = __categories.filter(p=>p.type.includes(cat) && p.status == 'active').slice(0,4) %>
             <% for(var c=0; c< reyonlar.length; c++) {%>
             <li class="<%= (cat == 'list' || cat == 'reyon') ?  'd-lg-none':'' %> nav-item ">
               <a class="pl-0 nav-link d-md-flex  align-items-md-center" href="/<%= reyonlar[c].slug %>">

@@ -30,9 +30,9 @@ export default class Route extends ViewRouter {
 
 
     renderPage(view: string, viewAsTarif: boolean = false) {
-        let pageTitle = viewAsTarif ? (this.category.tarifPageTitle || this.category.tarifTitle): this.category.pageTitle;
+        let pageTitle = viewAsTarif ? (this.category.tarifPageTitle || this.category.tarifTitle) : this.category.pageTitle;
         let pageDescription = viewAsTarif ? this.category.tarifPageDesc : this.category.pageDescription;
-        let append = (viewAsTarif || this.category.type == 'resource') ? '': '';
+        let append = (viewAsTarif || this.category.type == 'resource') ? '' : '';
         this.res.render(view, this.viewData({
             pageTitle: (pageTitle || this.category.name + ' Et Lezzetleri') + append,
             pageDescription: pageDescription,
@@ -177,13 +177,24 @@ export default class Route extends ViewRouter {
 
         else {
             this.products = await ProductManager.getProductsOfCategories([this.category.id]);
-            if (this.category.relatedFoodCategory) {                 
+            if (this.category.relatedFoodCategory) {
                 this.foods = await new ProductsApi(this.constructorParams).getFoodAndTarifResources(null, null, [this.category.relatedFoodCategory]);
 
             } else if (this.category.tarifTitle) {
                 this.foods = await new ProductsApi(this.constructorParams).getFoodAndTarifResources(this.products, 15);
             }
-            
+            // if (this.req.query.loc == 'feat') {
+            //     let loc = await Area.findOne({
+            //         where: {
+            //             slug: 'ankara-cankaya-cayyolu'
+            //         }
+            //     })
+            //     if (loc) {
+            //         await this.req.helper.setPreferredAddress({
+            //             level3Id: loc.id
+            //         }, true)
+            //     }
+            // }
             this.renderPage('pages/category.ejs')
         }
     }
