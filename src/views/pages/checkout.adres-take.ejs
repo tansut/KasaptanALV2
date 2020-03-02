@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="tr-TR" prefix="og: http://ogp.me/ns#">
+
+<head>
+  <% include ./_partial/head %>
+</head>
+
+<body>
+  <% include ./_partial/header %>
+
+
+
+
+  <div class="page-title-overlap bg-accent pt-4">
+    <div class="container d-lg-flex justify-content-between py-2 py-lg-3">
+      <div class="order-lg-2 mb-3 mb-lg-0 pt-lg-2">
+        <nav aria-label="breadcrumb">
+          <ol class="breadcrumb breadcrumb-light flex-lg-nowrap justify-content-center justify-content-lg-star">
+            <li class="breadcrumb-item"><a class="text-nowrap" href="/"><i class="czi-home"></i></a></li>
+            <li class="breadcrumb-item text-nowrap active" aria-current="page">İletişim Bilgileriniz</li>
+          </ol>
+        </nav>
+      </div>
+      <div class="order-lg-1 pr-lg-4 text-center text-lg-left">
+        <h1 class="h3 text-light mb-0">İletişim Bilgileriniz</h1>
+      </div>
+    </div>
+  </div>
+
+    <!-- Page Content-->
+    <div class="container mb-4 ">
+        <form class="needs-validation" method="post" novalidate action="/alisveris-sepetim/saveadrestake">
+        <div class="row">
+          <section class="col-lg-8">
+            <!-- Steps-->
+            
+            <%- include('./_partial/checkout-steps.ejs', {   step: 2        }); %>
+            <!-- Shipping address-->
+            <h2 class="h6 pt-1 pb-3 mb-3 border-bottom">Siparişinizle ilgili gerekirse sizinle iletişime geçelim</h2>
+            <div class="row">
+              <div class="col-sm-12">
+                <div class="form-group">
+                  <label for="checkout-fn">Ad Soyad</label>
+                  <input value="<%= shopcard.address.name %>" required name="name" class="form-control" type="text" id="name">
+                </div>
+              </div>
+            </div>
+            <div class="row">
+              <div class="col-sm-6">
+                <div class="form-group">
+                  <label for="checkout-email">E-posta Adresi</label>
+                  <input required value="<%= shopcard.address.email %>" name="email" class="form-control" type="email" id="email">
+                </div>
+              </div>
+              <div class="col-sm-6">
+                <div class="form-group">
+                  <label for="checkout-phone">Telefon</label>
+                  <input value="<%= shopcard.address.phone %>" required name="phone" class="form-control" type="tel" id="phone">
+                </div>
+              </div>
+            </div>
+
+
+            <!-- Navigation (desktop)-->
+            <div class="d-none d-lg-flex pt-4 mt-3">
+              <div class="w-50 pr-3"><a class="btn btn-secondary btn-block" href="/alisveris-sepetim/ship"><i class="czi-arrow-left mt-sm-0 mr-1"></i><span class="d-none d-sm-inline">Geri</span><span class="d-inline d-sm-none">Geri</span></a></div>
+              <div class="w-50 pl-2"><button type="submit" id="setadres" name="setadres" class="btn btn-accent btn-block"><span class="d-none d-sm-inline">Sonraki Adım</span><span class="d-inline d-sm-none">Sonraki</span><i class="czi-arrow-right mt-sm-0 ml-1"></i></button></div>
+            </div>
+          </section>
+          <!-- Sidebar-->
+          <!-- <aside class="col-lg-4 pt-4 pt-lg-0">
+
+              <form method="POST" onsubmit="return App.Auth.checkAuthentication(window.location.href)" novalidate
+                class="needs-validation" action="/alisveris-sepetim/savecard">
+                <div class="cz-sidebar-static rounded-lg box-shadow-lg ml-lg-auto">
+                fgdfg,g fdg,gdf,g,
+
+                gfdf
+                gdfdg
+                fdggfd
+                gdfdgdfg
+                fdgg
+                </div>
+              </form>
+          </aside> -->
+        </div>
+        <!-- Navigation (mobile)-->
+        <div class="row d-lg-none">
+          <div class="col-lg-8">
+            <div class="d-flex mt-3">
+              <div class="w-50 pr-3"><a class="btn btn-secondary btn-block" href="/alisveris-sepetim/ship"><i class="czi-arrow-left mt-sm-0 mr-1"></i><span class="d-none d-sm-inline">Geri</span><span class="d-inline d-sm-none">Geri</span></a></div>
+              <div class="w-50 pl-2"><button type="submit" id="save-adres" name="save-adres" class="btn btn-accent btn-block"><span class="d-none d-sm-inline">Sonraki Adım</span><span class="d-inline d-sm-none">Next</span><i class="czi-arrow-right mt-sm-0 ml-1"></i></button></div>
+            </div>
+          </div>
+        </div></form>
+      </div>
+
+  <% include ./_partial/footer %>
+  <% include ./_partial/scripts %>
+
+  <script>
+  
+  App.Ready.then(function () {
+    var orderadr = window.kb.userlocation();
+    var city = $('#ordercity').data('city');
+    var district = $('#orderdistrict').data('district');    
+    orderadr.init({
+           defaultCity: city,
+           defaultDistrict: district,
+            openDistricts: false,
+            cityDomSelector: "#ordercity",
+            districtDomSelector: "#orderdistrict"
+          }, function () {
+            $(window).on('kb.userloction.districtselected', function (e, sender) {
+    
+                if (sender == orderadr) {
+   
+                  $("#ordercitytext").val(orderadr.selectedCity.name);
+                  $("#orderdistricttext").val(orderadr.selectedDistrict.name);
+                }
+            });
+          });    
+
+  })
+  
+
+  </script>
+
+</body>
+
+</html>

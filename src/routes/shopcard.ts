@@ -106,6 +106,17 @@ export default class Route extends ViewRouter {
         }
     }
 
+    async saveadresTakeRoute() {
+        this.shopcard = await ShopCard.createFromRequest(this.req);
+        this.shopcard.address.name = this.req.body.name;
+        this.shopcard.address.email = this.req.body.email;
+        this.shopcard.address.phone = this.req.body.phone;
+        await this.setDispatcher();
+        await this.shopcard.saveToRequest(this.req);
+        this.renderPage("pages/checkout.payment.ejs");
+    }
+
+
 
     async saveadresRoute() {
         this.shopcard = await ShopCard.createFromRequest(this.req);
@@ -125,7 +136,7 @@ export default class Route extends ViewRouter {
 
     async shipViewRoute() {
         this.shopcard = await ShopCard.createFromRequest(this.req);
-        this.setDispatcher();
+        await this.setDispatcher();
         await this.shopcard.saveToRequest(this.req);
         this.renderPage("pages/checkout.ship.ejs");
     }    
@@ -162,8 +173,8 @@ export default class Route extends ViewRouter {
             this.shopcard.address.phone = this.req.user.mphone;
         }
         await this.shopcard.saveToRequest(this.req);
-
-        needAddress ? this.renderPage("pages/checkout.adres.ejs"): this.renderPage("pages/checkout.payment.ejs");
+        //this.renderPage("pages/checkout.adres.ejs")
+        needAddress ? this.renderPage("pages/checkout.adres.ejs"): this.renderPage("pages/checkout.adres-take.ejs");
     }
 
 
@@ -225,6 +236,9 @@ export default class Route extends ViewRouter {
         router.get("/alisveris-sepetim/adres", Route.BindRequest(Route.prototype.adresViewRoute));
         router.post("/alisveris-sepetim/savecard", Route.BindRequest(Route.prototype.savecardRoute));
         router.post("/alisveris-sepetim/saveadres", Route.BindRequest(Route.prototype.saveadresRoute));
+        router.post("/alisveris-sepetim/saveadrestake", Route.BindRequest(Route.prototype.saveadresTakeRoute));
+
+        
         router.get("/alisveris-sepetim/ship", Route.BindRequest(Route.prototype.shipViewRoute));
         router.post("/alisveris-sepetim/saveship", Route.BindRequest(Route.prototype.saveshipRoute));
         router.get("/alisveris-sepetim/payment", Route.BindRequest(Route.prototype.paymentViewRoute));

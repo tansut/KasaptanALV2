@@ -181,6 +181,7 @@ export default class Route extends ApiRouter {
         (place.geometry && place.geometry.location) && (model.lat = place.geometry.location.lat, model.lng = place.geometry.location.lng);
         place["user_ratings_total"] && (model.ratingCount = place["user_ratings_total"]);
         model.rating = isNaN(place.rating) ? 0.0 : place.rating;
+        model.legalName = place.name;
         if (!model.slug)
             model.slug = Helper.slugify(model.name)
 

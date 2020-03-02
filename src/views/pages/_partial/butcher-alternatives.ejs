@@ -29,7 +29,7 @@
             <div class="tab-pane fade show active" id="serving" role="tabpanel">
               <% butchersServing.forEach(b=> { %>
                 <div class="bg-secondary border-bottom p-3">
-                  <a class="media align-items-center" href="<%=`/${product.slug}?butcher=${b.slug}#butchervendor`%>"><img
+                  <a class="media align-items-center" data-butcher="<%=b.slug%>" href="javascript:window.App.ProductApp.selectNewButcher('<%=`${b.slug}`%>')"><img
                       class="rounded-circle header-img"  src="<%= `${__req.helper.imgUrl('butcher-google-photos', b.slug)}` %>" alt="<%=b.name%>">
                     <div class="media-body pl-2"><span class="font-size-ms text-muted"></span>
                       <h5 class="h6 mb-0 mr-2"><%= b.name %></h5>
@@ -42,7 +42,7 @@
             <div class="tab-pane fade <%= butchersServing.length == 0 ? 'show active':''%>" id="takeaway" role="tabpanel">
               <% butchersTakeaway.forEach(b=> { %>
                 <div class="bg-secondary border-bottom p-3">
-                  <a class="media align-items-center" href="<%=`/${product.slug}?butcher=${b.slug}#butchervendor`%>"><img
+                  <a class="media align-items-center" href="javascript:window.App.ProductApp.selectNewButcher('<%=`${b.slug}`%>')"><img
                       class="rounded-circle header-img"  src="<%= `${__req.helper.imgUrl('butcher-google-photos', b.slug)}` %>" alt="<%=b.name%>">
                     <div class="media-body pl-2"><span class="font-size-ms text-muted"></span>
                       <h5 class="h6 mb-0 mr-2"><%= b.name %></h5>

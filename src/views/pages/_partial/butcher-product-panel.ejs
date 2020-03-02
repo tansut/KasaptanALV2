@@ -1,0 +1,66 @@
+<div class="bg-secondary">
+                   
+
+                   
+    <div id="butchervendor" class="bg-secondary">
+    <div class="   d-flex flex-nowrap justify-content-between align-items-center">
+      <div class="d-flex">
+
+     
+     <% if (butcherVideo) {%>
+      <a data-gtrack="1" data-restype="<%= butcherVideo.type %>" data-resref="<%= view.butcher.slug %>" data-restitle="<%= product.slug %>" onclick="javascript:openSlider(<%=butcherVideo.id%>);return false" data-resid="<%=butcherVideo.id%>" id="butcher-video-link" class="w-25 gallery-item <%= butcherVideo.contentType == 'video-youtube' ? 'video-item':''%>"
+href="<%= `${butcherVideo.fileUrl}`  %>"
+data-sub-html="&lt;h6 class=&quot;font-size-sm text-light&quot;&gt;<%= butcherVideo.title %>&lt;/h6&gt;"><img
+ class=""
+src="<%= `${butcherVideo.thumbnailFileUrl}` %>" alt="<%= `${view.butcher.name}`  %>" /><span
+class="gallery-item-caption"><%= butcherVideo.title %></span></a>
+<a class="media align-items-center" href="/<%=view.butcher.slug%>">
+<%} else { %>
+  <a class="pl-2 media align-items-center" href="/<%=view.butcher.slug%>">
+    
+    <img class="rounded-circle header-img"
+    src="<%= `${__req.helper.imgUrl('butcher-google-photos', view.butcher.slug)}` %>" alt="<%=view.butcher.name%>">
+ <% } %>
+      <div class="media-body  p-2">
+        <h6 class="h5 mb-0 mr-2"><%= view.butcher.name %></h6>
+        <span class="font-size-ms text-muted">sağlamaktadır.</span>
+
+   
+      </div></a>
+    </div>
+      <a class="align-self-center d-md-block btn btn-sm" href="/<%=view.butcher.slug%>"><i
+          class="czi-arrow-right font-size-xs align-middle ml-1"></i></a>                        
+  </div>
+
+  <!-- <div>
+    <span class="h4 font-weight-normal text-accent mr-1">
+      <%- include('./currency.ejs', {value: view.viewUnitPrice, unit: view.viewUnit}) %>
+    </span>
+  </div> -->
+  
+    <% if (view.butcherNote) { %>
+      <div class="font-size-sm p-3">
+        <!-- <span class="badge badge-accent font-size-xs mr-1">Kasabımızdan</span> -->
+        <span class="font-size-sm text-muted">"<%= view.butcherNote %>"</span>
+        
+
+      </div>
+    <% } %>
+  </div>
+
+  <%if (otherButcherAlternatives) {%>
+    <div class="d-flex px-3 align-items-center justify-content-between mt-2 ">
+
+        <p  class="mb-1 text-dark font-size-sm ">
+            <!-- {{  formatCurrency(selectedUnit.unitPrice).val}}.<small>{{formatCurrency(selectedUnit.unitPrice).krs}}</small> TL/{{selectedUnit.unitTitle}} -->
+            
+        
+         
+        </p> 
+        
+      <p class="mb-1 font-size-sm"><a class="text-dark font-weight-medium" href="javascript:showOtherButchers()"><span>Diğer kasaplar (</span><span class="text-primary"><%=otherButcherAlternatives %></span><span>)</span></a> </p> 
+      
+    </div>
+    <%}%>
+  </div>
+

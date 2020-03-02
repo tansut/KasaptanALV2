@@ -197,68 +197,20 @@
 
                 <div class="mb-3">
 
-                  <div>
-                   
+                  <%if (view.butcher) {  %>
 
-                    <!-- <span class="h3 font-weight-normal text-accent mr-1">
-                      <%- include('./_partial/currency.ejs', {value: view.viewUnitPrice, unit: view.viewUnit}) %>
-                    </span> -->
-                    <div id="butchervendor" class="bg-secondary">
-                    <div class="   d-flex flex-nowrap justify-content-between align-items-center">
-                      <div class="d-flex">
-
+                    <div class="">
                      
-                     <% if (butcherVideo) {%>
-                      <a data-gtrack="1" data-restype="<%= butcherVideo.type %>" data-resref="<%= view.butcher.slug %>" data-restitle="<%= product.slug %>" onclick="javascript:openSlider(<%=butcherVideo.id%>);return false" data-resid="<%=butcherVideo.id%>" id="butcher-video-link" class="w-25 gallery-item <%= butcherVideo.contentType == 'video-youtube' ? 'video-item':''%>"
-              href="<%= `${butcherVideo.fileUrl}`  %>"
-              data-sub-html="&lt;h6 class=&quot;font-size-sm text-light&quot;&gt;<%= butcherVideo.title %>&lt;/h6&gt;"><img
-                 class=""
-                src="<%= `${butcherVideo.thumbnailFileUrl}` %>" alt="<%= `${view.butcher.name}`  %>" /><span
-                class="gallery-item-caption"><%= butcherVideo.title %></span></a>
-                <a class="media align-items-center" href="/<%=view.butcher.slug%>">
-                <%} else { %>
-                  <a class="media align-items-center" href="/<%=view.butcher.slug%>">
                     
-                    <img class="rounded-circle header-img"
-                    src="<%= `${__req.helper.imgUrl('butcher-google-photos', view.butcher.slug)}` %>" alt="<%=view.butcher.name%>">
-                 <% } %>
-                      <div class="media-body  p-2">
-                        <h6 class="h5 mb-0 mr-2"><%= view.butcher.name %></h6>
-                        <span class="font-size-ms text-muted">sağlamaktadır.</span>
+                     </div>
 
-                   
-                      </div></a>
-                    </div>
-                      <a class="align-self-center d-md-block btn btn-sm" href="/<%=view.butcher.slug%>"><i
-                          class="czi-arrow-right font-size-xs align-middle ml-1"></i></a>                        
-                  </div>
-                  
-                    <% if (view.butcherNote) { %>
-                      <div class="font-size-sm p-3">
-                        <!-- <span class="badge badge-accent font-size-xs mr-1">Kasabımızdan</span> -->
-                        <span class="font-size-sm text-muted">"<%= view.butcherNote %>"</span>
-                        
-
-                      </div>
-                    <% } %>
-                  </div>
-                  <%if (otherButcherAlternatives) {%>
-                    <div class="mt-2">
-                      <p class="text-right font-size-sm"><a class="text-dark font-weight-medium" href="javascript:showOtherButchers()"><span>Diğer kasaplar (</span><span class="text-primary"><%=otherButcherAlternatives %></span><span>)</span></a> </p> 
-
-                    </div>
-                  <%}%>
-          
-
-                    <!-- <p><small><a class="text-muted" href="/<%=view.butcher.slug%>"><%=view.butcher.name%></a></small>
-                    </p> -->
-                  </div>
-
-
+                     <%}%>
 
 
                 </div>
-                <%} %>
+                <%} else { %>
+   
+                <% } %>
                 <form id="product-form" class="" @submit.prevent="addToShopcard">
                   <% if (product.featuresText) { %>
                     <% var notes = product.featuresText.split('\n') %>
@@ -339,24 +291,31 @@
 
                     
                       
-                      <!-- <a title="WhatsApp Canlı Destek" 
-                      target="_blank" href="https://wa.me/908503054216?text=<%-`Merhaba, kasaptanal.com üzerinden size ulaşıyorum. ${product.name} ile ilgili whatsapp üzerinden yardımcı olabilir misiniz?`%>" class="font-size-sm font-weight-medium  text-success">
-                      <img src="/static/img/messaging-whatsapp.svg" width="24">
-                        Destek</a> -->
+              
 
                    
                    </div>
-<!--                     
+                    
                       <p v-if="product && product.purchaseOptions.length > 1" class="font-size-sm mb-1">
-                        İşinizi kolaylaştıran seçenekleri kullanın.
-                      </p> -->
+                        Detaylı bilgi almak için lütfen seçim yapın.
+                      </p> 
                       <input type="hidden" id="product-id" value="<%= product.id %>" />
                       <div class="xform-group">
                         <div v-if="product && product.purchaseOptions.length > 1">
                           <ul class="nav nav-pills nav-pills-dark nav-fill mb-2">
                             <li v-for="(option, index) in product.purchaseOptions" class="nav-item h-100">
-                              <a class="nav-link h-100 shadow-none " href="#t" v-bind:class="{ active: option == selectedUnit }"
-                                @click="selectedUnit = option">{{option.unitTitle}}</a>
+                              <a class="nav-link h-100 shadow-none " href="#option" v-bind:class="{ active: option == selectedUnit }"
+                                @click="selectedUnit = option">{{option.unitTitle}}
+                                <%if (false) { %>
+                                <span class="d-block" class="font-size-sm text-muted">
+                                  {{  formatCurrency(option.unitPrice).val}}.<small>{{formatCurrency(option.unitPrice).krs}}</small> TL 
+                                  
+              
+                               
+                                </span> 
+
+                                <%}%>
+                              </a>
                                 
                             </li>
 
@@ -377,8 +336,42 @@
                           </div>
                         
               
-                     
+                          <a id="noteanchor"></a>
                             <div class="mb-3 bg-secondary border">
+                              <%if (view.butcher) {  %>
+
+                              <div class="border-bottom">
+                                <%- include('./_partial/butcher-product-panel.ejs', { butcherVideo: butcherVideo }) %>
+                              
+                               </div>
+
+                               <%}%>
+
+                              <% if (view.butcher && __req.prefAddr) { %>
+                                <div class="mb-3  ">
+                                  <div class="mb-3">
+                  
+                        
+        
+                                     <!-- <p class="mt-2 text-center text-muted font-size-sm">
+                                      Satın almak için alışveriş sepetinize ekleyebilirsiniz.
+        
+                                      <%if (false) {%>
+                                        <span>
+                                          veya <a class="alert-link" href="javascript:showOtherButchers()">bir başka kasap</a>  seçebilirsiniz.
+                                        </span>
+                                        <%}%>
+                                    </p>  -->
+                                    
+                            
+                                   
+        
+                            
+                                  </div>
+                                </div>
+        
+                              <%}%>
+
 
                               <div class="mt-2 d-flex align-items-center justify-content-center mb-1">
                                 <span v-if="selectedUnit.unit != 'kg'">Kaç <b>{{ selectedUnit.unitTitle }}</b> hazırlayalım?</span>
@@ -387,21 +380,41 @@
                                 
     
                               </div>
-                              
+                             
+
                             <amount-input :def="quantity || selectedUnit.default" :min="selectedUnit.min"
                             :max="selectedUnit.max" :step="selectedUnit.step" v-model="quantity"
-                            :unit="selectedUnit.unitTitle">
+                            :unit="selectedUnit.unitTitle" >
                        
                           </amount-input>
-                        </div>
+                          <%if (view.butcher) { %>
+<div class="text-center"> 
+   <!-- <span class="text-muted d-block">
+    Toplam Bedel
+  </span>  -->
+   <span  v-if="selectedUnit" class="d-block text-center text-accent font-size-sm"> 
+    {{  formatCurrency(price).val}}.<small>{{formatCurrency(price).krs}}</small> TL </span>
+</div> 
+
+
+                <%}%>            </div>
                           <div class="  d-flex align-items-center justify-content-center">
 <p> <i class="czi-announcement mr-1"></i><a @click="showCalculator(selectedUnit)"
-  class="text-accent font-weight-medium " href="#size-chart">Miktar Hesaplama Aracı</a> doğru miktarda almanıza yardımcı olabilir.</p>
+  class="text-accent font-weight-medium " href="#size-chart">Miktar Hesaplama Aracı</a> doğru miktarda almanıza yardımcı olabilir. </p>
                         
                           
                           </div>
-           
 
+                          <div class="mb-3">
+                            <span class="font-weight-medium"> Sorularınız mı var ?</span>  <br> <a title="WhatsApp Canlı Destek" 
+  target="_blank" href="https://wa.me/908503054216?text=<%-`Merhaba, kasaptanal.com üzerinden size ulaşıyorum. ${product.name} ile ilgili whatsapp üzerinden yardımcı olabilir misiniz?`%>" class=" font-weight-medium  text-success">
+  <img src="/static/img/messaging-whatsapp.svg" width="24">
+  Destek için hazırız.</a>
+                          </div>
+
+                          
+           
+                     
                       
                          
                         </div>
@@ -433,7 +446,7 @@
                           </div>
     
                           <% } %>
-                          <a id="noteanchor"></a>
+                          
                         <div class="form-group" >
                           <label class="mb-2" for="note"><span
                               class="badge badge-accent font-size-xs mr-2">Notunuz</span><span class="font-size-sm"></span>
@@ -451,8 +464,20 @@
                         </div>
                         <% if (!view.butcher) {%>
                         <div class="text-center">
+
+
+                      <% if (!__req.prefAddr) { %>
+                        <div class="alert border-none rounded-0 alert-info alert-with-icon font-size-sm mb-2" role="alert">
+  
+  
+                          <div class="alert-icon-box rounded-0"><i class="alert-icon czi-announcement"></i></div> 
+                          <span class=" d-block font-size-sm text-info text-center">Kasaplarımızdan alışveriş yapmak ve fiyatlarımız için önce semtinizi seçin.</span>
+
+                        </div>
+                        <%}%>
+
                           <button @click="selectArea(null, '<%=__req.prefAddr ? `Maalesef ürünümüz ${__req.prefAddr.level1Text}/${__req.prefAddr.level2Text}/${__req.prefAddr.level3Text} için ulaşılabilir değil. Lütfen bir başka adres seçin.`: ``%>')" type="button"  id="add2scSetAddrBtn" class="btn btn-accent btn-block"><i
-                              class="czi-cart font-size-lg mr-2"></i>Sepete Ekle</button>
+                              class="czi-location font-size-lg mr-2"></i>Semt Seç</button>
                           <% if (__req.prefAddr) { %>
 
                             <div class="toast-container toast-top-center">
@@ -490,67 +515,10 @@
                       </div>
                       <%} %>
 
-                      <% if (false) {%>
 
-                        <div class="toast-container toast-top-center">
-                          <div id="shopcard-available-toast" class="toast mb-3" id="accent-toast" data-delay="25000" role="alert" aria-live="assertive" aria-atomic="true">
-                            <div class="toast-header bg-accent text-white">
-                              <h6 class="font-size-sm text-white mb-0 mr-auto">Tebrikler</h6>
-                              <button class="close text-white ml-2 mb-1" type="button" data-dismiss="toast" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-                            </div>
-                            <div class="toast-body text-accent text-center">
-                                <p>
-                                  Ürünümüz mevcut. Alışveriş sepetinize ekleyebilir ve alışverişe devam edebilirsiniz.
-                                </p>
-                                <div>
-                                  <div class="d-flex d-flex justify-content-around">
-                                   
 
-                                    <button class="btn btn-sm btn-accent" type="button" data-dismiss="toast" aria-label="Close">OK</button>
-
-                                  
-                                  </div>
-                                </div>
-                                <div>
-                    
-                                </div>
-                          
-                          </div>
-                          </div>
-                    </div>
-
-                       <%}%>
-                       <% if (view.butcher && __req.prefAddr && __req.query.action == 'add2sc') { %>
-                        <div class="mb-3 alert alert-success">
-                          <div class="mb-3">
-                   <p class="font-weight-bold">
-                     Ürünümüz Mevcut
-                   </p>
-                            <!-- <p>
-                              <%=view.butcher.name %> tarafından sağlanmaktadır.
-                            </p> -->
-
-                            <p>
-                              Satın almak için alışveriş sepetinize ekleyebilirsiniz.
-
-                              <%if (false) {%>
-                                <span>
-                                  veya <a class="alert-link" href="javascript:showOtherButchers()">bir başka kasap</a>  seçebilirsiniz.
-                                </span>
-                                <%}%>
-                            </p>
-                            
-                    
-                           
-
-                    
-                          </div>
-                            <button data-tag="true" data-category="shopcard/add" data-action="<%=view.butcher.slug%>" data-label="<%=product.slug%>" id="addtoscbtn" class="btn btn-accent btn-block" type="submit"><i
-                              class="czi-cart font-size-lg mr-2"></i>Sepete Ekle</button>
-                        </div>
-
-                      <%}%>
-                          <% if (view.butcher && __req.prefAddr && __req.query.action != 'add2sc') { %>
+                       
+                          <% if (view.butcher && __req.prefAddr) { %>
                             <button data-tag="true" data-category="shopcard/add" data-action="<%=view.butcher.slug%>" data-label="<%=product.slug%>" id="addtoscbtn" class="btn btn-accent btn-block" type="submit"><i
                               class="czi-cart font-size-lg mr-2"></i>Sepete Ekle</button>
                           
@@ -594,7 +562,7 @@
           <% if (view.butcher) {%>
             <li class="nav-item">
               <a class="nav-link" id="butcherproductstab" data-toggle="tab" href="#butcherproducts" role="tab" 
-                aria-selected="false">Ürünler</a>
+                aria-selected="false">Kasaptan</a>
             </li>
           <%}%>
 
@@ -607,7 +575,7 @@
         </ul>
         <div class="tab-content px-4" id="myTabContent">
           <div class="tab-pane fade show active" id="home" role="tabpanel" aria-labelledby="home-tab">
-            <%- controller.markdown.render(product.mddesc || '') %>
+          
             <% if (videoTarifs.length) {%>
           <div id="tarifVideos" class="d-flex flex-wrap justify-content-between align-items-center pt-1 border-bottom pb-1 mb-2">
                     <h3 class="h5 mb-0 mr-2">Et Yemek Tarifleri</h3>
@@ -674,7 +642,11 @@
                         <%})%>
                       </div>
                     <%}%>
+                    <%if (product.mddesc) { %>
+                      
+                    <%- controller.markdown.render(product.mddesc || '') %>
 
+                    <%}%>
           </div>
           <% if (view.butcher) { %>
             <div class="tab-pane fade" id="butcherproducts" role="tabpanel" aria-labelledby="butcherproducts-tab">

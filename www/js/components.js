@@ -338,6 +338,7 @@ window.initComponents = function initComponents() {
                 selectedUnit: null,
                 note: '',
                 newlyAddedItem: null
+               
             }
         },
         mounted: function () {
@@ -379,6 +380,16 @@ window.initComponents = function initComponents() {
 
             },
 
+            selectNewButcher(butcher) {
+                var self = this;
+                var urlParams = new URLSearchParams(window.location.search);
+                var returnUrl = '/' + self.product.slug + '?butcher=' + butcher;
+                self.selectedUnit && (returnUrl += '&selectedUnit=' + encodeURIComponent(self.selectedUnit.unit))
+                self.quantity && (returnUrl += '&quantity=' + encodeURIComponent(self.quantity))
+                self.note && (returnUrl += '&note=' + encodeURIComponent(self.note))
+                window.location.href = returnUrl + "#noteanchor";
+            },
+
             selectArea(returnUrl, msg) {
                 var self = this;
                 window.kb.selectArea(function (sender, ul) {
@@ -397,6 +408,10 @@ window.initComponents = function initComponents() {
                 }, {
                     msg: msg
                 });
+            },
+
+            asCurrency(n) {
+                return Number(n.toFixed(2));
             },
 
             showCalculator(unit) {
@@ -512,7 +527,12 @@ window.initComponents = function initComponents() {
             },
         },
         computed: {
-
+            price: function() {
+                if (this.selectedUnit && this.quantity) {
+                    var quantity = Number(this.quantity.toFixed(3)); 
+                    return this.asCurrency(this.selectedUnit.unitPrice * quantity);
+                } else return 0.00;
+            }
         }
     })
 

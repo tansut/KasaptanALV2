@@ -14,7 +14,7 @@ import ProductCategory from '../../db/models/productcategory';
 import Category from '../../db/models/category';
 import ButcherProduct from '../../db/models/butcherproduct';
 
-export default class Route extends ViewRouter {
+export default class Route  extends ViewRouter {
 
     butcher: ButcherModel;
     products: Product[];
