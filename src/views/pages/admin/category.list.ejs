@@ -30,8 +30,14 @@
                         </td>
                         <td><%= categories[i].type %></td>
                         <td><%= categories[i].slug %></td>
+                        <td>
+                            <%if (categories[i].type != 'resource') { %>
+                            <a href="<%= `/pages/admin/category/${categories[i].slug}/products` %>"
+                            >Ürünler</a>
+                                <%}%>
+                        </td>
                         <td><a href="<%= `/pages/admin/resource/category-photos/${categories[i].id}?fileprefix=${categories[i].slug}&title=${categories[i].name}` %>"
-                                target="_blank">Düzenle</a></td>
+                                >Resimler</a></td>
                     </tr>
 
 

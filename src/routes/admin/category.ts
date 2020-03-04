@@ -11,12 +11,13 @@ import { threadId } from 'worker_threads';
 import Helper from '../../lib/helper';
 import Category from '../../db/models/category';
 import ProductCategory from '../../db/models/productcategory';
+import ProductManager from '../../lib/productManager';
 
 export default class Route extends ViewRouter {
 
     product: ProductModel;
 
-    @Auth.Anonymous()
+    
     async listViewRoute() {
 
         let data = await Category.findAll({
@@ -26,10 +27,47 @@ export default class Route extends ViewRouter {
         this.res.render('pages/admin/category.list.ejs', this.viewData({ categories: data }))
     }
 
+    async saveProductViewRoute() {
+        let category = await Category.findOne({
+            where: {
+                slug: this.req.params.category
+            }
+        });
 
+        let products = await ProductManager.getProductsOfCategories([category.id]);
+        let product = products.find(p=>p.id == parseInt(this.req.body.productid));
+        let pcategory = product.categories.find(p=>p.categoryid == category.id);
+        if (this.req.body.op == 'update') {
+            pcategory.displayOrder = parseInt(this.req.body.displayorder);
+            await pcategory.save();
+        } else {
+            await pcategory.destroy();
+        }
+
+        products = await ProductManager.getProductsOfCategories([category.id]);
+
+        this.res.render('pages/admin/category.productlist.ejs', this.viewData({ category: category, products: products }))
+
+    }
+
+    
+    async productViewRoute() {
+
+        let category = await Category.findOne({
+            where: {
+                slug: this.req.params.category
+            }
+        })
+
+        let products = await ProductManager.getProductsOfCategories([category.id]);
+            
+        this.res.render('pages/admin/category.productlist.ejs', this.viewData({ category: category, products: products }))
+    }
 
     static SetRoutes(router: express.Router) {
         router.get("/category/list", Route.BindRequest(Route.prototype.listViewRoute));
+        router.get("/category/:category/products", Route.BindRequest(Route.prototype.productViewRoute));
+        router.post("/category/:category/products", Route.BindRequest(Route.prototype.saveProductViewRoute));
     }
 }
 

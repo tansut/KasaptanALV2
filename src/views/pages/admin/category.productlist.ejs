@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="tr-TR" prefix="og: http://ogp.me/ns#">
+
+<head>
+    <% include ./_partial/head %>
+
+</head>
+
+<body>
+    <% include ./_partial/header %>
+    <!-- Page Content -->
+    <div class="container">
+        <h1>Ürünler: <%=category.name%></h4>
+            
+
+            <table class="table table-hover">
+                <thead>
+                    <tr>
+                        <th>Ürün</th>
+                        <th>Sıra</th>
+                        <th></th>
+                        <th></th>
+                    </tr>
+                </thead>
+                <tbody>
+                 
+                    <% products.forEach(p=> { %>
+                        <%
+                        var pcategory = p.categories.find(p=>p.categoryid == category.id);
+                        %>
+
+                        <tr>
+                            <td>
+                                <form method="POST">
+                                    <div class="row">
+                                            <div class="col-sm-6">
+                                                <%=p.name%>
+                                            </div>
+                                            <div class="col-sm-2">
+                                                <input type="hidden" name="productid" value="<%= p.id %>">
+                                                <input type="text" class="form-control" value="<%= pcategory.displayOrder %>"
+                                                    name="displayorder">
+                                            </div>
+                                            <div class="col">
+                                                <button type="submit" name="op" value="update"
+                                                class="btn btn-primary">Kaydet</button>
+                                            </div>
+                                            <div class="col">
+                                                <button type="submit" name="op" value="remove"
+                                                class="btn btn-dark">Çıkar</button>
+                                            </div>
+
+                                    </div>
+
+                            </form>
+                            </td>
+                       
+                        </tr>
+                    <% }) %>
+
+                </tbody>
+            </table>
+
+
+    </div>
+    <div class="container">
+        <div id="main">
+
+
+
+
+
+
+
+
+
+
+
+
+        </div>
+    </div>
+
+
+    <% include ./_partial/scripts %>
+    <script>
+
+
+        window.App.Ready.then(function () {
+
+            //window.App.Render("PlaceList", null, document.getElementById('main'))
+        })
+    </script>
+</body>
+
+</html>
