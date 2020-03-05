@@ -61,5 +61,6 @@ export default class Route extends ViewRouter {
         router.get("/reset-password", Route.BindRequest(Route.prototype.viewRoute));
         router.post("/reset-password", Route.BindRequest(Route.prototype.resetRoute));
         router.get('/login', Route.BindToView("pages/login.ejs"))
+        router.get('/signup', Route.BindToView("pages/signup.ejs"))
     }
 }
