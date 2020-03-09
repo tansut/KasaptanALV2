@@ -130,7 +130,8 @@ export default class Helper {
     static normalizePhoto(url: string, thumbnail?: string) {
         return Jimp.read(path.resolve(url))
             .then(image => {
-                let _img = image.resize(900, Jimp.AUTO)
+                let _img = image.resize(900, Jimp.AUTO);
+                
                 return new Promise((resolve, reject) => {
                     _img.write(path.resolve(url), (err) => {
                         if (thumbnail) {

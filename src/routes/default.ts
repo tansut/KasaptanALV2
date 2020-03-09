@@ -46,7 +46,7 @@ export default class Route extends ViewRouter {
 
     @Auth.Anonymous()
     async kasapViewRoute() {
-        this.foods = await new ProductsApi(this.constructorParams).getFoodResources(null, 15);
+        this.foods = await new ProductsApi(this.constructorParams).getFoodResources(null, 10);
         this.sendView("pages/content.kasap-basvuru.ejs", this.viewData({
 
         }))
@@ -59,7 +59,7 @@ export default class Route extends ViewRouter {
         if (!recentButchers) {
             recentButchers = await ButcherModel.findAll({
                 order: [["updatedon", "DESC"]],
-                limit: 15,
+                limit: 10,
                 include: [
                     { all: true }
                 ],
@@ -79,7 +79,7 @@ export default class Route extends ViewRouter {
 
                 }, { [Op.like]: '%tarif%' }]
             }
-        }, null, 15);
+        }, null, 10);
         //this.foodsTitle = 'Yemekler ve Tarifler'
 
         //this.foods = CacheManager.dataCache.get("recent-foods");
