@@ -94,8 +94,8 @@
                                         class="col-lg-5 col-md-6 offset-lg-1 order-md-1 pt-4 pb-md-4 text-center text-md-left">
                                         <span class="h2 d-block font-weight-light pb-1 scale-up">kırmızı et ile ilgili</span>
                                         <span class="h1 d-block display-4 scale-up delay-1 ">kısa ve öz içerikler</span>
-                                        <span class="h5 d-block font-weight-light pb-3 scale-up delay-2">&amp; dahası et kültür
-                                            magazinde.</span>
+                                        <span class="h5 d-block font-weight-light pb-3 scale-up delay-2">&amp; dahası Et Kültür
+                                            Blog'da.</span>
 
                                         <a class="btn btn-primary btn-shadow scale-up delay-4" href="/blog">Göz
                                             at<i class="czi-arrow-right ml-2 mr-n1"></i></a>
@@ -123,7 +123,7 @@
 
 
 
-    <!-- <section class="container">
+     <section class="container">
 
         <div class="row">
 
@@ -135,8 +135,11 @@
                 <div class="py-4 my-2 my-md-0 py-md-5 px-4 ml-md-3 text-center text-sm-left">
                     <h4 class="h6 font-size-lg font-weight-light mb-2">Hangi yemeğe hangi et, ne kadar et ?</h4>
                     <h3 class="mb-4 h5">Eti Bizden Seçeneğini Keşfedin</h3>
-
-                    <a href="/et-yemekleri" class="btn btn btn-primary ">Et Yemekleri</a>
+                 
+                    <div class="">
+                        <a href="javascript: window.App.openDefaultSlider() " class=" btn btn btn-primary "><i class="czi-video mr-2"> </i>Galeriyi Aç</a>
+                    </div>
+       
                 
                 </div>
             </div>
@@ -146,10 +149,10 @@
 
 
         </div>
-    </section> -->
+    </section> 
 
     <div class="container mb-3">
-        <%- include('./_partial/foods-slider.ejs', {mode: 'food', allUrl:'/et-yemekleri', showDesc: true, title: 'Güncel Yemekler', text: '', foods: controller.foods}); %>
+        <%- include('./_partial/foods-slider.ejs', {mode: 'food', allUrl:'/et-yemekleri', showDesc: true, title: 'Yemek Önerilerimiz', text: '', foods: controller.foods}); %>
     </div>
 
     <section class="container">

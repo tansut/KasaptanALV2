@@ -43,6 +43,11 @@ export class App extends AppBase {
         //history.replaceState(null,null,url);   //Don't like hashes. Changing it back.
     }
 
+    static openDefaultSlider() {
+        window.location.hash = "lg=1&slide=" + 0;
+        window['lgData'].lg0.init()
+    }
+
     static openSlider(i) {
         var node = $('a[data-resid=' + i + ']')[0];
         window['lgData'].lg0.items.forEach(function (item, i) {

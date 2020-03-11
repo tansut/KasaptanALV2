@@ -116,6 +116,18 @@ img{
   touch-action: manipulation;
 }
 
+.bootstrap-autocomplete, .searchBox {
+  border-radius: 0px !important;
+}
+
+.bootstrap-autocomplete {
+  max-height: 12rem;
+    overflow-y: scroll;
+  .dropdown-item:hover {
+    background-color: $secondary;
+  }
+}
+
 .md-content {
 
   h1,h2,h3,h4,h5,h6 {
