@@ -120,12 +120,39 @@
         <%- include('./_partial/category-products-slider', {category: 'populer-etler', reverse: true, img: 'img/category/premium.jpg'}); %>
     </div>
 
+
+
+
+    <!-- <section class="container">
+
+        <div class="row">
+
+
+
+            <div class="col-md-12 mb-3">
+                <div class="d-flex flex-column h-100 justify-content-center bg-size-cover bg-position-center rounded-lg"
+                style="background-image: url(/static/img/banner-bg.jpg);">
+                <div class="py-4 my-2 my-md-0 py-md-5 px-4 ml-md-3 text-center text-sm-left">
+                    <h4 class="h6 font-size-lg font-weight-light mb-2">Hangi yemeğe hangi et, ne kadar et ?</h4>
+                    <h3 class="mb-4 h5">Eti Bizden Seçeneğini Keşfedin</h3>
+
+                    <a href="/et-yemekleri" class="btn btn btn-primary ">Et Yemekleri</a>
+                
+                </div>
+            </div>
+            </div>
+
+        
+
+
+        </div>
+    </section> -->
+
     <div class="container mb-3">
-        <%- include('./_partial/foods-slider.ejs', {mode: 'food', allUrl:'/et-yemekleri', showDesc: true, title: controller.foodsTitle, text: '', foods: controller.foods}); %>
+        <%- include('./_partial/foods-slider.ejs', {mode: 'food', allUrl:'/et-yemekleri', showDesc: true, title: 'Güncel Yemekler', text: '', foods: controller.foods}); %>
     </div>
 
-
-       <section class="container">
+    <section class="container">
 
         <div class="row">
 
@@ -133,11 +160,10 @@
                 <div class="d-flex flex-column h-100 justify-content-center bg-size-cover bg-position-center rounded-lg"
                     style="background-image: url(/static/img/banner-bg.jpg);">
                     <div class="py-4 my-2 my-md-0 py-md-5 px-4 ml-md-3 text-center text-sm-left">
-                        <h4 class="h6 font-size-lg font-weight-light mb-2">Ücretsiz iyi et rehberini indirin</h4>
-                        <h3 class="h5 mb-4">Bir tıkla e-posta
-                            adresinizde.</h3>
+                        <h4 class="h6 font-size-lg font-weight-light mb-2">İyi et rehberini indirin.</h4>
+                        <h3 class="h5 mb-4">Tamamen Ücretsiz</h3>
 
-                        <a href="#" class="btn btn btn-primary get-userguide-action">İyi Et Rehberi</a>
+                        <a href="#rehber" class="btn btn btn-primary get-userguide-action">İyi Et Rehberi</a>
                     </div>
                 </div>
             </div>
@@ -145,18 +171,18 @@
 
             <div class="col-md-6 mb-3">
                 <div class="d-flex flex-column h-100 justify-content-center bg-size-cover bg-position-center rounded-lg"
-                    style="background-image: url(/static/img/banner-bg.jpg);">
-                    <div class="py-4 my-2 my-md-0 py-md-5 px-4 ml-md-3 text-center text-sm-left">
-                        <h4 class="h6 font-size-lg font-weight-light mb-2">Şehrinizdeki en seçkin kasapları keşfedin.</h4>
-                        <h3 class="mb-4 h5">Yeni kasaplar keşfedin.</h3>
-                        <% if ( typeof controller.req.session.areal1 != 'undefined') { %>
-                        <a href="<%= `/${controller.req.session.areal1.slug}` %>" class="btn btn btn-primary">Şehrinizdeki
-                            Kasaplar</a>
-                        <% } else { %>
-                        <a href="#" class="btn btn btn-primary explore-area-action">Semtinizi Seçin</a>
-                        <% } %>
-                    </div>
+                style="background-image: url(/static/img/banner-bg.jpg);">
+                <div class="py-4 my-2 my-md-0 py-md-5 px-4 ml-md-3 text-center text-sm-left">
+                    <h4 class="h6 font-size-lg font-weight-light mb-2">Tüm ürünlerimizi keşfedin.</h4>
+                    <h3 class="mb-4 h5">En Seçkin Kasaplardan Kapınızda</h3>
+                
+                  
+                    <a href="/kasap-urunleri" class="btn btn btn-primary explore-area-action">Ürünlerimiz</a>
+                   
                 </div>
+            </div>
+
+            
             </div>
 
         
@@ -167,21 +193,6 @@
 
 
 
-
-
-    <div class="container mb-3">
-
-        <%- include('./_partial/category-slider', { viewCats: ['reyon', 'list'], title: 'Ürün Kategorileri', allUrl: '/kasap-urunleri' }); %>
-
-
-
-
-    </div>
-
-    <div class="container mb-3">
-        <%- include('./_partial/category-slider', { viewCats: ['resource'], title: 'Yemek Kategorileri', allUrl: '/et-yemekleri' }); %>
-
-    </div>
 
     <!-- Butchers -->
 
@@ -258,7 +269,7 @@
             <div class="bg-secondary mb-2 p-2 d-flex flex-nowrap justify-content-between align-items-center">
                 <a class="media align-items-center align-self-center" href="/blog">
                     <div class="media-body pl-2">
-                        <h3 class="h6 mb-0 mr-2">Et Kültürü</h3>
+                        <h3 class="h6 mb-0 mr-2">Et Kültür Blog</h3>
                         <span class="font-size-ms text-muted"></span>
                     </div>
                 </a>
@@ -325,7 +336,7 @@
             <div class="col-md-6"><a class="card border-0 rounded-0 text-decoration-none py-md-4 bg-faded-primary"
                     href="/blog">
                     <div class="card-body text-center"><i class="czi-edit h3 mt-2 mb-4 text-primary"></i>
-                        <h3 class="h5 mb-1">Et Kültürü</h3>
+                        <h3 class="h5 mb-1">Et Kültür Blog</h3>
                         <p class="text-muted font-size-sm">Kırmızı et hakkında kısa ve öz içeriklere ulaşın.</p>
                     </div>
                 </a></div>

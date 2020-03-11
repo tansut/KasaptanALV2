@@ -22,14 +22,14 @@
         <nav aria-label="breadcrumb">
           <ol class="breadcrumb breadcrumb-light flex-lg-nowrap justify-content-center justify-content-lg-star">
             <li class="breadcrumb-item"><a class="text-nowrap" href="/"><i class="czi-home"></i></a></li>
-            <li class="breadcrumb-item text-nowrap active" aria-current="page">Yemekler
+            <li class="breadcrumb-item text-nowrap active" aria-current="page">Et Yemekleri
             </li>
           </ol>
         </nav>
       </div>
       <div class="order-lg-1 pr-lg-4 text-center text-lg-left">
         <h1 class="h3 text-light">
-          <%='Yemekler'%> </h1>
+          <%='Et Yemekleri'%> </h1>
         <h2 class="lead text-light h4">
 
           <span class="badge badge-light mr-1 "><i class=" czi-thumb-up mr-1">
@@ -73,7 +73,7 @@
           <% var foods = controller.getFoods(cat) %>
           <% if (foods.length) { %>
           <div class="px-3 pt-3 dborder-bottom">
-            <%- include('./_partial/foods-slider.ejs', {title: cat.name, desc: cat.shortdesc ? cat.shortdesc: undefined, text: '', iconUrl: `${__req.helper.imgUrl('category-photos', cat.slug)}`,
+            <%- include('./_partial/foods-slider.ejs', {title: cat.name, desc: undefined, text: '', iconUrl: `${__req.helper.imgUrl('category-photos', cat.slug)}`,
             allUrl: '/et-yemekleri/' + cat.slug, foods: foods}); %>
 
           </div>

@@ -17,7 +17,7 @@
 
             <li class="breadcrumb-item"><a class="text-nowrap" href="/"><i class="czi-home"></i></a></li>
 
-            <li class="breadcrumb-item text-nowrap"><a href="/blog">Et Kültürü</a>
+            <li class="breadcrumb-item text-nowrap"><a href="/blog">Et Kültür Blog</a>
             </li>
             <li class="breadcrumb-item text-nowrap" aria-current="page">
               <a href="/blog/<%=controller.content.categorySlug%>"> <%= controller.content.category %></a>
@@ -66,7 +66,7 @@
 
         <div class="container mb-3">
 
-          <%- include('./_partial/category-slider', { viewCats: ['reyon', 'list'], title: 'Lezzetler', allUrl: '/kasap-urunleri' }); %>
+          <%- include('./_partial/category-slider', { viewCats: ['reyon', 'list'], title: 'Ürünler', allUrl: '/kasap-urunleri' }); %>
   
   
   
@@ -74,7 +74,7 @@
       </div>
 
       <div class="container mb-3">
-        <%- include('./_partial/category-slider', { viewCats: ['resource'], title: 'Yemekler', allUrl: '/et-yemekleri' }); %>
+        <%- include('./_partial/category-slider', { viewCats: ['resource'], title: 'Et Yemekleri', allUrl: '/et-yemekleri' }); %>
 
     </div>
 

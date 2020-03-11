@@ -18,20 +18,20 @@
 
             <% if(controller.req.params.category){ %>
 
-            <li class="breadcrumb-item text-nowrap"><a href="/blog">Et Kültürü</a>
+            <li class="breadcrumb-item text-nowrap"><a href="/blog">Et Kültür Blog</a>
             </li>
             <li class="breadcrumb-item text-nowrap">
               <%= controller.allcontent.length > 0 ? controller.allcontent[0].category: "" %></li>
             <% } else { %>
 
-            <li class="breadcrumb-item active" aria-current="page">Et Kültürü</li>
+            <li class="breadcrumb-item active" aria-current="page"> Blog</li>
             <% } %>
 
           </ol>
         </nav>
       </div>
       <div class="order-lg-1 pr-lg-4 text-center text-lg-left">
-        <h1 class="h3">Et Kültürü</h1>
+        <h1 class="h3">Et Kültür Blog</h1>
         <h2 class="lead h4">
           Kırmızı et ile ilgili kısa ve öz
           içerikler

@@ -21,12 +21,22 @@
     </div>
 
     <% var products = controller.filterProductsByCategory(cat) %>
-    <!-- Product grid (carousel)-->
+
     <div class=" <%= reverse ? 'order-2 order-md-1':'' %> ">
 
         <%- include('./products-view', {viewId: "", viewMode:'tab', products: products}); %>
 
     </div>
 
+
+
+    <div class="d-xs-block d-md-none text-center mb-3">
+        <a class="btn btn-sm btn-secondary" href="/<%=cat.slug%>">Tümü
+
+            <i
+                class="czi-arrow-right font-size-xs align-middle ml-1"></i>
+        </a>
+
+    </div>
 
 </div>
