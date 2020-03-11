@@ -53,18 +53,12 @@
         <div class="col-md-3 col-6 ">
           <%- include('./_partial/product-view.ejs', {product: controller.products[j]}) %>
         </div>
-        <% if (!foodsInserted && (controller.foods.length) && (j == 11)) { foodsInserted = true; %>
-        <div class="mb-3  col-12">
-          <%- include('./_partial/foods-slider.ejs', foodCategoryParams) %>
-
-        </div>
-        <% } %>
         <% } %>
       </div>
 
       <div>
 
-        <% if (!foodsInserted && controller.foods.length > 0) { %>
+        <% if (controller.foods.length > 0) { %>
         <div class="mb-3 ">
           <%- include('./_partial/foods-slider.ejs', foodCategoryParams) %>
 

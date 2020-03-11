@@ -149,7 +149,7 @@ export default class SiteMapManager {
                     return {
                         url: r.getFileUrl(),
                         title: r.title || item.name,
-                        caption: `${item.shortdesc} || ${item.name}`
+                        caption: `${item.shortdesc}` || `${item.name}`
                     }
                 })
             })    
