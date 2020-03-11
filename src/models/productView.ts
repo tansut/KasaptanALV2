@@ -13,7 +13,7 @@ export interface PurchaseOption {
     default: number;
     perPerson: number;
     step: number;
-    weigthNote: string
+    weigthNote: string;
 }
 
 export interface ProductButcherView {

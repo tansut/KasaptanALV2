@@ -471,6 +471,12 @@
                                 
     
                               </div>
+
+                             <div class="text-center" v-if="selectedUnit && selectedUnit.unitWeight">
+                              <span class="d-block text-muted font-size-xs">1 {{selectedUnit.unit}} {{selectedUnit.unitWeight}}</span>
+
+                             </div>
+                    
                              
 
                             <amount-input :def="quantity || selectedUnit.default" :min="selectedUnit.min"
@@ -479,19 +485,15 @@
                        
                           </amount-input>
                           <%if (view.butcher) { %>
-<div class="text-center"> 
-   <!-- <span class="text-muted d-block">
-    Toplam Bedel
-  </span>  -->
-   <span  v-if="selectedUnit" class="d-block text-center text-accent font-size-sm"> 
-    {{  formatCurrency(price).val}}.<small>{{formatCurrency(price).krs}}</small> TL </span>
-</div> 
+
 
 
                 <%}%>            </div>
+           
+
                           <div class="  d-flex align-items-center justify-content-center">
 <p> <a @click="showCalculator(selectedUnit)"
-  class="text-accent font-weight-medium " href="#size-chart"><i class="czi-calculator mr-1"></i>Miktar Hesaplama Aracı</a> doğru miktarda almanıza yardımcı olabilir. </p>
+  class="text-accent font-weight-medium " href="#size-chart"><i class="czi-calculator mr-1"></i>Miktar Hesaplama Aracı</a> ihtiyacınız kadar almanıza yardımcı olabilir. </p>
                         
                           
                           </div>
@@ -610,9 +612,16 @@
                       <%} %>
 
 
-
+                  
                        
                           <% if (view.butcher && __req.prefAddr) { %>
+                            <div v-if="selectedUnit" class="mb-3 p-2 d-flex justify-content-end border bg-secondary"> 
+                              <span class="text-muted d-block mr-2">
+                              Ürün Bedeli: 
+                            </span>  
+                             <span class="d-block text-center text-accent"> 
+                              {{  formatCurrency(price).val}}.<small>{{formatCurrency(price).krs}}</small> TL </span>
+                          </div>                             
                             <button data-tag="true" data-category="shopcard/add" data-action="<%=view.butcher.slug%>" data-label="<%=product.slug%>" id="addtoscbtn" class="btn btn-accent btn-block" type="submit"><i
                               class="czi-cart font-size-lg mr-2"></i>Sepete Ekle</button>
                           
