@@ -101,9 +101,16 @@
           class="navbar-brand d-lg-none mr-2" href="<%=homeUrl%>" style="min-width: 2.125rem;"><img style="width: 8rem;"
             src="/static/img/logo-nav.png" title="KasaptanAl.com" alt="kasaptanal.com" /></a>
         <div class="input-group-overlay d-none d-lg-flex mx-4">
-          <input class="form-control appended-form-control searchBox" data-noresults-text="Maalesef bulamadık."
+          <div class="input-group-prepend-overlay">
+            
+            <span class="input-group-text">
+              <i class="notsearching czi-search"></i>
+              <span class="searching d-none spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
+            </span>
+          </div>
+          <input class="form-control searchBox prepended-form-control" data-noresults-text="Maalesef bulamadık."
             autocomplete="off" type="text" placeholder="yemek, tarif, kasap, et">
-          <div class="input-group-append-overlay"><span class="input-group-text"><i class="czi-search"></i></span></div>
+         
         </div>
         <div class="navbar-toolbar d-flex flex-shrink-0 align-items-center">
 
@@ -135,7 +142,12 @@
     <div class="navbar navbar-expand-lg navbar-dark navbar-stuck-menu mt-n2 pt-0 pb-2">
       <div class="container">
         <div class="input-group-overlay d-lg-none my-3">
-          <div class="input-group-prepend-overlay"><span class="input-group-text"><i class="czi-search"></i></span>
+          <div class="input-group-prepend-overlay">
+            
+            <span class="input-group-text">
+              <i class="notsearching czi-search"></i>
+              <span class="searching d-none spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
+            </span>
           </div>
           <input class="form-control searchBox prepended-form-control" data-noresults-text="Maalesef bulamadık."
             autocomplete="off" type="text" placeholder="yemek, tarif, kasap, et">

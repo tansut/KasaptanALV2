@@ -16,14 +16,18 @@ src="<%= `${butcherVideo.thumbnailFileUrl}` %>" alt="<%= `${view.butcher.name}` 
 class="gallery-item-caption"><%= butcherVideo.title %></span></a>
 <a class="media align-items-center" href="/<%=view.butcher.slug%>">
 <%} else { %>
-  <a class="pl-2 media align-items-center" href="/<%=view.butcher.slug%>">
+  <a class="pl-2 media align-items-center" target="_blank" href="/<%=view.butcher.slug%>">
     
     <img class="rounded-circle header-img"
     src="<%= `${__req.helper.imgUrl('butcher-google-photos', view.butcher.slug)}` %>" alt="<%=view.butcher.name%>">
  <% } %>
       <div class="media-body  p-2">
         <h6 class="h5 mb-0 mr-2"><%= view.butcher.name %></h6>
-        <span class="font-size-ms text-muted">sağlamaktadır.</span>
+        <!-- <span class="d-block font-size-ms text-muted">sağlamaktadır. </span> -->
+        <span class="font-size-ms text-muted">
+          {{  formatCurrency(selectedUnit.unitPrice).val}}.<small>{{formatCurrency(selectedUnit.unitPrice).krs}}</small> TL/{{selectedUnit.unitTitle}} 
+
+        </span>
 
    
       </div></a>
@@ -51,8 +55,8 @@ class="gallery-item-caption"><%= butcherVideo.title %></span></a>
   <%if (otherButcherAlternatives) {%>
     <div class="d-flex px-3 align-items-center justify-content-between mt-2 ">
 
-        <p  class="mb-1 text-dark font-size-sm ">
-            <!-- {{  formatCurrency(selectedUnit.unitPrice).val}}.<small>{{formatCurrency(selectedUnit.unitPrice).krs}}</small> TL/{{selectedUnit.unitTitle}} -->
+        <p  class="mb-1 text-dark font-weight-medium font-size-sm ">
+             <!-- {{  formatCurrency(selectedUnit.unitPrice).val}}.<small>{{formatCurrency(selectedUnit.unitPrice).krs}}</small> TL/{{selectedUnit.unitTitle}}  -->
             
         
          

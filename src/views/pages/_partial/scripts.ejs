@@ -34,13 +34,53 @@
     }
   })
 
+  $(document).ajaxStart(function(){
+  // Show image container
+  $("#loader").show();
+});
+$(document).ajaxComplete(function(){
+  // Hide image container
+  $("#loader").hide();
+});
+
   $('.searchBox').autoComplete({
+    resolver: 'custom',
+
+    formatResult: function (item) {
+						return {
+							value: item.id,
+							text:  item.text,
+							html: [ 
+									$('<img>').attr('src', item.thumb).css("height", 48), ' ',
+									item.text 
+								] 
+						};
+          },
+          
     resolverSettings: {
-      url: '/api/v1/fts'
+      url: '/api/v1/fts',
+      requestThrottling: 1000
     },
     events: {
+
+      search: function (qry, callback) {
+              // let's do a custom ajax call
+              $('.notsearching').addClass('d-none');
+              $('.searching').removeClass('d-none');
+							$.ajax(
+								'/api/v1/fts',
+								{
+									data: { 'q': qry}
+								}
+							).done(function (res) {
+                $('.searching').addClass('d-none');
+              $('.notsearching').removeClass('d-none');
+                callback(res);
+                
+							});
+            },
+            
       searchPost: function (res, el) {
-        debugger;
         window.__searchResult = res;
         window.dataLayer = window.dataLayer || [];
                     window.dataLayer.push({
@@ -53,7 +93,8 @@
         return res.map(function (p) {
           return {
             id: p.id,
-            text: p.name
+            text: p.name,
+            thumb: p.thumb
           }
         })
         // return window.__searchResult;

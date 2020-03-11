@@ -17,12 +17,17 @@
                 Adrese Teslim</a>
             </li>
             <% } %>
+            <% if (butchersTakeaway.length > 0) { %>
+
+            
             <li class="nav-item">
               <a class="nav-link <%= butchersServing.length == 0 ? 'active':''%>" id="takeaway-tab" data-toggle="tab" href="#takeaway" role="tab"
                  aria-selected="true">
 
                 Gel-Al</a>
             </li>
+            <% } %>
+
           </ul>
           <div class="tab-content p-0 m-0 " id="butchers-serving-tabContent">
             <% if (butchersServing.length > 0) { %>
@@ -38,6 +43,7 @@
               <% }) %>
             </div>
             <% } %>
+            <% if (butchersTakeaway.length > 0) { %>
             
             <div class="tab-pane fade <%= butchersServing.length == 0 ? 'show active':''%>" id="takeaway" role="tabpanel">
               <% butchersTakeaway.forEach(b=> { %>
@@ -50,6 +56,8 @@
                   </a></div> 
               <% }) %>
             </div>
+            <% } %>
+
           </div>
      
 

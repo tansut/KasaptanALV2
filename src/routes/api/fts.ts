@@ -4,6 +4,7 @@ import * as express from "express";
 import * as sq from 'sequelize';
 import User from '../../db/models/user';
 import Product from '../../db/models/product';
+import Resource from '../../db/models/resource';
 
 export class SearchResult {
     type: string;
@@ -46,7 +47,8 @@ export default class Route extends ApiRouter {
                 id: 'p' + i,
                 name: px.name,
                 url: '/' + px.url,
-                type: px.type
+                type: px.type,
+                thumb: this.req.helper.imgUrl('product-photos', px.url)
             }
         })
 
@@ -65,17 +67,18 @@ export default class Route extends ApiRouter {
                 id: 'b' + i,
                 name: px.name,
                 url: '/' + px.url,
-                type: px.type
+                type: px.type,
+                thumb: this.req.helper.imgUrl('butcher-google-photos', px.url)
             }
         })
 
-        let foodResources = await User.sequelize.query("select id, title, ref1, slug, match(title, description, mddesc) against (:search IN BOOLEAN MODE) as RELEVANCE " +
+        let foodResources = await Resource.sequelize.query("select id, title, ref1, slug, contentType, thumbnailUrl, folder,  match(title, description, mddesc) against (:search IN BOOLEAN MODE) as RELEVANCE " +
             "from Resources where (tag1 like '%tarif%' or tag1 like '%yemek%') and match(title, description, mddesc)  against (:search IN BOOLEAN MODE) ORDER BY  RELEVANCE DESC LIMIT 10",
             {
                 replacements: { search: search },
+                model: Resource,
                 type: sq.QueryTypes.SELECT,
-                mapToModel: false,
-                raw: true
+                mapToModel: true
             }
 
         );
@@ -102,7 +105,9 @@ export default class Route extends ApiRouter {
                 id: 'f' + i,
                 name: px.title,
                 url: px.slug ? ('/et-yemekleri/' + px.slug): '/' + foodProds.find(fp=>fp.id == px.ref1).slug + '?r=' + px.id,
-                type: 'food'
+                type: 'food',
+                thumb : px.contentType == 'video-youtube' ? (px.thumbnailUrl ? px.getThumbnailFileUrl(): null): px.getThumbnailFileUrl()
+
             }
         })        
 
