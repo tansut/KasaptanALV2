@@ -653,12 +653,7 @@
                     </li> -->
 
 
-          <% if (view.butcher) {%>
-            <li class="nav-item">
-              <a class="nav-link" id="butcherproductstab" data-toggle="tab" href="#butcherproducts" role="tab" 
-                aria-selected="false">Kasaptan</a>
-            </li>
-          <%}%>
+
 
           <% if (otherButcherAlternatives > 0) { %>
           <!-- <li class="nav-item">
@@ -744,20 +739,7 @@
                     <%}%>
                  
           </div>
-          <% if (view.butcher) { %>
-            <div class="tab-pane fade" id="butcherproducts" role="tabpanel" aria-labelledby="butcherproducts-tab">
-              <div>
-                <p class="font-size-sm">                  <%=view.butcher.name%> ayrıca aşağıdaki lezzetleri sunmakta.
 
-                </p>
-              </div>
-              <%- include('./_partial/products-view', {butcher: view.butcher.slug,  viewMode:'tab', products: butcherProducts}); %>
-              <div>
-                <a class="font-size-sm" href="/<%=view.butcher.slug%>">Tüm Ürünler<i
-                  class="czi-arrow-right ml-1"></i></a>
-              </div>
-            </div>  
-          <%}%>
 
                            
 
