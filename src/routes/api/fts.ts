@@ -5,6 +5,7 @@ import * as sq from 'sequelize';
 import User from '../../db/models/user';
 import Product from '../../db/models/product';
 import Resource from '../../db/models/resource';
+import * as _ from "lodash"
 
 export class SearchResult {
     type: string;
@@ -16,24 +17,16 @@ export default class Route extends ApiRouter {
     @Auth.Anonymous()
     async searchRoute() {
 
-        // let user = new User({
-            
-        // });
-
-        // user.mphone = '5326274151';
-        // user.name = 'xxx';
-        // user.password = 'uu';
-        // user.email = 'esdfasf';
-
-        // await user.save();
 
         if (!this.req.query.q || this.req.query.length < 2)
             return this.res.send([])
 
-        let search = '+' + (<string>this.req.query.q).replace(' ', '+') + "*";
+        let text =  <string>this.req.query.q;
+        let words = text.match(/\S+/g).map(w=> `+${w}*`)
+        let search = words.join()
 
-        let prods = await User.sequelize.query("select name, slug as url, 'product' as type, match(name, shortdesc, mddesc) against (:search IN BOOLEAN MODE) as RELEVANCE " +
-            "from Products where match(name, shortdesc, mddesc)  against (:search IN BOOLEAN MODE) ORDER BY  RELEVANCE, DISPLAYORDER DESC LIMIT 10",
+        let prods = await User.sequelize.query("select name, slug as url, '' as type, match(name, shortdesc, slug) against (:search IN BOOLEAN MODE) as RELEVANCE " +
+            "from Products where match(name, shortdesc, slug)  against (:search IN BOOLEAN MODE) ORDER BY RELEVANCE DESC LIMIT 10",
             {
                 replacements: { search: search },
                 type: sq.QueryTypes.SELECT,
@@ -48,12 +41,34 @@ export default class Route extends ApiRouter {
                 name: px.name,
                 url: '/' + px.url,
                 type: px.type,
+                score: px.RELEVANCE,
                 thumb: this.req.helper.imgUrl('product-photos', px.url)
             }
         })
 
-        let butchers = await User.sequelize.query("select name, slug as url, 'butcher' as type, match(name, description, mddesc) against (:search IN BOOLEAN MODE) as RELEVANCE " +
-            "from Butchers where approved=true and match(name, description, mddesc)  against (:search IN BOOLEAN MODE) ORDER BY  RELEVANCE DESC LIMIT 10",
+        let cats = await User.sequelize.query("select name, slug as url, 'Kategoriler' as type, match(name, shortdesc, slug) against (:search IN BOOLEAN MODE) as RELEVANCE " +
+            "from Categories where match(name, shortdesc, slug)  against (:search IN BOOLEAN MODE) ORDER BY RELEVANCE DESC LIMIT 10",
+            {
+                replacements: { search: search },
+                type: sq.QueryTypes.SELECT,
+                mapToModel: false,
+                raw: true
+            },
+
+        ).map((p, i) => {
+            let px = <any>p;
+            return {
+                id: 'c' + i,
+                name: px.name,
+                url: '/' + px.url,
+                type: px.type,
+                score: px.RELEVANCE,
+                thumb: this.req.helper.imgUrl('category-photos', px.url)
+            }
+        })        
+
+        let butchers = await User.sequelize.query("select name, slug as url, 'Kasaplar' as type, match(name, description, slug) against (:search IN BOOLEAN MODE) as RELEVANCE " +
+            "from Butchers where approved=true and match(name, description, slug)  against (:search IN BOOLEAN MODE) ORDER BY RELEVANCE DESC LIMIT 10",
             {
                 replacements: { search: search },
                 type: sq.QueryTypes.SELECT,
@@ -68,12 +83,13 @@ export default class Route extends ApiRouter {
                 name: px.name,
                 url: '/' + px.url,
                 type: px.type,
+                score: px.RELEVANCE,
                 thumb: this.req.helper.imgUrl('butcher-google-photos', px.url)
             }
         })
 
-        let foodResources = await Resource.sequelize.query("select id, title, ref1, slug, contentType, thumbnailUrl, folder,  match(title, description, mddesc) against (:search IN BOOLEAN MODE) as RELEVANCE " +
-            "from Resources where (tag1 like '%tarif%' or tag1 like '%yemek%') and match(title, description, mddesc)  against (:search IN BOOLEAN MODE) ORDER BY  RELEVANCE DESC LIMIT 10",
+        let foodResources = await Resource.sequelize.query("select id, title, ref1, slug, contentType, thumbnailUrl, folder,  match(title, description, slug) against (:search IN BOOLEAN MODE) as RELEVANCE " +
+            "from Resources where (tag1 like '%tarif%' or tag1 like '%yemek%') and match(title, description, slug)  against (:search IN BOOLEAN MODE) ORDER BY  RELEVANCE DESC LIMIT 10",
             {
                 replacements: { search: search },
                 model: Resource,
@@ -89,29 +105,24 @@ export default class Route extends ApiRouter {
              }
          })
         
-        // let foods = foodResources.map((p, i) => {
-        //     let px = <any>p;
-        //     return {
-        //         id: 'f' + i,
-        //         name: px.title,
-        //         url: '/' + foodProds.find(fp=>fp.id == px.ref1).slug + '?r=' + px.id,
-        //         type: 'food'
-        //     }
-        // })
 
         let foods = foodResources.map((p, i) => {
             let px = <any>p;
             return {
                 id: 'f' + i,
                 name: px.title,
+                score: px.RELEVANCE,
                 url: px.slug ? ('/et-yemekleri/' + px.slug): '/' + foodProds.find(fp=>fp.id == px.ref1).slug + '?r=' + px.id,
-                type: 'food',
+                type: 'Yemekler',
                 thumb : px.contentType == 'video-youtube' ? (px.thumbnailUrl ? px.getThumbnailFileUrl(): null): px.getThumbnailFileUrl()
 
             }
         })        
 
-        this.res.send(prods.concat(butchers.concat(foods)))
+        let combined = prods.concat(butchers.concat(foods.concat(cats)));
+        let sorted = _.sortBy(combined, 'RELEVANCE')
+
+        this.res.send(sorted)
     }
 
     static SetRoutes(router: express.Router) {

@@ -10,7 +10,7 @@ import { Op } from 'sequelize';
 @Table({
     tableName: "Butchers",
     indexes: [
-        { type: 'FULLTEXT', name: 'butcher_fts', fields: ['name', 'description', 'mddesc'] }]
+        { type: 'FULLTEXT', name: 'butcher_fts', fields: ['name', 'description', 'slug'] }]
 })
 class Butcher extends BaseModel<Butcher> {
 

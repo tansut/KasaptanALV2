@@ -46,7 +46,7 @@ import { ResourceView } from '../../models/productView';
         fields: ["type", "contentUrl"]
     },
     
-    { type: 'FULLTEXT', name: 'resource_fts', fields: ['title', 'description', 'mddesc'] }]
+    { type: 'FULLTEXT', name: 'resource_fts', fields: ['title', 'description', 'slug'] }]
 
 
 })

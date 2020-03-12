@@ -14,7 +14,7 @@ import { Op, QueryTypes } from 'sequelize';
         fields: ["slug"],
         unique: true
     },
-    { type: 'FULLTEXT', name: 'product_fts', fields: ['name', 'description', 'mddesc'] }]
+    { type: 'FULLTEXT', name: 'product_fts', fields: ['name', 'shortdesc', 'slug'] }]
 })
 
 class Product extends BaseModel<Product> {

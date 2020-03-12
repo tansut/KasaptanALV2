@@ -14,7 +14,7 @@
   
 <%}%> -->
 
-<div class="<%= typeof(noBorder) == 'undefined' ? 'border':'' %>">
+<div>
   <div class="bg-secondary p-2 d-flex flex-nowrap justify-content-between align-items-center">
       <a class="media align-items-center align-self-center" href="<%=targetUrl%>">
         <img class="rounded-circle header-img d-none d-md-block"   src="<%= typeof(iconUrl) == 'undefined' ? '/static/img/logo-home.jpg': iconUrl%>" alt="<%=title%>">
@@ -27,6 +27,33 @@
   </div>
 
 <% if(typeof (showDesc) != 'undefined') {  %>
+
+
+
+
+
+     
+            <div class="bg-size-cover bg-position-center"
+            style="background-image: url(/static/img/banner-bg.jpg);">
+            <div class=" px-3 py-3  text-center text-sm-left">
+                <h4 class="h6 font-size-lg font-weight-light mb-2">Hangi yemeğe hangi et, ne kadar et?</h4>
+                <h3 class="mb-4 h5">Eti Bizden Seçeneğini Keşfedin</h3>
+             
+               <div>
+                <a href="javascript: window.App.openDefaultSlider() " class="btn btn btn-primary btn-sm"><i class="czi-video mr-2"> </i>Galeriyi Aç</a>
+
+               </div>
+               
+   
+            
+            </div>
+        </div>
+      
+
+    
+
+
+
 
   <!-- <div class="text-center text-sm-left p-2">
       <h4 class="h6 font-weight-light font-size-lg mb-3">Hangi eti ne kadar almalıyım ?</h4>

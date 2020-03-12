@@ -11,7 +11,7 @@ import ButcherProduct from './butcherproduct';
         fields: ["slug"],
         unique: true
     },
-    { type: 'FULLTEXT', name: 'product_fts', fields: ['name', 'shortdesc', 'mddesc', 'slug'] }]
+    { type: 'FULLTEXT', name: 'category_fts', fields: ['name', 'shortdesc', 'slug'] }]
 })
 
 class Category extends BaseModel<Category> {

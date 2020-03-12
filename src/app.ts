@@ -92,8 +92,6 @@ class KasaptanAlApp {
         if (config.nodeenv === 'production') {
             this.app.set('trust proxy', 1) // trust first proxy
             sess.cookie.secure = true // serve secure cookies
-
-
         }
 
 
@@ -104,8 +102,8 @@ class KasaptanAlApp {
             if (proto && host == "kasaptanal.com")
                 return res.redirect(301, "https://www.kasaptanal.com" + req.originalUrl)
 
-            if (proto && proto != "https")
-                return res.redirect(301, "https://www.kasaptanal.com" + req.originalUrl)
+            // if (proto && proto != "https")
+            //     return res.redirect(301, "https://www.kasaptanal.com" + req.originalUrl)
 
             return next()
         })
