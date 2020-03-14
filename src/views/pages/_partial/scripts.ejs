@@ -53,7 +53,7 @@ $(document).ajaxComplete(function(){
 							html: [ 
 									$('<img>').attr('src', item.thumb).css("height", 48), ' ', 
                   item.text, 
-                  item.type ? $('<span>').text(' [' + item.type + ']').addClass('text-muted'):'' 
+                  item.type ? $('<span>').text(' /' + item.type + '').addClass('text-accent'):'' 
 								] 
 						};
           },
