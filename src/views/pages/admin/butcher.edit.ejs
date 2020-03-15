@@ -35,7 +35,7 @@
                     <a class="nav-link" data-toggle="tab" href="#menu3">Ürünler</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" data-toggle="tab" href="#menu4">Açıklama</a>
+                    <a class="nav-link" data-toggle="tab" href="#dispatch">Servis Alanları</a>
                 </li>
             </ul>
 
@@ -166,10 +166,6 @@
                     </form>
                 </div>
 
-                <div id="menu4" class="container-fluid tab-pane active"><br>
-
-                </div>
-
                 <div id="menu1" class="container-fluid tab-pane fade"><br>
                     <form name="saveimgform" method="POST">
                         <a href="<%= `/pages/admin/resource/butcher-google-photos/${butcher.id}?fileprefix=${butcher.slug}&title=${butcher.name}&videotype=butcher-videos` %>"
@@ -290,6 +286,105 @@
              
                     </div>
                 </div>
+
+                <div id="dispatch" class="container-fluid tab-pane fade">
+                    <div>
+                        <form method="POST" action="/pages/admin/butcher/<%=butcher.slug%>/dispatch">
+
+                            <div class="form-group">
+                                <label>Şehir</label>
+                                <select class="custom-select" name="dareal1" onchange="this.form.submit()">
+                                    <% 
+                                    for(var i=0; i<controller.darea1.length; i++) {%>
+                                    <option value="<%=controller.darea1[i].id %>"
+                                        <% if (controller.darea1[i].id == controller.darea1sel) { %>selected<% } %>>
+                                        <%= controller.darea1[i].name %></option>
+                                    <% } 
+                                
+                                %>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label>İlçe</label>
+                                <select class="custom-select" name="dareal2" id="dareal2"
+                                    onchange="this.form.submit()">
+                                    <% 
+                                        for(var i=0; i<controller.darea2.length; i++) {%>
+                                    <option value="<%=controller.darea2[i].id %>"
+                                        <% if (controller.darea2[i].id == controller.darea2sel) { %>selected<% } %>>
+                                        <%= controller.darea2[i].name %></option>
+                                    <% } 
+                                    
+                                    %>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label>Semt</label>
+                                <select name="dareal3" class="custom-select" id="dareal3">
+                                    <% 
+                                            for(var i=0; i<controller.darea3.length; i++) {%>
+                                    <option value="<%=controller.darea3[i].id %>"
+                                        <% if (controller.darea3[i].id == butcher.areaLevel3Id) { %>selected<% } %>>
+                                        <%= controller.darea3[i].name %></option>
+                                    <% } 
+                                        
+                                        %>
+                                </select>
+                            </div>
+                            <input type="text" class="form-control" name="fee" id="fee" placeholder="ücret">
+                            <input type="text" class="form-control" name="free" id="free" placeholder="alt bedel ücretsiz">
+
+                            <button type="submit" name="add" value="semtekle" class="btn btn-primary">SemtEkle</button>
+                            <button type="submit" name="add" value="ilceekle" class="btn btn-primary">İlçeEkle</button>
+        
+                                <div>
+                                    <table class="table">
+                                        <tr>    
+                                            <th>
+                                                adres
+                                            </th>
+                                            <th>
+                                                ücret
+                                            </th>
+                                            <th>
+                                                alt sınır ücretsiz
+                                            </th>
+
+                                        </tr>
+                                      
+                                        <%controller.dispatchs.forEach(d=> {%>
+                                            <tr>
+                                                <td>
+                                                    <%=d.address.display%>
+                                                </td>
+                                                <td>
+                                                    <input type="hidden" value="">
+                                                    <input type="text" name="fee<%=d.id%>" value="<%=d.fee%>">
+                                                </td>
+                                                <td>
+                                                    <input type="text" name="free<%=d.id%>" value="<%=d.totalForFree%>">
+
+                                                </td>
+
+                                                <td>
+                                                    <button type="submit" class="btn btn-sm btn-primary" name="update" value="<%=d.id%>">Kaydet</button>
+
+                                                </td>
+                                                <td>
+                                                    <button type="submit" class="btn btn-sm btn-danger" name="delete" value="<%=d.id%>">Sil</button>
+                                                </td>
+                                            </tr>
+                                        <%})%>
+                                    </table>
+                     
+                                </div>
+                        </form>
+
+                    </div>
+
+                </div>
+
+
             </div>
 
 
@@ -313,7 +408,8 @@
             $("deleteimage").val(i)
         }
         window.App.Ready.then(function () {
-
+            debugger;
+            $('a[href="#<%=controller.activetab%>"]').tab('show');
             //window.App.Render("PlaceList", null, document.getElementById('main'))
         })
     </script>

@@ -13,11 +13,23 @@ import Product from '../../db/models/product';
 import ProductCategory from '../../db/models/productcategory';
 import Category from '../../db/models/category';
 import ButcherProduct from '../../db/models/butcherproduct';
+import Dispatcher from '../../db/models/dispatcher';
 
 export default class Route  extends ViewRouter {
 
     butcher: ButcherModel;
     products: Product[];
+
+    dispatchs: Dispatcher[] = [];
+
+    activetab: string;
+
+    darea1: Area [] = [];
+    darea2: Area [] = [];
+    darea3: Area [] = [];
+
+    darea1sel: number;
+    darea2sel: number;
 
     @Auth.Anonymous()
     async listViewRoute() {
@@ -102,6 +114,21 @@ export default class Route  extends ViewRouter {
         this.butcher = await this.getButcher();
         let resources = await this.getResources(this.butcher);
         this.products = await this.getProducts();
+        this.dispatchs = await Dispatcher.findAll({
+            where: {
+                butcherId: this.butcher.id
+            },
+            order: [["toarealevel", "DESC"], ["fee", "ASC"]],
+            include: [
+                {
+                    all: true
+                }
+            ]
+        })
+
+        for (let i = 0; i < this.dispatchs.length; i++) {
+            this.dispatchs[i].address = await this.dispatchs[i].toarea.getPreferredAddress()
+        }
 
         let area1 = await Area.findAll({
             where: {
@@ -123,12 +150,98 @@ export default class Route  extends ViewRouter {
             }
         });
 
+        this.darea1 = await Area.findAll({
+            where: { level: 1 }
+        });
+
         this.res.render('pages/admin/butcher.edit.ejs', this.viewData({ images: resources, area1: area1, area2: area2, area3: area3, butcher: this.butcher }))
     }
 
 
+    async dispatchRoute() {
+        if (!this.req.params.butcher) {
+            return this.next();
+        }
+        this.butcher = await this.getButcher();
 
-    @Auth.Anonymous()
+
+
+        this.darea1 = await Area.findAll({
+            where: { level: 1 }
+        });
+
+        if (parseInt(this.req.body.dareal1) > 0) {
+            this.darea1sel = parseInt(this.req.body.dareal1)
+        
+            this.darea2 = await Area.findAll({
+                where: { level: 2, parentid :parseInt(this.req.body.dareal1) }
+            });
+        }
+
+        if (parseInt(this.req.body.dareal2) > 0) {
+            this.darea2sel = parseInt(this.req.body.dareal2)
+            this.darea3 = await Area.findAll({
+                where: { level: 3, parentid :parseInt(this.req.body.dareal2) }
+            });
+        }
+
+        if (this.req.body.add == "ilceekle") {
+            let l2 = this.darea2.find(p=>p.id == parseInt(this.req.body.dareal2))
+            let paddr = await l2.getPreferredAddress();
+            let d = new Dispatcher();
+            d.toarealevel = 2;
+            d.toareaid = parseInt(this.req.body.dareal2);
+            d.totalForFree = parseInt(this.req.body.free);
+            d.fee = parseInt(this.req.body.fee);
+            d.type = 'butcher';
+            d.name = this.butcher.name;
+            d.butcherid = this.butcher.id;
+            d.note = paddr.display;
+            d.typeid = 0;
+            await d.save();
+        }  
+
+ 
+
+        if (this.req.body.add == "semtekle") {
+            let l3 = this.darea3.find(p=>p.id == parseInt(this.req.body.dareal3))
+            let paddr = await l3.getPreferredAddress();
+            let d = new Dispatcher();
+            d.toarealevel = 3;
+            d.toareaid = parseInt(this.req.body.dareal3);
+            d.totalForFree = parseInt(this.req.body.free);
+            d.fee = parseInt(this.req.body.fee);
+            d.type = 'butcher';
+            d.name = this.butcher.name;
+            d.butcherid = this.butcher.id;
+            d.note = paddr.display;
+            d.typeid = 0;
+            await d.save();
+        }  
+
+        if (this.req.body.delete) {
+            let id = parseInt(this.req.body.delete);
+            await Dispatcher.destroy({
+                where: {
+                    id: id
+                }
+            })
+        } else if (this.req.body.update) {
+            let id = parseInt(this.req.body.update);
+            let d = await Dispatcher.findByPk(id);
+            let fee = parseInt(this.req.body['fee' + id.toString()])
+            let free = parseInt(this.req.body['free' + id.toString()])
+            d.fee = fee;
+            d.totalForFree = free;
+            await d.save()
+
+        }
+
+        this.activetab = "dispatch";
+        return this.editViewRoute()
+    }        
+
+
     async saveRoute() {
 
         if (!this.req.params.butcher) {
@@ -220,6 +333,9 @@ export default class Route  extends ViewRouter {
         router.get("/butcher/list", Route.BindRequest(Route.prototype.listViewRoute));
         router.get("/butcher/:butcher", Route.BindRequest(Route.prototype.editViewRoute));
         router.post("/butcher/:butcher", Route.BindRequest(Route.prototype.saveRoute));
+        router.post("/butcher/:butcher/dispatch", Route.BindRequest(Route.prototype.dispatchRoute));
+
+
     }
 }
 
