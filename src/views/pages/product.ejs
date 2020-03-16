@@ -271,6 +271,30 @@
                     </div>
  
                     <% } %>
+                    <% if (!view.butcher) { %>
+                    <div>
+                      
+                        <div class="alert border-none rounded-0 alert-accent alert-with-icon font-size-sm mb-2" role="alert">
+  
+  
+                          <div class="alert-icon-box rounded-0"><i class="alert-icon czi-announcement"></i></div> 
+                          <span class="mb-3 d-block font-size-sm text-info text-center">Alışveriş yapmak ve kasaplarımızın ürün fiyatları için önce semtinizi seçin.</span>
+  
+                          <div class="text-center">
+                            <button @click="selectArea(null, '<%=__req.prefAddr ? `Maalesef ürünümüz ${__req.prefAddr.level1Text}/${__req.prefAddr.level2Text}/${__req.prefAddr.level3Text} için ulaşılabilir değil. Lütfen bir başka adres seçin.`: ``%>')" type="button"  id="add2scSetAddrBtn" class="btn btn-accent btn-sm"><i
+                              class="czi-location font-size-lg mr-2"></i>Semt Seç</button>
+                          </div>
+                          
+
+                        </div>
+                       
+  
+                  
+                    </div>
+                    <% } %>
+                    
+
+
                   <div>
 
                     <% if (bilgiResources.length) { %>
@@ -424,10 +448,16 @@
                
                  
                           <a id="noteanchor"></a>
-                          <div class="d-flex  justify-content-between">
+                          <div class="d-flex  flex-nowrap justify-content-between align-items-center">
                             <h5 class="h6 mb-2 text-accent "><i class="czi-thumb-up mr-2"></i>Şimdi satın alın</h5>
         
-                            
+                            <button title="<%= __req.prefAddr ? __req.prefAddr.level3Text: 'Semt Seçin' %>"  @click="selectArea(null, '<%=__req.prefAddr ? `Semtiniz:  ${__req.prefAddr.display}`: ``%>')" type="button"  class="rounded-0 btn btn-secondary btn-sm"><i
+                              class="czi-location font-size-lg "></i>
+                              
+                               
+
+                              
+                            </button>
                               
                       
         
@@ -576,18 +606,7 @@
                         <div class="text-center">
 
 
-                      <% if (!__req.prefAddr) { %>
-                        <div class="alert border-none rounded-0 alert-info alert-with-icon font-size-sm mb-2" role="alert">
-  
-  
-                          <div class="alert-icon-box rounded-0"><i class="alert-icon czi-announcement"></i></div> 
-                          <span class=" d-block font-size-sm text-info text-center">Kasaplarımızdan alışveriş yapmak ve fiyatlarımız için önce semtinizi seçin.</span>
-
-                        </div>
-                        <%}%>
-
-                          <button @click="selectArea(null, '<%=__req.prefAddr ? `Maalesef ürünümüz ${__req.prefAddr.level1Text}/${__req.prefAddr.level2Text}/${__req.prefAddr.level3Text} için ulaşılabilir değil. Lütfen bir başka adres seçin.`: ``%>')" type="button"  id="add2scSetAddrBtn" class="btn btn-accent btn-block"><i
-                              class="czi-location font-size-lg mr-2"></i>Semt Seç</button>
+                     
                           <% if (__req.prefAddr) { %>
 
                             <div class="toast-container toast-top-center">

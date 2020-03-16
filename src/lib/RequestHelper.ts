@@ -75,6 +75,8 @@ export class RequestHelper {
                 adr.level2Slug = pa.slug;
                 adr.level3Slug = area.slug;
 
+                adr.display = `${adr.level1Text}/${adr.level2Text}/${adr.level3Text}`;
+
                 this.req.prefAddr = adr;
 
                 if (save) {
