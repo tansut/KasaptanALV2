@@ -81,12 +81,40 @@ export default class Route extends ApiRouter {
     //     return res;
     // }
 
-    async getButchersSeling(address: PreferredAddress) {
+    // async getButchersSeling(address: PreferredAddress) {
+    //     let where = {
+    //         type: 'butcher'
+    //     }
+    //     where['$butcher.approved$'] = true;
+    //     where = await this._where(where, address);
+    //     let res = await Dispatcher.findAll({
+    //         where: where,
+    //         include: [
+    //             {
+    //                 model: Butcher,
+    //                 as: 'butcher'
+    //             },
+    //         ],
+    //         order: [["toarealevel", "DESC"]]
+    //         //limit: 10
+    //     })
+    //     let ugly = {}, result = [];
+    //     res.forEach(r => {
+    //         if (!ugly[r.butcherid]) {
+    //             ugly[r.butcherid] = r;
+    //             result.push(r)
+    //         }
+    //     })
+    //     return result;
+    // }
+
+    async getButchersDispatches(address: PreferredAddress) {
         let where = {
             type: 'butcher'
         }
-        where['$butcher.approved$'] = true;
+
         where = await this._where(where, address);
+        where["toarealevel"] = address.level3Id ? 3: (address.level2Id ? 2: 1)
         let res = await Dispatcher.findAll({
             where: where,
             include: [
@@ -96,17 +124,11 @@ export default class Route extends ApiRouter {
                 },
             ],
             order: [["toarealevel", "DESC"]]
-            //limit: 10
         })
-        let ugly = {}, result = [];
-        res.forEach(r => {
-            if (!ugly[r.butcherid]) {
-                ugly[r.butcherid] = r;
-                result.push(r)
-            }
-        })
-        return result;
+
+        return res;
     }
+
 
     async  getButchersSelingAndDispatches(address: PreferredAddress, pid) {
         let where = {

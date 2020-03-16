@@ -68,45 +68,47 @@ export default class Route extends ViewRouter {
         }
         let areas = this.req.params.area.split("-");
         let areaSlug = this.req.params.area;
-        // if (back) {
-        //     areas.splice(areas.length - 1, 1);
-        //     areaSlug = areas.join("-");
-        //     this.req.params.area = areaSlug;
-        // }
+
         let area = await AreaModel.findOne({ where: { slug: areaSlug }, include: [{
             all:true
         }] });
         if (!area) return this.next();
+
         await this.checkSave(area);
         this.address = await area.getPreferredAddress();
 
-        let field = `areaLevel${areas.length}Id`;
-        let where = (<any>{})
-        where[field] = area.id;
-        where["approved"] = true;
+        let butchers: ButcherModel[] = [];
 
-        let butchers = await ButcherModel.findAll({
-            where: where,
-            order: [["updatedon", "DESC"]],
-            include: [{
-                all: true
-            }]
-        })
+        if (area.level == 1) {
+            let field = `areaLevel1Id`;
+            let where = (<any>{})
+            where[field] = area.id;
+            where["approved"] = true;
+    
+            butchers = await ButcherModel.findAll({
+                where: where,
+                order: [["updatedon", "DESC"]],
+                include: [{
+                    all: true
+                }]
+            })
+        } else {
+            let dp = new DispatcherApi(this.constructorParams);
+            let dispatchers = await dp.getButchersDispatches(this.address);
+            butchers = dispatchers.map(b=>b.butcher);
+            if (butchers.length == 0 && area.level == 3) {
+                let parent = area.parent;
+                let address = await parent.getPreferredAddress();
+                dispatchers = await dp.getButchersDispatches(address);
+                butchers = dispatchers.map(b=>b.butcher);
+            }
+        }
 
         if (this.req.query.save && butchers.length == 0) {
             this.res.redirect('/kasap-urunleri');
             return;
         }
 
-        //butchers.length == 0 && (area.level != 1
-
-        // let dpapi = new DispatcherApi(this.constructorParams);
-        // let address = await area.getPreferredAddress();
-        // let res = await dpapi.getButchersSeling(address);
-        // let butchers = res.map(p=>p.butcher)
-        if (false) {
-            return this.arealRoute(true)
-        } else
             if (area.level != 3) {
                 return Area.findAll({
                     where: {
