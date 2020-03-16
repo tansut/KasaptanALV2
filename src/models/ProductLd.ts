@@ -52,7 +52,7 @@ export class ProductLd implements IProductLd {
         this.sku = product.slug;
         product.resources.forEach(r=> {
             if (!r.tag1 && r.list) {
-                this.image.push('https://www.kasaptanal.com' + r.getFileUrl())
+                this.image.push(r.getFileUrl())
             }
         })
         this.aggregateRating = {
