@@ -29,7 +29,8 @@ import { ProductLd } from '../models/ProductLd';
 
 interface ButcherSelection {
     best: Butcher,
-    serving: Butcher[]
+    servingL2: Dispatcher[]
+    servingL3: Dispatcher[]
     others: Butcher[]
 }
 
@@ -52,7 +53,8 @@ export default class Route extends ViewRouter {
     }
 
     async tryBestFromOrders(serving: Dispatcher[]) {
-        let orderedByDate = _.orderBy(serving, 'updatedOn');
+        serving.forEach(s=>s.lastorderitemid = s.lastorderitemid || 0);
+        let orderedByDate = _.orderBy(serving, 'lastorderitemid', 'asc');
         return orderedByDate.length ? orderedByDate[0].butcher : null;
     }
 
@@ -66,43 +68,47 @@ export default class Route extends ViewRouter {
     async bestButchersForProduct(pid, adr: PreferredAddress, userBest: Butcher): Promise<ButcherSelection> {
         let api = new DispatcherApi(this.constructorParams);
 
-        let sellingl3 = await Butcher.sellingButchers(pid, {
-            level3Id: this.req.prefAddr.level3Id
-        });
+        // let sellingl3 = await Butcher.sellingButchers(pid, {
+        //     level3Id: this.req.prefAddr.level3Id
+        // });
 
-        let sellingl2 = await Butcher.sellingButchers(pid, {
-            level2Id: this.req.prefAddr.level2Id
-        });
+        // let sellingl2 = await Butcher.sellingButchers(pid, {
+        //     level2Id: this.req.prefAddr.level2Id
+        // });
 
-        let sellingl1 = await Butcher.sellingButchers(pid, {
-            level1Id: this.req.prefAddr.level1Id
-        });
+         let butchersInCity = await Butcher.sellingButchers(pid, {
+             level1Id: this.req.prefAddr.level1Id
+         });
 
-        let servingDispatchers = await api.getButchersSelingAndDispatches(adr, pid);
+        let serving = await api.getButchersSelingAndDispatches(adr, pid);
 
-        _.remove(sellingl1, p => servingDispatchers.find(s => s.butcherid == p.butcher.id));
-        _.remove(sellingl2, p => servingDispatchers.find(s => s.butcherid == p.butcher.id));
-        _.remove(sellingl3, p => servingDispatchers.find(s => s.butcherid == p.butcher.id));
+        let servingL3 = serving.filter(p=>p.toarealevel == 3);
+        let servingL2 = serving.filter(p=>p.toarealevel == 2 && (servingL3.find(m=>m.butcher.id == p.butcher.id) == null));
 
-        let otherids = _.uniqBy(sellingl3.concat(sellingl2).concat(sellingl1), function (e) {
+
+
+        _.remove(butchersInCity, p => serving.find(s => s.butcherid == p.butcher.id));
+
+        let takeButcherIds = _.uniqBy(butchersInCity, function (e) {
             return e.butcherid;
         });
 
-        let otherButchers = otherids.map(p => p.butcher);
-        let servingButchers = servingDispatchers.map(p => p.butcher);
+        let takeButchers = takeButcherIds.map(p => p.butcher);
+        let servingButchers = serving.map(p => p.butcher);
 
-        otherButchers = Helper.shuffle(otherButchers)
+        takeButchers = Helper.shuffle(takeButchers)
         servingButchers = Helper.shuffle(servingButchers)
 
-        let mybest = await this.tryBestFromShopcard(servingButchers, otherButchers) || await this.tryBestFromOrders(servingDispatchers) || this.tryBestAsRandom(servingButchers, otherButchers);
+        let mybest = await this.tryBestFromShopcard(servingButchers, takeButchers) || await this.tryBestFromOrders(servingL3) || await this.tryBestFromOrders(servingL2) || this.tryBestAsRandom(servingButchers, takeButchers);
 
         if (mybest)
             mybest = userBest || mybest;
 
         return {
             best: mybest,
-            serving: servingButchers,
-            others: otherButchers
+            servingL2: servingL2,
+            servingL3: servingL3,
+            others: takeButchers
         }
 
 
@@ -144,7 +150,8 @@ export default class Route extends ViewRouter {
         if (!this.req.prefAddr) {
             selectedButchers = {
                 best: null,
-                serving: [],
+                servingL2: [],
+                servingL3: [],
                 others: []
             }
         } else

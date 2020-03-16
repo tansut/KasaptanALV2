@@ -108,7 +108,7 @@ export default class Route extends ApiRouter {
         return result;
     }
 
-    async getButchersSelingAndDispatches(address: PreferredAddress, pid) {
+    async  getButchersSelingAndDispatches(address: PreferredAddress, pid) {
         let where = {
             type: 'butcher'
         }
@@ -177,7 +177,7 @@ export default class Route extends ApiRouter {
                     ]
                 },
             ],
-            order: [['lastorderitemid', 'DESC'], ["toarealevel", "DESC"]]
+            order: [["toarealevel", "DESC"]]
             //limit: 10
         })
         let ugly = {}, result = [];

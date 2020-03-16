@@ -102,6 +102,12 @@ class Dispatcher extends BaseModel<Dispatcher> {
     })
     note: string;    
 
+    get priceInfo() {
+        if (this.fee <= 0) return 'Ücretsiz Gönderim';
+        else if (this.fee > 0 && this.totalForFree <= 0) `${Helper.formattedCurrency(this.fee)} Gönderim Ücreti`;
+        else if (this.fee > 0) return `Ücretsiz Gönderim ${Helper.formattedCurrency(this.totalForFree)} üzeri, altı ${Helper.formattedCurrency(this.fee)}`;
+    }
+
 }
 
 export default Dispatcher;

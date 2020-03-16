@@ -38,7 +38,10 @@
   <% include ./_partial/scripts %>
 
   <script>
-    window.App.showLoginDlg()
+    $(document).ready(function() {
+      window.App.showLoginDlg()
+
+    })
   </script>
 </body>
 

@@ -19,10 +19,15 @@
   <% include ./_partial/header %>
   <%- include('./_partial/product-weight-calc.ejs', {    product: product}) %>
 
-  <% otherButcherAlternatives = butchers.serving.length + butchers.others.length - 1 %>
+  <% otherButcherAlternatives = butchers.servingL3.length + butchers.servingL2.length  + butchers.others.length - 1 %>
 
   <% if (view.butcher) {%>
-    <%- include('./_partial/butcher-alternatives.ejs', {butchersTakeaway: butchers.others.filter(p=>p.id != view.butcher.id), butchersServing: butchers.serving.filter(p=>p.id != view.butcher.id)}) %>
+    <%- include('./_partial/butcher-alternatives.ejs', 
+    { butchersTakeaway: butchers.others.filter(p=>p.id != view.butcher.id), 
+      butchersServingL2: butchers.servingL2.filter(p=>p.butcher.id != view.butcher.id),
+      butchersServingL3: butchers.servingL3.filter(p=>p.butcher.id != view.butcher.id),
+    
+    }) %>
 <%}%>
 
   <div class="page-title-overlap bg-primary pt-4">
@@ -428,7 +433,7 @@
         
                            
                            </div>
-                            <div class="mb-3 bg-secondary border">
+                            <div class="mb-1 bg-secondary border">
                               <%if (view.butcher) {  %>
 
                               <div class="border-bottom">
@@ -484,12 +489,21 @@
                             :unit="selectedUnit.unitTitle" >
                        
                           </amount-input>
-                          <%if (view.butcher) { %>
+                          
 
 
 
-                <%}%>            </div>
+                          </div>
            
+                <%if (view.butcher) { %>
+                <div v-if="selectedUnit" class="mb-3 p-2 d-flex justify-content-end border bg-secondary"> 
+                  <span class="text-muted d-block mr-2">
+                  Ürün Bedeli: 
+                </span>  
+                 <span class="d-block text-center text-accent"> 
+                  {{  formatCurrency(price).val}}.<small>{{formatCurrency(price).krs}}</small> TL </span>
+              </div> 
+              <%}%>  
 
                           <div class="  d-flex align-items-center justify-content-center">
 <p> <a @click="showCalculator(selectedUnit)"
@@ -615,13 +629,7 @@
                   
                        
                           <% if (view.butcher && __req.prefAddr) { %>
-                            <div v-if="selectedUnit" class="mb-3 p-2 d-flex justify-content-end border bg-secondary"> 
-                              <span class="text-muted d-block mr-2">
-                              Ürün Bedeli: 
-                            </span>  
-                             <span class="d-block text-center text-accent"> 
-                              {{  formatCurrency(price).val}}.<small>{{formatCurrency(price).krs}}</small> TL </span>
-                          </div>                             
+                                                      
                             <button data-tag="true" data-category="shopcard/add" data-action="<%=view.butcher.slug%>" data-label="<%=product.slug%>" id="addtoscbtn" class="btn btn-accent btn-block" type="submit"><i
                               class="czi-cart font-size-lg mr-2"></i>Sepete Ekle</button>
                           

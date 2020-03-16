@@ -95,6 +95,12 @@ export default class Helper {
         }
     }
 
+    static formattedCurrency(n: number, symbol: string = 'TL') {
+        let parts = Helper.splitCurrency(n);
+        if (parts.krs <= 0) return numeral(parts.val).format('0,0') + 'TL'
+        else return numeral(parts.val).format('0,0') + '.' + numeral(parts.krs).format('0,0') + 'TL'
+    }
+
     static getPhoneNumber(phone: string) {
         //05326274151
         let f = phone.replace(' ', '');

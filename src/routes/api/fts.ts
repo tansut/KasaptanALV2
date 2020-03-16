@@ -113,7 +113,7 @@ export default class Route extends ApiRouter {
                 name: px.title,
                 score: px.RELEVANCE,
                 url: px.slug ? ('/et-yemekleri/' + px.slug): '/' + foodProds.find(fp=>fp.id == px.ref1).slug + '?r=' + px.id,
-                type: 'Yemekler',
+                type: 'Eti Bizden',
                 thumb : px.contentType == 'video-youtube' ? (px.thumbnailUrl ? px.getThumbnailFileUrl(): null): px.getThumbnailFileUrl()
 
             }

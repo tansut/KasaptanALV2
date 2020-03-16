@@ -90,45 +90,105 @@
         <%- include('./_partial/category-products-slider', {category: 'bu-hafta', reverse: true, img: 'img/category/premium.jpg'}); %>
     </div>
 
-
-    <div class="container mb-3">
-        <%- include('./_partial/category-products-slider', {category: 'populer-etler', reverse: true, img: 'img/category/premium.jpg'}); %>
-    </div>
-
-     <!-- <section class="container">
-
-        <div class="row">
-
-
-
-            <div class="col-md-12 mb-3">
-                <div class="d-flex flex-column h-100 justify-content-center bg-size-cover bg-position-center rounded-lg"
-                style="background-image: url(/static/img/banner-bg.jpg);">
-                <div class="py-4 my-2 my-md-0 py-md-5 px-4 ml-md-3 text-center text-sm-left">
-                    <h4 class="h6 font-size-lg font-weight-light mb-2">Hangi yemeğe hangi et, ne kadar et?</h4>
-                    <h3 class="mb-4 h5">Eti Bizden Seçeneğini Keşfedin</h3>
-                 
-                    <div class="">
-                        <a href="javascript: window.App.openDefaultSlider() " class=" btn btn btn-primary "><i class="czi-video mr-2"> </i>Galeriyi Aç</a>
-                    </div>
-       
-                
+    <section class="container mb-3">
+        <h2 class="h3 text-center mb-grid-gutter pt-2">kasaptanAl.com'u kullanmak için 3 sebep</h2>
+        <div class="row no-gutters bg-light rounded-lg">
+          <div class="col-xl-4 col-lg-12 col-md-4 border-right">
+            <div class="py-3">
+              <div class="d-flex align-items-center mx-auto py-3 px-3" style="max-width: 362px;">
+                <div class="display-2 font-weight-normal border-color mr-4">1</div>
+                <div class="pl-2">
+                  <p class="mb-3 pt-1">En iyi kasaplardan %100 doğal ve güvenilir et sağlıyoruz</p>
                 </div>
+              </div>
+              <hr class="d-md-none d-lg-block d-xl-none">
             </div>
+          </div>
+          <div class="col-xl-4 col-lg-12 col-md-4 border-right">
+            <div class="py-3">
+              <div class="d-flex align-items-center mx-auto py-3 px-3" style="max-width: 362px;">
+                <div class="display-2 font-weight-normal border-color mr-4">2</div>
+                <div class="pl-2">
+                  <p class="mb-3 pt-1">Farklı kasap alternatifleri sunarak fiyat avantajı sağlıyoruz</p>
+                </div>
+              </div>
+              <hr class="d-md-none d-lg-block d-xl-none">
+            </div>
+          </div>
+          <div class="col-xl-4 col-lg-12 col-md-4">
+            <div class="py-3">
+              <div class="d-flex align-items-center mx-auto py-3 px-3" style="max-width: 362px;">
+                <div class="display-2 font-weight-normal border-color mr-4">3</div>
+                <div class="pl-2">
+                  <p class="mb-3 pt-1">Siparişlerinizi kapınıza kadar istediğiniz zaman getiriyoruz</p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="pt-2 ">
+            <h3 class="h5 text-center pb-2 pt-2">Usta Kasaplarımız</h3>
+
+            <div class="table-responsive" data-simplebar>
+                <div class="d-flex pb-2">
+
+                    <% for(var i=0; i<recentButchers.length; i++) {%>
+                    <div class="mr-2">
+                        <div class="card h-100 item-slider item-slider-sm">
+                            <a href="<%= `/${recentButchers[i].slug}` %>">
+                                <img src="<%= `${__req.helper.imgUrl('butcher-google-photos', recentButchers[i].slug)}` %>"
+                                    class="card-img-top" alt="<%= `/${recentButchers[i].name}` %>">
+                            </a>
+
+
+
+                            <div class="card-body touch-support text-center">
+
+                                <h5 class="card-title ">
+                                    <a href="<%= `/${recentButchers[i].slug}` %>" class="text-dark">
+                                        <%= recentButchers[i].name %>
+                                    </a>
+
+                                </h5>
+
+
+                            </div>
+
+
+
+
+                        </div>
+
+                    </div>
+
+                    <%}%>
+
+                    </div>
+
             </div>
 
-        
 
 
         </div>
-    </section>  -->
+
+      </section>
+
+
+
 
     <div class="container mb-3">
         <%- include('./_partial/foods-slider.ejs', {mode: 'food', allUrl:'/et-yemekleri', showDesc: true, title: 'Et Yemekleri', text: '', foods: controller.foods}); %>
     </div>
 
+
+
     <div class="container mb-3">
-        <%- include('./_partial/category-slider', { viewCats: ['reyon', 'list'], title: 'Ürünlerimizi Keşfedin', allUrl: '/kasap-urunleri' }); %>      
+        <%- include('./_partial/category-products-slider', {category: 'populer-etler', reverse: true, img: 'img/category/premium.jpg'}); %>
+    </div>
+
+    <div class="container mb-3">
+        <%- include('./_partial/category-slider', { viewCats: ['reyon', 'list'], title: 'Tüm Ürünlerimiz', allUrl: '/kasap-urunleri' }); %>      
       </div>
 
     <section class="container">
@@ -173,66 +233,12 @@
 
 
 
-    <!-- Butchers -->
-
-    <section class="container mb-3 ">
-        <div class="bg-secondary">
-            <div class="pt-2 ">
-                <h3 class="h5 text-center pb-2 pt-2">Ustalara Saygı Kuşağı</h3>
-
-                <div class="table-responsive" data-simplebar>
-                    <div class="d-flex pl-2 pb-2">
-
-                        <% for(var i=0; i<recentButchers.length; i++) {%>
-                        <div class="mr-2">
-                            <div class="card item-slider">
-                                <a href="<%= `/${recentButchers[i].slug}` %>">
-                                    <img src="<%= `${__req.helper.imgUrl('butcher-google-photos', recentButchers[i].slug)}` %>"
-                                        class="card-img-top" alt="<%= `/${recentButchers[i].name}` %>">
-                                </a>
-
-
-
-                                <div class="card-body touch-support text-center">
-
-                                    <h5 class="card-title truncate ">
-                                        <a href="<%= `/${recentButchers[i].slug}` %>" class="text-dark">
-                                            <%= recentButchers[i].name %>
-                                        </a>
-
-                                    </h5>
-
-                                    <p class="card-text ">
-
-                                            
-                                        <%= recentButchers[i].areaLevel1 && recentButchers[i].areaLevel1.name%>
-                                    </p>
-
-
-                                </div>
+ 
 
 
 
 
-                            </div>
 
-                        </div>
-
-                        <%}%>
-
-                        </div>
-
-                </div>
-
-    
-
-            </div>
-
-        </div>
-    </section>
-
-
-    <!-- Banners-->
  
 
 
