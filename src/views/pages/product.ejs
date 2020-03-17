@@ -708,13 +708,7 @@
               <%}%>
 
              
-                <h3 class="h5"><%=product.name%> Fiyat</h3>
-                <p>
-                  
-
-                  
-                  <strong><%=product.name%> fiyatları</strong> semtinize ve kasaplarımıza göre farklılık göstermektedir. <strong>En uygun <%=product.name%> fiyat</strong> bilgisi semt ve kasap seçiminiz ardından otomatik olarak hesaplanmaktadır.
-                </p>
+               
            
 
             <% if (videoTarifs.length) {%>
@@ -783,6 +777,40 @@
                         <%})%>
                       </div>
                     <%}%>
+
+                    <h3 class="h5"><%=product.name%> Fiyat</h3>
+                    <p>
+                      
+    
+                      
+                      <strong><%=product.name%> fiyatları</strong> semtinize ve kasaplarımıza göre farklılık göstermektedir. <strong>En uygun <%=product.name%> fiyat</strong> bilgisi semt ve ürünü online olarak sağlayabilecek kasap seçiminiz ardından otomatik olarak hesaplanmaktadır.
+                    </p>
+    
+                    <% var categories = product.getCategories() %>
+    
+                    <% var priceCategories = [];
+                     categories.forEach(c=>{
+                       var pc = controller.req.__pricecategories.find(p=> (p.categoryid == c.id));
+                       pc && priceCategories.push(pc)
+                     })
+                      
+                     
+                     %>
+                     <% if (priceCategories.length) { %>
+                    <p>
+                      Aşağıdaki kategorilerdeki ürünlerimiz için <strong>et fiyatlarını</strong> da incelemek isteyebilirsiniz.
+                      <ul>
+
+                      
+                      <% priceCategories.forEach(pc=> { %>
+                        <li>
+                          <a href="/<%=pc.slug %>"><%=pc.name %></a>
+                        </li>
+                        
+                        <% }) %>
+                      </ul>
+                    </p>
+                    <%  } %>
                  
           </div>
 

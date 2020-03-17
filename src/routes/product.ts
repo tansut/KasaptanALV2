@@ -26,6 +26,7 @@ import { ShopCard } from '../models/shopcard';
 import config from '../config';
 import { Op, Sequelize, where } from 'sequelize';
 import { ProductLd } from '../models/ProductLd';
+import ProductCategory from '../db/models/productcategory';
 
 interface ButcherSelection {
     best: Butcher,
@@ -121,8 +122,10 @@ export default class Route extends ViewRouter {
         }
         let product = await ProductModel.findOne({
             include: [{
-                all: true
-            }], where: { slug: this.req.params.product }
+                model: ProductCategory,
+                include: [Category]
+            }
+            ], where: { slug: this.req.params.product }
         });
         if (!product) return this.next();
 
