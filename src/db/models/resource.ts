@@ -46,16 +46,18 @@ import { ResourceView } from '../../models/productView';
         fields: ["type", "contentUrl"]
     },
     
-    { type: 'FULLTEXT', name: 'resource_fts', fields: ['title', 'description', 'slug'] }]
+    { type: 'FULLTEXT', name: 'resource_fts', fields: ['title', 'description', 'slug', 'keywords'] }]
 
 
 })
 class Resource extends BaseModel<Resource> {
 
-
     product: Product;
 
     otherProducts: Product[] = [];
+
+    @Column
+    keywords: string;    
 
     @HasMany(() => ResourceCategory, {
         sourceKey: "id",

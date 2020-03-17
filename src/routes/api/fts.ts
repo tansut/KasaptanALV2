@@ -25,8 +25,8 @@ export default class Route extends ApiRouter {
         let words = text.match(/\S+/g).map(w=> `+${w}*`)
         let search = words.join()
 
-        let prods = await User.sequelize.query("select name, slug as url, '' as type, match(name, shortdesc, slug) against (:search IN BOOLEAN MODE) as RELEVANCE " +
-            "from Products where match(name, shortdesc, slug)  against (:search IN BOOLEAN MODE) ORDER BY RELEVANCE DESC LIMIT 10",
+        let prods = await User.sequelize.query("select name, slug as url, '' as type, match(name, shortdesc, slug, keywords) against (:search IN BOOLEAN MODE) as RELEVANCE " +
+            "from Products where match(name, shortdesc, slug, keywords)  against (:search IN BOOLEAN MODE) ORDER BY RELEVANCE DESC LIMIT 10",
             {
                 replacements: { search: search },
                 type: sq.QueryTypes.SELECT,
@@ -46,8 +46,8 @@ export default class Route extends ApiRouter {
             }
         })
 
-        let cats = await User.sequelize.query("select name, slug as url, 'Kategoriler' as type, match(name, shortdesc, slug) against (:search IN BOOLEAN MODE) as RELEVANCE " +
-            "from Categories where match(name, shortdesc, slug)  against (:search IN BOOLEAN MODE) ORDER BY RELEVANCE DESC LIMIT 10",
+        let cats = await User.sequelize.query("select name, slug as url, 'Kategoriler' as type, match(name, shortdesc, slug, keywords) against (:search IN BOOLEAN MODE) as RELEVANCE " +
+            "from Categories where match(name, shortdesc, slug, keywords)  against (:search IN BOOLEAN MODE) ORDER BY RELEVANCE DESC LIMIT 10",
             {
                 replacements: { search: search },
                 type: sq.QueryTypes.SELECT,
@@ -67,8 +67,29 @@ export default class Route extends ApiRouter {
             }
         })        
 
-        let butchers = await User.sequelize.query("select name, slug as url, 'Kasaplar' as type, match(name, description, slug) against (:search IN BOOLEAN MODE) as RELEVANCE " +
-            "from Butchers where approved=true and match(name, description, slug)  against (:search IN BOOLEAN MODE) ORDER BY RELEVANCE DESC LIMIT 10",
+        let areas = await User.sequelize.query("select name, slug as url, 'Bölgeler' as type, match(name, slug, keywords) against (:search IN BOOLEAN MODE) as RELEVANCE " +
+        "from Areas where match(name, slug, keywords)  against (:search IN BOOLEAN MODE) ORDER BY RELEVANCE DESC LIMIT 10",
+        {
+            replacements: { search: search },
+            type: sq.QueryTypes.SELECT,
+            mapToModel: false,
+            raw: true
+        },
+
+    ).map((p, i) => {
+        let px = <any>p;
+        return {
+            id: 'loc' + i,
+            name: px.name + ' Kasapları',
+            url: '/' + px.url + '-kasap',
+            type: px.type,
+            score: px.RELEVANCE,
+            thumb: null // this.req.helper.imgUrl('category-photos', px.url)
+        }
+    })              
+
+        let butchers = await User.sequelize.query("select name, slug as url, 'Kasaplar' as type, match(name, slug, keywords) against (:search IN BOOLEAN MODE) as RELEVANCE " +
+            "from Butchers where approved=true and match(name, slug, keywords)  against (:search IN BOOLEAN MODE) ORDER BY RELEVANCE DESC LIMIT 10",
             {
                 replacements: { search: search },
                 type: sq.QueryTypes.SELECT,
@@ -88,8 +109,8 @@ export default class Route extends ApiRouter {
             }
         })
 
-        let foodResources = await Resource.sequelize.query("select id, title, ref1, slug, contentType, thumbnailUrl, folder,  match(title, description, slug) against (:search IN BOOLEAN MODE) as RELEVANCE " +
-            "from Resources where (tag1 like '%tarif%' or tag1 like '%yemek%') and match(title, description, slug)  against (:search IN BOOLEAN MODE) ORDER BY  RELEVANCE DESC LIMIT 10",
+        let foodResources = await Resource.sequelize.query("select id, title, ref1, slug, contentType, thumbnailUrl, folder,  match(title, description, slug, keywords) against (:search IN BOOLEAN MODE) as RELEVANCE " +
+            "from Resources where (tag1 like '%tarif%' or tag1 like '%yemek%') and match(title, description, slug, keywords)  against (:search IN BOOLEAN MODE) ORDER BY  RELEVANCE DESC LIMIT 10",
             {
                 replacements: { search: search },
                 model: Resource,
@@ -119,7 +140,7 @@ export default class Route extends ApiRouter {
             }
         })        
 
-        let combined = prods.concat(butchers.concat(foods.concat(cats)));
+        let combined = prods.concat(butchers.concat(foods.concat(cats.concat(areas))));
         let sorted = _.sortBy(combined, 'RELEVANCE')
 
         this.res.send(sorted)

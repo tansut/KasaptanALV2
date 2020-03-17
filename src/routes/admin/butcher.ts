@@ -231,6 +231,7 @@ export default class Route  extends ViewRouter {
             let d = await Dispatcher.findByPk(id);
             let fee = parseInt(this.req.body['fee' + id.toString()])
             let free = parseInt(this.req.body['free' + id.toString()])
+            d.enabled = this.req.body['enabled' + id.toString()] ? true : false;
             d.fee = fee;
             d.totalForFree = free;
             await d.save()
@@ -266,6 +267,8 @@ export default class Route  extends ViewRouter {
             this.butcher.videoInstagramStr = this.req.body.butchervideoinstagram;
             this.butcher.facebook = this.req.body.butcherfacebook;
             this.butcher.description = this.req.body.butcherdesc;
+            this.butcher.keywords = this.req.body.keywords;
+
             await this.butcher.save();
 
             //return this.res.redirect(`/pages/admin/butcher/${this.butcher.slug}`)

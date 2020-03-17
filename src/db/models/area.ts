@@ -23,7 +23,9 @@ export interface AreaLevels {
         name: "slug_level_idx",
         fields: ["slug", "level"],
         unique: true
-    }]
+    },
+    
+        { type: 'FULLTEXT', name: 'area_fts', fields: ['name', 'slug', 'keywords'] }]
 })
 class Area extends BaseModel<Area> {
     static async NormalizeNames() {
@@ -48,6 +50,9 @@ class Area extends BaseModel<Area> {
         allowNull: false,
     })
     name: string;
+
+    @Column
+    keywords: string;
 
     @Column({
         allowNull: false,
@@ -110,7 +115,7 @@ class Area extends BaseModel<Area> {
                 level2Slug: this.slug,
                 level2Text: this.name,
 
-                display: this.name + ', ' + parent.name
+                display: this.name + '/' + parent.name
             }
         } else {
             let parentOfParent, parent: Area;            

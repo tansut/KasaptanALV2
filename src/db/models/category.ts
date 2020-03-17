@@ -11,7 +11,7 @@ import ButcherProduct from './butcherproduct';
         fields: ["slug"],
         unique: true
     },
-    { type: 'FULLTEXT', name: 'category_fts', fields: ['name', 'shortdesc', 'slug'] }]
+    { type: 'FULLTEXT', name: 'category_fts', fields: ['name', 'shortdesc', 'slug', 'keywords'] }]
 })
 
 class Category extends BaseModel<Category> {
@@ -24,6 +24,9 @@ class Category extends BaseModel<Category> {
         allowNull: false,
     })
     type: string;
+
+    @Column
+    keywords: string;    
 
     @Column({
         allowNull: false,

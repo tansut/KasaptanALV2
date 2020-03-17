@@ -14,7 +14,7 @@ import { Op, QueryTypes } from 'sequelize';
         fields: ["slug"],
         unique: true
     },
-    { type: 'FULLTEXT', name: 'product_fts', fields: ['name', 'shortdesc', 'slug'] }]
+    { type: 'FULLTEXT', name: 'product_fts', fields: ['name', 'shortdesc', 'slug', 'keywords'] }]
 })
 
 class Product extends BaseModel<Product> {
@@ -22,6 +22,9 @@ class Product extends BaseModel<Product> {
         allowNull: false,
     })
     name: string;
+
+    @Column
+    keywords: string;    
 
     get generatedDesc() {
         let start = "";

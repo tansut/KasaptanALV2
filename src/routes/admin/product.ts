@@ -104,6 +104,7 @@ export default class Route extends ViewRouter {
                 this.product.name = this.req.body.name;
                 this.product.tag1 = this.req.body.tag1;
                 this.product.tag2 = this.req.body.tag2;
+                this.product.keywords = this.req.body.keywords;
                 this.product.shortdesc = this.req.body.description;
                 this.product.notePlaceholder = this.req.body.notePlaceholder;
                 this.product.featuresText = this.req.body.featuresText;

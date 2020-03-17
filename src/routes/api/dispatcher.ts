@@ -24,7 +24,7 @@ export default class Route extends ApiRouter {
         //     attributes: ["id"],
         //     raw: true
         // }).map(p=>p.id))
-
+        where['enabled'] = true;
         where[Op.or] = where[Op.or] || [];
         if (address && address.level1Id) {
             where[Op.or].push({
