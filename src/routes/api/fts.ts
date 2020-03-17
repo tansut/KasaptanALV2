@@ -68,7 +68,7 @@ export default class Route extends ApiRouter {
         })        
 
         let areas = await User.sequelize.query("select name, slug as url, 'Bölgeler' as type, match(name, slug, keywords) against (:search IN BOOLEAN MODE) as RELEVANCE " +
-        "from Areas where match(name, slug, keywords)  against (:search IN BOOLEAN MODE) ORDER BY RELEVANCE DESC LIMIT 10",
+        "from Areas where status='active' and match(name, slug, keywords)  against (:search IN BOOLEAN MODE) ORDER BY RELEVANCE DESC LIMIT 10",
         {
             replacements: { search: search },
             type: sq.QueryTypes.SELECT,
