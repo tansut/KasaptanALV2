@@ -16,6 +16,7 @@ import Resource from "../db/models/resource";
 import Content from "../db/models/content";
 import WebPage from "../db/models/webpage";
 import Redirect from "../db/models/redirect";
+import PriceCategory from "../db/models/pricecategory";
 
 
 let cache: Cache;
@@ -68,6 +69,7 @@ export class CacheManager {
             CacheManager.generateDataCache().then(p => {
                 res.locals.__categories = p.categories;
                 req.__categories = p.categories;
+                req.__pricecategories = p.pricecategories;
                 req.__resources = p.resources;
                 req.__products = p.products;
                 req.__recentBlogs = p.recentBlogs;
@@ -187,6 +189,23 @@ export class CacheManager {
         return categories;
     }
 
+    static async fillPriceCategories(cats: Category[]): Promise<PriceCategory[]> {
+        let categories = <PriceCategory[]>this.dataCache.get("pricecategories")
+        if (!categories) {
+            categories = await PriceCategory.findAll({
+                raw: true,
+                order: [["displayOrder", 'desc']]
+            });
+
+            categories.forEach(m=>{
+                m.category = cats.find(c=>c.id == m.categoryid)
+            })
+
+            this.dataCache.set("pricecategories", categories);
+        }
+        return categories;
+    }
+
     static async fillProductsByCategory(categories: Category[]) {
         let cacheproducts: { [key: string]: CategoryProductItem[] } = this.dataCache.get("category-products")
         if (!cacheproducts) {
@@ -281,6 +300,7 @@ export class CacheManager {
 
     static async generateDataCache() {
         let categories = await this.fillCategories();
+        let pricecategories = await this.fillPriceCategories(categories);
         let products = <any>await this.fillProducts();
         let butchers = <any>await this.fillButchers();
         let cities = <any>await this.fillCities();
@@ -292,6 +312,7 @@ export class CacheManager {
         let categoryProducts = <any>await this.fillProductsByCategory(categories);
         return {
             categories: categories,
+            pricecategories: pricecategories,
             products: products,
             cities: cities,
             butcherCities: butcherCities,

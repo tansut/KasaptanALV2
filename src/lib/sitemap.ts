@@ -9,6 +9,7 @@ import {Op, QueryTypes} from "sequelize";
 import Content from "../db/models/content";
 import Butcher from "../db/models/butcher";
 import Area from "../db/models/area";
+import PriceCategory from "../db/models/pricecategory";
 
 export default class SiteMapManager {
     static baseUrl = 'https://www.kasaptanal.com';
@@ -165,6 +166,40 @@ export default class SiteMapManager {
 
     } 
 
+    static async fillPriceCategories(stream: SitemapStream) {
+        let items = await PriceCategory.findAll({
+            include: [
+                {
+                    model: Category
+                }
+            ]
+        });
+
+        for(let i = 0; i < items.length; i++) {
+            let item = items[i];
+            let resources = await Resource.findAll({
+                where: {
+                    ref1: item.category.id,
+                    type: 'category-photos'
+                }
+            })
+            stream.write({
+                url: `${this.baseUrl}/${item.slug}`,
+                img: resources.map(r=> {
+                    return {
+                        url: r.getFileUrl(),
+                        title: r.title || item.name,
+                        caption: `${item.shortdesc}` || `${item.name}`
+                    }
+                })
+            })    
+            
+
+        }
+
+
+    } 
+
 
     static async fillProducts(stream: SitemapStream) {
         let items = await Product.findAll({
@@ -212,6 +247,7 @@ export default class SiteMapManager {
         });
         await this.fillProducts(stream);
         await this.fillCategories(stream);
+        await this.fillPriceCategories(stream);
         await this.fillFoods(stream);
         await this.fillBlog(stream);
         await this.fillButchers(stream);

@@ -27,14 +27,14 @@ class Product extends BaseModel<Product> {
         let start = "";
         if (this.shortdesc)
         start = `${this.name}: ${this.shortdesc}.`
-        else start = `${this.name} en lezzetli haliyle kasaptanAl.com'da.` ;
+        else start = `${this.name} kasaptanAl.com'da.` ;
         let availUnits = this.availableUnits;
 
         let units = availUnits.length < 3 ? this.availableUnits.join(' veya ').toLocaleLowerCase():
         this.availableUnits.slice(0, -1).join(', ').toLocaleLowerCase() + ' veya ' + this.availableUnits[this.availableUnits.length-1].toLocaleLowerCase()
         ;
 
-        let result = `${start} En iyi ${units} fiyat teklifleriyle online kasaplarımızdan satın alın, kapınıza gelsin!`
+        let result = `${start} En iyi ${units} ${this.name} fiyat teklifleriyle online kasaplarımızdan satın alın, kapınıza gelsin!`
 
         return result;
     }

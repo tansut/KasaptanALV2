@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="tr-TR" prefix="og: http://ogp.me/ns#">
+
+<head>
+  <% include ./_partial/head %>
+</head>
+
+<body>
+  <% include ./_partial/header %>
+
+
+  <div class="page-title-overlap bg-primary pt-4">
+    <div class="container d-lg-flex justify-content-between py-2 py-lg-3">
+      <div class="order-lg-2 mb-3 mb-lg-0 pt-lg-2">
+        <nav aria-label="breadcrumb">
+          <ol class="breadcrumb breadcrumb-light flex-lg-nowrap justify-content-center justify-content-lg-star">
+            <li class="breadcrumb-item"><a class="text-nowrap" href="/"><i class="czi-home"></i></a></li>
+            <li class="breadcrumb-item text-nowrap"><a href="/et-fiyatlari">Et Fiyatları</a>
+            </li>
+            <li class="breadcrumb-item text-nowrap active" aria-current="page"><%= controller.category.name %></li>
+          </ol>
+        </nav>
+      </div>
+      <div class="media media-ie-fix d-block d-sm-flex align-items-center text-center text-sm-left">
+        <a class="d-inline-block mx-auto mr-sm-4" href="/<%= controller.category.slug%>" style="width: 10rem;">
+
+          <img class="rounded-circle" src="<%=`${__req.helper.imgUrl('category-photos', controller.category.category.slug)}`%>"
+            alt="<%= controller.category.name%>"></a>
+        <div class="media-body pt-2">
+
+
+          <h1 class="h3 text-light"><%= controller.category.name %></h1>
+          <h2 class=" text-light h4 lead"><%= controller.category.shortdesc %></h2>         
+        </div>
+      </div>
+    </div>
+  </div>
+
+
+
+  <div class="container px-0">
+    <div class="bg-light box-shadow-lg px-4 py-4 mb-3 ">
+      <div class="row">
+        <% for(var j=0; j< controller.products.length; j++) {%>
+        <div class="col-md-3 col-6 ">
+          <%- include('./_partial/product-view.ejs', {product: controller.products[j]}) %>
+        </div>
+        <% } %>
+      </div>
+
+<div class="mb-3">
+  <%- include('./_partial/price-category-slider', {  title: 'Et Fiyatları', allUrl: '/et-fiyatlari' }); %>
+
+</div>
+
+<% if (controller.category.mddesc) { %>
+<div class="collapse-container page-footer-text">
+  <div class="collapse" id="collapseSummary">
+    <%- controller.category.mddesc && controller.Markdown.render(controller.category.mddesc) %>
+
+  </div>
+  <a class="collapsed text-dark" data-toggle="collapse" href="#collapseSummary" aria-expanded="false" aria-controls="collapseSummary"></a>
+</div>
+
+<%}%>
+
+
+    </div>
+  </div>
+
+
+
+  <% include ./_partial/footer %>
+  <% include ./_partial/scripts %>
+
+</body>
+
+</html>

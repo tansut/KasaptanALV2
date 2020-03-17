@@ -4,3 +4,5 @@
 /kasap-urunleri
 /blog
 /hikayemiz
+/kasaplar
+/et-fiyatlari

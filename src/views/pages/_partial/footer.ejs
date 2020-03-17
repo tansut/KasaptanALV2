@@ -59,9 +59,20 @@
 
 
             <div class="col-md-4 col-sm-6">
-
+                <div class="widget widget-links widget-light pb-2 mb-4">
+                    <h3 class="widget-title text-light">Et Fiyatları</h3>
+                    <ul class="widget-list">
+                        <% controller.req.__pricecategories.forEach(pc=> {  %>
+                        <li class="widget-list-item"><a class="widget-list-link" href="/<%=pc.slug%>"><%=pc.name%></a></li>                            
+                       <% })%>
+                       <li class="widget-list-item">
+                        <a class="widget-list-link" href="<%= `/et-fiyatlari`%>"><i
+                                class="czi-arrow-right-circle mr-2"></i>Tümü</a>
+                    </li>
+                    </ul>
+                </div> 
                 <div class="widget widget-links widget-light pb-2 mb-4 mr-4">
-                    <h3 class="widget-title text-light">Şehirler</h3>
+                    <h3 class="widget-title text-light">Online Kasaplar</h3>
                     <% var cityChunks = _.chunk(__butcherCities, 12) %>
                     <div class="row">
                         <% cityChunks.forEach((chunk, i) => { %>
@@ -85,6 +96,8 @@
 
 
                     </div>
+    
+                    
                     <div class="widget widget-links widget-light pb-2 mb-4">
                         <h3 class="widget-title text-light">Hakkımızda</h3>
                         <ul class="widget-list">
@@ -99,7 +112,7 @@
                             <li class="widget-list-item"><a class="widget-list-link" href="/iletisim">İletişim</a></li>
                         
                         </ul>
-                    </div>                   
+                    </div>  
                 </div>
                 <div class="col-md-4">
                     <div class="widget pb-2 mb-4">

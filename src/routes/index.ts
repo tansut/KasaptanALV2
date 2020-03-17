@@ -6,6 +6,7 @@ let appRoutes = [
     './resource',
     './product',
     './category',
+    './pricecategory',
     './content',
     './product.list',
     './default',

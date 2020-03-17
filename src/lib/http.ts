@@ -7,6 +7,7 @@ import { RequestHelper } from './RequestHelper';
 import Category from '../db/models/category';
 import { ResourceCacheItem, ProductCacheItem, CategoryProductItem, ButcherCacheItem, WebPageCacheItem, RedirectCacheItem } from './cache';
 import Content from '../db/models/content';
+import PriceCategory from '../db/models/pricecategory';
 
 export class ApplicationError extends Error {
     protected constructor(message?: string) {
@@ -65,6 +66,7 @@ export interface AppRequest extends express.Request {
     helper: RequestHelper;
     prefAddr: PreferredAddress;
     __categories: Category[];
+    __pricecategories: PriceCategory[];
     __resources: { [key: string]: [ResourceCacheItem]; }
     __products: { [key: string]: ProductCacheItem; }
     __recentBlogs: Content[];
