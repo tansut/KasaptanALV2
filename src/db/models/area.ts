@@ -110,7 +110,7 @@ class Area extends BaseModel<Area> {
                 level2Slug: this.slug,
                 level2Text: this.name,
 
-                display: parent.name + '/' + this.name
+                display: this.name + ', ' + parent.name
             }
         } else {
             let parentOfParent, parent: Area;            
@@ -132,7 +132,7 @@ class Area extends BaseModel<Area> {
                 level3Slug: this.slug,
                 level3Text: this.name           ,
                 
-                display: parentOfParent.name + '/' + parent.name + '/' + this.name
+                display: this.name + ', ' + parent.name + '/' + parentOfParent.name 
             }            
         }
 

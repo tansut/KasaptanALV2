@@ -75,7 +75,7 @@
                     <h3 class="widget-title text-light">Online Kasaplar</h3>
                     <% var cityChunks = _.chunk(__butcherCities, 12) %>
                     <div class="row">
-                        <% cityChunks.forEach((chunk, i) => { %>
+                        <% cityChunks.forEach((chunk, j) => { %>
                         <div class="col">
                             <ul class="widget-list">
                                 <% for(var i=0; i<chunk.length; i++) {%>
@@ -86,8 +86,12 @@
 
                                 <%}%>
                                     
-                                    
-                                                                </li>
+                                    <% if (j == 0) { %>
+                                <li class="widget-list-item">
+                                    <a class="widget-list-link" href="<%= `/kasaplar`%>"><i
+                                            class="czi-arrow-right-circle mr-2"></i>Tümü</a>
+                                </li>
+                                <%}%>
                                         
                                                             </ul>                        
                                             </div>
