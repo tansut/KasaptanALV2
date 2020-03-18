@@ -231,6 +231,7 @@ export default class Route  extends ViewRouter {
             let d = await Dispatcher.findByPk(id);
             let fee = parseInt(this.req.body['fee' + id.toString()])
             let free = parseInt(this.req.body['free' + id.toString()])
+            let min = parseInt(this.req.body['min' + id.toString()])
             d.enabled = this.req.body['enabled' + id.toString()] ? true : false;
             d.fee = fee;
             d.totalForFree = free;

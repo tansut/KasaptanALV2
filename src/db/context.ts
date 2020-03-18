@@ -20,6 +20,7 @@ import Dispatcher from './models/dispatcher';
 import WebPage from './models/webpage';
 import Redirect from './models/redirect';
 import PriceCategory from './models/pricecategory';
+import ButcherPriceHistory from './models/butcherpricehistory';
 
 
 let dbInstance: Sequelize;
@@ -36,7 +37,7 @@ let init = (params?: any) => {
         dialectOptions: { decimalNumbers: true }
     });
 
-    dbInstance.addModels([PriceCategory, Redirect, WebPage, ButcherModel, Order, OrderItem, Dispatcher, User, RefreshToken, Resource, Area, SiteLog, Category, Product, ProductCategory, ButcherProduct, Content, ResourceCategory]);
+    dbInstance.addModels([ButcherPriceHistory, PriceCategory, Redirect, WebPage, ButcherModel, Order, OrderItem, Dispatcher, User, RefreshToken, Resource, Area, SiteLog, Category, Product, ProductCategory, ButcherProduct, Content, ResourceCategory]);
 
     return dbInstance.sync({
         alter: true,

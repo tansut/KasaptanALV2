@@ -10,6 +10,9 @@ import Area from "../../db/models/area";
 import { ButcherRouter } from "./home";
 import * as _ from "lodash";
 import Helper from "../../lib/helper";
+import db from "../../db/context";
+import { Transaction } from "sequelize";
+import ButcherPriceHistory from "../../db/models/butcherpricehistory";
 
 
 export default class Route extends ButcherRouter {
@@ -131,6 +134,40 @@ export default class Route extends ButcherRouter {
         this.otherProducts = others.map(p => this.getButcherProductInfo(null, p));
     }
 
+    async manageHistory(rec: ButcherProduct, t: Transaction) {
+        if (!rec.enabled)
+            return;            
+        let existing = await ButcherPriceHistory.findOne({
+            where: {
+                butcherid: rec.butcherid,
+                productid: rec.productid,                
+            },
+            order: [['id', 'desc']],            
+        })
+        if (existing) {
+            if (existing.unit1price == rec.unit1price && 
+                existing.unit2price == rec.unit2price &&
+                existing.unit3price == rec.unit3price &&
+                existing.unit4price == rec.unit4price &&
+                existing.unit5price == rec.unit5price &&
+                existing.kgPrice == rec.kgPrice)
+                return;
+        }    
+        
+        let newItem = new ButcherPriceHistory();
+        newItem.unit1price = rec.unit1price;
+        newItem.unit2price = rec.unit2price;
+        newItem.unit3price = rec.unit3price;
+        newItem.unit4price = rec.unit4price;
+        newItem.unit5price = rec.unit5price;
+        newItem.kgPrice = rec.kgPrice;
+        newItem.productid = rec.productid;
+        newItem.butcherid = rec.butcherid;
+        return newItem.save({
+            transaction: t
+        })
+    }
+
     async saveProductRoute() {
         await this.setButcher();
 
@@ -174,7 +211,12 @@ export default class Route extends ButcherRouter {
                 }
             }))
         } else {
-            await newItem.save();
+            await db.getContext().transaction((t:Transaction)=> {
+                return newItem.save({
+                    transaction: t
+                }).then(()=> this.manageHistory(newItem, t))
+            })
+            
             await this.setButcher();
             await this.setProducts();
             this.goto = "p" + productid.toString();
