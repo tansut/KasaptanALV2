@@ -3,6 +3,10 @@
 
 <head>
   <% include ./_partial/head %>
+
+  <% if (area.status != 'active') {%>
+    <meta name="robots" content="noindex,follow">
+    <%}%>
 </head>
 
 <body>
