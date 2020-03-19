@@ -652,6 +652,9 @@
                             <button data-tag="true" data-category="shopcard/add" data-action="<%=view.butcher.slug%>" data-label="<%=product.slug%>" id="addtoscbtn" class="btn btn-accent btn-block" type="submit"><i
                               class="czi-cart font-size-lg mr-2"></i>Sepete Ekle</button>
                           
+                          <% } else { %>
+                              <button @click="selectArea(null, '<%=__req.prefAddr ? `Maalesef ürünümüz ${__req.prefAddr.level1Text}/${__req.prefAddr.level2Text}/${__req.prefAddr.level3Text} için ulaşılabilir değil. Lütfen bir başka adres seçin.`: ``%>')" type="button"  id="add2scSetAddrBtn" class="btn btn-accent btn-block"><i
+                                class="czi-location font-size-lg mr-2"></i>Semt Seç</button>
                           <% } %>
 
 

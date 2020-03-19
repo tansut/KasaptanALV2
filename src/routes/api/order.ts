@@ -13,6 +13,7 @@ import Product from '../../db/models/product';
 import  OrderApi from '../api/order';
 import { Transaction } from "sequelize";
 import db from "../../db/context";
+import { Sms } from '../../lib/sms';
 
 
 export default class Route extends ApiRouter {
@@ -136,21 +137,12 @@ export default class Route extends ApiRouter {
             return dbOrder
         }).then(dbOrder=> {
             let view = this.getView(dbOrder);
-            return email.send(order.email, "siparişinizi aldık", "order.started.ejs", view).then((em)=>dbOrder)                    
+            return Promise.all(
+                [email.send(order.email, "siparişinizi aldık", "order.started.ejs", view),
+                 Sms.send(dbOrder.phone, 'kasaptanAl.com siparisinizi aldik, destek tel/whatsup: 08503054216. Urunleriniz hazir oldugunda sizi bilgilendirecegiz.', false)
+                ]
+            ).then(()=>dbOrder)   
         })
-        
-
-
-        
-        // for(let s in card.shipment) {
-        //     let shipment = card.shipment[s];
-        //     let dispatcher = shipment.dispatcher ? shipment.dispatcher: null;
-        //     if (dispatcher) {
-        //         Dispatcher.update({
-        //             lasto
-        //         })
-        //     }
-        // }
 
     }
 
