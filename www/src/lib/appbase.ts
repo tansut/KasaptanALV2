@@ -30,9 +30,10 @@ export default class AppBase {
         this.jq('a[href="#' + tab + '"]').tab('show');
     };
 
-    static showSignupDlg(returnUrl?: string) {
+    static showSignupDlg(returnUrl: string = null, showAd: boolean = false) {
         this.activaTab("signup-tab");
         this.RunConfig['returnUrl'] = returnUrl;
+        showAd ? this.jq('#signupad').show(): this.jq('#signupad').hide();
         this.jq('#signin-modal').modal('show');
         $('#signin-modal').one('shown.bs.modal', function () {
             $('#su-tel').focus();
@@ -42,9 +43,10 @@ export default class AppBase {
 
     }    
 
-    static showLoginDlg(returnUrl?: string) {
+    static showLoginDlg(returnUrl: string = null, showAd: boolean = false) {
         this.activaTab("signin-tab")
         this.RunConfig['returnUrl'] = returnUrl;
+        showAd ? this.jq('#signupad').show(): this.jq('#signupad').hide();
         this.jq('#signin-modal').modal('show');
 
         $('#signin-modal').one('shown.bs.modal', function () {

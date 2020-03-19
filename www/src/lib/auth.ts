@@ -29,6 +29,11 @@ export class Auth {
                 App.gTag('signup', 'send-sms-code', tel);
                 $("#signup-form-2").removeClass('d-none');
                 $("#signup-form-1").addClass('d-none');
+                setTimeout(() => {
+                    $('#signupad').hide();
+                    $('#su-sms').focus();
+                    
+                });
             } catch (err) {
                 if (err && err.response && err.response.status == 400) {
                     $('#si-email').val(tel);
@@ -63,6 +68,10 @@ export class Auth {
 
                 $("#signup-form-3").removeClass('d-none');
                 $("#signup-form-2").addClass('d-none');
+                setTimeout(() => {
+                    $('#su-name').focus();
+                });
+
             } catch (err) {
                 App.gTag('signup', 'error-verify-sms-code',  Auth.phone);
                 App.HandleError(err)

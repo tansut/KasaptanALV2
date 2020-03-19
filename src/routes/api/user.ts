@@ -14,6 +14,7 @@ import { Auth, UserRoles } from '../../lib/common';
 import { SignupModel, AppUser, LoginResult } from '../../models/user';
 import Helper from '../../lib/helper';
 import { Sms } from '../../lib/sms';
+import email from '../../lib/email';
 var validator = require("validator");
 var generator = require('generate-password');
 let passport = require("passport")
@@ -81,6 +82,9 @@ export default class UserRoute extends ApiRouter {
         user.email = this.req.body.email;
         user.name = this.req.body.name;
         await user.save();
+        await email.send( user.email, "iyi et rehberi", "meatguide.ejs", {
+            email:  user.email
+        })
         await this.authenticateRoute()
     }
 

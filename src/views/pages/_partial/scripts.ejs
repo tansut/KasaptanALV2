@@ -200,7 +200,8 @@ $(document).ajaxComplete(function(){
       if (($(document).scrollTop() >= $(document).height() / 3) && !userGuide.autoPopuped) {
         userGuide.autoPopuped = true;
         window.App.setCookie("guidewindow", "1", 30);
-        userGuide.open();
+        window.App.showSignupDlg(null, true);
+        //userGuide.open();
       }
     });
 
