@@ -27,9 +27,12 @@
                     <div class="media-body pl-2">
                       <h5 class="h6 mb-1">{{alt.butcher.name}}</h5>
                      
-                        <money-view :unit="selectedUnit.unitTitle" 
+                        <money-view v-if="!alt.butcher.kgPrice" :unit="selectedUnit.unitTitle" 
                         v-if="selectedUnitForAlternate(alt.butcher)" 
                         class="font-size-sm text-accent" :money="selectedUnitForAlternate(alt.butcher).unitPrice"></money-view>
+                        <money-view v-else unit="Kg" 
+                        
+                        class="font-size-sm text-accent" :money="alt.butcher.kgPrice"></money-view>
                         <span class="d-block text-muted font-size-xs">
                           {{alt.dispatcher.priceInfo}}
                         </span>

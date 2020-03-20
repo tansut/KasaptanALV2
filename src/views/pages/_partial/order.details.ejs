@@ -53,11 +53,12 @@
             href="/<%=item.product.slug%>?butcher=<%=item.butcher.slug%>"><%=item.product.name%></a>
         </h3>
         <div class="font-size-normal"><span class="font-weight-medium"><%=item.quantity%></span> <span
-            class="text-muted"><%=item.pounit%>/</span>
+            class="text-muted"><%=item.pounitTitle%>/</span>
           <span class="font-size-sm">
             <%- include('./currency.ejs', {value: item.price}) %>
           </span>
-
+          <span
+          class="text-muted font-size-sm d-block">1 <%=item.pounitTitle%> <%=item.pounitWeight%>/</span>
         </div>
         <div class="text-nowrap">
 
