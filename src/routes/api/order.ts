@@ -114,6 +114,10 @@ export default class Route extends ApiRouter {
                         transaction: t
                     }))
                 }
+                if (card.address.saveaddress) {
+                    this.req.user.lastAddress = card.address.adres;
+                    promises.push(this.req.user.save())
+                }
                 return Promise.all(promises);  
             }).then((orderItems) => {
                 let promises = []
@@ -129,6 +133,7 @@ export default class Route extends ApiRouter {
                         }))
                     }                    
                 })
+           
                 return Promise.all(promises)
             });
         }).then(tc=>{

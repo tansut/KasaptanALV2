@@ -83,25 +83,30 @@ export default class Route extends ViewRouter {
     async setDispatcher() {
         let api = new Dispatcher(this.constructorParams);
         for (let o in this.shopcard.shipment) {
-            let dispatch = await api.bestDispatcher(parseInt(o), {
-                level1Id: this.shopcard.address.level1Id,
-                level2Id: this.shopcard.address.level2Id,
-                level3Id: this.shopcard.address.level3Id
-            });
-            if (dispatch) {
-                this.shopcard.shipment[o].dispatcher = {
-                    id: dispatch.id,
-                    name: dispatch.name,
-                    fee: dispatch.fee,
-                    totalForFree: dispatch.totalForFree,
-                    type: dispatch.type
+            if (true) {
+                let dispatch = await api.bestDispatcher(parseInt(o), {
+                    level1Id: this.shopcard.address.level1Id,
+                    level2Id: this.shopcard.address.level2Id,
+                    level3Id: this.shopcard.address.level3Id
+                });
+                if (dispatch) {
+                    this.shopcard.shipment[o].dispatcher = {
+                        id: dispatch.id,
+                        name: dispatch.name,
+                        fee: dispatch.fee,
+                        totalForFree: dispatch.totalForFree,
+                        type: dispatch.type,
+                        min: dispatch.min
+                    }
+                    if (dispatch.min > this.shopcard.butchers[o].subTotal) {
+                        this.shopcard.shipment[o].howTo = 'take'
+                    } else if (this.shopcard.shipment[o].howTo == 'unset') {
+                        this.shopcard.shipment[o].howTo = 'ship'                    
+                    }
+                } else {
+                    this.shopcard.shipment[o].dispatcher = null;
+                    this.shopcard.shipment[o].howTo = 'take'
                 }
-                //if (this.shopcard.shipment[o].howTo == 'unset') {
-                    this.shopcard.shipment[o].howTo = 'ship'                    
-                //}
-            } else {
-                this.shopcard.shipment[o].dispatcher = null;
-                this.shopcard.shipment[o].howTo = 'take'
             }
         }
     }
@@ -164,7 +169,7 @@ export default class Route extends ViewRouter {
                 this.shopcard.shipment[k].hours = [this.req.body[`samedaytime${k}`]];    
                 this.shopcard.shipment[k].daysText = ['Bugün - ' + Helper.formatDate(Helper.Now())];    
                 this.shopcard.shipment[k].hoursText = [this.shipmentHours[parseInt(this.req.body[`samedaytime${k}`])]];                
-            }            
+            }             
         }
         this.shopcard.calculateShippingCosts();        
         if (needAddress && !this.shopcard.address.name) {
@@ -172,6 +177,7 @@ export default class Route extends ViewRouter {
             this.shopcard.address.email = this.req.user.email;
             this.shopcard.address.phone = this.req.user.mphone;
         }
+        this.shopcard.address.adres = this.shopcard.address.adres || this.req.user.lastAddress;
         await this.shopcard.saveToRequest(this.req);
         //this.renderPage("pages/checkout.adres.ejs")
         needAddress ? this.renderPage("pages/checkout.adres.ejs"): this.renderPage("pages/checkout.adres-take.ejs");

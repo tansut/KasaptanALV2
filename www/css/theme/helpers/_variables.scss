@@ -32,8 +32,12 @@ $light:                 $white !default;
 $dark:                  $gray-800 !default;
 
 // Adding new color to default Bootstrap's $theme-colors map
-$theme-colors: (
-  "accent": $accent
+$theme-colors: () !default;
+$theme-colors: map-merge(
+  (
+    "accent": $accent
+  ),
+  $theme-colors
 );
 
 
@@ -51,9 +55,14 @@ $enable-print-styles:     false !default;
 $spacer: 1rem !default;
 
 // Add new space to default Bootstrap's $spacers map
-$spacers: (
-  10: ($spacer * 10)
+$spacers: () !default;
+$spacers: map-merge(
+  (
+    10: ($spacer * 10)
+  ),
+  $spacers
 );
+
 
 
 // Body
@@ -79,20 +88,29 @@ $emphasized-link-hover-darken-percentage: 0% !default;
 // Grid breakpoints
 //
 // Modifying default Bootstrap's $grid-breakpoints map
-$grid-breakpoints: (
-  xs: 0,
-  sm: 576px,
-  md: 768px,
-  lg: 992px,
-  xl: 1280px
+$grid-breakpoints: () !default;
+$grid-breakpoints: map-merge(
+  (
+    xs: 0,
+    sm: 576px,
+    md: 768px,
+    lg: 992px,
+    xl: 1280px
+  ),
+  $grid-breakpoints
 );
+
 
 
 // Grid containers
 //
 // Modifying default Bootstrap's $container-max-widths map (max-width of .container)
-$container-max-widths: (
-  xl: 1260px
+$container-max-widths: () !default;
+$container-max-widths: map-merge(
+  (
+    xl: 1260px
+  ),
+  $container-max-widths
 );
 
 
@@ -333,6 +351,7 @@ $dropdown-item-icon-size:           $dropdown-item-font-size !default;
 // Z-index master list
 
 $zindex-btn-scroll-top:             1025 !default;
+$zindex-toolbar:                    1026 !default;
 $zindex-offcanvas:                  1035 !default;
 $zindex-toast:                      1040 !default;
 
@@ -473,6 +492,7 @@ $pagination-font-size:                $font-size-base * .9375 !default;
 $pagination-font-size-sm:             $font-size-base * .8125 !default;
 $pagination-font-size-lg:             $font-size-base !default;
 
+$pagination-bg:                       transparent !default;
 $pagination-color:                    $gray-700 !default;
 $pagination-border-color:             transparent;
 $pagination-transition:               color .25s ease-in-out, border-color .25s ease-in-out, background-color .25s ease-in-out !default;
@@ -964,3 +984,14 @@ $sidebar-toggler-box-shadow:          0 .25rem 0.5625rem 0 rgba($black, .03), 0 
 $sidebar-toggler-transition:          color .25s ease-in-out, background-color .25s ease-in-out !default;
 $sidebar-toggler-hover-color:         $white !default;
 $sidebar-toggler-hover-bg:            $primary !default;
+
+
+// Handheld toolbar
+
+$toolbar-bg:                          $white !default;
+$toolbar-box-shadow:                  -1.25rem 0 2rem 0 rgba($gray-900, .15) !default;
+$toolbar-transition:                  all .3s .35s ease-in-out;
+$toolbar-icon-size:                   1.25rem !default;
+$toolbar-label-font-size:             .6875rem !default;
+$toolbar-icon-color:                  $gray-700 !default;
+$toolbar-label-color:                 $gray-600 !default;

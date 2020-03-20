@@ -232,9 +232,13 @@ export default class Route  extends ViewRouter {
             let fee = parseInt(this.req.body['fee' + id.toString()])
             let free = parseInt(this.req.body['free' + id.toString()])
             let min = parseInt(this.req.body['min' + id.toString()])
-            d.enabled = this.req.body['enabled' + id.toString()] ? true : false;
+            d.enabled = this.req.body['enabled' + id.toString()] == "on" ? true : false;
+            d.takeOnly = this.req.body['takeonly' + id.toString()] == "on" ? true : false;
+
+
             d.fee = fee;
             d.totalForFree = free;
+            d.min = min;
             await d.save()
 
         }

@@ -352,10 +352,19 @@
                                                 adres
                                             </th>
                                             <th>
+                                                min
+                                            </th>
+                                            <th>
                                                 ücret
                                             </th>
                                             <th>
-                                                alt sınır ücretsiz
+                                                üstü ücretsiz
+                                            </th>
+                                            <th>
+                                                gel al sadece
+                                            </th>
+                                            <th>
+                                                aktif
                                             </th>
 
                                         </tr>
@@ -375,6 +384,15 @@
                                                     <input type="text" name="free<%=d.id%>" value="<%=d.totalForFree%>">
 
                                                 </td>
+
+                                                <td>
+
+                                                    <input type="checkbox" name="takeonly<%=d.id%>"" class="form-check-input"
+                                                   <%= d.takeOnly ? "checked" : "" %> />
+
+                                                   
+
+                                                </td>    
 
                                                 <td>
 

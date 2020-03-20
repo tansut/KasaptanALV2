@@ -45,7 +45,7 @@ hr {
 }
 
 // Change Bootstrap default .container-fluid paddings
-@include media-breakpoint-up(lg) {
+@include media-breakpoint-up(xl) {
   .container-fluid {
     padding-right: $grid-gutter-width;
     padding-left: $grid-gutter-width;
@@ -62,4 +62,9 @@ small { font-weight: inherit; }
 // Remove top padding from body when screen size below md (992px)
 @include media-breakpoint-down(md) {
   body { padding-top: 0 !important; }
+}
+
+// Disable button :focus outline
+button:focus {
+  outline: none;
 }

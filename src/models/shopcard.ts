@@ -108,6 +108,13 @@ export class ShopCard {
     }    
 
 
+    // butcherDi(bi) {
+    //     let shipment = this.shipment[bi];
+    //     if (!shipment.dispatcher) 
+        
+    // }
+
+
     get butcherDiscountTotal() {
         let totalPrice = 0;
         for(let s in this.butcherDiscounts) {

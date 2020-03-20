@@ -236,6 +236,22 @@
 }
 
 
+// Floating button
+
+.product-floating-btn {
+  position: absolute;
+  right: .75rem;
+  bottom: .75rem;
+  transition: opacity .2s ease-in-out;
+  opacity: 0;
+  z-index: 10;
+
+  .product-card:hover & {
+    opacity: 1;
+  }
+}
+
+
 // Star rating
 
 .star-rating {

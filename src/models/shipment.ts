@@ -44,6 +44,7 @@ export interface DispatcherView {
     name: string,
     fee: number,
     totalForFree: number
+    min: number;
 }
 
 export class Shipment {

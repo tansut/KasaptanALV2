@@ -70,6 +70,9 @@ export default class User extends BaseModel<User> {
     lastLogin: Date
 
     @Column
+    lastAddress: string    
+
+    @Column
     butcherid: number;
 
     static retrieveByEMailOrPhone(email: string) {

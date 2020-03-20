@@ -25,7 +25,10 @@
 // Widget: Categories
 
 .widget-categories {
-  .card, .card-header { border: 0; }
+  .card, .card-header {
+    border: 0;
+    border-radius: 0;
+  }
   .card-body {
     padding: $card-spacer-y / 1.425 0;
   }
@@ -74,6 +77,7 @@
     border-right: $border-width * 2 solid $border-color;
     .widget-list-item {
       padding-right: 1rem;
+      .widget-list:not([data-simplebar]) { border-right: 0; }
     }
   }
 }

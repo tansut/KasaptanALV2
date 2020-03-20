@@ -29,10 +29,10 @@ import { ProductLd } from '../models/ProductLd';
 import ProductCategory from '../db/models/productcategory';
 
 interface ButcherSelection {
-    best: Butcher,
+    best: Dispatcher,
     servingL2: Dispatcher[]
     servingL3: Dispatcher[]
-    others: Butcher[]
+    takeOnly: Butcher[]
 }
 
 export default class Route extends ViewRouter {
@@ -43,23 +43,23 @@ export default class Route extends ViewRouter {
     butcherResources: Resource[] = [];
     productLd: ProductLd;
 
-    async tryBestFromShopcard(serving: Butcher[], others: Butcher[]) {
+    async tryBestFromShopcard(serving: Dispatcher[], others: Dispatcher[] = []) {
         let shopcard = await ShopCard.createFromRequest(this.req);
         let scButcher = (shopcard.items && shopcard.items.length) ? shopcard.items[0].product.butcher.id : null;
         if (scButcher) {
-            let inServing = serving.find(p => p.id == scButcher);
-            let inOther = others.find(p => p.id == scButcher);
+            let inServing = serving.find(p => p.butcherid == scButcher);
+            let inOther = others.find(p => p.butcherid == scButcher);
             return inServing || inOther
         } else return null;
     }
 
     async tryBestFromOrders(serving: Dispatcher[]) {
-        serving.forEach(s=>s.lastorderitemid = s.lastorderitemid || 0);
+        serving.forEach(s => s.lastorderitemid = s.lastorderitemid || 0);
         let orderedByDate = _.orderBy(serving, 'lastorderitemid', 'asc');
-        return orderedByDate.length ? orderedByDate[0].butcher : null;
+        return orderedByDate.length ? orderedByDate[0] : null;
     }
 
-    tryBestAsRandom(serving: Butcher[], others: Butcher[]) {
+    tryBestAsRandom(serving: Dispatcher[], others: Dispatcher[] = []) {
         let res = (serving.length > 0 ? serving[0] : null);
         res = res || (others.length > 0 ? others[0] : null);
 
@@ -69,47 +69,32 @@ export default class Route extends ViewRouter {
     async bestButchersForProduct(pid, adr: PreferredAddress, userBest: Butcher): Promise<ButcherSelection> {
         let api = new DispatcherApi(this.constructorParams);
 
-        // let sellingl3 = await Butcher.sellingButchers(pid, {
-        //     level3Id: this.req.prefAddr.level3Id
-        // });
-
-        // let sellingl2 = await Butcher.sellingButchers(pid, {
-        //     level2Id: this.req.prefAddr.level2Id
-        // });
-
-         let butchersInCity = await Butcher.sellingButchers(pid, {
-             level1Id: this.req.prefAddr.level1Id
-         });
-
         let serving = await api.getButchersSelingAndDispatches(adr, pid);
 
-        let servingL3 = serving.filter(p=>p.toarealevel == 3);
-        let servingL2 = serving.filter(p=>p.toarealevel == 2 && (servingL3.find(m=>m.butcher.id == p.butcher.id) == null));
+        let takeOnly = serving.filter(p => p.takeOnly == true);
+        let servingL3 = serving.filter(p => p.toarealevel == 3 && !p.takeOnly);
+        let servingL2 = serving.filter(p => p.toarealevel == 2 && !p.takeOnly && (servingL3.find(m => m.butcher.id == p.butcher.id) == null));
 
 
+        takeOnly = Helper.shuffle(takeOnly)
+        servingL3 = Helper.shuffle(servingL3)
+        servingL2 = Helper.shuffle(servingL2)
 
-        _.remove(butchersInCity, p => serving.find(s => s.butcherid == p.butcher.id));
+        let mybest: Dispatcher = await this.tryBestFromShopcard(serving) || 
+            await this.tryBestFromOrders(servingL3) || 
+            await this.tryBestFromOrders(servingL2) || this.tryBestAsRandom(serving);
 
-        let takeButcherIds = _.uniqBy(butchersInCity, function (e) {
-            return e.butcherid;
-        });
+        
 
-        let takeButchers = takeButcherIds.map(p => p.butcher);
-        let servingButchers = serving.map(p => p.butcher);
-
-        takeButchers = Helper.shuffle(takeButchers)
-        servingButchers = Helper.shuffle(servingButchers)
-
-        let mybest = await this.tryBestFromShopcard(servingButchers, takeButchers) || await this.tryBestFromOrders(servingL3) || await this.tryBestFromOrders(servingL2) || this.tryBestAsRandom(servingButchers, takeButchers);
-
-        if (mybest)
-            mybest = userBest || mybest;
+        if (mybest) {            
+            mybest = (userBest ? (serving.find(s=>s.butcherid == userBest.id)): null) || mybest;
+        }
 
         return {
             best: mybest,
             servingL2: servingL2,
             servingL3: servingL3,
-            others: takeButchers
+            takeOnly: takeOnly
         }
 
 
@@ -145,7 +130,6 @@ export default class Route extends ViewRouter {
         }
 
 
-        //let butchersSelling = await Butcher.sellingButchers(product.id);
 
 
         let selectedButchers: ButcherSelection;
@@ -155,56 +139,60 @@ export default class Route extends ViewRouter {
                 best: null,
                 servingL2: [],
                 servingL3: [],
-                others: []
+                takeOnly: []
             }
         } else
             selectedButchers = await this.bestButchersForProduct(product.id, this.req.prefAddr, butcher);
 
 
 
-        if (this.req.prefAddr && !butcher) {
+        
+        let view = await api.getProductView(product, selectedButchers.best ? selectedButchers.best.butcher : null, null,  true)
+        let serving = selectedButchers.servingL2.concat(selectedButchers.servingL3).concat(<any>selectedButchers.takeOnly);
 
 
-
-            // let dispatcher = await dapi.bestDispatcher(this.req.prefAddr.level3Id, 3);
-            // if (dispatcher && dispatcher.type == 'butcher') {
-
-            // let l1Butchers = await Butcher.sellingButchers(product.id, {
-            //     level3Id: this.req.prefAddr.level3Id
-            // }); 
-
-            // let l2Butchers = await Butcher.sellingButchers(product.id, {
-            //     level2Id: this.req.prefAddr.level2Id
-            // });
-
-            // let l3Butchers = await Butcher.sellingButchers(product.id, {
-            //     level2Id: this.req.prefAddr.level2Id
-            // });
-
-            // }
-            // let butchersInSemt = await Butcher.getByArea(this.req.prefAddr.level3Id, 3);
-            // let butchersInDistrict = await Butcher.getByArea(this.req.prefAddr.level2Id, 2);
-            // let butchersInCity = await Butcher.getByArea(this.req.prefAddr.level1Id, 1);
-
-            //  if (!butcher && l1Butchers.length > 0) selectedButcherProduct = l1Butchers[0];
-            //  if (!butcher && l2Butchers.length > 0) selectedButcherProduct = l2Butchers[0];
-            //  if (!butcher && l3Butchers.length > 0) selectedButcherProduct = l3Butchers[0];
-
-            //  if (selectedButcherProduct) butcher = selectedButcherProduct.butcher;
-
-            //  this.butcherProducts =  l1Butchers.concat(l1Butchers).concat(l1Butchers)
-        }
-
-
-
-        // if (this.butcherProducts.length == 0) {
-        //     this.butcherProducts = await Butcher.sellingButchers(product.id); 
-        // }
-
-
-
-
-        let view = await api.getProductView(product, selectedButchers.best || (selectedButchers.others.length ? selectedButchers.others[0]: null), null, true)
+        serving.forEach(s => {
+            let butcher = s instanceof Dispatcher ? s.butcher: s;
+            let dispatcher = s instanceof Dispatcher ? s: null;
+            if (view.butcher && (butcher.id != view.butcher.id)) {
+                let bp = butcher.products.find(bp => bp.productid == product.id);
+                view.alternateButchers.push({
+                    butcher: {
+                        id: butcher.id,
+                        slug: butcher.slug,
+                        name: butcher.name,
+                        kgPrice: bp ? bp.kgPrice: 0,
+                        productNote: bp ? bp.mddesc || "" : "",
+                        thumbnail: this.req.helper.imgUrl("butcher-google-photos", butcher.slug)
+                    },
+                    dispatcher: dispatcher ? {
+                        id: dispatcher.id,
+                        fee: dispatcher.fee,
+                        min: dispatcher.min,
+                        totalForFree: dispatcher.totalForFree,
+                        type: dispatcher.type,
+                        priceInfo: dispatcher.priceInfo,
+                        takeOnly: dispatcher.takeOnly
+                    }: null,
+                    purchaseOptions: api.getPurchaseOptions(product, bp).map(po => {
+                        return {
+                            unit: po.unit,
+                            unitPrice: po.unitPrice
+                        }
+                    })
+                })
+            } else if (view.butcher && view.butcher.id == s.butcher.id) {
+                view.dispatcher = dispatcher ? {
+                    id: dispatcher.id,
+                    fee: dispatcher.fee,
+                    min: dispatcher.min,
+                    totalForFree: dispatcher.totalForFree,
+                    type: dispatcher.type,
+                    priceInfo: dispatcher.priceInfo,
+                    takeOnly: dispatcher.takeOnly
+                }: null
+            }
+        })
 
 
 
@@ -244,26 +232,30 @@ export default class Route extends ViewRouter {
                     }
                 ]
             })
-
-            this.butcherResources = await Resource.findAll({
-                where: {
-                    type: ["butcher-google-photos", "butcher-videos"],
-                    ref1: view.butcher.id,
-                    list: true
-                },
-                order: [["displayOrder", "DESC"], ["updatedOn", "DESC"]]
-            })
         }
-        this.productLd = await api.getProductLd(product);
-        this.res.render('pages/product', this.viewData({ butcherProducts: this.butcherProducts.map(p => p.product), butchers: selectedButchers, 
-            pageTitle: product.name + ' Siparişi ve Fiyatları', 
-            // pageDescription: product.pageDescription + ' ', 
+
+            //     this.butcherResources = await Resource.findAll({
+            //         where: {
+            //             type: ["butcher-google-photos", "butcher-videos"],
+            //             ref1: view.butcher.id,
+            //             list: true
+            //         },
+            //         order: [["displayOrder", "DESC"], ["updatedOn", "DESC"]]
+            //     })
+            // }
+            this.productLd = await api.getProductLd(product);
+            this.res.render('pages/product', this.viewData({
+                butcherProducts: this.butcherProducts.map(p => p.product), butchers: selectedButchers,
+                pageTitle: product.name + ' Siparişi ve Fiyatları',
+                // pageDescription: product.pageDescription + ' ', 
 
 
-            pageThumbnail: this.req.helper.imgUrl('product-photos', product.slug),
-            pageDescription: product.generatedDesc,
-            product: product, view: view, 
-            __supportMessage: `${`Merhaba, kasaptanal.com üzerinden size ulaşıyorum. ${product.name} ile ilgili whatsapp üzerinden yardımcı olabilir misiniz?`}` }))
+                pageThumbnail: this.req.helper.imgUrl('product-photos', product.slug),
+                pageDescription: product.generatedDesc,
+                product: product, view: view,
+                __supportMessage: `${`Merhaba, kasaptanal.com üzerinden size ulaşıyorum. ${product.name} ile ilgili whatsapp üzerinden yardımcı olabilir misiniz?`}`
+            }))
+        
     }
 
 

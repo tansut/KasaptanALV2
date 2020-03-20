@@ -83,8 +83,8 @@ class Dispatcher extends BaseModel<Dispatcher> {
     @Column({
         allowNull: false,
     })
-    name: string; 
-    
+    name: string;
+
     @ForeignKey(() => Butcher)
     butcherid: number
 
@@ -107,18 +107,38 @@ class Dispatcher extends BaseModel<Dispatcher> {
     @Column({
         allowNull: true,
     })
-    note: string;    
+    note: string;
 
     @Column({
         allowNull: false,
         defaultValue: true
     })
-    enabled: boolean;        
+    enabled: boolean;
+
+    @Column({
+        allowNull: false,
+        defaultValue: false
+    })
+    takeOnly: boolean;
 
     get priceInfo() {
-        if (this.fee <= 0) return 'Ücretsiz Gönderim';
-        else if (this.fee > 0 && this.totalForFree <= 0) `${Helper.formattedCurrency(this.fee)} Gönderim Ücreti`;
-        else if (this.fee > 0) return `${Helper.formattedCurrency(this.totalForFree)} üzeri ücretsiz gönderim`;
+        let desc = "";
+
+        if (this.takeOnly) {
+            desc = "Gel-al sadece"
+            return desc;
+        }
+        
+        if (this.min > 0)
+            desc = `En az sipariş tutarı ${Helper.formattedCurrency(this.min)}`
+
+        if (this.fee <= 0) desc += ((desc ? ', ' : '') + 'Ücretsiz Gönderim');
+        else if (this.fee > 0 && this.totalForFree <= 0)
+            desc += ((desc ? ', ' : '') + `${Helper.formattedCurrency(this.fee)} gönderim ücreti`);
+        else if (this.fee > 0)
+
+            desc += ((desc ? ', ' : '') + `${Helper.formattedCurrency(this.totalForFree)} üzeri ücretsiz gönderim`);
+        return desc
     }
 
 }

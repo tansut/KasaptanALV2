@@ -22,12 +22,15 @@ class="gallery-item-caption"><%= butcherVideo.title %></span></a>
     src="<%= `${__req.helper.imgUrl('butcher-google-photos', view.butcher.slug)}` %>" alt="<%=view.butcher.name%>">
  <% } %>
       <div class="media-body  p-2">
-        <h6 class="h5 mb-0 mr-2"><%= view.butcher.name %></h6>
+        <h5 class="h6 mb-1 mr-2"><%= view.butcher.name %></h6>
         <!-- <span class="d-block font-size-ms text-muted">sağlamaktadır. </span> -->
-        <span class="font-size-ms text-muted">
-          {{  formatCurrency(selectedUnit.unitPrice).val}}.<small>{{formatCurrency(selectedUnit.unitPrice).krs}}</small> TL/{{selectedUnit.unitTitle}} 
+       
+          <money-view class=" font-size-sm text-accent" :unit="selectedUnit.unitTitle"  :money="selectedUnit.unitPrice"></money-view>
 
-        </span>
+          <span class="d-block text-muted font-size-xs">
+            <%= view.dispatcher ? view.dispatcher.priceInfo:""%>
+          </span>
+       
 
    
       </div></a>
@@ -43,9 +46,9 @@ class="gallery-item-caption"><%= butcherVideo.title %></span></a>
   </div> -->
   
     <% if (view.butcherNote) { %>
-      <div class="font-size-sm p-3">
+      <div class="font-size-sm  p-3">
         <!-- <span class="badge badge-accent font-size-xs mr-1">Kasabımızdan</span> -->
-        <span class="font-size-sm text-muted">"<%= view.butcherNote %>"</span>
+        <span class="font-size-sm text-info">"<%= view.butcherNote %>"</span>
         
 
       </div>

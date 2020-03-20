@@ -14,18 +14,40 @@ export interface PurchaseOption {
     perPerson: number;
     step: number;
     weigthNote: string;
+    
+}
+
+export interface ButcherPurchaseOption {
+    unit: string;
+    unitPrice: number;
+}
+
+export interface AlternateButchersView {
+    butcher: ProductButcherView;
+    dispatcher: ProductDispatcherView;    
+    purchaseOptions: ButcherPurchaseOption[];
 }
 
 export interface ProductButcherView {
     slug: string;
     name: string;
+    productNote: string;
     id: number;
+    kgPrice: number;
+    thumbnail?: string
 }
 
-export interface DispatcherView {
+export interface ProductDispatcherView {
+    type: string;
     id: number;
-    name: string;
+    min: number;
+    fee: number;
+    totalForFree: number;
+    priceInfo: string;
+    takeOnly: boolean;
 }
+
+
 
 export interface ResourceView {
     id: number,
@@ -39,6 +61,7 @@ export interface ProductView {
     id: number;
     butcher?: ProductButcherView;
     butcherNote?: string;
+    dispatcher?: ProductDispatcherView
     slug: string;
     kgPrice: number;
     name: string;
@@ -51,4 +74,5 @@ export interface ProductView {
     purchaseOptions: PurchaseOption[];
     //defaultUnit: number
     resources?: ResourceView[];
+    alternateButchers: AlternateButchersView[]
 }

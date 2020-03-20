@@ -98,7 +98,7 @@
 
                           <div v-if="card && card.shipment[<%=bi%>].dispatcher && (card.shipment[<%=bi%>].howTo == 'ship')">
                             <span class="text-dark font-weight-medium">En hızlı şekilde</span><br><span class="text-muted">
-                              Sizi arayalım ve teslimatı planlayalım.  Çoğu ürünümüzü 1-2 saat içerisinde gönderiyoruz.
+                              Sizi arayalım ve teslimatı planlayalım. Çoğu ürünümüzü 1-2 saat içerisinde gönderiyoruz.
         
                             </span>
                           </div>
@@ -178,8 +178,23 @@
                 <div v-if="card && card.shipment[<%=bi%>].dispatcher && (card.shipment[<%=bi%>].howTo == 'ship')" class="mx-4 mb-4 custom-control custom-checkbox">
                   <input class="custom-control-input" name="informme<%=bi%>" type="checkbox" <%= shipment.informMe ? 'checked':'' %> id="informme<%=bi%>">
                   <label class="custom-control-label" for="informme<%=bi%>">Paketim çıkmadan önce arayıp haber verirseniz sevinirim.</label>
-                </div>   
-                <% if (shopcard.getShippingCost(bi) > 0) { %>
+                </div> 
+
+
+                
+                <% if (shopcard.shipment[bi].dispatcher && (shopcard.shipment[bi].dispatcher.min > shopcard.butchers[bi].subTotal)) { %>
+                  <div class="alert alert-accent mx-4 mb-4" v-if="card && card.shipment['<%=bi%>'].howTo == 'ship'">
+                    <p class="font-size-sm">
+                    Alışveriş toplamınız <%- include('./_partial/currency.ejs', {value: shopcard.butchers[bi].subTotal}) %> olarak gözüküyor.
+                    <%=shipment.dispatcher.name%>, <%- include('./_partial/currency.ejs', {value: shipment.dispatcher.min}) %> ve üzeri siparişleri bu bölgeye teslim etmekte.
+                  </p>  
+                  <p class="font-size-sm"> 
+                    <a class="alert-link" href="/<%=shopcard.butchers[bi].slug%>"><%= shopcard.butchers[bi].name %></a> ürünlerine göz atabilirsiniz.                    
+                  </p>
+                   </div> 
+                
+
+                <% } else if (shopcard.getShippingCost(bi) > 0) { %>
                   <div class="alert alert-info mx-4 mb-4" v-if="card && card.shipment['<%=bi%>'].howTo == 'ship'">
                     <p class="font-size-sm">
                     Alışveriş toplamınız <%- include('./_partial/currency.ejs', {value: shopcard.butchers[bi].subTotal}) %> olarak gözüküyor.

@@ -8,6 +8,7 @@
   width: 100%;
   max-width: $sidebar-max-width;
   background-color: $sidebar-bg;
+  .close { font-size: $h3-font-size; }
 }
 .cz-sidebar-static {
   padding: $sidebar-padding-y $sidebar-padding-x;
@@ -26,7 +27,6 @@
   height: $sidebar-header-height;
   padding: .25rem ($spacer * 1.5);
   background-color: $sidebar-bg;
-  .close { font-size: $h3-font-size; }
 }
 .cz-sidebar-body {
   padding: $sidebar-padding-y $sidebar-padding-x;
@@ -37,30 +37,60 @@
   [data-simplebar] .simplebar-content > * {
     margin-right: -.625rem;
   }
-}
-.cz-sidebar-toggler {
-  display: none;
-  position: fixed;
-  top: 50%;
-  left: 0;
-  padding: $sidebar-toggler-padding-y $sidebar-toggler-padding-x;
-  transition: $sidebar-toggler-transition;
-  border-right: $sidebar-toggler-border-width solid $sidebar-toggler-border-color;
-  @include border-radius($border-radius);
-  border-top-left-radius: 0;
-  border-bottom-left-radius: 0;
-  background-color: $sidebar-toggler-bg;
-  background-color: $sidebar-toggler-bg;
-  color: $sidebar-toggler-color;
-  text: {
-    align: center;
-    decoration: none !important;
+  .sidebar-nav {
+    margin: {
+      right: -$sidebar-padding-x;
+      left: -$sidebar-padding-x;
+    }
   }
-  box-shadow: $sidebar-toggler-box-shadow;
-  z-index: $zindex-fixed;
-  &:hover {
-    background-color: $sidebar-toggler-hover-bg;
-    color: $sidebar-toggler-hover-color;
+}
+
+.cz-sidebar-fixed {
+  position: fixed;
+  top: 0;
+  left: 0;
+  height: 100%;
+  border-right: $border-width solid $border-color;
+  .cz-sidebar-inner {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    height: 100%;
+  }
+  .close {
+    display: none;
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 3.5rem;
+    padding: 1rem $sidebar-padding-x;
+    border-bottom: $border-width solid $border-color;
+    background-color: $gray-100;
+    float: none;
+  }
+  .cz-sidebar-body {
+    height: 100%;
+    overflow-y: auto;
+
+    &::-webkit-scrollbar {
+      width: $scrollbar-width;
+      background-color: transparent;
+      opacity: 0;
+    }
+    &::-webkit-scrollbar-thumb {
+      background-color: $scrollbar-bg;
+      @include border-radius($scrollbar-width / 2);
+    }
+    & > .simplebar-track {
+      display: block;
+      background-color: transparent;
+    }
+  }
+}
+@include media-breakpoint-up(lg) {
+  .sidebar-fixed-enabled {
+    padding-left: $sidebar-max-width;
   }
 }
 
@@ -95,6 +125,13 @@
     }
     overflow-y: auto;
 
+    .sidebar-nav {
+      margin: {
+        right: -($spacer * 1.5);
+        left: -($spacer * 1.5);
+      }
+    }
+
     &::-webkit-scrollbar {
       width: $scrollbar-width;
       background-color: transparent;
@@ -115,5 +152,15 @@
       margin-right: -.375rem;
     }
   }
-  .cz-sidebar-toggler { display: block; }
+  .cz-sidebar-fixed {
+    padding-top: 3.5rem !important;
+    border-right: 0;
+    .close { display: block; }
+    .cz-sidebar-body {
+      position: relative;
+      width: 100%;
+      height: 100%;
+    }
+  }
+
 }

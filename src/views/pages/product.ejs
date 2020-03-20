@@ -19,16 +19,9 @@
   <% include ./_partial/header %>
   <%- include('./_partial/product-weight-calc.ejs', {    product: product}) %>
 
-  <% otherButcherAlternatives = butchers.servingL3.length + butchers.servingL2.length  + butchers.others.length - 1 %>
+  <% otherButcherAlternatives = butchers.servingL3.length + butchers.servingL2.length  + butchers.takeOnly.length - 1 %>
 
-  <% if (view.butcher) {%>
-    <%- include('./_partial/butcher-alternatives.ejs', 
-    { butchersTakeaway: butchers.others.filter(p=>p.id != view.butcher.id), 
-      butchersServingL2: butchers.servingL2.filter(p=>p.butcher.id != view.butcher.id),
-      butchersServingL3: butchers.servingL3.filter(p=>p.butcher.id != view.butcher.id),
-    
-    }) %>
-<%}%>
+
 
   <div class="page-title-overlap bg-primary pt-4">
     <div class="container d-lg-flex justify-content-between py-2 py-lg-3">
@@ -75,6 +68,7 @@
 
 
 <div>
+
 
 
   <div class="container px-0 cz-gallery">
@@ -167,9 +161,15 @@
 
               </div>
             </div>
-            
+
 
             <div id="productapp" v-cloak class="col-lg-5 ">
+              <% if (view.butcher) {%>
+                <%- include('./_partial/butcher-alternatives.ejs', 
+                { alternates:  view.alternateButchers
+                
+                }) %>
+            <%}%>
               <% if (view.butcher) { %>
               <div class="toast-container toast-top-center">
                 <div id="shopcard-added-toast" class="toast mb-3" id="accent-toast" data-delay="50000" role="alert" aria-live="assertive" aria-atomic="true">
@@ -530,8 +530,9 @@
                   <span class="text-muted d-block mr-2">
                   Ürün Bedeli: 
                 </span>  
-                 <span class="d-block text-center text-accent"> 
-                  {{  formatCurrency(price).val}}.<small>{{formatCurrency(price).krs}}</small> TL </span>
+                
+                  <money-view class="d-block text-center text-accent"  :money="price"></money-view>
+                  
               </div> 
               <%}%>  
 
@@ -850,9 +851,12 @@
                 <script>
                   window.App.ProductApp.product = <%- JSON.stringify(view) %>;
                   window.App.WeightCalculatorApp.product = window.App.ProductApp.product;
+                  window.App.AlternativeButchersApp.product = window.App.ProductApp.product;
 
                   function showOtherButchers() {
-                    $('#butcher-alternatives').modal();
+                    $('#butcher-alternatives').appendTo("body").modal('show');
+
+                    //$('#butcher-alternatives').modal();
                      //window.App.scrollToAnchor("#tabpc");
                      //window.App.activaTab("vendors");
                     

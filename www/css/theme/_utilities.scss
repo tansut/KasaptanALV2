@@ -128,6 +128,7 @@
   color: darken($border-color, 8%) !important;
   font-weight: $font-weight-light;
 }
+.border-color { color: $border-color !important; }
 
 // Box shadow
 .box-shadow {
@@ -269,14 +270,10 @@
 }
 
 // Table layout fixed
-.table-fixed {
-  table-layout: fixed;
-}
+.table-fixed { table-layout: fixed !important; }
 
 // Disable animation
-.animation-0 {
-  animation: none !important;
-}
+.animation-0 { animation: none !important; }
 
 // IE fix for Media component inside flex container
 @media screen and (-ms-high-contrast: active), screen and (-ms-high-contrast: none) {  

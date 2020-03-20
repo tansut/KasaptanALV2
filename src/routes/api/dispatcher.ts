@@ -17,13 +17,6 @@ export default class Route extends ApiRouter {
 
     async _where(where: any, address: PreferredAddress) {
 
-        // .concat(await Area.findAll({
-        //     where: {
-        //         parentId: address.level1Id
-        //     },
-        //     attributes: ["id"],
-        //     raw: true
-        // }).map(p=>p.id))
         where['enabled'] = true;
         where[Op.or] = where[Op.or] || [];
         if (address && address.level1Id) {

@@ -46,7 +46,7 @@
     .nav-link::before {
       left: 0;
       width: 100%;
-    }
+    }    
   }
 }
 
@@ -295,4 +295,12 @@ a.nav-link {
 .active > .nav-link-style.nav-link-light,
 .nav-link-style.nav-link-light.active {
   color: $nav-link-light-active-color;
+}
+
+
+// Radio tabs
+
+.radio-tab-pane {
+  display: none;
+  &.active { display: block; }
 }

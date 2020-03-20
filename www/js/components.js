@@ -40,7 +40,23 @@ window.initComponents = function initComponents() {
     })
 
 
+    Vue.component('money-view', {
+            template: `
+            <span>
+            {{formatCurrency(money).val}}.<small>{{formatCurrency(money).krs}}</small> TL
+            <span v-if="unit">/{{unit}}</span>
+            </span>            `,
+            props: {                
+                money: { type: Number },
+                unit: { type: this.String}
+            },
 
+            methods: {
+                formatCurrency(v) {
+                    return window.App.formatCurrency(v);
+                },
+            }
+    })
 
     Vue.component('amount-input', {
         template: `
@@ -328,6 +344,18 @@ window.initComponents = function initComponents() {
         }
     })
 
+    window.App.AlternativeButchersApp = new Vue(
+        {
+            el: '#alternativebutchersapp',
+
+            data: function() {
+                return {
+                    product: null
+                }
+            }
+        }
+    )
+
     window.App.ProductApp = new Vue({
         el: '#productapp',
 
@@ -358,6 +386,19 @@ window.initComponents = function initComponents() {
 
             },
 
+            selectedUnitForAlternate(butcher) {
+                var self = this;
+                if (!this.product || !this.selectedUnit) return null;
+                var f = this.product.alternateButchers.find(function(ab) {
+                    return ab.butcher.slug == butcher.slug
+                });
+                if (!f) return null;
+                var au = f.purchaseOptions.find(function(po) {
+                    return po.unit == self.selectedUnit.unit;
+                })
+                return au;
+            },
+
             formatCurrency(v) {
                 return window.App.formatCurrency(v);
             },
@@ -383,7 +424,7 @@ window.initComponents = function initComponents() {
             selectNewButcher(butcher) {
                 var self = this;
                 var urlParams = new URLSearchParams(window.location.search);
-                var returnUrl = '/' + self.product.slug + '?butcher=' + butcher;
+                var returnUrl = '/' + self.product.slug + '?butcher=' + butcher.slug;
                 self.selectedUnit && (returnUrl += '&selectedUnit=' + encodeURIComponent(self.selectedUnit.unit))
                 self.quantity && (returnUrl += '&quantity=' + encodeURIComponent(self.quantity))
                 self.note && (returnUrl += '&note=' + encodeURIComponent(self.note))
