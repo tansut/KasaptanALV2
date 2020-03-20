@@ -101,6 +101,17 @@ export default class Route extends ViewRouter {
                 let address = await parent.getPreferredAddress();
                 dispatchers = await dp.getButchersDispatches(address);
                 butchers = dispatchers.map(b=>b.butcher);
+            } else if (butchers.length == 0 && area.level == 2) {
+                let children = await Area.findAll({
+                    attributes: ['id'],
+                    where: {
+                        parentid: area.id
+                    }
+                }).map(a=>a.id)   
+                dispatchers = await dp.getButchersDispatchesForAll(children);
+                butchers = dispatchers.map(b=>b.butcher);                
+                
+
             }
         }
 

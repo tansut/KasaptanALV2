@@ -101,6 +101,27 @@ export default class Route extends ApiRouter {
     //     return result;
     // }
 
+    async getButchersDispatchesForAll(areaids: number[]) {
+        let where = {
+            type: 'butcher'
+        }
+
+        where["toareaid"] = areaids
+        let res = await Dispatcher.findAll({
+            where: where,
+            include: [
+                {
+                    model: Butcher,
+                    as: 'butcher'
+                },
+            ],
+            order: [["toarealevel", "DESC"]]
+        })
+
+        return res;
+    }
+
+
     async getButchersDispatches(address: PreferredAddress) {
         let where = {
             type: 'butcher'
