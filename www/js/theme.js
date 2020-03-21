@@ -3,7 +3,7 @@
  * Theme core scripts
  * 
  * @author Createx Studio
- * @version 1.0
+ * @version 1.1
  */
 
 ;(function ($) {
@@ -19,6 +19,7 @@
     */
 
     init: () => {
+      theme.masonryGrid();
       theme.stickyNavbar();
       theme.stuckNavbarMenuToggle();
       theme.passwordVisibilityToggle();
@@ -42,10 +43,39 @@
       theme.rangeSlider();
       theme.filterList();
       theme.dataFilter();
+      theme.labelUpdate();
+      theme.radioTabs();
       theme.countdown();
       theme.charts();
     },
 
+
+    /**
+     * Cascading (Masonry) grid layout
+     * @memberof theme
+     * @method masonryGrid
+     * @requires https://github.com/desandro/imagesloaded
+     * @requires https://github.com/Vestride/Shuffle
+    */
+    masonryGrid: () => {
+
+      let grid = document.querySelectorAll('.cz-masonry-grid'),
+          masonry;
+
+      if (grid === null) return;
+      
+      for (let i = 0; i < grid.length; i++) {
+        masonry = new Shuffle(grid[i], {
+          itemSelector: '.grid-item',
+          sizer: '.grid-item'
+        });
+
+        imagesLoaded(grid[i]).on('progress', () => {
+          masonry.layout();
+        });
+      }
+    },
+    
 
     /**
      * Enable sticky behaviour of navigation bar on page scroll
@@ -63,7 +93,9 @@
 
       window.addEventListener('scroll', (e) => {
         if (e.currentTarget.pageYOffset > scrollOffset) {
-          document.body.style.paddingTop = navbarH + 'px';
+          if (! navbar.classList.contains('navbar-transparent')) {
+            document.body.style.paddingTop = navbarH + 'px';
+          }
           navbar.classList.add('navbar-stuck');
         } else {
           document.body.style.paddingTop = '';
@@ -295,19 +327,22 @@
     offcanvasSidebar: () => {
 
       let openTogglers = document.querySelectorAll('[data-toggle="sidebar"]'),
-          closeTogglers = document.querySelectorAll('[data-dismiss="sidebar"]');
+          closeTogglers = document.querySelectorAll('[data-dismiss="sidebar"]'),
+          body = document.querySelector('body');
 
       for (let i = 0; i < openTogglers.length; i++) {
         openTogglers[i].addEventListener('click', (e) => {
           e.preventDefault();
           let sidebarID = e.currentTarget.getAttribute('href');
           document.querySelector(sidebarID).classList.add('show');
+          body.classList.add('offcanvas-open');
         });
       }
       
       for (let i = 0; i < closeTogglers.length; i++) {
         closeTogglers[i].addEventListener('click', (e) => {
           e.currentTarget.closest('.cz-sidebar').classList.remove('show');
+          body.classList.remove('offcanvas-open');
         });
       }
     },
@@ -426,21 +461,17 @@
           lightGallery(gallery[i], {
             selector: '.gallery-item',
             download: false,
-            showAfterLoad: true,
-            
             videojs: true,
             youtubePlayerParams: {
               modestbranding: 1,
               showinfo: 0,
               rel: 0,
-              controls: 1,
-              autoplay: 1
+              controls: 0
             },
             vimeoPlayerParams: {
               byline: 0,
               portrait: 0,
-              color: 'fe696a',
-              autoplay: 1
+              color: 'fe696a'
             }
           });
         }
@@ -716,7 +747,7 @@
      * @memberof theme
      * @method dataFilter
     */
-    dataFilter: function () {
+    dataFilter: () => {
 
       let trigger = document.querySelector('[data-filter="trigger"]'),
           target = document.querySelectorAll('[data-filter="target"]');
@@ -740,11 +771,61 @@
 
 
     /**
+     * Updated the text of the label when radio button changes (mainly for color options)
+     * @memberof theme
+     * @method labelUpdate
+    */
+    labelUpdate: () => {
+
+      let radioBtns = document.querySelectorAll('[data-label]');
+
+      for (let i = 0; i < radioBtns.length; i++ ) {
+        radioBtns[i].addEventListener('change', function() {
+          let target = this.dataset.label;
+          try {
+            document.getElementById(target).textContent = this.value;
+          }
+          catch(err) {
+            if (err.message = "Cannot set property 'textContent' of null") {
+              console.error('Make sure the [data-label] matches with the id of the target element you want to change text of!');
+            }
+          }
+        });
+      }
+    },
+
+
+    /**
+     * Change tabs with radio buttons
+     * @memberof theme
+     * @method radioTabs
+    */
+    radioTabs: () => {
+
+      let radioBtns = document.querySelectorAll('[data-toggle="radioTab"]');
+
+      for (let i = 0; i < radioBtns.length; i++ ) {
+        radioBtns[i].addEventListener('click', function() {
+          let target = this.dataset.target,
+              parent = document.querySelector(this.dataset.parent),
+              children = parent.querySelectorAll('.radio-tab-pane');
+
+          children.forEach(function(element) {
+            element.classList.remove('active');
+          });
+
+          document.querySelector(target).classList.add('active');
+        });
+      }
+    },
+
+
+    /**
      * Countdown Timer
      * @memberof theme
      * @method countdown
     */
-    countdown: function () {
+    countdown: () => {
 
       let coundown = document.querySelectorAll('.cz-countdown');
 
@@ -809,7 +890,7 @@
      * @method charts
      * @requires https://github.com/gionkunz/chartist-js
     */
-    charts: function () {
+    charts: () => {
 
       let lineChart = document.querySelectorAll('[data-line-chart]'),
           barChart = document.querySelectorAll('[data-bar-chart]'),
@@ -912,7 +993,6 @@
           }
         });
       }
-
     }
 
   }
