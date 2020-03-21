@@ -77,7 +77,7 @@
 
     <div class="bg-light box-shadow-lg mb-3 pb-4 ">
       <div>
-        <div class="row ">
+        <div class="row no-gutters">
           <!-- Product gallery-->
 
           <div class="col-lg-7 ">
@@ -163,7 +163,7 @@
             </div>
 
 
-            <div id="productapp" v-cloak class="col-lg-5 ">
+            <div id="productapp" v-cloak class="col-lg-5 pt-lg-3 px-3 px-lg-4">
               <% if (view.butcher) {%>
                 <%- include('./_partial/butcher-alternatives.ejs', 
                 { alternates:  view.alternateButchers
@@ -238,25 +238,8 @@
         </div>
 
         <%} %>
-              <div class=" px-3 pl-lg-0 pr-lg-4   pt-lg-3 pb-0">
-                <% if (view.butcher) {%>
-
-                <div class="mb-3">
-
-                  <%if (view.butcher) {  %>
-
-                    <div class="">
-                     
-                    
-                     </div>
-
-                     <%}%>
-
-
-                </div>
-                <%} else { %>
-   
-                <% } %>
+              <div class=" pb-0">
+           
                 <form id="product-form" class="" @submit.prevent="addToShopcard">
                   <% if (product.featuresText) { %>
                     <% var notes = product.featuresText.split('\n') %>
