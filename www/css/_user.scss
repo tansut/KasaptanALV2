@@ -125,7 +125,11 @@ img{
   touch-action: manipulation;
 }
 
-.bootstrap-autocomplete, .searchBox {
+@media only screen and (max-width: 768px) {
+  .lg-toolbar {
+    margin-top: 25px !important;
+  }
+  
 }
 
 .bootstrap-autocomplete {
