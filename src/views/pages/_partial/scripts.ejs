@@ -218,7 +218,7 @@ $(document).ajaxComplete(function(){
       $(window.lgData.lg0.el).on('onAfterSlide.lg',function(event){
         var node = window.lgData.lg0.items[event.detail.index];
         if (node) {
-          window.scrollTo({ top: 0, left: 0, behavior: 'smooth' });
+          //window.scrollTo({ top: 0, left: 0, behavior: 'smooth' });
           if ($(node).data('gtrack')) {
             var href = $(node).attr('href');
             var type = $(node).data('restype');
@@ -240,7 +240,7 @@ $(document).ajaxComplete(function(){
     }
 
     $(window).on('shown.bs.modal', function() { 
-      window.scrollTo({ top: 0, left: 0, behavior: 'smooth' });
+      //window.scrollTo({ top: 0, left: 0, behavior: 'smooth' });
     });
     
 
