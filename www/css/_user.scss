@@ -1,10 +1,19 @@
 
+
 .reyon-navbar {
   li {
     img {
       width: 2.875rem;
     }
   }
+}
+
+.item-slider-selected {
+  border: red 3px solid;
+}
+
+.item-slider-unselected {
+  opacity: 0.6;
 }
 
 .line-h-extra {

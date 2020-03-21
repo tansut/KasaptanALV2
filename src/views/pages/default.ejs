@@ -20,7 +20,7 @@
     <% var reyonlar = __categories.filter(p=>p.type.includes('reyon')).slice(0,4) %>
 
 
-    <section class="bg-faded-primary pt-2 mb-3">
+    <section class="bg-faded-primary pt-2">
         <div class="container">
            
                 <div class="cz-carousel">
@@ -85,6 +85,9 @@
     </section>
 
 
+    <div class=" mb-3">
+        <%- include('./_partial/category-slider', { header: false, titles: false, viewCats: ['reyon', 'list'], title: 'Tüm Ürünlerimiz', allUrl: '/kasap-urunleri' }); %>      
+      </div>
 
     <div class="container mb-3">
         <%- include('./_partial/category-products-slider', {category: 'bu-hafta', reverse: true, img: 'img/category/premium.jpg'}); %>

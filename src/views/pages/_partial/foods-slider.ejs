@@ -22,7 +22,7 @@
         <h3 class="h6 mb-0 mr-2"><%= typeof(title) != 'undefined' ? title: 'Et Yemek Tarifleri' %></h3>
         <span class="font-size-ms text-muted"><%= typeof(text) != 'undefined' ? text: ''%></span>
       </div></a>
-      <a class="align-self-center d-md-block btn btn-sm" href="<%=targetUrl%>">Tümü<i
+      <a class=" align-self-center d-md-block btn btn-sm" href="<%=targetUrl%>">Tümü<i
           class="czi-arrow-right font-size-xs align-middle ml-1"></i></a>                        
   </div>
 
@@ -54,29 +54,6 @@
 
 
 
-
-  <!-- <div class="text-center text-sm-left p-2">
-      <h4 class="h6 font-weight-light font-size-lg mb-3">Hangi eti ne kadar almalıyım ?</h4>
-      <p class="font-weight-medium"><span class="text-primary mr-1"><i class=" czi-thumb-up mr-1">
-            
-      </i>Eti Bizden</span> seçeneği ile yemeğinize en uygun etler doğru miktarda bizden.</p>
-     
-     
-  </div> -->
-
-<!-- <div class="bg-secondary border-top">
-  <div class="p-1 font-size-sm">
-    <span class="badge badge-primary mr-1 "><i class=" czi-thumb-up mr-1">
-            
-    </i>Eti Bizden</span><span class="text-muted">seçeneği ile <%= mode == 'tarif' ? 'tarife': 'yemeğinize' %> uygun eti ihtiyacınız kadar hazırlıyoruz.
-
-
-
-    </span> 
-  
-  </div>
-   
-  </div> -->
 
 <% } %>
 
@@ -126,6 +103,15 @@
             </div>  
             <% } %>
       </div>
+</div>
+
+<div class="d-xs-block border-bottom d-md-none text-center mt-3 mb-3">
+  <a class="btn rounded-0 btn-sm btn-secondary" href="<%=targetUrl%>">Tümü
+
+      <i
+          class="czi-arrow-right font-size-xs align-middle ml-1"></i>
+  </a>
+
 </div>
 </div>
 

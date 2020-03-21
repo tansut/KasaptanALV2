@@ -213,18 +213,19 @@ $(document).ajaxComplete(function(){
 
 <script>
   $(document).ready(function () {
-    var scroll = 0; $(window).scrollTop();
+    var scroll = 0; 
+
     if (window.lgData && window.lgData.lg0) {
       $(window.lgData.lg0.el).on('onBeforeOpen.lg',function(event){
           
           scroll = $(window).scrollTop();
-          window.scrollTo({ top: 0, left: 0, behavior: 'auto' });
+          //$("html").scrollTop(0);
           
 
       })
 
       $(window.lgData.lg0.el).on('onCloseAfter.lg',function(event){
-        $("html").scrollTop(scroll);
+        //$("html").scrollTop(scroll);
       })
 
       
@@ -255,7 +256,7 @@ $(document).ajaxComplete(function(){
 
     $(window).on('show.bs.modal', function(e) { 
       scroll = $(window).scrollTop();
-      window.scrollTo({ top: 0, left: 0, behavior: 'auto' });
+      //$("html").scrollTop(0);
     });
     
 
