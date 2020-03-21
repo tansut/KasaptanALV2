@@ -37,7 +37,7 @@
                         self.selectedDistrict = list[0];
                         setTimeout(function () {
                             //self.districtsloaded || (self.options && self.options.openDistricts) ? $(options.districtDomSelector).selectpicker('toggle') : null;
-                            $(options.districtDomSelector).selectpicker('toggle');
+                            //$(options.districtDomSelector).selectpicker('toggle');
                             self.districtsloaded = list;
                         });
 

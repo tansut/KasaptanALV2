@@ -67,14 +67,14 @@ export default class UserRoute extends ApiRouter {
     async completesignupRoute() {
         let user = await UserModel.findOne({
             where: {
-                mphone: this.req.body.phone                
+                mphone: Helper.getPhoneNumber(this.req.body.phone)                
             }
         });
 
         
-        if (!user) throw new http.ValidationError("invalid phone");
+        if (!user) throw new http.ValidationError("invalid phone: " + Helper.getPhoneNumber(this.req.body.phone));
         if (!user.verifyPassword(this.req.body.password))
-            throw new http.ValidationError("SMS kodu hatalıdır");
+            throw new http.ValidationError("SMS kodu hatalıdır: " + Helper.getPhoneNumber(this.req.body.phone) );
         if (!validator.isEmail(this.req.body.email))
             throw new http.ValidationError("Geçersiz e-posta adresi");
         if (validator.isEmpty(this.req.body.name))
