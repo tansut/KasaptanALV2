@@ -44,6 +44,7 @@ export interface ProductDispatcherView {
     fee: number;
     totalForFree: number;
     priceInfo: string;
+    userNote: string;
     takeOnly: boolean;
 }
 

@@ -148,7 +148,7 @@ export default class Route extends ViewRouter {
 
         
         let view = await api.getProductView(product, selectedButchers.best ? selectedButchers.best.butcher : null, null,  true)
-        let serving = selectedButchers.servingL2.concat(selectedButchers.servingL3).concat(<any>selectedButchers.takeOnly);
+        let serving = selectedButchers.servingL3.concat(selectedButchers.servingL2).concat(<any>selectedButchers.takeOnly);
 
 
         serving.forEach(s => {
@@ -172,6 +172,7 @@ export default class Route extends ViewRouter {
                         totalForFree: dispatcher.totalForFree,
                         type: dispatcher.type,
                         priceInfo: dispatcher.priceInfo,
+                        userNote: dispatcher.userNote,
                         takeOnly: dispatcher.takeOnly
                     }: null,
                     purchaseOptions: api.getPurchaseOptions(product, bp).map(po => {
@@ -189,6 +190,7 @@ export default class Route extends ViewRouter {
                     totalForFree: dispatcher.totalForFree,
                     type: dispatcher.type,
                     priceInfo: dispatcher.priceInfo,
+                    userNote: dispatcher.userNote,
                     takeOnly: dispatcher.takeOnly
                 }: null
             }

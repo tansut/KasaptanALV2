@@ -121,7 +121,23 @@ class Dispatcher extends BaseModel<Dispatcher> {
     })
     takeOnly: boolean;
 
+    get userNote() {
+        let desc = "";
+
+        if (this.takeOnly) {
+            desc = "Semtinize sadece gel-al hizmeti verebiliyoruz"         
+        } else {
+            if (this.min > 0)
+                desc = `Sipariş toplamı ${Helper.formattedCurrency(this.min)} ve üzeriyse adresinize gönderebiliriz`
+            else desc = 'Adresinize gönderebiliriz'
+        }
+
+        return desc;
+    }
+
     get priceInfo() {
+
+
         let desc = "";
 
         if (this.takeOnly) {
