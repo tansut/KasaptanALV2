@@ -52,12 +52,12 @@ export default class UserRoute extends ApiRouter {
         
         let user = await UserModel.findOne({
             where: {
-                mphone: this.req.body.phone
+                mphone: Helper.getPhoneNumber(this.req.body.phone)
             }
         });
-        if (!user) throw new http.ValidationError("invalid phone");
+        if (!user) throw new http.ValidationError("Geçersiz telefon: " + Helper.getPhoneNumber(this.req.body.phone));
         if (!user.verifyPassword(this.req.body.password))
-            throw new http.ValidationError("SMS kodu hatalıdır");
+            throw new http.ValidationError("SMS kodu hatalıdır:" + Helper.getPhoneNumber(this.req.body.phone));
         user.mphoneverified = true;
         await user.save();
         this.res.sendStatus(200)
