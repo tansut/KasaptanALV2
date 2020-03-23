@@ -421,7 +421,7 @@ export class ShopcardItem {
         public quantity: number, public price: number,
         public purchaseoption: PurchaseOption, public note: string) {
             if (!product) throw new ValidationError('geçersiz ürün');
-            if (!quantity) throw new ValidationError('geçersiz miktar');
-            if (!price) throw new ValidationError('geçersiz bedel');
+            if (!quantity) throw new ValidationError('geçersiz miktar:' + product.name);
+            if (!price) throw new ValidationError('geçersiz bedel: ' + product.name);
     }
 }
