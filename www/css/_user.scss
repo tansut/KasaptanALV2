@@ -133,6 +133,10 @@ img{
   .modal-dialog {
     margin-top: 3rem !important;
   }
+
+  .toast-top-left, .toast-top-center, .toast-top-right {
+    top: 3rem !important;
+  }
 }
 
 .bootstrap-autocomplete {

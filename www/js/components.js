@@ -443,6 +443,7 @@ window.initComponents = function initComponents() {
                         self.selectedUnit && (returnUrl += '&selectedUnit=' + encodeURIComponent(self.selectedUnit.unit))
                         self.quantity && (returnUrl += '&quantity=' + encodeURIComponent(self.quantity))
                         self.note && (returnUrl += '&note=' + encodeURIComponent(self.note))
+                        returnUrl+='#aftersetloc'
                     }
                     window.location.href = "/adres-belirle/" + ul.selectedDistrict.slug + '?r=' + (encodeURIComponent(returnUrl));
                     //window.location.reload(true) // = "/" + window.App.ProductApp.product.slug + "?semt=" + ul.selectedDistrict.slug

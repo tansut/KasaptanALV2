@@ -47,6 +47,13 @@ export default class UserRoute extends ApiRouter {
     //         console.log(err)
     //     })
     // }
+
+
+    cleanSMS(sms: string) {
+        sms = sms || "";
+        return  sms.match(/\S+/g)[0]
+
+    }
     @Auth.Anonymous()
     async verifysignupRoute() {
         
@@ -56,7 +63,8 @@ export default class UserRoute extends ApiRouter {
             }
         });
         if (!user) throw new http.ValidationError("Geçersiz telefon: " + Helper.getPhoneNumber(this.req.body.phone));
-        if (!user.verifyPassword(this.req.body.password))
+        let sms = this.cleanSMS(this.req.body.password);
+        if (!user.verifyPassword(sms))
             throw new http.ValidationError("SMS kodu hatalıdır:" + Helper.getPhoneNumber(this.req.body.phone));
         user.mphoneverified = true;
         await user.save();
@@ -73,8 +81,10 @@ export default class UserRoute extends ApiRouter {
 
         
         if (!user) throw new http.ValidationError("invalid phone: " + Helper.getPhoneNumber(this.req.body.phone));
-        if (!user.verifyPassword(this.req.body.password))
-            throw new http.ValidationError("SMS kodu hatalıdır: " + Helper.getPhoneNumber(this.req.body.phone) );
+        let sms = this.cleanSMS(this.req.body.password);
+        
+        if (!user.verifyPassword(sms))
+            throw new http.ValidationError("SMS kodu hatalıdır." + Helper.getPhoneNumber(this.req.body.phone) );
         if (!validator.isEmail(this.req.body.email))
             throw new http.ValidationError("Geçersiz e-posta adresi");
         if (validator.isEmpty(this.req.body.name))
@@ -124,7 +134,9 @@ export default class UserRoute extends ApiRouter {
         let pwd = generator.generate({
             length: 5,
             numbers: true,
-            uppercase: false
+            uppercase: false,
+            lowercase: true,
+            excludeSimilarCharacters: true,
         });
 
         if (config.nodeenv == 'development')
