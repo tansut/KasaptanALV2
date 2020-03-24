@@ -45,6 +45,7 @@ export interface DispatcherView {
     fee: number,
     totalForFree: number
     min: number;
+    takeOnly: boolean;
 }
 
 export class Shipment {

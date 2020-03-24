@@ -89,18 +89,23 @@ export default class Route extends ViewRouter {
                     level2Id: this.shopcard.address.level2Id,
                     level3Id: this.shopcard.address.level3Id
                 });
-                if (dispatch) {
+                if (dispatch && !dispatch.takeOnly) {
                     this.shopcard.shipment[o].dispatcher = {
                         id: dispatch.id,
                         name: dispatch.name,
                         fee: dispatch.fee,
                         totalForFree: dispatch.totalForFree,
                         type: dispatch.type,
-                        min: dispatch.min
+                        min: dispatch.min,
+                        takeOnly: dispatch.takeOnly
                     }
                     if (dispatch.min > this.shopcard.butchers[o].subTotal) {
-                        this.shopcard.shipment[o].howTo = 'take'
-                    } else if (this.shopcard.shipment[o].howTo == 'unset') {
+                        this.shopcard.shipment[o].howTo = 'take';
+                    }
+                    else if (dispatch.takeOnly) {
+                        this.shopcard.shipment[o].howTo = 'take';
+                    } 
+                     else if (this.shopcard.shipment[o].howTo == 'unset') {
                         this.shopcard.shipment[o].howTo = 'ship'                    
                     }
                 } else {

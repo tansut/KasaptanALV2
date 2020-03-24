@@ -125,7 +125,7 @@ class Dispatcher extends BaseModel<Dispatcher> {
         let desc = "";
 
         if (this.takeOnly) {
-            desc = "Semtinize sadece gel-al hizmeti verebiliyoruz"         
+            desc = "*Semtinize sadece gel-al hizmeti verebiliyoruz*"         
         } else {
             if (this.min > 0)
                 desc = `Sipariş toplamı ${Helper.formattedCurrency(this.min)} ve üzeriyse adresinize gönderebiliriz`

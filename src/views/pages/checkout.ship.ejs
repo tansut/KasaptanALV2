@@ -182,8 +182,16 @@
 
 
                 
-                <% if (shopcard.shipment[bi].dispatcher && (shopcard.shipment[bi].dispatcher.min > shopcard.butchers[bi].subTotal)) { %>
-                  <div class="alert alert-accent mx-4 mb-4" v-if="card && card.shipment['<%=bi%>'].howTo == 'ship'">
+                <% if (shopcard.shipment[bi].dispatcher && (shopcard.shipment[bi].dispatcher.takeOnly)) { %>
+                  <div class="alert alert-accent mx-4 mb-4" v-if="card && card.shipment[<%=bi%>].dispatcher.takeOnly">
+                    <p class="font-size-sm">
+                      <%=shipment.dispatcher.name%> bu bölgede sadece gel-al hizmeti vermektedir.
+                  </p>  
+                 
+                   </div> 
+
+                <% } else if (shopcard.shipment[bi].dispatcher && (shopcard.shipment[bi].dispatcher.min > shopcard.butchers[bi].subTotal)) { %>
+                  <div class="alert alert-accent mx-4 mb-4" v-if="card && card.shipment[<%=bi%>].howTo == 'ship'">
                     <p class="font-size-sm">
                     Alışveriş toplamınız <%- include('./_partial/currency.ejs', {value: shopcard.butchers[bi].subTotal}) %> olarak gözüküyor.
                     <%=shipment.dispatcher.name%>, <%- include('./_partial/currency.ejs', {value: shipment.dispatcher.min}) %> ve üzeri siparişleri bu bölgeye teslim etmekte.
