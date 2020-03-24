@@ -42,17 +42,17 @@
                           "
                         </span>
 
-                        <div class="">
-                          <div class="mt-2" v-if="alt.butcher.userRatingAsPerc > 0">
-                            <div class="font-size-xs text-muted ">Ürün Memnuniyeti</div>
+                        <div class="row">
+                          <div class="mt-2 col" v-if="alt.butcher.userRatingAsPerc > 0">
+                            <div class="font-size-xs text-muted ">Memnuniyet</div>
                             <div class="progress">
                               <div class="progress-bar font-weight-medium bg-info" role="progressbar" :style="'width:' + alt.butcher.userRatingAsPerc + '%'" :aria-valuenow="alt.butcher.userRatingAsPerc" aria-valuemin="0" aria-valuemax="100">
                                 {{alt.butcher.userRatingAsPerc}}%
                               </div>  
                             </div>
                           </div>
-                          <div class="mt-2" v-if="alt.butcher.shipRatingAsPerc > 0">
-                            <div class="font-size-xs text-muted ">Teslimat Başarısı</div>
+                          <div class="mt-2 col" v-if="alt.butcher.shipRatingAsPerc > 0">
+                            <div class="font-size-xs text-muted ">Teslimat</div>
                             <div class="progress ">
                               <div class="progress-bar font-weight-medium bg-info" role="progressbar" :style="'width:' + alt.butcher.shipRatingAsPerc + '%'" :aria-valuenow="alt.butcher.shipRatingAsPerc" aria-valuemin="0" aria-valuemax="100">
                                 {{alt.butcher.shipRatingAsPerc}}%
