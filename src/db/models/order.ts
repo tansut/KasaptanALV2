@@ -31,10 +31,29 @@ class Order extends BaseModel<Order> {
     ordernum: string;
 
     @Column({
+        allowNull: true
+    })
+    ordergroupnum: string;    
+
+    @Column({
         allowNull: true,
         type: DataType.TEXT
     })
     note: string;
+
+    
+
+    @ForeignKey(() => Butcher)
+    butcherid: number;
+
+    @BelongsTo(() => Butcher, "butcherid")
+    butcher: Butcher;  
+    
+    @Column({
+        allowNull: false,
+        defaultValue: 'belli değil'        
+    })
+    butcherName: string;
 
     @Column({
         allowNull: false,
@@ -124,8 +143,24 @@ class Order extends BaseModel<Order> {
     })
     total: number;
 
+    @Column({
+        allowNull: true    
+    })    
+    status: string;    
+
+    @Column({
+        allowNull: true    
+    })    
+    statusDesc: string;      
+
     @Column
     shopcardjson: Buffer
+
+    @Column({
+        allowNull: true,
+        type: DataType.DECIMAL(5, 2)
+    })    
+    userRating: number;    
 
     get shopcard(): Object {
         return JSON.parse((<Buffer>this.getDataValue('shopcardjson')).toString())
@@ -135,16 +170,15 @@ class Order extends BaseModel<Order> {
         this.setDataValue('shopcardjson', Buffer.from(JSON.stringify(value), "utf-8"));
     }
 
-    static fromShopcard(c: ShopCard): Order {
+    static fromShopcard(c: ShopCard, bi: number): Order {
         let o = new Order();
         o.ordernum = orderid.generate();
         o.note = c.note;
-        //o.status = OrderStatus.preparing;
-        o.subTotal = c.subTotal;
-        o.discountTotal = c.discountTotal;
-        o.shippingTotal = c.shippingTotal;
-        o.total = c.total;
-
+        o.status = OrderItemStatus.supplying;
+        o.discountTotal = c.getButcherDiscountTotal(bi);
+        o.subTotal = c.butchers[bi].subTotal;        
+        o.shippingTotal = c.getShippingCost(bi);
+        o.total = c.getButcherTotal(bi);        
         o.areaLevel1Id = c.address.level1Id;
         o.areaLevel3Id = c.address.level3Id;
         o.areaLevel1Text = c.address.level1Text;
@@ -190,7 +224,23 @@ class OrderItem extends BaseModel<Order> {
     butcherid: number;
 
     @BelongsTo(() => Butcher, "butcherid")
-    butcher: Butcher;
+    butcher: Butcher;    
+
+    @Column({
+        allowNull: true,
+        type: DataType.DECIMAL(5, 2)
+    })    
+    userRating: number;
+
+    @Column({
+        allowNull: true    
+    })    
+    status: string;    
+
+    @Column({
+        allowNull: true    
+    })    
+    statusDesc: string;    
 
     @Column({
         allowNull: false,
@@ -226,10 +276,6 @@ class OrderItem extends BaseModel<Order> {
     })
     productName: string;
 
-    @Column({
-        allowNull: true
-    })
-    status: string;
 
     @Column({
         allowNull: false,

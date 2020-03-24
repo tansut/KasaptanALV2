@@ -4,8 +4,14 @@
 //     shipped = 'gönderildi',    
 // }
 
-export enum OrderItemStatus {
+
+
+export enum OrderItemStatus {    
     supplying = 'tedarik sürecinde',
-    approved = 'tedarik edildi',
-    completed = 'tamamlandı'
+    shipping = 'teslim edilecek',
+    success = 'teslim edildi',
+    successPartial = 'kısmen teslim edildi',
+    customerCanceled= 'iptal: müşteri',
+    butcherCannotShip = 'iptal: kasap teslimatı yapamadı',
+    butcherCannotProvide = 'iptal: kasap ürünü sağlayamadı'
 }

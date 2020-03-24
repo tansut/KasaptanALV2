@@ -160,6 +160,8 @@ export default class Route extends ViewRouter {
                     butcher: {
                         id: butcher.id,
                         slug: butcher.slug,
+                        userRatingAsPerc: butcher.userRatingAsPerc,
+                        shipRatingAsPerc: butcher.shipRatingAsPerc,
                         name: butcher.name,
                         kgPrice: bp ? bp.kgPrice: 0,
                         productNote: bp ? bp.mddesc || "" : "",

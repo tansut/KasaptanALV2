@@ -14,7 +14,7 @@ import  OrderApi from '../api/order';
 import { Transaction } from "sequelize";
 import db from "../../db/context";
 import { Sms } from '../../lib/sms';
-
+const orderid = require('order-id')('dkfjsdklfjsdlkg450435034.,')
 
 export default class Route extends ApiRouter {
 
@@ -94,26 +94,23 @@ export default class Route extends ApiRouter {
         }
     }    
 
-    async create(card: ShopCard) {
-        let order = Order.fromShopcard(card);
-        let l3 = await Area.findByPk(order.areaLevel3Id);
-        let l2 = await Area.findByPk(l3.parentid);
-        order.userId = this.req.user.id;
-        order.areaLevel2Id = l2.id;
-        order.areaLevel2Text = l2.name;
-
-        return db.getContext().transaction((t:Transaction)=> {
+     createOrder(t: Transaction, order: Order, card: ShopCard): Promise<any> {  
+              
             return order.save({
                 transaction: t
             }).then((order) => {
-                let promises = []
-                for(let i=0; i < card.items.length;i++) {
-                    let oi = OrderItem.fromShopcardItem(card, card.items[i]);            
-                    oi.orderid = order.id;
-                    promises.push(oi.save({
-                        transaction: t
-                    }))
-                }
+                let promises = [];
+                let butcher = card.butchers[order.butcherid];        
+                
+                 butcher.products.forEach((pi, i) => { 
+                     let item = card.items[pi];
+                     let oi = OrderItem.fromShopcardItem(card, item);            
+                     oi.orderid = order.id;
+                     promises.push(oi.save({
+                         transaction: t
+                     }))
+                 })
+
                 if (card.address.saveaddress) {
                     this.req.user.lastAddress = card.address.adres;
                     promises.push(this.req.user.save())
@@ -135,20 +132,50 @@ export default class Route extends ApiRouter {
                 })
            
                 return Promise.all(promises)
-            });
-        }).then(tc=>{
-            let api = new OrderApi(this.constructorParams);
-            let dbOrder = api.getOrder(order.ordernum);
-            return dbOrder
-        }).then(dbOrder=> {
-            let view = this.getView(dbOrder);
-            return Promise.all(
-                [email.send(order.email, "siparişinizi aldık", "order.started.ejs", view),
-                 Sms.send(dbOrder.phone, 'kasaptanAl.com siparisinizi aldik, destek tel/whatsup: 08503054216. Urunleriniz hazir oldugunda sizi bilgilendirecegiz.', false)
-                ]
-            ).then(()=>dbOrder)   
+            })
+    }
+
+    async create(card: ShopCard): Promise<Order[]> {
+
+        let butchers = card.butchers;
+        let groupid = orderid.generate();
+        let l3 = await Area.findByPk(card.address.level3Id);
+        let l2 = await Area.findByPk(l3.parentid);    
+        let result: Promise<Order>[] = [];
+        let orders = []
+
+        for(var bi in butchers) {
+            let order = Order.fromShopcard(card, <any>bi);   
+            order.ordergroupnum = groupid; 
+            order.butcherid = parseInt(bi);     
+            order.butcherName = butchers[bi].name;   
+            order.userId = this.req.user.id;
+            order.areaLevel2Id = l2.id;
+            order.areaLevel2Text = l2.name;
+            orders.push(order);
+        }    
+
+        let res = db.getContext().transaction((t:Transaction)=> {
+            for(var i = 0; i < orders.length; i++) {
+                let dbOrder = this.createOrder(t, orders[i], card);
+                result.push(dbOrder);
+            }
+            return Promise.all(result)            
         })
 
+        await res;
+        let fres = []
+        for(var oi = 0; oi < orders.length; oi++) {
+            let order = orders[oi];
+             let api = new OrderApi(this.constructorParams);
+             let dbOrder = await api.getOrder(order.ordernum);
+             let view = this.getView(dbOrder);
+             await email.send(dbOrder.email, "siparişinizi aldık", "order.started.ejs", view);
+             await Sms.send(dbOrder.phone, 'kasaptanAl.com siparisinizi aldik, destek tel/whatsup: 08503054216. Urunleriniz hazir oldugunda sizi bilgilendirecegiz.', false)             
+             fres.push(dbOrder)
+         }
+        
+         return fres;
     }
 
 

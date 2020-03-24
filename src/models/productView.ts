@@ -34,7 +34,9 @@ export interface ProductButcherView {
     productNote: string;
     id: number;
     kgPrice: number;
-    thumbnail?: string
+    thumbnail?: string;
+    userRatingAsPerc: number;
+    shipRatingAsPerc: number;
 }
 
 export interface ProductDispatcherView {

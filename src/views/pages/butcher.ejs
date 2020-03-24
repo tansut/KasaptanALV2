@@ -71,40 +71,70 @@
 
 
 
+      
+
+
 
 
     </div>
 
-
-    <div class="table-responsive cz-gallery bg-dark" data-simplebar>
-      <div class="d-flex mx-2 pb-2 ">
-        <% for(var i=0; i<images.length; i++) {%>
-
-        <div class="mr-2 ">
-          <div class="item-slider item-slider-sm p-3">
-
-
-
-
-            <a data-gtrack="1" data-restype="<%=images[i].type%>" data-resref="<%= butcher.slug %>"
-              data-restitle="<%= images[i].title || butcher.name %>" data-resid="<%=images[i].id%>"
-              class="gallery-item <%= images[i].contentType == 'video-youtube' ? 'video-item':''%>"
-              href="<%= `${images[i].fileUrl}`  %>"
-              data-sub-html="&lt;h6 class=&quot;font-size-sm text-light&quot;&gt;<%= images[i].title %>&lt;/h6&gt;"><img
-                style="width: 8rem; height: auto;" class="" src="<%= `${images[i].thumbnailFileUrl}` %>" /><span
-                class="gallery-item-caption"><%= images[i].title %></span></a>
+<div class="bg-dark">
+<div class="d-flex justify-content-center">
+  <div class="container mt-3 row w-50 justify-content-center">
+    <div class="col-sm-6">
+      <div class="font-size-sm text-light mb-2">Ürün Memnuniyeti</div>
+      <div class="progress mb-3">
+        <div class="progress-bar font-weight-medium bg-info" role="progressbar" style="width: <%=butcher.userRatingAsPerc %>%" aria-valuenow="<%=butcher.userRatingAsPerc %>" aria-valuemin="0" aria-valuemax="100">
+          <%=butcher.userRatingAsPerc %>%
+        </div>  
+      </div>
+    </div>
 
 
+<div class="col-sm-6">
+  <div class="font-size-sm text-light mb-2">Teslimat Başarısı</div>
+
+  <div class="progress mb-3">
+    <div class="progress-bar font-weight-medium bg-info" role="progressbar" style="width: <%=butcher.shipRatingAsPerc %>%" aria-valuenow="<%=butcher.shipRatingAsPerc %>" aria-valuemin="0" aria-valuemax="100">
+      <%=butcher.shipRatingAsPerc %>%
+    </div>  
+  </div>
+</div>
+
+  </div>
+</div>
+
+  <div class="table-responsive cz-gallery bg-dark" data-simplebar>
+    <div class="d-flex mx-2 pb-2 ">
+      <% for(var i=0; i<images.length; i++) {%>
+
+      <div class="mr-2 ">
+        <div class="item-slider item-slider-sm p-3">
 
 
 
-          </div>
+
+          <a data-gtrack="1" data-restype="<%=images[i].type%>" data-resref="<%= butcher.slug %>"
+            data-restitle="<%= images[i].title || butcher.name %>" data-resid="<%=images[i].id%>"
+            class="gallery-item <%= images[i].contentType == 'video-youtube' ? 'video-item':''%>"
+            href="<%= `${images[i].fileUrl}`  %>"
+            data-sub-html="&lt;h6 class=&quot;font-size-sm text-light&quot;&gt;<%= images[i].title %>&lt;/h6&gt;"><img
+              style="width: 8rem; height: auto;" class="" src="<%= `${images[i].thumbnailFileUrl}` %>" /><span
+              class="gallery-item-caption"><%= images[i].title %></span></a>
+
+
+
+
 
         </div>
 
-        <% } %>
       </div>
+
+      <% } %>
     </div>
+  </div>
+</div>
+
 
 
 

@@ -27,6 +27,42 @@ class Butcher extends BaseModel<Butcher> {
     @Column
     slug: string;
 
+    get userRatingAsPerc() {
+        return Math.round((this.userRating * 2) * 10);
+    }
+
+    get shipRatingAsPerc() {
+        let succ = this.shipTotalCount - this.shipFailureCount;
+        return this.shipTotalCount > 0 ? Math.round((succ / this.shipTotalCount) * 100): 0;
+    }
+
+    @Column({
+        allowNull: false,
+        defaultValue: 0,
+        type: DataType.DECIMAL(5, 2)
+    })    
+    userRating: number;    
+
+    @Column({
+        allowNull: false,
+        type: DataType.INTEGER,
+        defaultValue: 0
+    })    
+    userRatingCount: number;      
+
+    @Column({
+        allowNull: false,
+        type: DataType.INTEGER,
+        defaultValue: 0
+    })    
+    shipFailureCount: number;      
+
+    @Column({
+        allowNull: false,
+        type: DataType.INTEGER,
+        defaultValue: 0
+    })    
+    shipTotalCount: number;          
 
     @AllowNull(false)
     @Default(false)

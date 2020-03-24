@@ -308,6 +308,8 @@ export default class Route extends ApiRouter {
         view = {
             id: product.id,
             butcher: butcherProduct ? {
+                userRatingAsPerc: butcher.userRatingAsPerc,
+                shipRatingAsPerc: butcher.shipRatingAsPerc,
                 slug: butcher.slug,
                 name: butcher.name,
                 id: butcher.id           ,
