@@ -111,11 +111,12 @@ class Butcher extends BaseModel<Butcher> {
     @Column
     address: string;
 
-    @Column({ type: DataType.FLOAT })
-    lat: number;
+    @Column({
+        allowNull: true,
+        type: DataType.GEOMETRY('POINT')
+    })
+    location: object;
 
-    @Column({ type: DataType.FLOAT })
-    lng: number;
 
     @Column
     phone: string;

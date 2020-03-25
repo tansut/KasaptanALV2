@@ -1,6 +1,7 @@
 import Helper from "../lib/helper";
 import moment = require("moment");
 import Dispatcher from "../db/models/dispatcher";
+import { GeoLocation } from "./geo";
 
 export let ShipmentHours = {
     //0: 'Herhangi bir saat olabilir',
@@ -46,6 +47,7 @@ export interface DispatcherView {
     totalForFree: number
     min: number;
     takeOnly: boolean;
+    location: GeoLocation
 }
 
 export class Shipment {

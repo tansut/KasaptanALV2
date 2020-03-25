@@ -47,7 +47,14 @@ export default class Route extends ApiRouter {
 
         let res = await Dispatcher.findOne({
             where: where,
-            order: [["toarealevel", "DESC"]]
+            include: [
+                {
+                    model: Butcher,
+                    as: 'butcher'
+                },
+            ],            
+            order: [["toarealevel", "DESC"]],
+
         })
         return res;
     }

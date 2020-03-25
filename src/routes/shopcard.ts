@@ -97,7 +97,8 @@ export default class Route extends ViewRouter {
                         totalForFree: dispatch.totalForFree,
                         type: dispatch.type,
                         min: dispatch.min,
-                        takeOnly: dispatch.takeOnly
+                        takeOnly: dispatch.takeOnly,
+                        location: dispatch.butcher ? <any>dispatch.butcher.location: null
                     }
                     if (dispatch.min > this.shopcard.butchers[o].subTotal) {
                         this.shopcard.shipment[o].howTo = 'take';
@@ -134,6 +135,12 @@ export default class Route extends ViewRouter {
         this.shopcard.address.email = this.req.body.email;
         this.shopcard.address.phone = this.req.body.phone;
         this.shopcard.address.adres = this.req.body.address;
+        if (this.req.body.lat && this.req.body.long) {
+            this.shopcard.address.location = {
+                type: 'Point',
+                coordinates: [parseFloat(this.req.body.lat), parseFloat(this.req.body.long)]
+            }
+        }
         // this.shopcard.address.level1Id = parseInt(this.req.body.ordercity);
         // this.shopcard.address.level3Id = parseInt(this.req.body.orderdistrict);
         // this.shopcard.address.level1Text = this.req.body.ordercitytext;

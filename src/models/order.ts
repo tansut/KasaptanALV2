@@ -1,11 +1,3 @@
-// export enum OrderStatus {
-//     preparing = 'tedarik sürecinde',    
-//     willbeshipped = 'gönderilecek',
-//     shipped = 'gönderildi',    
-// }
-
-
-
 export enum OrderItemStatus {    
     supplying = 'tedarik sürecinde',
     shipping = 'teslim edilecek',

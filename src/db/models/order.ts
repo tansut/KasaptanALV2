@@ -6,6 +6,7 @@ import Product from './product';
 import Butcher from './butcher';
 import { OrderItemStatus } from '../../models/order';
 import Dispatcher from './dispatcher';
+import { GeoLocation } from '../../models/geo';
 const orderid = require('order-id')('dkfjsdklfjsdlkg450435034.,')
 
 @Table({
@@ -111,6 +112,22 @@ class Order extends BaseModel<Order> {
     })
     areaLevel3Text: string;
 
+    @Column({
+        allowNull: true,
+        type: DataType.GEOMETRY('POINT')
+    })
+    shipLocation: GeoLocation;
+
+    @Column({
+        allowNull: true,
+        type: DataType.GEOMETRY('POINT')
+    })
+    dispatcherLocation: GeoLocation;    
+
+    @Column({
+        allowNull: true
+    })
+    dispatcherDistance: number;    
 
     @HasMany(() => OrderItem, {
         sourceKey: "id",
@@ -162,6 +179,31 @@ class Order extends BaseModel<Order> {
     })    
     userRating: number;    
 
+    @ForeignKey(() => Dispatcher)
+    dispatcherid: number;
+
+    @Column({
+        allowNull: true
+    })
+    dispatcherType: string;  
+
+    @Column({
+        allowNull: true
+    })
+    dispatcherName: string;      
+
+    @Column({
+        allowNull: true,
+        type: DataType.DECIMAL(13, 2)
+    })
+    dispatcherFee: number;     
+
+    @Column({
+        allowNull: true,
+        type: DataType.DECIMAL(13, 2)
+    })
+    dispatchertotalForFree: number;        
+
     get shopcard(): Object {
         return JSON.parse((<Buffer>this.getDataValue('shopcardjson')).toString())
     }
@@ -185,9 +227,22 @@ class Order extends BaseModel<Order> {
         o.areaLevel3Text = c.address.level3Text;
         o.email = c.address.email;
         o.address = c.address.adres;
+        o.shipLocation = c.address.location;
         o.phone = c.address.phone;
         o.name = c.address.name;
         o.saveAddress = c.address.saveaddress;
+
+        if (c.shipment[bi].dispatcher) {
+            o.dispatcherid = c.shipment[bi].dispatcher.id;
+            o.dispatcherFee = c.shipment[bi].dispatcher.fee;
+            o.dispatcherName = c.shipment[bi].dispatcher.name;
+            o.dispatcherType = c.shipment[bi].dispatcher.type;
+            o.dispatchertotalForFree = c.shipment[bi].dispatcher.totalForFree;    
+            o.dispatcherLocation = c.shipment[bi].dispatcher.location;
+            if (o.shipLocation && o.dispatcherLocation) {
+                o.dispatcherDistance = Helper.distance(o.shipLocation, o.dispatcherLocation)
+            }        
+        }        
         return o;
     }
 
@@ -376,9 +431,6 @@ class OrderItem extends BaseModel<Order> {
 
     @ForeignKey(() => Dispatcher)
     dispatcherid: number;
-
-    // @BelongsTo(() => Dispatcher, "dispatcherid")
-    // dispatcher: Dispatcher;
 
     @Column({
         allowNull: true

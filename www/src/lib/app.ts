@@ -32,6 +32,17 @@ export class App extends AppBase {
 
     public static ComponentMap: ComponentMap = {};
 
+
+    static GetGeoLocation() {
+        if (navigator.geolocation) {
+            return new Promise((resolve, reject) => {
+                navigator.geolocation.getCurrentPosition(function(position) {
+                    resolve(position)
+                });
+            })
+        } else Promise.reject('not supported')
+    }
+
     static scrollToAnchor(aid){
         var aTag = $(aid);
         $('html,body').animate({scrollTop: aTag.offset().top},'slow');

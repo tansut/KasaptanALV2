@@ -73,6 +73,7 @@ export default class Route extends ApiRouter {
                         type: item.dispatcherType,
                         name: item.dispatcherName,
                         fee: item.dispatcherFee,
+                        location: order.dispatcherLocation,
                         totalForFree: item.dispatchertotalForFree
                     })                    
                 }

@@ -178,7 +178,17 @@ export default class Route extends ApiRouter {
         place.formatted_phone_number && (model.phone = place.formatted_phone_number);
         model.gplastdate = moment.utc().toDate();
         model.gpPlace = place;
-        (place.geometry && place.geometry.location) && (model.lat = place.geometry.location.lat, model.lng = place.geometry.location.lng);
+        if (place.geometry && place.geometry.location) {
+            model.location = {
+                
+                
+                    type: 'Point',
+                    coordinates: [place.geometry.location.lat, place.geometry.location.lng]
+                
+            
+            }
+      
+        } 
         place["user_ratings_total"] && (model.ratingCount = place["user_ratings_total"]);
         model.rating = isNaN(place.rating) ? 0.0 : place.rating;
         model.legalName = place.name;

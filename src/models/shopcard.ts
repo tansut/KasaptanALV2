@@ -6,6 +6,7 @@ import { Shipment, ShipmentType, ShipmentTypeDesc } from "./shipment";
 import { Payment, PaymentType, PaymentTypeDesc } from "./payment";
 import { Order } from "../db/models/order";
 import * as _ from "lodash"
+import { GeoLocation } from "./geo";
 
 export interface ShopcardAdres {
     name: string;
@@ -19,6 +20,7 @@ export interface ShopcardAdres {
     level1Text: string;
     level2Text: string;
     level3Text: string;
+    location?:GeoLocation;
 }
 
 class Modifier {
@@ -78,7 +80,8 @@ export class ShopCard {
         adres: '',
         level1Text: '',
         level2Text:'',
-        level3Text: ''
+        level3Text: '',
+        location: null
     };
     butchers: { [key: number]: ShopcardButcherView; } = {};
     shipment: { [key: number]: Shipment; } = {};
