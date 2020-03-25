@@ -136,13 +136,13 @@ export default class Route extends ViewRouter {
         this.shopcard.address.email = this.req.body.email;
         this.shopcard.address.phone = this.req.body.phone;
         this.shopcard.address.adres = this.req.body.address;
-        if (this.req.body.lat && this.req.body.long) {
+        if (this.req.body.lat && this.req.body.long && (parseFloat(this.req.body.lat) > 0) && (parseFloat(this.req.body.long) > 0)) {
             this.shopcard.address.location = {
                 type: 'Point',
                 coordinates: [parseFloat(this.req.body.lat), parseFloat(this.req.body.long)]
             }
             this.shopcard.address.accuracy = parseFloat(this.req.body.accuracy)
-        }
+        } else this.shopcard.address.location = null;
         // this.shopcard.address.level1Id = parseInt(this.req.body.ordercity);
         // this.shopcard.address.level3Id = parseInt(this.req.body.orderdistrict);
         // this.shopcard.address.level1Text = this.req.body.ordercitytext;

@@ -57,7 +57,7 @@ export default class Route extends ViewRouter {
         this.user = await User.findByPk(this.req.user.id);
         let order = await api.getOrder(this.req.params.orderid)
 
-        this.render("pages/user.order.details.ejs", api.getView(order));
+        this.render("pages/user.order.details.ejs", {...api.getView(order), ...{enableImgContextMenu: true} }   );
     }
 
     async saveProfile() {

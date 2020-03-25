@@ -312,6 +312,7 @@ function percentageToDegrees(percentage) {
       $('#si-email').focus();
     })
 
+    <% if (typeof(enableImgContextMenu) == 'undefined') { %>
     var allImages = document.querySelectorAll(".gallery-item");
     allImages.forEach((value) => {
       value.oncontextmenu = (e) => {
@@ -319,6 +320,7 @@ function percentageToDegrees(percentage) {
         return false;
       }
     })
+    <%}%>
   });
 
 

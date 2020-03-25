@@ -8,8 +8,21 @@
     <li><span class="text-muted">İsim:&nbsp;</span><%= order.name %></li>
     <li><span class="text-muted">Adres:&nbsp;</span><%= order.address%>
       <%= order.areaLevel3Text%>/<%= order.areaLevel1Text%></li>
-    <li><span class="text-muted">Telefon:&nbsp;</span><%= order.phone%></li>
+    <li id="orderphone" onclick="javascript:$('#orderphone').hide()"><span   class="text-muted">Telefon:&nbsp;</span><%= order.phone%></li>
   </ul>
+
+   <% if (order.shipLocation && order.shipLocation.coordinates) { %>
+
+  <div>
+    
+      <img width="600" src="https://maps.googleapis.com/maps/api/staticmap?center=<%=order.shipLocation.coordinates[0]%>+<%=order.shipLocation.coordinates[1]%>&zoom=16&scale=1&size=600x300&maptype=roadmap&key=AIzaSyBFqn2GNAhwbJnpga-3S3xQGBc0EcdAgH8&format=png&visual_refresh=true&markers=size:mid%7Ccolor:0xff0000%7Clabel:M%7C<%=order.shipLocation.coordinates[0]%>+<%=order.shipLocation.coordinates[1]%>">
+
+  </div>
+  <a target="_blank" class="font-size-sm" href="https://www.google.com/maps/place/<%=order.shipLocation.coordinates[0]%>+<%=order.shipLocation.coordinates[1]%>/">
+    <%=order.shipLocation.coordinates[0]%>, <%=order.shipLocation.coordinates[1]%>
+  </a>
+  <div class="font-size-sm text-muted">Lokasyon hata payı: <%=(order.shipLocationAccuracy)%>m</div>
+  <%}%>
 </div>
 
 
@@ -179,3 +192,10 @@
 
 </div>
 </div>
+
+<style>
+  img{
+  
+  pointer-events: all !important;
+}
+</style>
