@@ -38,7 +38,9 @@ export class App extends AppBase {
             return new Promise((resolve, reject) => {
                 navigator.geolocation.getCurrentPosition(function(position) {
                     resolve(position)
-                });
+                }, function(err) {
+                    reject(err)
+                }, {maximumAge:60000, timeout:10000, enableHighAccuracy: true});
             })
         } else Promise.reject('not supported')
     }

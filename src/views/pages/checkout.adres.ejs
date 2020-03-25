@@ -101,6 +101,7 @@
               </p>
               <input type="hidden" name="lat" value="0" id="lat">
               <input type="hidden" name="long" value="0" id="long">
+              <input type="hidden" name="accuracy" value="0" id="accuracy">
               <button id="getlatlong" type="button" onclick="javascript:setGeoLocation()" class="btn btn-primary"><i class="czi-location mr-1"></i>Konumumu Paylaş</button>
             </div>
             <h6 class="mb-3 py-3 border-bottom">Adresimi Kaydet</h6>
@@ -152,6 +153,7 @@
     window.App.GetGeoLocation().then(function(position) {
       $('#lat').val(position.coords.latitude);
       $('#long').val(position.coords.longitude);
+      $('#accuracy').val(position.coords.accuracy);
       alert('Tam konumunuzu aldık, teşekkürler.')
     }).catch(function(err) {
       alert('Konumunuzu maalesef alamadık, adresinizi yazmanız yeterli.')

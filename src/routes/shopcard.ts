@@ -99,6 +99,7 @@ export default class Route extends ViewRouter {
                         min: dispatch.min,
                         takeOnly: dispatch.takeOnly,
                         location: dispatch.butcher ? <any>dispatch.butcher.location: null
+                        
                     }
                     if (dispatch.min > this.shopcard.butchers[o].subTotal) {
                         this.shopcard.shipment[o].howTo = 'take';
@@ -140,6 +141,7 @@ export default class Route extends ViewRouter {
                 type: 'Point',
                 coordinates: [parseFloat(this.req.body.lat), parseFloat(this.req.body.long)]
             }
+            this.shopcard.address.accuracy = parseFloat(this.req.body.accuracy)
         }
         // this.shopcard.address.level1Id = parseInt(this.req.body.ordercity);
         // this.shopcard.address.level3Id = parseInt(this.req.body.orderdistrict);

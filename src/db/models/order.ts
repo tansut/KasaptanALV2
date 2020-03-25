@@ -118,6 +118,9 @@ class Order extends BaseModel<Order> {
     })
     shipLocation: GeoLocation;
 
+    @Column
+    shipLocationAccuracy: number
+
     @Column({
         allowNull: true,
         type: DataType.GEOMETRY('POINT')
@@ -228,6 +231,7 @@ class Order extends BaseModel<Order> {
         o.email = c.address.email;
         o.address = c.address.adres;
         o.shipLocation = c.address.location;
+        o.shipLocationAccuracy = c.address.accuracy;
         o.phone = c.address.phone;
         o.name = c.address.name;
         o.saveAddress = c.address.saveaddress;
@@ -238,7 +242,7 @@ class Order extends BaseModel<Order> {
             o.dispatcherName = c.shipment[bi].dispatcher.name;
             o.dispatcherType = c.shipment[bi].dispatcher.type;
             o.dispatchertotalForFree = c.shipment[bi].dispatcher.totalForFree;    
-            o.dispatcherLocation = c.shipment[bi].dispatcher.location;
+            o.dispatcherLocation = c.shipment[bi].dispatcher.location;            
             if (o.shipLocation && o.dispatcherLocation) {
                 o.dispatcherDistance = Helper.distance(o.shipLocation, o.dispatcherLocation)
             }        

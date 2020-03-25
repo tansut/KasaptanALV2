@@ -21,6 +21,7 @@ export interface ShopcardAdres {
     level2Text: string;
     level3Text: string;
     location?:GeoLocation;
+    accuracy?: number;
 }
 
 class Modifier {
