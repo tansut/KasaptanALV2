@@ -75,8 +75,10 @@
           <span class="font-size-sm">
             <%- include('./currency.ejs', {value: item.price}) %>
           </span>
+          <%if (item.pounitWeight) { %>
           <span
           class="text-muted font-size-sm d-block">1 <%=item.pounitTitle%> <%=item.pounitWeight%>/</span>
+          <% } %>
         </div>
         <div class="text-nowrap">
 

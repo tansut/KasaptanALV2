@@ -1,0 +1,13 @@
+<% var positive = Math.round(val);
+var negative = 5 - positive;
+%>
+<div class="star-rating">
+    <%for(var i = 0; i < positive;i++) { %>
+    <i class="sr-star czi-star-filled active"></i>
+    <%}%>
+    <%for(var i = 0; i < negative;i++) { %>
+        <i class="sr-star czi-star"></i>
+
+        <%}%>
+        
+</div>

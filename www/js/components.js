@@ -423,8 +423,9 @@ window.initComponents = function initComponents() {
 
             selectNewButcher(butcher) {
                 var self = this;
+                var butcherSlug = typeof(butcher) == 'string' ? butcher: butcher.slug;
                 var urlParams = new URLSearchParams(window.location.search);
-                var returnUrl = '/' + self.product.slug + '?butcher=' + butcher.slug;
+                var returnUrl = '/' + self.product.slug + '?butcher=' + butcherSlug;
                 self.selectedUnit && (returnUrl += '&selectedUnit=' + encodeURIComponent(self.selectedUnit.unit))
                 self.quantity && (returnUrl += '&quantity=' + encodeURIComponent(self.quantity))
                 self.note && (returnUrl += '&note=' + encodeURIComponent(self.note))

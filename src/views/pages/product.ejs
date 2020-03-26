@@ -239,8 +239,18 @@
 
         <%} %>
               <div class=" pb-0">
-           
+                
                 <form id="product-form" class="" @submit.prevent="addToShopcard">
+                  <% if (controller.reviews.length) { %>
+                    <div class="text-center mb-3">
+                      <div class="mb-1">
+                        <%- include('./_partial/star-rating.ejs', {val: product.ratingValue }) %>
+
+                      </div>
+                      <a href="javascript:gotoComments()"  class="font-size-sm text-dark font-weight-medium" ><span>Yorumlar (</span><span class="text-primary"><%=controller.reviews.length %></span><span>)</span></a>
+                      
+                    </div>
+                  <% } %>
                   <% if (product.featuresText) { %>
                     <% var notes = product.featuresText.split('\n') %>
                     <div class="border-bottom mb-3  ">
@@ -671,10 +681,12 @@
             <a class="nav-link active" id="home-tab" data-toggle="tab" href="#home" role="tab" aria-controls="home"
               aria-selected="true">Bilgi</a>
           </li>
-          <!-- <li class="nav-item">
-                      <a class="nav-link" id="profile-tab" data-toggle="tab" href="#profile" role="tab" aria-controls="profile" aria-selected="false">Yorumlar</a>
-                    </li> -->
-
+          <%if (controller.reviews.length) { %>
+            <a id="usercomments"></a>
+           <li class="nav-item">
+                      <a class="nav-link" id="comments-tab" data-toggle="tab" href="#comments" role="tab" aria-controls="comments" aria-selected="false">Yorumlar</a>
+                    </li> 
+          <% } %>
 
 
 
@@ -685,6 +697,7 @@
           </li>   -->
          <% } %>        
         </ul>
+        <%if (controller.reviews.length) { %>
         <div class="tab-content px-4" id="myTabContent">
           <div class="tab-pane fade show active" id="home" role="tabpanel" aria-labelledby="home-tab">
           
@@ -810,12 +823,54 @@
                    
                  
           </div>
+          <div class="tab-pane fade" id="comments" role="tabpanel" aria-labelledby="comments-tab">
+          
+          <% controller.reviews.forEach(r => {  %> 
+            <div class="product-review pb-4 mb-4 border-bottom">
+            <div class="d-flex mb-3">
+              <div class="media media-ie-fix align-items-center mr-4 pr-2">
+                <div class="avatar">
+              
+                  <img  src="/static/img/avatar.jpg" alt="<%=r.displayUser%>">
 
+                </div> 
 
+                <%
+                
+                  const dateops = { year: 'numeric', month: 'long'};
+
+                %>
+                
+                <div class="media-body pl-3">
+                  <h6 class="font-size-sm mb-0"><%=r.displayUser%></h6>
+                  <span class="font-size-ms text-muted"></span>
+                </div>
+              </div>
+              <div>
+                <%- include('./_partial/star-rating.ejs', {val: r.userRating1 }) %>
+
+                <div class="font-size-ms text-muted">
+                  <%=r.itemDate.toLocaleDateString('tr-TR', dateops)%> tarihli 
+                  <%if (view.butcher) { %>
+                  <a href="javascript: window.App.ProductApp.selectNewButcher('<%=r.ref2slug%>')"><%=r.ref2Text%></a> 
+                  <% } else  { %>
+                  <a href="/<%=r.ref2slug%>"><%=r.ref2Text%></a> 
+
+                  <% } %>
+                  siparişi
+                </div>
+              </div>
+            </div>
+            <p class="font-size-md mb-2">
+              <%= r.content %>
+            </p>
+          </div>
+          <% }) %>
                            
+          </div>
 
-
-                  </div>            
+                  </div>          
+        <% } %>  
     </div>
 
 
@@ -835,6 +890,11 @@
                   window.App.ProductApp.product = <%- JSON.stringify(view) %>;
                   window.App.WeightCalculatorApp.product = window.App.ProductApp.product;
                   window.App.AlternativeButchersApp.product = window.App.ProductApp.product;
+
+function gotoComments() {
+  window.App.activaTab('comments'); 
+  window.App.scrollToAnchor('#usercomments')
+}
 
                   function showOtherButchers() {
                     $('#butcher-alternatives').appendTo("body").modal('show');

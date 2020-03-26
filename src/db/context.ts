@@ -21,6 +21,7 @@ import WebPage from './models/webpage';
 import Redirect from './models/redirect';
 import PriceCategory from './models/pricecategory';
 import ButcherPriceHistory from './models/butcherpricehistory';
+import Review from './models/review';
 
 
 let dbInstance: Sequelize;
@@ -37,7 +38,7 @@ let init = (params?: any) => {
         dialectOptions: { decimalNumbers: true }
     });
 
-    dbInstance.addModels([ButcherPriceHistory, PriceCategory, Redirect, WebPage, ButcherModel, Order, OrderItem, Dispatcher, User, RefreshToken, Resource, Area, SiteLog, Category, Product, ProductCategory, ButcherProduct, Content, ResourceCategory]);
+    dbInstance.addModels([Review, ButcherPriceHistory, PriceCategory, Redirect, WebPage, ButcherModel, Order, OrderItem, Dispatcher, User, RefreshToken, Resource, Area, SiteLog, Category, Product, ProductCategory, ButcherProduct, Content, ResourceCategory]);
 
     return dbInstance.sync({
         alter: true,

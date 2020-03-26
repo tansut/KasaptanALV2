@@ -85,6 +85,36 @@ html {
   //}
 }
 
+.avatar {
+  border-radius: 50%;
+  display: inline-block;
+  height: 48px;
+  position: relative;
+  width: 48px;
+  margin-right: 2px;
+
+    img {
+      border-radius: 50%;
+    height: 48px;
+    width: 48px;
+    }
+
+
+    .approved {
+      position: absolute;
+    top: -3px;
+    right: 8px;
+    color: #00f;
+    background-repeat: no-repeat;
+    background-position: 50%;
+    background-size: contain;
+    background-image: url("data:image/svg+xml;charset=utf-8,%3Csvg width='22' height='21' xmlns='http://www.w3.org/2000/svg' xmlns:xlink='http://www.w3.org/1999/xlink' fill='none'%3E%3Cdefs%3E%3Cpath d='M14.417 0l1.872 3.202 3.605.8-.328 3.72L22 10.5l-2.434 2.778.328 3.72-3.605.8L14.417 21 11 19.54 7.583 21l-1.872-3.155-3.605-.847.328-3.72L0 10.5l2.434-2.825-.328-3.673 3.605-.8L7.583 0 11 1.46 14.417 0zm-.38 7.72a.786.786 0 00-.587.267l-3.77 4.138-1.134-1.244a.786.786 0 00-.587-.267.786.786 0 00-.587.267.974.974 0 000 1.287l1.762 1.933c.151.17.364.266.586.266a.786.786 0 00.587-.266.919.919 0 00.17-.276l4.147-4.55a.974.974 0 000-1.288.786.786 0 00-.587-.266z' id='a'/%3E%3C/defs%3E%3Cuse fill='%236C84FA' xlink:href='%23a' fill-rule='evenodd'/%3E%3C/svg%3E");
+    width: 20px;
+    height: 20px;
+    }
+
+}
+
 img{
   
   pointer-events: none;

@@ -25,6 +25,9 @@ import { ResourceCacheItem } from '../lib/cache';
 import Dispatcher from '../db/models/dispatcher';
 import config from '../config';
 import {Op} from "sequelize";
+import Review from '../db/models/review';
+import * as sq from 'sequelize';
+
 
 
 export default class Route extends ViewRouter {
@@ -33,11 +36,30 @@ export default class Route extends ViewRouter {
     vitrinProducts: Product[];
     butcher: Butcher;
     dispatchers: Dispatcher[];
+    reviews: Review[] = [];
 
 
     filterProductsByCategory(filter, chunk: number = 0) {
         let products = ProductManager.filterProductsByCategory(this.products, filter, { productType: 'generic' }, { chunk: chunk })
         return products;
+    }
+
+
+    async loadReviews(butcher: ButcherModel) {
+        let res: Review[] = await Review.sequelize.query(`
+        SELECT r.* FROM Reviews r, Orders o  
+        WHERE r.type='order' and r.ref1=o.id and r.ref2=:bid
+        ORDER BY r.ID DESC
+         `
+        ,
+        {
+            replacements: { bid: butcher.id },
+            type: sq.QueryTypes.SELECT,
+            mapToModel: true,
+            raw: true
+        }
+        );
+        this.reviews = res;
     }
 
 
@@ -91,6 +113,8 @@ export default class Route extends ViewRouter {
             return this.next();
         } 
 
+        await this.loadReviews(butcher)
+
         if (!butcher.location && butcher.gpPlace && butcher.gpPlace['geometry'] && butcher.gpPlace['geometry']['location'])
         {
             let latlong = butcher.gpPlace['geometry']['location']
@@ -132,7 +156,8 @@ export default class Route extends ViewRouter {
 
         this.dispatchers = await Dispatcher.findAll({
             where: {
-                butcherId: this.butcher.id
+                butcherId: this.butcher.id,
+                enabled: true
             },
             order: [["toarealevel", "DESC"], ["fee", "ASC"]],
             include: [

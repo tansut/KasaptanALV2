@@ -6,6 +6,8 @@ import { Auth } from '../lib/common';
 import Helper from '../lib/helper';
 import Resource from '../db/models/resource';
 import ResourceRoute from './resource';
+import * as sq from 'sequelize';
+
 import * as path from "path"
 import * as Jimp2 from 'jimp'
 const Jimp = <Jimp2.default>require('jimp');
@@ -27,6 +29,8 @@ import config from '../config';
 import { Op, Sequelize, where } from 'sequelize';
 import { ProductLd } from '../models/ProductLd';
 import ProductCategory from '../db/models/productcategory';
+import Review from '../db/models/review';
+import Product from '../db/models/product';
 
 interface ButcherSelection {
     best: Dispatcher,
@@ -42,6 +46,7 @@ export default class Route extends ViewRouter {
     foods: Resource[] = [];
     butcherResources: Resource[] = [];
     productLd: ProductLd;
+    reviews: Review[] = [];
 
     async tryBestFromShopcard(serving: Dispatcher[], others: Dispatcher[] = []) {
         let shopcard = await ShopCard.createFromRequest(this.req);
@@ -64,6 +69,23 @@ export default class Route extends ViewRouter {
         res = res || (others.length > 0 ? others[0] : null);
 
         return res;
+    }
+
+    async loadReviews(product: Product) {
+        let res: Review[] = await Review.sequelize.query(`
+        SELECT r.* FROM Reviews r, Orders o, OrderItems oi 
+        WHERE r.type='order' and oi.status='teslim edildi' and r.ref1=o.id and oi.orderid = o.id and oi.productid=:pid
+        ORDER BY r.ID DESC
+        `
+        ,
+        {
+            replacements: { pid: product.id },
+            type: sq.QueryTypes.SELECT,
+            mapToModel: true,
+            raw: true
+        }
+        );
+        this.reviews = res;
     }
 
     async bestButchersForProduct(pid, adr: PreferredAddress, userBest: Butcher): Promise<ButcherSelection> {
@@ -115,6 +137,8 @@ export default class Route extends ViewRouter {
         if (!product) return this.next();
 
         await product.loadResources();
+        await this.loadReviews(product);
+
         let api = new ProductApi(this.constructorParams);
         let dapi = new DispatcherApi(this.constructorParams);
 
