@@ -11,6 +11,7 @@ import { Payment } from '../../models/payment';
 import Butcher from '../../db/models/butcher';
 import Product from '../../db/models/product';
 import  OrderApi from '../api/order';
+import  SiteLogRoute from '../api/sitelog';
 import { Transaction } from "sequelize";
 import db from "../../db/context";
 import { Sms } from '../../lib/sms';
@@ -170,9 +171,9 @@ export default class Route extends ApiRouter {
             let order = orders[oi];
              let api = new OrderApi(this.constructorParams);
              let dbOrder = await api.getOrder(order.ordernum);
-             let view = this.getView(dbOrder);
+             let view = this.getView(dbOrder);             
              await email.send(dbOrder.email, "siparişinizi aldık", "order.started.ejs", view);
-             await Sms.send(dbOrder.phone, 'kasaptanAl.com siparisinizi aldik, destek tel/whatsup: 08503054216. Urunleriniz hazir oldugunda sizi bilgilendirecegiz.', false)             
+             await Sms.send(dbOrder.phone, 'kasaptanAl.com siparisinizi aldik, destek tel/whatsapp: 08503054216. Urunleriniz hazir oldugunda sizi bilgilendirecegiz.', false, new SiteLogRoute(this.constructorParams))             
              fres.push(dbOrder)
          }
         

@@ -15,6 +15,7 @@ import { SignupModel, AppUser, LoginResult } from '../../models/user';
 import Helper from '../../lib/helper';
 import { Sms } from '../../lib/sms';
 import email from '../../lib/email';
+import SiteLogRoute from './sitelog';
 var validator = require("validator");
 var generator = require('generate-password');
 let passport = require("passport")
@@ -145,7 +146,7 @@ export default class UserRoute extends ApiRouter {
     }
 
     async sendPassword(pwd: string, phoneNumber: string) {
-        await Sms.send('90' + phoneNumber, `kasaptanal.com giris sifreniz: ${pwd}`);
+        await Sms.send('90' + phoneNumber, `kasaptanal.com giris sifreniz: ${pwd}`, true, new SiteLogRoute(this.constructorParams));
         return pwd;
     }
 

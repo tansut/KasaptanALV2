@@ -53,6 +53,12 @@ class SiteLog extends BaseModel<SiteLog> {
     })
     ip: string;
 
+    @Column({
+        allowNull: true,
+        type: DataType.TEXT
+    })
+    logData: string;    
+
 }
 
 export default SiteLog;

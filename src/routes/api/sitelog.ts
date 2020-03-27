@@ -8,7 +8,16 @@ import email from '../../lib/email';
 //     session: any
 // }
 
-export default class Route extends ApiRouter {
+export default class SiteLogRoute extends ApiRouter {
+
+
+    async log(content: any) {
+        var objectC = {...content, ...{
+            sessionid: this.req["session"].id,
+            ip: this.req.header("x-forwarded-for") || this.req.connection.remoteAddress
+        }};
+        await SiteLog.create(objectC)
+    }
 
     @Auth.Anonymous()
     async logRoute() {
@@ -33,7 +42,7 @@ export default class Route extends ApiRouter {
     }
 
     static SetRoutes(router: express.Router) {
-        router.post("/sitelog/create", Route.BindRequest(this.prototype.logRoute));
+        router.post("/sitelog/create", SiteLogRoute.BindRequest(this.prototype.logRoute));
     }
 }
 
