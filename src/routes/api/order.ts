@@ -9,12 +9,15 @@ import { Shipment } from '../../models/shipment';
 import Dispatcher from '../../db/models/dispatcher';
 import { Payment } from '../../models/payment';
 import Butcher from '../../db/models/butcher';
+import AccountModel from '../../db/models/accountmodel';
 import Product from '../../db/models/product';
 import  OrderApi from '../api/order';
 import  SiteLogRoute from '../api/sitelog';
 import { Transaction } from "sequelize";
 import db from "../../db/context";
 import { Sms } from '../../lib/sms';
+import { AccountingOperation, Account } from '../../models/account';
+import Helper from '../../lib/helper';
 const orderid = require('order-id')('dkfjsdklfjsdlkg450435034.,')
 
 export default class Route extends ApiRouter {
@@ -137,13 +140,62 @@ export default class Route extends ApiRouter {
             })
     }
 
+    generateAccounting(o: Order): AccountingOperation {
+
+        let total = Helper.asCurrency(o.total);
+
+        let op = new AccountingOperation(`${o.name} ${o.ordernum} siparişi`, o.ordernum);
+
+        op.accounts.push(new Account("kredi-karti-provizyon", [o.userId, o.ordernum]).inc(total))
+        op.accounts.push(new Account("havuz-hesabi", [o.userId, o.ordernum]).inc(total))
+
+
+        let kasapKarOran = 0.10;
+        let kasapPuanOran = 0.2;
+        let odemeSirketiKomisyonOran = 0.032;
+        let kalittePuanOran = 0.00;
+
+
+        let musteriIadeToplam = Helper.asCurrency(total * 0.05);
+        let gerceklesenSatisToplam = Helper.asCurrency(total - musteriIadeToplam);
+
+        let kasapSatisToplam = Helper.asCurrency(gerceklesenSatisToplam * (1.00 - kasapKarOran));
+        let kasapPuanToplam = Helper.asCurrency(gerceklesenSatisToplam * kasapPuanOran);
+        let kasapUrunToplam = Helper.asCurrency(kasapSatisToplam - kasapPuanToplam);
+        
+        let kalittePuanToplam = Helper.asCurrency(gerceklesenSatisToplam * kalittePuanOran);
+        let odemeSirketiKomisyonToplam = Helper.asCurrency(gerceklesenSatisToplam * odemeSirketiKomisyonOran);
+
+        let netKar = Helper.asCurrency(gerceklesenSatisToplam - kalittePuanToplam - kasapPuanToplam - kasapUrunToplam - odemeSirketiKomisyonToplam);
+
+
+        op.accounts.push(new Account("kredi-karti-provizyon", [o.userId, o.ordernum]).dec(gerceklesenSatisToplam))
+        op.accounts.push(new Account("havuz-hesabi", [o.userId, o.ordernum]).dec(total))
+        op.accounts.push(new Account("kredi-karti-provizyon-iade", [o.userId, o.ordernum]).inc(musteriIadeToplam))
+
+        op.accounts.push(new Account("kredi-karti-odemeleri", [o.userId, o.ordernum]).inc(gerceklesenSatisToplam))
+        op.accounts.push(new Account("banka", [o.userId, o.ordernum]).inc(netKar))
+        
+        op.accounts.push(new Account("kasap-puan-giderleri", [o.userId, o.ordernum]).inc(kasapPuanToplam))
+        op.accounts.push(new Account("kasap-urun-giderleri", [o.userId, o.ordernum]).inc(kasapUrunToplam))
+        kalittePuanToplam > 0 ? op.accounts.push(new Account("kalitte-puan-giderleri", [o.userId, o.ordernum]).inc(kalittePuanToplam)): null;
+        op.accounts.push(new Account("odeme-sirketi-giderleri", [o.userId, o.ordernum]).inc(odemeSirketiKomisyonToplam))
+        
+
+
+        op.validate()
+
+        return op;
+    }
+
+
     async create(card: ShopCard): Promise<Order[]> {
 
         let butchers = card.butchers;
         let groupid = orderid.generate();
         let l3 = await Area.findByPk(card.address.level3Id);
         let l2 = await Area.findByPk(l3.parentid);    
-        let result: Promise<Order>[] = [];
+        let result: Promise<any>[] = [];
         let orders = []
 
         for(var bi in butchers) {
@@ -160,7 +212,11 @@ export default class Route extends ApiRouter {
         let res = db.getContext().transaction((t:Transaction)=> {
             for(var i = 0; i < orders.length; i++) {
                 let dbOrder = this.createOrder(t, orders[i], card);
+                let accOperation = this.generateAccounting(orders[i]);                
                 result.push(dbOrder);
+                result.push(AccountModel.saveOperation(accOperation, {
+                    transaction: t
+                }))
             }
             return Promise.all(result)            
         })

@@ -697,7 +697,7 @@
           </li>   -->
          <% } %>        
         </ul>
-        <%if (controller.reviews.length) { %>
+        
         <div class="tab-content px-4" id="myTabContent">
           <div class="tab-pane fade show active" id="home" role="tabpanel" aria-labelledby="home-tab">
           
@@ -823,6 +823,8 @@
                    
                  
           </div>
+
+          <%if (controller.reviews.length) { %>
           <div class="tab-pane fade" id="comments" role="tabpanel" aria-labelledby="comments-tab">
           
           <% controller.reviews.forEach(r => {  %> 
@@ -869,8 +871,10 @@
                            
           </div>
 
+          <% } %>
+
                   </div>          
-        <% } %>  
+         
     </div>
 
 
