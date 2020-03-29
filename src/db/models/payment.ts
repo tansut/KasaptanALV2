@@ -3,11 +3,17 @@ import BaseModel from "./basemodel"
 import Helper from '../../lib/helper';
 
 @Table({
-    tableName: "SiteLogs",
-    indexes: []
+    tableName: "Payments",
+    indexes: [{
+        fields: ['paymentId'],
+        name: 'paymentId_idx'
+    }, {
+        fields: ['conversationId'],
+        name: 'conversationId_idx',
+        unique: false
+    }]
 })
-class SiteLog extends BaseModel<SiteLog> {
-
+class Payment extends BaseModel<Payment> {
     @Column({
         allowNull: true
     })
@@ -16,42 +22,17 @@ class SiteLog extends BaseModel<SiteLog> {
     @Column({
         allowNull: false,
     })
-    logtype: string;
+    provider: string;
 
     @Column({
         allowNull: true,
     })
-    f1: string;
+    paymentId: string;
 
     @Column({
         allowNull: true,
     })
-    f2: string;
-
-    @Column({
-        allowNull: true,
-    })
-    f3: string;
-
-    @Column({
-        allowNull: true,
-    })
-    email: string;
-
-    @Column({
-        allowNull: true,
-    })
-    firstname: string;
-
-    @Column({
-        allowNull: true,
-    })
-    surname: string;
-
-    @Column({
-        allowNull: true,
-    })
-    sessionid: string;
+    conversationId: string;
 
     @Column({
         allowNull: true,
@@ -64,6 +45,12 @@ class SiteLog extends BaseModel<SiteLog> {
     status: string;    
 
     @Column({
+        allowNull: false,
+        type: DataType.DECIMAL(13, 2)
+    })
+    price: number;     
+
+    @Column({
         allowNull: true,
         type: DataType.TEXT
     })
@@ -71,4 +58,4 @@ class SiteLog extends BaseModel<SiteLog> {
 
 }
 
-export default SiteLog;
+export default Payment;

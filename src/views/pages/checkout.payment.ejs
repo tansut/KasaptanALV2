@@ -48,7 +48,21 @@
                 <div class="table-responsive">
 
                   <table class="table font-size-sm ">
-                    <tbody>                   
+                    <tbody>      
+                      <%if (shopcard.butchers[bi].enableCreditCard) { %>
+                      <tr>
+                        <td>
+                          <div class="custom-control custom-radio mb-4">
+                            <input class="custom-control-input" type="radio" id="onlinepayment<%=bi%>" value="onlinepayment" name="paymentmethod<%=bi%>" <%= shopcard.payment[bi].type == 'onlinepayment' ? 'checked':'' %>>
+                            <label class="custom-control-label" for="onlinepayment<%=bi%>"></label>
+                          </div>
+                        </td>
+                        <td class="align-middle"><span class="text-dark font-weight-medium">Online ödeme ile zamandan kazanın</span><br><span class="text-muted">
+                          Online ödeme yapacağım.
+  
+                        </span></td>
+                      </tr>
+                      <%}%>
                       <tr>
                         <td>
                           <div class="custom-control custom-radio mb-4">

@@ -31,7 +31,7 @@
   <div class="container mb-4 ">
     <form class="needs-validation" method="post" novalidate action="/alisveris-sepetim/savereview">
       <div class="row">
-        <section class="col-lg-7">
+        <section class="col">
           <!-- Steps-->
 
           <%- include('./_partial/checkout-steps.ejs', {   step: 4        }); %>
@@ -112,24 +112,13 @@
             </div>
             <%}%>
           </div>
-
-          
-
-          <!-- Navigation (desktop)-->
-          <div class="d-none d-lg-flex ">
-            <div class="w-50 pr-3"><a class="btn btn-secondary btn-block" href="/alisveris-sepetim/payment"><i
-                  class="czi-arrow-left mt-sm-0 mr-1"></i><span class="d-none d-sm-inline">Geri</span><span
-                  class="d-inline d-sm-none">Geri</span></a></div>
-            <div class="w-50 pl-2"><button type="submit" id="save-adres" name="save-adres"
-                class="btn btn-accent btn-block"><span class="d-none d-sm-inline">Onayla</span><span
-                  class="d-inline d-sm-none">Onayla</span><i class="czi-arrow-right mt-sm-0 ml-1"></i></button></div>
-          </div>
-        </section>
-        <!-- Sidebar-->
-        <aside class="col-lg-5 mb-4 pt-4 pt-lg-0">
+<% var onlineTotal = controller.shopcard.getPaymentTotal('onlinepayment') %>
 
 
-          <div class="cz-sidebar-static rounded-lg box-shadow-lg ml-lg-auto">
+ 
+        
+        
+          <div class="p-3 border">
             <div class="widget">
               <h2 class="widget-title text-center">Siparişim</h2>
               <% for (let bi in shopcard.butchers) { %>
@@ -263,8 +252,28 @@
       </ul>
 
   </div>
+          </div>
 
-  </aside>
+  <% if (onlineTotal > 0) { %>
+    <div class="mt-3">
+      <%- include('./_partial/creditcard', {}) %>
+
+    </div>
+  
+  <% } %>
+
+           <!-- Navigation (desktop)-->
+           <div class="d-none d-lg-flex ">
+            <div class="w-50 pr-3"><a class="btn btn-secondary btn-block" href="/alisveris-sepetim/payment"><i
+                  class="czi-arrow-left mt-sm-0 mr-1"></i><span class="d-none d-sm-inline">Geri</span><span
+                  class="d-inline d-sm-none">Geri</span></a></div>
+            <div class="w-50 pl-2"><button type="submit" id="save-adres" name="save-adres"
+                class="btn btn-accent btn-block"><span class="d-none d-sm-inline">Onayla</span><span
+                  class="d-inline d-sm-none">Onayla</span><i class="czi-arrow-right mt-sm-0 ml-1"></i></button></div>
+          </div>
+        </section>
+        
+
   </div>
   <!-- Navigation (mobile)-->
   <div class="row d-lg-none">
@@ -274,8 +283,8 @@
               class="czi-arrow-left mt-sm-0 mr-1"></i><span class="d-none d-sm-inline">Geri</span><span
               class="d-inline d-sm-none">Geri</span></a></div>
         <div class="w-50 pl-2"><button type="submit" id="save-adres" name="save-adres"
-            class="btn btn-primary btn-block"><span class="d-none d-sm-inline">Tamamdır</span><span
-              class="d-inline d-sm-none">Tamamdır</span><i class="czi-arrow-right mt-sm-0 ml-1"></i></button></div>
+            class="btn btn-accent btn-block"><span class="d-none d-sm-inline">Onayla</span><span
+              class="d-inline d-sm-none">Onayla</span><i class="czi-arrow-right mt-sm-0 ml-1"></i></button></div>
       </div>
     </div>
   </div>
@@ -284,6 +293,8 @@
 
   <% include ./_partial/footer %>
   <% include ./_partial/scripts %>
+
+
 
 </body>
 

@@ -205,7 +205,63 @@ class Order extends BaseModel<Order> {
         allowNull: true,
         type: DataType.DECIMAL(13, 2)
     })
-    dispatchertotalForFree: number;        
+    dispatchertotalForFree: number;   
+    
+    @Column({
+        allowNull: true
+    })
+    shipmentType: string;
+
+    @Column({
+        allowNull: true
+    })
+    shipmentTypeText: string;
+
+    @Column({
+        allowNull: true
+    })
+    shipmentHowTo: string;
+
+    @Column({
+        allowNull: true
+    })
+    shipmentHowToText: string;
+
+    @Column({
+        allowNull: true
+    })
+    shipmentdate: Date;
+
+    @Column({
+        allowNull: true
+    })
+    shipmenthour: number;
+
+    @Column({
+        allowNull: true
+    })
+    shipmenthourText: string;
+
+    @Column({
+        allowNull: true
+    })
+    paymentType: string;
+
+    @Column({
+        allowNull: true
+    })
+    paymentStatus: string;    
+
+    @Column({
+        allowNull: true
+    })
+    paymentTypeText: string;
+
+    @Column({
+        allowNull: true
+    })
+    shipmentInformMe: boolean;    
+
 
     get shopcard(): Object {
         return JSON.parse((<Buffer>this.getDataValue('shopcardjson')).toString())
@@ -246,7 +302,20 @@ class Order extends BaseModel<Order> {
             if (o.shipLocation && o.dispatcherLocation) {
                 o.dispatcherDistance = Helper.distance(o.shipLocation, o.dispatcherLocation)
             }        
-        }        
+        }     
+                
+        
+        o.shipmentHowTo = c.shipment[bi].howTo;
+        o.shipmentHowToText = c.shipment[bi].howToDesc;
+        o.paymentType = c.payment[bi].type;
+        o.paymentTypeText = c.payment[bi].desc;
+        o.shipmentType = c.shipment[bi].type;
+        o.shipmentTypeText = c.shipment[bi].desc;
+        o.shipmentdate = c.shipment[bi].days[0] ? new Date(c.shipment[bi].days[0]): null;
+        o.shipmenthour = c.shipment[bi].hours[0];
+        o.shipmenthourText = c.shipment[bi].hoursText[0];
+        o.shipmentInformMe = c.shipment[bi].informMe;
+
         return o;
     }
 
@@ -426,12 +495,12 @@ class OrderItem extends BaseModel<Order> {
     @Column({
         allowNull: true
     })
-    note: string;
-
-    @Column({
-        allowNull: true
-    })
     shipmentInformMe: boolean;    
+
+
+
+
+
 
     @ForeignKey(() => Dispatcher)
     dispatcherid: number;
@@ -482,6 +551,11 @@ class OrderItem extends BaseModel<Order> {
     })
     butcherTotal: number;
 
+
+    @Column({
+        allowNull: true
+    })
+    note: string;
 
     static fromShopcardItem(sc: ShopCard, i: ShopcardItem) {
         let c = new OrderItem();

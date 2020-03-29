@@ -6,11 +6,7 @@ import UserRoute from "../api/user";
 import { Order, OrderItem } from "../../db/models/order";
 import { PermissionError } from "../../lib/http";
 import * as _ from "lodash";
-import Butcher from "../../db/models/butcher";
-import Product from "../../db/models/product";
-import { Shipment, DispatcherView } from "../../models/shipment";
-import { Payment } from "../../models/payment";
-import Dispatcher from "../../db/models/dispatcher";
+
 
 import  OrderApi from '../api/order';
 

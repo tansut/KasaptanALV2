@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="tr-TR" prefix="og: http://ogp.me/ns#">
+
+<head>
+  <% include ./_partial/head %>
+</head>
+
+<body>
+  <% include ./_partial/header %>
+
+  <!-- Page Title (Light)-->
+  <div class="bg-secondary pt-4 ">
+    <div class="container d-lg-flex justify-content-between py-2 py-lg-3">
+      <div class="order-lg-2 mb-3 mb-lg-0 pt-lg-2">
+        <nav aria-label="breadcrumb">
+          <ol class="breadcrumb flex-lg-nowrap justify-content-center justify-content-lg-star">
+            <li class="breadcrumb-item"><a class="text-nowrap" href="/"><i class="czi-home"></i></a></li>
+
+
+          </ol>
+        </nav>
+      </div>
+      <div class="order-lg-1 pr-lg-4 text-center text-lg-left">
+        <h1 class="h3">Online Ödeme</h1>
+        <h2 class="lead h4"><%= __helper.formatDate(order.creationDate) + ' tarihli ' + controller.order.butcherName + ' siparişim' %></h2>
+      </div>
+    </div>
+
+
+
+  </div>
+
+
+
+
+<% var balance = accounting.find(p=>p.code == 'total') 
+  var shouldBePaid = __helper.asCurrency(balance.alacak - balance.borc)
+%>
+
+
+  <div class="table-responsive mb-3" data-simplebar>
+    <div class="d-flex pb-2">
+
+        <% order.items.forEach(oi => { %>
+        <div class="mr-2">
+
+            <div id="<%=oi.product.slug%>" class="item-slider item-slider-sm %>">
+              
+                <div class="card product-card pb-0 card-static item-card">
+                    <a class="" href="<%= `/${oi.product.slug}`%>"><img class="shadow-lg"
+                            src="<%=`${__req.helper.imgUrl('product-photos', oi.product.slug)}`%>" alt="<%=oi.productName%>"></a>
+
+                </div>
+
+            </div>
+
+
+
+        </div>
+        <%})%>
+
+    </div>
+</div>
+  <div class="container mb-3 ">
+
+    <form method="POST" id="pageForm">
+      <input type="hidden" name="paymentId" id="paymentId">
+<div class="text-center">
+  <h4 class="h5">Nefis ürünlerinizi güvenle kapınıza bırakalım</h4>
+  <% if (shouldBePaid > 0) { %>
+  <p class="text-muted">
+    <%- include('./_partial/currency.ejs', {value: shouldBePaid}) %>
+
+  </p>
+  <% } else { %>
+<p class="text-success">
+  Siparişin Ödemesi Yapıldı
+</p>
+  <% } %>
+
+</div>
+
+
+      <%- include('./_partial/creditcard', {}) %>
+
+
+
+
+      <div class="text-center">
+        <button id="pay-btn" name="makepayment" value="true" class="btn btn-primary" type="submit">Ödeme Yap</button>
+      </div>
+
+      <div class="mb-3">
+        <%- include('./_partial/order.details.ejs', {
+          order: order                
+      }) %>
+      </div>
+
+<h3 class="h5">Sipariş işlemleri</h3>
+      <table class="font-size-sm table">
+        <tr>
+          <td>
+            İşlem
+          </td>       
+          <td>
+            Borç
+          </td> 
+          <td>
+            Alacak
+          </td>  
+        </tr>
+        <% accounting.forEach((o, i) => { %>
+          <tr>
+
+        
+          <td>
+            <%=o.desc%>
+          </td>
+
+          <td>
+            <%- include('./_partial/currency.ejs', {value: o.borc}) %>
+
+          </td>
+
+          <td>
+            <%- include('./_partial/currency.ejs', {value: o.alacak}) %>
+
+          </td>
+         
+
+    </tr>
+    
+        <%})%>
+      </table>
+
+
+
+
+
+
+    
+
+
+  </form>
+    </div>
+
+
+
+
+
+
+
+
+  <% include ./_partial/footer %>
+  <% include ./_partial/scripts %>
+
+<script>
+<% if (controller.threeDhtml) { %>
+
+  $(window).on('load',function(){
+  $('#threeDmodal').modal('show');
+})
+
+<% } %>
+
+</script>
+
+</body>
+
+</html>

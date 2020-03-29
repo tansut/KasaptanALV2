@@ -203,6 +203,13 @@ export class ViewRouter extends BaseRouter {
         }
     }
 
+    get url() {
+        let proto = this.req.header("x-forwarded-proto") || this.req.protocol;
+        let host = this.req.get('Host');
+        return proto + '://' + host; 
+             
+    }
+
 
     protected renderView(view: string, pageKey: string = null, vdata = {}) {
         pageKey = pageKey || view;

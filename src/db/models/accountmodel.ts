@@ -1,9 +1,11 @@
 import { Table, Column, DataType, Model, HasMany, CreatedAt, UpdatedAt, DeletedAt, Unique, Default, AllowNull, ForeignKey, BelongsTo } from 'sequelize-typescript';
 import BaseModel from "./basemodel"
-import { AccountingOperation } from '../../models/account';
+import { AccountingOperation, Account } from '../../models/account';
 import Helper from '../../lib/helper';
 import { SaveOptions } from 'sequelize/types';
 const orderid = require('order-id')('dkfjsdklfjsdlkg450435034.,')
+import * as sq from 'sequelize';
+import { Op } from 'sequelize';
 
 
 @Table({
@@ -19,7 +21,60 @@ const orderid = require('order-id')('dkfjsdklfjsdlkg450435034.,')
     }]
 })
 
+
 class AccountModel extends BaseModel<AccountModel> {
+
+    static async list(codes: string[]) {
+        let list = await AccountModel.findAll({
+            where: {
+                code: {
+                    [Op.or]: codes.map(c=>{
+                        return {
+                            [Op.like]: c + '%' 
+                        }
+                    })
+                }
+            },
+            order: [['date', 'asc']]
+        })
+        let b = 0.00, a = 0.00;
+
+        list.forEach(l=> {
+            b+=Helper.asCurrency(l.borc);
+            a+=Helper.asCurrency(l.alacak);
+        })
+
+        list.push(new AccountModel({
+            alacak: Helper.asCurrency(a),
+            borc: Helper.asCurrency(b),
+            code: 'total',
+            desc: 'Toplam'
+        }))
+
+        return list;
+    }
+
+    static async summary(codes: string[]) {
+        let result = {};
+        let b = 0.00, a = 0.00
+        for(let i=0;i<codes.length;i++) {
+            let totals = await <any>AccountModel.sequelize.query(
+                "SELECT sum(borc) as b, sum(alacak) as a FROM Accounts where code like :code"
+               ,
+                {                
+                    replacements: { code: codes[i] + '%' },
+                    type: sq.QueryTypes.SELECT,
+                    mapToModel: false,
+                    raw: true
+                })
+             let numbers = (totals.length <= 0) ?[0.00, 0.00]: [Helper.asCurrency(totals[0].b || 0), Helper.asCurrency(totals[0].a || 0)]
+             result[codes[i]] = numbers;
+             b+=Helper.asCurrency(numbers[0]);
+             a+=Helper.asCurrency(numbers[1]);
+        }
+        result['total'] = [Helper.asCurrency(b), Helper.asCurrency(a)]
+        return result;
+    }
 
     static async saveOperation(list: AccountingOperation, ops: SaveOptions) {
         let arr = [];

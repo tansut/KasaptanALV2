@@ -7,7 +7,7 @@ export type AccountType =  "active" | "passive"
 export type ParentAccount =  "kredi-karti-provizyon" | "havuz-hesabi" | 
 "kredi-karti-provizyon-iade" | "kredi-karti-odemeleri" | "banka" | 
 "kasap-puan-giderleri" | "kasap-urun-giderleri" | "kalitte-puan-giderleri" | 
-"odeme-sirketi-giderleri"
+"odeme-sirketi-giderleri" | "odeme-bekleyen-satislar" | "satis-alacaklari" | "düşülen-satis-bedelleri"
 
 export interface AccountInfo {
     type: AccountType,
@@ -70,6 +70,24 @@ export let KnownAccounts: {[key: string]: AccountInfo} = {
         type: "active",
         name: "",
         code: "110"
+    },
+
+    "odeme-bekleyen-satislar": {
+        type: "passive",
+        name: "",
+        code: "205"
+    },
+
+    "satis-alacaklari": {
+        type: "active",
+        name: "",
+        code: "206"
+    },
+
+    "düşülen-satis-bedelleri": {
+        type: "active",
+        name: "",
+        code: "207"
     }
 }
 

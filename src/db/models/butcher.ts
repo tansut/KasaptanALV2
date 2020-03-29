@@ -165,6 +165,39 @@ class Butcher extends BaseModel<Butcher> {
     })
     mddesc: string;
 
+
+    @Column({
+        allowNull: true
+    })
+    iban: string;    
+
+    @Column({
+        allowNull: true
+    })
+    companyType: string;      
+    
+    @Column({
+        allowNull: true
+    })
+    taxOffice: string;        
+    
+    @Column({
+        allowNull: true
+    })
+    taxNumber: string;      
+
+    @Column({
+        allowNull: true
+    })
+    email: string;   
+    
+    @Column({
+        allowNull: false,
+        defaultValue: false
+    })
+    enableCreditCard: boolean;   
+
+
     @Column
     videoinstagram: Buffer;
 

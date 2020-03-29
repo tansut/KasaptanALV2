@@ -30,12 +30,23 @@
   <%}%>
 </div>
 
+<div class="row mb-3">
+  <div class="col-sm-4 mb-2">
+    <div class="bg-secondary p-4 text-center rounded-lg"><span class="font-weight-medium text-dark mr-2">Dağtımı yapacak:</span><%=order.dispatcherName%></div>
+  </div>
+  <div class="col-sm-4 mb-2">
+    <div class="bg-secondary p-4 text-center rounded-lg"><span class="font-weight-medium text-dark mr-2">Durum:</span><%= order.status %></div>
+  </div>
+  <div class="col-sm-4 mb-2">
+    <div class="bg-secondary p-4 text-center rounded-lg"><span class="font-weight-medium text-dark mr-2">Tahmini dağıtım:</span>Belirlenen gün ve saat</div>
+  </div>
+</div>
 
 <% for (let bi in butchers) { %>
 <% let butcher = butchers[bi]%>
 
 
-<div class="mt-4 border-top border-left border-right">
+<div class="mb-3 border-top border-left border-right">
 
   <div class="bg-secondary p-3  mb-4"><a class="media align-items-center" href="/<%=butcher.slug%>"><img
         class="rounded-circle header-img" 
@@ -98,7 +109,7 @@
       </div>
 
 
-      <div class="butcher-totals border-bottom border-right border-left p-2 bg-secondary">
+      <div class="d-none butcher-totals  p-2 bg-secondary">
         <div class="d-flex justify-content-between mb-2 border-bottom">
           <div class="">
             <div class="font-size-sm">Ürünler:</div>

@@ -14,6 +14,8 @@ import ProductCategory from '../../db/models/productcategory';
 import Category from '../../db/models/category';
 import ButcherProduct from '../../db/models/butcherproduct';
 import Dispatcher from '../../db/models/dispatcher';
+import IyziPayment from '../../lib/payment/iyzico';
+import { CreditcardPaymentFactory } from '../../lib/payment/creditcard';
 
 export default class Route  extends ViewRouter {
 
@@ -257,7 +259,14 @@ export default class Route  extends ViewRouter {
         let resources = await this.getResources(this.butcher);
         this.products = await this.getProducts();
 
-        if (this.req.body.save == "true") {
+        if (this.req.body.saveAsSubMerchant) {
+            let payment = CreditcardPaymentFactory.getInstance();
+            let subMerchantReq = payment.subMerchantRequestFromButcher(this.butcher);
+            let result = await payment.createSubMerchant(subMerchantReq);
+            let k = result.subMerchantKey;
+            console.log(k)
+        }
+        else if (this.req.body.save == "true") {
             this.butcher.slug = this.req.body.butcherslug
             this.butcher.name = this.req.body.butchername;
             this.butcher.address = this.req.body.butcheradres;

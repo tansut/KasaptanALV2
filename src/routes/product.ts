@@ -183,6 +183,7 @@ export default class Route extends ViewRouter {
                 view.alternateButchers.push({
                     butcher: {
                         id: butcher.id,
+                        enableCreditCard: butcher.enableCreditCard,
                         slug: butcher.slug,
                         userRatingAsPerc: butcher.userRatingAsPerc,
                         shipRatingAsPerc: butcher.shipRatingAsPerc,

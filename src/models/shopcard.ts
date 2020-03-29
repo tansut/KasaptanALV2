@@ -20,7 +20,7 @@ export interface ShopcardAdres {
     level1Text: string;
     level2Text: string;
     level3Text: string;
-    location?:GeoLocation;
+    location?: GeoLocation;
     accuracy?: number;
 }
 
@@ -64,6 +64,7 @@ export interface ShopcardButcherView {
     slug: string;
     name: string;
     id: number;
+    onlinePayment: boolean;
     subTotal: number;
     products: number[]
 }
@@ -80,7 +81,7 @@ export class ShopCard {
         saveaddress: true,
         adres: '',
         level1Text: '',
-        level2Text:'',
+        level2Text: '',
         level3Text: '',
         location: null
     };
@@ -91,15 +92,25 @@ export class ShopCard {
     butcherDiscounts: { [key: number]: Discount[]; } = {};
 
     discounts = [];
-    
+
 
     items: ShopcardItem[] = [];
+
+    getPaymentTotal(type: string) {
+        let total = 0.00;
+        for (var bi in this.payment) {
+            if (this.payment[bi].type == type) {
+                total += Helper.asCurrency(this.getButcherTotal(bi));
+            }
+        }
+        return Helper.asCurrency(total)
+    }
 
     getButcherDiscountTotal(bi) {
         let totalPrice = 0;
         if (!this.butcherDiscounts[bi])
-            return 0.00;            
-        this.butcherDiscounts[bi].forEach(d=>(totalPrice+=d.calculated));
+            return 0.00;
+        this.butcherDiscounts[bi].forEach(d => (totalPrice += d.calculated));
         return Helper.asCurrency(totalPrice);
     }
 
@@ -107,23 +118,23 @@ export class ShopCard {
         let totalPrice = this.butchers[bi].subTotal;
         let discounts = this.getButcherDiscountTotal(bi);
         let shippings = this.getShippingCost(bi);
-        
+
         return totalPrice + discounts + shippings;
-    }    
+    }
 
 
     // butcherDi(bi) {
     //     let shipment = this.shipment[bi];
     //     if (!shipment.dispatcher) 
-        
+
     // }
 
 
     get butcherDiscountTotal() {
         let totalPrice = 0;
-        for(let s in this.butcherDiscounts) {
-            totalPrice+=this.getButcherDiscountTotal(s)
-        }            
+        for (let s in this.butcherDiscounts) {
+            totalPrice += this.getButcherDiscountTotal(s)
+        }
         return Helper.asCurrency(totalPrice)
     }
 
@@ -137,9 +148,9 @@ export class ShopCard {
 
     get shippingTotal() {
         let totalPrice = 0;
-        for(let s in this.shippingCosts)
+        for (let s in this.shippingCosts)
             totalPrice += this.shippingCosts[s].calculated;
-            return Helper.asCurrency(totalPrice)
+        return Helper.asCurrency(totalPrice)
     }
 
     get total() {
@@ -170,12 +181,12 @@ export class ShopCard {
     getShippingCost(bi) {
         let shipment = this.shipment[bi];
         let butcher = this.butchers[bi];
-        return shipment.dispatcher ? (Math.max(0.00, (shipment.dispatcher.totalForFree - butcher.subTotal > 0) ? shipment.dispatcher.fee: 0)):0.00
+        return shipment.dispatcher ? (Math.max(0.00, (shipment.dispatcher.totalForFree - butcher.subTotal > 0) ? shipment.dispatcher.fee : 0)) : 0.00
     }
 
     calculateShippingCosts() {
         this.shippingCosts = {};
-        for(let k in this.butchers) {
+        for (let k in this.butchers) {
             let butcher = this.butchers[k];
             let shipment = this.shipment[k];
             let cost = this.getShippingCost(k);
@@ -183,9 +194,9 @@ export class ShopCard {
                 this.shippingCosts[k] = new ShippingCost();
                 this.shippingCosts[k].name = butcher.name;
                 this.shippingCosts[k].net = cost;
-                this.shippingCosts[k].subTotal =butcher.subTotal;
-            }            
-        }        
+                this.shippingCosts[k].subTotal = butcher.subTotal;
+            }
+        }
     }
 
     arrangeButchers() {
@@ -208,7 +219,14 @@ export class ShopCard {
             else shipment[bi] = new Shipment();
             if (this.payment[bi])
                 payment[bi] = this.payment[bi];
-            else payment[bi] = new Payment();            
+            else {
+                let preferred = butchers[bi].enableCreditCard ? 'onlinepayment' : 'cashondoor';
+                payment[bi] = Object.assign(new Payment(), {
+                    type: preferred,
+                    desc: PaymentTypeDesc[preferred]
+                })
+            }
+
         })
         this.butchers = butchers;
         this.shipment = shipment;
@@ -216,7 +234,7 @@ export class ShopCard {
     }
 
     addProduct(product: ProductView, quantity: number, purchaseoption: PurchaseOption, note: string) {
-        quantity = Number(quantity.toFixed(3)); 
+        quantity = Number(quantity.toFixed(3));
         let price = ShopCard.calculatePrice(product, quantity, purchaseoption);
         let found = null; // this.items.find(p => p.note == note && p.product.id == product.id && p.purchaseoption.id == purchaseoption.id && p.product.butcher.id == product.butcher.id);
         // if (found) {
@@ -258,7 +276,6 @@ export class ShopCard {
         })
 
         let discounts = values.discounts || [];
-
         let subTotal = this.subTotal;
 
         discounts.forEach(d => {
@@ -271,11 +288,11 @@ export class ShopCard {
         this.butcherDiscounts = {}
         Object.keys(values.butcherDiscounts).forEach(k => {
             let discounts = values.butcherDiscounts[k] || []
-            discounts.forEach((element,i) => {
+            discounts.forEach((element, i) => {
                 let o = Object.assign(new Discount(), element);
                 discounts[i] = o;
             });
-           
+
             this.butcherDiscounts[k] = discounts;
         })
 
@@ -295,8 +312,8 @@ export class ShopCard {
             return this;
         } else if (req.session) {
             req.session.shopcard = this;
-            return new Promise((resolve, reject)=>{
-                req.session.save((err)=>err ? reject(err): resolve())
+            return new Promise((resolve, reject) => {
+                req.session.save((err) => err ? reject(err) : resolve())
             })
             return this;
         }
@@ -306,35 +323,46 @@ export class ShopCard {
         if (req.user) {
             req.user.shopcard = null;
             await req.user.save()
-        }        
+        }
         req.session.shopcard = null;
-        return new Promise((resolve, reject)=>{
-            req.session.save((err)=>err ? reject(err): resolve())
-        })        
+        return new Promise((resolve, reject) => {
+            req.session.save((err) => err ? reject(err) : resolve())
+        })
     }
 
     addButcherDiscount(bi, discount: Discount) {
         if (!this.butcherDiscounts[bi])
             this.butcherDiscounts[bi] = [];
-        this.butcherDiscounts[bi].push(discount) 
+        this.butcherDiscounts[bi].push(discount)
     }
 
     removeButcherDiscount(bi, code: string) {
         if (this.butcherDiscounts[bi]) {
-            _.remove(this.butcherDiscounts[bi], p => p.code == code)                    
+            _.remove(this.butcherDiscounts[bi], p => p.code == code)
         }
         this.butcherDiscounts[bi].length == 0 && delete this.butcherDiscounts[bi];
-        
-    }    
-    
+
+    }
+
 
     getButcherDiscount(bi, code: string) {
         if (!this.butcherDiscounts[bi])
             return null;
-        return this.butcherDiscounts[bi].find(p=>p.code == code)
-    }   
-    
+        return this.butcherDiscounts[bi].find(p => p.code == code)
+    }
+
     async manageDiscounts() {
+        // for(let b in this.butchers) {                
+        //     let discountTotal = this.getButcherDiscountTotal(b);
+        //     let discounts = this.butcherDiscounts[b];
+        //     let butcherProducts = this.butchers[b].products;
+        //     butcherProducts.forEach((pi) => {
+        //         let product = this.items[pi];
+                
+        //     })
+        // }        
+
+
         // for(let b in this.butchers) {                
         //     let applied = this.getButcherDiscount(b, sub14OrderDiscount.code);
         //     if (applied) {
@@ -355,27 +383,27 @@ export class ShopCard {
 
     async manageFirstOrderDiscount(hasFirstOrder: Order) {
         firstOrderDiscount.subTotal = this.subTotal;
-         for(let b in this.butchers) {                
-             let applied = this.getButcherDiscount(b, firstOrderDiscount.code);
-             if (applied) {
-                this.removeButcherDiscount(b, firstOrderDiscount.code)  
+        for (let b in this.butchers) {
+            let applied = this.getButcherDiscount(b, firstOrderDiscount.code);
+            if (applied) {
+                this.removeButcherDiscount(b, firstOrderDiscount.code)
                 applied = null;
-             }
-             if (!applied) {
+            }
+            if (!applied) {
                 if (!hasFirstOrder) {
                     this.addButcherDiscount(b, Object.assign(new Discount(), {
                         code: firstOrderDiscount.code,
                         percent: firstOrderDiscount.percent,
                         name: firstOrderDiscount.name,
                         subTotal: this.butchers[b].subTotal
-                    }))                    
+                    }))
                 }
-             } else {
+            } else {
                 if (hasFirstOrder) {
-                    this.removeButcherDiscount(b, firstOrderDiscount.code)                    
+                    this.removeButcherDiscount(b, firstOrderDiscount.code)
                 }
-             }
-         }
+            }
+        }
 
 
 
@@ -405,14 +433,14 @@ export class ShopCard {
             result.address.level2Text = req.prefAddr.level2Text;
 
             result.address.level3Id = req.prefAddr.level3Id;
-            result.address.level3Text = req.prefAddr.level3Text;            
+            result.address.level3Text = req.prefAddr.level3Text;
         }
 
         let firstOrder = !req.user ? null : await Order.findOne({
             where: {
                 userid: req.user.id
             }
-        })        
+        })
         result.butcherDiscounts = {}
         await result.manageFirstOrderDiscount(firstOrder);
         await result.manageDiscounts();
@@ -421,11 +449,12 @@ export class ShopCard {
 }
 
 export class ShopcardItem {
+    // public discount: number = 0.00;
     constructor(public product: ProductView,
         public quantity: number, public price: number,
         public purchaseoption: PurchaseOption, public note: string) {
-            if (!product) throw new ValidationError('geçersiz ürün');
-            if (!quantity) throw new ValidationError('geçersiz miktar:' + product.name);
-            if (!price) throw new ValidationError('geçersiz bedel: ' + product.name);
+        if (!product) throw new ValidationError('geçersiz ürün');
+        if (!quantity) throw new ValidationError('geçersiz miktar:' + product.name);
+        if (!price) throw new ValidationError('geçersiz bedel: ' + product.name);
     }
 }

@@ -24,6 +24,7 @@ import ErrorMiddleware from './middleware/error'
 import * as cookieParser from 'cookie-parser';
 const flash = require('connect-flash');
 import { RequestHelper } from './lib/RequestHelper';
+import iyzico from './lib/payment/iyzico';
 
 const SessionStore = require('express-session-sequelize')(session.Store);
 const fileUpload = require('express-fileupload');
@@ -94,7 +95,8 @@ class KasaptanAlApp {
             sess.cookie.secure = true // serve secure cookies
         }
 
-
+        iyzico.register();
+        
         this.app.use((req, res, next) => {
             let proto = req.header("x-forwarded-proto") || null;
             let host = (req.get('Host') || "").toLowerCase();

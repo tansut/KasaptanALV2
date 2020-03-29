@@ -12,7 +12,9 @@ let appRoutes = [
     './default',
     './anonymous',
     './error',
-    './shopcard'
+    './shopcard',
+    './creditcard',
+    './payorder'
 ];
 
 export default class RouteLoader {

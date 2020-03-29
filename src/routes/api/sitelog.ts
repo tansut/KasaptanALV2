@@ -13,7 +13,8 @@ export default class SiteLogRoute extends ApiRouter {
 
     async log(content: any) {
         var objectC = {...content, ...{
-            sessionid: this.req["session"].id,
+            sessionid: this.req["session"] ? this.req["session"].id: null,
+            userid: this.req.user ? this.req.user.id: null,
             ip: this.req.header("x-forwarded-for") || this.req.connection.remoteAddress
         }};
         await SiteLog.create(objectC)
@@ -24,7 +25,8 @@ export default class SiteLogRoute extends ApiRouter {
         // if (this.req["session"].id != this.req.body.sessionid)
         //     return this.res.sendStatus(400)
         await SiteLog.create({
-            sessionid: this.req["session"].id,
+            userid: this.req.user ? this.req.user.id: null,
+            sessionid: this.req["session"] ? this.req["session"].id: null,
             f1: this.req.body.city,
             f2: this.req.body.district,
             logtype: this.req.body.logtype,

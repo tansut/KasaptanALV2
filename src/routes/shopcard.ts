@@ -21,7 +21,7 @@ import Dispatcher from './api/dispatcher';
 import OrderApi from './api/order';
 let ellipsis = require('text-ellipsis');
 var MarkdownIt = require('markdown-it')
-
+import { Creditcard, CreditcardPaymentFactory } from '../lib/payment/creditcard'
 
 export default class Route extends ViewRouter {
     shopcard: ShopCard;
@@ -32,10 +32,11 @@ export default class Route extends ViewRouter {
     Butchers: ButcherModel[] = null;
     
     
-    renderPage(page: string) {
-        this.sendView(page, {
+    renderPage(page: string, userMessage?: any) {
+        userMessage = userMessage || {}
+        this.sendView(page, {...userMessage, ...{
             shopcard: this.shopcard,
-        })      
+        }})      
     }
 
 
@@ -227,28 +228,39 @@ export default class Route extends ViewRouter {
     }
 
 
-    async reviewViewRoute() {
+    async reviewViewRoute(userMessage?: any) {
         this.shopcard = await ShopCard.createFromRequest(this.req);
         this.shopcard.arrangeButchers();
         this.setDispatcher();
         this.shopcard.calculateShippingCosts();
         await this.shopcard.saveToRequest(this.req);
       
-        this.renderPage("pages/checkout.review.ejs");
+        this.renderPage("pages/checkout.review.ejs", userMessage);
     }  
 
 
     async savereviewRoute() {
         this.shopcard = await ShopCard.createFromRequest(this.req); 
-        let api = new OrderApi(this.constructorParams);
-
-        let orders = await api.create(this.shopcard);
-        await ShopCard.empty(this.req);
-        
-        this.res.render("pages/checkout.complete.ejs", this.viewData({
-            orders: orders           
-        }));
-
+        let creditCard: Creditcard = null;
+        try {
+            if (this.shopcard.getPaymentTotal('onlinepayment') > 0) {
+                creditCard = {
+                    cardHolderName: this.req.body.name,
+                    cardNumber: this.req.body.number,
+                    cvc: this.req.body.cvc,
+                    expireMonth: this.req.body.expiry.split('/')[0],
+                    expireYear: this.req.body.expiry.split('/')[1]
+                }
+            }
+            let api = new OrderApi(this.constructorParams);
+            let orders = await api.create(this.shopcard, null);
+            //await ShopCard.empty(this.req);
+            this.res.render("pages/checkout.complete.ejs", this.viewData({
+                orders: orders           
+            }));            
+        } catch(err) {
+            await this.reviewViewRoute({_usrmsg: {text: err.message || err.errorMessage }})
+        }
     }    
 
     static SetRoutes(router: express.Router) {
