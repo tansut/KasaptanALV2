@@ -34,6 +34,11 @@ export default class Route extends PaymentRouter {
 
     async getOrderSummary() {
         this.acountingSummary = await this.api.getWorkingAccounts(this.order);
+        if (this.acountingSummary.length == 1) {
+            let initial = this.api.generateInitialAccounting(this.order);
+            await this.api.saveAccountingOperations([initial]);
+            this.acountingSummary = await this.api.getWorkingAccounts(this.order);
+        }
     }
 
 
@@ -62,14 +67,28 @@ export default class Route extends PaymentRouter {
         let userMessage = "";
 
         if (this.pageHasPaymentId) {
-            let threedPaymentMade = await this.created3DPayment();
-            if (threedPaymentMade) {
-                await this.paymentSuccess(threedPaymentMade);                
-                userMessage = "Ödemeniz başarıyla alındı"
-            } else {
-                userMessage = "Ödeme işlemi başarısız"
+            try {
+                this.getPaymentRequest();
+                let threedPaymentMade = await this.created3DPayment();
+                if (threedPaymentMade) {
+                    await this.paymentSuccess(threedPaymentMade);                
+                    userMessage = "Ödemeniz başarıyla alındı"
+                } else {
+                    userMessage = "Ödeme işlemi başarısız"
+                }
+            } catch(err) {
+                userMessage = err.message || err.errorMessage
             }
+
         } else if (this.req.body.makepayment == "true") {
+            if (this.req.body.secureship == 'on') {
+                this.order.noInteraction = true;
+                await this.order.save()
+            } else {
+                this.order.noInteraction = false;
+                await this.order.save()
+            }
+
             let paymentResult: PaymentResult;
             try {
                 let req: PaymentRequest = this.getPaymentRequest();
@@ -83,14 +102,14 @@ export default class Route extends PaymentRouter {
                         paid: paymentResult.paidPrice,
                         type: "sales"
                     })
-                    userMessage = "başarılı"
+                    userMessage = "Ödemenizi başarıyla aldık"
                 }
             } catch (err) {
                 userMessage = err.message || err.errorMessage
             }
         }
 
-        this.sendView("pages/payorder.ejs", { ...{ _usrmsg: { text: userMessage } }, ...{ accounting: this.acountingSummary }, ...this.api.getView(this.order), ...{ enableImgContextMenu: true } });
+        this.sendView("pages/payorder.ejs", { ...{ _usrmsg: { text: userMessage } }, ...{ accounting: this.acountingSummary }, ...this.api.getView(this.order, this.acountingSummary), ...{ enableImgContextMenu: true } });
     }
 
     async getOrder() {
@@ -107,7 +126,7 @@ export default class Route extends PaymentRouter {
 
         await this.getOrderSummary();            
 
-            this.sendView("pages/payorder.ejs", { ... { accounting: this.acountingSummary }, ...this.api.getView(this.order), ...{ enableImgContextMenu: true } });
+            this.sendView("pages/payorder.ejs", { ... { accounting: this.acountingSummary }, ...this.api.getView(this.order, this.acountingSummary), ...{ enableImgContextMenu: true } });
     }
 
 

@@ -1,4 +1,6 @@
-
+<% var balance = accounting ? accounting.find(p=>p.code == 'total'): null;
+  var shouldBePaid = balance ? __helper.asCurrency(balance.alacak - balance.borc): 0
+%>
 
 <div>
   <div class="d-flex flex-nowrap justify-content-between align-items-center pt-1 pb-1 mb-2">
@@ -8,6 +10,9 @@
     <li><span class="text-muted">İsim:&nbsp;</span><%= order.name %></li>
     <li><span class="text-muted">Adres:&nbsp;</span><%= order.address%>
       <%= order.areaLevel3Text%>/<%= order.areaLevel1Text%></li>
+      <% if (order.noInteraction) { %>
+    <li>Güvenli Teslimat: <%= order.noInteraction ? 'Evet': 'Hayır'%></li>
+    <% } %>
     <li id="orderphone" onclick="javascript:$('#orderphone').hide()"><span   class="text-muted">Telefon:&nbsp;</span><%= order.phone%></li>
   </ul>
 
@@ -32,13 +37,13 @@
 
 <div class="row mb-3">
   <div class="col-sm-4 mb-2">
-    <div class="bg-secondary p-4 text-center rounded-lg"><span class="font-weight-medium text-dark mr-2">Dağtımı yapacak:</span><%=order.dispatcherName%></div>
+    <div class="bg-secondary p-4 text-center rounded-lg"><span class="font-weight-medium text-dark mr-2">Dağtımı yapacak: <br></span><%=order.dispatcherName%></div>
   </div>
   <div class="col-sm-4 mb-2">
-    <div class="bg-secondary p-4 text-center rounded-lg"><span class="font-weight-medium text-dark mr-2">Durum:</span><%= order.status %></div>
+    <div class="bg-secondary p-4 text-center rounded-lg"><span class="font-weight-medium text-dark mr-2">Durum:<br></span><%= order.status %></div>
   </div>
   <div class="col-sm-4 mb-2">
-    <div class="bg-secondary p-4 text-center rounded-lg"><span class="font-weight-medium text-dark mr-2">Tahmini dağıtım:</span>Belirlenen gün ve saat</div>
+    <div class="bg-secondary p-4 text-center rounded-lg"><span class="font-weight-medium text-dark mr-2">Tahmini dağıtım:<br></span>Belirlenen gün ve saat</div>
   </div>
 </div>
 
@@ -161,7 +166,7 @@
 
   <%}%>  
 
-      <div class="order-totals border mt-4 p-2 bg-secondary">
+      <div class="mb-3 order-totals border mt-4 p-2 bg-secondary">
           <div class="d-flex justify-content-between mb-2 border-bottom">
             <div class="">
               <div class="font-size-sm">Ürünler:</div>
@@ -210,6 +215,51 @@
 
 </div>
 </div>
+
+
+<% if (accounting) { %>
+<h3 class="h5">Sipariş işlemleri</h3>
+      <table class="font-size-sm table">
+        <tr>
+          <td>
+            İşlem
+          </td>       
+          <td>
+            Borç
+          </td> 
+          <td>
+            Alacak
+          </td>  
+        </tr>
+        <% accounting.forEach((o, i) => { %>
+          <tr class="<%= o.code == 'total' ? 'font-weight-bold':'' %>">
+
+        
+          <td>
+            <%=o.desc%>
+          </td>
+
+          <td>
+            <%- include('./currency.ejs', {value: o.borc}) %>
+
+          </td>
+
+          <td>
+            <%- include('./currency.ejs', {value: o.alacak}) %>
+
+          </td>
+         
+
+    </tr>
+    
+        <%})%>
+      </table>
+<% if (shouldBePaid > 0) { %>
+<div class="text-center">
+<a class="" href="/pay/<%=order.ordernum%>">Önline Ödeme</a>
+</div>
+<% } %>
+<% } %>
 
 <style>
   img{

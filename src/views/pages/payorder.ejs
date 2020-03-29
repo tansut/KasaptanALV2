@@ -47,7 +47,7 @@
             <div id="<%=oi.product.slug%>" class="item-slider item-slider-sm %>">
               
                 <div class="card product-card pb-0 card-static item-card">
-                    <a class="" href="<%= `/${oi.product.slug}`%>"><img class="shadow-lg"
+                    <a class="" href="#orderdetails"><img class="shadow-lg"
                             src="<%=`${__req.helper.imgUrl('product-photos', oi.product.slug)}`%>" alt="<%=oi.productName%>"></a>
 
                 </div>
@@ -65,73 +65,49 @@
 
     <form method="POST" id="pageForm">
       <input type="hidden" name="paymentId" id="paymentId">
-<div class="text-center">
-  <h4 class="h5">Nefis ürünlerinizi güvenle kapınıza bırakalım</h4>
-  <% if (shouldBePaid > 0) { %>
-  <p class="text-muted">
+
+
+<% if (shouldBePaid > 0) { %>
+
+  <div class="text-center">
+
+
+    <h4 class="h5">Nefis ürünlerinizi güvenle kapınıza bırakabiliriz</h4>
+    <div class="form-group ">
+      <div class="form-check  ">
+        <input <%= order.noInteraction ? "checked" : "" %>   type="checkbox" name="secureship" class="form-check-input" id="3d">
+        <label class="form-check-label" for="secureship"><span class="font-weight-bold">Güvenli teslimat istiyorum.</span> Ürünlerimi kapıma bırakın ve bana haber verin</label>
+      </div>
+    </div>
+  
+  
+  
+  </div>
+
+  <p class="text-muted text-center">
     <%- include('./_partial/currency.ejs', {value: shouldBePaid}) %>
 
   </p>
-  <% } else { %>
-<p class="text-success">
-  Siparişin Ödemesi Yapıldı
-</p>
-  <% } %>
-
-</div>
-
-
       <%- include('./_partial/creditcard', {}) %>
 
 
 
 
       <div class="text-center">
-        <button id="pay-btn" name="makepayment" value="true" class="btn btn-primary" type="submit">Ödeme Yap</button>
+        <button id="pay-btn" name="makepayment" value="true" class="btn btn-success" type="submit"><i class="czi-thumb-up mr-2"></i>Ödeme Yap</button>
       </div>
-
+<% } else { %>
+  <p class="text-success text-center">
+    Siparişin Ödemesi Yapıldı
+  </p>
+<% } %>
+  <a id="orderdetails"></a>
       <div class="mb-3">
         <%- include('./_partial/order.details.ejs', {
           order: order                
       }) %>
       </div>
 
-<h3 class="h5">Sipariş işlemleri</h3>
-      <table class="font-size-sm table">
-        <tr>
-          <td>
-            İşlem
-          </td>       
-          <td>
-            Borç
-          </td> 
-          <td>
-            Alacak
-          </td>  
-        </tr>
-        <% accounting.forEach((o, i) => { %>
-          <tr>
-
-        
-          <td>
-            <%=o.desc%>
-          </td>
-
-          <td>
-            <%- include('./_partial/currency.ejs', {value: o.borc}) %>
-
-          </td>
-
-          <td>
-            <%- include('./_partial/currency.ejs', {value: o.alacak}) %>
-
-          </td>
-         
-
-    </tr>
-    
-        <%})%>
-      </table>
 
 
 

@@ -28,6 +28,12 @@ class Order extends BaseModel<Order> {
 
     @Column({
         allowNull: false,
+        defaultValue: false
+    })
+    noInteraction: boolean;
+
+    @Column({
+        allowNull: false,
     })
     ordernum: string;
 

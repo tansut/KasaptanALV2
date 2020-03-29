@@ -112,7 +112,7 @@ $(document).ajaxComplete(function(){
     window.location.href = go.url;
   });
 </script>
-<% if (typeof _usrmsg != 'undefined') { %>
+<% if (typeof _usrmsg != 'undefined' && _usrmsg.text) { %>
 <script>
   window.App.alert("<%=_usrmsg.text%>", "<%=_usrmsg.type %>")
 </script>

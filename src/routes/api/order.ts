@@ -55,7 +55,7 @@ export default class Route extends ApiRouter {
     }
 
 
-    getView(order: Order) {
+    getView(order: Order, accounting: AccountModel [] = null) {
 
         let shipment = {};
         let payment = {};
@@ -107,7 +107,8 @@ export default class Route extends ApiRouter {
             butchers: butchers,
             shipment: shipment,
             payment: payment,
-            items: order.items
+            items: order.items,
+            accounting: accounting || null
         }
     }
 
@@ -212,7 +213,11 @@ export default class Route extends ApiRouter {
             result.push(op)            
         }
 
-        return this.saveAccountingOperations(result, t);
+        await this.saveAccountingOperations(result, t);
+        for (let i = 0; i < ol.length; i++) {
+        await email.send(ol[i].email, "siparişinizin ödemesi yapıldı", "order.paid.ejs", this.getView(ol[i]));
+        }
+
 
     }
 
@@ -220,7 +225,7 @@ export default class Route extends ApiRouter {
 
         let total = Helper.asCurrency(o.total);
 
-        let op = new AccountingOperation(`${o.ordernum} numralı sipariş`, o.ordernum);
+        let op = new AccountingOperation(`${o.ordernum} numaralı sipariş`, o.ordernum);
 
         op.accounts.push(new Account("odeme-bekleyen-satislar", [o.userId, o.ordernum]).inc(total))
         op.accounts.push(new Account("satis-alacaklari", [o.userId, o.ordernum]).inc(total))
@@ -320,8 +325,8 @@ export default class Route extends ApiRouter {
             let api = new OrderApi(this.constructorParams);
             let dbOrder = await api.getOrder(order.ordernum);
             let view = this.getView(dbOrder);
-            //await email.send(dbOrder.email, "siparişinizi aldık", "order.started.ejs", view);
-            //await Sms.send(dbOrder.phone, 'kasaptanAl.com siparisinizi aldik, destek tel/whatsapp: 08503054216. Urunleriniz hazir oldugunda sizi bilgilendirecegiz.', false, new SiteLogRoute(this.constructorParams))             
+            await email.send(dbOrder.email, "siparişinizi aldık", "order.started.ejs", view);
+            await Sms.send(dbOrder.phone, 'kasaptanAl.com siparisinizi aldik, destek tel/whatsapp: 08503054216. Urunleriniz hazir oldugunda sizi bilgilendirecegiz.', false, new SiteLogRoute(this.constructorParams))             
             fres.push(dbOrder)
         }
 

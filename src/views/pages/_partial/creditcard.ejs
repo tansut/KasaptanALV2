@@ -15,16 +15,40 @@ var threeDhtml = typeof (controller.threeDhtml) == 'undefined' ? '': controller.
         <div class="card-wrapper"></div>
         <div class="interactive-credit-card row">
           <div class="form-group col-sm-6">
-            <input class="form-control" type="text" value="5890040000000016" name="number" placeholder="Kart Numarası" required>
+            <input class="form-control" type="text" 
+            <% if (__config.nodeenv == 'development') { %>  
+              value="5890040000000016"
+            <% } %> 
+            
+            name="number" placeholder="Kart Numarası" required>
           </div>
           <div class="form-group col-sm-6">
-            <input class="form-control" type="text" name="name" placeholder="Kartın Üzerindeki İsim" value="dfsdf" required>
+            <input class="form-control" type="text" name="name" placeholder="Kartın Üzerindeki İsim" 
+            <% if (__config.nodeenv == 'development') { %>  
+              value="xxx"
+            <% } %> 
+            
+            required>
           </div>
           <div class="form-group col-sm-3">
-            <input class="form-control" type="text" value="12/25" name="expiry" placeholder="GG/YY" required>
+            <input class="form-control" type="text" 
+            <% if (__config.nodeenv == 'development') { %>  
+              value="12/25" 
+            <% } %> 
+
+            
+            
+            
+            name="expiry" placeholder="GG/YY" required>
           </div>
           <div class="form-group col-sm-3">
-            <input class="form-control" type="text" value="522" name="cvc" placeholder="CVC" required>
+            <input class="form-control" type="text" 
+            
+            <% if (__config.nodeenv == 'development') { %>  
+              value="112" 
+            <% } %> 
+            
+            name="cvc" placeholder="CVC" required>
           </div>
           <div class="col-sm-6">
             <div class="form-group ">

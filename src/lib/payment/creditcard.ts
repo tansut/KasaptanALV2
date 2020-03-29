@@ -8,7 +8,7 @@ import SiteLogRoute from '../../routes/api/sitelog';
 import { Transaction, or } from "sequelize";
 import Payment from '../../db/models/payment';
 
-const paymentConfig = require(path.join(config.projectDir, "payment.json"));
+const paymentConfig = require(path.join(config.projectDir, `payment.json`));
 
 export type SubMerchantType = 'PRIVATE_COMPANY' | 'LIMITED_OR_JOINT_STOCK_COMPANY' | 'NONE'
 
