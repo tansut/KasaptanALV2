@@ -20,6 +20,7 @@ import { AccountingOperation, Account } from '../../models/account';
 import Helper from '../../lib/helper';
 import { Creditcard, CreditcardPaymentFactory, PaymentTotal, PaymentResult } from '../../lib/payment/creditcard';
 import { OrderPaymentStatus } from '../../models/order';
+import config from '../../config';
 const orderid = require('order-id')('dkfjsdklfjsdlkg450435034.,')
 
 export default class Route extends ApiRouter {
@@ -245,6 +246,7 @@ export default class Route extends ApiRouter {
          promises.push(this.saveAccountingOperations(ops, t));
 
         for (let i = 0; i < ol.length; i++) {
+            
             email.send(ol[i].email, "siparişinizin ödemesi yapıldı", "order.paid.ejs", this.getView(ol[i]));
         }
         return promises

@@ -171,6 +171,12 @@ export class CreditcardPaymentProvider {
         let price = 0.00, paidPrice = 0.00;
         ol.forEach((o, j) => {
             o.items.forEach((oi, i) => {
+                let merchantPrice = undefined;
+                if (this.marketPlace) {
+                    let fee = i == 0 ? Helper.asCurrency(o.butcher.commissionFee): 0.00;
+                    let rated = Helper.asCurrency(oi.price * (o.butcher.commissionRate))
+                    merchantPrice = Helper.asCurrency(oi.price - fee - rated           )                                               
+                }
                 basketItems.push({
                     category1: o.butcherName,
                     id: oi.orderitemnum,
@@ -178,10 +184,10 @@ export class CreditcardPaymentProvider {
                     name: oi.product.name,
                     price: Helper.asCurrency(oi.price),
                     subMerchantKey: this.marketPlace ? o.butcher[this.providerKey + "SubMerchantKey"]: undefined,
-                    subMerchantPrice: this.marketPlace ? (i == 0 ? Helper.asCurrency(o.butcher.commissionFee): 0) + Helper.asCurrency(oi.price * (1.00 - o.butcher.commissionRate)): undefined
+                    subMerchantPrice: merchantPrice
                 }) 
             })
-            price += Helper.asCurrency(o.subTotal); 
+            price += Helper.asCurrency(o.total); 
             paidPrice += Helper.asCurrency(o.total); 
         })
 

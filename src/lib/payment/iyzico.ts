@@ -101,9 +101,11 @@ export default class IyziPayment extends CreditcardPaymentProvider {
     async createSubMerchant(request: SubMerchantCreateRequest): Promise<SubMerchantCreateResult> {
         return new Promise((resolve, reject) => {
             this.iyzipay.subMerchant.create(request, function (err, result) {
-                if (err) reject(err);
-                else if (result.status == 'failure') reject(result);
-                else resolve(result);
+                this.logOperation("submerchant-create", request, result).then(() => {
+                    if (err) reject(err);
+                    else if (result.status == 'failure') reject(result);
+                    else resolve(result);
+                }).catch(err=>reject(err))
             });
         })
     }

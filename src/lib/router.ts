@@ -205,9 +205,8 @@ export class ViewRouter extends BaseRouter {
 
     get url() {
         let proto = this.req.header("x-forwarded-proto") || this.req.protocol;
-        let host = this.req.get('Host');
-        return proto + '://' + host; 
-             
+        let host = config.nodeenv == "development" ? this.req.get('Host'): 'www.kasaptanal.com';
+        return proto + '://' + host;              
     }
 
 
