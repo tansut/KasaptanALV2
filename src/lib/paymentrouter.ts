@@ -109,10 +109,10 @@ export class PaymentRouter extends ViewRouter  {
     getCreditCard(): Creditcard {
         return {
             cardHolderName: this.req.body.name,
-            cardNumber: this.req.body.number,
+            cardNumber: this.req.body.number.replace(/\s+/g, ''),
             cvc: this.req.body.cvc,
-            expireMonth: this.req.body.expiry.split('/')[0],
-            expireYear: this.req.body.expiry.split('/')[1]
+            expireMonth: this.req.body.expiry.split('/')[0].replace(/\s+/g, ''),
+            expireYear: this.req.body.expiry.split('/')[1].replace(/\s+/g, '')
         }        
     }
 
