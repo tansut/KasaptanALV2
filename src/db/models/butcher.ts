@@ -197,6 +197,24 @@ class Butcher extends BaseModel<Butcher> {
     })
     enableCreditCard: boolean;   
 
+    @Column({
+        allowNull: true
+    })
+    iyzicoSubMerchantKey: string;   
+
+    @Column({
+        allowNull: false,
+        type: DataType.DECIMAL(5, 2),
+        defaultValue: 0.1
+    })
+    commissionRate: number;    
+
+    @Column({
+        allowNull: false,
+        type: DataType.DECIMAL(13, 2),
+        defaultValue: 1.00
+    })
+    commissionFee: number;   
 
     @Column
     videoinstagram: Buffer;

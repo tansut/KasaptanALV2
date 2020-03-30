@@ -41,6 +41,8 @@ export default class Route extends ApiRouter {
                 ordernum: num
             },
             include: [{
+                model: Butcher
+            },{
                 model: OrderItem,
                 include: [{
                     model: Butcher,
@@ -296,6 +298,7 @@ export default class Route extends ApiRouter {
             let order = Order.fromShopcard(card, <any>bi);
             order.ordergroupnum = groupid;
             order.butcherid = parseInt(bi);
+            order.butcher = await Butcher.findByPk(order.butcherid)
             order.butcherName = butchers[bi].name;
             order.userId = this.req.user.id;
             order.areaLevel2Id = l2.id;

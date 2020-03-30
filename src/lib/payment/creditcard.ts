@@ -70,6 +70,8 @@ export interface BasketItem {
     category1: string,
     itemType: string,
     price: number;
+     subMerchantKey?: string;
+     subMerchantPrice?:number;
 }
 
 export interface PaymentRequest {
@@ -134,6 +136,10 @@ export class CreditcardPaymentProvider {
         })
     }
 
+    get providerKey() {
+        return "unset"
+    }
+
     requestFromOrder(ol: Order[]): PaymentRequest {
         let basketItems: BasketItem [] = [];
         let price = 0.00, paidPrice = 0.00;
@@ -144,8 +150,10 @@ export class CreditcardPaymentProvider {
                     id: oi.product.id.toString() + '@' + o.butcherid.toString(),
                     itemType: 'PHYSICAL',
                     name: oi.product.name,
-                    price: Helper.asCurrency(oi.price)
-                })
+                    price: Helper.asCurrency(oi.price),
+                    subMerchantKey: o.butcher[this.providerKey + "SubMerchantKey"],
+                    subMerchantPrice: (i == 0 ? Helper.asCurrency(o.butcher.commissionFee): 0) + Helper.asCurrency(oi.price * (1.00 - o.butcher.commissionRate))
+                }) 
             })
             price += Helper.asCurrency(o.subTotal) 
             paidPrice += Helper.asCurrency(o.total) 
@@ -154,7 +162,7 @@ export class CreditcardPaymentProvider {
         let orderids = ol.map(o=>o.ordernum).join(',');
         let o = ol[0];
 
-        return {
+        let result = {
             price: Helper.asCurrency(price),
             paidPrice: Helper.asCurrency(paidPrice),
             billingAddress: {
@@ -188,6 +196,7 @@ export class CreditcardPaymentProvider {
             installment: '1',
             registerCard: false
         }
+        return result;
     }
 
     subMerchantRequestFromButcher(b: Butcher): SubMerchantCreateRequest {

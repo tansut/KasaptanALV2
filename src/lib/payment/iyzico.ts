@@ -22,6 +22,10 @@ export default class IyziPayment extends CreditcardPaymentProvider {
         return req;
     }
 
+    get providerKey() {
+        return IyziPayment.key
+    }
+
     async pay3dInit(request: PaymentRequest, card: Creditcard): Promise<PaymentResult> {
         let req = this.createIyzicoPaymentReq(request, card);
         
