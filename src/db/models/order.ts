@@ -38,7 +38,7 @@ class Order extends BaseModel<Order> {
     ordernum: string;
 
     @Column({
-        allowNull: false,
+        allowNull: true        
     })
     paymentId: string;    
 
@@ -176,7 +176,8 @@ class Order extends BaseModel<Order> {
 
     @Column({
         allowNull: false,
-        type: DataType.DECIMAL(13, 2)
+        type: DataType.DECIMAL(13, 2),
+        defaultValue: 0.00
     })
     paidTotal: number;    
 
@@ -463,6 +464,12 @@ class OrderItem extends BaseModel<Order> {
     pounitdesc: string;
 
     @Column({
+        allowNull: true    
+    })
+    orderitemnum: string;
+
+
+    @Column({
         allowNull: false,
         defaultValue: 0,
         type: DataType.DECIMAL(13, 2)
@@ -593,6 +600,7 @@ class OrderItem extends BaseModel<Order> {
         c.status = OrderItemStatus.supplying;
         c.productName = i.product.name;
         c.kgPrice = i.product.kgPrice;
+        c.orderitemnum = orderid.generate();
         // c.viewUnit = i.product.viewUnit;
         // c.viewUnitAmount = i.product.viewUnitAmount;
         // c.viewUnitDesc = i.product.viewUnitDesc;

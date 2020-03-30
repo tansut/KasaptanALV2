@@ -205,6 +205,13 @@ export default class Route extends ApiRouter {
     async updateOrderByPayment(o: Order, paymentInfo: PaymentResult, t?: Transaction) {
         o.paymentId = paymentInfo.paymentId;
         o.paidTotal = paymentInfo.paidPrice;
+        paymentInfo.itemTransactions.forEach(it => {
+            let oi = o.items.find(p=>p.orderitemnum == it.itemId);
+            if (oi) {
+                oi.paymentTransactionId = it.paymentTransactionId
+                oi.paidPrice = it.paidPrice
+            }
+        })
         return o.isNewRecord ? null: o.save({
             transaction: t
         });        

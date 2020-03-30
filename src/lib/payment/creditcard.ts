@@ -122,9 +122,10 @@ export class CreditcardPaymentProvider {
     logger: SiteLogRoute;
     userid: number;
     ip: string;
+    marketPlace: boolean = false;
 
     constructor(config: any) {
-
+        this.marketPlace = config.marketPlace == "true";
     }
 
     validateCard(card: Creditcard) {
@@ -159,12 +160,12 @@ export class CreditcardPaymentProvider {
             o.items.forEach((oi, i) => {
                 basketItems.push({
                     category1: o.butcherName,
-                    id: oi.product.id.toString(),
+                    id: oi.orderitemnum,
                     itemType: 'PHYSICAL',
                     name: oi.product.name,
                     price: Helper.asCurrency(oi.price),
-                    //subMerchantKey: o.butcher[this.providerKey + "SubMerchantKey"],
-                    //subMerchantPrice: (i == 0 ? Helper.asCurrency(o.butcher.commissionFee): 0) + Helper.asCurrency(oi.price * (1.00 - o.butcher.commissionRate))
+                    subMerchantKey: this.marketPlace ? o.butcher[this.providerKey + "SubMerchantKey"]: undefined,
+                    subMerchantPrice: this.marketPlace ? (i == 0 ? Helper.asCurrency(o.butcher.commissionFee): 0) + Helper.asCurrency(oi.price * (1.00 - o.butcher.commissionRate)): undefined
                 }) 
             })
             price += Helper.asCurrency(o.subTotal); 
