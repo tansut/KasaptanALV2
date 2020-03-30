@@ -14,7 +14,8 @@ let appRoutes = [
     './error',
     './shopcard',
     './creditcard',
-    './payorder'
+    './payorder',
+    './operator.order'
 ];
 
 export default class RouteLoader {

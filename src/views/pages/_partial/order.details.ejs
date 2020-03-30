@@ -1,5 +1,6 @@
 <% var balance = accounting ? accounting.find(p=>p.code == 'total'): null;
   var shouldBePaid = balance ? __helper.asCurrency(balance.alacak - balance.borc): 0
+  var operator = typeof(operator) == 'undefined' ? false: operator
 %>
 
 <div>
@@ -10,26 +11,29 @@
     <li><span class="text-muted">İsim:&nbsp;</span><%= order.name %></li>
     <li><span class="text-muted">Adres:&nbsp;</span><%= order.address%>
       <%= order.areaLevel3Text%>/<%= order.areaLevel1Text%></li>
-      <% if (order.noInteraction) { %>
+    <% if (order.noInteraction) { %>
     <li>Güvenli Teslimat: <%= order.noInteraction ? 'Evet': 'Hayır'%></li>
     <% } %>
-    <li id="orderphone" onclick="javascript:$('#orderphone').hide()"><span   class="text-muted">Telefon:&nbsp;</span><%= order.phone%></li>
+    <li id="orderphone" onclick="javascript:$('#orderphone').hide()"><span
+        class="text-muted">Telefon:&nbsp;</span><%= order.phone%></li>
   </ul>
 
-   <% if (order.shipLocation && order.shipLocation.coordinates) { %>
+  <% if (order.shipLocation && order.shipLocation.coordinates) { %>
 
 
   <div class="alert alert-info">
     <div class="">
-    
-      <img class="border" width="600" src="https://maps.googleapis.com/maps/api/staticmap?center=<%=order.shipLocation.coordinates[0]%>+<%=order.shipLocation.coordinates[1]%>&zoom=16&scale=1&size=600x300&maptype=roadmap&key=AIzaSyBFqn2GNAhwbJnpga-3S3xQGBc0EcdAgH8&format=png&visual_refresh=true&markers=size:mid%7Ccolor:0xff0000%7Clabel:M%7C<%=order.shipLocation.coordinates[0]%>+<%=order.shipLocation.coordinates[1]%>">
 
-  </div>
+      <img class="border" width="600"
+        src="https://maps.googleapis.com/maps/api/staticmap?center=<%=order.shipLocation.coordinates[0]%>+<%=order.shipLocation.coordinates[1]%>&zoom=16&scale=1&size=600x300&maptype=roadmap&key=AIzaSyBFqn2GNAhwbJnpga-3S3xQGBc0EcdAgH8&format=png&visual_refresh=true&markers=size:mid%7Ccolor:0xff0000%7Clabel:M%7C<%=order.shipLocation.coordinates[0]%>+<%=order.shipLocation.coordinates[1]%>">
+
+    </div>
     <div class="mt-3 font-size-sm text-muted">Kasabınıza uzaklık: <%=(order.dispatcherDistance)%>km</div>
     <div class="font-size-sm text-muted">Hata payı: <%=(order.shipLocationAccuracy)%>m</div>
-    <div class="font-size-sm text-muted">Tam Lokasyon:   <a target="_blank" class="font-size-sm" href="https://www.google.com/maps/place/<%=order.shipLocation.coordinates[0]%>+<%=order.shipLocation.coordinates[1]%>/">
-      <%=order.shipLocation.coordinates[0]%>, <%=order.shipLocation.coordinates[1]%>
-    </a>  </div>
+    <div class="font-size-sm text-muted">Tam Lokasyon: <a target="_blank" class="font-size-sm"
+        href="https://www.google.com/maps/place/<%=order.shipLocation.coordinates[0]%>+<%=order.shipLocation.coordinates[1]%>/">
+        <%=order.shipLocation.coordinates[0]%>, <%=order.shipLocation.coordinates[1]%>
+      </a> </div>
   </div>
 
   <%}%>
@@ -37,14 +41,17 @@
 
 <div class="row mb-3">
   <div class="col-sm-4 mb-2">
-    <div class="bg-secondary p-4 text-center rounded-lg"><span class="font-weight-medium text-dark mr-2">Dağtımı yapacak: <br></span><%=order.dispatcherName%></div>
-  </div>
-  <div class="col-sm-4 mb-2">
-    <div class="bg-secondary p-4 text-center rounded-lg"><span class="font-weight-medium text-dark mr-2">Durum:<br></span><%= order.status %></div>
-  </div>
-  <div class="col-sm-4 mb-2">
-    <div class="bg-secondary p-4 text-center rounded-lg"><span class="font-weight-medium text-dark mr-2">Tahmini dağıtım:<br></span>Belirlenen gün ve saat</div>
-  </div>
+    <div class="bg-secondary p-4 text-center rounded-lg"><span class="font-weight-medium text-dark mr-2">Dağtımı yapacak: <br></span><%=order.dispatcherName%>
+</div>
+</div>
+<div class="col-sm-4 mb-2">
+  <div class="bg-secondary p-4 text-center rounded-lg"><span
+      class="font-weight-medium text-dark mr-2">Durum:<br></span><%= order.status %></div>
+</div>
+<div class="col-sm-4 mb-2">
+  <div class="bg-secondary p-4 text-center rounded-lg"><span class="font-weight-medium text-dark mr-2">Tahmini
+      dağıtım:<br></span>Belirlenen gün ve saat</div>
+</div>
 </div>
 
 <% for (let bi in butchers) { %>
@@ -54,8 +61,8 @@
 <div class="mb-3 border-top border-left border-right">
 
   <div class="bg-secondary p-3  mb-4"><a class="media align-items-center" href="/<%=butcher.slug%>"><img
-        class="rounded-circle header-img" 
-        src="<%= `${__req.helper.imgUrl('butcher-google-photos', butcher.slug)}` %>" alt="<%=butcher.name%>">
+        class="rounded-circle header-img" src="<%= `${__req.helper.imgUrl('butcher-google-photos', butcher.slug)}` %>"
+        alt="<%=butcher.name%>">
       <div class="media-body pl-2"><span class="font-size-ms text-muted">Siparişiniz</span>
         <h3 class="h4 mb-0 mr-2"><%= butchers[bi].name %></h3>
       </div>
@@ -92,8 +99,7 @@
             <%- include('./currency.ejs', {value: item.price}) %>
           </span>
           <%if (item.pounitWeight) { %>
-          <span
-          class="text-muted font-size-sm d-block">1 <%=item.pounitTitle%> <%=item.pounitWeight%>/</span>
+          <span class="text-muted font-size-sm d-block">1 <%=item.pounitTitle%> <%=item.pounitWeight%>/</span>
           <% } %>
         </div>
         <div class="text-nowrap">
@@ -109,7 +115,52 @@
   
                         </div>
                       </div>
+<%if (operator) { %>
+  <form action="/operator/order/<%=order.ordernum%>/item" method="POST">
+    <input type="hidden" name="itemid" value="<%=item.id%>">
+    <input type="hidden" name="orderid" value="<%=order.id%>">
+<div class="bg-secondary p-3">
 
+  <div class="form-group row">
+    <label for="staticEmail" class="col-sm-2 col-form-label">Numara</label>
+    <div class="col-sm-10">
+      <input type="text" readonly class="form-control-plaintext" value="<%=item.orderitemnum%>/<%=item.id%>/<%=item.product.name%>">
+    </div>
+  </div>
+  <div class="form-group row">
+    <label for="inputPassword" class="col-sm-2 col-form-label">Ödeme</label>
+    <div class="col-sm-10">
+      <span>PaymentID: <%=item.paymentTransactionId%></span>
+    </div>
+  </div>
+
+  <div class="form-group row">
+    <label for="inputPassword" class="col-sm-2 col-form-label">Durum</label>
+    <div class="col-sm-10">
+      <div>Status: <%=item.status%> / <%=item.statusText%></div>
+      <div>subMerchantStatus: <em class="font-weight-bold"> <%=item.subMerchantStatus%> </em>/ <%=item.subMerchantStatusText%></div>
+    </div>
+  </div>
+
+  <div class="form-group row">
+    <% if (item.subMerchantStatus == 'approved') { %>
+      <button name="disApproveSubMerchant" value="true">DisApprove SubMerchant</button>
+
+
+    <% } else { %>
+      <button name="approveSubMerchant" value="true">Approve SubMerchant</button>      
+    <% } %>
+  </div>
+
+  
+
+  <div>
+
+  </div>
+
+</div>
+</form>
+<% } %>
                   <% }) %>
       </div>
 
@@ -219,51 +270,51 @@
 
 <% if (accounting) { %>
 <h3 class="h5">Sipariş işlemleri</h3>
-      <table class="font-size-sm table">
-        <tr>
-          <td>
-            İşlem
-          </td>       
-          <td>
-            Borç
-          </td> 
-          <td>
-            Alacak
-          </td>  
-        </tr>
-        <% accounting.forEach((o, i) => { %>
-          <tr class="<%= o.code == 'total' ? 'font-weight-bold':'' %>">
+<table class="font-size-sm table">
+  <tr>
+    <td>
+      İşlem
+    </td>
+    <td>
+      Borç
+    </td>
+    <td>
+      Alacak
+    </td>
+  </tr>
+  <% accounting.forEach((o, i) => { %>
+  <tr class="<%= o.code == 'total' ? 'font-weight-bold':'' %>">
 
-        
-          <td>
-            <%=o.desc%>
-          </td>
 
-          <td>
-            <%- include('./currency.ejs', {value: o.borc}) %>
+    <td>
+      <%=o.desc%>
+    </td>
 
-          </td>
+    <td>
+      <%- include('./currency.ejs', {value: o.borc}) %>
 
-          <td>
-            <%- include('./currency.ejs', {value: o.alacak}) %>
+    </td>
 
-          </td>
-         
+    <td>
+      <%- include('./currency.ejs', {value: o.alacak}) %>
 
-    </tr>
-    
-        <%})%>
-      </table>
+    </td>
+
+
+  </tr>
+
+  <%})%>
+</table>
 <% if (shouldBePaid > 0) { %>
 <div class="text-center">
-<a class="" href="/pay/<%=order.ordernum%>">Önline Ödeme</a>
+  <a class="" href="/pay/<%=order.ordernum%>">Önline Ödeme</a>
 </div>
 <% } %>
 <% } %>
 
 <style>
-  img{
-  
-  pointer-events: all !important;
-}
+  img {
+
+    pointer-events: all !important;
+  }
 </style>

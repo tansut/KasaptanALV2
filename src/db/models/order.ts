@@ -384,6 +384,11 @@ class OrderItem extends BaseModel<Order> {
     paymentTransactionId: string;
 
     @Column({
+        allowNull: true
+    })  
+    subMerchantStatus: string;    
+
+    @Column({
         allowNull: true    
     })    
     status: string;    
@@ -532,11 +537,6 @@ class OrderItem extends BaseModel<Order> {
         allowNull: true
     })
     shipmentInformMe: boolean;    
-
-
-
-
-
 
     @ForeignKey(() => Dispatcher)
     dispatcherid: number;

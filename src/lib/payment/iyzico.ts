@@ -1,4 +1,4 @@
-import {PaymentRequest, CreditcardPaymentProvider, CreditcardPaymentFactory, PaymentResult, Creditcard, SubMerchantCreateRequest, SubMerchantCreateResult } from "./creditcard";
+import {PaymentRequest, CreditcardPaymentProvider, CreditcardPaymentFactory, PaymentResult, Creditcard, SubMerchantCreateRequest, SubMerchantCreateResult, SubMerchantItemApproveRequest, SubMerchantItemApproveResponse } from "./creditcard";
 
 var Iyzipay = require('iyzipay');
 
@@ -26,12 +26,36 @@ export default class IyziPayment extends CreditcardPaymentProvider {
         return IyziPayment.key
     }
 
+    async approveItem(request: SubMerchantItemApproveRequest): Promise<SubMerchantItemApproveResponse> {
+        return new Promise((resolve, reject) => {
+            this.iyzipay.approval.create(request, (err, result) => {
+                this.logOperation("submerchant-approval", request, result).then(() => {
+                    if (err) reject(err);
+                    else if (result.status == 'failure') reject(result);
+                    else resolve(result);
+                }).catch(err=>reject(err))
+            });
+        })        
+    }    
+
+    async disApproveItem(request: SubMerchantItemApproveRequest): Promise<SubMerchantItemApproveResponse> {
+        return new Promise((resolve, reject) => {
+            this.iyzipay.disapproval.create(request, (err, result) => {
+                this.logOperation("submerchant-disapproval", request, result).then(() => {
+                    if (err) reject(err);
+                    else if (result.status == 'failure') reject(result);
+                    else resolve(result);
+                }).catch(err=>reject(err))
+            });
+        })          
+    }     
+
     async pay3dInit(request: PaymentRequest, card: Creditcard): Promise<PaymentResult> {
         let req = this.createIyzicoPaymentReq(request, card);
         
         return new Promise((resolve, reject) => {
             this.iyzipay.threedsInitialize.create(req, (err, result) => {
-                this.logPaymentResult("creditcard-3d-init", request, result).then(() => {
+                this.logOperation("creditcard-3d-init", request, result).then(() => {
                     if (err) reject(err);
                     else if (result.status == 'failure') reject(result);
                     else resolve(result);
@@ -50,7 +74,7 @@ export default class IyziPayment extends CreditcardPaymentProvider {
         let req = request;
         return new Promise((resolve, reject) => {
             this.iyzipay.threedsPayment.create(req, (err, result) => {
-                this.logPaymentResult("creditcard-3d-complete", request, result).then(() => {                    
+                this.logOperation("creditcard-3d-complete", request, result).then(() => {                    
                     if (err) reject(err);
                     else if (result.status == 'failure') reject(result);
                     else return this.savePayment("3d-iyzico", request, result).then(()=>resolve(result)).catch(err=>reject(err));
@@ -65,7 +89,7 @@ export default class IyziPayment extends CreditcardPaymentProvider {
         
         return new Promise((resolve, reject) => {
             this.iyzipay.payment.create(req, (err, result) => {
-                this.logPaymentResult("creditcard-payment-create", request, result).then(() => {
+                this.logOperation("creditcard-payment-create", request, result).then(() => {
                     if (err) reject(err);
                     else if (result.status == 'failure') reject(result);
                     else return this.savePayment('pos-iyzico', request, result).then(()=>resolve(result)).catch(err=>reject(err));                    

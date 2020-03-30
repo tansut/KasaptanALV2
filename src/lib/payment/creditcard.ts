@@ -107,6 +107,19 @@ export interface ItemTransaction {
     paidPrice: number    
 }
 
+export interface SubMerchantItemApproveRequest {
+    paymentTransactionId: string;
+    conversationId?: string;
+}
+
+export interface SubMerchantItemApproveResponse {
+    paymentTransactionId: string;
+    conversationId?: string;
+    status: string;
+    errorCode: string;
+    errorMessage:string;
+}
+
 
 export type PaymentType = 'pre' | 'sales'
 
@@ -226,7 +239,7 @@ export class CreditcardPaymentProvider {
         }
     }
 
-    async logPaymentResult(logType: string, request: any, result: any) {
+    async logOperation(logType: string, request: any, result: any) {
         if (this.logger) {
             let data = {
                 request: request,
@@ -243,6 +256,14 @@ export class CreditcardPaymentProvider {
             )
         } else return Promise.resolve();
     }
+
+    async approveItem(request: SubMerchantItemApproveRequest): Promise<SubMerchantItemApproveResponse> {
+        return null;
+    }    
+
+    async disApproveItem(request: SubMerchantItemApproveRequest): Promise<SubMerchantItemApproveResponse> {
+        return null;
+    }        
 
     async pay(request: PaymentRequest, card: Creditcard): Promise<PaymentResult> {
         return null;

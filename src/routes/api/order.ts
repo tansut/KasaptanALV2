@@ -203,18 +203,21 @@ export default class Route extends ApiRouter {
     }
 
     async updateOrderByPayment(o: Order, paymentInfo: PaymentResult, t?: Transaction) {
+        let promises = [];
         o.paymentId = paymentInfo.paymentId;
         o.paidTotal = paymentInfo.paidPrice;
+        promises.push(o.save({
+            transaction: t
+        }));
         paymentInfo.itemTransactions.forEach(it => {
             let oi = o.items.find(p=>p.orderitemnum == it.itemId);
             if (oi) {
                 oi.paymentTransactionId = it.paymentTransactionId
-                oi.paidPrice = it.paidPrice
+                oi.paidPrice = it.paidPrice;
+                promises.push(oi.save({transaction:t}))
             }
         })
-        return o.isNewRecord ? null: o.save({
-            transaction: t
-        });        
+        return o.isNewRecord ? null: Promise.all(promises);        
     }
 
     async completeCreditcardPayment(ol: Order[], paymentInfo: PaymentResult) {
@@ -361,8 +364,16 @@ export default class Route extends ApiRouter {
     }
 
 
-    static SetRoutes(router: express.Router) {
-        //router.get("/search", Route.BindRequest(this.prototype.searchRoute));
+    async getOrderRoute() {
+        let order = await this.getOrder(this.req.params.ordernum);
+
+        if (!order) return this.next();
+        let view = this.getView(order);
+        this.res.send(view);
+    }
+
+    static SetRoutes(router: express.Router) {        
+        //router.get("/admin/order/:ordernum", Route.BindRequest(this.prototype.getOrderRoute));
     }
 }
 
