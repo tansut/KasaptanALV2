@@ -5,7 +5,7 @@
   <% include ./_partial/head %>
 </head>
 
-<body>
+<body class="<%= controller.threeDhtml ? 'd-none':''%>">
   <% include ./_partial/header %>
 
   <!-- Page Title (Light)-->
@@ -14,18 +14,18 @@
       <div class="order-lg-2 mb-3 mb-lg-0 pt-lg-2">
         <nav aria-label="breadcrumb">
           <ol class="breadcrumb flex-lg-nowrap justify-content-center justify-content-lg-star">
-            <li class="breadcrumb-item"><a class="text-nowrap" href="/"><i class="czi-home"></i></a></li>
           </ol>
         </nav>
       </div>
       <div class="order-lg-1 pr-lg-4 text-center text-lg-left">
         <h1 class="h3">Online Ödeme</h1>
+        <h2 class="lead h4" >
+          <%=order.name%>
+        </h2>
         <h2 class="lead h4"><%= __helper.formatDate(order.creationDate) + ' tarihli ' + controller.order.butcherName + ' siparişim' %></h2>
       </div>
     </div>
   </div>
-
-
 
 
 <% var balance = accounting.find(p=>p.code == 'total') 
@@ -58,7 +58,7 @@
 </div>
   <div class="container mb-3 ">
 
-    <form class="interactive-credit-card" method="POST" id="pageForm">
+  <form class="interactive-credit-card" onsubmit="beforeSubmit()" method="POST" id="pageForm">
       <input type="hidden" name="paymentId" id="paymentId">
 
 
@@ -67,7 +67,7 @@
   <div class="text-center">
 
 
-    <h4 class="h5">Nefis ürünlerinizi güvenle kapınıza bırakabiliriz</h4>
+    <!-- <h4 class="h5">Nefis ürünlerinizi güvenle kapınıza bırakabiliriz</h4> -->
     <div class="form-group ">
       <div class="form-check  ">
         <input <%= order.noInteraction ? "checked" : "" %>   type="checkbox" name="secureship" class="form-check-input" id="3d">
@@ -128,13 +128,16 @@
 <script>
 
 
-
+function beforeSubmit() {
+  setTimeout(function() { $('$pay-btn').attr('disabled', true);})
+}
 
 <% if (controller.threeDhtml) { %>
-
-  $(window).on('load',function(){
-  $('#threeDmodal').modal('show');
-})
+  
+  $(window).on('load',function() {
+    $('#threeDmodal').modal('show');
+    setTimeout(function() { $(document.body).removeClass("d-none")}, 250);
+  })
 
 <% } %>
 

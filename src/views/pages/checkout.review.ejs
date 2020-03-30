@@ -30,9 +30,9 @@
   <!-- Page Content-->
   <div class="container mb-4 ">
     <form class="needs-validation" method="post" novalidate action="/alisveris-sepetim/savereview">
-      <div class="row">
-        <section class="col">
-          <!-- Steps-->
+      <div>
+        <section >
+       
 
           <%- include('./_partial/checkout-steps.ejs', {   step: 4        }); %>
           <% if (shopcard.address.name) { %>
@@ -118,7 +118,7 @@
  
         
         
-          <div class="p-3 border">
+          <div class="p-3 mb-3 border">
             <div class="widget">
               <h2 class="widget-title text-center">Siparişim</h2>
               <% for (let bi in shopcard.butchers) { %>

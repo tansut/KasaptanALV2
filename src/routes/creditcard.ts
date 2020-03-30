@@ -80,5 +80,8 @@ export default class Route extends PaymentRouter {
         router.get("/3dpaymentHtml", Route.BindRequest(Route.prototype.threeDRoute));
         router.post("/3dnotify", Route.BindRequest(Route.prototype.threeDNotifyRoute));
         router.get('/testcard', Route.BindToView("pages/testcard.ejs"))
+        router.get('/3dnotify', Route.BindToView("pages/3dcomplete.ejs"))
+
+        
     }
 }

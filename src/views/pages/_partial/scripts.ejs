@@ -47,6 +47,7 @@ $(document).ajaxComplete(function(){
 
   $('.searchBox').autoComplete({
     resolver: 'custom',
+    minLength: 4,
 
     formatResult: function (item) {
 						return {
@@ -62,7 +63,7 @@ $(document).ajaxComplete(function(){
           
     resolverSettings: {
       url: '/api/v1/fts',
-      requestThrottling: 1000
+      requestThrottling: 2000
     },
     events: {
 

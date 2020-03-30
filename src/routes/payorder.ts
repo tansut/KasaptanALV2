@@ -62,7 +62,7 @@ export default class Route extends PaymentRouter {
         if (!this.order)
             return this.next();
 
-        await this.getOrderSummary();            
+        await this.getOrderSummary();
 
         let userMessage = "";
 
@@ -71,12 +71,12 @@ export default class Route extends PaymentRouter {
                 this.getPaymentRequest();
                 let threedPaymentMade = await this.created3DPayment();
                 if (threedPaymentMade) {
-                    await this.paymentSuccess(threedPaymentMade);                
+                    await this.paymentSuccess(threedPaymentMade);
                     userMessage = "Ödemeniz başarıyla alındı"
                 } else {
                     userMessage = "Ödeme işlemi başarısız"
                 }
-            } catch(err) {
+            } catch (err) {
                 userMessage = err.message || err.errorMessage
             }
 
@@ -120,9 +120,12 @@ export default class Route extends PaymentRouter {
         if (!this.order)
             return this.next();
 
-        await this.getOrderSummary();            
+        await this.getOrderSummary();
 
-            this.sendView("pages/payorder.ejs", { ... { accounting: this.acountingSummary }, ...this.api.getView(this.order, this.acountingSummary), ...{ enableImgContextMenu: true } });
+        let pageTitle = `Online Ödeyin: ${Helper.formatDate(this.order.creationDate)} tarihli ${this.order.butcherName} siparişiniz` ;
+        let pageDescription = `Nefis ürünlerinizi güvenle online ödeyin, hem zamandan kazanın, hem sağlığınızı koruyun.`
+
+        this.sendView("pages/payorder.ejs", {...{ pageTitle: pageTitle, pageDescription: pageDescription}, ...{ accounting: this.acountingSummary }, ...this.api.getView(this.order, this.acountingSummary), ...{ enableImgContextMenu: true } });
     }
 
 

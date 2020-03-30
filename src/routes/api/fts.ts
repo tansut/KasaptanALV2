@@ -22,7 +22,7 @@ export default class Route extends ApiRouter {
             return this.res.send([])
 
         let text =  <string>this.req.query.q;
-        let words = text.match(/\S+/g).map(w=> `+${w}*`)
+        let words = text.match(/\S+/g).filter(w=>w.length>3).map(w=> `+${w}*`)
         let search = words.join()
 
         let prods = await User.sequelize.query("select name, slug as url, '' as type, match(name, shortdesc, slug, keywords) against (:search IN BOOLEAN MODE) as RELEVANCE " +

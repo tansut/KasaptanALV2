@@ -45,12 +45,14 @@
                     <h6 class="font-size-base text-light mb-0">Sipariş bilgilerim</h6><a class="btn btn-primary btn-sm"
                         href="/user/signoff"><i class="czi-sign-out mr-2"></i>Çıkış</a>
                 </div>
-                
+                <% if (__req.user && (__req.user.hasRole('admin') || __req.user.hasRole('operator'))) {%>
+                    <a href="/operator/order/<%=order.ordernum%>" class="btn btn-primary">Sipariş Yönetimi</a>
+                    <%}%>
                 <a id="order"></a>
                 <div class="d-flex flex-nowrap justify-content-between align-items-center border-bottom pt-1 pb-1 mb-2">
                     <h3 class="h4 mb-0 mr-2"><%=__helper.formatDate(order.creationDate)%> tarihli siparişim</h3>
                   </div>                
-                <!-- Orders list-->
+          
                
             <%- include('./_partial/order.details.ejs', {
                 order: order                
