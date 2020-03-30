@@ -54,7 +54,13 @@ class Payment extends BaseModel<Payment> {
         allowNull: true,
         type: DataType.TEXT
     })
-    logData: string;    
+    request: string;    
+
+    @Column({
+        allowNull: true,
+        type: DataType.TEXT
+    })
+    response: string;       
 
 }
 

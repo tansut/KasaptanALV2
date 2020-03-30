@@ -96,7 +96,17 @@ export interface PaymentResult {
     conversationId: string;
     paidPrice: number;
     price: number;
+    itemTransactions: ItemTransaction[];
 }
+
+export interface ItemTransaction {
+    itemId: string;
+    paymentTransactionId: string;
+    transactionStatus: number,
+    price: number,
+    paidPrice: number    
+}
+
 
 export type PaymentType = 'pre' | 'sales'
 
@@ -125,14 +135,16 @@ export class CreditcardPaymentProvider {
         return false;
     }
 
-    async savePayment(provider: string, payment: PaymentResult) {
+    async savePayment(provider: string, request: any, response: PaymentResult) {
         return Payment.create({
             userid: this.userid,
-            conversationId: payment.conversationId,
-            paymentId: payment.paymentId,
+            conversationId: response.conversationId,
+            paymentId: response.paymentId,
             provider: provider,
             ip: this.ip,
-            price: payment.paidPrice
+            price: response.paidPrice,
+            request: JSON.stringify(request),
+            response: JSON.stringify(response)
         })
     }
 
@@ -147,16 +159,16 @@ export class CreditcardPaymentProvider {
             o.items.forEach((oi, i) => {
                 basketItems.push({
                     category1: o.butcherName,
-                    id: oi.product.id.toString() + '@' + o.butcherid.toString(),
+                    id: oi.product.id.toString(),
                     itemType: 'PHYSICAL',
                     name: oi.product.name,
                     price: Helper.asCurrency(oi.price),
-                    subMerchantKey: o.butcher[this.providerKey + "SubMerchantKey"],
-                    subMerchantPrice: (i == 0 ? Helper.asCurrency(o.butcher.commissionFee): 0) + Helper.asCurrency(oi.price * (1.00 - o.butcher.commissionRate))
+                    //subMerchantKey: o.butcher[this.providerKey + "SubMerchantKey"],
+                    //subMerchantPrice: (i == 0 ? Helper.asCurrency(o.butcher.commissionFee): 0) + Helper.asCurrency(oi.price * (1.00 - o.butcher.commissionRate))
                 }) 
             })
-            price += Helper.asCurrency(o.subTotal) 
-            paidPrice += Helper.asCurrency(o.total) 
+            price += Helper.asCurrency(o.subTotal); 
+            paidPrice += Helper.asCurrency(o.total); 
         })
 
         let orderids = ol.map(o=>o.ordernum).join(',');

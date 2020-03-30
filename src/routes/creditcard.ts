@@ -61,11 +61,7 @@ export default class Route extends PaymentRouter {
                 let creditCard = this.getCreditCard();
                 try {
                     paymentResult = await this.createPayment(req, creditCard);
-                    await this.paymentSuccess({
-                        paymentId: paymentResult.paymentId,
-                        paid: paymentResult.paidPrice,
-                        type: "sales"
-                    })
+                    await this.paymentSuccess(paymentResult)
                     userMessage = "başarılı"
                 } catch (err) {
                     userMessage = err.message || err.errorMessage

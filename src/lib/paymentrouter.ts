@@ -28,8 +28,7 @@ export class PaymentRouter extends ViewRouter  {
     _paymentProvider: CreditcardPaymentProvider;
     threeDhtml: string;
 
-    async paymentSuccess(payment: PaymentTotal) {
-  
+    async paymentSuccess(payment: PaymentResult) {
     }
 
     get pageHasPaymentId() {
@@ -64,18 +63,14 @@ export class PaymentRouter extends ViewRouter  {
     }
 
 
-    async created3DPayment(): Promise<PaymentTotal> {
+    async created3DPayment(): Promise<PaymentResult> {
         if (this.req.body.paymentId) {
             let payment = await Payment.findOne({
                 where: {
                     paymentId: this.req.body.paymentId
                 }
             })
-            return payment ? {
-                paymentId: payment.paymentId,
-                paid: payment.price,
-                type: "sales"
-            }: null;
+            return payment ? JSON.parse(payment.response) : null;
 
         } else return null;
     }

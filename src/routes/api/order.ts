@@ -18,7 +18,7 @@ import db from "../../db/context";
 import { Sms } from '../../lib/sms';
 import { AccountingOperation, Account } from '../../models/account';
 import Helper from '../../lib/helper';
-import { Creditcard, CreditcardPaymentFactory, PaymentTotal } from '../../lib/payment/creditcard';
+import { Creditcard, CreditcardPaymentFactory, PaymentTotal, PaymentResult } from '../../lib/payment/creditcard';
 import { OrderPaymentStatus } from '../../models/order';
 const orderid = require('order-id')('dkfjsdklfjsdlkg450435034.,')
 
@@ -42,7 +42,7 @@ export default class Route extends ApiRouter {
             },
             include: [{
                 model: Butcher
-            },{
+            }, {
                 model: OrderItem,
                 include: [{
                     model: Butcher,
@@ -57,7 +57,7 @@ export default class Route extends ApiRouter {
     }
 
 
-    getView(order: Order, accounting: AccountModel [] = null) {
+    getView(order: Order, accounting: AccountModel[] = null) {
 
         let shipment = {};
         let payment = {};
@@ -187,7 +187,7 @@ export default class Route extends ApiRouter {
                     transaction: t
                 }))
             }
-            return Promise.all(result)            
+            return Promise.all(result)
         } else {
             let res = db.getContext().transaction((t: Transaction) => {
                 for (var i = 0; i < ops.length; i++) {
@@ -202,25 +202,42 @@ export default class Route extends ApiRouter {
         }
     }
 
-    async makeCreditcardPayment(ol: Order[], paymentInfo: PaymentTotal, t?: Transaction) {
+    async updateOrderByPayment(o: Order, paymentInfo: PaymentResult, t?: Transaction) {
+        o.paymentId = paymentInfo.paymentId;
+        o.paidTotal = paymentInfo.paidPrice;
+        return o.isNewRecord ? null: o.save({
+            transaction: t
+        });        
+    }
 
-        let result: AccountingOperation[] = [];
-        
+    async completeCreditcardPayment(ol: Order[], paymentInfo: PaymentResult) {
+        let res = db.getContext().transaction((t: Transaction) => {
+            return this.makeCreditcardPayment(ol, paymentInfo, t)            
+        })       
+        return res; 
+    }
+
+    async makeCreditcardPayment(ol: Order[], paymentInfo: PaymentResult, t?: Transaction) {
+
+        let ops: AccountingOperation[] = [];
+        let promises = []
+
         for (let i = 0; i < ol.length; i++) {
             let o = ol[i];
             let total = Helper.asCurrency(o.total);
-            let op = new AccountingOperation(`${o.ordernum} kredi kartı ödemesi`, o.ordernum);
-            op.accounts.push(new Account("odeme-bekleyen-satislar", [o.userId, o.ordernum]).dec(paymentInfo.paid))
-            op.accounts.push(new Account("satis-alacaklari", [o.userId, o.ordernum]).dec(paymentInfo.paid))            
-            result.push(op)            
+            let op = new AccountingOperation(`${o.ordernum} kredi kartı ödemesi - ${paymentInfo.paymentId}`, o.ordernum);
+            op.accounts.push(new Account("odeme-bekleyen-satislar", [o.userId, o.ordernum]).dec(paymentInfo.paidPrice))
+            op.accounts.push(new Account("satis-alacaklari", [o.userId, o.ordernum]).dec(paymentInfo.paidPrice))
+            ops.push(op);
+            promises.push(this.updateOrderByPayment(o, paymentInfo, t));            
         }
 
-        await this.saveAccountingOperations(result, t);
+         promises.push(this.saveAccountingOperations(ops, t));
+
         for (let i = 0; i < ol.length; i++) {
-        await email.send(ol[i].email, "siparişinizin ödemesi yapıldı", "order.paid.ejs", this.getView(ol[i]));
+            email.send(ol[i].email, "siparişinizin ödemesi yapıldı", "order.paid.ejs", this.getView(ol[i]));
         }
-
-
+        return promises
     }
 
     generateInitialAccounting(o: Order): AccountingOperation {
@@ -329,7 +346,7 @@ export default class Route extends ApiRouter {
             let dbOrder = await api.getOrder(order.ordernum);
             let view = this.getView(dbOrder);
             await email.send(dbOrder.email, "siparişinizi aldık", "order.started.ejs", view);
-            await Sms.send(dbOrder.phone, 'kasaptanAl.com siparisinizi aldik, destek tel/whatsapp: 08503054216. Urunleriniz hazir oldugunda sizi bilgilendirecegiz.', false, new SiteLogRoute(this.constructorParams))             
+            await Sms.send(dbOrder.phone, 'kasaptanAl.com siparisinizi aldik, destek tel/whatsapp: 08503054216. Urunleriniz hazir oldugunda sizi bilgilendirecegiz.', false, new SiteLogRoute(this.constructorParams))
             fres.push(dbOrder)
         }
 

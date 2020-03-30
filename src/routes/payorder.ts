@@ -42,8 +42,8 @@ export default class Route extends PaymentRouter {
     }
 
 
-    async paymentSuccess(payment: PaymentTotal) {
-        await this.api.makeCreditcardPayment([this.order], payment);
+    async paymentSuccess(payment: PaymentResult) {
+        await this.api.completeCreditcardPayment([this.order], payment);
         await this.getOrderSummary();
     }
 
@@ -97,11 +97,7 @@ export default class Route extends PaymentRouter {
                 } else {
                     let creditCard = this.getCreditCard();
                     paymentResult = await this.createPayment(req, creditCard);
-                    await this.paymentSuccess({
-                        paymentId: paymentResult.paymentId,
-                        paid: paymentResult.paidPrice,
-                        type: "sales"
-                    })
+                    await this.paymentSuccess(paymentResult)
                     userMessage = "Ödemenizi başarıyla aldık"
                 }
             } catch (err) {

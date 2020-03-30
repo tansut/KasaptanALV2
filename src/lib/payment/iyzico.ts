@@ -53,7 +53,7 @@ export default class IyziPayment extends CreditcardPaymentProvider {
                 this.logPaymentResult("creditcard-3d-complete", request, result).then(() => {                    
                     if (err) reject(err);
                     else if (result.status == 'failure') reject(result);
-                    else return this.savePayment("3d-iyzico", result).then(()=>resolve(result)).catch(err=>reject(err));
+                    else return this.savePayment("3d-iyzico", request, result).then(()=>resolve(result)).catch(err=>reject(err));
                 }).catch(err=>reject(err))
             });
         })
@@ -68,7 +68,7 @@ export default class IyziPayment extends CreditcardPaymentProvider {
                 this.logPaymentResult("creditcard-payment-create", request, result).then(() => {
                     if (err) reject(err);
                     else if (result.status == 'failure') reject(result);
-                    else return this.savePayment('pos-iyzico', result).then(()=>resolve(result)).catch(err=>reject(err));                    
+                    else return this.savePayment('pos-iyzico', request, result).then(()=>resolve(result)).catch(err=>reject(err));                    
                 }).catch(err=>reject(err))
             });
         })

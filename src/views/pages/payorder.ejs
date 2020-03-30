@@ -15,8 +15,6 @@
         <nav aria-label="breadcrumb">
           <ol class="breadcrumb flex-lg-nowrap justify-content-center justify-content-lg-star">
             <li class="breadcrumb-item"><a class="text-nowrap" href="/"><i class="czi-home"></i></a></li>
-
-
           </ol>
         </nav>
       </div>
@@ -25,9 +23,6 @@
         <h2 class="lead h4"><%= __helper.formatDate(order.creationDate) + ' tarihli ' + controller.order.butcherName + ' siparişim' %></h2>
       </div>
     </div>
-
-
-
   </div>
 
 
@@ -63,7 +58,7 @@
 </div>
   <div class="container mb-3 ">
 
-    <form method="POST" id="pageForm">
+    <form class="interactive-credit-card" method="POST" id="pageForm">
       <input type="hidden" name="paymentId" id="paymentId">
 
 
@@ -131,6 +126,10 @@
   <% include ./_partial/scripts %>
 
 <script>
+
+
+
+
 <% if (controller.threeDhtml) { %>
 
   $(window).on('load',function(){
@@ -138,6 +137,11 @@
 })
 
 <% } %>
+
+new Card({
+      form: document.querySelector('.interactive-credit-card'),
+      container: '.card-wrapper'
+  });
 
 </script>
 
