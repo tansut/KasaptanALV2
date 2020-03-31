@@ -92,7 +92,6 @@ export class Shipment {
             let text = i == 0 ? 'Yarın': Helper.formatDate(nextDay)
             res[nextDay.toDateString()] = text;
         }
-
         return res;
     }    
 }

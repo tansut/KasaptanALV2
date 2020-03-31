@@ -72,8 +72,8 @@
     <li><span class="text-muted">Teslimat:&nbsp;</span><%= shipment[bi].howToDesc %></li>
     <li><span class="text-muted">Teslimat planı:&nbsp;</span><%= shipment[bi].desc %></li>
     <% if (shipment[bi].type != 'callme') {%>
-    <li><span class="text-muted">Gün:&nbsp;</span><%= shipment[bi].daysText %></li>
-    <li><span class="text-muted">Saat Aralığı:&nbsp;</span><%= shipment[bi].hoursText%> </li>
+    <li><span class="text-muted">Gün:&nbsp;</span><strong><%= shipment[bi].daysText %></strong></li>
+    <li><span class="text-muted">Saat Aralığı:&nbsp;</span><strong><%= shipment[bi].hoursText%></strong> </li>
     <%}%>
                 <li><span class="text-muted">Paketim çıkmadan bana haber ver:&nbsp;</span><%= __helper.boolStr(shipment[bi].informMe)%>
     </li>
@@ -102,8 +102,8 @@
           <span class="text-muted font-size-sm d-block">1 <%=item.pounitTitle%> <%=item.pounitWeight%></span>
           <% } %>
         </div>
-        <div class="text-nowrap">
-
+        <div class="text-nowrap text-muted">
+          Durum: <%=item.status%>
         </div>
         <% if (item.note) {%>
         <div class="font-size-sm text-info"><%=item.note%></div>
@@ -142,7 +142,7 @@
       <div>subMerchantStatus: <em class="font-weight-bold"> <%=item.subMerchantStatus%> </em>/ <%=item.subMerchantStatusText%></div>
     </div>
   </div>
-
+<%if (item.status == 'teslim edildi' || (item.status || '').startsWith('iptal')) { %>
   <div class="form-group row">
     <% if (item.subMerchantStatus == 'approved') { %>
       <button name="disApproveSubMerchant" class="btn- btn-primary btn-sm" value="true">DisApprove SubMerchant</button>
@@ -153,12 +153,13 @@
     <% } %>
   </div>
 
+<%}%>
+
+  <p><%-controller.markdown.render(item.statusDesc || '')%></p>
   <div class="form-group">
-    <label for="orderItemStatus" class="">Sipariş Durumu</label>
+    <label for="orderItemStatus" class=""><%=item.productName%>:</label>
     <%- include('./order-status.ejs', { name: "orderItemStatus", order: item }) %>
   </div>
-  <p><%-controller.markdown.render(item.statusDesc || '')%></p>
-
   <button name="saveOrderItemStatus" value="true" class="btn btn-primary btn-sm">Durum Kaydet</button>
 
   <div>

@@ -19,7 +19,7 @@ import { Sms } from '../../lib/sms';
 import { AccountingOperation, Account } from '../../models/account';
 import Helper from '../../lib/helper';
 import { Creditcard, CreditcardPaymentFactory, PaymentTotal, PaymentResult } from '../../lib/payment/creditcard';
-import { OrderPaymentStatus } from '../../models/order';
+import { OrderPaymentStatus, OrderItemStatus } from '../../models/order';
 import config from '../../config';
 const orderid = require('order-id')('dkfjsdklfjsdlkg450435034.,')
 
@@ -29,12 +29,38 @@ export default class Route extends ApiRouter {
         let list = [
             Account.generateCode("odeme-bekleyen-satislar", [o.userId, o.ordernum])
         ]
-        // let summary = await AccountModel.summary(
-        //     [Account.generateCode("odeme-bekleyen-satislar", [this.order.userId, this.order.ordernum])]);
         let accounts = await AccountModel.list(list);
         return accounts;
     }
 
+    async getAccountsSummary(o: Order) {
+        let list = [
+            Account.generateCode("odeme-bekleyen-satislar", [o.userId, o.ordernum])
+        ]
+        let accounts = await AccountModel.summary(list);
+        return accounts;
+    }
+
+    async getOrders(where?: any) {
+        let res = await Order.findAll({
+            where: where,
+            order: [['ID', 'DESC']],
+            limit: 25,
+            include: [{
+                model: Butcher
+            }, {
+                model: OrderItem,
+                include: [{
+                    model: Butcher,
+                    all: true
+                }, {
+                    model: Product,
+                    all: true
+                }]
+            }]
+        })    
+        return res;    
+    }
 
     async getOrder(num) {
         let order = await Order.findOne({
@@ -55,6 +81,88 @@ export default class Route extends ApiRouter {
             }]
         })
         return order;
+    }
+
+    async completeOrderStatus(o: Order, newStatus: OrderItemStatus) {
+        let res = db.getContext().transaction((t: Transaction) => {
+            return this.changeOrderStatus(o, newStatus, t)
+        })
+        await res;
+    }
+
+    async changeOrderStatus(o: Order, newStatus: OrderItemStatus, t?: Transaction) {
+        let promises = [], ops = [];
+        if (o.status != newStatus) {
+            if (newStatus.startsWith('iptal') && o.status.startsWith('iptal')) {
+
+            } else {
+                if (newStatus.startsWith('iptal')) {
+                    let summary = await this.getAccountsSummary(o);
+                    let balance = Helper.asCurrency(summary['total'][1] - summary['total'][0]);
+                    if (balance > 0.00) {
+                        let op = new AccountingOperation(`${o.ordernum} iptali`);
+                        op.accounts.push(new Account("odeme-bekleyen-satislar", [o.userId, o.ordernum]).dec(balance))
+                        op.accounts.push(new Account("satis-alacaklari", [o.userId, o.ordernum]).dec(balance))
+                        ops.push(op);                                    
+                    }   
+                    o.items.forEach(oi=> {
+                        if (!oi.status.startsWith('iptal')) {
+                            oi.status = newStatus;
+                            promises.push(oi.save({transaction:t}))
+                        }
+                    })                 
+                } else if (o.status.startsWith('iptal')) {
+                    // let op = new AccountingOperation(`${oi.productName} iptalin iptali`);
+                    // op.accounts.push(new Account("odeme-bekleyen-satislar", [oi.order.userId, oi.order.ordernum]).inc(oi.price))
+                    // op.accounts.push(new Account("satis-alacaklari", [oi.order.userId, oi.order.ordernum]).inc(oi.price))
+                    // ops.push(op);  
+                } else {
+                    o.items.forEach(oi=> {
+                        if (!oi.status.startsWith('iptal')) {
+                            oi.status = newStatus;
+                            promises.push(oi.save({transaction:t}))
+                        }
+                    })                     
+                }
+            }
+            await this.saveAccountingOperations(ops, t)
+            o.status = newStatus;
+            await o.save({ transaction: t })
+        }
+    }
+
+
+    async completeOrderItemStatus(oi: OrderItem, newStatus: OrderItemStatus) {
+        let res = db.getContext().transaction((t: Transaction) => {
+            return this.changeOrderItemStatus(oi, newStatus, t)
+        })
+        await res;
+    }
+
+
+    changeOrderItemStatus(oi: OrderItem, newStatus: OrderItemStatus, t?: Transaction) {
+        let promises = [], ops = [];
+        if (oi.status != newStatus) {
+            if (newStatus.startsWith('iptal') && oi.status.startsWith('iptal')) {
+
+            } else {
+                if (newStatus.startsWith('iptal')) {
+                    let op = new AccountingOperation(`${oi.productName} ${newStatus}`);
+                    op.accounts.push(new Account("odeme-bekleyen-satislar", [oi.order.userId, oi.order.ordernum]).dec(oi.price))
+                    op.accounts.push(new Account("satis-alacaklari", [oi.order.userId, oi.order.ordernum]).dec(oi.price))
+                    ops.push(op);
+                } else if (oi.status.startsWith('iptal')) {
+                    let op = new AccountingOperation(`${oi.productName} iptalin iptali`);
+                    op.accounts.push(new Account("odeme-bekleyen-satislar", [oi.order.userId, oi.order.ordernum]).inc(oi.price))
+                    op.accounts.push(new Account("satis-alacaklari", [oi.order.userId, oi.order.ordernum]).inc(oi.price))
+                    ops.push(op);
+                }
+            }
+            promises.push(this.saveAccountingOperations(ops, t))
+            oi.status = newStatus;
+            promises.push(oi.save({ transaction: t }))
+        }
+        return Promise.all(promises);
     }
 
 
@@ -211,21 +319,21 @@ export default class Route extends ApiRouter {
             transaction: t
         }));
         paymentInfo.itemTransactions.forEach(it => {
-            let oi = o.items.find(p=>p.orderitemnum == it.itemId);
+            let oi = o.items.find(p => p.orderitemnum == it.itemId);
             if (oi) {
                 oi.paymentTransactionId = it.paymentTransactionId
                 oi.paidPrice = it.paidPrice;
-                promises.push(oi.save({transaction:t}))
+                promises.push(oi.save({ transaction: t }))
             }
         })
-        return o.isNewRecord ? null: Promise.all(promises);        
+        return o.isNewRecord ? null : Promise.all(promises);
     }
 
     async completeCreditcardPayment(ol: Order[], paymentInfo: PaymentResult) {
         let res = db.getContext().transaction((t: Transaction) => {
-            return this.makeCreditcardPayment(ol, paymentInfo, t)            
-        })       
-        return res; 
+            return this.makeCreditcardPayment(ol, paymentInfo, t)
+        })
+        return res;
     }
 
     async makeCreditcardPayment(ol: Order[], paymentInfo: PaymentResult, t?: Transaction) {
@@ -240,13 +348,13 @@ export default class Route extends ApiRouter {
             op.accounts.push(new Account("odeme-bekleyen-satislar", [o.userId, o.ordernum]).dec(paymentInfo.paidPrice))
             op.accounts.push(new Account("satis-alacaklari", [o.userId, o.ordernum]).dec(paymentInfo.paidPrice))
             ops.push(op);
-            promises.push(this.updateOrderByPayment(o, paymentInfo, t));            
+            promises.push(this.updateOrderByPayment(o, paymentInfo, t));
         }
 
-         promises.push(this.saveAccountingOperations(ops, t));
+        promises.push(this.saveAccountingOperations(ops, t));
 
         for (let i = 0; i < ol.length; i++) {
-            
+
             email.send(ol[i].email, "siparişinizin ödemesi yapıldı", "order.paid.ejs", this.getView(ol[i]));
         }
         return promises
@@ -374,7 +482,7 @@ export default class Route extends ApiRouter {
         this.res.send(view);
     }
 
-    static SetRoutes(router: express.Router) {        
+    static SetRoutes(router: express.Router) {
         //router.get("/admin/order/:ordernum", Route.BindRequest(this.prototype.getOrderRoute));
     }
 }

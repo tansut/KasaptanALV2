@@ -69,8 +69,9 @@ export default class Route extends ViewRouter {
         if (this.req.body.saveOrderStatus == "true" && this.order.status != this.req.body.orderStatus) {
             this.order.statusDesc ? null : (this.order.statusDesc = '')
             this.order.statusDesc += `\n- ${Helper.formatDate(Helper.Now(), true)} tarihinde ${this.order.status} -> ${this.req.body.orderStatus}` 
-            this.order.status = this.req.body.orderStatus;
-            await this.order.save()
+            await this.api.completeOrderStatus(this.order, this.req.body.orderStatus);
+            // this.order.status = this.req.body.orderStatus;
+            // await this.order.save()
         }
 
         
@@ -85,6 +86,12 @@ export default class Route extends ViewRouter {
         let ordernum = this.req.params.ordernum;
         this.api = new OrderApi(this.constructorParams);
         this.order = await this.api.getOrder(ordernum);
+    }
+
+    async ordersListRoute() {
+        this.api = new OrderApi(this.constructorParams);
+        let orders = await this.api.getOrders();
+        this.sendView('pages/operator.orders.ejs', {orders: orders})
     }
 
     
@@ -122,10 +129,8 @@ export default class Route extends ViewRouter {
                 if (orderitem.status != this.req.body.orderItemStatus) {
                     orderitem.statusDesc ? null : (orderitem.statusDesc = '')
                     orderitem.statusDesc += `\n- ${Helper.formatDate(Helper.Now(), true)} tarihinde ${orderitem.status} -> ${this.req.body.orderItemStatus}\n`
-                    orderitem.status = this.req.body.orderItemStatus;
+                    await this.api.completeOrderItemStatus(orderitem, this.req.body.orderItemStatus)
                     userMessage = `${orderitem.productName} yeni durum: ${orderitem.status}`
-
-                    await orderitem.save()
                 }                         
             }            
         } catch(err) {
@@ -156,6 +161,7 @@ export default class Route extends ViewRouter {
 
     static SetRoutes(router: express.Router) {
         router.get('/operator/order/:ordernum', Route.BindRequest(Route.prototype.orderViewRoute))
+        router.get('/operator/orders', Route.BindRequest(Route.prototype.ordersListRoute))
         router.post('/operator/order/:ordernum', Route.BindRequest(Route.prototype.orderSaveRoute))
         router.post('/operator/order/:ordernum/item', Route.BindRequest(Route.prototype.orderItemUpdateRoute))
         //router.post('/pay/:ordernum', Route.BindRequest(Route.prototype.payOrderRoute))
