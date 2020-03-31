@@ -99,7 +99,7 @@
             <%- include('./currency.ejs', {value: item.price}) %>
           </span>
           <%if (item.pounitWeight) { %>
-          <span class="text-muted font-size-sm d-block">1 <%=item.pounitTitle%> <%=item.pounitWeight%>/</span>
+          <span class="text-muted font-size-sm d-block">1 <%=item.pounitTitle%> <%=item.pounitWeight%></span>
           <% } %>
         </div>
         <div class="text-nowrap">
@@ -116,10 +116,11 @@
                         </div>
                       </div>
 <%if (operator) { %>
-  <form action="/operator/order/<%=order.ordernum%>/item" method="POST">
+  <form action="/operator/order/<%=order.ordernum%>/item#shop-card-item-<%=i%>" method="POST">
+    <h6><%=item.productName%></h6>
     <input type="hidden" name="itemid" value="<%=item.id%>">
     <input type="hidden" name="orderid" value="<%=order.id%>">
-<div class="bg-secondary p-3">
+<div class="border-bottom p-3">
 
   <div class="form-group row">
     <label for="staticEmail" class="col-sm-2 col-form-label">Numara</label>
@@ -144,15 +145,21 @@
 
   <div class="form-group row">
     <% if (item.subMerchantStatus == 'approved') { %>
-      <button name="disApproveSubMerchant" value="true">DisApprove SubMerchant</button>
+      <button name="disApproveSubMerchant" class="btn- btn-primary btn-sm" value="true">DisApprove SubMerchant</button>
 
 
     <% } else { %>
-      <button name="approveSubMerchant" value="true">Approve SubMerchant</button>      
+      <button name="approveSubMerchant" class="btn- btn-primary btn-sm value="true">Approve SubMerchant</button>      
     <% } %>
   </div>
 
-  
+  <div class="form-group">
+    <label for="orderItemStatus" class="">Sipariş Durumu</label>
+    <%- include('./order-status.ejs', { name: "orderItemStatus", order: item }) %>
+  </div>
+  <p><%-controller.markdown.render(item.statusDesc || '')%></p>
+
+  <button name="saveOrderItemStatus" value="true" class="btn btn-primary btn-sm">Durum Kaydet</button>
 
   <div>
 

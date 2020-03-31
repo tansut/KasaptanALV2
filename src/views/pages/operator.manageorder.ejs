@@ -36,7 +36,13 @@
 
   <div class="container mb-3 ">
 
-    <form class="interactive-credit-card" method="POST" id="pageForm">
+    <form class="" method="POST" id="pageForm">
+      <div class="form-group">
+        <label for="orderStatus" class="">Sipariş Durumu</label>
+        <%- include('./_partial/order-status.ejs', { name: 'orderStatus', order: order }) %>
+      </div>
+      <p><%-controller.markdown.render(order.statusDesc || '')%></p>
+      <button name="saveOrderStatus" value="true" class="btn btn-primary btn-sm">Durum Değiştir</button>
     </form>
 
 

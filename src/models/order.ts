@@ -1,6 +1,6 @@
 export enum OrderItemStatus {    
     supplying = 'tedarik sürecinde',
-    shipping = 'tedarik edildi, teslim edilecek',
+    shipping = 'teslim edilecek',
     success = 'teslim edildi',
     successPartial = 'kısmen teslim edildi',
     customerCanceled= 'iptal: müşteri',
@@ -12,5 +12,4 @@ export enum OrderItemStatus {
 export enum OrderPaymentStatus {
     waitingOnlinePayment = 'Online Ödeme Bekliyor',
     manualPayment = 'Manuel Ödeme Yapılacak'
-
 }

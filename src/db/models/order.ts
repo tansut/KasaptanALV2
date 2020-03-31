@@ -187,7 +187,8 @@ class Order extends BaseModel<Order> {
     status: string;    
 
     @Column({
-        allowNull: true    
+        allowNull: true    ,
+        type: DataType.TEXT
     })    
     statusDesc: string;      
 
@@ -394,7 +395,8 @@ class OrderItem extends BaseModel<Order> {
     status: string;    
 
     @Column({
-        allowNull: true    
+        allowNull: true    ,
+        type: DataType.TEXT
     })    
     statusDesc: string;    
 

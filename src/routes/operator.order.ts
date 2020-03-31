@@ -27,13 +27,14 @@ import AccountModel from '../db/models/accountmodel';
 import { Account } from '../models/account';
 import { PaymentRouter } from '../lib/paymentrouter';
 import { stringify } from 'querystring';
+var MarkdownIt = require('markdown-it')
 
 export default class Route extends ViewRouter {
     order: Order;
     api: OrderApi;
     acountingSummary: AccountModel[];
     _paymentProvider: CreditcardPaymentProvider
-
+    markdown = new MarkdownIt()
     get paymentProvider() {
         if (!this._paymentProvider) {
             let payment = CreditcardPaymentFactory.getInstance();
@@ -57,7 +58,28 @@ export default class Route extends ViewRouter {
         }
     }
 
-    
+    async orderSaveRoute() {
+        let userMessage = "";
+
+        await this.getOrder();
+
+        if (!this.order)
+            return this.next();
+
+        if (this.req.body.saveOrderStatus == "true" && this.order.status != this.req.body.orderStatus) {
+            this.order.statusDesc ? null : (this.order.statusDesc = '')
+            this.order.statusDesc += `\n- ${Helper.formatDate(Helper.Now(), true)} tarihinde ${this.order.status} -> ${this.req.body.orderStatus}` 
+            this.order.status = this.req.body.orderStatus;
+            await this.order.save()
+        }
+
+        
+        await this.getOrder();
+        await this.getOrderSummary();            
+        this.sendView("pages/operator.manageorder.ejs", { ...{ _usrmsg: { text: userMessage } }, ...{ accounting: this.acountingSummary }, ...this.api.getView(this.order, this.acountingSummary), ...{ enableImgContextMenu: true } });
+
+
+    }
 
     async getOrder() {
         let ordernum = this.req.params.ordernum;
@@ -83,6 +105,7 @@ export default class Route extends ViewRouter {
                     paymentTransactionId: orderitem.paymentTransactionId
                 })
                 orderitem.subMerchantStatus = 'approved';
+                userMessage = `${orderitem.productName} subMerchant ONAYLANDI`
                 await orderitem.save();
             }
             if (this.req.body.disApproveSubMerchant) {            
@@ -90,8 +113,21 @@ export default class Route extends ViewRouter {
                     paymentTransactionId: orderitem.paymentTransactionId
                 })
                 orderitem.subMerchantStatus = 'disapproved';
+                userMessage = `${orderitem.productName} subMerchant ONAY KALDIRILDI`
+
                 await orderitem.save();
             }
+
+            if (this.req.body.saveOrderItemStatus == "true") {   
+                if (orderitem.status != this.req.body.orderItemStatus) {
+                    orderitem.statusDesc ? null : (orderitem.statusDesc = '')
+                    orderitem.statusDesc += `\n- ${Helper.formatDate(Helper.Now(), true)} tarihinde ${orderitem.status} -> ${this.req.body.orderItemStatus}\n`
+                    orderitem.status = this.req.body.orderItemStatus;
+                    userMessage = `${orderitem.productName} yeni durum: ${orderitem.status}`
+
+                    await orderitem.save()
+                }                         
+            }            
         } catch(err) {
             userMessage = err.message || err.errorMessage
         }
@@ -120,6 +156,7 @@ export default class Route extends ViewRouter {
 
     static SetRoutes(router: express.Router) {
         router.get('/operator/order/:ordernum', Route.BindRequest(Route.prototype.orderViewRoute))
+        router.post('/operator/order/:ordernum', Route.BindRequest(Route.prototype.orderSaveRoute))
         router.post('/operator/order/:ordernum/item', Route.BindRequest(Route.prototype.orderItemUpdateRoute))
         //router.post('/pay/:ordernum', Route.BindRequest(Route.prototype.payOrderRoute))
     }
