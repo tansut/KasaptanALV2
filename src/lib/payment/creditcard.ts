@@ -169,26 +169,29 @@ export class CreditcardPaymentProvider {
     requestFromOrder(ol: Order[]): PaymentRequest {
         let basketItems: BasketItem [] = [];
         let price = 0.00, paidPrice = 0.00;
-        ol.forEach((o, j) => {
-            o.items.forEach((oi, i) => {
-                let merchantPrice = undefined;
-                if (this.marketPlace) {
-                    let fee = i == 0 ? Helper.asCurrency(o.butcher.commissionFee): 0.00;
-                    let rated = Helper.asCurrency(oi.price * (o.butcher.commissionRate))
-                    merchantPrice = Helper.asCurrency(oi.price - fee - rated           )                                               
-                }
-                basketItems.push({
-                    category1: o.butcherName,
-                    id: oi.orderitemnum,
-                    itemType: 'PHYSICAL',
-                    name: oi.product.name,
-                    price: Helper.asCurrency(oi.price),
-                    subMerchantKey: this.marketPlace ? o.butcher[this.providerKey + "SubMerchantKey"]: undefined,
-                    subMerchantPrice: merchantPrice
-                }) 
-            })
-            price += Helper.asCurrency(o.total); 
-            paidPrice += Helper.asCurrency(o.total); 
+        ol.forEach((o, j) => {            
+            let total = o.workedAccounts.find(p => p.code == 'total');
+            let shouldBePaid = Helper.asCurrency(total.alacak - total.borc);
+
+            let merchantPrice = 0.00;                                          
+            
+            if (this.marketPlace) {
+                let rated = Helper.asCurrency(shouldBePaid * (o.butcher.commissionRate))
+                let fee = Helper.asCurrency(o.butcher.commissionFee);
+                merchantPrice = Helper.asCurrency(shouldBePaid- fee - rated)      
+            }
+            basketItems.push({
+                category1: o.butcherName,
+                id: o.ordernum,
+                itemType: 'PHYSICAL',
+                name: o.name + ' ' + o.ordernum + ' nolu ' + 'ürün siparişi',
+                price: Helper.asCurrency(shouldBePaid),
+                subMerchantKey: this.marketPlace ? o.butcher[this.providerKey + "SubMerchantKey"]: undefined,
+                subMerchantPrice: merchantPrice > 0.00 ? merchantPrice: undefined
+            }) 
+
+            price += Helper.asCurrency(shouldBePaid); 
+            paidPrice += Helper.asCurrency(shouldBePaid); 
         })
 
         let orderids = ol.map(o=>o.ordernum).join(',');
@@ -230,6 +233,72 @@ export class CreditcardPaymentProvider {
         }
         return result;
     }
+
+
+    // requestFromOrder(ol: Order[]): PaymentRequest {
+    //     let basketItems: BasketItem [] = [];
+    //     let price = 0.00, paidPrice = 0.00;
+    //     ol.forEach((o, j) => {
+    //         o.items.forEach((oi, i) => {
+    //             let merchantPrice = undefined;
+    //             if (this.marketPlace) {
+    //                 let fee = i == 0 ? Helper.asCurrency(o.butcher.commissionFee): 0.00;
+    //                 let rated = Helper.asCurrency(oi.price * (o.butcher.commissionRate))
+    //                 merchantPrice = Helper.asCurrency(oi.price - fee - rated           )                                               
+    //             }
+    //             basketItems.push({
+    //                 category1: o.butcherName,
+    //                 id: oi.orderitemnum,
+    //                 itemType: 'PHYSICAL',
+    //                 name: oi.product.name,
+    //                 price: Helper.asCurrency(oi.price),
+    //                 subMerchantKey: this.marketPlace ? o.butcher[this.providerKey + "SubMerchantKey"]: undefined,
+    //                 subMerchantPrice: merchantPrice
+    //             }) 
+    //         })
+    //         price += Helper.asCurrency(o.total); 
+    //         paidPrice += Helper.asCurrency(o.total); 
+    //     })
+
+    //     let orderids = ol.map(o=>o.ordernum).join(',');
+    //     let o = ol[0];
+
+    //     let result = {
+    //         price: Helper.asCurrency(price),
+    //         paidPrice: Helper.asCurrency(paidPrice),
+    //         billingAddress: {
+    //             address: o.address,
+    //             city: o.areaLevel1Text,
+    //             contactName: o.name,
+    //             country: 'Turkey'
+    //         },
+    //         shippingAddress: {
+    //             address: o.address,
+    //             city: o.areaLevel1Text,
+    //             contactName: o.name,
+    //             country: 'Turkey'                
+    //         },
+    //         basketId: orderids,
+    //         conversationId: orderids,
+    //         basketItems: basketItems,
+    //         buyer: {
+    //             city: o.areaLevel1Text,
+    //             country: 'Turkey',
+    //             email: o.email,
+    //             gsmNumber: '',
+    //             id: o.userId.toString(),
+    //             identityNumber: '2312312',
+    //             ip: this.ip,
+    //             name: o.name,
+    //             registrationAddress: o.address,
+    //             surname: o.name                
+    //         },
+    //         currency: 'TRY',
+    //         installment: '1',
+    //         registerCard: false
+    //     }
+    //     return result;
+    // }
 
     subMerchantRequestFromButcher(b: Butcher): SubMerchantCreateRequest {
         return {

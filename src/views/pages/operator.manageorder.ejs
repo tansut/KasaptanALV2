@@ -29,7 +29,7 @@
 
 
 
-<% var balance = accounting.find(p=>p.code == 'total') 
+<% var balance = order.workedAccounts.find(p=>p.code == 'total') 
   var shouldBePaid = __helper.asCurrency(balance.alacak - balance.borc)
 %>
 
@@ -42,8 +42,24 @@
         <label for="orderStatus" class="">Sipariş Durumu</label>
         <%- include('./_partial/order-status.ejs', { name: 'orderStatus', order: order }) %>
       </div>
-      <p><%-controller.markdown.render(order.statusDesc || '')%></p>
       <button name="saveOrderStatus" value="true" class="btn btn-primary btn-sm">Durum Değiştir</button>
+      <p><%-controller.markdown.render(order.statusDesc || '')%></p>
+
+      <div>
+        PaymentId: <%=order.paymentId%> PaymentTransactionId: <%=order.paymentTransactionId%>
+      </div>
+      <div>
+        <div>subMerchantStatus: <em class="font-weight-bold"> <%=order.subMerchantStatus%> </em>/ <%=order.subMerchantStatusText%></div>
+      </div>
+      <div class="form-group row">
+        <% if (order.subMerchantStatus == 'approved') { %>
+          <button name="disApproveOrderSubMerchant" class="btn- btn-primary btn-sm" value="true">DisApprove SubMerchant</button>
+    
+    
+        <% } else { %>
+          <button name="approveOrderSubMerchant" class="btn- btn-primary btn-sm" value="true">Approve SubMerchant</button>      
+        <% } %>
+      </div>      
     </form>
 
 

@@ -28,7 +28,7 @@
   </div>
 
 
-<% var balance = accounting.find(p=>p.code == 'total') 
+<% var balance = order.workedAccounts.find(p=>p.code == 'total') 
   var shouldBePaid = __helper.asCurrency(balance.alacak - balance.borc)
 %>
 

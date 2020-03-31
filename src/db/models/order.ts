@@ -7,6 +7,7 @@ import Butcher from './butcher';
 import { OrderItemStatus } from '../../models/order';
 import Dispatcher from './dispatcher';
 import { GeoLocation } from '../../models/geo';
+import AccountModel from './accountmodel';
 const orderid = require('order-id')('dkfjsdklfjsdlkg450435034.,')
 
 @Table({
@@ -21,6 +22,9 @@ const orderid = require('order-id')('dkfjsdklfjsdlkg450435034.,')
     }]
 })
 class Order extends BaseModel<Order> {
+
+    workedAccounts: AccountModel[] = [];
+
     @Column({
         allowNull: false,
     })
@@ -41,6 +45,16 @@ class Order extends BaseModel<Order> {
         allowNull: true        
     })
     paymentId: string;    
+
+    @Column({
+        allowNull: true        
+    })
+    paymentTransactionId: string;        
+
+    @Column({
+        allowNull: true
+    })  
+    subMerchantStatus: string;        
 
     @Column({
         allowNull: true

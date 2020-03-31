@@ -80,6 +80,7 @@ export default class Route extends ApiRouter {
                 }]
             }]
         })
+        order.workedAccounts = await this.getWorkingAccounts(order)
         return order;
     }
 
@@ -166,7 +167,7 @@ export default class Route extends ApiRouter {
     }
 
 
-    getView(order: Order, accounting: AccountModel[] = null) {
+    getView(order: Order) {
 
         let shipment = {};
         let payment = {};
@@ -218,8 +219,7 @@ export default class Route extends ApiRouter {
             butchers: butchers,
             shipment: shipment,
             payment: payment,
-            items: order.items,
-            accounting: accounting || null
+            items: order.items
         }
     }
 
@@ -314,17 +314,21 @@ export default class Route extends ApiRouter {
     async updateOrderByPayment(o: Order, paymentInfo: PaymentResult, t?: Transaction) {
         let promises = [];
         o.paymentId = paymentInfo.paymentId;
-        o.paidTotal = paymentInfo.paidPrice;
         promises.push(o.save({
             transaction: t
         }));
         paymentInfo.itemTransactions.forEach(it => {
-            let oi = o.items.find(p => p.orderitemnum == it.itemId);
-            if (oi) {
-                oi.paymentTransactionId = it.paymentTransactionId
-                oi.paidPrice = it.paidPrice;
-                promises.push(oi.save({ transaction: t }))
-            }
+            // let oi = o.items.find(p => p.orderitemnum == it.itemId);
+            // if (oi) {
+            //     oi.paymentTransactionId = it.paymentTransactionId
+            //     oi.paidPrice = it.paidPrice;
+            //     promises.push(oi.save({ transaction: t }))
+            // }
+            if (it.itemId == o.ordernum) {
+                o.paymentTransactionId = it.paymentTransactionId
+                o.paidTotal = it.paidPrice;
+                promises.push(o.save({ transaction: t }))
+            }            
         })
         return o.isNewRecord ? null : Promise.all(promises);
     }
@@ -343,7 +347,6 @@ export default class Route extends ApiRouter {
 
         for (let i = 0; i < ol.length; i++) {
             let o = ol[i];
-            let total = Helper.asCurrency(o.total);
             let op = new AccountingOperation(`${o.ordernum} kredi kartı ödemesi - ${paymentInfo.paymentId}`, o.ordernum);
             op.accounts.push(new Account("odeme-bekleyen-satislar", [o.userId, o.ordernum]).dec(paymentInfo.paidPrice))
             op.accounts.push(new Account("satis-alacaklari", [o.userId, o.ordernum]).dec(paymentInfo.paidPrice))

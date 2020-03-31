@@ -29,27 +29,25 @@ import { PaymentRouter } from '../lib/paymentrouter';
 
 export default class Route extends PaymentRouter {
     order: Order;
-    api: OrderApi;
-    acountingSummary: AccountModel[];
+    api: OrderApi;    
 
-    async getOrderSummary() {
-        this.acountingSummary = await this.api.getWorkingAccounts(this.order);
-        if (this.acountingSummary.length == 1) {
+    async getOrderSummary() {        
+        if (this.order.workedAccounts.length == 1) {
             let initial = this.api.generateInitialAccounting(this.order);
             await this.api.saveAccountingOperations([initial]);
-            this.acountingSummary = await this.api.getWorkingAccounts(this.order);
+            await this.getOrder();
         }
     }
 
 
     async paymentSuccess(payment: PaymentResult) {
         await this.api.completeCreditcardPayment([this.order], payment);
-        await this.getOrderSummary();
+        await this.getOrder();
     }
 
     getPaymentRequest() {
         let request = this.paymentProvider.requestFromOrder([this.order]);
-        let total = this.acountingSummary.find(p => p.code == 'total');
+        let total = this.order.workedAccounts.find(p => p.code == 'total');
         let shouldBePaid = total.alacak - total.borc;
         if (shouldBePaid != request.paidPrice)
             throw new Error("Geçersiz sipariş ve muhasebesel tutarlar");
@@ -105,7 +103,7 @@ export default class Route extends PaymentRouter {
             }
         }
 
-        this.sendView("pages/payorder.ejs", { ...{ _usrmsg: { text: userMessage } }, ...{ accounting: this.acountingSummary }, ...this.api.getView(this.order, this.acountingSummary), ...{ enableImgContextMenu: true } });
+        this.sendView("pages/payorder.ejs", { ...{ _usrmsg: { text: userMessage } }, ...this.api.getView(this.order), ...{ enableImgContextMenu: true } });
     }
 
     async getOrder() {
@@ -125,7 +123,7 @@ export default class Route extends PaymentRouter {
         let pageTitle = `Online Ödeyin: ${Helper.formatDate(this.order.creationDate)} tarihli ${this.order.butcherName} siparişiniz` ;
         let pageDescription = `Nefis ürünlerinizi güvenle online ödeyin, hem zamandan kazanın, hem sağlığınızı koruyun.`
 
-        this.sendView("pages/payorder.ejs", {...{ pageTitle: pageTitle, pageDescription: pageDescription}, ...{ accounting: this.acountingSummary }, ...this.api.getView(this.order, this.acountingSummary), ...{ enableImgContextMenu: true } });
+        this.sendView("pages/payorder.ejs", {...{ pageTitle: pageTitle, pageDescription: pageDescription}, ...this.api.getView(this.order), ...{ enableImgContextMenu: true } });
     }
 
 

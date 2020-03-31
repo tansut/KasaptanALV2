@@ -1,4 +1,4 @@
-<% var balance = accounting ? accounting.find(p=>p.code == 'total'): null;
+<% var balance = order.workedAccounts.find(p=>p.code == 'total');
   var shouldBePaid = balance ? __helper.asCurrency(balance.alacak - balance.borc): 0
   var operator = typeof(operator) == 'undefined' ? false: operator
 %>
@@ -131,7 +131,7 @@
   <div class="form-group row">
     <label for="inputPassword" class="col-sm-2 col-form-label">Ödeme</label>
     <div class="col-sm-10">
-      <span>PaymentID: <%=item.paymentTransactionId%></span>
+      <span>paymentTransactionId: <%=item.paymentTransactionId%></span>
     </div>
   </div>
 
@@ -149,7 +149,7 @@
 
 
     <% } else { %>
-      <button name="approveSubMerchant" class="btn- btn-primary btn-sm value="true">Approve SubMerchant</button>      
+      <button name="approveSubMerchant" class="btn- btn-primary btn-sm" value="true">Approve SubMerchant</button>      
     <% } %>
   </div>
 
@@ -276,7 +276,7 @@
 </div>
 
 
-<% if (accounting) { %>
+<% if (order.workedAccounts.length > 0) { %>
 <h3 class="h5">Sipariş işlemleri</h3>
 <table class="font-size-sm table">
   <tr>
@@ -290,7 +290,7 @@
       Alacak
     </td>
   </tr>
-  <% accounting.forEach((o, i) => { %>
+  <% order.workedAccounts.forEach((o, i) => { %>
   <tr class="<%= o.code == 'total' ? 'font-weight-bold':'' %>">
 
 
