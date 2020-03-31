@@ -443,9 +443,9 @@ export default class Route extends ApiRouter {
             order.userId = this.req.user.id;
             order.areaLevel2Id = l2.id;
             order.areaLevel2Text = l2.name;
-            if (order.paymentType == 'onlinepayment') {
-                order.paymentStatus = OrderPaymentStatus.waitingOnlinePayment
-            } else order.paymentStatus = OrderPaymentStatus.manualPayment;
+            // if (order.paymentType == 'onlinepayment') {
+            //     order.paymentStatus = OrderPaymentStatus.waitingOnlinePayment
+            // } else order.paymentStatus = OrderPaymentStatus.manualPayment;
             orders.push(order);
         }
 

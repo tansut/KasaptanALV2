@@ -243,15 +243,15 @@ export default class Route extends ViewRouter {
         this.shopcard = await ShopCard.createFromRequest(this.req); 
         let creditCard: Creditcard = null;
         try {
-            if (this.shopcard.getPaymentTotal('onlinepayment') > 0) {
-                creditCard = {
-                    cardHolderName: this.req.body.name,
-                    cardNumber: this.req.body.number,
-                    cvc: this.req.body.cvc,
-                    expireMonth: this.req.body.expiry.split('/')[0],
-                    expireYear: this.req.body.expiry.split('/')[1]
-                }
-            }
+            // if (this.shopcard.getPaymentTotal('onlinepayment') > 0) {
+            //     creditCard = {
+            //         cardHolderName: this.req.body.name,
+            //         cardNumber: this.req.body.number,
+            //         cvc: this.req.body.cvc,
+            //         expireMonth: this.req.body.expiry.split('/')[0],
+            //         expireYear: this.req.body.expiry.split('/')[1]
+            //     }
+            // }
             let api = new OrderApi(this.constructorParams);
             let orders = await api.create(this.shopcard, null);
             await ShopCard.empty(this.req);

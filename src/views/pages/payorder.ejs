@@ -23,6 +23,7 @@
           <%=order.name%>
         </h2>
         <h2 class="lead h4"><%= __helper.formatDate(order.creationDate) + ' tarihli ' + controller.order.butcherName + ' siparişim' %></h2>
+        <a class="font-size-xs text-muted" href="#orderdetails">Sipariş Bilgileri<i class="czi-arrow-right"></i></a>
       </div>
     </div>
   </div>
@@ -33,7 +34,7 @@
 %>
 
 
-  <div class="table-responsive mb-3" data-simplebar>
+  <!-- <div class="table-responsive mb-3" data-simplebar>
     <div class="d-flex pb-2">
 
         <% order.items.forEach(oi => { %>
@@ -55,7 +56,7 @@
         <%})%>
 
     </div>
-</div>
+</div> -->
   <div class="container mb-3 ">
 
   <form class="interactive-credit-card" onsubmit="beforeSubmit()" method="POST" id="pageForm">
@@ -64,7 +65,7 @@
 
 <% if (shouldBePaid > 0) { %>
 
-  <div class="text-center">
+  <div class=" mb-3">
 
 
     <!-- <h4 class="h5">Nefis ürünlerinizi güvenle kapınıza bırakabiliriz</h4> -->
@@ -79,7 +80,8 @@
   
   </div>
 
-  <p class="text-muted text-center">
+  <p class="text-success text-center">
+
     <%- include('./_partial/currency.ejs', {value: shouldBePaid}) %>
 
   </p>
@@ -129,7 +131,7 @@
 
 
 function beforeSubmit() {
-  setTimeout(function() { $('$pay-btn').attr('disabled', true);})
+  setTimeout(function() { $('#pay-btn').text(' Ödemenizi yapıyorum ... '); $('#pay-btn').attr('disabled', true);})
 }
 
 <% if (controller.threeDhtml) { %>
