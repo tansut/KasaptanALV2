@@ -313,7 +313,7 @@
 
   <%})%>
 </table>
-<% if (shouldBePaid > 0) { %>
+<% if (shouldBePaid > 0 && order.butcher.enableCreditCard) { %>
 <div class="text-center">
   <a class="" href="/pay/<%=order.ordernum%>">Önline Ödeme</a>
 </div>
