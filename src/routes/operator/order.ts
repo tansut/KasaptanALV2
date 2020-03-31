@@ -1,31 +1,31 @@
-import { ApiRouter, ViewRouter } from '../lib/router';
+import { ApiRouter, ViewRouter } from '../../lib/router';
 import * as express from "express";
 import * as maps from "@google/maps"
-import ButcherModel from '../db/models/butcher';
+import ButcherModel from '../../db/models/butcher';
 import moment = require('moment');
-import { Auth } from '../lib/common';
-import AreaModel from '../db/models/area';
-import Helper from '../lib/helper';
-import Area from '../db/models/area';
-import Category from '../db/models/category';
-import Content from '../db/models/content';
-import config from '../config';
+import { Auth } from '../../lib/common';
+import AreaModel from '../../db/models/area';
+import Helper from '../../lib/helper';
+import Area from '../../db/models/area';
+import Category from '../../db/models/category';
+import Content from '../../db/models/content';
+import config from '../../config';
 import * as path from 'path';
 import * as fs from 'fs';
 import { readFileSync } from 'fs';
-import UserRoute from './api/user';
-import { Order } from '../db/models/order';
+import UserRoute from '../api/user';
+import { Order } from '../../db/models/order';
 let ellipsis = require('text-ellipsis');
 var MarkdownIt = require('markdown-it')
-import iyzico from '../lib/payment/iyzico';
-import { CreditcardPaymentFactory, Creditcard, PaymentResult, PaymentRequest, PaymentTotal, CreditcardPaymentProvider } from '../lib/payment/creditcard';
-import OrderApi from "./api/order"
-import SiteLogRoute from './api/sitelog';
-import SiteLog from '../db/models/sitelog';
-import Payment from '../db/models/payment';
-import AccountModel from '../db/models/accountmodel';
-import { Account } from '../models/account';
-import { PaymentRouter } from '../lib/paymentrouter';
+import iyzico from '../../lib/payment/iyzico';
+import { CreditcardPaymentFactory, Creditcard, PaymentResult, PaymentRequest, PaymentTotal, CreditcardPaymentProvider } from '../../lib/payment/creditcard';
+import OrderApi from "../api/order"
+import SiteLogRoute from '../api/sitelog';
+import SiteLog from '../../db/models/sitelog';
+import Payment from '../../db/models/payment';
+import AccountModel from '../../db/models/accountmodel';
+import { Account } from '../../models/account';
+import { PaymentRouter } from '../../lib/paymentrouter';
 import { stringify } from 'querystring';
 var MarkdownIt = require('markdown-it')
 
@@ -160,10 +160,10 @@ export default class Route extends ViewRouter {
 
 
     static SetRoutes(router: express.Router) {
-        router.get('/operator/order/:ordernum', Route.BindRequest(Route.prototype.orderViewRoute))
-        router.get('/operator/orders', Route.BindRequest(Route.prototype.ordersListRoute))
-        router.post('/operator/order/:ordernum', Route.BindRequest(Route.prototype.orderSaveRoute))
-        router.post('/operator/order/:ordernum/item', Route.BindRequest(Route.prototype.orderItemUpdateRoute))
+        router.get('/order/:ordernum', Route.BindRequest(Route.prototype.orderViewRoute))
+        router.get('/orders', Route.BindRequest(Route.prototype.ordersListRoute))
+        router.post('/order/:ordernum', Route.BindRequest(Route.prototype.orderSaveRoute))
+        router.post('/order/:ordernum/item', Route.BindRequest(Route.prototype.orderItemUpdateRoute))
         //router.post('/pay/:ordernum', Route.BindRequest(Route.prototype.payOrderRoute))
     }
 }

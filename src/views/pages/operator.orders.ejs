@@ -42,7 +42,7 @@
           <% 
                   for(var i=0; i<orders.length; i++) {%>
           <tr>
-              <td><a href="<%= `/operator/order/${orders[i].ordernum}` %>"><%= orders[i].name %> </a>
+              <td><a href="<%= `/pages/operator/order/${orders[i].ordernum}` %>"><%= orders[i].name %> </a>
               </td>
               <td><%= orders[i].butcherName %></td>
               <td><%= orders[i].status %></td>

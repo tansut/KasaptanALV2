@@ -116,7 +116,7 @@
                         </div>
                       </div>
 <%if (operator) { %>
-  <form action="/operator/order/<%=order.ordernum%>/item#shop-card-item-<%=i%>" method="POST">
+  <form action="/pages/operator/order/<%=order.ordernum%>/item#shop-card-item-<%=i%>" method="POST">
     <h6><%=item.productName%></h6>
     <input type="hidden" name="itemid" value="<%=item.id%>">
     <input type="hidden" name="orderid" value="<%=order.id%>">

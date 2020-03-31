@@ -37,7 +37,7 @@
 
   <div class="container mb-3 ">
 
-    <form class="" method="POST" action="/operator/order/<%=order.ordernum%>" id="pageForm">
+    <form class="" method="POST" action="/pages/operator/order/<%=order.ordernum%>" id="pageForm">
       <div class="form-group">
         <label for="orderStatus" class="">Sipariş Durumu</label>
         <%- include('./_partial/order-status.ejs', { name: 'orderStatus', order: order }) %>
