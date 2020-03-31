@@ -309,8 +309,9 @@ export class CreditcardPaymentProvider {
             legalCompanyTitle: b.legalName,
             subMerchantExternalId: b.id.toString(),
             subMerchantType: <any>b.companyType,
-            taxNumber: b.taxNumber,
-            taxOffice: b.taxOffice
+            taxNumber: b.companyType == 'LIMITED_OR_JOINT_STOCK_COMPANY' ? b.taxNumber: undefined,
+            taxOffice: b.taxOffice,
+            identityNumber: b.companyType != 'LIMITED_OR_JOINT_STOCK_COMPANY' ? b.taxNumber: undefined
         }
     }
 
