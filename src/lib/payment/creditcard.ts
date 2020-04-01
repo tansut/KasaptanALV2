@@ -31,8 +31,8 @@ export interface SubMerchantCreateRequest {
 export interface SubMerchantCreateResult {
     subMerchantKey: string;
     status: string;
-    errorCode: string;
-    errorMessage: string;
+    errorCode?: string;
+    errorMessage?: string;
 } 
 
 export interface Creditcard {
@@ -127,6 +127,11 @@ export interface PaymentTotal {
     paymentId: string;
     paid: number,
     type: PaymentType,
+}
+
+export interface ErrorResponse {
+    errorCode: string;
+    errorMessage: string;
 }
 
 
@@ -363,7 +368,6 @@ export class CreditcardPaymentFactory {
 
     static register(key: string, cls: typeof CreditcardPaymentProvider) {
         CreditcardPaymentFactory.items[key] = cls;
-        //console.log(key);
     }
 
     static getInstance(key?: string): CreditcardPaymentProvider {

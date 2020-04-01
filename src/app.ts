@@ -26,6 +26,7 @@ import * as cookieParser from 'cookie-parser';
 const flash = require('connect-flash');
 import { RequestHelper } from './lib/RequestHelper';
 import iyzico from './lib/payment/iyzico';
+import paratika from './lib/payment/paratika';
 
 const SessionStore = require('express-session-sequelize')(session.Store);
 const fileUpload = require('express-fileupload');
@@ -98,6 +99,7 @@ class KasaptanAlApp {
         }
 
         iyzico.register();
+        paratika.register();
         
         this.app.use((req, res, next) => {
             let proto = req.header("x-forwarded-proto") || null;

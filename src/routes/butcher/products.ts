@@ -230,6 +230,17 @@ export default class Route extends ButcherRouter {
 
     }
 
+    async viewListRoute() {
+        await this.setButcher();
+        await this.setProducts();
+        // (p.kgPrice > 0 || p.unit1price > 0 || p.unit2price > 0 || p.unit3price > 0)
+
+
+        this.res.render("pages/butcher.product-list.ejs", this.viewData({
+
+        }))        
+    }
+
     async viewRoute() {
         await this.setButcher();
         await this.setProducts();
@@ -243,6 +254,7 @@ export default class Route extends ButcherRouter {
 
     static SetRoutes(router: express.Router) {
         router.get("/products", Route.BindRequest(this.prototype.viewRoute));
+        router.get("/product-list", Route.BindRequest(this.prototype.viewListRoute));
         router.get("/product/save", Route.BindRequest(this.prototype.viewRoute));
         router.post("/product/save", Route.BindRequest(this.prototype.saveProductRoute));
     }

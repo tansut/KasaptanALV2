@@ -93,7 +93,7 @@ export class PaymentRouter extends ViewRouter  {
         }
         try {
             if (!this.paymentProvider.pay3dHandshakeSuccess(result))
-                new Error("3d işlemi başarısız");
+                throw new Error("3d işlemi başarısız" );
             let threedResult = await this.paymentProvider.pay3dComplete(request);
             this.res.render("pages/3dcomplete", {
                 paymentId: threedResult.paymentId

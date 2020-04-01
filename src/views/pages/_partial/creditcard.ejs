@@ -5,6 +5,27 @@ var threeDhtml = typeof (controller.threeDhtml) == 'undefined' ? '': controller.
 %>
 
 
+<style>
+
+.modal {
+  padding: 0 !important; 
+}
+.modal .modal-dialog {
+  width: 100%;
+  max-width: none;
+  height: 100%;
+  margin: 0;
+}
+.modal .modal-content {
+  height: 100%;
+  border: 0;
+  border-radius: 0;
+}
+.modal .modal-body {
+  overflow-y: auto;
+}
+</style>
+
       <!-- <p class="font-size-sm">Güvenle ödeme yapın:&nbsp;&nbsp;<img class="d-inline-block align-middle" src="/static/img/cards.png" style="width: 187px;" alt="Cerdit Cards"></p> -->
       
       <div class="interactive-credit-card row">
@@ -58,7 +79,7 @@ var threeDhtml = typeof (controller.threeDhtml) == 'undefined' ? '': controller.
   <% if (controller.threeDhtml) { %>
 
     <div class="modal fade" id="threeDmodal">
-      <div class="modal-dialog modal-lg modal-dialog-scrollable" role="document">
+      <div class="modal-dialog modal-lg " role="document">
             <div class="modal-content">
                 <div class="modal-header">
                     <h4 class="modal-title">Güvenli Ödeme</h4>
@@ -66,10 +87,9 @@ var threeDhtml = typeof (controller.threeDhtml) == 'undefined' ? '': controller.
                         <span aria-hidden="true">×</span>
                     </button>
                 </div>
-                <div class="modal-body p-0">
-                  <div class="embed-responsive embed-responsive-16by9">
-                    <iframe id="threeDhtml" src="<%=threeDhtml%>" class="embed-responsive-item"></iframe>
-                  </div>
+                <div class="modal-body h-100 p-0">
+                  <iframe height="100%" width="100%" id="threeDhtml" src="<%=threeDhtml%>"></iframe>
+
                 </div>
             </div>
       </div>
