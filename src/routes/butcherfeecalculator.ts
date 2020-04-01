@@ -44,7 +44,7 @@ export default class Route extends ViewRouter {
     @Auth.Anonymous()
     async calculateRoute(totalSales: number = 0.00, ratePercParam: number = 0.00) {
         
-            let total = totalSales || parseFloat(this.req.body.salesTotal);
+            let total =  parseFloat(this.req.body.salesTotal) || totalSales;
             let ratePerc = ratePercParam || parseFloat(this.req.body.rate);
             let calc = new ComissionHelper(ratePerc / 100, 0);
             this.feeResult = calc.calculate(total);

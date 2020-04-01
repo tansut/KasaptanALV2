@@ -24,7 +24,7 @@ export interface ComissionResult {
 
 export class ComissionHelper {
 
-   constructor(public rate: number, public fee: number) {
+   constructor(public rate: number, public fee: number, public butcherBankRate=0.01) {
 
    }
 
@@ -41,9 +41,10 @@ export class ComissionHelper {
             productVat: productVat,
             kalitteFee: kalitteFee,
             kalitteVat: kalitteVat,
+            butcherBankFeeAdvantage: Helper.asCurrency(totalSales * this.butcherBankRate),
             butcherTaxAdvantage: Helper.asCurrency(kalitteFee * 0.22),
             butcherVatAdvantage: Helper.asCurrency(kalitteVat),
-            butcherNetCost: Helper.asCurrency(kalitteFee - kalitteFee * 0.22)
+            butcherNetCost: Helper.asCurrency(kalitteFee - kalitteFee * 0.22 - Helper.asCurrency(totalSales * this.butcherBankRate))
         }
    }
 
