@@ -7,6 +7,7 @@ import Butcher from '../../db/models/butcher';
 import SiteLogRoute from '../../routes/api/sitelog';
 import { Transaction, or } from "sequelize";
 import Payment from '../../db/models/payment';
+import { ComissionHelper } from '../commissionHelper';
 
 const paymentConfig = require(path.join(config.projectDir, `payment.json`));
 
@@ -181,9 +182,9 @@ export class CreditcardPaymentProvider {
             let merchantPrice = 0.00;                                          
             
             if (this.marketPlace) {
-                let rated = Helper.asCurrency(shouldBePaid * (o.butcher.commissionRate))
-                let fee = Helper.asCurrency(o.butcher.commissionFee);
-                merchantPrice = Helper.asCurrency(shouldBePaid- fee - rated)      
+                let calc = new ComissionHelper(o.butcher.commissionRate, o.butcher.commissionFee);
+                let totalFee = calc.calculate(shouldBePaid)
+                merchantPrice = Helper.asCurrency(totalFee.inputTotal - totalFee.kalitteFee - totalFee.kalitteVat)
             }
             basketItems.push({
                 category1: o.butcherName,

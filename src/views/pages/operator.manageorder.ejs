@@ -101,12 +101,13 @@
 
     <div class="col-sm-6">
       <p>
-        -------------------
+        -------------------<br>
+      <%=order.butcherName%> satış makbuzu: <%- include('./_partial/currency.ejs', {value: controller.butcherFee.inputTotal}) %>
       </p>
       <span class="d-block"><%= __helper.formatDate(order.creationDate)%>, <%=order.areaLevel3Text%></span>
-      <span class="d-block"> <%=order.ordernum%>/<%=order.name%></span>
-      <span class="d-block">Satış: <%- include('./_partial/currency.ejs', {value: controller.butcherFee.product}) %> + KDV
-      <span class="d-block">Toplanan Komisyon: <%- include('./_partial/currency.ejs', {value: controller.butcherFee.kalitteFee}) %> + KDV
+      <span class="d-block">Sipariş no: <%=order.ordernum%>/<%=order.name%></span>
+      <span class="d-block">Cironuza katkımız: <%- include('./_partial/currency.ejs', {value: controller.butcherFee.product}) %> + KDV
+      <span class="d-block">Topladığımız komisyon: <%- include('./_partial/currency.ejs', {value: controller.butcherFee.kalitteFee}) %> + KDV
       </span>
       <span>
         <a href="<%=controller.url%>/gelir-hesapla?rate=<%=controller.butcherFee.inputRate*100%>&total=<%=controller.butcherFee.inputTotal%>&go=1">
