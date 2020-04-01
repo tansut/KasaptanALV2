@@ -371,7 +371,7 @@ export class CreditcardPaymentFactory {
     }
 
     static getInstance(key?: string): CreditcardPaymentProvider {
-        key = key || paymentConfig.default
+        key = key || paymentConfig.default || config.paymentProvider
         const cls = CreditcardPaymentFactory.items[key]
         return new cls(paymentConfig.providers[key][config.nodeenv])
     }
