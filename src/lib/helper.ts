@@ -97,6 +97,7 @@ export default class Helper {
         return val ? 'Evet' : 'Hayır'
     }
 
+
     static formatDate(date: Date, useTime: boolean = false) {
         const options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
         return date.toLocaleDateString('tr-TR', options);

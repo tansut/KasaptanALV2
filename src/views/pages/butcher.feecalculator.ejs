@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+<html lang="tr-TR" prefix="og: http://ogp.me/ns#">
+
+<head>
+  <% include ./_partial/head %>
+
+</head>
+
+
+
+
+
+<body>
+  <% include ./_partial/header %>
+
+
+  <div class="page-title-overlap bg-primary pt-4 d-print-none">
+    <div class="container d-lg-flex justify-content-between py-2 py-lg-3">
+      <div class="order-lg-2 mb-3 mb-lg-0 pt-lg-2">
+        <nav aria-label="breadcrumb">
+          <ol class="breadcrumb breadcrumb-light flex-lg-nowrap justify-content-center justify-content-lg-star">
+            <li class="breadcrumb-item"><a class="text-nowrap" href="/"><i class="czi-home"></i></a></li>
+            <li class="breadcrumb-item text-nowrap active" aria-current="page">
+              Komisyon Hesaplama</li>
+          </ol>
+        </nav>
+      </div>
+
+
+    </div>
+  </div>
+
+
+
+
+
+
+
+  <div class="container px-0">
+    <div class="bg-light box-shadow-lg px-4 py-4 mb-3 ">
+      <% if (controller.feeResult) { %>
+      <table class="table">
+        <thead>
+          <th>
+Kalem
+          </th>
+
+          <th>
+Bedel
+          </th>
+        </thead>
+
+
+        <tbody>
+          <tr>
+
+            <td>
+              Satış Tutarı
+            </td>
+            <td>
+              <%- include('./_partial/currency.ejs', {value: controller.feeResult.product}) %>
+
+            </td>
+
+          </tr>
+          <tr>
+
+            <td>
+              Satış KDV
+            </td>
+            <td>
+              <%- include('./_partial/currency.ejs', {value: controller.feeResult.productVat}) %>
+
+            </td>
+
+          </tr>
+
+          <tr class="font-weight-bolder">
+            <td >
+              Satış Toplam
+            </td>
+            <td>
+              <%- include('./_partial/currency.ejs', {value: controller.feeResult.inputTotal}) %>
+
+            </td>
+          </tr>
+
+          <tr>
+
+            <td>
+              Komisyon Tutarı
+            </td>
+            <td>
+              <%- include('./_partial/currency.ejs', {value: controller.feeResult.kalitteFee}) %>
+
+            </td>
+
+          </tr>
+
+          <tr>
+
+            <td>
+              Komisyon KDV
+            </td>
+            <td>
+              <%- include('./_partial/currency.ejs', {value: controller.feeResult.kalitteVat}) %>
+
+            </td>
+
+          </tr>
+
+          <tr>
+
+            <td>
+              Komisyon Toplam
+            </td>
+            <td>
+              <%- include('./_partial/currency.ejs', {value: __helper.asCurrency(controller.feeResult.kalitteFee + controller.feeResult.kalitteVat)}) %>
+
+            </td>
+
+          </tr>
+
+
+          <tr>
+
+            <td>
+              KDV Avantajı
+            </td>
+            <td>
+              <%- include('./_partial/currency.ejs', {value: controller.feeResult.butcherVatAdvantage}) %>
+
+            </td>
+
+          </tr>
+
+          <tr>
+
+            <td>
+              Gelir Vergisi Avantajı
+            </td>
+            <td>
+              <%- include('./_partial/currency.ejs', {value: controller.feeResult.butcherTaxAdvantage}) %>
+
+            </td>
+
+          </tr>
+
+          <tr class="text-success bg-secondary font-weight-bold">
+
+            <td>
+              Kasabınıza Net Maliyet
+            </td>
+            <td>
+              <%- include('./_partial/currency.ejs', {value: controller.feeResult.butcherNetCost}) %>
+
+            </td>
+
+          </tr>
+
+        </tbody>
+      </table>
+      <% } %>
+      <form method="POST">
+
+
+        <div class="form-group row">
+          <label for="salesTotal" class="col-sm-2 col-form-label">Satış Toplamı (TL)</label>
+          <div class="col-sm-10">
+            <input value="100" type="number" class="form-control" name="salesTotal" id="salesTotal"
+              placeholder="Satış Toplamı">
+          </div>
+        </div>
+        <div class="form-group row">
+          <label for="rate" class="col-sm-2 col-form-label">Komisyon Oranı (%)</label>
+          <div class="col-sm-10">
+            <input readonly type="number" value="8" class="form-control" name="rate" id="rate" placeholder="Komisyon Yüzdesi">
+          </div>
+        </div>
+        <button type="submit" name="calculate" value="true" class="btn btn-primary">Hesapla</button>
+
+      </form>
+    </div>
+
+  </div>
+
+  <% include ./_partial/footer %>
+  <% include ./_partial/scripts %>
+
+
+
+</body>
+
+
+</html>

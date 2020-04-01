@@ -38,6 +38,8 @@
   <div class="container mb-3 ">
 
     <form class="" method="POST" action="/pages/operator/order/<%=order.ordernum%>" id="pageForm">
+     <div class="alert alert-info mt-3">
+
       <div class="form-group">
         <label for="orderStatus" class="">Sipariş Durumu</label>
         <%- include('./_partial/order-status.ejs', { name: 'orderStatus', order: order }) %>
@@ -45,8 +47,14 @@
       <button name="saveOrderStatus" value="true" class="btn btn-primary btn-sm">Durum Değiştir</button>
       <p><%-controller.markdown.render(order.statusDesc || '')%></p>
 
+     </div>
+
+     <div class="alert alert-info">
       <div>
-        PaymentId: <%=order.paymentId%> PaymentTransactionId: <%=order.paymentTransactionId%>
+        PaymentId: <%=order.paymentId%> 
+      </div>
+      <div>
+        PaymentTransactionId: <%=order.paymentTransactionId%>
       </div>
       <div>
         <div>subMerchantStatus: <em class="font-weight-bold"> <%=order.subMerchantStatus%> </em>/ <%=order.subMerchantStatusText%></div>
@@ -60,6 +68,9 @@
           <button name="approveOrderSubMerchant" class="btn- btn-primary btn-sm" value="true">Approve SubMerchant</button>      
         <% } %>
       </div>      
+     </div>
+
+
     </form>
 
 
@@ -84,9 +95,36 @@
       </div>
 
 
+<% if (controller.butcherFee) { %>
+<div class="alert alert-info">
+  <div class="row">
+
+    <div class="col-sm-6">
+      <p>
+        -------------------
+      </p>
+      <span class="d-block"><%= __helper.formatDate(order.creationDate)%>, <%=order.areaLevel3Text%></span>
+      <span class="d-block"> <%=order.ordernum%>/<%=order.name%></span>
+      <span class="d-block">Satış: <%- include('./_partial/currency.ejs', {value: controller.butcherFee.product}) %> + KDV
+      <span class="d-block">Toplanan Komisyon: <%- include('./_partial/currency.ejs', {value: controller.butcherFee.kalitteFee}) %> + KDV
+      </span>
+      <span>
+        <a href="<%=controller.url%>/gelir-hesapla?rate=<%=controller.butcherFee.inputRate*100%>&total=<%=controller.butcherFee.inputTotal%>&go=1">
+          <%=controller.url%>/hesapla?rate=<%=controller.butcherFee.inputRate*100%>&total=<%=controller.butcherFee.inputTotal%>&go=1
+        </a>
+      </span>
+      <p>
+        -------------------
+      </p>
+    </div>
+    <div class="col-sm-6"></div>
+  </div>
 
 
 
+</div>
+
+<% } %>
 
 
     

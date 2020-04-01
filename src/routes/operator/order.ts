@@ -27,14 +27,16 @@ import AccountModel from '../../db/models/accountmodel';
 import { Account } from '../../models/account';
 import { PaymentRouter } from '../../lib/paymentrouter';
 import { stringify } from 'querystring';
+import { ComissionResult, ComissionHelper } from '../../lib/commissionHelper';
 var MarkdownIt = require('markdown-it')
 
 export default class Route extends ViewRouter {
     order: Order;
     api: OrderApi;
-    acountingSummary: AccountModel[];
     _paymentProvider: CreditcardPaymentProvider
-    markdown = new MarkdownIt()
+    markdown = new MarkdownIt();
+    butcherFee: ComissionResult;
+
     get paymentProvider() {
         if (!this._paymentProvider) {
             let payment = CreditcardPaymentFactory.getInstance();
@@ -50,12 +52,14 @@ export default class Route extends ViewRouter {
 
 
     async getOrderSummary() {
-        this.acountingSummary = await this.api.getWorkingAccounts(this.order);
-        if (this.acountingSummary.length == 1) {
+        let acountingSummary = await this.api.getWorkingAccounts(this.order);
+        if (acountingSummary.length == 1) {
             let initial = this.api.generateInitialAccounting(this.order);
             await this.api.saveAccountingOperations([initial]);
-            this.acountingSummary = await this.api.getWorkingAccounts(this.order);
+            acountingSummary = await this.api.getWorkingAccounts(this.order);
         }
+        let calc = new ComissionHelper(this.order.butcher.commissionRate, this.order.butcher.commissionFee);
+        this.butcherFee = calc.calculate(this.order.workedAccounts.find(p=>p.code == 'total').alacak);
     }
 
     async orderSaveRoute() {
