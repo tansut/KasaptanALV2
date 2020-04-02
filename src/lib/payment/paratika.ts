@@ -213,7 +213,7 @@ export default class ParatikaPayment extends CreditcardPaymentProvider {
             itemTransactions: request.basketItems.map(bi => {
                 return {
                     itemId: bi.id,
-                    paymentTransactionId: result.merchantPaymentId;
+                    paymentTransactionId: result.merchantPaymentId,
                     price: bi.price,
                     paidPrice: bi.price                   
                 }
