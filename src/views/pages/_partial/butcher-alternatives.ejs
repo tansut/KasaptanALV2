@@ -20,13 +20,26 @@
               
                 <div v-if="product" v-for="(alt, index) in product.alternateButchers" class="bg-secondary border-bottom p-3">
                   <a class="media align-items-center" :data-butcher="alt.butcher.slug" href="#newbutcher" @click="selectNewButcher(alt.butcher)">
-                    <img
+                   
+                      <img
                       class="rounded-circle header-img"  :src="alt.butcher.thumbnail" :alt="alt.butcher.name">
+
+                 
 
                     
                     <div class="media-body pl-2">
                       <h5 class="h6 mb-1">{{alt.butcher.name}}</h5>
+                      
+                        <div v-if="alt.butcher.badges.length > 0" class="butcher-badges">
+              
+                        
                      
+                        <span v-for="(badge, index) in alt.butcher.badges" class="badge badge-success font-size-xs">
+                          {{badge}}
+              
+                        </span>
+                     
+                    </div>
                         <money-view v-if="!alt.butcher.kgPrice" :unit="selectedUnit.unitTitle" 
                         v-if="selectedUnitForAlternate(alt.butcher)" 
                         class="font-size-sm text-accent" :money="selectedUnitForAlternate(alt.butcher).unitPrice"></money-view>

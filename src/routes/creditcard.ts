@@ -29,6 +29,14 @@ export default class Route extends PaymentRouter {
 
     orders: Order[] = [];
 
+
+    @Auth.Anonymous()
+    async paySessionRoute() {
+        debugger
+    }
+    
+
+
     @Auth.Anonymous()
     async payRoute() {
 
@@ -79,6 +87,7 @@ export default class Route extends PaymentRouter {
         router.post("/testcard", Route.BindRequest(Route.prototype.payRoute));
         router.get("/3dpaymentHtml", Route.BindRequest(Route.prototype.threeDRoute));
         router.post("/3dnotify", Route.BindRequest(Route.prototype.threeDNotifyRoute));
+        router.post("/pay-session", Route.BindRequest(Route.prototype.paySessionRoute));
         router.get('/testcard', Route.BindToView("pages/testcard.ejs"))
         router.get('/3dnotify', Route.BindToView("pages/3dcomplete.ejs"))
 

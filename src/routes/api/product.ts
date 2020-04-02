@@ -312,6 +312,7 @@ export default class Route extends ApiRouter {
                 userRatingAsPerc: butcher.userRatingAsPerc,
                 shipRatingAsPerc: butcher.shipRatingAsPerc,
                 slug: butcher.slug,
+                badges: butcher.badges ? butcher.badges.split(','): [],
                 name: butcher.name,
                 id: butcher.id           ,
                 productNote: '',     

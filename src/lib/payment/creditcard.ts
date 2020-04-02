@@ -103,7 +103,7 @@ export interface PaymentResult {
 export interface ItemTransaction {
     itemId: string;
     paymentTransactionId: string;
-    transactionStatus: number,
+    //transactionStatus: number,
     price: number,
     paidPrice: number    
 }
@@ -172,6 +172,15 @@ export class CreditcardPaymentProvider {
         return "unset"
     }
 
+    getSubmerchantId(o: Order) {
+        return o.butcher[this.providerKey + "SubMerchantKey"]
+    }
+
+    async paySession(request: PaymentRequest, card: Creditcard) {
+        return false
+    }
+
+
     requestFromOrder(ol: Order[]): PaymentRequest {
         let basketItems: BasketItem [] = [];
         let price = 0.00, paidPrice = 0.00;
@@ -192,7 +201,7 @@ export class CreditcardPaymentProvider {
                 itemType: 'PHYSICAL',
                 name: o.name + ' ' + o.ordernum + ' nolu ' + 'ürün siparişi',
                 price: Helper.asCurrency(shouldBePaid),
-                subMerchantKey: this.marketPlace ? o.butcher[this.providerKey + "SubMerchantKey"]: undefined,
+                subMerchantKey: this.marketPlace ? this.getSubmerchantId(o): undefined,
                 subMerchantPrice: merchantPrice > 0.00 ? merchantPrice: undefined
             }) 
 
@@ -225,7 +234,7 @@ export class CreditcardPaymentProvider {
                 city: o.areaLevel1Text,
                 country: 'Turkey',
                 email: o.email,
-                gsmNumber: '',
+                gsmNumber: o.phone,
                 id: o.userId.toString(),
                 identityNumber: '2312312',
                 ip: this.ip,

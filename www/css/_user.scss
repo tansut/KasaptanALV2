@@ -8,7 +8,10 @@
   }
 }
 
-
+.butcher-badge {
+  font-size: $font-size-xs;
+  margin-right: 2px;  
+}
 
 .item-slider-selected {
   border: red 3px solid;

@@ -200,6 +200,11 @@ class Butcher extends BaseModel<Butcher> {
     @Column({
         allowNull: true
     })
+    badges: string;   
+
+    @Column({
+        allowNull: true
+    })
     iyzicoSubMerchantKey: string;   
 
     @Column({

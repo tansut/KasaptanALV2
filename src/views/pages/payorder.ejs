@@ -22,11 +22,12 @@
         <h2 class="lead h4" >
           <%=order.name%>
         </h2>
-        <h2 class="lead h4"><%= __helper.formatDate(order.creationDate) + ' tarihli ' + controller.order.butcherName + ' siparişim' %></h2>
+        <h2 class="lead h4"><%= __helper.formatDate(order.creationDate) + ' tarihli ' + 'kasaptanAl.com ' + 'siparişim' %></h2>
         <a class="font-size-xs text-muted" href="#orderdetails">Sipariş Bilgileri<i class="czi-arrow-right"></i></a>
       </div>
     </div>
   </div>
+
 
 
 <% var balance = order.workedAccounts.find(p=>p.code == 'total') 

@@ -101,6 +101,9 @@
 
     <div class="col-sm-6">
       <p>
+        Değerli iş ortağımız, aşağıda satış makbuzunu iletiyorum. Hayırlı ve bol kazançlı günler dileriz.
+      </p>
+      <p>
         -------------------<br>
       <%=order.butcherName%> satış makbuzu: <%- include('./_partial/currency.ejs', {value: controller.butcherFee.inputTotal}) %>
       </p>
@@ -110,8 +113,11 @@
       <span class="d-block">Topladığımız komisyon: <%- include('./_partial/currency.ejs', {value: controller.butcherFee.kalitteFee}) %> + KDV
       </span>
       <span>
+        <span class="d-block">
+          Bu satışla KDV, kart komisyonu ve vergi avantajlarınız oldu. Detaylar için tıklayın:
+        </span>
         <a href="<%=controller.url%>/gelir-hesapla?rate=<%=controller.butcherFee.inputRate*100%>&total=<%=controller.butcherFee.inputTotal%>&go=1">
-          <%=controller.url%>/hesapla?rate=<%=controller.butcherFee.inputRate*100%>&total=<%=controller.butcherFee.inputTotal%>&go=1
+          <%=controller.url%>/gelir-hesapla?rate=<%=controller.butcherFee.inputRate*100%>&total=<%=controller.butcherFee.inputTotal%>&go=1
         </a>
       </span>
       <p>

@@ -33,6 +33,7 @@ export interface ProductButcherView {
     name: string;
     productNote: string;
     enableCreditCard: boolean;
+    badges: string[];
     id: number;
     kgPrice: number;
     thumbnail?: string;
