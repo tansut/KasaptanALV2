@@ -4,10 +4,10 @@
     "reportVersion": 1,
     "event": "Allocation failed - JavaScript heap out of memory",
     "trigger": "FatalError",
-    "filename": "report.20200402.124013.703.0.001.json",
-    "dumpEventTime": "2020-04-02T12:40:13Z",
-    "dumpEventTimeStamp": "1585820413370",
-    "processId": 703,
+    "filename": "report.20200403.114306.7363.0.001.json",
+    "dumpEventTime": "2020-04-03T11:43:06Z",
+    "dumpEventTimeStamp": "1585903386941",
+    "processId": 7363,
     "cwd": "/Users/tansu/project/kasaptanal",
     "commandLine": [
       "node",
@@ -49,73 +49,73 @@
       {
         "model": "Intel(R) Core(TM) i7-6820HQ CPU @ 2.70GHz",
         "speed": 2700,
-        "user": 4992160,
+        "user": 2364050,
         "nice": 0,
-        "sys": 2948800,
-        "idle": 19376620,
+        "sys": 1079150,
+        "idle": 9406250,
         "irq": 0
       },
       {
         "model": "Intel(R) Core(TM) i7-6820HQ CPU @ 2.70GHz",
         "speed": 2700,
-        "user": 947510,
+        "user": 315880,
         "nice": 0,
-        "sys": 535100,
-        "idle": 25829580,
+        "sys": 164930,
+        "idle": 12368020,
         "irq": 0
       },
       {
         "model": "Intel(R) Core(TM) i7-6820HQ CPU @ 2.70GHz",
         "speed": 2700,
-        "user": 4579470,
+        "user": 2162750,
         "nice": 0,
-        "sys": 2085030,
-        "idle": 20647960,
+        "sys": 814810,
+        "idle": 9871270,
         "irq": 0
       },
       {
         "model": "Intel(R) Core(TM) i7-6820HQ CPU @ 2.70GHz",
         "speed": 2700,
-        "user": 942540,
+        "user": 315700,
         "nice": 0,
-        "sys": 507590,
-        "idle": 25862020,
+        "sys": 156610,
+        "idle": 12376530,
         "irq": 0
       },
       {
         "model": "Intel(R) Core(TM) i7-6820HQ CPU @ 2.70GHz",
         "speed": 2700,
-        "user": 4090800,
+        "user": 1945300,
         "nice": 0,
-        "sys": 1738460,
-        "idle": 21483160,
+        "sys": 666920,
+        "idle": 10236610,
         "irq": 0
       },
       {
         "model": "Intel(R) Core(TM) i7-6820HQ CPU @ 2.70GHz",
         "speed": 2700,
-        "user": 942530,
+        "user": 316050,
         "nice": 0,
-        "sys": 486180,
-        "idle": 25883410,
+        "sys": 148690,
+        "idle": 12384100,
         "irq": 0
       },
       {
         "model": "Intel(R) Core(TM) i7-6820HQ CPU @ 2.70GHz",
         "speed": 2700,
-        "user": 3651130,
+        "user": 1740480,
         "nice": 0,
-        "sys": 1480200,
-        "idle": 22181050,
+        "sys": 556550,
+        "idle": 10551800,
         "irq": 0
       },
       {
         "model": "Intel(R) Core(TM) i7-6820HQ CPU @ 2.70GHz",
         "speed": 2700,
-        "user": 949800,
+        "user": 319210,
         "nice": 0,
-        "sys": 467980,
-        "idle": 25894300,
+        "sys": 142350,
+        "idle": 12387270,
         "irq": 0
       }
     ],
@@ -147,10 +147,19 @@
         "scopeid": 1
       },
       {
+        "name": "en5",
+        "internal": false,
+        "mac": "ac:de:48:00:11:22",
+        "address": "fe80::aede:48ff:fe00:1122",
+        "netmask": "ffff:ffff:ffff:ffff::",
+        "family": "IPv6",
+        "scopeid": 4
+      },
+      {
         "name": "en0",
         "internal": false,
         "mac": "78:4f:43:50:bd:8d",
-        "address": "fe80::4fd:b36d:b7cb:3dcf",
+        "address": "fe80::1c33:ea2:9ccd:b9e0",
         "netmask": "ffff:ffff:ffff:ffff::",
         "family": "IPv6",
         "scopeid": 5
@@ -166,8 +175,8 @@
       {
         "name": "awdl0",
         "internal": false,
-        "mac": "ca:24:3d:91:ee:2f",
-        "address": "fe80::c824:3dff:fe91:ee2f",
+        "mac": "de:b2:7a:68:68:ef",
+        "address": "fe80::dcb2:7aff:fe68:68ef",
         "netmask": "ffff:ffff:ffff:ffff::",
         "family": "IPv6",
         "scopeid": 12
@@ -175,8 +184,8 @@
       {
         "name": "llw0",
         "internal": false,
-        "mac": "ca:24:3d:91:ee:2f",
-        "address": "fe80::c824:3dff:fe91:ee2f",
+        "mac": "de:b2:7a:68:68:ef",
+        "address": "fe80::dcb2:7aff:fe68:68ef",
         "netmask": "ffff:ffff:ffff:ffff::",
         "family": "IPv6",
         "scopeid": 13
@@ -185,7 +194,7 @@
         "name": "utun0",
         "internal": false,
         "mac": "00:00:00:00:00:00",
-        "address": "fe80::72be:3d61:7774:7974",
+        "address": "fe80::a573:2b91:158c:1de5",
         "netmask": "ffff:ffff:ffff:ffff::",
         "family": "IPv6",
         "scopeid": 14
@@ -194,7 +203,7 @@
         "name": "utun1",
         "internal": false,
         "mac": "00:00:00:00:00:00",
-        "address": "fe80::5b6b:8496:598f:5e19",
+        "address": "fe80::1f41:7b5f:4eb9:b204",
         "netmask": "ffff:ffff:ffff:ffff::",
         "family": "IPv6",
         "scopeid": 15
@@ -203,7 +212,7 @@
         "name": "utun2",
         "internal": false,
         "mac": "00:00:00:00:00:00",
-        "address": "fe80::2db:d065:f21d:858c",
+        "address": "fe80::c14a:aaba:b5fa:9251",
         "netmask": "ffff:ffff:ffff:ffff::",
         "family": "IPv6",
         "scopeid": 16
@@ -212,25 +221,16 @@
         "name": "utun3",
         "internal": false,
         "mac": "00:00:00:00:00:00",
-        "address": "fe80::db16:121f:fe8d:6129",
+        "address": "fe80::5c73:ce9:5ae9:e885",
         "netmask": "ffff:ffff:ffff:ffff::",
         "family": "IPv6",
         "scopeid": 17
       },
       {
-        "name": "en5",
-        "internal": false,
-        "mac": "ac:de:48:00:11:22",
-        "address": "fe80::aede:48ff:fe00:1122",
-        "netmask": "ffff:ffff:ffff:ffff::",
-        "family": "IPv6",
-        "scopeid": 4
-      },
-      {
         "name": "utun4",
         "internal": false,
         "mac": "00:00:00:00:00:00",
-        "address": "fe80::386e:c207:ce0e:eece",
+        "address": "fe80::6297:7227:64f6:9873",
         "netmask": "ffff:ffff:ffff:ffff::",
         "family": "IPv6",
         "scopeid": 18
@@ -239,7 +239,7 @@
         "name": "utun5",
         "internal": false,
         "mac": "00:00:00:00:00:00",
-        "address": "fe80::3191:8dc6:c27c:f768",
+        "address": "fe80::7774:7d54:f85f:cd08",
         "netmask": "ffff:ffff:ffff:ffff::",
         "family": "IPv6",
         "scopeid": 19
@@ -305,13 +305,21 @@
     {
       "pc": "0x00000001009288f9",
       "symbol": "Builtins_CEntry_Return1_DontSaveFPRegs_ArgvOnStack_NoBuiltinExit [/usr/local/bin/node]"
+    },
+    {
+      "pc": "0x00000001008a67ac",
+      "symbol": "Builtins_StringSubstring [/usr/local/bin/node]"
+    },
+    {
+      "pc": "0x00002cd6dd0eb3aa",
+      "symbol": ""
     }
   ],
   "javascriptHeap": {
-    "totalMemory": 2153222144,
-    "totalCommittedMemory": 2151224152,
-    "usedMemory": 2116862992,
-    "availableMemory": 47054672,
+    "totalMemory": 2152472576,
+    "totalCommittedMemory": 2150821488,
+    "usedMemory": 2114899248,
+    "availableMemory": 47525568,
     "memoryLimit": 2197815296,
     "heapSpaces": {
       "read_only_space": {
@@ -323,37 +331,37 @@
       },
       "new_space": {
         "memorySize": 2097152,
-        "committedMemory": 1017624,
+        "committedMemory": 1247240,
         "capacity": 1047328,
-        "used": 360,
-        "available": 1046968
+        "used": 200888,
+        "available": 846440
       },
       "old_space": {
-        "memorySize": 1945481216,
-        "committedMemory": 1945194600,
-        "capacity": 1914890280,
-        "used": 1914753456,
-        "available": 136824
+        "memorySize": 1884663808,
+        "committedMemory": 1884416640,
+        "capacity": 1852058984,
+        "used": 1852000304,
+        "available": 58680
       },
       "code_space": {
-        "memorySize": 13271040,
-        "committedMemory": 12952480,
-        "capacity": 11737792,
-        "used": 11737792,
+        "memorySize": 7503872,
+        "committedMemory": 7258272,
+        "capacity": 6454368,
+        "used": 6454368,
         "available": 0
       },
       "map_space": {
         "memorySize": 3149824,
-        "committedMemory": 3066936,
-        "capacity": 1988240,
-        "used": 1988240,
+        "committedMemory": 3071816,
+        "capacity": 1991520,
+        "used": 1991520,
         "available": 0
       },
       "large_object_space": {
-        "memorySize": 188911616,
-        "committedMemory": 188911616,
-        "capacity": 188348256,
-        "used": 188348256,
+        "memorySize": 254746624,
+        "committedMemory": 254746624,
+        "capacity": 254217280,
+        "used": 254217280,
         "available": 0
       },
       "code_large_object_space": {
@@ -373,13 +381,13 @@
     }
   },
   "resourceUsage": {
-    "userCpuSeconds": 1528.7,
-    "kernelCpuSeconds": 77.8044,
-    "cpuConsumptionPercent": 5.89001,
-    "maxRss": 2250504142848,
+    "userCpuSeconds": 274.539,
+    "kernelCpuSeconds": 13.0856,
+    "cpuConsumptionPercent": 3.44956,
+    "maxRss": 2309710938112,
     "pageFaults": {
-      "IORequired": 788,
-      "IONotRequired": 13642557
+      "IORequired": 581,
+      "IONotRequired": 2500085
     },
     "fsActivity": {
       "reads": 0,
@@ -390,10 +398,10 @@
   ],
   "environmentVariables": {
     "USER": "tansu",
-    "DISPLAY": "/private/tmp/com.apple.launchd.1NKhc5l2wq/org.macosforge.xquartz:0",
+    "DISPLAY": "/private/tmp/com.apple.launchd.ONpR6TNayH/org.macosforge.xquartz:0",
     "LOGNAME": "tansu",
     "PATH": "/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin:~/google-cloud-sdk 2/bin:/usr/local/share/dotnet:/opt/X11/bin:~/.dotnet/tools:/Library/Frameworks/Mono.framework/Versions/Current/Commands:/Applications/Xamarin Workbooks.app/Contents/SharedSupport/path-bin",
-    "SSH_AUTH_SOCK": "/private/tmp/com.apple.launchd.v68RACL8DC/Listeners",
+    "SSH_AUTH_SOCK": "/private/tmp/com.apple.launchd.OIj7HK7r5n/Listeners",
     "HOME": "/Users/tansu",
     "SHELL": "/bin/zsh",
     "__CF_USER_TEXT_ENCODING": "0x1F5:0x0:0x0",

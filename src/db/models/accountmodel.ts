@@ -54,8 +54,11 @@ class AccountModel extends BaseModel<AccountModel> {
         return list;
     }
 
-    static async summary(codes: string[]) {
-        let result = {};
+    static async summary(codes: string[]): Promise<AccountModel> {
+        let result = new AccountModel({
+            code: 'total',
+            name: 'Toplam'
+        });
         let b = 0.00, a = 0.00
         for(let i=0;i<codes.length;i++) {
             let totals = await <any>AccountModel.sequelize.query(
@@ -72,7 +75,8 @@ class AccountModel extends BaseModel<AccountModel> {
              b+=Helper.asCurrency(numbers[0]);
              a+=Helper.asCurrency(numbers[1]);
         }
-        result['total'] = [Helper.asCurrency(b), Helper.asCurrency(a)]
+        result.borc = Helper.asCurrency(b);
+        result.alacak = Helper.asCurrency(a);
         return result;
     }
 

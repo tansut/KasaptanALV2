@@ -16,6 +16,7 @@ import ButcherProduct from '../../db/models/butcherproduct';
 import Dispatcher from '../../db/models/dispatcher';
 import IyziPayment from '../../lib/payment/iyzico';
 import { CreditcardPaymentFactory } from '../../lib/payment/creditcard';
+import SiteLogRoute from '../api/sitelog';
 
 export default class Route  extends ViewRouter {
 
@@ -260,11 +261,12 @@ export default class Route  extends ViewRouter {
         this.products = await this.getProducts();
 
         if (this.req.body.saveAsSubMerchant) {
+            let logger = new SiteLogRoute(this.constructorParams);
             let payment = CreditcardPaymentFactory.getInstance();
+            payment.logger = logger;
             let subMerchantReq = payment.subMerchantRequestFromButcher(this.butcher);
             let result = await payment.createSubMerchant(subMerchantReq);
             let k = result.subMerchantKey;
-            console.log(k)
         }
         else if (this.req.body.save == "true") {
             this.butcher.slug = this.req.body.butcherslug

@@ -8,6 +8,9 @@ import config from '../config';
 import { GeoLocation } from '../models/geo';
 import { create } from 'domain';
 import Helper from './helper';
+import { Puan } from '../models/puan';
+import AccountModel from '../db/models/accountmodel';
+import { Account } from '../models/account';
 
 export interface ComissionResult {
     inputRate: number;
@@ -28,7 +31,7 @@ export class ComissionHelper {
 
    }
 
-   calculate(totalSales: number) {
+   calculateButcherComission(totalSales: number) {
        let product = Helper.asCurrency(totalSales / 1.08);
        let productVat = Helper.asCurrency(totalSales - product);
        let kalitteFee = Helper.asCurrency(product * this.rate + this.fee);
@@ -47,5 +50,33 @@ export class ComissionHelper {
             butcherNetCost: Helper.asCurrency(kalitteFee - kalitteFee * 0.22 - Helper.asCurrency(totalSales * this.butcherBankRate))
         }
    }
+
+}
+
+export class PuanCalculator {
+
+    calculateCustomerPuan(puan: Puan, totalSales: number) {
+        if (Helper.asCurrency(puan.minSales) == 0.00 || (totalSales >= puan.minSales)) {
+            return Helper.asCurrency(totalSales * puan.rate)
+        } else return 0.00
+    }
+
+    async earnedButcherPuanAccounts(userid: number, butcherid: number) {
+        return await AccountModel.summary([Account.generateCode("musteri-kasap-kazanilan-puan", [userid, butcherid])]);
+    }
+
+    async getEarnedButcherPuan(userid: number, butcherid: number) {
+        let summary = await this.earnedButcherPuanAccounts(userid, butcherid)
+        return Helper.asCurrency(summary.alacak - summary.borc);
+    }  
+    
+    async earnedKalittePuanAccounts(userid: number, butcherid: number) {
+        return await AccountModel.summary([Account.generateCode("musteri-kalitte-kazanilan-puan", [userid, 1, butcherid])]);
+    }
+
+    async getEarnedKalittePuan(userid: number, butcherid: number) {
+        let summary = await this.earnedKalittePuanAccounts(userid, butcherid)
+        return Helper.asCurrency(summary.alacak - summary.borc);
+    }      
 
 }

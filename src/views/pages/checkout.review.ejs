@@ -199,8 +199,9 @@
 
           <%}%>
                      
-                       <% let discounts = shopcard.butcherDiscounts[bi] || [] %>
+                       <% let discounts =  shopcard.butcherDiscounts[bi] || [] %>
           <% discounts.forEach(d=> { %>
+            <%if (d.type == 'discount') { %>
           <div class="d-flex justify-content-between mb-2 border-bottom">
             <div>
               <div class="font-size-sm"><%=d.name%></div>
@@ -211,6 +212,7 @@
             </div>
 
           </div>
+          <%}%>
           <%})%>
 
 

@@ -18,6 +18,13 @@
 <script src="/static/js/app.js?v=<%=__config.versionKey%>"></script>
 
 
+<script type='text/javascript'>
+  $(document).ready(function () {
+  if ($("[rel=tooltip]").length) {
+  $("[rel=tooltip]").tooltip();
+  }
+});
+</script>
 
 <script>
 

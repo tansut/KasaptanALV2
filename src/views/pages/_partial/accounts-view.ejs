@@ -1,0 +1,58 @@
+<div class="accordion mb-2" id="payment-method" role="tablist">
+  <div class="card">
+    <div class="card-header" role="tab">
+      <h3 class="accordion-heading"><a href="#card" data-toggle="collapse"><i class="font-size-lg mr-2 mt-n1 align-middle"></i><%=title%><span class="accordion-indicator"><i data-feather="chevron-up"></i></span></a></h3>
+    </div>
+    <div class="collapse show" id="card" data-parent="#payment-method" role="tabpanel">
+      <div class="card-body p-0">
+      
+
+
+        <div class="table-responsive">
+          <table class="font-size-sm table ">
+            <tr>
+              <td>
+                
+              </td>
+              <td class="text-right">
+                Borç
+              </td>
+              <td class="text-right">
+                Alacak
+              </td>
+            </tr>
+            <% accounts.forEach((o, i) => { %>
+            <tr class="<%= o.code == 'total' ? 'font-weight-bold':'' %>">
+          
+          
+              <td>
+                <%=o.desc%>
+              </td>
+          
+              <td class="text-right">
+                <%- include('./currency.ejs', {value: o.borc}) %>
+          
+              </td>
+          
+              <td class="text-right">
+                <%- include('./currency.ejs', {value: o.alacak}) %>
+          
+              </td>
+          
+          
+            </tr>
+          
+            <%})%>
+          </table>
+        </div>
+        
+        
+        
+
+      </div>
+    </div>
+  </div>
+
+
+</div>
+

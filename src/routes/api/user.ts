@@ -66,7 +66,7 @@ export default class UserRoute extends ApiRouter {
         if (!user) throw new http.ValidationError("Geçersiz telefon: " + Helper.getPhoneNumber(this.req.body.phone));
         let sms = this.cleanSMS(this.req.body.password);
         if (!user.verifyPassword(sms))
-            throw new http.ValidationError("SMS şifreniz hatalıdır:" + Helper.getPhoneNumber(this.req.body.phone));
+            throw new http.ValidationError("SMS şifreniz hatalıdır. SMS şifreniz 5 karakterden oluşmaktadır. Tel no: " +  Helper.getPhoneNumber(this.req.body.phone));
         user.mphoneverified = true;
         await user.save();
         this.res.sendStatus(200)
@@ -146,7 +146,7 @@ export default class UserRoute extends ApiRouter {
     }
 
     async sendPassword(pwd: string, phoneNumber: string) {
-        await Sms.send('90' + phoneNumber, `kasaptanal.com giris sifreniz: ${pwd}`, true, new SiteLogRoute(this.constructorParams));
+        await Sms.send('90' + phoneNumber, `${pwd} kasaptanal.com giris sifreniz ile isleme devam edin.`, true, new SiteLogRoute(this.constructorParams));
         return pwd;
     }
 

@@ -1,7 +1,53 @@
-<% var balance = order.workedAccounts.find(p=>p.code == 'total');
-  var shouldBePaid = balance ? __helper.asCurrency(balance.alacak - balance.borc): 0
+<% 
   var operator = typeof(operator) == 'undefined' ? false: operator
+  var hidePhone = typeof(hidePhone) == 'undefined' ? false: hidePhone
+  var hidePayLink = typeof(hidePayLink) == 'undefined' ? false: hidePayLink
 %>
+
+
+
+
+<% if (controller.shouldBePaid > 0 && order.butcher.enableCreditCard) { %>
+  <%if (!hidePayLink) { %>
+    <div class="mt-3 alert alert-success text-center">
+      <div>    
+        <% if (controller.mayEarnPuanTotal > 0) { %>
+          <span>
+            Şimdi online ödeyin, <strong><%- include('./currency.ejs', {value: controller.mayEarnPuanTotal}) %></strong> değerinde puan kazanın.
+          </span>
+        <%}%>
+      </div>
+      <!-- <%- include('./currency.ejs', {value: controller.shouldBePaid}) %> -->
+    
+    </div>
+
+
+ 
+
+
+
+
+  <div class="text-center">
+    <a class="btn btn-sm btn-success" href="/pay/<%=order.ordernum%>">Önline Ödeme</a>
+  </div>
+  <% } %>
+  <% } else { %>
+    <div class="mt-3 alert alert-success text-center">
+      <div>
+        <p class="text-success text-center">
+          Siparişin ödemesi yapıldı. 
+        </p>      
+        <% if (controller.earnedPuanTotal > 0) { %>
+        <p>
+          Tebrikler! Online ödeme yaparak bu siparişinizden <strong><%- include('./currency.ejs', {value: controller.earnedPuanTotal}) %></strong> değerinde puan kazandınız.
+        </p>
+        <%}%>
+      </div>
+    
+    
+    </div>
+<% } %>
+
 
 <div>
   <div class="d-flex flex-nowrap justify-content-between align-items-center pt-1 pb-1 mb-2">
@@ -14,8 +60,10 @@
     <% if (order.noInteraction) { %>
     <li>Güvenli Teslimat: <%= order.noInteraction ? 'Evet': 'Hayır'%></li>
     <% } %>
+    <% if (!hidePhone) { %>
     <li id="orderphone" onclick="javascript:$('#orderphone').hide()"><span
         class="text-muted">Telefon:&nbsp;</span><%= order.phone%></li>
+    <% } %>
   </ul>
 
   <% if (order.shipLocation && order.shipLocation.coordinates) { %>
@@ -56,6 +104,7 @@
 
 <% for (let bi in butchers) { %>
 <% let butcher = butchers[bi]%>
+
 
 
 <div class="mb-3 border-top border-left border-right">
@@ -275,50 +324,27 @@
 </div>
 </div>
 
+<%- include('./accounts-view.ejs', { title: 'Sipariş Hareketleri', accounts: order.workedAccounts }) %>
 
-<% if (order.workedAccounts.length > 0) { %>
-<h3 class="h5">Sipariş işlemleri</h3>
-<table class="font-size-sm table">
-  <tr>
-    <td>
-      İşlem
-    </td>
-    <td>
-      Borç
-    </td>
-    <td>
-      Alacak
-    </td>
-  </tr>
-  <% order.workedAccounts.forEach((o, i) => { %>
-  <tr class="<%= o.code == 'total' ? 'font-weight-bold':'' %>">
+<% if (order.kalittePuanAccounts.length > 1) { %>
+  <%- include('./accounts-view.ejs', { accounts: order.kalittePuanAccounts, title:'kasaptanAl.com Puanlar' }) %>
+  <%}%>
+
+<% if (order.butcherPuanAccounts.length > 1) { %>
+  <%- include('./accounts-view.ejs', { accounts: order.butcherPuanAccounts, title:'Kasaplarımızın Kazandırdığı Puanlar' }) %>
+  <%}%>
 
 
-    <td>
-      <%=o.desc%>
-    </td>
-
-    <td>
-      <%- include('./currency.ejs', {value: o.borc}) %>
-
-    </td>
-
-    <td>
-      <%- include('./currency.ejs', {value: o.alacak}) %>
-
-    </td>
 
 
-  </tr>
+  
 
-  <%})%>
-</table>
-<% if (shouldBePaid > 0 && order.butcher.enableCreditCard) { %>
-<div class="text-center">
-  <a class="" href="/pay/<%=order.ordernum%>">Önline Ödeme</a>
-</div>
-<% } %>
-<% } %>
+
+
+
+
+
+
 
 <style>
   img {

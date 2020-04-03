@@ -34,8 +34,9 @@
               
                         
                      
-                        <span v-for="(badge, index) in alt.butcher.badges" class="badge badge-success font-size-xs">
-                          {{badge}}
+                        <span v-for="(badge, index) in alt.butcher.badges" class="badge badge-secondary border font-size-xs mr-1">
+                          <i v-if="badge.icon" :class="badge.icon || '' + 'mr-1'"></i>
+                          {{badge.name}}
               
                         </span>
                      

@@ -5,8 +5,8 @@ const orderid = require('order-id')('dkfjsdklfjsdlkg450435034.,')
 
 export type AccountType =  "active" | "passive"
 export type ParentAccount =  "kredi-karti-provizyon" | "havuz-hesabi" | 
-"kredi-karti-provizyon-iade" | "kredi-karti-odemeleri" | "banka" | 
-"kasap-puan-giderleri" | "kasap-urun-giderleri" | "kalitte-puan-giderleri" | 
+"kredi-karti-provizyon-iade" | "kredi-karti-odemeleri" | "banka" | "musteri-kalitte-kazanilan-puan" |
+"kasap-puan-giderleri" | "kasap-urun-giderleri" | "kalitte-puan-giderleri" | "musteri-kasap-kazanilan-puan" |
 "odeme-sirketi-giderleri" | "odeme-bekleyen-satislar" | "satis-alacaklari" | "düşülen-satis-bedelleri"
 
 export interface AccountInfo {
@@ -52,7 +52,19 @@ export let KnownAccounts: {[key: string]: AccountInfo} = {
         type: "active",
         name: "",
         code: "120"
-    }  ,
+    },
+
+    "musteri-kasap-kazanilan-puan": {
+        type: "passive",
+        name: "",
+        code: "130"
+    },    
+
+    "musteri-kalitte-kazanilan-puan": {
+        type: "passive",
+        name: "",
+        code: "132"
+    },        
 
     "kasap-urun-giderleri": {
         type: "active",

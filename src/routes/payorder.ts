@@ -26,10 +26,49 @@ import Payment from '../db/models/payment';
 import AccountModel from '../db/models/accountmodel';
 import { Account } from '../models/account';
 import { PaymentRouter } from '../lib/paymentrouter';
+import { PuanCalculator } from '../lib/commissionHelper';
+import { PuanResult } from '../models/puan';
 
 export default class Route extends PaymentRouter {
     order: Order;
     api: OrderApi;    
+    balance: AccountModel;
+    shouldBePaid = 0.00;
+    puanBalanceButcher: AccountModel;
+    puanBalanceKalitte: AccountModel;
+    earnedPuanButcher = 0.00;
+    earnedPuanKalitte = 0.00;
+    earnedPuanTotal = 0.00;
+    mayEarnPuanTotal = 0.00;
+
+    possiblePuanList: PuanResult[] = [];
+
+    renderPage(userMessage?: string) {
+        let pageInfo = {};
+        if (this.shouldBePaid > 0.00) {
+            let pageTitle = '', pageDescription = '';
+
+            if (this.mayEarnPuanTotal > 0.00) {
+                pageTitle = `Online ödeyin, ${this.mayEarnPuanTotal} TL değerinde puan kazanın: ${Helper.formatDate(this.order.creationDate)} tarihli ${this.order.butcherName} siparişiniz` ;
+                pageDescription = `Nefis ürünlerinizi güvenle online ödeyin, puan kazanın, zaman kazanın, sağlığınızı koruyun.`
+
+            }
+            else {
+                pageTitle = `Online Ödeyin: ${Helper.formatDate(this.order.creationDate)} tarihli ${this.order.butcherName} siparişiniz` ;
+                pageDescription = `Nefis ürünlerinizi güvenle online ödeyin, hem zamandan kazanın, hem sağlığınızı koruyun.`
+            }
+    
+            pageInfo = {
+                pageTitle: pageTitle, 
+                pageDescription: pageDescription
+            }
+        } else {
+            
+        }
+  
+        this.sendView("pages/payorder.ejs", {...pageInfo, ...{ _usrmsg: { text: userMessage } }, ...this.api.getView(this.order), ...{ enableImgContextMenu: true } });
+        
+    }
 
     async getOrderSummary() {        
         if (this.order.workedAccounts.length == 1) {
@@ -37,12 +76,26 @@ export default class Route extends PaymentRouter {
             await this.api.saveAccountingOperations([initial]);
             await this.getOrder();
         }
+
+        this.balance = this.order.workedAccounts.find(p=>p.code == 'total')
+        this.shouldBePaid = Helper.asCurrency(this.balance.alacak - this.balance.borc);
+        this.puanBalanceKalitte = this.order.kalittePuanAccounts.find(p=>p.code == 'total');  
+        this.puanBalanceButcher = this.order.butcherPuanAccounts.find(p=>p.code == 'total');  
+        this.earnedPuanKalitte = this.puanBalanceKalitte ? Helper.asCurrency(this.puanBalanceKalitte.alacak -   this.puanBalanceKalitte.borc):0.00
+        this.earnedPuanButcher = this.puanBalanceButcher ? Helper.asCurrency(this.puanBalanceButcher.alacak -   this.puanBalanceButcher.borc):0.00
+        this.earnedPuanTotal = Helper.asCurrency(this.earnedPuanKalitte + this.earnedPuanButcher)
+        if (this.shouldBePaid > 0) {
+            this.possiblePuanList = this.api.getPossiblePuanGain(this.order, this.shouldBePaid);
+            this.possiblePuanList.forEach(pg=>this.mayEarnPuanTotal+=pg.earned)
+            this.mayEarnPuanTotal = Helper.asCurrency(this.mayEarnPuanTotal)
+        }
     }
 
 
     async paymentSuccess(payment: PaymentResult) {
         await this.api.completeCreditcardPayment([this.order], payment);
         await this.getOrder();
+        await this.getOrderSummary() 
     }
 
     getPaymentRequest() {
@@ -103,13 +156,14 @@ export default class Route extends PaymentRouter {
             }
         }
 
-        this.sendView("pages/payorder.ejs", { ...{ _usrmsg: { text: userMessage } }, ...this.api.getView(this.order), ...{ enableImgContextMenu: true } });
+        this.renderPage(userMessage);
+
     }
 
     async getOrder() {
         let ordernum = this.req.params.ordernum;
         this.api = new OrderApi(this.constructorParams);
-        this.order = await this.api.getOrder(ordernum);
+        this.order = await this.api.getOrder(ordernum, true);
     }
 
     @Auth.Anonymous()
@@ -120,10 +174,8 @@ export default class Route extends PaymentRouter {
 
         await this.getOrderSummary();
 
-        let pageTitle = `Online Ödeyin: ${Helper.formatDate(this.order.creationDate)} tarihli ${this.order.butcherName} siparişiniz` ;
-        let pageDescription = `Nefis ürünlerinizi güvenle online ödeyin, hem zamandan kazanın, hem sağlığınızı koruyun.`
 
-        this.sendView("pages/payorder.ejs", {...{ pageTitle: pageTitle, pageDescription: pageDescription}, ...this.api.getView(this.order), ...{ enableImgContextMenu: true } });
+        this.renderPage();
     }
 
 

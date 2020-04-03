@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="tr-TR" prefix="og: http://ogp.me/ns#">
+
+<head>
+    <% include ./_partial/head %>
+    <meta name="robots" content="noindex,follow">
+
+</head>
+
+<body>
+    <% include ./_partial/header %>
+
+
+
+    <div class="page-title-overlap bg-accent pt-4">
+        <div class="container d-lg-flex justify-content-between py-2 py-lg-3">
+            <div class="order-lg-2 mb-3 mb-lg-0 pt-lg-2">
+                <nav aria-label="breadcrumb">
+                    <ol
+                        class="breadcrumb breadcrumb-light flex-lg-nowrap justify-content-center justify-content-lg-star">
+                        <li class="breadcrumb-item"><a class="text-nowrap" href="/"><i class="czi-home"></i></a></li>
+                        <li class="breadcrumb-item text-nowrap active" aria-current="page">
+                            Kasap Kart&trade; Puanlarım</li>
+                    </ol>
+                </nav>
+            </div>
+            <div class="order-lg-1 pr-lg-4 text-center text-lg-left">
+                <h1 class="h3 text-light mb-0">Kasap Kart&trade; Puanlarım</h1>
+                <p class="lead text-light"></p>
+
+            </div>
+        </div>
+    </div>
+
+    <!-- Page Content-->
+    <div class="container pb-5 mb-2 mb-md-3">
+        <div class="row">
+            <%- include('./_partial/user.sidebar.ejs', {
+               page: 'puans'
+           }) %>
+            <!-- Content  -->
+            <section class="col-lg-8">
+                <!-- Toolbar-->
+                <div class="d-none d-lg-flex justify-content-between align-items-center pt-lg-3 pb-4 pb-lg-5 mb-lg-3">
+                    <h6 class="font-size-base text-light mb-0">Kasap Kart&trade; Puanlarım</h6><a class="btn btn-primary btn-sm"
+                        href="/user/signoff"><i class="czi-sign-out mr-2"></i>Çıkış</a>
+                </div>
+            <div>
+                <% if (controller.puanAccountsKalitte.length > 1) { %>
+                    <%- include('./_partial/accounts-view.ejs', { accounts: controller.puanAccountsKalitte, title:'kasaptanAl.com Puanlar' }) %>
+                    <%}%>
+                  
+                  <% if (controller.puanAccountsButcher.length > 1) { %>
+                    <%- include('./_partial/accounts-view.ejs', { accounts: controller.puanAccountsButcher, title:'Kasaplarımızın Kazandırdığı Puanlar' }) %>
+                    <%}%>
+              
+             
+
+            </div>
+            </section>
+        </div>
+    </div>
+    </section>
+    </div>
+    </div>
+
+
+    <% include ./_partial/footer %>
+    <% include ./_partial/scripts %>
+
+</body>
+
+</html>

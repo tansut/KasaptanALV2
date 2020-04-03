@@ -40,16 +40,55 @@
         <div class="alert alert-secondary">
 
 
-          <h4 class="h5">Güvendesiniz.</h4>
+          <h4 class="h4">Güvendesiniz.</h4>
           <!-- <p>
             Çünkü en güncel teknolojiyi kullanıyoruz, sipariş vermek hızlı, kolay ve güvenli.
           </p> -->
 
-          <ul class="list-unstyled mb-4"> <li><i class="czi-check text-primary mr-1"></i> Kapıda kredi kartı ile veya nakit ödeyin.</li>
-          <li><i class="czi-check text-primary mr-1"></i> Deneyimli usta kasaplarımız %100 memnuniyet oranına sahipler.</li>
-          <li><i class="czi-check text-primary mr-1"></i> Şimdi sipariş verin, indirim fırsatlarını ve enfes lezzetlerimizi kaçırmayın.</li>
+          <ul class="list-unstyled mb-4"> <li><i class="czi-check text-primary mr-1"></i>Online veya kapıda ödeyebilirsiniz.</li>
+          <li><i class="czi-check text-primary mr-1"></i> Usta kasaplarımız %100 memnuniyet oranına sahipler.</li>
         </ul>
+
+        <div>
+          <% var partners = controller.Butchers.filter(p=>p.enablePuan) %>
+          <% if (partners) { %>
+            <h5 class="h5 mb-0">Kasap Kart&trade; İş Ortakları</h5>
+            <p>
+              Kasap Kart iş ortaklarımız kasap alışverişlerinizde size puan kazandırır.
+            </p>
+            <% controller.Butchers.forEach(b=> {  %>
+              <% var puan = b.getPuanData()  %>
+
+              <% if (puan != null) { %>
+                <span class="font-weight-medium"><%=b.name %>:</span> 
+                <%- include('./_partial/puan-data-view.ejs', {puan: puan, hideMinPuanForUsage: true}) %>
+  
+              <% } %>
+            <% }) %>
+          <% } %>
+
+        </div>
           
+        <% if (controller.possiblePuanList.length > 0) { %>
+          <div class="mb-3 alert alert-info rounded-0">
+         
+            <h5 class="h5">Bu alışverişinizle kazandığınız puanlar</h4>
+         
+           <% controller.possiblePuanList.forEach(pg => { %>
+            <ul>
+              <li>
+                <strong><%- include('./_partial/currency.ejs', {value: pg.earned}) %></strong>, <%=pg.title%>
+
+              </li>
+            </ul>
+             
+           
+          <% }) %> 
+          <span class="d-block">           
+            Toplam <strong><%- include('./_partial/currency.ejs', {value: controller.mayEarnPuanTotal}) %></strong> değerinde puanı hesabınıza yüklüyoruz. 
+          </span>
+        </div>
+          <%}%>
 
           <div class="text-center">
             <% if (shopcard.items.length) { %>   
@@ -95,13 +134,17 @@
               <div class="card">
                 <div class="card-header ">
                   <h3 class="accordion-heading"><a class="" href="#order-discounts" role="button"
-                      data-toggle="collapse" aria-expanded="true" aria-controls="order-discounts">Toplam Tutar<span
+                      data-toggle="collapse" aria-expanded="true" aria-controls="order-discounts">Toplamlar<span
                         class="accordion-indicator"></span></a></h3>
                 </div>
                 <div class="collapse show" id="order-discounts" data-parent="#order-options">
                   <div class="card-body">
                     <div class="text-center font-weight-medium">
-                      
+                      <div>
+                        <h6 class="h6">
+                          Sipariş Toplamı
+                        </h6>
+                      </div>
                       <%- include('./_partial/currency.ejs', {value: shopcard.total}) %> 
                       <% if (shopcard.discountTotal != 0) { %>
                       <br>
@@ -111,13 +154,27 @@
                       </span>
                       <% } %>
                     </div>
+<% if (controller.mayEarnPuanTotal > 0.00) { %>
+  <div class="mt-3 text-center font-weight-medium">
+    <h6>
+      Kazandığınız Puan
+    </h6>
+<div class="text-center ">
+  <%- include('./_partial/currency.ejs', {value: controller.mayEarnPuanTotal}) %>
 
-    
+</div>
+  </div>
+
+<% } %>
 
                   </div>
                 </div>
               </div>
-            </div>
+
+
+
+
+
               <%}%>
               <!-- <div class="accordion" id="order-options"> -->
                 <!-- <div class="card">

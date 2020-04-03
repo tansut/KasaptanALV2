@@ -1,0 +1,21 @@
+<% var hideMinPuanForUsage = typeof(hideMinPuanForUsage) == 'undefined' ? false: hideMinPuanForUsage %>
+
+      <p>
+        <% if (puan.minSales > 0.00) { %>
+          <%- include('./currency.ejs', {value: puan.minSales}) %> ve üzeri alışveriş yapın,
+  
+        <% } else { %>
+          Tüm alışverişlerinizden
+        <% } %>
+  
+        %<%=puan.rate * 100 %> puan kazanın.
+
+        <% if (puan.minPuanForUsage > 0.00 && !hideMinPuanForUsage) { %>
+            <br>
+            <%- include('./currency.ejs', {value: puan.minPuanForUsage}) %> puanınız birikince, güle güle harcayın. 
+          
+          <% } %>
+
+      </p>
+
+    

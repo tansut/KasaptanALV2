@@ -59,7 +59,7 @@ export default class Route extends ViewRouter {
             acountingSummary = await this.api.getWorkingAccounts(this.order);
         }
         let calc = new ComissionHelper(this.order.butcher.commissionRate, this.order.butcher.commissionFee);
-        this.butcherFee = calc.calculate(this.order.workedAccounts.find(p=>p.code == 'total').alacak);
+        this.butcherFee = calc.calculateButcherComission(this.order.workedAccounts.find(p=>p.code == 'total').alacak);
     }
 
     async orderSaveRoute() {

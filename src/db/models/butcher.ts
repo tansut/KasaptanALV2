@@ -4,6 +4,11 @@ import Area, { AreaLevels } from './area';
 import ButcherProduct from './butcherproduct';
 import Product from './product';
 import { Op } from 'sequelize';
+import { Badge } from '../../models/badge';
+import { Puan } from '../../models/puan';
+import AccountModel from './accountmodel';
+import { Account } from '../../models/account';
+import Helper from '../../lib/helper';
 
 
 
@@ -202,6 +207,41 @@ class Butcher extends BaseModel<Butcher> {
     })
     badges: string;   
 
+    getPuanData(): Puan {
+        return this.enablePuan ? {
+            name: 'Kasap Kart Puanı',
+            minSales: this.minSalesPuan,
+            rate: this.customerPuanRate,
+            minPuanForUsage: this.minPuanUsage
+        }: null        
+    }
+
+
+
+    getBadgeList(): Badge[] {
+        let list: Badge[] = []
+
+   
+
+        if (this.enablePuan) {
+            list.push({
+                icon: '',
+                name: 'Kasap Kart™',
+                tip: 'Alışverişlerinizden puan kazandırır'
+            })            
+        }
+
+        if (this.enableCreditCard) {
+            list.push({
+                icon: 'czi-card',
+                name: 'online/kapıda ödeme',
+                tip: 'Online veya kapıda ödeme yapabilirsiniz'
+            })
+        } 
+     
+        return list;
+    }
+
     @Column({
         allowNull: true
     })
@@ -217,9 +257,38 @@ class Butcher extends BaseModel<Butcher> {
     @Column({
         allowNull: false,
         type: DataType.DECIMAL(13, 2),
-        defaultValue: 1.00
+        defaultValue: 0.00
     })
     commissionFee: number;   
+
+    @Column({
+        allowNull: false,
+        type: DataType.DECIMAL(13, 2),
+        defaultValue: 0.00
+    })
+    minSalesPuan: number;       
+
+    @Column({
+        allowNull: false,
+        type: DataType.DECIMAL(5, 2),
+        defaultValue: 0.01
+    })
+    customerPuanRate: number;      
+
+    @Column({
+        allowNull: false,
+        type: DataType.DECIMAL(13, 2),
+        defaultValue: 50.00
+    })
+    minPuanUsage: number;      
+
+    @Column({
+        allowNull: false,
+        defaultValue: false
+    })
+    enablePuan: boolean;   
+    
+    
 
     @Column
     videoinstagram: Buffer;

@@ -1,3 +1,6 @@
+import { Badge } from "./badge";
+import { Puan } from "./puan";
+
 export interface PurchaseOption {
     id: number;
     unit: string,
@@ -22,6 +25,8 @@ export interface ButcherPurchaseOption {
     unitPrice: number;
 }
 
+
+
 export interface AlternateButchersView {
     butcher: ProductButcherView;
     dispatcher: ProductDispatcherView;    
@@ -33,12 +38,14 @@ export interface ProductButcherView {
     name: string;
     productNote: string;
     enableCreditCard: boolean;
-    badges: string[];
+    badges: Badge[];
     id: number;
     kgPrice: number;
     thumbnail?: string;
     userRatingAsPerc: number;
     shipRatingAsPerc: number;
+    puanData: Puan;    
+    earnedPuan: number;
 }
 
 export interface ProductDispatcherView {

@@ -1,13 +1,14 @@
 import { Table, Column, DataType, Model, HasMany, CreatedAt, UpdatedAt, DeletedAt, Unique, Default, AllowNull, ForeignKey, BelongsTo } from 'sequelize-typescript';
 import BaseModel from "./basemodel"
 import Helper from '../../lib/helper';
-import { ShopCard, ShopcardItem } from '../../models/shopcard';
+import { ShopCard, ShopcardItem, firstOrderDiscount } from '../../models/shopcard';
 import Product from './product';
 import Butcher from './butcher';
 import { OrderItemStatus } from '../../models/order';
 import Dispatcher from './dispatcher';
 import { GeoLocation } from '../../models/geo';
 import AccountModel from './accountmodel';
+import { PuanResult } from '../../models/puan';
 const orderid = require('order-id')('dkfjsdklfjsdlkg450435034.,')
 
 @Table({
@@ -23,7 +24,12 @@ const orderid = require('order-id')('dkfjsdklfjsdlkg450435034.,')
 })
 class Order extends BaseModel<Order> {
 
+    isFirstOrder: boolean = false;
     workedAccounts: AccountModel[] = [];
+    butcherPuanAccounts: AccountModel[] = [];
+    kalittePuanAccounts: AccountModel[] = [];
+
+    puanSummary: PuanResult [] = [];
 
     @Column({
         allowNull: false,
@@ -304,11 +310,13 @@ class Order extends BaseModel<Order> {
         this.setDataValue('shopcardjson', Buffer.from(JSON.stringify(value), "utf-8"));
     }
 
-    static fromShopcard(c: ShopCard, bi: number): Order {
+    static async fromShopcard(c: ShopCard, bi: number): Promise<Order> {
         let o = new Order();
         o.ordernum = orderid.generate();
         o.note = c.note;
         o.status = OrderItemStatus.supplying;
+        let firstDiscount = c.getButcherDiscount(bi, firstOrderDiscount.code)
+        o.isFirstOrder = firstDiscount != null;
         o.discountTotal = c.getButcherDiscountTotal(bi);
         o.subTotal = c.butchers[bi].subTotal;        
         o.shippingTotal = c.getShippingCost(bi);

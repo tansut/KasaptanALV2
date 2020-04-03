@@ -25,6 +25,7 @@ export interface ShopcardAdres {
 }
 
 class Modifier {
+    type: 'discount' | 'puan'
     code: string;
     name: string;
     percent: number;
@@ -47,6 +48,7 @@ export class ShippingCost extends Modifier {
 }
 
 export let firstOrderDiscount = Object.assign(new Discount(), {
+    type: 'puan',
     code: 'ilksiparis',
     name: 'İlk sipariş indirimi',
     percent: 3,
@@ -110,7 +112,7 @@ export class ShopCard {
         let totalPrice = 0;
         if (!this.butcherDiscounts[bi])
             return 0.00;
-        this.butcherDiscounts[bi].forEach(d => (totalPrice += d.calculated));
+        this.butcherDiscounts[bi].forEach(d => (totalPrice += (d.type == 'discount' ? d.calculated: 0.00)));
         return Helper.asCurrency(totalPrice);
     }
 
@@ -141,7 +143,7 @@ export class ShopCard {
     get discountTotal() {
         let totalPrice = 0;
         this.discounts.forEach(p => {
-            totalPrice += p.calculated;
+            totalPrice += (p.type=='discount' ? p.calculated: 0.00);
         })
         return Helper.asCurrency(totalPrice + this.butcherDiscountTotal)
     }
@@ -390,7 +392,7 @@ export class ShopCard {
                 applied = null;
             }
             if (!applied) {
-                if (!hasFirstOrder) {
+                if (!hasFirstOrder ) {
                     this.addButcherDiscount(b, Object.assign(new Discount(), {
                         code: firstOrderDiscount.code,
                         percent: firstOrderDiscount.percent,
@@ -436,9 +438,12 @@ export class ShopCard {
             result.address.level3Text = req.prefAddr.level3Text;
         }
 
+        let butcherids = Object.keys(result.butchers || {})
+
         let firstOrder = !req.user ? null : await Order.findOne({
             where: {
-                userid: req.user.id
+                userid: req.user.id,
+                butcherid: butcherids
             }
         })
         result.butcherDiscounts = {}

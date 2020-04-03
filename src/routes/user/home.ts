@@ -9,10 +9,29 @@ import * as _ from "lodash";
 
 
 import  OrderApi from '../api/order';
+import AccountModel from "../../db/models/accountmodel";
+import { Account } from "../../models/account";
+import Helper from "../../lib/helper";
+import { PuanCalculator } from "../../lib/commissionHelper";
+import { PuanResult } from "../../models/puan";
 
 export default class Route extends ViewRouter {
-
+    order: Order;
+    api: OrderApi;
     user: User;
+    balance: AccountModel;
+    shouldBePaid = 0.00;
+    puanBalanceButcher: AccountModel;
+    puanBalanceKalitte: AccountModel;
+    earnedPuanButcher = 0.00;
+    earnedPuanKalitte = 0.00;
+    earnedPuanTotal = 0.00;
+    mayEarnPuanTotal = 0.00;
+
+    possiblePuanList: PuanResult[] = [];
+
+    puanAccountsKalitte: AccountModel[] = []
+    puanAccountsButcher: AccountModel[] = []
 
     render(view, data?) {
         data = data || {}
@@ -48,10 +67,32 @@ export default class Route extends ViewRouter {
     }
 
 
+    async getOrderSummary() {        
+        this.balance = this.order.workedAccounts.find(p=>p.code == 'total')
+        this.shouldBePaid = Helper.asCurrency(this.balance.alacak - this.balance.borc);
+        this.puanBalanceKalitte = this.order.kalittePuanAccounts.find(p=>p.code == 'total');  
+        this.puanBalanceButcher = this.order.butcherPuanAccounts.find(p=>p.code == 'total');  
+        this.earnedPuanKalitte = this.puanBalanceKalitte ? Helper.asCurrency(this.puanBalanceKalitte.alacak -   this.puanBalanceKalitte.borc):0.00
+        this.earnedPuanButcher = this.puanBalanceButcher ? Helper.asCurrency(this.puanBalanceButcher.alacak -   this.puanBalanceButcher.borc):0.00
+        this.earnedPuanTotal = Helper.asCurrency(this.earnedPuanKalitte + this.earnedPuanButcher)
+        if (this.shouldBePaid > 0) {
+            this.possiblePuanList = this.api.getPossiblePuanGain(this.order, this.shouldBePaid);
+            this.possiblePuanList.forEach(pg=>this.mayEarnPuanTotal+=pg.earned)
+            this.mayEarnPuanTotal = Helper.asCurrency(this.mayEarnPuanTotal)
+        }
+    }
+    
+    async getUserSummary() {        
+        
+        this.puanAccountsKalitte = await AccountModel.list([Account.generateCode("musteri-kalitte-kazanilan-puan", [this.user.id, 1])])
+        this.puanAccountsButcher = await AccountModel.list([Account.generateCode("musteri-kasap-kazanilan-puan", [this.user.id])])
+    }
+
     async viewOrderDetails() {
-        let api = new OrderApi(this.constructorParams);
+        let api = this.api = new OrderApi(this.constructorParams);
         this.user = await User.findByPk(this.req.user.id);
-        let order = await api.getOrder(this.req.params.orderid);
+        let order = this.order = await api.getOrder(this.req.params.orderid, true);
+        await this.getOrderSummary();
         this.render("pages/user.order.details.ejs", {...api.getView(order), ...{enableImgContextMenu: true} }   );
     }
 
@@ -89,6 +130,12 @@ export default class Route extends ViewRouter {
 
     }
 
+    async viewPuans() {
+        this.user = await User.findByPk(this.req.user.id);
+        await this.getUserSummary();
+        this.render("pages/user.puans.ejs");
+    }
+
 
     async signoff() {
         let userRoute = new UserRoute(this.constructorParams);
@@ -103,6 +150,7 @@ export default class Route extends ViewRouter {
         router.post("/password", Route.BindRequest(Route.prototype.savePassword));
         router.post("/profile", Route.BindRequest(Route.prototype.saveProfile));
         router.get("/orders", Route.BindRequest(Route.prototype.viewOrders));
+        router.get("/puans", Route.BindRequest(Route.prototype.viewPuans));
         router.get("/orders/:orderid", Route.BindRequest(Route.prototype.viewOrderDetails));
         router.get("/orders/:orderid/email", Route.BindRequest(Route.prototype.emailOrderDetails));
         router.get("/signoff", Route.BindRequest(Route.prototype.signoff));

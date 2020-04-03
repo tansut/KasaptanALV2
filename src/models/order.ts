@@ -1,3 +1,5 @@
+import { PuanResult } from "./puan";
+
 export enum OrderItemStatus {    
     supplying = 'tedarik sürecinde',
     shipping = 'teslim edilecek',
@@ -13,3 +15,4 @@ export enum OrderPaymentStatus {
     waitingOnlinePayment = 'Online Ödeme Bekliyor',
     manualPayment = 'Manuel Ödeme Yapılacak'
 }
+

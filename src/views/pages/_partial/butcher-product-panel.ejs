@@ -18,26 +18,42 @@ src="<%= `${butcherVideo.thumbnailFileUrl}` %>" alt="<%= `${view.butcher.name}` 
 class="gallery-item-caption"><%= butcherVideo.title %></span></a>
 <a class="media align-items-center" href="/<%=view.butcher.slug%>">
 <%} else { %>
-  <a class="pl-2 media align-items-center" target="_blank" href="/<%=view.butcher.slug%>">
+  <a target="_blank" class="pl-2 media align-items-center" target="_blank" href="/<%=view.butcher.slug%>">
     
     <img class="rounded-circle header-img"
     src="<%= `${__req.helper.imgUrl('butcher-google-photos', view.butcher.slug)}` %>" alt="<%=view.butcher.name%>">
  <% } %>
       <div class="media-body  p-2">
         <h5 class="h6 mb-1 mr-2"><%= view.butcher.name %></h6>
-        <% if (view.butcher.badges.length > 0 ) { %>
-          <div class="butcher-badges">
 
+          <% if (view.butcher.badges.length > 0 ) { %>
+            <div class="butcher-badges mb-1">
           
-        <% view.butcher.badges.forEach(b=> {  %>
-          <span class="badge badge-success font-size-xs">
-            <%=b%>
+            
+          <% view.butcher.badges.forEach(b=> {  %>
+            <span class="badge border badge-secondary   font-size-xs" data-toggle="tooltip" data-original-title="<%=b.tip%>"  title="">
+              <%if (b.icon) { %>
+              <i class="<%= b.icon || '' %> mr-1"></i>
+              <%}%>
+              <%=b.name%>
+          
+            </span>
+          <% }) %>
+          </div>
+          <% } %>
 
-          </span>
-        <% }) %>
-      </div>
-        <% } %>
-       
+          <% if (view.butcher.earnedPuan > 0.00) { %>
+            <div class="font-size-sm mt-3">
+              <p class="text-success">
+                 Birikmiş puanınız var: <%- include('./currency.ejs', {value: view.butcher.earnedPuan}) %>
+              </p>
+              
+            </div>
+             
+
+          <% } %>
+
+
           <money-view class="font-size-sm text-accent" :unit="product.kgPrice ? 'Kg': selectedUnit.unitTitle"  :money="product.kgPrice || selectedUnit.unitPrice"></money-view>
 
           <span class="d-block text-muted font-size-xs">
@@ -47,6 +63,7 @@ class="gallery-item-caption"><%= butcherVideo.title %></span></a>
 
    
       </div></a>
+      
     </div>
       <a class="align-self-center d-md-block btn btn-sm" href="/<%=view.butcher.slug%>"><i
           class="czi-arrow-right font-size-xs align-middle ml-1"></i></a>                        
@@ -57,7 +74,7 @@ class="gallery-item-caption"><%= butcherVideo.title %></span></a>
       <%- include('./currency.ejs', {value: view.viewUnitPrice, unit: view.viewUnit}) %>
     </span>
   </div> -->
-  
+
     <% if (view.butcherNote) { %>
       <div class="font-size-sm  p-3">
         <!-- <span class="badge badge-accent font-size-xs mr-1">Kasabımızdan</span> -->
@@ -93,7 +110,16 @@ class="gallery-item-caption"><%= butcherVideo.title %></span></a>
 
       <%}%>
     </div>
+
+    <% if (view.butcher.puanData) { %>
+      <div class="text-accent px-3 font-size-sm mt-3">
+        <span class="text-dark"><%=view.butcher.name%>, Kasap Kart&trade; iş ortağıdır.</span>
+        <%- include('./puan-data-view.ejs', {puan: view.butcher.puanData, hideMinPuanForUsage: true}) %>
+    
+      </div>
+    <% } %>    
   </div>
+
 
 
 

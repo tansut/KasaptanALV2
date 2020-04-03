@@ -31,6 +31,7 @@ import { ProductLd } from '../models/ProductLd';
 import ProductCategory from '../db/models/productcategory';
 import Review from '../db/models/review';
 import Product from '../db/models/product';
+import { PuanCalculator } from '../lib/commissionHelper';
 
 interface ButcherSelection {
     best: Dispatcher,
@@ -185,10 +186,12 @@ export default class Route extends ViewRouter {
                         id: butcher.id,
                         enableCreditCard: butcher.enableCreditCard,
                         slug: butcher.slug,
-                        badges: butcher.badges ? butcher.badges.split(','): [],
+                        badges: butcher.getBadgeList(),
                         userRatingAsPerc: butcher.userRatingAsPerc,
                         shipRatingAsPerc: butcher.shipRatingAsPerc,
                         name: butcher.name,
+                        puanData: butcher.getPuanData(),
+                        earnedPuan: 0.00,
                         kgPrice: bp ? bp.kgPrice: 0,
                         productNote: bp ? bp.mddesc || "" : "",
                         thumbnail: this.req.helper.imgUrl("butcher-google-photos", butcher.slug)
@@ -227,7 +230,9 @@ export default class Route extends ViewRouter {
 
 
 
-        if (view.butcher) {
+        if (view.butcher) {            
+            let calculator = new PuanCalculator();
+            view.butcher.earnedPuan = this.req.user ? await calculator.getEarnedButcherPuan(this.req.user.id, view.butcher.id): 0.00
             this.butcherProducts = await ButcherProduct.findAll({
                 where: {
                     butcherid: view.butcher.id,
@@ -263,16 +268,17 @@ export default class Route extends ViewRouter {
                 ]
             })
         }
-
-            //     this.butcherResources = await Resource.findAll({
-            //         where: {
-            //             type: ["butcher-google-photos", "butcher-videos"],
-            //             ref1: view.butcher.id,
-            //             list: true
-            //         },
-            //         order: [["displayOrder", "DESC"], ["updatedOn", "DESC"]]
-            //     })
-            // }
+            if (view.butcher) {
+                this.butcherResources = await Resource.findAll({
+                    where: {
+                        type: ["butcher-google-photos", "butcher-videos"],
+                        ref1: view.butcher.id,
+                        list: true
+                    },
+                    order: [["displayOrder", "DESC"], ["updatedOn", "DESC"]]
+                })
+            }
+            
             this.productLd = await api.getProductLd(product);
             this.res.render('pages/product', this.viewData({
                 butcherProducts: this.butcherProducts.map(p => p.product), butchers: selectedButchers,

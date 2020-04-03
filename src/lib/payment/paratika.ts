@@ -238,7 +238,7 @@ export default class ParatikaPayment extends CreditcardPaymentProvider {
                                 reject(this.generateErrorResponse(result));
                             else {
                                 let paymentRes: PaymentResult = this.convertParatikaPaymentResult(request, result)
-                                this.savePayment('pos-paratika', pr, result)
+                                this.savePayment('pos-paratika', pr, paymentRes)
                                 .then(() => resolve(paymentRes))
                                     .catch(err => reject(err));
                             }
