@@ -186,8 +186,8 @@ export class CreditcardPaymentProvider {
         let price = 0.00, paidPrice = 0.00;
         ol.forEach((o, j) => {            
             let total = o.workedAccounts.find(p => p.code == 'total');
-            let totalButcherPuanEarned = o.butcherPuanAccounts.find(p => p.code == 'total');
-            let totalKalittePuanEarned = o.kalittePuanAccounts.find(p => p.code == 'total');
+            // let totalButcherPuanEarned = o.butcherPuanAccounts.find(p => p.code == 'total');
+            // let totalKalittePuanEarned = o.kalittePuanAccounts.find(p => p.code == 'total');
             
             let shouldBePaid = Helper.asCurrency(total.alacak - total.borc);
 
@@ -288,7 +288,7 @@ export class CreditcardPaymentProvider {
     //             address: o.address,
     //             city: o.areaLevel1Text,
     //             contactName: o.name,
-    //             country: 'Turkey'
+    //             country: 'Turkey' 
     //         },
     //         shippingAddress: {
     //             address: o.address,

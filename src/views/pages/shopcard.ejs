@@ -51,7 +51,7 @@
 
         <div>
           <% var partners = controller.Butchers.filter(p=>p.enablePuan) %>
-          <% if (partners) { %>
+          <% if (partners.length > 0) { %>
             <h5 class="h5 mb-0">Kasap Kart&trade; İş Ortakları</h5>
             <p>
               Kasap Kart iş ortaklarımız kasap alışverişlerinizde size puan kazandırır.

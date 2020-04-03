@@ -40,14 +40,16 @@ export default class Route extends ViewRouter {
 
 
     async getOrderSummary() {
-        this.loadButchers();
-        let orders = await this.orderapi.getFromShopcard(this.shopcard);
-        for(var i = 0; i < orders.length; i++) {
-            let list = this.orderapi.getPossiblePuanGain(orders[i], this.shopcard.getButcherTotal(orders[i].butcherid));
-            this.possiblePuanList = this.possiblePuanList.concat(list);
+        await this.loadButchers();
+        if (this.shopcard.items.length > 0) {
+            let orders = await this.orderapi.getFromShopcard(this.shopcard);
+            for(var i = 0; i < orders.length; i++) {
+                let list = this.orderapi.getPossiblePuanGain(orders[i], this.shopcard.getButcherTotal(orders[i].butcherid));
+                this.possiblePuanList = this.possiblePuanList.concat(list);
+            }
+            this.possiblePuanList.forEach(pg => this.mayEarnPuanTotal += pg.earned)
+            this.mayEarnPuanTotal = Helper.asCurrency(this.mayEarnPuanTotal)    
         }
-        this.possiblePuanList.forEach(pg => this.mayEarnPuanTotal += pg.earned)
-        this.mayEarnPuanTotal = Helper.asCurrency(this.mayEarnPuanTotal)
     }
 
 

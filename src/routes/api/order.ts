@@ -394,6 +394,8 @@ export default class Route extends ApiRouter {
         let calculator = new PuanCalculator();
         let result: PuanResult[] = [];
 
+        return result;
+
         if (o.butcher.enablePuan && o.butcher.enableCreditCard) {            
             if (o.isFirstOrder) {
                 let firstOrderPuan = calculator.calculateCustomerPuan({
@@ -588,7 +590,7 @@ export default class Route extends ApiRouter {
             order.butcherid = parseInt(bi);
             order.butcher = await Butcher.findByPk(order.butcherid)
             order.butcherName = butchers[bi].name;
-            order.userId = this.req.user.id;
+            order.userId = this.req.user ? this.req.user.id: 0;
             order.areaLevel2Id = l2.id;
             order.areaLevel2Text = l2.name;
             // if (order.paymentType == 'onlinepayment') {

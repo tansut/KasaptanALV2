@@ -48,7 +48,7 @@ export class ShippingCost extends Modifier {
 }
 
 export let firstOrderDiscount = Object.assign(new Discount(), {
-    type: 'puan',
+    type: 'discount',
     code: 'ilksiparis',
     name: 'İlk sipariş indirimi',
     percent: 3,
@@ -394,6 +394,7 @@ export class ShopCard {
             if (!applied) {
                 if (!hasFirstOrder ) {
                     this.addButcherDiscount(b, Object.assign(new Discount(), {
+                        type: firstOrderDiscount.type,
                         code: firstOrderDiscount.code,
                         percent: firstOrderDiscount.percent,
                         name: firstOrderDiscount.name,
