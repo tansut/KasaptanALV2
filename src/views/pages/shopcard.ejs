@@ -73,7 +73,7 @@
                     alt="<%=b.name%>">
                   <div class="media-body  pl-2">
                    
-                      <h6 class="h6 mb-0 mt-3"><%= b.name %></h6>
+                      <h6 class="h6 mb-0"><%= b.name %></h6>
                       <span class="font-size-sm text-dark">
                    
                  
@@ -119,9 +119,11 @@
              
            
           <% }) %> 
+          <% if (controller.mayEarnPuanTotal > 0.00) { %>
           <span class="d-block">           
             Toplam <strong><%- include('./_partial/currency.ejs', {value: controller.mayEarnPuanTotal}) %></strong> değerinde puanı hesabınıza yüklüyoruz. 
           </span>
+          <% } %>
         </div>
           <%}%>
 

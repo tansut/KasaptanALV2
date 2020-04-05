@@ -9,15 +9,40 @@
 
 <% if (controller.shouldBePaid > 0 && order.butcher.enableCreditCard) { %>
   <%if (!hidePayLink) { %>
-    <div class="mt-3  text-center">
+    <div class="mt-3  ">
       <% if (controller.mayEarnPuanTotal > 0) { %>
-      <div class="alert alert-success">    
-       
-          <span>
-            Şimdi online ödeyin, <strong><%- include('./currency.ejs', {value: controller.mayEarnPuanTotal}) %></strong> değerinde puan kazanın.
-          </span>
-       
-      </div>
+        <% if (controller.mayEarnPuanTotal) { %>
+          <div class="mt-3 mb-3 alert alert-success text-center">
+        
+            
+              <strong>Tebrikler!</strong> <br> kasaptanAl.com alışverişiniz size <strong><%- include('./currency.ejs', {value: controller.mayEarnPuanTotal}) %></strong> değerinde puan kazandırdı.
+           
+          </div>
+          <div>
+        
+        
+            <% if (controller.possiblePuanList.length > 0) { %>
+              <div class="mb-3">
+             
+               <% controller.possiblePuanList.forEach(pg => { %>
+                <ul>
+                  <li>
+                    <strong><%- include('./currency.ejs', {value: pg.earned}) %></strong>, <%=pg.title%>
+        
+                  </li>
+                </ul>
+                 
+               
+              <% }) %> 
+        
+            </div>
+              <%}%>
+            
+        
+        
+          
+          </div>
+        <% } %>
       <%}%>
       <!-- <%- include('./currency.ejs', {value: controller.shouldBePaid}) %> -->
     
@@ -27,7 +52,7 @@
     <a class="btn btn-sm btn-success" href="/pay/<%=order.ordernum%>">Önline Ödeme</a>
   </div>
   <% } %>
-  <% } else { %>
+  <% } else if (controller.shouldBePaid <= 0) { %>
     <div class="mt-3 alert alert-success text-center">
       <div>
         <p class="text-success text-center">

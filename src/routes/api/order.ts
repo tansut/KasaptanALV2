@@ -104,6 +104,26 @@ export default class Route extends ApiRouter {
         return res;
     }
 
+    arrangeKalittePuans(o: Order) {
+        o.kalitteOnlyPuanAccounts = [];
+        o.kalitteByButcherPuanAccounts = [];
+
+        let kalitteCode = Account.generateCode("musteri-kalitte-kazanilan-puan", [o.userId, 1, o.ordernum]);
+        let kalitteByButcherCode = Account.generateCode("musteri-kalitte-kazanilan-puan", [o.userId, 2, o.ordernum]);
+
+
+        o.kalittePuanAccounts.forEach(a => {
+             if (a.code == kalitteCode) {
+                o.kalitteOnlyPuanAccounts.push(a);
+            } else if (a.code == kalitteByButcherCode) {
+                o.kalitteByButcherPuanAccounts.push(a)
+            }
+        })
+
+        AccountModel.addTotals(o.kalitteOnlyPuanAccounts)
+        AccountModel.addTotals(o.kalitteByButcherPuanAccounts)        
+    }
+
     async getOrder(num, checkFirst: boolean = false) {
         let order = await Order.findOne({
             where: {
@@ -122,9 +142,10 @@ export default class Route extends ApiRouter {
                 }]
             }]
         })
-        order.workedAccounts = await this.getWorkingAccounts(order)
-        order.butcherPuanAccounts = await this.getButcherPuanAccounts(order)
-        order.kalittePuanAccounts = await this.getKalittePuanAccounts(order)
+        order.workedAccounts = await this.getWorkingAccounts(order);
+        order.butcherPuanAccounts = await this.getButcherPuanAccounts(order);
+        order.kalittePuanAccounts = await this.getKalittePuanAccounts(order);
+        this.arrangeKalittePuans(order);
         if (checkFirst) {
             order.isFirstButcherOrder = await Order.findOne({ where: { userid: order.userId, butcherid: order.butcherid, ordernum: { [Op.ne]: order.ordernum } } }) == null;
             order.isFirstOrder = await Order.findOne({ where: { userid: order.userId } }) == null;
@@ -148,7 +169,7 @@ export default class Route extends ApiRouter {
             } else {
                 if (newStatus.startsWith('iptal')) {
                     let summary = await this.getAccountsSummary(o);
-                    let balance = Helper.asCurrency(summary['total'][1] - summary['total'][0]);
+                    let balance = Helper.asCurrency(summary.alacak - summary.borc);
                     if (balance > 0.00) {
                         let op = new AccountingOperation(`${o.ordernum} iptali`);
                         op.accounts.push(new Account("odeme-bekleyen-satislar", [o.userId, o.ordernum]).dec(balance))
@@ -402,15 +423,15 @@ export default class Route extends ApiRouter {
         let result: PuanResult[] = [];
 
         let firstOrder: Puan = {
-           
-                minPuanForUsage: 0.00,
-                minSales: 0.00,
-                name: 'ilk sipariş indirimi',
-                rate: 0.03
-         
+
+            minPuanForUsage: 0.00,
+            minSales: 0.00,
+            name: 'ilk sipariş indirimi',
+            rate: 0.03
+
         }
 
-        if (o.butcher.enablePuan && o.butcher.enableCreditCard) {
+        if (o.butcher.enableCreditCard) {
             if (o.isFirstButcherOrder) {
                 let firstOrderPuan = calculator.calculateCustomerPuan(firstOrder, total);
                 if (firstOrderPuan > 0.00 || includeAvailable) {
@@ -418,27 +439,61 @@ export default class Route extends ApiRouter {
                         type: "kalitte-by-butcher",
                         earned: firstOrderPuan,
                         id: o.butcherid.toString(),
-                        title: `kasaptanAl.com ilk sipariş hediye puanı`,
+                        title: `Kasap Kart™ programı ilk sipariş puanı`,
                         desc: `${o.ordernum} nolu ${o.butcherName} siparişi kasaptanAl.com Puan`,
                         based: firstOrder
                     })
                 }
-            } {
+            }
+
+            if (o.butcher.enablePuan) {
                 let butcherPuan = o.butcher.getPuanData()
                 let earnedPuanb = calculator.calculateCustomerPuan(butcherPuan, total);
                 if (earnedPuanb > 0.00 || includeAvailable) {
-                    result.push(
-                        {
-                            type: "butcher",
-                            earned: earnedPuanb,
-                            id: o.butcherid.toString(),
-                            title: o.butcher.name + ' Kasap Kart™ programı',
-                            desc: `${o.ordernum} nolu ${o.butcherName} sipariş Kasap Puan`,
-                            based: butcherPuan
+                    if (earnedPuanb == 0) {
+                        result.push(
+                            {
+                                type: "butcher",
+                                earned: earnedPuanb,
+                                id: o.butcherid.toString(),
+                                title: o.butcher.name + ' Kasap Kart™ programı',
+                                desc: `${o.ordernum} nolu ${o.butcherName} sipariş Kasap Puan`,
+                                based: butcherPuan
+                            }
+                        )
+                    } else {
+                        let toKalitte = Helper.asCurrency(earnedPuanb * 0.2);
+                        let toButcher = Helper.asCurrency(earnedPuanb - toKalitte);
+                        if (toButcher > 0.00) {
+                            result.push(
+                                {
+                                    type: "butcher",
+                                    earned: toButcher,
+                                    id: o.butcherid.toString(),
+                                    title: o.butcher.name + ' Kasap Kart™ programı',
+                                    desc: `${o.ordernum} nolu ${o.butcherName} sipariş Kasap Puan`,
+                                    based: butcherPuan
+                                }
+                            )
                         }
-                    )
+                        if (toKalitte > 0.00) {
+                            result.push(
+                                {
+                                    type: "kalitte-by-butcher",
+                                    earned: toKalitte,
+                                    id: o.butcherid.toString(),
+                                    title: `kasaptanAl.com Kasap Kart™ programı`,
+                                    desc: `${o.ordernum} nolu ${o.butcherName} sipariş kasaptanAl.com Puan`,
+                                    based: butcherPuan
+                                }
+                            )
+                        }
+                    }
                 }
             }
+
+
+
         }
 
         // if (o.isFirstOrder) {
@@ -510,17 +565,16 @@ export default class Route extends ApiRouter {
                 o.butcherPuanAccounts.push(acc)
             } else if (a.code == kalitteCode) {
                 o.kalittePuanAccounts.push(acc);
-                o.kalitteOnlyPuanAccounts.push(acc);
             } else if (a.code == kalitteByButcherCode) {
                 o.kalittePuanAccounts.push(acc);
-                o.kalitteByButcherPuanAccounts.push(acc)
             }
         })
 
+        this.arrangeKalittePuans(o);
+
         AccountModel.addTotals(o.butcherPuanAccounts)
         AccountModel.addTotals(o.kalittePuanAccounts)
-        AccountModel.addTotals(o.kalitteOnlyPuanAccounts)
-        AccountModel.addTotals(o.kalitteByButcherPuanAccounts)
+
     }
 
     async makeCreditcardPayment(ol: Order[], paymentInfo: PaymentResult, t?: Transaction): Promise<any> {
@@ -629,6 +683,10 @@ export default class Route extends ApiRouter {
             order.butcher = await Butcher.findByPk(order.butcherid)
             order.butcherName = butchers[bi].name;
             order.userId = this.req.user ? this.req.user.id : 0;
+            if (!order.userId) {
+                order.isFirstButcherOrder = true;
+                order.isFirstOrder = true;
+            }
             order.areaLevel2Id = l2 && l2.id;
             order.areaLevel2Text = l2 && l2.name;
             orders.push(order);

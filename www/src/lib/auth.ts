@@ -36,13 +36,16 @@ export class Auth {
                 });
             } catch (err) {
                 if (err && err.response && err.response.status == 400) {
-                    $('#si-email').val(tel);
-                    $('#si-password').focus();
+                    $('#si-email').val(tel);                    
                     App.activaTab("signin-tab");
+                    setTimeout(() => {
+                        $('#si-password').focus();
+                    }, 250);
                 } else {
                     App.gTag('signup', 'error-send-sms-code', tel);
+                    App.HandleError(err)
                 }
-                App.HandleError(err)
+                
             } finally {
             $('#btn-signup-sendsms').removeAttr("disabled");
                 

@@ -95,7 +95,9 @@
       </div>
 
 
+
 <% if (controller.butcherFee) { %>
+
 <div class="alert alert-info">
   <div class="row">
 
@@ -105,13 +107,17 @@
       </p>
       <p>
         -------------------<br>
-      <%=order.butcherName%> satış makbuzu: <%- include('./_partial/currency.ejs', {value: controller.butcherFee.inputTotal}) %>
+      <%=order.butcherName%> Sipariş Toplamı: <%- include('./_partial/currency.ejs', {value: controller.butcherFee.inputTotal}) %>
       </p>
       <span class="d-block"><%= __helper.formatDate(order.creationDate)%>, <%=order.areaLevel3Text%></span>
       <span class="d-block">Sipariş no: <%=order.ordernum%>/<%=order.name%></span>
-      <span class="d-block">Cironuza katkımız: <%- include('./_partial/currency.ejs', {value: controller.butcherFee.product}) %> + KDV
+      <!-- <span class="d-block">Cironuza katkımız: <%- include('./_partial/currency.ejs', {value: controller.butcherFee.product}) %> + KDV -->
       <span class="d-block">Topladığımız komisyon: <%- include('./_partial/currency.ejs', {value: controller.butcherFee.kalitteFee}) %> + KDV
       </span>
+      <% if (controller.butcherFee.butcherToCustomer > 0) { %>
+      <span class="d-block">Sadık müşteri puanı: <%- include('./_partial/currency.ejs', {value: controller.butcherFee.butcherToCustomer}) %> 
+      </span>      
+      <% } %>
       <span>
         <span class="d-block">
           Bu satışla KDV, kart komisyonu ve vergi avantajlarınız oldu. Detaylar için tıklayın:
