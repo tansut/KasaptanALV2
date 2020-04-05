@@ -48,7 +48,7 @@ export class ShippingCost extends Modifier {
 }
 
 export let firstOrderDiscount = Object.assign(new Discount(), {
-    type: 'discount',
+    type: 'puan',
     code: 'ilksiparis',
     name: 'İlk sipariş indirimi',
     percent: 3,

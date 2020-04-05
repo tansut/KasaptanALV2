@@ -4,6 +4,7 @@ import * as express from "express";
 import * as moment from 'moment';
 import Middleware from "./base";
 import email from "../lib/email";
+import config from "../config";
 
 var errormw: ErrorMiddleware;
 
@@ -18,11 +19,13 @@ class ErrorMiddleware extends Middleware {
         if (ErrorMiddleware.isXhr(req)) {
             let isHttpErr = err instanceof HttpError
             let httpErr = isHttpErr ? <HttpError>err: null;
-            let msg = httpErr ? httpErr.message : err.name || err.message
+            let msg = httpErr ? httpErr.message : err.name || err.message;
+            if (config.nodeenv != 'development') {
             email.send('tansut@gmail.com', 'hata/XHR: kasaptanAl.com', "error.ejs", {
                 text: err + '/' + err.sql,
                 stack: err.stack
             })
+        }
             
             res.status((httpErr && httpErr.statusCode) ? httpErr.statusCode : 500).send({ msg: msg })
         } else {

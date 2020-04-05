@@ -99,11 +99,17 @@ export default class Route extends PaymentRouter {
     }
 
     getPaymentRequest() {
-        let request = this.paymentProvider.requestFromOrder([this.order]);
         let total = this.order.workedAccounts.find(p => p.code == 'total');
-        let shouldBePaid = total.alacak - total.borc;
+        let shouldBePaid = Helper.asCurrency(total.alacak - total.borc);
+        if (shouldBePaid <= 0.00)
+            throw new Error("Geçersiz ödeme işlemi, siparişin borcu yoktur");        
+
+        this.api.fillPuanAccounts(this.order, shouldBePaid);
+        let request = this.paymentProvider.requestFromOrder([this.order]);
+
         if (shouldBePaid != request.paidPrice)
             throw new Error("Geçersiz sipariş ve muhasebesel tutarlar");
+
         return request;
     }
 

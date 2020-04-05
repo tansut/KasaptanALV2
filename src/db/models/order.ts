@@ -24,10 +24,18 @@ const orderid = require('order-id')('dkfjsdklfjsdlkg450435034.,')
 })
 class Order extends BaseModel<Order> {
 
+    isFirstButcherOrder: boolean = false;
     isFirstOrder: boolean = false;
     workedAccounts: AccountModel[] = [];
     butcherPuanAccounts: AccountModel[] = [];
     kalittePuanAccounts: AccountModel[] = [];
+
+    kalitteOnlyPuanAccounts: AccountModel[] = [];
+    kalitteByButcherPuanAccounts: AccountModel[] = [];
+    
+    
+
+
 
     puanSummary: PuanResult [] = [];
 
@@ -316,7 +324,7 @@ class Order extends BaseModel<Order> {
         o.note = c.note;
         o.status = OrderItemStatus.supplying;
         let firstDiscount = c.getButcherDiscount(bi, firstOrderDiscount.code)
-        o.isFirstOrder = firstDiscount != null;
+        o.isFirstButcherOrder = firstDiscount != null;
         o.discountTotal = c.getButcherDiscountTotal(bi);
         o.subTotal = c.butchers[bi].subTotal;        
         o.shippingTotal = c.getShippingCost(bi);

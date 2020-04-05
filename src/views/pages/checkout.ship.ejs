@@ -37,6 +37,11 @@
             <%- include('./_partial/checkout-steps.ejs', {   step: 1        }); %>
             <% for (let bi in shopcard.shipment) { %>
             <% let shipment = shopcard.shipment[bi]%>
+
+            <%
+             var cannotShip = !shipment.dispatcher || ((shipment.dispatcher.min > shipment.subTotal)) || ((shipment.dispatcher.takeOnly));
+            
+            %>
             <div class="border mb-4">
               <div class="bg-secondary p-3  mb-4"><a class="media align-items-center" href="/<%=shopcard.butchers[bi].slug%>"><img class="rounded-circle header-img"  
                 src="<%= `${__req.helper.imgUrl('butcher-google-photos', shopcard.butchers[bi].slug)}` %>" alt="<%=shopcard.butchers[bi].name%>">
@@ -84,6 +89,42 @@
                  
               </div>
               <%} %>
+
+   
+              <% if (shopcard.shipment[bi].dispatcher && (shopcard.shipment[bi].dispatcher.takeOnly)) { %>
+                <div class="alert alert-accent mx-4 mb-4" v-if="card && card.shipment[<%=bi%>].dispatcher.takeOnly">
+                  <p class="font-size-sm">
+                    <%=shipment.dispatcher.name%> bu bölgede sadece gel-al hizmeti vermektedir.
+                </p>  
+               
+                 </div> 
+
+              <% } else if (shipment.dispatcher && (shipment.dispatcher.min > shopcard.butchers[bi].subTotal)) { %>
+                <div class="alert alert-accent mx-4 mb-4" v-if="card && card.shipment[<%=bi%>].howTo == 'ship'">
+                  <p class="font-size-sm">
+                 
+                  <%=shipment.dispatcher.name%>, <%- include('./_partial/currency.ejs', {value: shipment.dispatcher.min}) %> ve üzeri siparişleri bu bölgeye teslim etmekte.
+                  Alışveriş toplamınız <%- include('./_partial/currency.ejs', {value: shopcard.butchers[bi].subTotal}) %> olarak gözüküyor.
+                </p>  
+                <p class="font-size-sm"> 
+                  <a class="alert-link" href="/<%=shopcard.butchers[bi].slug%>"><%= shopcard.butchers[bi].name %></a> ürünlerine göz atabilirsiniz.                    
+                </p>
+                 </div> 
+              
+
+              <% } else if (shopcard.getShippingCost(bi) > 0) { %>
+                <div class="alert alert-info mx-4 mb-4" v-if="card && card.shipment['<%=bi%>'].howTo == 'ship'">
+                  <p class="font-size-sm">
+                  Alışveriş toplamınız <%- include('./_partial/currency.ejs', {value: shopcard.butchers[bi].subTotal}) %> olarak gözüküyor.
+                  <%=shipment.dispatcher.name%>, <%- include('./_partial/currency.ejs', {value: shipment.dispatcher.totalForFree}) %> ve üzeri siparişleri bu bölgeye ücretsiz teslim etmekte.
+                </p>  
+                <p class="font-size-sm"> 
+                  <a class="alert-link" href="/<%=shopcard.butchers[bi].slug%>"><%= shopcard.butchers[bi].name %></a> ürünlerine göz atabilirsiniz veya bu şekilde devam edebilirsiniz.                    
+                </p>
+                 </div> 
+                  <%}%>
+
+              
              <div class="table-responsive">
                 <table class="table font-size-sm ">
                   <tbody>                   
@@ -181,39 +222,7 @@
                 </div> 
 
 
-                
-                <% if (shopcard.shipment[bi].dispatcher && (shopcard.shipment[bi].dispatcher.takeOnly)) { %>
-                  <div class="alert alert-accent mx-4 mb-4" v-if="card && card.shipment[<%=bi%>].dispatcher.takeOnly">
-                    <p class="font-size-sm">
-                      <%=shipment.dispatcher.name%> bu bölgede sadece gel-al hizmeti vermektedir.
-                  </p>  
-                 
-                   </div> 
-
-                <% } else if (shopcard.shipment[bi].dispatcher && (shopcard.shipment[bi].dispatcher.min > shopcard.butchers[bi].subTotal)) { %>
-                  <div class="alert alert-accent mx-4 mb-4" v-if="card && card.shipment[<%=bi%>].howTo == 'ship'">
-                    <p class="font-size-sm">
-                    Alışveriş toplamınız <%- include('./_partial/currency.ejs', {value: shopcard.butchers[bi].subTotal}) %> olarak gözüküyor.
-                    <%=shipment.dispatcher.name%>, <%- include('./_partial/currency.ejs', {value: shipment.dispatcher.min}) %> ve üzeri siparişleri bu bölgeye teslim etmekte.
-                  </p>  
-                  <p class="font-size-sm"> 
-                    <a class="alert-link" href="/<%=shopcard.butchers[bi].slug%>"><%= shopcard.butchers[bi].name %></a> ürünlerine göz atabilirsiniz.                    
-                  </p>
-                   </div> 
-                
-
-                <% } else if (shopcard.getShippingCost(bi) > 0) { %>
-                  <div class="alert alert-info mx-4 mb-4" v-if="card && card.shipment['<%=bi%>'].howTo == 'ship'">
-                    <p class="font-size-sm">
-                    Alışveriş toplamınız <%- include('./_partial/currency.ejs', {value: shopcard.butchers[bi].subTotal}) %> olarak gözüküyor.
-                    <%=shipment.dispatcher.name%>, <%- include('./_partial/currency.ejs', {value: shipment.dispatcher.totalForFree}) %> ve üzeri siparişleri bu bölgeye ücretsiz teslim etmekte.
-                  </p>  
-                  <p class="font-size-sm"> 
-                    <a class="alert-link" href="/<%=shopcard.butchers[bi].slug%>"><%= shopcard.butchers[bi].name %></a> ürünlerine göz atabilirsiniz veya bu şekilde devam edebilirsiniz.                    
-                  </p>
-                   </div> 
-                    <%}%>
-
+             
 
             </div>
               

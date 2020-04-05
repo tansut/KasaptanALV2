@@ -29,6 +29,11 @@
     </div>
   </div>
 
+  <%
+  
+  var showShopBtn = false;
+  
+  %>
   <form method="POST" onsubmit="return App.Auth.checkAuthentication('/alisveris-sepetim/ship')" novalidate
   class="needs-validation" action="/alisveris-sepetim/savecard">
   <div class="container pb-5 mb-3 ">
@@ -37,7 +42,7 @@
       <section class="col-lg-8">
         <!-- <%- include('./_partial/checkout-steps.ejs', {   step: 0        }); %> -->
      
-        <div class="alert alert-secondary">
+        <div class="p-3 border bg-secondary">
 
 
           <h4 class="h4">Güvendesiniz.</h4>
@@ -52,16 +57,36 @@
         <div>
           <% var partners = controller.Butchers.filter(p=>p.enablePuan) %>
           <% if (partners.length > 0) { %>
-            <h5 class="h5 mb-0">Kasap Kart&trade; İş Ortakları</h5>
-            <p>
-              Kasap Kart iş ortaklarımız kasap alışverişlerinizde size puan kazandırır.
-            </p>
-            <% controller.Butchers.forEach(b=> {  %>
-              <% var puan = b.getPuanData()  %>
 
-              <% if (puan != null) { %>
-                <span class="font-weight-medium"><%=b.name %>:</span> 
-                <%- include('./_partial/puan-data-view.ejs', {puan: puan, hideMinPuanForUsage: true}) %>
+            <div class="border p-3 mb-3">
+              <h5 class="h5 mb-0">Kasap Kart&trade; İş Ortakları</h5>
+              <p>
+                Kasap Kart iş ortaklarımız kasap alışverişlerinizde size puan kazandırır.
+              </p>
+              <% controller.Butchers.forEach(b=> {  %>
+                <% var puan = b.getPuanData()  %>
+  
+                <% if (puan != null) { %>
+                  <div class="mb-3">
+                  <a class="d-flex flex-nowrap justify-content-between align-items-center" href="/<%=b.slug%>"><img
+                    class="rounded-circle header-img" src="<%= `${__req.helper.imgUrl('butcher-google-photos', b.slug)}` %>"
+                    alt="<%=b.name%>">
+                  <div class="media-body  pl-2">
+                   
+                      <h6 class="h6 mb-0 mt-3"><%= b.name %></h6>
+                      <span class="font-size-sm text-dark">
+                   
+                 
+                  <%- include('./_partial/puan-data-view.ejs', {puan: puan, hideMinPuanForUsage: true}) %>
+                    
+
+                    </span>
+                  </div>
+                </a></div>
+            </div>
+
+
+          
   
               <% } %>
             <% }) %>
@@ -70,15 +95,25 @@
         </div>
           
         <% if (controller.possiblePuanList.length > 0) { %>
-          <div class="mb-3 alert alert-info rounded-0">
+          <div class="mb-3 text-info border p-3">
          
             <h5 class="h5">Bu alışverişinizle kazandığınız puanlar</h4>
          
            <% controller.possiblePuanList.forEach(pg => { %>
             <ul>
               <li>
-                <strong><%- include('./_partial/currency.ejs', {value: pg.earned}) %></strong>, <%=pg.title%>
+              
+                <strong class="<%=pg.earned <= 0.00 ? 'text-muted':''%>"><%- include('./_partial/currency.ejs', {value: pg.earned}) %></strong>, <%=pg.title%>
+                <% if (pg.earned <= 0.00) {%>
+                  <% showShopBtn = true%>
+                  <div class="text-dark font-size-sm">
+                    <%- include('./_partial/puan-data-view.ejs', {puan: pg.based, hideMinPuanForUsage: true}) %>
+                  
+                      
+              
+                  </div>
 
+                <% } %>
               </li>
             </ul>
              
@@ -92,6 +127,11 @@
 
           <div class="text-center">
             <% if (shopcard.items.length) { %>   
+              <% if (showShopBtn) { %>
+              <a class="btn btn-sm btn-accent" href="/kasap-urunleri">Alışverişe Devam</a>
+                <% } %>
+
+
               <button data-tag="true" data-category="checkout" data-action="view/start" data-label="<%=__req.user ? __req.user.mphone: ''  %>" data-value="<%=shopcard.items.length%>" class="btn btn-primary btn-sm  " type="submit" value="true" name="checkout"
               id="checkout">Sonraki Adım <i class="czi-arrow-right ml-1"></i></button>
             <%} else { %>
@@ -155,7 +195,7 @@
                       <% } %>
                     </div>
 <% if (controller.mayEarnPuanTotal > 0.00) { %>
-  <div class="mt-3 text-center font-weight-medium">
+  <div class="text-info mt-3 text-center font-weight-medium">
     <h6>
       Kazandığınız Puan
     </h6>

@@ -99,8 +99,10 @@ export default class Helper {
 
 
     static formatDate(date: Date, useTime: boolean = false) {
+        if (date) {
         const options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
         return date.toLocaleDateString('tr-TR', options);
+        } else return ''
     }
 
     static UtcNow() {

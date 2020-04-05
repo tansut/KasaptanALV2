@@ -53,8 +53,8 @@
                                 <th>Sipariş #</th>
                                 <th>Tarih</th>
                                 <th>Durum</th>
-                                <!-- <th>İndirimler</th> -->
-                                <th>Toplam</th>
+                             
+                                <th>Kasap</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -69,9 +69,8 @@
                                         <%- include('./_partial/currency.ejs', {value: -1*p.discountTotal}) %>
                                 </td>                                 -->
                                 <td class="py-3">
-
-                                        <%- include('./_partial/currency.ejs', {value: p.total}) %>
-                                </td>
+                                    <%=p.butcherName%>
+                                    </td>
                             </tr>
                           <% }) %>
                         </tbody>

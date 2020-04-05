@@ -8,6 +8,8 @@ import SiteLogRoute from '../../routes/api/sitelog';
 import { Transaction, or } from "sequelize";
 import Payment from '../../db/models/payment';
 import { ComissionHelper } from '../commissionHelper';
+import AccountModel from '../../db/models/accountmodel';
+import { Account } from '../../models/account';
 
 const paymentConfig = require(path.join(config.projectDir, `payment.json`));
 
@@ -186,9 +188,10 @@ export class CreditcardPaymentProvider {
         let price = 0.00, paidPrice = 0.00;
         ol.forEach((o, j) => {            
             let total = o.workedAccounts.find(p => p.code == 'total');
-            // let totalButcherPuanEarned = o.butcherPuanAccounts.find(p => p.code == 'total');
-            // let totalKalittePuanEarned = o.kalittePuanAccounts.find(p => p.code == 'total');
-            
+            let butcherPuanEarned = o.butcherPuanAccounts.find(p => p.code == 'total');
+            let kalitteOnlyPuanEarned = o.kalitteOnlyPuanAccounts.find(p => p.code == 'total');
+            let kalitteByButcherEarned = o.kalitteByButcherPuanAccounts.find(p => p.code == 'total');
+
             let shouldBePaid = Helper.asCurrency(total.alacak - total.borc);
 
             let merchantPrice = 0.00;                                          
@@ -196,7 +199,13 @@ export class CreditcardPaymentProvider {
             if (this.marketPlace) {
                 let calc = new ComissionHelper(o.butcher.commissionRate, o.butcher.commissionFee);
                 let totalFee = calc.calculateButcherComission(shouldBePaid)
-                merchantPrice = Helper.asCurrency(totalFee.inputTotal - totalFee.kalitteFee - totalFee.kalitteVat)
+                merchantPrice = Helper.asCurrency(totalFee.inputTotal - totalFee.kalitteFee - totalFee.kalitteVat);
+                let butcherPuan = Helper.asCurrency(butcherPuanEarned.alacak - butcherPuanEarned.borc);
+                let kalitteByButcherPuan = Helper.asCurrency(kalitteByButcherEarned.alacak - kalitteByButcherEarned.borc);
+                let totalPuanByButcher = Helper.asCurrency(butcherPuan + kalitteByButcherPuan);
+
+                merchantPrice = Helper.asCurrency(merchantPrice - totalPuanByButcher)
+
             }
             basketItems.push({
                 category1: o.butcherName,

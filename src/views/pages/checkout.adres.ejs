@@ -97,7 +97,7 @@
             </div>
             <div class="text-center">
               <p class="text-center">
-                Siparişiniz şu an bulunduğunuz konuma mı gelsin ? Sorunsuz teslimat için tam konumunuzu almak isteriz. 
+                Siparişiniz şu an bulunduğunuz konuma mı gelsin ?<br> <strong>Sorunsuz teslimat için </strong> tam konumunuzu almak isteriz. 
               </p>
               <input type="hidden" name="lat" value="0" id="lat">
               <input type="hidden" name="long" value="0" id="long">
@@ -150,14 +150,18 @@
 
   function setGeoLocation() {
     $('#getlatlong').attr('disabled', "true");
+    $('#getlatlong').text("Hesaplıyorum...");
     window.App.GetGeoLocation().then(function(position) {
       $('#lat').val(position.coords.latitude);
       $('#long').val(position.coords.longitude);
       $('#accuracy').val(position.coords.accuracy);
-      alert('Tam konumunuzu aldık, teşekkürler.')
+      alert('Tam konumunuzu aldık, teşekkürler.');
+      $('#getlatlong').text("Başarıyla Aldık");
     }).catch(function(err) {
-      alert('Konumunuzu maalesef alamadık, adresinizi yazmanız yeterli.')
-    }).finally(function() {
+      alert('Konumunuzu maalesef alamadık, adresinizi yazmanız yeterli.');
+      $('#getlatlong').text("Tekrar Deneyin");
+
+    }).finally(function() {    
       $('#getlatlong').removeAttr("disabled");
     })
   }

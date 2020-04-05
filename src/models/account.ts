@@ -7,7 +7,7 @@ export type AccountType =  "active" | "passive"
 export type ParentAccount =  "kredi-karti-provizyon" | "havuz-hesabi" | 
 "kredi-karti-provizyon-iade" | "kredi-karti-odemeleri" | "banka" | "musteri-kalitte-kazanilan-puan" |
 "kasap-puan-giderleri" | "kasap-urun-giderleri" | "kalitte-puan-giderleri" | "musteri-kasap-kazanilan-puan" |
-"odeme-sirketi-giderleri" | "odeme-bekleyen-satislar" | "satis-alacaklari" | "düşülen-satis-bedelleri"
+"odeme-sirketi-giderleri" | "odeme-bekleyen-satislar" | "satis-alacaklari" | "satis-indirimleri"
 
 export interface AccountInfo {
     type: AccountType,
@@ -96,9 +96,9 @@ export let KnownAccounts: {[key: string]: AccountInfo} = {
         code: "206"
     },
 
-    "düşülen-satis-bedelleri": {
+    "satis-indirimleri": {
         type: "active",
-        name: "",
+        name: "Uygulanan Satış İndirimleri",
         code: "207"
     }
 }
@@ -110,7 +110,9 @@ export class Account {
     info: AccountInfo;
     borc: number;
     alacak: number;   
-    desc: string; 
+    opDesc: string; 
+    itemDesc: string; 
+
 
     static getType(parent: ParentAccount) {
         let item = KnownAccounts[parent];
@@ -125,23 +127,24 @@ export class Account {
 
     inc(val: number) {
         if (this.info.type == 'active')
-            this.borc += val;
-        else this.alacak +=val;
+            this.borc += Helper.asCurrency(val);
+        else this.alacak += Helper.asCurrency(val);
         return this;
     }
 
     dec(val: number) {
         if (this.info.type == 'active')
-            this.alacak += val;
-        else this.borc +=val;
+            this.alacak += Helper.asCurrency(val);
+        else this.borc += Helper.asCurrency(val);
         return this;
     }
 
-    constructor(parent: ParentAccount, subValues: Object[]) {
+    constructor(parent: ParentAccount, subValues: Object[], itemDesc: string='') {
         this.info = Account.getType(parent);
         this.code = Account.generateCode(parent, subValues);    
         this.borc = 0.00;
         this.alacak = 0.00;    
+        this.itemDesc = itemDesc;
     }
 }
 
@@ -166,7 +169,9 @@ export class AccountingOperation {
 
     validate() {
         let s = this.summary();
-        if (s[0] != s[1]) throw new Error("Invalid accounting operation");
+        if (s[0] != s[1]) {
+            throw new Error("Invalid accounting operation");
+        } 
         else return s
     }
 }

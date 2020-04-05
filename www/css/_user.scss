@@ -90,6 +90,10 @@ html {
   //}
 }
 
+a {
+  text-decoration: none !important;
+}
+
 .avatar {
   border-radius: 50%;
   display: inline-block;
@@ -238,7 +242,7 @@ img{
   }
 
   .header-img {
-    width: 3.0rem;
+    width: 3rem;
   }
 
   .item-slider-sm {

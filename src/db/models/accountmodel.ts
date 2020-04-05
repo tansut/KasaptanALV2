@@ -6,6 +6,7 @@ import { SaveOptions } from 'sequelize/types';
 const orderid = require('order-id')('dkfjsdklfjsdlkg450435034.,')
 import * as sq from 'sequelize';
 import { Op } from 'sequelize';
+import { threadId } from 'worker_threads';
 
 
 @Table({
@@ -24,6 +25,33 @@ import { Op } from 'sequelize';
 
 class AccountModel extends BaseModel<AccountModel> {
 
+    static fromAccount(l: Account) {
+        return new AccountModel({            
+                borc: l.borc,
+                alacak: l.alacak,
+                code: l.code,
+                opDesc: l.opDesc,                
+                itemDesc: l.itemDesc,
+                date: Helper.Now()
+          
+        })
+    }
+
+    static addTotals(list: AccountModel []) {
+        let b = 0.00, a = 0.00;        
+        list.forEach(l=> {
+            b+=Helper.asCurrency(l.borc);
+            a+=Helper.asCurrency(l.alacak);
+        })
+
+        list.push(new AccountModel({
+            alacak: Helper.asCurrency(a),
+            borc: Helper.asCurrency(b),
+            code: 'total',
+            desc: 'Toplam'
+        }))
+    }
+
     static async list(codes: string[]) {
         let list = await AccountModel.findAll({
             where: {
@@ -37,19 +65,9 @@ class AccountModel extends BaseModel<AccountModel> {
             },
             order: [['date', 'asc']]
         })
-        let b = 0.00, a = 0.00;
 
-        list.forEach(l=> {
-            b+=Helper.asCurrency(l.borc);
-            a+=Helper.asCurrency(l.alacak);
-        })
 
-        list.push(new AccountModel({
-            alacak: Helper.asCurrency(a),
-            borc: Helper.asCurrency(b),
-            code: 'total',
-            desc: 'Toplam'
-        }))
+        AccountModel.addTotals(list)
 
         return list;
     }
@@ -83,24 +101,24 @@ class AccountModel extends BaseModel<AccountModel> {
     static async saveOperation(list: AccountingOperation, ops: SaveOptions) {
         let arr = [];
         list.accounts.forEach((l, i) => {
-            var dbItem = new AccountModel({
-                accorder: i + 1,
-                borc: l.borc,
-                alacak: l.alacak,
-                code: l.code,
-                desc: list.desc,
-                operation: list.opcode,
-                date: Helper.Now()
-            })            
+            var dbItem = AccountModel.fromAccount(l);
+            dbItem.accorder = i;
+            dbItem.operation = list.opcode;
+            dbItem.opDesc = list.desc;
             arr.push(dbItem.save(ops))      
         })
-        Promise.all(arr);
+        return Promise.all(arr);
     }
 
     @Column({
         allowNull: false
     })
     code: string;
+
+    @Column({
+        allowNull: true
+    })
+    name: string;    
 
     @Column({
         allowNull: false,
@@ -123,7 +141,12 @@ class AccountModel extends BaseModel<AccountModel> {
     @Column({
         allowNull: false
     })
-    desc: string;
+    opDesc: string;
+
+    @Column({
+        allowNull: false
+    })
+    itemDesc: string;    
     
     @Column({
         allowNull: false        

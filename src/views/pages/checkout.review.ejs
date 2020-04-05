@@ -246,6 +246,23 @@
           <%- include('./_partial/currency.ejs', {value: d.calculated}) %>
         </span></li>
       <%})%>
+      <li>
+        <% if ((onlineTotal >  0) && (controller.mayEarnPuanTotal > 0)) { %>
+        <div class="mt-3 alert alert-success text-center">
+         
+       
+            
+            <span>
+              Tebrikler! Bu siparişinizden <strong><%- include('./_partial/currency.ejs', {value: controller.mayEarnPuanTotal}) %></strong> değerinde puan kazandınız.
+            </span>
+            
+        
+        
+        
+        </div>
+        <%}%>
+
+      </li>
       <li class="font-weight-bolder d-flex justify-content-between align-items-center"><span class="mr-2">
           Genel Toplam:</span><span class="font-size-normal ">
           <%- include('./_partial/currency.ejs', {value: shopcard.total}) %>

@@ -1,3 +1,11 @@
+<%
+
+var hideBorc = typeof(hideBorc) != 'undefined' ? hideBorc: false;
+var hideAlacak = typeof(hideAlacak) != 'undefined' ? hideAlacak: false;
+var showDate = typeof(showDate) != 'undefined' ? showDate: false;
+
+%>
+
 <div class="accordion mb-2" id="payment-method" role="tablist">
   <div class="card">
     <div class="card-header" role="tab">
@@ -11,34 +19,54 @@
         <div class="table-responsive">
           <table class="font-size-sm table ">
             <tr>
+              <% if (showDate) { %>
+                <td class="text-left">
+                  Tarih
+                </td>
+                <% } %>              
               <td>
                 
               </td>
+              <% if (!hideBorc) { %>
               <td class="text-right">
                 Borç
               </td>
+              <% } %>
+              <% if (!hideAlacak) { %>
               <td class="text-right">
                 Alacak
               </td>
+              <% } %>
+
             </tr>
             <% accounts.forEach((o, i) => { %>
             <tr class="<%= o.code == 'total' ? 'font-weight-bold':'' %>">
           
-          
+              <% if (showDate) { %>
+                <td class="text-left">
+                  <%= __helper.formatDate(o.date)%>
+                </td>
+                <% } %>              
+              
               <td>
-                <%=o.desc%>
+                <%=o.opDesc%>
+                <% if (o.itemDesc) { %>
+                  / <%=o.itemDesc%>
+                <% } %>
               </td>
-          
+              <% if (!hideBorc) { %>
               <td class="text-right">
                 <%- include('./currency.ejs', {value: o.borc}) %>
           
               </td>
+              <% } %>
           
+              <% if (!hideAlacak) { %>
               <td class="text-right">
                 <%- include('./currency.ejs', {value: o.alacak}) %>
           
               </td>
-          
+              <% } %>
           
             </tr>
           

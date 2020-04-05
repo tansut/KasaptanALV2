@@ -27,19 +27,29 @@
                     <div class="cz-carousel-inner"
                         data-carousel-options='{"items": 1, "autoplay": false, "controls": true, "loop": false}'>
 
-                     
+                     <% if (!__req.user) { %>
                                 <div
                                     class="pt-4 pb-md-4 text-center">
-                                    <span class="h2 d-block font-weight-light pb-1 ">ilk siparişinize özel</span>
-                                    <span class="h1 d-block display-4  ">%3 indirim</span>
-                                    <span class="h5 d-block  font-weight-light pb-3 ">anında kazanın, online veya kapıda ödeyin.</span>
+                                    <span class="h2 d-block font-weight-light pb-1 ">şimdi üye olun</span>
+                                    <span class="h1 d-block display-4  ">%3 ilk sipariş puanı</span>
+                                    <span class="h5 d-block  font-weight-light pb-3 ">kazanın.</span>
 
                                     <a class="btn btn-primary btn-shadow "
-                                        href="/kasap-urunleri">Alışverişe Başla<i
+                                        href="javascript:window.App.showSignupDlg()">Fırsatı Yakala<i
                                             class="czi-arrow-right ml-2 mr-n1"></i></a>
                                 </div>
                     
-                
+                <% } %>
+                <div
+                class="pt-4 pb-md-4 text-center">
+                <span class="h2 d-block font-weight-light pb-1 ">alışverişleriniz daha kârlı</span>
+                <span class="h1 d-block display-4  ">Kasap Kart&trade;</span>
+                <span class="h5 d-block  font-weight-light pb-3 ">dünyasına hoş geldiniz</span>
+
+                <a class="btn btn-primary btn-shadow "
+                    href="/blog/kasap-kart">Daha Fazlası<i
+                        class="czi-arrow-right ml-2 mr-n1"></i></a>
+            </div>
 
                                 <div
                                     class=" pt-4 pb-md-4 text-center ">
@@ -55,7 +65,7 @@
                                
                                 <div
                                     class=" pt-4 pb-md-4 text-center ">
-                                    <span class="h2 d-block font-weight-light pb-1 ">en doğalını sunuyoruz</span>
+                                    <span class="h2 d-block font-weight-light pb-1 ">en iyisini sunuyoruz</span>
                                     <span class="h1 d-block display-4  ">çünkü usta kasaplarla</span>
                                     <span class="h5 d-block font-weight-light pb-3 ">çalışıyoruz.</span>
 

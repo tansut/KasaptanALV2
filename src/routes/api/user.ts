@@ -92,8 +92,15 @@ export default class UserRoute extends ApiRouter {
             throw new http.ValidationError("Geçersiz ad soyad");
         user.email = this.req.body.email;
         user.name = this.req.body.name;
-        await user.save();
-        await email.send( user.email, "iyi et rehberi", "meatguide.ejs", {
+        try {
+            await user.save();
+        } catch(err) {
+            if (err.original && err.original.code == 'ER_DUP_ENTRY') {
+                throw new http.ValidationError(user.email + ' e-posta adresi sistemimizde mevcut. Lütfen başla bir e-posta adresi girin.', 400);
+
+            }            
+        }
+        email.send( user.email, "iyi et rehberi", "meatguide.ejs", {
             email:  user.email
         })
         await this.authenticateRoute()

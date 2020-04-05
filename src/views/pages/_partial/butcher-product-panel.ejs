@@ -42,7 +42,7 @@ class="gallery-item-caption"><%= butcherVideo.title %></span></a>
           </div>
           <% } %>
 
-          <% if (view.butcher.earnedPuan > 0.00) { %>
+          <% if (false) { %>
             <div class="font-size-sm mt-3">
               <p class="text-success">
                  Birikmiş puanınız var: <%- include('./currency.ejs', {value: view.butcher.earnedPuan}) %>
@@ -113,8 +113,8 @@ class="gallery-item-caption"><%= butcherVideo.title %></span></a>
 
     <% if (view.butcher.puanData) { %>
       <div class="text-accent px-3 font-size-sm mt-3">
-        <span class="text-dark"><%=view.butcher.name%>, Kasap Kart&trade; iş ortağıdır.</span>
-        <%- include('./puan-data-view.ejs', {puan: view.butcher.puanData, hideMinPuanForUsage: true}) %>
+        <span class="text-dark"><%=view.butcher.name%>, Kasap Kart&trade; iş ortağıdır, alışverişlerinizden puan kazanabilirsiniz.</span>
+        <!-- <%- include('./puan-data-view.ejs', {puan: view.butcher.puanData, hideMinPuanForUsage: true}) %> -->
     
       </div>
     <% } %>    

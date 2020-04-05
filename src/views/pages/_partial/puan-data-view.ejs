@@ -1,6 +1,6 @@
 <% var hideMinPuanForUsage = typeof(hideMinPuanForUsage) == 'undefined' ? false: hideMinPuanForUsage %>
 
-      <p>
+      <span>
         <% if (puan.minSales > 0.00) { %>
           <%- include('./currency.ejs', {value: puan.minSales}) %> ve üzeri alışveriş yapın,
   
@@ -16,6 +16,6 @@
           
           <% } %>
 
-      </p>
+        </span>
 
     

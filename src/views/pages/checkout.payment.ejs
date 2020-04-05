@@ -64,13 +64,16 @@
                       </div>
                     </td>
                     <td class="align-middle">
-                      <span class="text-dark font-weight-medium">Online ödeme </span><br><span
+                      <span class="text-dark font-weight-medium">Güvenli online ödeme</span><br><span
                         class="text-muted">
                         
                           
-                          <span class="font-weight-medium">Güvendesiniz.</span> Siparişiniz hazır olduğunda online ödeme yapmanız için haber vermekteyiz.
+                          <span class="font-weight-medium text-dark"></span>Tüm ürünlerim hazırlandığında haber verin, halledeyim.
                       
                       </span>
+                      <p class="mt-3">
+                        <i class="czi-announcement"></i> Sizlerin ve kasaplarımızın sağlığına önem veriyoruz, güvenli teslimat seçeneği ile isterseniz kapınıza asabiliyoruz.  
+                      </p>
                       <!-- <% if (butcher.enablePuan)  { %>
                       <div class="mt-3">
                         <span class="font-weight-medium mb-2">
@@ -90,9 +93,9 @@
 
                       <% } %> -->
 
-                      <% if (controller.possiblePuanList.length > 0) { %>
+                      <% if (controller.mayEarnPuanTotal > 0) { %>
                         <div class="alert alert-info rounded-0 mb-3 mt-3">
-                          <h6 class="h6">Online alışverişiniz size puan kazandırdı.</h4>
+                          <h6 class="h6">Online ödeme size puan kazandırır</h4>
                        
                         <!-- <% controller.possiblePuanList.forEach(pg => { %>
                            <span class="d-block">
@@ -118,7 +121,7 @@
             </td>
             <td class="align-middle"><span class="text-dark font-weight-medium">Teslim alırken nakit</span><br><span
                 class="text-muted">
-                Lezzetleri teslim alırken nakit öderim.
+                Lezzetleri teslim alırken kapıda nakit öderim.
 
               </span></td>
             </tr>
@@ -132,7 +135,7 @@
               </td>
               <td class="align-middle"><span class="text-dark font-weight-medium">Teslim alırken kredi
                   kartı</span><br><span class="text-muted">
-                  Lezzetleri teslim alırken kredi kartımla öderim.
+                  Lezzetleri teslim alırken kapıda kredi kartımla öderim.
                 </span></td>
             </tr>
             </tbody>

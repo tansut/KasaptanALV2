@@ -44,7 +44,7 @@ export default class Route extends ViewRouter {
         if (this.shopcard.items.length > 0) {
             let orders = await this.orderapi.getFromShopcard(this.shopcard);
             for(var i = 0; i < orders.length; i++) {
-                let list = this.orderapi.getPossiblePuanGain(orders[i], this.shopcard.getButcherTotal(orders[i].butcherid));
+                let list = this.orderapi.getPossiblePuanGain(orders[i], this.shopcard.getButcherTotal(orders[i].butcherid), true);
                 this.possiblePuanList = this.possiblePuanList.concat(list);
             }
             this.possiblePuanList.forEach(pg => this.mayEarnPuanTotal += pg.earned)
@@ -260,7 +260,7 @@ export default class Route extends ViewRouter {
         this.setDispatcher();
         this.shopcard.calculateShippingCosts();
         await this.shopcard.saveToRequest(this.req);
-        await this.loadButchers();
+        await this.getOrderSummary();
         this.renderPage("pages/checkout.review.ejs");
     }
 
@@ -271,7 +271,7 @@ export default class Route extends ViewRouter {
         this.setDispatcher();
         this.shopcard.calculateShippingCosts();
         await this.shopcard.saveToRequest(this.req);
-        await this.loadButchers();
+        await this.getOrderSummary();
         this.renderPage("pages/checkout.review.ejs", userMessage);
     }
 

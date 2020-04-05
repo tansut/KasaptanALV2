@@ -22,7 +22,7 @@ import { Creditcard, CreditcardPaymentFactory, PaymentTotal, PaymentResult } fro
 import { OrderPaymentStatus, OrderItemStatus } from '../../models/order';
 import config from '../../config';
 import { PuanCalculator } from '../../lib/commissionHelper';
-import { PuanResult } from '../../models/puan';
+import { PuanResult, Puan } from '../../models/puan';
 import { Op } from 'sequelize';
 
 
@@ -43,12 +43,13 @@ export default class Route extends ApiRouter {
             Account.generateCode("musteri-kasap-kazanilan-puan", [o.userId, o.butcherid, o.ordernum])
         ]
         let accounts = await AccountModel.summary(list);
-        return accounts;        
+        return accounts;
     }
 
     async getKalittePuanAccounts(o: Order) {
         let list = [
-            Account.generateCode("musteri-kalitte-kazanilan-puan", [o.userId, 1, o.butcherid, o.ordernum])
+            Account.generateCode("musteri-kalitte-kazanilan-puan", [o.userId, 1, o.ordernum]),
+            Account.generateCode("musteri-kalitte-kazanilan-puan", [o.userId, 2, o.ordernum])
         ]
         let accounts = await AccountModel.list(list);
         return accounts;
@@ -56,16 +57,18 @@ export default class Route extends ApiRouter {
 
     async getKalittePuanAccountsSummary(o: Order) {
         let list = [
-            Account.generateCode("musteri-kalitte-kazanilan-puan", [o.userId, 1, o.butcherid, o.ordernum])
+            Account.generateCode("musteri-kalitte-kazanilan-puan", [o.userId, 1, o.ordernum]),
+            Account.generateCode("musteri-kalitte-kazanilan-puan", [o.userId, 2, o.ordernum])
         ]
         let accounts = await AccountModel.summary(list);
-        return accounts;        
-    }    
+        return accounts;
+    }
 
 
     async getWorkingAccounts(o: Order) {
         let list = [
-            Account.generateCode("odeme-bekleyen-satislar", [o.userId, o.ordernum])
+            Account.generateCode("odeme-bekleyen-satislar", [o.userId, o.ordernum]),
+            Account.generateCode("satis-indirimleri", [o.userId, o.ordernum])
         ]
         let accounts = await AccountModel.list(list);
         return accounts;
@@ -73,7 +76,8 @@ export default class Route extends ApiRouter {
 
     async getAccountsSummary(o: Order) {
         let list = [
-            Account.generateCode("odeme-bekleyen-satislar", [o.userId, o.ordernum])
+            Account.generateCode("odeme-bekleyen-satislar", [o.userId, o.ordernum]),
+            Account.generateCode("satis-indirimleri", [o.userId, o.ordernum])
         ]
         let accounts = await AccountModel.summary(list);
         return accounts;
@@ -96,8 +100,8 @@ export default class Route extends ApiRouter {
                     all: true
                 }]
             }]
-        })    
-        return res;    
+        })
+        return res;
     }
 
     async getOrder(num, checkFirst: boolean = false) {
@@ -121,7 +125,11 @@ export default class Route extends ApiRouter {
         order.workedAccounts = await this.getWorkingAccounts(order)
         order.butcherPuanAccounts = await this.getButcherPuanAccounts(order)
         order.kalittePuanAccounts = await this.getKalittePuanAccounts(order)
-        checkFirst && (order.isFirstOrder = await Order.findOne({where: {userid: order.userId, butcherid: order.butcherid, ordernum: { [Op.ne]: order.ordernum} }}) == null);
+        if (checkFirst) {
+            order.isFirstButcherOrder = await Order.findOne({ where: { userid: order.userId, butcherid: order.butcherid, ordernum: { [Op.ne]: order.ordernum } } }) == null;
+            order.isFirstOrder = await Order.findOne({ where: { userid: order.userId } }) == null;
+        }
+
         return order;
     }
 
@@ -145,26 +153,23 @@ export default class Route extends ApiRouter {
                         let op = new AccountingOperation(`${o.ordernum} iptali`);
                         op.accounts.push(new Account("odeme-bekleyen-satislar", [o.userId, o.ordernum]).dec(balance))
                         op.accounts.push(new Account("satis-alacaklari", [o.userId, o.ordernum]).dec(balance))
-                        ops.push(op);                                    
-                    }   
-                    o.items.forEach(oi=> {
+                        ops.push(op);
+                    }
+                    o.items.forEach(oi => {
                         if (!oi.status.startsWith('iptal')) {
                             oi.status = newStatus;
-                            promises.push(oi.save({transaction:t}))
+                            promises.push(oi.save({ transaction: t }))
                         }
-                    })                 
+                    })
                 } else if (o.status.startsWith('iptal')) {
-                    // let op = new AccountingOperation(`${oi.productName} iptalin iptali`);
-                    // op.accounts.push(new Account("odeme-bekleyen-satislar", [oi.order.userId, oi.order.ordernum]).inc(oi.price))
-                    // op.accounts.push(new Account("satis-alacaklari", [oi.order.userId, oi.order.ordernum]).inc(oi.price))
-                    // ops.push(op);  
+
                 } else {
-                    o.items.forEach(oi=> {
+                    o.items.forEach(oi => {
                         if (!oi.status.startsWith('iptal')) {
                             oi.status = newStatus;
-                            promises.push(oi.save({transaction:t}))
+                            promises.push(oi.save({ transaction: t }))
                         }
-                    })                     
+                    })
                 }
             }
             await this.saveAccountingOperations(ops, t)
@@ -369,16 +374,12 @@ export default class Route extends ApiRouter {
                 o.paymentTransactionId = it.paymentTransactionId
                 o.paidTotal = it.paidPrice;
                 promises.push(o.save({ transaction: t }))
-            }            
+            }
         })
         return o.isNewRecord ? null : Promise.all(promises);
     }
 
-    // getPossiblePuanGain(): PuanResult[] {
-    //     if (o.butcher.enablePuan) {
-    //         let calculator = new PuanCalculator()
-    //         let earnedPuan = calculator.calculateCustomerPuan(o.butcher.getPuanData(), paymentInfo.paidPrice);        
-    // }
+
 
 
 
@@ -386,127 +387,159 @@ export default class Route extends ApiRouter {
         let res = db.getContext().transaction((t: Transaction) => {
             return this.makeCreditcardPayment(ol, paymentInfo, t)
         })
-        await res;
+        await new Promise((resolve, reject) => {
+            res.then((result) => {
+                resolve(result)
+            }).catch((err) => {
+                reject(err);
+            })
+        })
     }
 
 
-    getPossiblePuanGain(o: Order, total): PuanResult [] {
+    getPossiblePuanGain(o: Order, total, includeAvailable: boolean = false): PuanResult[] {
         let calculator = new PuanCalculator();
         let result: PuanResult[] = [];
 
-        return result;
+        let firstOrder: Puan = {
+           
+                minPuanForUsage: 0.00,
+                minSales: 0.00,
+                name: 'ilk sipariş indirimi',
+                rate: 0.03
+         
+        }
 
-        if (o.butcher.enablePuan && o.butcher.enableCreditCard) {            
-            if (o.isFirstOrder) {
-                let firstOrderPuan = calculator.calculateCustomerPuan({
-                    minPuanForUsage: 0.00,
-                    minSales: 0.00,
-                    name:'ilk sipariş indirimi',
-                    rate: 0.03
-                }, total);
-                if (firstOrderPuan > 0.00) {
+        if (o.butcher.enablePuan && o.butcher.enableCreditCard) {
+            if (o.isFirstButcherOrder) {
+                let firstOrderPuan = calculator.calculateCustomerPuan(firstOrder, total);
+                if (firstOrderPuan > 0.00 || includeAvailable) {
                     result.push({
                         type: "kalitte-by-butcher",
                         earned: firstOrderPuan,
                         id: o.butcherid.toString(),
-                        title: `${o.butcher.name} ilk sipariş hediye puanı`,
-                        desc: `${o.ordernum} nolu sipariş ${o.butcherName} ilk sipariş puan bedeli`                    
-                    })   
-                }    
-            } else {
-                let earnedPuanb = calculator.calculateCustomerPuan(o.butcher.getPuanData(), total);
-                if (earnedPuanb > 0.00) {
+                        title: `kasaptanAl.com ilk sipariş hediye puanı`,
+                        desc: `${o.ordernum} nolu ${o.butcherName} siparişi kasaptanAl.com Puan`,
+                        based: firstOrder
+                    })
+                }
+            } {
+                let butcherPuan = o.butcher.getPuanData()
+                let earnedPuanb = calculator.calculateCustomerPuan(butcherPuan, total);
+                if (earnedPuanb > 0.00 || includeAvailable) {
                     result.push(
                         {
                             type: "butcher",
                             earned: earnedPuanb,
                             id: o.butcherid.toString(),
-                            title: o.butcher.name + ' Kasap Kart programı',
-                            desc: `${o.ordernum} nolu sipariş ${o.butcherName} kazanılan puan`
+                            title: o.butcher.name + ' Kasap Kart™ programı',
+                            desc: `${o.ordernum} nolu ${o.butcherName} sipariş Kasap Puan`,
+                            based: butcherPuan
                         }
                     )
-                }                
+                }
             }
-        }       
-        
-        if (o.isFirstOrder) {
-            let earnedPuan = calculator.calculateCustomerPuan({
-                minPuanForUsage: 0.00,
-                minSales: 0.00,
-                name:'kalitte ilk sipariş',
-                rate: 0.01
-            }, total);
-            if (earnedPuan > 0.00) {
-                result.push(
-                    {
-                        type:"kalitte",
-                        desc: `${o.ordernum} kasaptanAl.com ilk sipariş kazanılan puan bedeli `,
-                        earned: earnedPuan,
-                        id: 'kasaptanAl.com',
-                        title: 'kasaptanAl.com ilk sipariş hediye puanı'
-                    }
-                )                
-            }
-        } 
+        }
+
+        // if (o.isFirstOrder) {
+        //     let earnedPuan = calculator.calculateCustomerPuan({
+        //         minPuanForUsage: 0.00,
+        //         minSales: 0.00,
+        //         name:'kalitte ilk sipariş',
+        //         rate: 0.01
+        //     }, total);
+        //     if (earnedPuan > 0.00) {
+        //         result.push(
+        //             {
+        //                 type:"kalitte",
+        //                 desc: `${o.ordernum} kasaptanAl.com ilk sipariş kazanılan puan bedeli `,
+        //                 earned: earnedPuan,
+        //                 id: 'kasaptanAl.com',
+        //                 title: 'kasaptanAl.com ilk sipariş hediye puanı'
+        //             }
+        //         )                
+        //     }
+        // } 
 
         return result
     }
 
 
-    getPuanAccounts(o: Order, total: number): AccountingOperation[] {
+    getPuanAccounts(o: Order, total: number): AccountingOperation {
 
         let gains = this.getPossiblePuanGain(o, total);
-        let result: AccountingOperation[] = [];
+        let result: AccountingOperation = new AccountingOperation(`${o.ordernum} nolu ${o.butcherName} siparişi puan kazancı`, o.ordernum);
 
         gains.forEach(pg => {
-            if (pg.type == "butcher") {
-                 let opPuanButcher = new AccountingOperation(pg.desc, o.ordernum);
-                 opPuanButcher.accounts.push(new Account("kasap-puan-giderleri", [o.butcherid, o.userId, o.ordernum]).inc(pg.earned))
-                 opPuanButcher.accounts.push(new Account("musteri-kasap-kazanilan-puan", [o.userId, o.butcherid, o.ordernum]).inc(pg.earned))                                     
-                 result.push(opPuanButcher)
+            if (pg.earned > 0.00) {
+                if (pg.type == "butcher") {
+                    result.accounts.push(new Account("kasap-puan-giderleri", [o.butcherid, o.userId, o.ordernum], pg.title).inc(pg.earned))
+                    result.accounts.push(new Account("musteri-kasap-kazanilan-puan", [o.userId, o.butcherid, o.ordernum], pg.title).inc(pg.earned))
+                }
+                if (pg.type == "kalitte") {
+                    result.accounts.push(new Account("kalitte-puan-giderleri", [o.userId, 1, o.ordernum], pg.title).inc(pg.earned))
+                    result.accounts.push(new Account("musteri-kalitte-kazanilan-puan", [o.userId, 1, o.ordernum], pg.title).inc(pg.earned))
+                }
+                if (pg.type == "kalitte-by-butcher") {
+                    result.accounts.push(new Account("kalitte-puan-giderleri", [o.userId, 2, o.ordernum], pg.title).inc(pg.earned))
+                    result.accounts.push(new Account("musteri-kalitte-kazanilan-puan", [o.userId, 2, o.ordernum], pg.title).inc(pg.earned))
+                }
             }
-            if (pg.type == "kalitte-by-butcher") {
-                let opPuanKalitte = new AccountingOperation(pg.desc, o.ordernum);
-                opPuanKalitte.accounts.push(new Account("kalitte-puan-giderleri", [o.userId, 1, o.butcherid, o.ordernum]).inc(pg.earned))
-                opPuanKalitte.accounts.push(new Account("musteri-kalitte-kazanilan-puan", [o.userId, 1, o.butcherid, o.ordernum]).inc(pg.earned))                                
-                result.push(opPuanKalitte)
-            }
-            if (pg.type == "kalitte") {
-                let opPuanKalitte = new AccountingOperation(pg.desc, o.ordernum);
-                opPuanKalitte.accounts.push(new Account("kalitte-puan-giderleri", [o.userId, 2, o.ordernum]).inc(pg.earned))
-                opPuanKalitte.accounts.push(new Account("musteri-kalitte-kazanilan-puan", [o.userId, 2, o.ordernum]).inc(pg.earned))                                
-                result.push(opPuanKalitte)
-            }            
         })
 
         return result;
-    
+
 
     }
 
-    async makeCreditcardPayment(ol: Order[], paymentInfo: PaymentResult, t?: Transaction) {
+    fillPuanAccounts(o: Order, paidPrice: number) {
+        o.butcherPuanAccounts = [];
+        o.kalittePuanAccounts = [];
+        o.kalitteOnlyPuanAccounts = [];
+        o.kalitteByButcherPuanAccounts = [];
+
+        let accounts = this.getPuanAccounts(o, paidPrice).accounts;
+
+        let butcherCode = Account.generateCode("musteri-kasap-kazanilan-puan", [o.userId, o.butcherid, o.ordernum]);
+        let kalitteCode = Account.generateCode("musteri-kalitte-kazanilan-puan", [o.userId, 1, o.ordernum]);
+        let kalitteByButcherCode = Account.generateCode("musteri-kalitte-kazanilan-puan", [o.userId, 2, o.ordernum]);
+
+        accounts.forEach(a => {
+            let acc = AccountModel.fromAccount(a);
+            if (a.code == butcherCode) {
+                o.butcherPuanAccounts.push(acc)
+            } else if (a.code == kalitteCode) {
+                o.kalittePuanAccounts.push(acc);
+                o.kalitteOnlyPuanAccounts.push(acc);
+            } else if (a.code == kalitteByButcherCode) {
+                o.kalittePuanAccounts.push(acc);
+                o.kalitteByButcherPuanAccounts.push(acc)
+            }
+        })
+
+        AccountModel.addTotals(o.butcherPuanAccounts)
+        AccountModel.addTotals(o.kalittePuanAccounts)
+        AccountModel.addTotals(o.kalitteOnlyPuanAccounts)
+        AccountModel.addTotals(o.kalitteByButcherPuanAccounts)
+    }
+
+    async makeCreditcardPayment(ol: Order[], paymentInfo: PaymentResult, t?: Transaction): Promise<any> {
 
         let ops: AccountingOperation[] = [];
-        let promises = []
+        let promises: Promise<any>[] = []
 
         for (let i = 0; i < ol.length; i++) {
             let o = ol[i];
             let op = new AccountingOperation(`${o.ordernum} kredi kartı ödemesi - ${paymentInfo.paymentId}`, o.ordernum);
-            op.accounts.push(new Account("odeme-bekleyen-satislar", [o.userId, o.ordernum]).dec(paymentInfo.paidPrice))
+            op.accounts.push(new Account("odeme-bekleyen-satislar", [o.userId, o.ordernum, 500]).dec(paymentInfo.paidPrice))
             op.accounts.push(new Account("satis-alacaklari", [o.userId, o.ordernum]).dec(paymentInfo.paidPrice))
-            
-
-
-
-
-            
             ops.push(op);
             let puanAccounts = this.getPuanAccounts(o, paymentInfo.paidPrice)
-            ops = ops.concat(puanAccounts);
-            promises.push(this.updateOrderByPayment(o, paymentInfo, t));
+            ops.push(puanAccounts);
+            promises = promises.concat(this.updateOrderByPayment(o, paymentInfo, t));
         }
 
-        promises.push(this.saveAccountingOperations(ops, t));
+        promises = promises.concat(this.saveAccountingOperations(ops, t));
 
         for (let i = 0; i < ol.length; i++) {
             if (config.nodeenv == 'production') {
@@ -518,12 +551,17 @@ export default class Route extends ApiRouter {
 
     generateInitialAccounting(o: Order): AccountingOperation {
 
-        let total = Helper.asCurrency(o.total);
-
         let op = new AccountingOperation(`${o.ordernum} numaralı sipariş`, o.ordernum);
 
-        op.accounts.push(new Account("odeme-bekleyen-satislar", [o.userId, o.ordernum]).inc(total));
-        op.accounts.push(new Account("satis-alacaklari", [o.userId, o.ordernum]).inc(total))
+        op.accounts.push(new Account("odeme-bekleyen-satislar", [o.userId, o.ordernum, 100], "Ürün Bedeli").inc(o.subTotal));
+        if (o.shippingTotal > 0.00) {
+            op.accounts.push(new Account("odeme-bekleyen-satislar", [o.userId, o.ordernum, 200], "Teslimat Bedeli").inc(o.shippingTotal));
+        }
+        if (Math.abs(o.discountTotal) > 0.00) {
+            op.accounts.push(new Account("satis-indirimleri", [o.userId, o.ordernum, 100], "Uygulanan İndirimler").inc(Math.abs(o.discountTotal)));
+
+        }
+        op.accounts.push(new Account("satis-alacaklari", [o.userId, o.ordernum]).inc(o.total))
 
         op.validate()
 
@@ -531,53 +569,53 @@ export default class Route extends ApiRouter {
 
         return;
 
-        op.accounts.push(new Account("kredi-karti-provizyon", [o.userId, o.ordernum]).inc(total))
-        op.accounts.push(new Account("havuz-hesabi", [o.userId, o.ordernum]).inc(total))
+        // op.accounts.push(new Account("kredi-karti-provizyon", [o.userId, o.ordernum]).inc(total))
+        // op.accounts.push(new Account("havuz-hesabi", [o.userId, o.ordernum]).inc(total))
 
 
-        let kasapKarOran = 0.10;
-        let kasapPuanOran = 0.2;
-        let odemeSirketiKomisyonOran = 0.032;
-        let kalittePuanOran = 0.00;
+        // let kasapKarOran = 0.10;
+        // let kasapPuanOran = 0.2;
+        // let odemeSirketiKomisyonOran = 0.032;
+        // let kalittePuanOran = 0.00;
 
 
-        let musteriIadeToplam = Helper.asCurrency(total * 0.05);
-        let gerceklesenSatisToplam = Helper.asCurrency(total - musteriIadeToplam);
+        // let musteriIadeToplam = Helper.asCurrency(total * 0.05);
+        // let gerceklesenSatisToplam = Helper.asCurrency(total - musteriIadeToplam);
 
-        let kasapSatisToplam = Helper.asCurrency(gerceklesenSatisToplam * (1.00 - kasapKarOran));
-        let kasapPuanToplam = Helper.asCurrency(gerceklesenSatisToplam * kasapPuanOran);
-        let kasapUrunToplam = Helper.asCurrency(kasapSatisToplam - kasapPuanToplam);
+        // let kasapSatisToplam = Helper.asCurrency(gerceklesenSatisToplam * (1.00 - kasapKarOran));
+        // let kasapPuanToplam = Helper.asCurrency(gerceklesenSatisToplam * kasapPuanOran);
+        // let kasapUrunToplam = Helper.asCurrency(kasapSatisToplam - kasapPuanToplam);
 
-        let kalittePuanToplam = Helper.asCurrency(gerceklesenSatisToplam * kalittePuanOran);
-        let odemeSirketiKomisyonToplam = Helper.asCurrency(gerceklesenSatisToplam * odemeSirketiKomisyonOran);
+        // let kalittePuanToplam = Helper.asCurrency(gerceklesenSatisToplam * kalittePuanOran);
+        // let odemeSirketiKomisyonToplam = Helper.asCurrency(gerceklesenSatisToplam * odemeSirketiKomisyonOran);
 
-        let netKar = Helper.asCurrency(gerceklesenSatisToplam - kalittePuanToplam - kasapPuanToplam - kasapUrunToplam - odemeSirketiKomisyonToplam);
-
-
-        op.accounts.push(new Account("kredi-karti-provizyon", [o.userId, o.ordernum]).dec(gerceklesenSatisToplam))
-        op.accounts.push(new Account("havuz-hesabi", [o.userId, o.ordernum]).dec(total))
-        op.accounts.push(new Account("kredi-karti-provizyon-iade", [o.userId, o.ordernum]).inc(musteriIadeToplam))
-
-        op.accounts.push(new Account("kredi-karti-odemeleri", [o.userId, o.ordernum]).inc(gerceklesenSatisToplam))
-        op.accounts.push(new Account("banka", [o.userId, o.ordernum]).inc(netKar))
-
-        op.accounts.push(new Account("kasap-puan-giderleri", [o.userId, o.ordernum]).inc(kasapPuanToplam))
-        op.accounts.push(new Account("kasap-urun-giderleri", [o.userId, o.ordernum]).inc(kasapUrunToplam))
-        kalittePuanToplam > 0 ? op.accounts.push(new Account("kalitte-puan-giderleri", [o.userId, o.ordernum]).inc(kalittePuanToplam)) : null;
-        op.accounts.push(new Account("odeme-sirketi-giderleri", [o.userId, o.ordernum]).inc(odemeSirketiKomisyonToplam))
+        // let netKar = Helper.asCurrency(gerceklesenSatisToplam - kalittePuanToplam - kasapPuanToplam - kasapUrunToplam - odemeSirketiKomisyonToplam);
 
 
+        // op.accounts.push(new Account("kredi-karti-provizyon", [o.userId, o.ordernum]).dec(gerceklesenSatisToplam))
+        // op.accounts.push(new Account("havuz-hesabi", [o.userId, o.ordernum]).dec(total))
+        // op.accounts.push(new Account("kredi-karti-provizyon-iade", [o.userId, o.ordernum]).inc(musteriIadeToplam))
 
-        op.validate()
+        // op.accounts.push(new Account("kredi-karti-odemeleri", [o.userId, o.ordernum]).inc(gerceklesenSatisToplam))
+        // op.accounts.push(new Account("banka", [o.userId, o.ordernum]).inc(netKar))
 
-        return op;
+        // op.accounts.push(new Account("kasap-puan-giderleri", [o.userId, o.ordernum]).inc(kasapPuanToplam))
+        // op.accounts.push(new Account("kasap-urun-giderleri", [o.userId, o.ordernum]).inc(kasapUrunToplam))
+        // kalittePuanToplam > 0 ? op.accounts.push(new Account("kalitte-puan-giderleri", [o.userId, o.ordernum]).inc(kalittePuanToplam)) : null;
+        // op.accounts.push(new Account("odeme-sirketi-giderleri", [o.userId, o.ordernum]).inc(odemeSirketiKomisyonToplam))
+
+
+
+        // op.validate()
+
+        // return op;
     }
 
     async getFromShopcard(card: ShopCard): Promise<Order[]> {
         let butchers = card.butchers;
         let groupid = orderid.generate();
         let l3 = await Area.findByPk(card.address.level3Id);
-        let l2 = await Area.findByPk(l3.parentid);
+        let l2 = l3 ? await Area.findByPk(l3.parentid) : null;
         let orders = []
 
         let payment = CreditcardPaymentFactory.getInstance();
@@ -590,12 +628,9 @@ export default class Route extends ApiRouter {
             order.butcherid = parseInt(bi);
             order.butcher = await Butcher.findByPk(order.butcherid)
             order.butcherName = butchers[bi].name;
-            order.userId = this.req.user ? this.req.user.id: 0;
-            order.areaLevel2Id = l2.id;
-            order.areaLevel2Text = l2.name;
-            // if (order.paymentType == 'onlinepayment') {
-            //     order.paymentStatus = OrderPaymentStatus.waitingOnlinePayment
-            // } else order.paymentStatus = OrderPaymentStatus.manualPayment;
+            order.userId = this.req.user ? this.req.user.id : 0;
+            order.areaLevel2Id = l2 && l2.id;
+            order.areaLevel2Text = l2 && l2.name;
             orders.push(order);
         }
 
@@ -605,7 +640,7 @@ export default class Route extends ApiRouter {
     async create(card: ShopCard, paymentInfo: PaymentTotal): Promise<Order[]> {
 
         let result: Promise<any>[] = [];
- 
+
         let orders = await this.getFromShopcard(card);
 
         let res = db.getContext().transaction((t: Transaction) => {

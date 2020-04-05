@@ -12,4 +12,5 @@ export interface PuanResult {
     title: string;
     desc: string;
     earned: number;
+    based: Puan;
 }

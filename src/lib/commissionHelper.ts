@@ -71,7 +71,9 @@ export class PuanCalculator {
     }  
     
     async earnedKalittePuanAccounts(userid: number, butcherid: number) {
-        return await AccountModel.summary([Account.generateCode("musteri-kalitte-kazanilan-puan", [userid, 1, butcherid])]);
+        return await AccountModel.summary([
+            Account.generateCode("musteri-kalitte-kazanilan-puan", [userid, 1]),
+            Account.generateCode("musteri-kalitte-kazanilan-puan", [userid, 2])]);
     }
 
     async getEarnedKalittePuan(userid: number, butcherid: number) {
