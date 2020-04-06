@@ -104,9 +104,10 @@
     </div>
 
     <section class="container mb-3">
-        <h2 class="h3 text-center mb-grid-gutter pt-2">kasaptanAl.com'u kullanmak için 3 sebep</h2>
-        <div class="row no-gutters bg-light rounded-lg">
-          <div class="col-xl-4 col-lg-12 col-md-4 border-right">
+            <h2 class="h3 text-center mb-grid-gutter">kasaptanAl.com'u kullanmak için 4 sebep</h2>
+
+        <div class="row no-gutters border bg-light">
+          <div class="col-xl-3 col-lg-12 col-md-3 border-right ">
             <div class="py-3">
               <div class="d-flex align-items-center mx-auto py-3 px-3" style="max-width: 362px;">
                 <div class="display-2 font-weight-normal border-color mr-4">1</div>
@@ -117,10 +118,21 @@
               <hr class="d-md-none d-lg-block d-xl-none">
             </div>
           </div>
-          <div class="col-xl-4 col-lg-12 col-md-4 border-right">
+          <div class="col-xl-3 col-lg-12 col-md-3 border-right ">
             <div class="py-3">
               <div class="d-flex align-items-center mx-auto py-3 px-3" style="max-width: 362px;">
                 <div class="display-2 font-weight-normal border-color mr-4">2</div>
+                <div class="pl-2">
+                  <p class="mb-3 pt-1">Kasap Kart&trade; ile alışverişlerinizden puan kazandırıyoruz</p>
+                </div>
+              </div>
+              <hr class="d-md-none d-lg-block d-xl-none">
+            </div>
+          </div>          
+          <div class="col-xl-3 col-lg-12 col-md-3 border-right">
+            <div class="py-3">
+              <div class="d-flex align-items-center mx-auto py-3 px-3" style="max-width: 362px;">
+                <div class="display-2 font-weight-normal border-color mr-4">3</div>
                 <div class="pl-2">
                   <p class="mb-3 pt-1">Farklı kasap alternatifleri sunarak fiyat avantajı sağlıyoruz</p>
                 </div>
@@ -128,10 +140,10 @@
               <hr class="d-md-none d-lg-block d-xl-none">
             </div>
           </div>
-          <div class="col-xl-4 col-lg-12 col-md-4">
+          <div class="col-xl-3 col-lg-12 col-md-3">
             <div class="py-3">
               <div class="d-flex align-items-center mx-auto py-3 px-3" style="max-width: 362px;">
-                <div class="display-2 font-weight-normal border-color mr-4">3</div>
+                <div class="display-2 font-weight-normal border-color mr-4">4</div>
                 <div class="pl-2">
                   <p class="mb-3 pt-1">Siparişlerinizi kapınıza kadar istediğiniz zaman getiriyoruz</p>
                 </div>
@@ -140,50 +152,7 @@
           </div>
         </div>
 
-        <div class="pt-2 ">
-            <h3 class="h5 text-center pb-2 pt-2">Anlaşmalı Kasaplarımız</h3>
 
-            <div class="table-responsive" data-simplebar>
-                <div class="d-flex pb-2">
-
-                    <% for(var i=0; i<recentButchers.length; i++) {%>
-                    <div class="mr-2">
-                        <div class="card h-100 item-slider item-slider-sm">
-                            <a href="<%= `/${recentButchers[i].slug}` %>">
-                                <img src="<%= `${__req.helper.imgUrl('butcher-google-photos', recentButchers[i].slug)}` %>"
-                                    class="card-img-top" alt="<%= `/${recentButchers[i].name}` %>">
-                            </a>
-
-
-
-                            <div class="card-body touch-support text-center">
-
-                                <h5 class="card-title ">
-                                    <a href="<%= `/${recentButchers[i].slug}` %>" class="text-dark">
-                                        <%= recentButchers[i].name %>
-                                    </a>
-
-                                </h5>
-
-
-                            </div>
-
-
-
-
-                        </div>
-
-                    </div>
-
-                    <%}%>
-
-                    </div>
-
-            </div>
-
-
-
-        </div>
 
       </section>
 
@@ -199,6 +168,55 @@
     <div class="container mb-3">
         <%- include('./_partial/category-products-slider', {category: 'populer-etler', reverse: true, img: 'img/category/premium.jpg'}); %>
     </div>
+
+    <div class="container mb-3">
+        <div class=" ">
+            <h3 class="h5 text-center pb-2 pt-2">Anlaşmalı Kasaplarımız</h3>
+    
+            <div class="table-responsive" data-simplebar>
+                <div class="d-flex pb-2">
+    
+                    <% for(var i=0; i<recentButchers.length; i++) {%>
+                    <div class="mr-2">
+                        <div class="card h-100 item-slider item-slider-sm">
+                            <a href="<%= `/${recentButchers[i].slug}` %>">
+                                <img src="<%= `${__req.helper.imgUrl('butcher-google-photos', recentButchers[i].slug)}` %>"
+                                    class="card-img-top" alt="<%= `/${recentButchers[i].name}` %>">
+                            </a>
+    
+    
+    
+                            <div class="card-body touch-support text-center">
+    
+                                <h5 class="card-title ">
+                                    <a href="<%= `/${recentButchers[i].slug}` %>" class="text-dark">
+                                        <%= recentButchers[i].name %>
+                                    </a>
+    
+                                </h5>
+    
+    
+                            </div>
+    
+    
+    
+    
+                        </div>
+    
+                    </div>
+    
+                    <%}%>
+    
+                    </div>
+    
+            </div>
+    
+    
+    
+        </div>            
+    </div>
+
+
 
     <div class="container mb-3">
         <%- include('./_partial/category-slider', { viewCats: ['reyon', 'list'], title: 'Tüm Ürünlerimiz', allUrl: '/kasap-urunleri' }); %>      
