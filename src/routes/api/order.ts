@@ -150,7 +150,6 @@ export default class Route extends ApiRouter {
             order.isFirstButcherOrder = await Order.findOne({ where: { userid: order.userId, butcherid: order.butcherid, ordernum: { [Op.ne]: order.ordernum } } }) == null;
             order.isFirstOrder = await Order.findOne({ where: { userid: order.userId } }) == null;
         }
-
         return order;
     }
 

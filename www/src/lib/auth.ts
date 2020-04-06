@@ -41,6 +41,8 @@ export class Auth {
                     setTimeout(() => {
                         $('#si-password').focus();
                     }, 250);
+                    App.HandleError(err)
+
                 } else {
                     App.gTag('signup', 'error-send-sms-code', tel);
                     App.HandleError(err)
