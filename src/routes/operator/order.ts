@@ -40,6 +40,7 @@ export default class Route extends ViewRouter {
 
     balance: AccountModel;
     shouldBePaid = 0.00;
+    paid = 0.00;
     puanBalanceButcher: AccountModel;
     puanBalanceKalitte: AccountModel;
     earnedPuanButcher = 0.00;
@@ -61,6 +62,7 @@ export default class Route extends ViewRouter {
         }        
         this.balance = this.order.workedAccounts.find(p=>p.code == 'total')
         this.shouldBePaid = Helper.asCurrency(this.balance.alacak - this.balance.borc);
+        this.paid = Helper.asCurrency(this.balance.borc);
         this.puanBalanceKalitte = this.order.kalittePuanAccounts.find(p=>p.code == 'total');  
         this.puanBalanceButcher = this.order.butcherPuanAccounts.find(p=>p.code == 'total');  
         this.earnedPuanKalitte = this.puanBalanceKalitte ? Helper.asCurrency(this.puanBalanceKalitte.alacak -   this.puanBalanceKalitte.borc):0.00
@@ -102,6 +104,7 @@ export default class Route extends ViewRouter {
         let userMessage = "";
 
         await this.getOrder();
+        await this.getOrderSummary()     
 
         if (!this.order)
             return this.next();
@@ -114,6 +117,22 @@ export default class Route extends ViewRouter {
             // await this.order.save()
         }
 
+        if (this.req.body.makeManuelPayment == "true") {    
+            if(this.shouldBePaid > 0) {
+                await this.api.completeManuelPayment(this.order, this.shouldBePaid)
+            } else  userMessage = "Ödemesi yok siparişin";            
+        } 
+
+
+        if (this.req.body.loadPuans == "true") {    
+            if (this.shouldBePaid > 0) {
+                userMessage = "Ödemesi henüz yapılmamış siparişin"; 
+                
+            } else await this.api.completeLoadPuan(this.order, this.paid)
+            
+        }        
+
+        
         if (this.req.body.approveOrderSubMerchant == "true") {            
             await this.paymentProvider.approveItem({
                 paymentTransactionId: this.order.paymentTransactionId
@@ -137,6 +156,7 @@ export default class Route extends ViewRouter {
 
         
         await this.getOrder();
+        await this.getOrderSummary()     
 
         this.sendView("pages/operator.manageorder.ejs", { ...{ _usrmsg: { text: userMessage } }, ...this.api.getView(this.order), ...{ enableImgContextMenu: true } });
 

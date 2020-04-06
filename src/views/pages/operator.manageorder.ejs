@@ -45,6 +45,9 @@
         <%- include('./_partial/order-status.ejs', { name: 'orderStatus', order: order }) %>
       </div>
       <button name="saveOrderStatus" value="true" class="btn btn-primary btn-sm">Durum Değiştir</button>
+      <button name="makeManuelPayment" value="true" class="btn btn-primary btn-sm">Manuel Ödeme Yap</button>
+      <button name="loadPuans" value="true" class="btn btn-primary btn-sm">Puan Yükle</button>
+      
       <p><%-controller.markdown.render(order.statusDesc || '')%></p>
 
      </div>

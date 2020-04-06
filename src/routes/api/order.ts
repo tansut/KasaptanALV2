@@ -113,7 +113,7 @@ export default class Route extends ApiRouter {
 
 
         o.kalittePuanAccounts.forEach(a => {
-             if (a.code == kalitteCode) {
+            if (a.code == kalitteCode) {
                 o.kalitteOnlyPuanAccounts.push(a);
             } else if (a.code == kalitteByButcherCode) {
                 o.kalitteByButcherPuanAccounts.push(a)
@@ -121,7 +121,7 @@ export default class Route extends ApiRouter {
         })
 
         AccountModel.addTotals(o.kalitteOnlyPuanAccounts)
-        AccountModel.addTotals(o.kalitteByButcherPuanAccounts)        
+        AccountModel.addTotals(o.kalitteByButcherPuanAccounts)
     }
 
     async getOrder(num, checkFirst: boolean = false) {
@@ -575,6 +575,64 @@ export default class Route extends ApiRouter {
         AccountModel.addTotals(o.butcherPuanAccounts)
         AccountModel.addTotals(o.kalittePuanAccounts)
 
+    }
+
+    async loadPuan(o: Order, total: number, t?: Transaction): Promise<any> {
+        let ops: AccountingOperation[] = [];
+        let promises: Promise<any>[] = [];
+        let puanAccounts = this.getPuanAccounts(o, total);
+        ops.push(puanAccounts);
+        promises = promises.concat(this.saveAccountingOperations(ops, t));
+        return Promise.all(promises)
+    }
+
+
+    async completeManuelPayment(o: Order, total: number) {
+        let res = db.getContext().transaction((t: Transaction) => {
+            return this.makeManuelPayment(o, total, t)
+        })
+        await new Promise((resolve, reject) => {
+            res.then((result) => {
+                resolve(result)
+            }).catch((err) => {
+                reject(err);
+            })
+        })
+    }
+
+
+    async completeLoadPuan(o: Order, total: number) {
+        let res = db.getContext().transaction((t: Transaction) => {
+            return this.loadPuan(o, total, t)
+        })
+        await new Promise((resolve, reject) => {
+            res.then((result) => {
+                resolve(result)
+            }).catch((err) => {
+                reject(err);
+            })
+        })
+    }
+
+
+    async makeManuelPayment(o: Order, total: number, t?: Transaction): Promise<any> {
+
+        let ops: AccountingOperation[] = [];
+        let promises: Promise<any>[] = []
+
+        let paymentId = "manuel";
+
+        let op = new AccountingOperation(`${o.ordernum} ödemesi - ${paymentId}`, o.ordernum);
+        op.accounts.push(new Account("odeme-bekleyen-satislar", [o.userId, o.ordernum, 600]).dec(total))
+        op.accounts.push(new Account("satis-alacaklari", [o.userId, o.ordernum]).dec(total))
+        ops.push(op);
+        o.paidTotal = total;
+        promises.push(o.save({
+            transaction: t
+        }))
+
+        promises = promises.concat(this.saveAccountingOperations(ops, t));
+        return Promise.all(promises)
     }
 
     async makeCreditcardPayment(ol: Order[], paymentInfo: PaymentResult, t?: Transaction): Promise<any> {

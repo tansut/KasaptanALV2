@@ -76,17 +76,13 @@
 
 
     <% if (controller.possiblePuanList.length > 0) { %>
-      <div class="mb-3">
-     
+      <div class="mb-3">     
        <% controller.possiblePuanList.forEach(pg => { %>
         <ul>
           <li>
             <strong><%- include('./_partial/currency.ejs', {value: pg.earned}) %></strong>, <%=pg.title%>
-
           </li>
-        </ul>
-         
-       
+        </ul>         
       <% }) %> 
 
     </div>
