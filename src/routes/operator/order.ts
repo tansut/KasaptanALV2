@@ -41,6 +41,8 @@ export default class Route extends ViewRouter {
     balance: AccountModel;
     shouldBePaid = 0.00;
     paid = 0.00;
+    productTotal = 0.00;
+    teslimatTotal = 0.00;
     puanBalanceButcher: AccountModel;
     puanBalanceKalitte: AccountModel;
     earnedPuanButcher = 0.00;
@@ -60,10 +62,12 @@ export default class Route extends ViewRouter {
             await this.api.saveAccountingOperations([initial]);
             await this.getOrder();
         }        
-
+            this.productTotal = this.api.calculateProduct(this.order);
+            this.teslimatTotal = this.api.calculateTeslimat(this.order);
     
             this.balance = this.order.workedAccounts.find(p=>p.code == 'total')
             this.shouldBePaid = Helper.asCurrency(this.balance.alacak - this.balance.borc);
+            this.paid = this.api.calculatePaid(this.order);
             this.puanBalanceKalitte = this.order.kalittePuanAccounts.find(p=>p.code == 'total');  
             this.puanBalanceButcher = this.order.butcherPuanAccounts.find(p=>p.code == 'total');  
             this.earnedPuanKalitte = this.puanBalanceKalitte ? Helper.asCurrency(this.puanBalanceKalitte.alacak -   this.puanBalanceKalitte.borc):0.00
@@ -76,13 +80,18 @@ export default class Route extends ViewRouter {
             }
         
         let calc = new ComissionHelper(this.order.butcher.commissionRate, this.order.butcher.commissionFee);
-        this.butcherFee = calc.calculateButcherComission(this.order.workedAccounts.find(p=>p.code == 'total').alacak);
+        this.butcherFee = calc.calculateButcherComission(this.paid);
 
         let kalitteByButcherPuanAccounts = this.order.kalitteByButcherPuanAccounts.find(p=>p.code == 'total')
         
         let butcherToCustomer = Helper.asCurrency((kalitteByButcherPuanAccounts.alacak - kalitteByButcherPuanAccounts.borc) + (this.puanBalanceButcher.alacak - this.puanBalanceButcher.borc));
 
-        this.butcherFee.butcherToCustomer = butcherToCustomer;
+        if (butcherToCustomer <= 0) {
+            this.possiblePuanList = this.api.getPossiblePuanGain(this.order, this.paid);
+            this.possiblePuanList.forEach(pg=>butcherToCustomer+=pg.earned)
+        }
+
+        this.butcherFee.butcherToCustomer = Helper.asCurrency(butcherToCustomer);
 
     }
 
@@ -168,7 +177,7 @@ export default class Route extends ViewRouter {
     async getOrder() {
         let ordernum = this.req.params.ordernum;
         this.api = new OrderApi(this.constructorParams);
-        this.order = await this.api.getOrder(ordernum);
+        this.order = await this.api.getOrder(ordernum, true);
     }
 
     async ordersListRoute() {

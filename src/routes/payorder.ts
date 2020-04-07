@@ -28,10 +28,11 @@ import { Account } from '../models/account';
 import { PaymentRouter } from '../lib/paymentrouter';
 import { PuanCalculator } from '../lib/commissionHelper';
 import { PuanResult } from '../models/puan';
+import email from '../lib/email';
 
 export default class Route extends PaymentRouter {
     order: Order;
-    api: OrderApi;    
+    api: OrderApi;
     balance: AccountModel;
     shouldBePaid = 0.00;
     puanBalanceButcher: AccountModel;
@@ -49,44 +50,44 @@ export default class Route extends PaymentRouter {
             let pageTitle = '', pageDescription = '';
 
             if (this.mayEarnPuanTotal > 0.00) {
-                pageTitle = `Online ödeyin, ${this.mayEarnPuanTotal} TL değerinde puan kazanın: ${Helper.formatDate(this.order.creationDate)} tarihli ${this.order.butcherName} siparişiniz` ;
+                pageTitle = `Online ödeyin, ${this.mayEarnPuanTotal} TL değerinde puan kazanın: ${Helper.formatDate(this.order.creationDate)} tarihli ${this.order.butcherName} siparişiniz`;
                 pageDescription = `Nefis ürünlerinizi güvenle online ödeyin, puan kazanın, zaman kazanın, sağlığınızı koruyun.`
 
             }
             else {
-                pageTitle = `Online Ödeyin: ${Helper.formatDate(this.order.creationDate)} tarihli ${this.order.butcherName} siparişiniz` ;
+                pageTitle = `Online Ödeyin: ${Helper.formatDate(this.order.creationDate)} tarihli ${this.order.butcherName} siparişiniz`;
                 pageDescription = `Nefis ürünlerinizi güvenle online ödeyin, hem zamandan kazanın, hem sağlığınızı koruyun.`
             }
-    
+
             pageInfo = {
-                pageTitle: pageTitle, 
+                pageTitle: pageTitle,
                 pageDescription: pageDescription
             }
         } else {
-            
+
         }
-  
-        this.sendView("pages/payorder.ejs", {...pageInfo, ...{ _usrmsg: { text: userMessage } }, ...this.api.getView(this.order), ...{ enableImgContextMenu: true } });
-        
+
+        this.sendView("pages/payorder.ejs", { ...pageInfo, ...{ _usrmsg: { text: userMessage } }, ...this.api.getView(this.order), ...{ enableImgContextMenu: true } });
+
     }
 
-    async getOrderSummary() {        
+    async getOrderSummary() {
         if (this.order.workedAccounts.length == 1) {
             let initial = this.api.generateInitialAccounting(this.order);
             await this.api.saveAccountingOperations([initial]);
             await this.getOrder();
         }
 
-        this.balance = this.order.workedAccounts.find(p=>p.code == 'total')
+        this.balance = this.order.workedAccounts.find(p => p.code == 'total')
         this.shouldBePaid = Helper.asCurrency(this.balance.alacak - this.balance.borc);
-        this.puanBalanceKalitte = this.order.kalittePuanAccounts.find(p=>p.code == 'total');  
-        this.puanBalanceButcher = this.order.butcherPuanAccounts.find(p=>p.code == 'total');  
-        this.earnedPuanKalitte = this.puanBalanceKalitte ? Helper.asCurrency(this.puanBalanceKalitte.alacak -   this.puanBalanceKalitte.borc):0.00
-        this.earnedPuanButcher = this.puanBalanceButcher ? Helper.asCurrency(this.puanBalanceButcher.alacak -   this.puanBalanceButcher.borc):0.00
+        this.puanBalanceKalitte = this.order.kalittePuanAccounts.find(p => p.code == 'total');
+        this.puanBalanceButcher = this.order.butcherPuanAccounts.find(p => p.code == 'total');
+        this.earnedPuanKalitte = this.puanBalanceKalitte ? Helper.asCurrency(this.puanBalanceKalitte.alacak - this.puanBalanceKalitte.borc) : 0.00
+        this.earnedPuanButcher = this.puanBalanceButcher ? Helper.asCurrency(this.puanBalanceButcher.alacak - this.puanBalanceButcher.borc) : 0.00
         this.earnedPuanTotal = Helper.asCurrency(this.earnedPuanKalitte + this.earnedPuanButcher)
         if (this.shouldBePaid > 0) {
             this.possiblePuanList = this.api.getPossiblePuanGain(this.order, this.shouldBePaid);
-            this.possiblePuanList.forEach(pg=>this.mayEarnPuanTotal+=pg.earned)
+            this.possiblePuanList.forEach(pg => this.mayEarnPuanTotal += pg.earned)
             this.mayEarnPuanTotal = Helper.asCurrency(this.mayEarnPuanTotal)
         }
     }
@@ -95,14 +96,14 @@ export default class Route extends PaymentRouter {
     async paymentSuccess(payment: PaymentResult) {
         await this.api.completeCreditcardPayment([this.order], payment);
         await this.getOrder();
-        await this.getOrderSummary() 
+        await this.getOrderSummary()
     }
 
     getPaymentRequest() {
         let total = this.order.workedAccounts.find(p => p.code == 'total');
         let shouldBePaid = Helper.asCurrency(total.alacak - total.borc);
         if (shouldBePaid <= 0.00)
-            throw new Error("Geçersiz ödeme işlemi, siparişin borcu yoktur");        
+            throw new Error("Geçersiz ödeme işlemi, siparişin borcu yoktur");
 
         this.api.fillPuanAccounts(this.order, shouldBePaid);
         let request = this.paymentProvider.requestFromOrder([this.order]);
@@ -123,31 +124,29 @@ export default class Route extends PaymentRouter {
 
         let userMessage = "";
 
-        if (this.pageHasPaymentId) {
-            try {
+        try {
+            if (this.pageHasPaymentId) {
+
                 this.getPaymentRequest();
                 let threedPaymentMade = await this.created3DPayment();
                 if (threedPaymentMade) {
                     await this.paymentSuccess(threedPaymentMade);
                     userMessage = "Ödemeniz başarıyla alındı"
                 } else {
-                    userMessage = "Ödeme işlemi başarısız"
+                    throw new Error("Ödeme işlemi başarısız")
                 }
-            } catch (err) {
-                userMessage = err.message || err.errorMessage
-            }
 
-        } else if (this.req.body.makepayment == "true") {
-            if (this.req.body.secureship == 'on') {
-                this.order.noInteraction = true;
-                await this.order.save()
-            } else {
-                this.order.noInteraction = false;
-                await this.order.save()
-            }
+            } else if (this.req.body.makepayment == "true") {
+                if (this.req.body.secureship == 'on') {
+                    this.order.noInteraction = true;
+                    await this.order.save()
+                } else {
+                    this.order.noInteraction = false;
+                    await this.order.save()
+                }
 
-            let paymentResult: PaymentResult;
-            try {
+                let paymentResult: PaymentResult;
+
                 let req: PaymentRequest = this.getPaymentRequest();
                 if (this.threeDPaymentRequested) {
                     await this.init3dPayment(req);
@@ -157,9 +156,14 @@ export default class Route extends PaymentRouter {
                     await this.paymentSuccess(paymentResult)
                     userMessage = "Ödemenizi başarıyla aldık"
                 }
-            } catch (err) {
-                userMessage = err.message || err.errorMessage
+
             }
+        } catch (err) {
+            userMessage = err.message || err.errorMessage;
+            email.send('tansut@gmail.com', 'hata/payment: kasaptanAl.com', "error.ejs", {
+                text: JSON.stringify(err || {}) + '/' + userMessage,
+                stack: err.stack
+            })            
         }
 
         this.renderPage(userMessage);

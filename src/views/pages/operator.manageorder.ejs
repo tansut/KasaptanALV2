@@ -29,9 +29,7 @@
 
 
 
-<% var balance = order.workedAccounts.find(p=>p.code == 'total') 
-  var shouldBePaid = __helper.asCurrency(balance.alacak - balance.borc)
-%>
+
 
 
 
@@ -77,18 +75,106 @@
     </form>
 
 
-<% if (shouldBePaid > 0) { %>
+<% if (controller.shouldBePaid > 0) { %>
 
 
   <p class="text-muted text-center">
-    <%- include('./_partial/currency.ejs', {value: shouldBePaid}) %>
+    <%- include('./_partial/currency.ejs', {value: controller.shouldBePaid}) %>
   </p>
 
 <% } else { %>
-  <p class="text-success text-center">
+  <!-- <p class="text-success text-center">
     Siparişin BORCU YOKTUR
-  </p>
+  </p> -->
 <% } %>
+
+
+
+  <div class="alert alert-info">
+    <div class="row">
+      <% if (controller.butcherFee && controller.shouldBePaid <= 0) { %>
+      <div class="col-sm-6">
+        <h6>
+  
+        </h6>
+        <p>
+          Değerli iş ortağımız, aşağıda satış makbuzunu iletiyorum. Hayırlı ve bol kazançlı günler dileriz.
+        </p>
+        <p>
+          -------------------
+        </p>
+        <p>
+        <%=order.butcherName%> Sipariş Toplamı: <%- include('./_partial/currency.ejs', {value: controller.butcherFee.inputTotal}) %>
+        </p>
+        <span class="d-block"><%= __helper.formatDate(order.creationDate)%>, <%=order.areaLevel3Text%></span>
+        <span class="d-block">Sipariş no: <%=order.ordernum%>/<%=order.name%></span>
+        <!-- <span class="d-block">Cironuza katkımız: <%- include('./_partial/currency.ejs', {value: controller.butcherFee.product}) %> + KDV -->
+        <span class="d-block">kasaptanAl.com hizmeti: <%- include('./_partial/currency.ejs', {value: controller.butcherFee.kalitteFee}) %> + KDV
+        </span>
+        <% if (controller.butcherFee.butcherToCustomer > 0) { %>
+        <span class="d-block">Müşterinize iletilen puan: <%- include('./_partial/currency.ejs', {value: controller.butcherFee.butcherToCustomer}) %> 
+        </span>      
+        <% } %>
+        <span>
+          <span class="d-block">
+            Bu satışla vergi ve diğer avantajlarınız oldu. Detaylar için tıklayın:
+          </span>
+          <a href="<%=controller.url%>/gelir-hesapla?rate=<%=controller.butcherFee.inputRate*100%>&total=<%=controller.butcherFee.inputTotal%>&go=1">
+            <%=controller.url%>/gelir-hesapla?rate=<%=controller.butcherFee.inputRate*100%>&total=<%=controller.butcherFee.inputTotal%>&go=1
+          </a>
+        </span>
+        <p>
+          -------------------
+        </p>
+      </div>
+
+      <% } %>
+      <div class="col-sm-6">
+        <p>
+          Sipariş No : <%=order.ordernum%> <br>
+          Toplam (<%=order.items.length%>) adet ürün
+        </p>
+        <div class="mb-2">
+          <% order.items.forEach((item, i) => { %>
+           
+            (<%=i+1%>) <%=item.product.name%> <br>
+             <%=item.quantity%> <%=item.pounitTitle%>/ toplam 
+               <%- include('./_partial/currency.ejs', {value: item.price}) %> <br>
+            
+             <%if (item.pounitWeight) { %>
+             1 <%=item.pounitTitle%> <%=item.pounitWeight%> olacak şekilde <br>
+             <% } %>
+         
+           <% if (item.note) {%>
+             **<%=item.note%>** <br>
+             <%}%> 
+             -----------
+             <br>
+             <% }) %>
+
+
+            
+             <br>
+             <%if (controller.teslimatTotal > 0) { %>
+              Ürün Bedeli: <%- include('./_partial/currency.ejs', {value: controller.productTotal}) %>  <br>
+              Teslimat Bedeli: <%- include('./_partial/currency.ejs', {value: controller.teslimatTotal}) %> <br>
+              <%}%>
+             Toplam Ödenecek:  <%- include('./_partial/currency.ejs', {value: controller.shouldBePaid}) %>
+
+        </div>
+      </div>
+        
+          
+
+  
+   
+    </div>
+  
+  
+  
+  </div>
+  
+
   <a id="orderdetails"></a>
       <div class="mb-3">
         <%- include('./_partial/order.details.ejs', {
@@ -99,48 +185,7 @@
 
 
 
-<% if (controller.butcherFee) { %>
 
-<div class="alert alert-info">
-  <div class="row">
-
-    <div class="col-sm-6">
-      <p>
-        Değerli iş ortağımız, aşağıda satış makbuzunu iletiyorum. Hayırlı ve bol kazançlı günler dileriz.
-      </p>
-      <p>
-        -------------------<br>
-      <%=order.butcherName%> Sipariş Toplamı: <%- include('./_partial/currency.ejs', {value: controller.butcherFee.inputTotal}) %>
-      </p>
-      <span class="d-block"><%= __helper.formatDate(order.creationDate)%>, <%=order.areaLevel3Text%></span>
-      <span class="d-block">Sipariş no: <%=order.ordernum%>/<%=order.name%></span>
-      <!-- <span class="d-block">Cironuza katkımız: <%- include('./_partial/currency.ejs', {value: controller.butcherFee.product}) %> + KDV -->
-      <span class="d-block">Topladığımız komisyon: <%- include('./_partial/currency.ejs', {value: controller.butcherFee.kalitteFee}) %> + KDV
-      </span>
-      <% if (controller.butcherFee.butcherToCustomer > 0) { %>
-      <span class="d-block">Sadık müşteri puanı: <%- include('./_partial/currency.ejs', {value: controller.butcherFee.butcherToCustomer}) %> 
-      </span>      
-      <% } %>
-      <span>
-        <span class="d-block">
-          Bu satışla KDV, kart komisyonu ve vergi avantajlarınız oldu. Detaylar için tıklayın:
-        </span>
-        <a href="<%=controller.url%>/gelir-hesapla?rate=<%=controller.butcherFee.inputRate*100%>&total=<%=controller.butcherFee.inputTotal%>&go=1">
-          <%=controller.url%>/gelir-hesapla?rate=<%=controller.butcherFee.inputRate*100%>&total=<%=controller.butcherFee.inputTotal%>&go=1
-        </a>
-      </span>
-      <p>
-        -------------------
-      </p>
-    </div>
-    <div class="col-sm-6"></div>
-  </div>
-
-
-
-</div>
-
-<% } %>
 
 
     

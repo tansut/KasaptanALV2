@@ -26,6 +26,7 @@ import * as cookieParser from 'cookie-parser';
 const flash = require('connect-flash');
 import { RequestHelper } from './lib/RequestHelper';
 import iyzico from './lib/payment/iyzico';
+import Tasks from './lib/tasks/index';
 import paratika from './lib/payment/paratika';
 
 const SessionStore = require('express-session-sequelize')(session.Store);
@@ -192,6 +193,10 @@ class KasaptanAlApp {
                 process.exit(2);
             }
         });
+
+  
+
+        Tasks.start();
 
         return new Promise((resolve, reject) => {
             server.listen(config.port, () => {

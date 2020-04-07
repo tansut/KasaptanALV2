@@ -83,6 +83,37 @@ export default class Route extends ApiRouter {
         return accounts;
     }
 
+    calculatePaid(o: Order) {
+        let codeCredit = Account.generateCode("odeme-bekleyen-satislar", [o.userId, o.ordernum, 500]);
+        let codeManual = Account.generateCode("odeme-bekleyen-satislar", [o.userId, o.ordernum, 600]);
+        let total = 0.00;
+        o.workedAccounts.forEach(a=> {
+            if (a.code == codeCredit || a.code == codeManual) total+=a.alacak;
+        })
+        return Helper.asCurrency(total);       
+    }    
+
+
+    
+
+    calculateTeslimat(o: Order) {
+        let code = Account.generateCode("odeme-bekleyen-satislar", [o.userId, o.ordernum, 200]);
+        let total = 0.00;
+        o.workedAccounts.forEach(a=> {
+            if (a.code == code) total+=a.alacak;
+        })
+        return Helper.asCurrency(total);       
+    }
+
+    calculateProduct(o: Order) {
+        let code = Account.generateCode("odeme-bekleyen-satislar", [o.userId, o.ordernum, 100]);
+        let total = 0.00;
+        o.workedAccounts.forEach(a=> {
+            if (a.code == code) total+=a.alacak;
+        })
+        return Helper.asCurrency(total);       
+    }    
+
     async getOrders(where?: any) {
         let res = await Order.findAll({
             where: where,

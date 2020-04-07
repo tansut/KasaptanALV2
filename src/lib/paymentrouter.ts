@@ -107,12 +107,37 @@ export class PaymentRouter extends ViewRouter  {
     }    
 
     getCreditCard(): Creditcard {
+        this.req.body.number = this.req.body.number || "";
+        this.req.body.expiry = <string>this.req.body.expiry || "";
+        let expireMonth = "";
+        let expireYear = "";
+        if (this.req.body.expiry.includes("/")) {
+            expireMonth = this.req.body.expiry.split('/')[0]
+            expireYear = this.req.body.expiry.split('/')[1]
+        } else {
+            if (this.req.body.expiry.length == 4) {
+                expireMonth = this.req.body.expiry.slice(0,2);
+                expireYear = this.req.body.expiry.slice(2,4);
+            } else if (this.req.body.expiry.length == 6) {
+                expireMonth = this.req.body.expiry.slice(0,2);
+                expireYear = this.req.body.expiry.slice(2,6);
+            }
+        }
+
+        if (expireYear.length == 2) {
+            expireYear = "20" + expireYear
+        }
+
+        if (expireMonth.length == 1) {
+            expireMonth = "0" + expireMonth
+        }
+        
         return {
             cardHolderName: this.req.body.name,
             cardNumber: this.req.body.number.replace(/\s+/g, ''),
             cvc: this.req.body.cvc,
-            expireMonth: this.req.body.expiry.split('/')[0].replace(/\s+/g, ''),
-            expireYear: this.req.body.expiry.split('/')[1].replace(/\s+/g, '')
+            expireMonth: expireMonth.replace(/\s+/g, ''),
+            expireYear: expireYear.replace(/\s+/g, '')
         }        
     }
 

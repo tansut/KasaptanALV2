@@ -1,0 +1,230 @@
+<!DOCTYPE html>
+<html lang="tr-TR" prefix="og: http://ogp.me/ns#">
+
+<head>
+  <% include ./_partial/head %>
+  <style>
+    @media print {
+    
+    
+    .d-print-w-75 {
+          width: 75% !important;
+      }
+      .d-print-w-50 {
+          width: 50% !important;
+      }
+    
+      .d-print-w-25 {
+          width: 25% !important;
+      }
+    
+      .d-print-none {
+        display: none !important
+      }
+    
+      .d-print-inline {
+        display: inline !important
+      }
+    
+      .d-print-inline-block {
+        display: inline-block !important
+      }
+    
+      .d-print-block {
+        display: block !important
+      }
+    
+      .d-print-table {
+        display: table !important
+      }
+    
+      .d-print-table-row {
+        display: table-row !important
+      }
+    
+      .d-print-table-cell {
+        display: table-cell !important
+      }
+    
+      .d-print-flex {
+        display: -webkit-box !important;
+        display: flex !important
+      }
+    
+      .d-print-inline-flex {
+        display: -webkit-inline-box !important;
+        display: inline-flex !important
+      }
+    
+      .col-sm-1, .col-sm-2, .col-sm-3, .col-sm-4, .col-sm-5, .col-sm-6, .col-sm-7, .col-sm-8, .col-sm-9, .col-sm-10, .col-sm-11, .col-sm-12 {
+      float: left;
+    }
+    .col-sm-12 {
+      width: 100%;
+    }
+    .col-sm-11 {
+      width: 91.66666666666666%;
+    }
+    .col-sm-10 {
+      width: 83.33333333333334%;
+    }
+    .col-sm-9 {
+      width: 75%;
+    }
+    .col-sm-8 {
+      width: 66.66666666666666%;
+    }
+    .col-sm-7 {
+      width: 58.333333333333336%;
+    }
+    .col-sm-6 {
+      width: 50%;
+    }
+    .col-sm-5 {
+      width: 41.66666666666667%;
+    }
+    .col-sm-4 {
+      width: 33.33333333333333%;
+     }
+     .col-sm-3 {
+       width: 25%;
+     }
+     .col-sm-2 {
+       width: 16.666666666666664%;
+     }
+     .col-sm-1 {
+      width: 8.333333333333332%;
+     }
+    
+    }
+    </style>
+</head>
+
+<% var isViewMyProducts = __req.query.view=="my"
+   var isPrinting = __req.query.print=="1" || __req.query.print=="2"
+   var selling = controller._.sortBy(controller.sellingProducts, ["product.tag1"]).reverse() ;
+   var others = controller._.sortBy(controller.otherProducts, ["product.tag1"]).reverse() ;
+   var printingProducts = __req.query.print=="2" ? selling.concat(others): selling
+%>
+
+
+
+<body>
+  <% include ./_partial/header %>
+
+
+  <div class="page-title-overlap bg-primary pt-4 d-print-none">
+    <div class="container d-lg-flex justify-content-between py-2 py-lg-3">
+      <div class="order-lg-2 mb-3 mb-lg-0 pt-lg-2">
+        <nav aria-label="breadcrumb">
+          <ol class="breadcrumb breadcrumb-light flex-lg-nowrap justify-content-center justify-content-lg-star">
+            <li class="breadcrumb-item"><a class="text-nowrap" href="/pages/butcher"><i class="czi-home"></i></a></li>
+            <li class="breadcrumb-item text-nowrap active" aria-current="page">
+              <%= controller.butcher ? controller.butcher.name: "Kasap" %></li>
+          </ol>
+        </nav>
+      </div>
+
+
+    </div>
+    <div class="d-print-none text-center">
+      <div class="">
+        <h5 class="d-block h6 mb-3 text-white">Yazdır</h5>
+          <div class="d-flex justify-content-center">
+            
+            <button onclick="javascript:doPrint(1)" class="btn btn-dark btn-sm mr-3 mb-3 ">Sattığım Ürünler</button>
+            <button onclick="javascript:doPrint(2)" class="btn btn-dark btn-sm mr-3 mb-3">Tüm Ürünler</button>
+
+          </div>
+      </div>
+    </div>
+  </div>
+
+
+  <div class="d-none d-print-block text-center">
+    <h1><%= controller.butcher ? controller.butcher.name: "Kasap" %></h1>
+    <h3>kasaptanal.com ürün listesi</h3>
+    <hr>
+  </div>
+
+
+
+ 
+    <div class="container px-0">
+      <div class="bg-light box-shadow-lg px-4 py-4 mb-3 ">
+<h6 class="text-center">
+  Ürünler (<%=printingProducts.length%> adet)
+</h6>
+    <table class="table table-striped">
+      <thead>
+          <tr>
+              <th></th>
+              <th></th>
+             
+              <th></th>
+              <th></th>
+              <th></th>
+          </tr>
+      </thead>
+      <tbody>
+    <% printingProducts.forEach((p, i)=> { %>
+      <% var productunits = controller.getProductUnits(p.product, p) %>
+      <% var kgUnit = productunits.find(p=>p.unit == 'kg') %>
+      <% var newRow = (i % 2 == 0) %>
+    <tr>
+      <td>
+        <%=p.product.name%>
+      </td>      
+      <td>
+        <%- include('./_partial/currency.ejs', {value: p.kgPrice, unit: 'KG'}) %>
+
+
+      </td>
+      <td>
+        <% if (p.unit1enabled && p.unit1price > 0) { %>
+        <%- include('./_partial/currency.ejs', {value: p.unit1price, unit: p.product.unit1}) %>
+
+        <% } %>
+      </td>
+      <td>
+        <% if (p.unit2enabled && p.unit2price > 0) { %>
+          <%- include('./_partial/currency.ejs', {value: p.unit2price, unit: p.product.unit2}) %>
+  
+          <% } %>
+      </td>
+      <td>
+
+        <% if (p.unit3enabled && p.unit3price > 0) { %>
+          <%- include('./_partial/currency.ejs', {value: p.unit3price, unit: p.product.unit3}) %>
+  
+          <% } %>
+      </td>
+    </tr>
+    <% }) %>
+      </tbody>
+    </table>
+      </div>
+    </div>
+
+  <% include ./_partial/footer %>
+  <% include ./_partial/scripts %>
+
+  <script>
+  <% if (controller.goto) {  %>
+      window.App.jump("#<%= controller.goto %>");
+  <% } %>
+  </script>
+
+</body>
+
+<script>
+
+  function doPrint(n) {
+    window.location.href = '/pages/butcher/product-list?view=my&print=' + n;
+  }
+<% if (isPrinting) { %>
+    window.print();
+<%}%>
+</script>
+
+</html>
