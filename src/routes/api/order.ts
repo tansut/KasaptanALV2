@@ -7,7 +7,7 @@ import Area from '../../db/models/area';
 import email from '../../lib/email';
 import { Shipment } from '../../models/shipment';
 import Dispatcher from '../../db/models/dispatcher';
-import { Payment } from '../../models/payment';
+import { Payment, PaymentTypeDesc } from '../../models/payment';
 import Butcher from '../../db/models/butcher';
 import AccountModel from '../../db/models/accountmodel';
 import Product from '../../db/models/product';
@@ -88,7 +88,7 @@ export default class Route extends ApiRouter {
         let codeManual = Account.generateCode("odeme-bekleyen-satislar", [o.userId, o.ordernum, 600]);
         let total = 0.00;
         o.workedAccounts.forEach(a=> {
-            if (a.code == codeCredit || a.code == codeManual) total+=a.alacak;
+            if (a.code == codeCredit || a.code == codeManual) total+=a.borc;
         })
         return Helper.asCurrency(total);       
     }    
@@ -408,9 +408,11 @@ export default class Route extends ApiRouter {
         }
     }
 
-    async updateOrderByPayment(o: Order, paymentInfo: PaymentResult, t?: Transaction) {
+    async updateOrderByCreditcardPayment(o: Order, paymentInfo: PaymentResult, t?: Transaction) {
         let promises = [];
         o.paymentId = paymentInfo.paymentId;
+        o.paymentType = "onlinepayment";
+        o.paymentTypeText = PaymentTypeDesc.onlinepayment;
         promises.push(o.save({
             transaction: t
         }));
@@ -678,7 +680,7 @@ export default class Route extends ApiRouter {
             ops.push(op);
             let puanAccounts = this.getPuanAccounts(o, paymentInfo.paidPrice)
             ops.push(puanAccounts);
-            promises = promises.concat(this.updateOrderByPayment(o, paymentInfo, t));
+            promises = promises.concat(this.updateOrderByCreditcardPayment(o, paymentInfo, t));
         }
 
         promises = promises.concat(this.saveAccountingOperations(ops, t));

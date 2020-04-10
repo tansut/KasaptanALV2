@@ -104,7 +104,7 @@
           -------------------
         </p>
         <p>
-        <%=order.butcherName%> Sipariş Toplamı: <%- include('./_partial/currency.ejs', {value: controller.butcherFee.inputTotal}) %>
+        <%=order.butcherName%><br> Ödemeler Toplamı: <%- include('./_partial/currency.ejs', {value: controller.butcherFee.inputTotal}) %>
         </p>
         <span class="d-block"><%= __helper.formatDate(order.creationDate)%>, <%=order.areaLevel3Text%></span>
         <span class="d-block">Sipariş no: <%=order.ordernum%>/<%=order.name%></span>
@@ -112,7 +112,7 @@
         <span class="d-block">kasaptanAl.com hizmeti: <%- include('./_partial/currency.ejs', {value: controller.butcherFee.kalitteFee}) %> + KDV
         </span>
         <% if (controller.butcherFee.butcherToCustomer > 0) { %>
-        <span class="d-block">Müşterinize iletilen puan: <%- include('./_partial/currency.ejs', {value: controller.butcherFee.butcherToCustomer}) %> 
+        <span class="d-block">Müşterinize verdiğiniz sadakat puanı: <%- include('./_partial/currency.ejs', {value: controller.butcherFee.butcherToCustomer}) %> 
         </span>      
         <% } %>
         <span>

@@ -25,7 +25,7 @@ export default class ButcherStats extends BaseTask {
 
     async run() {
         console.log('running butchers job', Date.now())
-        let prods = await Order.sequelize.query<any>("SELECT butcherid, status, count(*) as total FROM orders  group by butcherid, status order by butcherid",
+        let prods = await Order.sequelize.query<any>("SELECT butcherid, status, count(*) as total FROM Orders  group by butcherid, status order by butcherid",
         {            
             type: sq.QueryTypes.SELECT,
             mapToModel: false,

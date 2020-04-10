@@ -34,6 +34,7 @@
       <thead>
           <tr>
               <th>Müşteri</th>
+              <th>Tarih</th>
               <th>Kasap</th>
               <th>Durum</th>
           </tr>
@@ -44,6 +45,7 @@
           <tr>
               <td><a href="<%= `/pages/operator/order/${orders[i].ordernum}` %>"><%= orders[i].name %> </a>
               </td>
+              <td><%= __helper.formatDate(orders[i].creationDate) %></td>
               <td><%= orders[i].butcherName %></td>
               <td><%= orders[i].status %></td>
           </tr>
