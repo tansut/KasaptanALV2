@@ -27,8 +27,59 @@
   </div>
 
   <div class="container px-0">
-    <div class="bg-light box-shadow-lg  px-4 py-4 mb-3 ">
+    <div class="bg-light box-shadow-lg  px-3 pt-2 pb-3 mb-3 ">
       <div class="">
+        <h3 class="h4">Size nasıl yardımcı olalım?</h3>
+
+
+        <!-- <label>İstediğiniz ürünü bulmaya çalışabiliriz.</label> -->
+
+        <div class="mb-3">
+          <div class="input-group-overlay">
+
+            <div class="input-group-prepend-overlay">
+
+              <span class="input-group-text">
+                <i class="notsearching czi-search"></i>
+                <span class="searching d-none spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
+              </span>
+            </div>
+            <input id="page-searchbox" class="form-control searchBox prepended-form-control"
+              data-noresults-text="Maalesef bulamadık." autocomplete="off" type="text"
+              placeholder="örneğin haşlamalık et">
+            <div>
+
+            </div>
+          </div>
+          <div class="mb-3">
+            <a class="search-sample badge badge-secondary mr-1" href="#search">kuzu kıyma</a>
+            <a class="search-sample badge badge-secondary mr-1" href="#search">dana kıyma</a>
+            <a class="search-sample badge badge-secondary mr-1" href="#search">bonfile</a>
+            <a class="search-sample badge badge-secondary mr-1" href="#search">köfte</a>
+            <a class="search-sample badge badge-secondary mr-1" href="#search">mangallık</a>
+            <a class="search-sample badge badge-secondary mr-1" href="#search">tandır</a>
+            <a class="search-sample badge badge-secondary mr-1" href="#search">antrikot</a>
+            <a class="search-sample badge badge-secondary mr-1" href="#search">yemeklik kuşbaşı</a>
+            <a class="search-sample badge badge-secondary mr-1" href="#search">sucuk</a>
+            <a class="search-sample badge badge-secondary mr-1" href="#search">sakatat</a>
+            <a class="search-sample badge badge-secondary mr-1" href="#search">arnavut ciğeri</a>
+            <a class="search-sample badge badge-secondary mr-1" href="#search">pirzola</a>
+            <a class="search-sample badge badge-secondary mr-1" href="#search">fırınlık et</a>
+  
+          </div>
+<div class="text-center">
+  <button id="listen" onclick="startRecording()" class="d-none btn-sm btn btn-primary">
+    <i class="czi-message mr-1"></i>
+    <span id="listen-text">Sizi Dinleyebilirim</span>
+  </button>
+</div>
+      
+        </div>
+
+
+
+        <!-- <h4 class="h6">Ürün kategorilerimize göz atabilirsiniz. </h3> -->
+
 
 
         <% var viewCats = ['reyon', 'list'] %>
@@ -66,6 +117,61 @@
 
     <% include ./_partial/footer %>
     <% include ./_partial/scripts %>
+
+    <script>
+      $('.search-sample').click(function (el) {
+        var search = el.currentTarget.textContent;
+        $('#page-searchbox').autoComplete('set', { value: search, text: search });
+        $('#page-searchbox').trigger('keyup');
+        $('#page-searchbox').focus();
+        el.stopImmediatePropagation()
+      })
+
+
+      if (('webkitSpeechRecognition' in window)) {
+        var recognition = new webkitSpeechRecognition();
+        recognition.lang = "tr-TR";
+        $('#listen').removeClass('d-none');
+
+        recognition.onstart = function () {
+          $('#listen-text').text('Dinliyorum ...')
+        };
+
+        recognition.onend = function () {
+          $('#listen-text').text('Sizi Dinleyebilirim')
+        };
+
+        recognition.onresult = function (event) {
+          var saidText = "";
+          for (var i = event.resultIndex; i < event.results.length; i++) {
+            if (event.results[i].isFinal) {
+              saidText = event.results[i][0].transcript;
+            } else {
+              saidText += event.results[i][0].transcript;
+            }
+          }
+          $('#page-searchbox').autoComplete('set', { value: saidText, text: saidText });
+          $('#page-searchbox').trigger('keyup');
+          $('#page-searchbox').focus();
+
+        }
+
+        function startRecording() {
+          try {
+            recognition.start();
+
+          } catch {
+            recognition.abort();
+
+          }
+        }
+
+      }
+
+
+
+
+    </script>
 
 </body>
 

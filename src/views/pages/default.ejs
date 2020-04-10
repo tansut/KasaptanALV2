@@ -34,7 +34,7 @@
                                     <span class="h1 d-block display-4  ">%3 ilk sipariş puanı</span>
                                     <span class="h5 d-block  font-weight-light pb-3 ">kazanın.</span>
 
-                                    <a class="btn btn-primary btn-shadow "
+                                    <a class="btn btn-primary "
                                         href="javascript:window.App.showSignupDlg()">Fırsatı Yakala<i
                                             class="czi-arrow-right ml-2 mr-n1"></i></a>
                                 </div>
@@ -46,7 +46,7 @@
                 <span class="h1 d-block display-4  ">Kasap Kart&trade;</span>
                 <span class="h5 d-block  font-weight-light pb-3 ">dünyasına hoş geldiniz</span>
 
-                <a class="btn btn-primary btn-shadow "
+                <a class="btn btn-primary "
                     href="/blog/kasap-kart">Daha Fazlası<i
                         class="czi-arrow-right ml-2 mr-n1"></i></a>
             </div>
@@ -56,7 +56,7 @@
                                     
                                     <h1 class="h2 line-h-extra  font-weight-light  ">seçkin kasaplardan <br /> <b>doğal, taze, güvenilir</b> <br />online et
                                         siparişi</h1>
-                                    <a class="btn btn-primary btn-shadow "
+                                    <a class="btn btn-primary  "
                                         href="/kasap-urunleri">Alışverişe Başla<i
                                             class="czi-arrow-right ml-2 mr-n1"></i></a>
                                 </div>
@@ -69,7 +69,7 @@
                                     <span class="h1 d-block display-4  ">çünkü usta kasaplarla</span>
                                     <span class="h5 d-block font-weight-light pb-3 ">çalışıyoruz.</span>
 
-                                    <a class="btn btn-primary btn-shadow "
+                                    <a class="btn btn-primary "
                                         href="/kasap-secim-kriterleri">Daha Fazlası<i
                                             class="czi-arrow-right ml-2 mr-n1"></i></a>
                                 </div>
@@ -84,7 +84,7 @@
                                     <span class="h5 d-block font-weight-light pb-3 ">&amp; dahası Et Kültür
                                         Blog'da.</span>
 
-                                    <a class="btn btn-primary btn-shadow " href="/blog">Göz
+                                    <a class="btn btn-primary " href="/blog">Göz
                                         at<i class="czi-arrow-right ml-2 mr-n1"></i></a>
                                 </div>
                       
@@ -97,6 +97,39 @@
 
     <div class=" mb-3">
         <%- include('./_partial/category-slider', { header: false, titles: false, viewCats: ['reyon', 'list'], title: 'Tüm Ürünlerimiz', allUrl: '/kasap-urunleri' }); %>      
+      </div>
+
+      <div class="container mb-3">
+          <div class="border bg-secondary">
+            <div class="row">
+                <div class="col-sm-4">
+                    <a href="/blog/kasap-kart">
+                        <img src="<%=__config.staticDomain%>/content-resimleri/kasap-kart-thumbnail.jpg" alt="Kasap Kart™">
+                    
+                    </a>
+                </div>
+                
+                <div class="col-sm-8 ">
+                    <p class="pl-3 pt-3 h3">
+                        Kasap Kart&trade; ile tanışın
+                    </p>
+                    <p class="pl-3 lead">
+                Tüm kasap alışverişlerinizi anlaşmalı kasaplarımızdan yaparak puan biriktirin, 
+                puanlarınızı sonraki alışverişlerinizde kullanın. 
+                    </p>
+                    <div class="pl-3 mb-3 text-lg-left text-center ">
+                        <a class="btn btn-primary "
+                        href="/kasap-urunleri">Alışverişe Başla<i
+                            class="czi-arrow-right ml-2 mr-n1"></i></a>
+                    </div>
+                
+                </div>
+                
+                </div>
+          </div>
+
+
+        
       </div>
 
     <div class="container mb-3">
@@ -170,7 +203,7 @@
     </div>
 
     <div class="container mb-3">
-        <div class=" ">
+       
             <h3 class="h5 text-center pb-2 pt-2">Anlaşmalı Kasaplarımız</h3>
     
             <div class="table-responsive" data-simplebar>
@@ -213,7 +246,7 @@
     
     
     
-        </div>            
+              
     </div>
 
 
