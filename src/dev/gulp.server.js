@@ -5,6 +5,10 @@ var del = require('del');
 var buffer = require('gulp-buffer');
 var uglify = require('gulp-uglify');
 minifyejs = require('gulp-minify-ejs')
+var AWS = require("aws-sdk");
+var awspublish = require("gulp-awspublish");
+ 
+
 
 const deployDir = "";
 
@@ -71,5 +75,52 @@ function deployBin() {
 //     return gulp.src(['./package.json'])
 //         .pipe(gulp.dest("deploy"));
 // }
+
+
+gulp.task('aws.deploy', () => {
+    AWS.config.loadFromPath('./awsconfig.json');
+
+
+    var publisher = awspublish.create(
+        {
+          params: {
+            Bucket: "static.kasaptanal.com/static"
+          }
+        },
+        {
+          cacheFileName: "./cacheaws"
+        }
+      );
+    
+      // define custom headers
+      var headers = {
+        //"Cache-Control": "max-age=315360000, no-transform, public"
+        // ...
+      };
+    
+      return (
+        gulp
+          .src("./public/**/*.*")
+          // gzip, Set Content-Encoding headers and add .gz extension
+          .pipe(awspublish.gzip())
+    
+          // publisher will add Content-Length, Content-Type and headers specified above
+          // If not specified it will set x-amz-acl to public-read by default
+          .pipe(publisher.publish(headers))
+    
+          // create a cache file to speed up consecutive uploads
+          .pipe(publisher.cache())
+
+    
+          // print upload updates to console
+          .pipe(awspublish.reporter())
+      );
+
+    return new Promise((resolve, reject) => {
+
+        resolve()
+    })
+})
+
 
 gulp.task('server.deploy', gulp.series(deployClean, gulp.parallel(deployBin)))

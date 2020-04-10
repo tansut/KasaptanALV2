@@ -90,6 +90,7 @@
     "del": "^5.1.0",
     "gulp": "^4.0.2",
     "gulp-autoprefixer": "^7.0.1",
+    "gulp-awspublish": "^4.1.1",
     "gulp-babel": "^8.0.0",
     "gulp-buffer": "0.0.2",
     "gulp-clean-css": "^4.2.0",

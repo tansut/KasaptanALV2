@@ -166,7 +166,7 @@ export default class Route extends PaymentRouter {
             })            
         }
 
-        this.renderPage(userMessage);
+secret:          this.renderPage(userMessage);
 
     }
 
