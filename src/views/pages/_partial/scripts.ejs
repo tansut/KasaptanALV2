@@ -11,20 +11,14 @@
 </script>
 <% } %>
 
-<script  src="/static/js/vendor.min.js?v=<%=__config.versionKey%>"></script>
-<script  src="/static/js/site.min.js?v=<%=__config.versionKey%>"></script>
+<script  src="<%=__config.staticDomain %>/resource/js/vendor.min.js?v=<%=__config.versionKey%>"></script>
+<script  src="<%=__config.staticDomain %>/resource/js/site.min.js?v=<%=__config.versionKey%>"></script>
 
 
-<script src="/static/js/app.js?v=<%=__config.versionKey%>"></script>
+<script src="<%=__config.staticDomain %>/resource/js/app.js?v=<%=__config.versionKey%>"></script>
 
 
-<script type='text/javascript'>
-  $(document).ready(function () {
-  if ($("[rel=tooltip]").length) {
-  $("[rel=tooltip]").tooltip();
-  }
-});
-</script>
+
 
 <script>
 
@@ -322,7 +316,6 @@ $('#__whatsup').floatingWhatsApp({
     zIndex: '1030',
     message: '<%= typeof(__supportMessage) == "undefined" ? '': __supportMessage %>',
     size: '3.2rem',
-    //buttonImage: '<img src="/static/img/logo-home.png" />'
     
   });
 

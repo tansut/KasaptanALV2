@@ -24,7 +24,7 @@ module.exports = function (shipit) {
 
 
     shipit.blTask('install', async function () {
-        await shipit.remote("nvm use v12.10.0" + "; cd " + this.currentPath + "; npm install --force; npm prune");
+        await shipit.remote("nvm use v12.10.0" + "; export NODE_OPTIONS=--max-old-space-size=4096; cd " + this.currentPath + "; npm install --force; npm prune");
         // await shipit.remote();
         // await shipit.remote();
     });

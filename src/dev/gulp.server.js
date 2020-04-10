@@ -84,7 +84,7 @@ gulp.task('aws.deploy', () => {
     var publisher = awspublish.create(
         {
           params: {
-            Bucket: "static.kasaptanal.com/static"
+            Bucket: "static.kasaptanal.com/resource"
           }
         },
         {
@@ -123,4 +123,4 @@ gulp.task('aws.deploy', () => {
 })
 
 
-gulp.task('server.deploy', gulp.series(deployClean, gulp.parallel(deployBin)))
+gulp.task('server.deploy', gulp.series(deployClean, gulp.parallel(deployBin, "aws.deploy")))
