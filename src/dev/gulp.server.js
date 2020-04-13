@@ -123,4 +123,4 @@ gulp.task('aws.deploy', () => {
 })
 
 
-gulp.task('server.deploy', gulp.series(deployClean, gulp.parallel(deployBin, "aws.deploy")))
+gulp.task('server.deploy', gulp.series(deployClean, gulp.parallel(deployBin)))
