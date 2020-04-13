@@ -62,7 +62,8 @@ export default class Route extends ViewRouter {
     async tryBestFromOrders(serving: Dispatcher[]) {
         serving.forEach(s => s.lastorderitemid = s.lastorderitemid || 0);
         let orderedByDate = _.orderBy(serving, 'lastorderitemid', 'asc');
-        return orderedByDate.length ? orderedByDate[0] : null;
+        let orderedByKasapCard = _.orderBy(orderedByDate, 'butcher.enablePuan', 'desc');
+        return orderedByKasapCard.length ? orderedByKasapCard[0] : null;
     }
 
     tryBestAsRandom(serving: Dispatcher[], others: Dispatcher[] = []) {
