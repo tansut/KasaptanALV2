@@ -127,7 +127,22 @@ class Review extends BaseModel<Review> {
     @Column({
         allowNull: true        
     })
-    areaSlug: string;        
+    areaSlug: string;       
+         
+
+
+    @Column({
+        type: DataType.TEXT
+    })
+    settingsjson: string
+
+    get settings(): any {
+        return this.settingsjson ? JSON.parse(this.getDataValue('settingsjson')) : null
+    }
+
+    set settings(value: any) {
+        this.setDataValue('settingsjson', JSON.stringify(value));
+    }
 
 }
 

@@ -532,6 +532,7 @@ class Product extends BaseModel<Product> {
 
     resources: Resource[];
 
+
     async getPriceStats() {
         let q = `select count(*) as count, 
         min(kgPrice) as kgmin, avg(kgPrice) as kgavg, max(kgPrice) as kgmax, 

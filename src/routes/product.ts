@@ -73,22 +73,6 @@ export default class Route extends ViewRouter {
         return res;
     }
 
-    async loadReviews(product: Product) {
-        let res: Review[] = await Review.sequelize.query(`
-        SELECT r.* FROM Reviews r, Orders o, OrderItems oi 
-        WHERE r.type='order' and oi.status='teslim edildi' and r.ref1=o.id and oi.orderid = o.id and oi.productid=:pid
-        ORDER BY r.ID DESC
-        `
-        ,
-        {
-            replacements: { pid: product.id },
-            type: sq.QueryTypes.SELECT,
-            mapToModel: true,
-            raw: true
-        }
-        );
-        this.reviews = res;
-    }
 
     async bestButchersForProduct(pid, adr: PreferredAddress, userBest: Butcher): Promise<ButcherSelection> {
         let api = new DispatcherApi(this.constructorParams);
@@ -138,10 +122,12 @@ export default class Route extends ViewRouter {
         });
         if (!product) return this.next();
 
-        await product.loadResources();
-        await this.loadReviews(product);
-
         let api = new ProductApi(this.constructorParams);
+
+
+        await product.loadResources();
+        this.reviews = await api.loadReviews(product.id);
+
         let dapi = new DispatcherApi(this.constructorParams);
 
         let butcher: Butcher = this.req.query.butcher ? await Butcher.getBySlug(this.req.query.butcher) : null;
@@ -280,7 +266,7 @@ export default class Route extends ViewRouter {
                 })
             }
             
-            this.productLd = await api.getProductLd(product);
+            this.productLd = product.reviewCount > 0 ? await api.getProductLd(product): null;
             this.res.render('pages/product', this.viewData({
                 butcherProducts: this.butcherProducts.map(p => p.product), butchers: selectedButchers,
                 pageTitle: product.name + ' Siparişi ve Fiyatları',

@@ -161,7 +161,7 @@ export default class Route extends PaymentRouter {
         } catch (err) {
             userMessage = err.message || err.errorMessage;
             email.send('tansut@gmail.com', 'hata/payment: kasaptanAl.com', "error.ejs", {
-                text: JSON.stringify(err || {}) + '/' + userMessage,
+                text: JSON.stringify(err || {}) + '/' + userMessage + ' ' + this.order.ordernum,
                 stack: err.stack
             })            
         }

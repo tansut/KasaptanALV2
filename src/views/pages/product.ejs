@@ -3,16 +3,18 @@
 
 <head>
   <% include ./_partial/head %>
+  <% if (controller.productLd) { %>
   <script type="application/ld+json">
     <%- JSON.stringify(controller.productLd) %>
   </script>
+  <% } %>
   <% if (Object.keys(__req.query).length != 0 ) {%>
   <meta name="robots" content="noindex,follow">
   <link href="https://www.kasaptanal.com<%=__req.path%>" rel="canonical">
   <%}%>
 </head>
 
-<body class="d-none">
+<body>
 
 
 
@@ -869,7 +871,10 @@
                 
                 <div class="media-body pl-3">
                   <h6 class="font-size-sm mb-0"><%=r.displayUser%></h6>
-                  <span class="font-size-ms text-muted"></span>
+                  <span class="">
+                    <a class="font-size-ms text-muted" href="/<%=r.areaSlug%>"><%=r.level3Text%></a>
+                    
+                  </span>
                 </div>
               </div>
               <div>
@@ -888,8 +893,28 @@
               </div>
             </div>
             <p class="font-size-md mb-2">
-              <%= r.content %>
+              <em>
+                <%= r.content %>
+
+              </em>
             </p>
+            <% if (r.settings && r.settings.products) { %>
+              <span class="d-block mb-1 font-weight-medium font-size-xs">
+                Sipariş verilen ürünler:
+              </span>
+             
+            
+              <% r.settings.products.forEach(p => { %>
+              
+                <a class="mr-2 font-size-xs " href="/<%=p.slug%>"><i class="mr-1 czi-check-circle"></i><%=p.name%></a>
+
+              
+
+               
+              <% })%>
+           
+
+            <% } %>
           </div>
           <% }) %>
                            

@@ -7,6 +7,8 @@ import Butcher from '../../db/models/butcher';
 import ButcherProduct from '../../db/models/butcherproduct';
 import Helper from '../../lib/helper';
 var MarkdownIt = require('markdown-it')
+import * as sq from 'sequelize';
+
 
 import * as _ from 'lodash';
 import Resource from '../../db/models/resource';
@@ -15,6 +17,7 @@ import Category from '../../db/models/category';
 import { Op } from 'sequelize';
 import { ProductLd, IProductLd } from '../../models/ProductLd';
 import DispatcherApi from './dispatcher';
+import Review from '../../db/models/review';
 
 export default class Route extends ApiRouter {
     markdown = new MarkdownIt();
@@ -27,6 +30,24 @@ export default class Route extends ApiRouter {
                 [Op.like]: '%yemek%',
             }
         }, products4, limit, catids, options)
+    }
+
+    async loadReviews(productid: number) {
+        let res: Review[] = await Review.sequelize.query(`
+        SELECT r.* FROM Reviews r, Orders o, OrderItems oi 
+        WHERE r.type='order' and oi.status='teslim edildi' and r.ref1=o.id and oi.orderid = o.id and oi.productid=:pid
+        ORDER BY r.ID DESC
+        `
+        ,
+        {
+            replacements: { pid: productid },
+            type: sq.QueryTypes.SELECT,
+            model: Review,
+            mapToModel: true,
+            raw: false
+        }
+        );
+        return res;
     }
 
     async getTarifResources(products4?: Product[], limit?: number, catids?: number[], options = {}) {

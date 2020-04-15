@@ -64,7 +64,7 @@
   <!-- Page Content-->
   <div class="container px-0 cz-gallery">
     <!-- Gallery + details-->
-    <div class="bg-light box-shadow-lg mb-3 pb-4 ">
+    <div class="bg-light box-shadow-lg mb-3 pb-4">
       <div>
         <div class="row ">
           <!-- Product gallery-->
@@ -82,11 +82,18 @@
 
                     <% } %>
                     " <% } %>>
-                  <img class="" <% if (resource.contentType == 'video-youtube') { %>
+                  <img  <% if (resource.contentType == 'video-youtube') { %>
                     src="<%= (resource.thumbnailUrl ? resource.getThumbnailFileUrl().replace('-thumbnail',''): null) ||  `${__req.helper.imgUrl('product-photos', resource.product.slug)}` %>"
                     <% } else { %> src="<%= `${resource.getFileUrl()}` %>" <% } %> alt="<%= resource.title  %>">
                 </a>
 
+                <% if (resource.contentType == 'video-youtube') { %>
+                <div class="text-center mt-3 mb-3">
+
+                <button onclick="javascript:window.App.openSlider(<%=resource.id%>)"" class="btn btn-sm btn-primary"> <i class="czi-play mr-2"></i> Tarifi İzle</button>
+
+                </div>
+                <% } %>
 
               
               </div>
@@ -102,7 +109,7 @@
 
               <div class=" mb-3">
 
-                <h3 class="h5"><strong><%=resource.title%></strong> hangi etten yapılır ?</h3>
+                <!-- <h3 class="h5"><strong><%=resource.title%></strong> hangi etten yapılır ?</h3> -->
                 <p class="font-size-md">
                   <i class="czi-announcement mr-1"></i>
                   Eti Bizden seçeneği ile <strong><%=resource.title%></strong> yapmak için en uygun eti kişi sayısına göre doğru miktarda biz hesaplıyoruz.
@@ -113,19 +120,40 @@
               </div>
 
  
+              <% if (resource.mddesc) { %>
            
-
+              <div class="accordion mb-3" id="payment-method" role="tablist">
+                <div class="card">
+                  <div class="card-header" role="tab">
+                    <h3 class="accordion-heading"><a href="#card" data-toggle="collapse"><i class="font-size-lg mr-2 mt-n1 align-middle"></i><%='Tarifi'%><span class="accordion-indicator"><i data-feather="chevron-up"></i></span></a></h3>
+                  </div>
+                  <div class="collapse show" id="card" data-parent="#payment-method" role="tabpanel">
+                    <div class="card-body ">
+                    
+              
+              
+                      
+                       
+                            <%- controller.Markdown.render(resource.mddesc) %>
+                  
+                      
+                      
+                      
+              
+                    </div>
+                  </div>
+                </div>
+              
+              
+              </div>
+              
+              <% } %>
 
 
                    
 
-              <% if (resource.mddesc) { %>
-              <div>
-                <h3 class="h5">Tarifi</h3>
-                  <%- controller.Markdown.render(resource.mddesc) %>
-              </div>
-              <% } %>
-     <h3 class="h5">Hangi etler uygundur?</h3>
+ 
+     <!-- <h3 class="h5">Hangi etler uygundur?</h3>
               <p>
                 <strong><%=resource.title%></strong> yapmak için 
 
@@ -153,7 +181,7 @@
           </div>
         </div>
       </div>
-      <div id="tabpc"></div>
+      <div id="tabpc"></div> -->
       <!-- <ul class="nav nav-tabs" id="optionsTab" role="tablist">
         <li class="nav-item">
           <a class="nav-link active" id="home-tab" data-toggle="tab" href="#home" role="tab" aria-controls="home"
