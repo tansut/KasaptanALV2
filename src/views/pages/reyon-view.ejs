@@ -29,13 +29,15 @@
   <div class="container px-0">
     <div class="bg-light box-shadow-lg  px-3 pt-2 pb-3 mb-3 ">
       <div class="">
-        <h3 class="h4">Size nasıl yardımcı olalım?</h3>
 
+        <div class="p-3">
+
+          <h3 class="h4">Size nasıl yardımcı olalım?</h3>
 
         <!-- <label>İstediğiniz ürünü bulmaya çalışabiliriz.</label> -->
 
-        <div class="mb-3">
-          <div class="input-group-overlay">
+        <div class="">
+          <div  class="input-group-overlay mb-1">
 
             <div class="input-group-prepend-overlay">
 
@@ -51,7 +53,7 @@
 
             </div>
           </div>
-          <div class="mb-3">
+          <div class="mb-3 font-size-lg">
             <a class="search-sample badge badge-secondary mr-1" href="#search">kuzu kıyma</a>
             <a class="search-sample badge badge-secondary mr-1" href="#search">dana kıyma</a>
             <a class="search-sample badge badge-secondary mr-1" href="#search">bonfile</a>
@@ -75,6 +77,8 @@
 </div>
       
         </div>
+        </div>
+
 
 
 
@@ -123,7 +127,10 @@
         var search = el.currentTarget.textContent;
         $('#page-searchbox').autoComplete('set', { value: search, text: search });
         $('#page-searchbox').trigger('keyup');
-        $('#page-searchbox').focus();
+        setTimeout(function() {
+          $('#page-searchbox').focus();
+
+        }, 100 )
         el.stopImmediatePropagation()
       })
 

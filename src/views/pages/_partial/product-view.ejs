@@ -1,4 +1,7 @@
 <% var butcher = typeof(butcher) != 'undefined' ? butcher: null %>
+<% var product = typeof(product) != 'undefined' ? product: butcherProduct.product %>
+
+
 <% var badge = typeof(badge) != 'undefined' ? badge: product.tag2 %>
 <div class="card product-card card-static item-card">
     <% if (badge && typeof(hideBadge) == 'undefined') { %>
@@ -16,9 +19,36 @@
             alt="<%= product.name  %>"></a>
             <% if (typeof(hideName) == 'undefined') { %>
     <div class="card-body pl-0 text-center">
-        <h3 class="product-title font-size-md"><a
+        <h3 class="product-title font-size-md mb-1"><a
                 href="/<%= product.slug%><%=(butcher ? `?butcher=${butcher}`:'') %>"><%= product.name  %></a>
         </h3>
+
+        <% if (typeof(butcherProduct) != 'undefined') { %>
+            <% var price = butcherProduct.kgPrice || butcherProduct.unit1price, unit = butcherProduct.kgPrice > 0 ? 'KG': butcherProduct.product.unit1title  %>
+            <div class="d-flex justify-content-center">
+                <div class=" text-accent font-size-sm"><%- include('./currency.ejs', {value: price, unit: unit}) %></div>
+             
+              </div>
+            <span>
+    
+                
+                
+            </span>
+            <% } %>
+
+            <!-- <% if (product.reviewCount > 0) { %>
+            <div class="text-center mb-3">
+                <div class="mb-1">
+                  <%- include('./star-rating.ejs', {val: product.ratingValue }) %>
+
+                </div>
+                <a href="javascript:gotoComments()"  class="font-size-sm text-dark font-weight-medium" ><span>Yorumlar (</span><span class="text-primary"><%=product.reviewCount %></span><span>)</span></a>
+                
+              </div>
+
+              <% } %> -->
+
+        
     </div>
 
     <%}%>

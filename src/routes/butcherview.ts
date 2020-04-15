@@ -40,8 +40,12 @@ export default class Route extends ViewRouter {
 
 
     filterProductsByCategory(filter, chunk: number = 0) {
-        let products = ProductManager.filterProductsByCategory(this.products, filter, { productType: 'generic' }, { chunk: chunk })
-        return products;
+        let products = <Product []>ProductManager.filterProductsByCategory(this.products, filter, { productType: 'generic' }, { chunk: chunk })
+        let butcherProducts = this.butcher.products.filter(bp=> {
+            return  (products.find(p=>p.id == bp.productid) != null)  && !bp['__displayed']
+        });
+        butcherProducts.forEach(r=>r['__displayed'] = true);
+        return butcherProducts;
     }
 
 
@@ -152,7 +156,7 @@ export default class Route extends ViewRouter {
             return p.product
         })
 
-        this.vitrinProducts = butcher.products.filter(bp => bp.vitrin).map(bp => bp.product);
+        //this.vitrinProducts = butcher.products.filter(bp => bp.vitrin).map(bp => bp.product);
 
         this.dispatchers = await Dispatcher.findAll({
             where: {

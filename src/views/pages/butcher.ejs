@@ -176,134 +176,197 @@
       <div class="row">
        
         <aside class="col-md-3 mr-md-0 pr-md-0 order-md-1 order-1">
-          <div class="cz-sidebar-static h-100 font-size-ms text-muted">
-            <h6>Hakkında</h6>
+          <div class="p-1 h-100 font-size-ms text-muted">
+     
+
+          
+
+              <div class="accordion" id="payment-method" role="tablist">
+
+
+             
+                  <div class="card">
+                    <div class="card-header" role="tab">
+                      <h3 class="accordion-heading"><a href="#card" data-toggle="collapse"><i class="font-size-lg mr-2 mt-n1 align-middle"></i><%='Hakkında'%><span class="accordion-indicator"><i data-feather="chevron-up"></i></span></a></h3>
+                    </div>
+                    <div class="collapse show" id="card" data-parent="#payment-method" role="tabpanel">
+                      <div class="card-body ">
+                      
+                
+                    
 
             <% if(butcher.description){ %>
-            <p><%- controller.markdown.render(butcher.description) %></p>
-
-            <% } else { %>
-            <p>
-              <%= butcher.name %>, uzun yıllardır en kaliteli et ve et ürünlerini müşterilerine sunmayı ilke
-              edinmiştir.
-            </p>
-            <p>
-              <%= butcher.areaLevel1.name %> ilinde hizmetlerine devam eden <%= butcher.name %>,
-              müşteri memnuniyetini en ön planda tutmakta, sağlıklı et ve et ürünleri sağlamaya devam etmektedir.
-            </p>
-
-            <%  } %>
-
-            <hr class="my-4">
-            <h6>İletişim</h6>
-            <p><%= butcher.address %>, <%= butcher.areaLevel2.name %>/<%= butcher.areaLevel1.name %></p>
-
-            <% if (!butcher.approved) { %>
-            <ul class="list-unstyled font-size-sm">
-              <% if(butcher.email){ %>
-
-              <li><a class="nav-link-style d-flex align-items-center font-size-xs" href="mailto:<%= butcher.email %>"><i
-                    class="czi-mail opacity-60 mr-2"></i><%= butcher.email %></a></li>
-              <% } %>
-
-              <% if(false) { %>
-
-              <li><a target="_blank" class="font-size-xs nav-link-style d-flex align-items-center"
-                  href="<%= butcher.website %>"><i class="czi-globe opacity-60 mr-2"></i><%= butcher.website %></a></li>
-
-
-              <% } %>
-
-              <% if(false) { %>
-
-              <li><a target="_blank" class="font-size-xs nav-link-style d-flex align-items-center"
-                  href="tel: <%= butcher.phone %>"><i class="czi-phone opacity-60 mr-2"></i><%= butcher.phone %></a>
-              </li>
-
-
-              <% } %>
-
-
-            </ul>
-            <% } %>
-
-            <% if (controller.dispatchers.length) {%>
-            <h6>Hizmet Bölgeleri</h6>
-            <ul class="list-unstyled font-size-sm">
-
-              <% controller.dispatchers.forEach((d,i) => { %>
-              <li>
-                <div>
-                  <span class="d-block font-weight-medium"><%=d.address.display%></span>
-                  <% if (d.takeOnly) { %>
-                  <span>Sadece Gel-Al</span>
-                  <% } else { %>
-
-                    <% if (d.min > 0) { %>
-                      <span>En az sipariş tutarı <%- include('./_partial/currency.ejs', {value: d.min}) %>, </span>                             
-                    <% } if (d.fee == 0.00) { %>
-                    <span>Ücretsiz Gönderim</span>
-                    <%} else if (d.fee > 0.00 && d.totalForFree == 0.00) { %>
-                    <span><%- include('./_partial/currency.ejs', {value: d.totalForFree}) %> gönderim ücreti</span>
-                    <%} else if (d.fee > 0.00) { %>
-                    <span><%- include('./_partial/currency.ejs', {value: d.totalForFree}) %> ve üzeri ücretsiz gönderim,
-                      altı siparişlerde <%- include('./_partial/currency.ejs', {value: d.fee}) %> gönderim ücreti.</span>
-                    <%}%>
-                    
-                  <% } %>
-                  
-
-                </div>
-
-               
-                
-              </li>
-
-              <% }) %>
-
-            </ul>
-
-            <%}%>
-            <%if (controller.reviews.length > 0 ) { %>
-            <h6>
-              Müşteri Yorumları
-            </h6>
-            <% controller.reviews.forEach(r => {  %> 
-              <div class="product-review pb-4 mb-4 border-bottom">
-                <div class="media media-ie-fix align-items-center mr-4 pr-2">
-                  <div class="avatar">
-                    <img  src="<%=__config.staticDomain %>/resource/img/avatar.jpg" alt="<%=r.displayUser%>">
+              <p><%- controller.markdown.render(butcher.description) %></p>
   
-                  </div> 
-  
-                  <%
-                  
-                    const dateops = { year: 'numeric', month: 'long'};
-  
-                  %>
-                  
-                  <div class="media-body pl-3">
-                    <h6 class="font-size-sm mb-0"><%=r.displayUser%></h6>
-                    <span class="font-size-ms text-muted"></span>
-                  </div>
-                </div>
-              <div class="d-flex mb-3">
-          
-                <div>
-                  <%- include('./_partial/star-rating.ejs', {val: r.userRating1 }) %>
-  
-                  <div class="font-size-ms text-muted">
-                    <%=r.itemDate.toLocaleDateString('tr-TR', dateops)%> 
-                  </div>
-                </div>
-              </div>
-              <p class="font-size-md mb-2">
-                <%= r.content %>
+              <% } else { %>
+              <p>
+                <%= butcher.name %>, uzun yıllardır en kaliteli et ve et ürünlerini müşterilerine sunmayı ilke
+                edinmiştir.
               </p>
-            </div>
-            <% }) %>
+              <p>
+                <%= butcher.areaLevel1.name %> ilinde hizmetlerine devam eden <%= butcher.name %>,
+                müşteri memnuniyetini en ön planda tutmakta, sağlıklı et ve et ürünleri sağlamaya devam etmektedir.
+              </p>
+  
+              <%  } %>
+  
+              <hr class="my-4">
+              <h6>İletişim</h6>
+              <p><%= butcher.address %>, <%= butcher.areaLevel2.name %>/<%= butcher.areaLevel1.name %></p>
+  
+              <% if (!butcher.approved) { %>
+              <ul class="list-unstyled font-size-sm">
+                <% if(butcher.email){ %>
+  
+                <li><a class="nav-link-style d-flex align-items-center font-size-xs" href="mailto:<%= butcher.email %>"><i
+                      class="czi-mail opacity-60 mr-2"></i><%= butcher.email %></a></li>
+                <% } %>
+  
+                <% if(false) { %>
+  
+                <li><a target="_blank" class="font-size-xs nav-link-style d-flex align-items-center"
+                    href="<%= butcher.website %>"><i class="czi-globe opacity-60 mr-2"></i><%= butcher.website %></a></li>
+  
+  
+                <% } %>
+  
+                <% if(false) { %>
+  
+                <li><a target="_blank" class="font-size-xs nav-link-style d-flex align-items-center"
+                    href="tel: <%= butcher.phone %>"><i class="czi-phone opacity-60 mr-2"></i><%= butcher.phone %></a>
+                </li>
+  
+  
+                <% } %>
+  
+  
+              </ul>
+              <% } %>
+                        
+                        
+                        
+                
+                      </div>
+                    </div>
+                  </div>
 
-            <%}%>
+                <div class="card">
+                  <div class="card-header" role="tab">
+                    <h3 class="accordion-heading"><a href="#dispatchArea" data-toggle="collapse"><i class="font-size-lg mr-2 mt-n1 align-middle"></i><%='Hizmet Bölgeleri'%><span class="accordion-indicator"><i data-feather="chevron-up"></i></span></a></h3>
+                  </div>
+                  <div class="collapse " id="dispatchArea" data-parent="#payment-method" role="tabpanel">
+                    <div class="card-body ">
+                    
+              
+              
+                      <ul class="list-unstyled font-size-sm">
+
+                        <% controller.dispatchers.forEach((d,i) => { %>
+                        <li>
+                          <div>
+                            <span class="d-block font-weight-medium"><%=d.address.display%></span>
+                            <% if (d.takeOnly) { %>
+                            <span>Sadece Gel-Al</span>
+                            <% } else { %>
+          
+                              <% if (d.min > 0) { %>
+                                <span>En az sipariş tutarı <%- include('./_partial/currency.ejs', {value: d.min}) %>, </span>                             
+                              <% } if (d.fee == 0.00) { %>
+                              <span>Ücretsiz Gönderim</span>
+                              <%} else if (d.fee > 0.00 && d.totalForFree == 0.00) { %>
+                              <span><%- include('./_partial/currency.ejs', {value: d.totalForFree}) %> gönderim ücreti</span>
+                              <%} else if (d.fee > 0.00) { %>
+                              <span><%- include('./_partial/currency.ejs', {value: d.totalForFree}) %> ve üzeri ücretsiz gönderim,
+                                altı siparişlerde <%- include('./_partial/currency.ejs', {value: d.fee}) %> gönderim ücreti.</span>
+                              <%}%>
+                              
+                            <% } %>
+                            
+          
+                          </div>
+          
+                         
+                          
+                        </li>
+          
+                        <% }) %>
+          
+                      </ul>
+                       
+                  
+                      
+                      
+                      
+              
+                    </div>
+                  </div>
+                </div>
+              
+                <%if (controller.reviews.length > 0 ) { %>
+                <div class="card">
+                  <div class="card-header" role="tab">
+                    <h3 class="accordion-heading"><a href="#revires" data-toggle="collapse"><i class="font-size-lg mr-2 mt-n1 align-middle"></i><%='Müşteri Yorumları'%><span class="accordion-indicator"><i data-feather="chevron-up"></i></span></a></h3>
+                  </div>
+                  <div class="collapse" id="revires" data-parent="#payment-method" role="tabpanel">
+                    <div class="card-body ">
+                    
+              
+                      <% controller.reviews.forEach(r => {  %> 
+                        <div class="product-review pb-4 mb-4 border-bottom">
+                          <div class="media media-ie-fix align-items-center mr-4 pr-2">
+                            <div class="avatar">
+                              <img  src="<%=__config.staticDomain %>/resource/img/avatar.jpg" alt="<%=r.displayUser%>">
+            
+                            </div> 
+            
+                            <%
+                            
+                              const dateops = { year: 'numeric', month: 'long'};
+            
+                            %>
+                            
+                            <div class="media-body pl-3">
+                              <h6 class="font-size-sm mb-0"><%=r.displayUser%></h6>
+                              <span class="font-size-ms text-muted"></span>
+                            </div>
+                          </div>
+                        <div class="d-flex mb-3">
+                    
+                          <div>
+                            <%- include('./_partial/star-rating.ejs', {val: r.userRating1 }) %>
+            
+                            <div class="font-size-ms text-muted">
+                              <%=r.itemDate.toLocaleDateString('tr-TR', dateops)%> 
+                            </div>
+                          </div>
+                        </div>
+                        <p class="font-size-md mb-2">
+                          <%= r.content %>
+                        </p>
+                      </div>
+                      <% }) %>
+                    
+                       
+                  
+                      
+                      
+                      
+              
+                    </div>
+                  </div>
+                </div>
+                <% } %>
+              </div>
+
+          
+        
+
+           
+            
+         
+        
+
+           
           </div>
         </aside>
  
@@ -345,9 +408,9 @@
           class="czi-arrow-up font-size-xs align-middle ml-1"></i></a>
     </div>
                 
-                    <% var products = controller.filterProductsByCategory({slug: category.slug}) %>
+                    <% var butcherProducts = controller.filterProductsByCategory({slug: category.slug}) %>
   
-                    <%- include('./_partial/products-view', {butcher: butcher.slug,  viewMode:'tab', products: products}); %>
+                    <%- include('./_partial/products-view', {butcher: butcher.slug,  viewMode:'tab', butcherProducts: butcherProducts}); %>
   
   
   

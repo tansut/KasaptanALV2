@@ -2,10 +2,20 @@
 
 <% if (typeof (viewMode) == 'undefined' || viewMode == 'tab') { %>
 <div class="row">
+    <% if (typeof(products) != 'undefined') {  %>
     <% for(var j=0; j< products.length; j++) {%>
     <div class="col-md-3 col-6 ">
         <%- include('./product-view.ejs', {product: products[j]}) %>
     </div>
+    <% } %>
+
+    <% } else if (typeof (butcherProducts) != 'undefined') { %>
+        <% for(var j=0; j< butcherProducts.length; j++) {%>
+            <div class="col-md-3 col-6 ">
+                <%- include('./product-view.ejs', {butcherProduct: butcherProducts[j]}) %>
+            </div>
+            <% } %>
+        
     <% } %>
 </div>
 <%} else { %>
