@@ -21,7 +21,7 @@
 
 
     <section class="bg-faded-primary pt-2">
-        <div class="container">
+        <div class="container mb-3">
            
                 <div class="cz-carousel">
                     <div class="cz-carousel-inner"
@@ -30,9 +30,9 @@
                      <% if (!__req.user) { %>
                                 <div
                                     class="pt-4 pb-md-4 text-center">
-                                    <span class="h2 d-block font-weight-light pb-1 ">şimdi üye olun</span>
+                                    <span class="h2 d-block font-weight-light pb-1 ">şimdi üyemiz olun</span>
                                     <span class="h1 d-block display-4  ">%3 kârlı çıkın</span>
-                                    <span class="h5 d-block  font-weight-light pb-3 ">ilk siparişinize özel</span>
+                                    <span class="h5 d-block  font-weight-light pb-3 ">ilk siparişinize özel ek puan kazanın</span>
 
                                     <a class="btn btn-primary "
                                         href="javascript:window.App.showSignupDlg()">Fırsatı Yakala<i
@@ -40,8 +40,7 @@
                                 </div>
                     
                 <% } %>
-                <div
-                class="pt-4 pb-md-4 text-center">
+                <!-- <div class="pt-4 pb-md-4 text-center">
                 <span class="h2 d-block font-weight-light pb-1 ">alışverişleriniz daha kârlı</span>
                 <span class="h1 d-block display-4  ">Kasap Kart&trade;</span>
                 <span class="h5 d-block  font-weight-light pb-3 ">dünyasına hoş geldiniz</span>
@@ -49,7 +48,7 @@
                 <a class="btn btn-primary "
                     href="/blog/kasap-kart">Daha Fazlası<i
                         class="czi-arrow-right ml-2 mr-n1"></i></a>
-            </div>
+            </div> -->
 
                                 <div
                                     class=" pt-4 pb-md-4 text-center ">
@@ -90,14 +89,22 @@
                       
                     </div>
                 </div>
-          
+      
 
     </section>
 
 
-    <div class=" mb-3">
+    <!-- <div class=" mb-3">
         <%- include('./_partial/category-slider', { header: false, titles: false, viewCats: ['reyon', 'list'], title: 'Tüm Ürünlerimiz', allUrl: '/kasap-urunleri' }); %>      
-      </div>
+      </div> -->
+
+      <div class="container  ">
+  
+       
+            <%-include('./_partial/fact-counter.ejs', {stats: controller.stats}) %>
+        
+       
+                  </div>
 
       <div class="container mb-3">
           <div class="border bg-secondary">
@@ -110,12 +117,12 @@
                 </div>
                 
                 <div class="col-sm-8 ">
-                    <p class="pl-3 pt-3 h3">
-                        Kasap Kart&trade; ile tanışın
-                    </p>
+                    <h3 class="h4 pl-3 pt-3 h3">
+                        Kasap Kart&trade; ile kârlı kasap alışverişi
+                    </h3>
                     <p class="pl-3 lead">
-                        Düzenli et alışverişlerinizden kârlı çıkmaya ne dersiniz? Her alışverişinizden puan kazanın, 
-                puanlarınızı sonraki alışverişlerinizde kullanın. 
+                        Düzenli et alışverişlerinizi kasaptanAl.com ile yapın, puan kazanın.
+                Puanlarınızı sonraki alışverişlerinizde kullanın. 
                     </p>
                     <div class="pl-3 mb-3 text-lg-left text-center ">
                         <a class="btn btn-primary "
@@ -132,6 +139,8 @@
         
       </div>
 
+ 
+
     <div class="container mb-3">
         <%- include('./_partial/category-products-slider', {category: 'bu-hafta', reverse: true, img: 'img/category/premium.jpg'}); %>
     </div>
@@ -139,7 +148,7 @@
     <section class="container mb-3">
             <h2 class="h3 text-center mb-grid-gutter">kasaptanAl.com'u kullanmak için 4 sebep</h2>
 
-        <div class="row no-gutters border bg-light">
+        <div class="row no-gutters border ">
           <div class="col-xl-3 col-lg-12 col-md-3 border-right ">
             <div class="py-3">
               <div class="d-flex align-items-center mx-auto py-3 px-3" style="max-width: 362px;">
@@ -186,7 +195,7 @@
         </div>
 
 
-
+   
       </section>
 
 
@@ -259,6 +268,24 @@
 
         <div class="row">
 
+            <% if (!__req.user) { %>
+
+
+                <div class="col-md-6 mb-3">
+                    <div class="d-flex flex-column h-100 justify-content-center bg-size-cover bg-position-center rounded-lg"
+                        style="background-image: url(<%=__config.staticDomain %>/resource/img/banner-bg.jpg);">
+                        <div class="py-4 my-2 my-md-0 py-md-5 px-4 ml-md-3 text-center text-sm-left">
+                            <h4 class="h6 font-size-lg font-weight-light mb-2">Şimdi üyemiz olun, ilk siparişinize</h4>
+                            <h3 class="h5 mb-4">%3 ek puan kazanın</h3>
+    
+                            <a href="javascript:window.App.showSignupDlg()" class="btn btn btn-primary ">Fırsatı Yakala</a>
+                        </div>
+                    </div>
+                </div>
+    
+<% } else { %>
+
+
             <div class="col-md-6 mb-3">
                 <div class="d-flex flex-column h-100 justify-content-center bg-size-cover bg-position-center rounded-lg"
                     style="background-image: url(<%=__config.staticDomain %>/resource/img/banner-bg.jpg);">
@@ -270,7 +297,7 @@
                     </div>
                 </div>
             </div>
-
+<% } %>
 
             <div class="col-md-6 mb-3">
                 <div class="d-flex flex-column h-100 justify-content-center bg-size-cover bg-position-center rounded-lg"
@@ -461,9 +488,118 @@
     <% include ./_partial/scripts %>
 
     <script>
-        // window.App.Ready.then(function () {
-        //     window.App.Render("PlaceList", null, document.getElementById('main'))
-        // })
+(function ($) {
+	$.fn.countTo = function (options) {
+		options = options || {};
+		
+		return $(this).each(function () {
+			// set options for current element
+			var settings = $.extend({}, $.fn.countTo.defaults, {
+				from:            $(this).data('from'),
+				to:              $(this).data('to'),
+				speed:           $(this).data('speed'),
+				refreshInterval: $(this).data('refresh-interval'),
+				decimals:        $(this).data('decimals')
+			}, options);
+			
+			// how many times to update the value, and how much to increment the value on each update
+			var loops = Math.ceil(settings.speed / settings.refreshInterval),
+				increment = (settings.to - settings.from) / loops;
+			
+			// references & variables that will change with each update
+			var self = this,
+				$self = $(this),
+				loopCount = 0,
+				value = settings.from,
+				data = $self.data('countTo') || {};
+			
+			$self.data('countTo', data);
+			
+			// if an existing interval can be found, clear it first
+			if (data.interval) {
+				clearInterval(data.interval);
+			}
+			data.interval = setInterval(updateTimer, settings.refreshInterval);
+			
+			// initialize the element with the starting value
+			render(value);
+			
+			function updateTimer() {
+				value += increment;
+				loopCount++;
+				
+				render(value);
+				
+				if (typeof(settings.onUpdate) == 'function') {
+					settings.onUpdate.call(self, value);
+				}
+				
+				if (loopCount >= loops) {
+					// remove the interval
+					$self.removeData('countTo');
+					clearInterval(data.interval);
+					value = settings.to;
+					
+					if (typeof(settings.onComplete) == 'function') {
+						settings.onComplete.call(self, value);
+					}
+				}
+			}
+			
+			function render(value) {
+				var formattedValue = settings.formatter.call(self, value, settings);
+				$self.html(formattedValue);
+			}
+		});
+	};
+	
+	$.fn.countTo.defaults = {
+		from: 0,               // the number the element should start at
+		to: 0,                 // the number the element should end at
+		speed: 1000,           // how long it should take to count between the target numbers
+		refreshInterval: 100,  // how often the element should be updated
+		decimals: 0,           // the number of decimal places to show
+		formatter: formatter,  // handler for formatting the value before rendering
+		onUpdate: null,        // callback method for every time the element is updated
+		onComplete: null       // callback method for when the element finishes updating
+	};
+	
+	function formatter(value, settings) {
+		return value.toFixed(settings.decimals);
+	}
+}(jQuery));
+
+jQuery(function ($) {
+  // custom formatting example
+  $('.count-number').data('countToOptions', {
+	formatter: function (value, options) {
+	  return value.toFixed(options.decimals).replace(/\B(?=(?:\d{3})+(?!\d))/g, ',');
+	}
+  });
+
+  $('.count-percent').data('countToOptions', {
+	formatter: function (value, options) {
+      var val = value.toFixed(options.decimals).replace(/\B(?=(?:\d{3})+(?!\d))/g, ',');
+      return val + '%'
+	}
+  });
+
+  $('.count-kg').data('countToOptions', {
+	formatter: function (value, options) {
+      var val = value.toFixed(options.decimals).replace(/\B(?=(?:\d{3})+(?!\d))/g, ',');
+      return val + 'kg'
+	}
+  });
+  
+  // start all the timers
+  $('.timer').each(count);  
+  
+  function count(options) {
+	var $this = $(this);
+	options = $.extend({}, options || {}, $this.data('countToOptions') || {});
+	$this.countTo(options);
+  }
+});
     </script>
 </body>
 

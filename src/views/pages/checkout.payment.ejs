@@ -64,12 +64,12 @@
                       </div>
                     </td>
                     <td class="align-middle">
-                      <span class="text-dark font-weight-medium">Ürünlerim hazır olunca haber verin, online ödeyim</span><br><span
+                      <span class="text-dark font-weight-medium">Güvenli online ödeme</span><br><span
                         class="text-muted">
                         
                           
                           <span class="font-weight-medium text-dark"></span>
-                           <span class="font-weight-medium">İsterseniz kapınıza asıp</span> size haber verebiliyoruz.  
+                           Kredi kartımla online ödeyeceğim.  
                       
                       </span>
                      
@@ -93,7 +93,7 @@
                       <% } %> -->
 
                       <% if (controller.mayEarnPuanTotal > 0) { %>
-                        <div class="alert alert-info rounded-0 mb-3 mt-3">
+                        <div class="alert alert-success rounded-0 mb-3 mt-3">
                           <!-- <p class="font-weight-medium text-dark">Online ödeme size puan kazandırır</p> -->
                        
                         <!-- <% controller.possiblePuanList.forEach(pg => { %>
@@ -101,8 +101,9 @@
                             <strong><%- include('./_partial/currency.ejs', {value: pg.earned}) %></strong>, <%=pg.title%> tarafından
                           </span> 
                         <% }) %> -->
-                        <span class="d-block">    
-                          <i class="czi-announcement mr-1"></i>Bu ödeme seçeneği ile toplam <strong><%- include('./_partial/currency.ejs', {value: controller.mayEarnPuanTotal}) %></strong> değerinde puan kazancınız mevcut. 
+                        <span class="d-block">   
+                          <h6 class="text-success">Online ödeyin, puan kazanın.</h6> 
+                          <span class=" font-weight-medium"> Tebrikler!</span> <strong><%- include('./_partial/currency.ejs', {value: controller.mayEarnPuanTotal}) %></strong> değerinde Kasap Kart™ puanını sonraki alışverişlerinizde kullanabilir, kârlı çıkabilirsiniz. 
                         </span>
                       </div>
                         <%}%>                      
@@ -110,20 +111,7 @@
                     </td>
                   </tr>
                   <%}%>
-                      <tr>
-                        <td>
-                          <div class="custom-control custom-radio mb-4">
-                            <input class="custom-control-input" type="radio" id="cashondoor<%=bi%>" value="cashondoor"
-                  name="paymentmethod<%=bi%>" <%= shopcard.payment[bi].type == 'cashondoor' ? 'checked':'' %>>
-                  <label class="custom-control-label" for="cashondoor<%=bi%>"></label>
-            </div>
-            </td>
-            <td class="align-middle"><span class="text-dark font-weight-medium">Teslim alırken nakit</span><br><span
-                class="text-muted">
-                Lezzetleri teslim alırken kapıda nakit öderim.
-
-              </span></td>
-            </tr>
+                
             <tr>
               <td>
                 <div class="custom-control custom-radio mb-4">
@@ -134,9 +122,23 @@
               </td>
               <td class="align-middle"><span class="text-dark font-weight-medium">Teslim alırken kredi
                   kartı</span><br><span class="text-muted">
-                  Lezzetleri teslim alırken kapıda kredi kartımla öderim.
+                   Teslim alırken kapıda kredi kartımla ödeyeceğim.
                 </span></td>
             </tr>
+            <tr>
+              <td>
+                <div class="custom-control custom-radio mb-4">
+                  <input class="custom-control-input" type="radio" id="cashondoor<%=bi%>" value="cashondoor"
+        name="paymentmethod<%=bi%>" <%= shopcard.payment[bi].type == 'cashondoor' ? 'checked':'' %>>
+        <label class="custom-control-label" for="cashondoor<%=bi%>"></label>
+  </div>
+  </td>
+  <td class="align-middle"><span class="text-dark font-weight-medium">Teslim alırken nakit</span><br><span
+      class="text-muted">
+      Teslim alırken kapıda nakit ödeyeceğim.
+
+    </span></td>
+  </tr>
             </tbody>
             </table>
           </div>

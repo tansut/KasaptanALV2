@@ -140,7 +140,7 @@ export default class Route extends ApiRouter {
             }
         })        
 
-        let combined = prods.concat(butchers.concat(foods.concat(cats.concat(areas))));
+        let combined = cats.concat(prods.concat(foods.concat(butchers.concat(areas))));
         let sorted = _.sortBy(combined, 'RELEVANCE')
 
         this.res.send(sorted)

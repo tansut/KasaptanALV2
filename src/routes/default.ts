@@ -16,6 +16,8 @@ import ProductsApi from './api/product';
 import Content from '../db/models/content';
 import { ProductCacheItem, CacheManager } from '../lib/cache';
 import { Op } from 'sequelize';
+import { SiteStatsData } from '../models/sitestat';
+import { SiteStats } from '../lib/sitestats';
 
 let ellipsis = require('text-ellipsis');
 
@@ -25,6 +27,7 @@ export default class Route extends ViewRouter {
     foods: Resource[];
     blogItems: Content[];
     foodsTitle = "Et Yemekleri";
+    stats: SiteStatsData;
 
     async getBlogItems() {
         return this.req.__recentBlogs;
@@ -84,11 +87,14 @@ export default class Route extends ViewRouter {
 
         //this.foods = CacheManager.dataCache.get("recent-foods");
         this.blogItems = await this.getBlogItems();
+        this.stats = await SiteStats.get();
+
 
         this.res.render("pages/default.ejs", this.viewData({
             recentButchers: recentButchers,
             ellipsis: ellipsis
         }));
+
     }
 
     @Auth.Anonymous()
