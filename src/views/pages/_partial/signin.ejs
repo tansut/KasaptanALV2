@@ -2,7 +2,7 @@
     <form class="needs-validation" onsubmit="App.Auth.signin()" autocomplete="off" novalidate id="signin-form">
         <div class="form-group">
             <!-- <label for="si-email">Cep Telefonun veya e-Posta Adresin</label> -->
-            <input class="form-control" minlength="5" maxlength="30" type="text" id="si-email"
+            <input class="form-control" autocomplete="username" minlength="5" maxlength="30" type="text" id="si-email"
                 placeholder="cep telefonu veya e-posta" required>
             <div class="invalid-feedback">Geçersiz tel veya e-posta adresi
 
@@ -11,7 +11,7 @@
         <div class="form-group">
             <!-- <label for="si-password">Şifren</label> -->
             <div class="password-toggle">
-                <input class="form-control" placeholder="şifre" type="password" id="si-password" required>
+                <input class="form-control"  placeholder="şifre" type="password" id="si-password" required>
                 <label class="password-toggle-btn">
                     <input class="custom-control-input" type="checkbox"><i
                         class="czi-eye password-toggle-indicator"></i><span class="sr-only">Şifreyi Göster</span>
