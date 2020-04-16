@@ -76,8 +76,9 @@ export default class User extends BaseModel<User> {
     butcherid: number;
 
     static retrieveByEMailOrPhone(email: string) {
+        email = email || "";
         let where = validator.isEmail(email) ? {
-            email: email
+            email: email.toLowerCase()
         } : {
                 mphone: Helper.getPhoneNumber(email)
             }

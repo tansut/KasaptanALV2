@@ -19,7 +19,7 @@ var MarkdownIt = require('markdown-it')
 
 export default class Route extends ViewRouter {
 
-
+    showLogin = false;
 
     renderPage(msg: any = undefined) {        
         this.sendView(`pages/resetpassword.ejs`, {
@@ -31,19 +31,21 @@ export default class Route extends ViewRouter {
 
     @Auth.Anonymous()
     async resetRoute() {
-        let email = this.req.body["recover-email"];
+
+        let email = (this.req.body["recover-email"] || "").toLowerCase();
         let phone = this.req.body["recover-tel"];
         if (email && phone) {
             let userRoute = new UserRoute(this.constructorParams);
             let user = await userRoute.retrieveByEMailOrPhone(phone);
             if (user) {
-                if (user.email == email) {
+                if (user.email.toLowerCase() == email) {
                     await userRoute.sendNewPassword(user);
+                    this.showLogin = true;
                     this.renderPage({text: "Yeni şifreniz telefonunuza gönderildi.", type: "info"});    
                 } else {
                     this.renderPage({text: "Geçersiz e-posta adresi/telefon numarası.",type: "danger"}); 
                 }
-            } else this.renderPage({text: "Geçersiz e-posta adresi.",type: "danger"});
+            } else this.renderPage({text: "Geçersiz telefon numarası",type: "danger"});
         } else this.renderPage({text: "Geçersiz e-posta adresi veya telefon numarası.", type: "danger"});
     }
 

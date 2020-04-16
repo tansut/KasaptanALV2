@@ -14,15 +14,24 @@ export default class AppBase {
     
 }
     static alert(msg, type?) {
+        // debugger;
+        // (<any>window).bootbox.alert({
+        //     message: msg,
+        //     backdrop: true
+        // });
         this.jq().notify({
-            message: msg
+            message: msg,
+            
         }, {
+            
             placement: {
                 from: "top",
                 align: "center"
             },
             type: type || 'info',
-            z_index: 2000
+            z_index: 2000,
+            delay: 15000,
+            allow_dismiss: true,
         });
     }
 

@@ -83,14 +83,15 @@ export default class UserRoute extends ApiRouter {
         
         if (!user) throw new http.ValidationError("invalid phone: " + Helper.getPhoneNumber(this.req.body.phone));
         let sms = this.cleanSMS(this.req.body.password);
+        let userEmail: string = (this.req.body.email || "").toLowerCase();
         
         if (!user.verifyPassword(sms))
             throw new http.ValidationError("SMS kodu hatalıdır." + Helper.getPhoneNumber(this.req.body.phone) );
-        if (!validator.isEmail(this.req.body.email))
+        if (!validator.isEmail(userEmail))
             throw new http.ValidationError("Geçersiz e-posta adresi");
         if (validator.isEmpty(this.req.body.name))
             throw new http.ValidationError("Geçersiz ad soyad");
-        user.email = this.req.body.email;
+        user.email = userEmail;
         user.name = this.req.body.name;
         try {
             await user.save();
@@ -125,7 +126,7 @@ export default class UserRoute extends ApiRouter {
             if (err.original && err.original.code == 'ER_DUP_ENTRY') {
                 let existingUser = await this.retrieveByEMailOrPhone(model.phone);
                 if (existingUser.mphoneverified)
-                    throw new http.ValidationError("Hesabınız mevcut ve şifrenizi " + Helper.formatDate(existingUser.creationDate) + " tarihinde SMS olarak göndermiştik. Giriş yapabilirsiniz veya yeni şifre almak için Şifremi Unuttum sayfasını ziyaret edebilirsiniz.- " + model.phone, 400);
+                    throw new http.ValidationError("<p>Sayın " + existingUser.name + ", kasaptanAl.com hesabınıza giriş yapabilirsiniz. Şifrenizi kayıt sırasında  SMS olarak göndermiştik.</p> <p> Şifrenizi hatırlamıyorsanız Şifremi Unuttum sayfasını ziyaret edebilirsiniz. </p>- " + model.phone, 400);
                 else {
                     let pwd = await this.sendPassword(this.generatePwd(), existingUser.mphone)
                     existingUser.setPassword(pwd);
