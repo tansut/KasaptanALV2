@@ -183,65 +183,52 @@
 
               <div class="accordion" id="payment-method" role="tablist">
 
-
-             
+                <%if (controller.reviews.length > 0 ) { %>
                   <div class="card">
                     <div class="card-header" role="tab">
-                      <h3 class="accordion-heading"><a href="#card" data-toggle="collapse"><i class="font-size-lg mr-2 mt-n1 align-middle"></i><%='Hakkında'%><span class="accordion-indicator"><i data-feather="chevron-up"></i></span></a></h3>
+                      <h3 class="accordion-heading"><a href="#revires" data-toggle="collapse"><i class="font-size-lg mr-2 mt-n1 align-middle"></i><%='Yorumlar (' + controller.reviews.length + ')'%><span class="accordion-indicator"><i data-feather="chevron-up"></i></span></a></h3>
                     </div>
-                    <div class="collapse show" id="card" data-parent="#payment-method" role="tabpanel">
+                    <div class="collapse" id="revires" data-parent="#payment-method" role="tabpanel">
                       <div class="card-body ">
                       
                 
+                        <% controller.reviews.forEach(r => {  %> 
+                          <div class="product-review pb-4 mb-4 border-bottom">
+                            <div class="media media-ie-fix align-items-center mr-4 pr-2">
+                              <div class="avatar">
+                                <img  src="<%=__config.staticDomain %>/resource/img/avatar.jpg" alt="<%=r.displayUser%>">
+              
+                              </div> 
+              
+                              <%
+                              
+                                const dateops = { year: 'numeric', month: 'long'};
+              
+                              %>
+                              
+                              <div class="media-body pl-3">
+                                <h6 class="font-size-sm mb-0"><%=r.displayUser%></h6>
+                                <span class="font-size-ms text-muted"></span>
+                              </div>
+                            </div>
+                          <div class="d-flex mb-3">
+                      
+                            <div>
+                              <%- include('./_partial/star-rating.ejs', {val: r.userRating1 }) %>
+              
+                              <div class="font-size-ms text-muted">
+                                <%=r.itemDate.toLocaleDateString('tr-TR', dateops)%> 
+                              </div>
+                            </div>
+                          </div>
+                          <p class="font-size-md mb-2">
+                            <%= r.content %>
+                          </p>
+                        </div>
+                        <% }) %>
+                      
+                         
                     
-
-            <% if(butcher.description){ %>
-              <p><%- controller.markdown.render(butcher.description) %></p>
-  
-              <% } else { %>
-              <p>
-                <%= butcher.name %>, uzun yıllardır en kaliteli et ve et ürünlerini müşterilerine sunmayı ilke
-                edinmiştir.
-              </p>
-              <p>
-                <%= butcher.areaLevel1.name %> ilinde hizmetlerine devam eden <%= butcher.name %>,
-                müşteri memnuniyetini en ön planda tutmakta, sağlıklı et ve et ürünleri sağlamaya devam etmektedir.
-              </p>
-  
-              <%  } %>
-  
-              <hr class="my-4">
-              <h6>İletişim</h6>
-              <p><%= butcher.address %>, <%= butcher.areaLevel2.name %>/<%= butcher.areaLevel1.name %></p>
-  
-              <% if (!butcher.approved) { %>
-              <ul class="list-unstyled font-size-sm">
-                <% if(butcher.email){ %>
-  
-                <li><a class="nav-link-style d-flex align-items-center font-size-xs" href="mailto:<%= butcher.email %>"><i
-                      class="czi-mail opacity-60 mr-2"></i><%= butcher.email %></a></li>
-                <% } %>
-  
-                <% if(false) { %>
-  
-                <li><a target="_blank" class="font-size-xs nav-link-style d-flex align-items-center"
-                    href="<%= butcher.website %>"><i class="czi-globe opacity-60 mr-2"></i><%= butcher.website %></a></li>
-  
-  
-                <% } %>
-  
-                <% if(false) { %>
-  
-                <li><a target="_blank" class="font-size-xs nav-link-style d-flex align-items-center"
-                    href="tel: <%= butcher.phone %>"><i class="czi-phone opacity-60 mr-2"></i><%= butcher.phone %></a>
-                </li>
-  
-  
-                <% } %>
-  
-  
-              </ul>
-              <% } %>
                         
                         
                         
@@ -249,6 +236,9 @@
                       </div>
                     </div>
                   </div>
+                  <% } %>
+             
+         
 
                 <div class="card">
                   <div class="card-header" role="tab">
@@ -302,52 +292,63 @@
                   </div>
                 </div>
               
-                <%if (controller.reviews.length > 0 ) { %>
                 <div class="card">
                   <div class="card-header" role="tab">
-                    <h3 class="accordion-heading"><a href="#revires" data-toggle="collapse"><i class="font-size-lg mr-2 mt-n1 align-middle"></i><%='Müşteri Yorumları'%><span class="accordion-indicator"><i data-feather="chevron-up"></i></span></a></h3>
+                    <h3 class="accordion-heading"><a href="#card" data-toggle="collapse"><i class="font-size-lg mr-2 mt-n1 align-middle"></i><%='Hakkında'%><span class="accordion-indicator"><i data-feather="chevron-up"></i></span></a></h3>
                   </div>
-                  <div class="collapse" id="revires" data-parent="#payment-method" role="tabpanel">
+                  <div class="collapse " id="card" data-parent="#payment-method" role="tabpanel">
                     <div class="card-body ">
                     
               
-                      <% controller.reviews.forEach(r => {  %> 
-                        <div class="product-review pb-4 mb-4 border-bottom">
-                          <div class="media media-ie-fix align-items-center mr-4 pr-2">
-                            <div class="avatar">
-                              <img  src="<%=__config.staticDomain %>/resource/img/avatar.jpg" alt="<%=r.displayUser%>">
-            
-                            </div> 
-            
-                            <%
-                            
-                              const dateops = { year: 'numeric', month: 'long'};
-            
-                            %>
-                            
-                            <div class="media-body pl-3">
-                              <h6 class="font-size-sm mb-0"><%=r.displayUser%></h6>
-                              <span class="font-size-ms text-muted"></span>
-                            </div>
-                          </div>
-                        <div class="d-flex mb-3">
-                    
-                          <div>
-                            <%- include('./_partial/star-rating.ejs', {val: r.userRating1 }) %>
-            
-                            <div class="font-size-ms text-muted">
-                              <%=r.itemDate.toLocaleDateString('tr-TR', dateops)%> 
-                            </div>
-                          </div>
-                        </div>
-                        <p class="font-size-md mb-2">
-                          <%= r.content %>
-                        </p>
-                      </div>
-                      <% }) %>
-                    
-                       
                   
+
+          <% if(butcher.description){ %>
+            <p><%- controller.markdown.render(butcher.description) %></p>
+
+            <% } else { %>
+            <p>
+              <%= butcher.name %>, uzun yıllardır en kaliteli et ve et ürünlerini müşterilerine sunmayı ilke
+              edinmiştir.
+            </p>
+            <p>
+              <%= butcher.areaLevel1.name %> ilinde hizmetlerine devam eden <%= butcher.name %>,
+              müşteri memnuniyetini en ön planda tutmakta, sağlıklı et ve et ürünleri sağlamaya devam etmektedir.
+            </p>
+
+            <%  } %>
+
+            <hr class="my-4">
+            <h6>İletişim</h6>
+            <p><%= butcher.address %>, <%= butcher.areaLevel2.name %>/<%= butcher.areaLevel1.name %></p>
+
+            <% if (!butcher.approved) { %>
+            <ul class="list-unstyled font-size-sm">
+              <% if(false){ %>
+
+              <li><a class="nav-link-style d-flex align-items-center font-size-xs" href="mailto:<%= butcher.email %>"><i
+                    class="czi-mail opacity-60 mr-2"></i><%= butcher.email %></a></li>
+              <% } %>
+
+              <% if(false) { %>
+
+              <li><a target="_blank" class="font-size-xs nav-link-style d-flex align-items-center"
+                  href="<%= butcher.website %>"><i class="czi-globe opacity-60 mr-2"></i><%= butcher.website %></a></li>
+
+
+              <% } %>
+
+              <% if(false) { %>
+
+              <li><a target="_blank" class="font-size-xs nav-link-style d-flex align-items-center"
+                  href="tel: <%= butcher.phone %>"><i class="czi-phone opacity-60 mr-2"></i><%= butcher.phone %></a>
+              </li>
+
+
+              <% } %>
+
+
+            </ul>
+            <% } %>
                       
                       
                       
@@ -355,7 +356,6 @@
                     </div>
                   </div>
                 </div>
-                <% } %>
               </div>
 
           
