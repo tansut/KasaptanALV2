@@ -8,7 +8,7 @@ import Butcher from "../../db/models/butcher";
 export default class ButcherStats extends BaseTask {
 
     get interval() {
-        return "0 0 */6 * * *"
+        return "0 0 */9 * * *"
     }
 
     async updateButcher(butcherid: number, success: number, fail: number) {

@@ -1,5 +1,5 @@
 <% var cat = __categories[__categories.findIndex(p=>p.slug == category)] %>
-
+<% var limit = typeof(limit) == 'undefined' ? 8: limit %>
     <div class="bg-secondary d-flex flex-column h-100 overflow-hidden">
 
 
@@ -19,7 +19,7 @@
 
     </div>
 
-    <% var products = controller.filterProductsByCategory(cat) %>
+    <% var products = controller.filterProductsByCategory(cat, limit) %>
 
     <div class=" <%= reverse ? 'order-2 order-md-1':'' %> ">
 

@@ -34,14 +34,14 @@ export default class Route extends ViewRouter {
     }
 
 
-    filterProductsByCategory(category: Category) {
+    filterProductsByCategory(category: Category, limit= 8) {
         let result: ProductCacheItem[] = []
         let prodSlugs = this.req.__categoryProducts[category.slug];
         if (prodSlugs) {
             for (let i = 0; i < prodSlugs.length; i++) {
                 let product = this.req.__products[prodSlugs[i].slug];
                 if (product) result.push(product);
-                if (result.length >= 8) break;
+                if (result.length >= limit) break;
             }
         }
         return result; //.slice(0, 8);

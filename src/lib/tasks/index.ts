@@ -4,7 +4,8 @@ import { BaseTask } from "./basetask";
 let appRoutes = [
     './butcherstats',
     './productstats',
-    './reviewstask'
+    './reviewstask',
+    './rutins'
 ];
 
 export default class TaskLoader {

@@ -40,20 +40,30 @@
                                 </div>
                     
                 <% } %>
-                <!-- <div class="pt-4 pb-md-4 text-center">
-                <span class="h2 d-block font-weight-light pb-1 ">alışverişleriniz daha kârlı</span>
-                <span class="h1 d-block display-4  ">Kasap Kart&trade;</span>
-                <span class="h5 d-block  font-weight-light pb-3 ">dünyasına hoş geldiniz</span>
+                 <div class="pt-4 pb-md-4 text-center">
+                <span class="h2 d-block font-weight-light pb-1 ">kasaptanAl.com</span>
+                <span class="h1 d-block display-4  ">popüler ürünler</span>
+                <span class="h5 d-block  font-weight-light pb-3 ">müşterilerimizin tercihleri</span>
 
                 <a class="btn btn-primary "
-                    href="/blog/kasap-kart">Daha Fazlası<i
+                    href="/populer-etler">Göz At<i
                         class="czi-arrow-right ml-2 mr-n1"></i></a>
-            </div> -->
+            </div> 
+
+            <div class="pt-4 pb-md-4 text-center">
+                <span class="h2 d-block font-weight-light pb-1 ">kasaptanAl.com</span>
+                <span class="h1 d-block display-4  ">haftanın ürünleri</span>
+                <span class="h5 d-block  font-weight-light pb-3 ">sizin için seçtiklerimiz</span>
+
+                <a class="btn btn-primary "
+                    href="/bu-hafta">Göz At<i
+                        class="czi-arrow-right ml-2 mr-n1"></i></a>
+            </div> 
 
                                 <div
                                     class=" pt-4 pb-md-4 text-center ">
                                     
-                                    <h1 class="h2 line-h-extra  font-weight-light  ">seçkin kasaplardan <br /> <b>doğal, taze, güvenilir</b> <br />online et
+                                    <h1 class="h2 line-h-extra  font-weight-light  ">en iyi kasaplardan <br /> <b>doğal, taze, güvenilir</b> <br />online et
                                         siparişi</h1>
                                     <a class="btn btn-primary  "
                                         href="/kasap-urunleri">Alışverişe Başla<i
@@ -139,77 +149,82 @@
         
       </div>
 
- 
+      <div class="container mb-3">
+        <%- include('./_partial/category-products-slider', {category: 'populer-etler', limit: 12, reverse: true, img: 'img/category/premium.jpg'}); %>
+    </div>
+
+    <section class="container mb-3">
+        <h2 class="h3 text-center mb-grid-gutter">kasaptanAl.com'u kullanmak için 4 sebep</h2>
+
+    <div class="row no-gutters border ">
+      <div class="col-xl-3 col-lg-12 col-md-3 border-right ">
+        <div class="py-3">
+          <div class="d-flex align-items-center mx-auto py-3 px-3" style="max-width: 362px;">
+            <div class="display-2 font-weight-normal border-color mr-4">1</div>
+            <div class="pl-2">
+                <h4 class="h6">Güvenilir Et</h4>
+              <p class="font-size-sm mb-3 pt-1">En iyi kasaplardan %100 doğal ve güvenilir et sağlıyoruz</p>
+            </div>
+          </div>
+          <hr class="d-md-none d-lg-block d-xl-none">
+        </div>
+      </div>
+      <div class="col-xl-3 col-lg-12 col-md-3 border-right ">
+        <div class="py-3">
+          <div class="d-flex align-items-center mx-auto py-3 px-3" style="max-width: 362px;">
+            <div class="display-2 font-weight-normal border-color mr-4">2</div>
+            <div class="pl-2">
+                <h4 class="h6">Kasap Kart&trade;</h4>
+              <p class="font-size-sm mb-3 pt-1">Kasap Kart&trade; ile alışverişlerinizden puan kazandırıyoruz</p>
+            </div>
+          </div>
+          <hr class="d-md-none d-lg-block d-xl-none">
+        </div>
+      </div>          
+      <div class="col-xl-3 col-lg-12 col-md-3 border-right">
+        <div class="py-3">
+          <div class="d-flex align-items-center mx-auto py-3 px-3" style="max-width: 362px;">
+            <div class="display-2 font-weight-normal border-color mr-4">3</div>
+            <div class="pl-2">
+                <h4 class="h6">Fiyat Avantajı</h4>
+              <p class="font-size-sm mb-3 pt-1">Farklı kasap alternatifleri sunarak fiyat avantajı sağlıyoruz</p>
+            </div>
+          </div>
+          <hr class="d-md-none d-lg-block d-xl-none">
+        </div>
+      </div>
+      <div class="col-xl-3 col-lg-12 col-md-3">
+        <div class="py-3">
+          <div class="d-flex align-items-center mx-auto py-3 px-3" style="max-width: 362px;">
+            <div class="display-2 font-weight-normal border-color mr-4">4</div>
+            <div class="pl-2">
+                <h4 class="h6">Hızlı Teslimat</h4>
+              <p class="font-size-sm mb-3 pt-1">Siparişlerinizi kapınıza kadar istediğiniz zaman getiriyoruz</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+
+
+  </section>
+
+  <div class="container mb-3">
+    <%- include('./_partial/foods-slider.ejs', {mode: 'food', allUrl:'/et-yemekleri', showDesc: true, title: 'Et Yemekleri', text: '', foods: controller.foods}); %>
+</div>
+
 
     <div class="container mb-3">
         <%- include('./_partial/category-products-slider', {category: 'bu-hafta', reverse: true, img: 'img/category/premium.jpg'}); %>
     </div>
 
-    <section class="container mb-3">
-            <h2 class="h3 text-center mb-grid-gutter">kasaptanAl.com'u kullanmak için 4 sebep</h2>
-
-        <div class="row no-gutters border ">
-          <div class="col-xl-3 col-lg-12 col-md-3 border-right ">
-            <div class="py-3">
-              <div class="d-flex align-items-center mx-auto py-3 px-3" style="max-width: 362px;">
-                <div class="display-2 font-weight-normal border-color mr-4">1</div>
-                <div class="pl-2">
-                  <p class="mb-3 pt-1">En iyi kasaplardan %100 doğal ve güvenilir et sağlıyoruz</p>
-                </div>
-              </div>
-              <hr class="d-md-none d-lg-block d-xl-none">
-            </div>
-          </div>
-          <div class="col-xl-3 col-lg-12 col-md-3 border-right ">
-            <div class="py-3">
-              <div class="d-flex align-items-center mx-auto py-3 px-3" style="max-width: 362px;">
-                <div class="display-2 font-weight-normal border-color mr-4">2</div>
-                <div class="pl-2">
-                  <p class="mb-3 pt-1">Kasap Kart&trade; ile alışverişlerinizden puan kazandırıyoruz</p>
-                </div>
-              </div>
-              <hr class="d-md-none d-lg-block d-xl-none">
-            </div>
-          </div>          
-          <div class="col-xl-3 col-lg-12 col-md-3 border-right">
-            <div class="py-3">
-              <div class="d-flex align-items-center mx-auto py-3 px-3" style="max-width: 362px;">
-                <div class="display-2 font-weight-normal border-color mr-4">3</div>
-                <div class="pl-2">
-                  <p class="mb-3 pt-1">Farklı kasap alternatifleri sunarak fiyat avantajı sağlıyoruz</p>
-                </div>
-              </div>
-              <hr class="d-md-none d-lg-block d-xl-none">
-            </div>
-          </div>
-          <div class="col-xl-3 col-lg-12 col-md-3">
-            <div class="py-3">
-              <div class="d-flex align-items-center mx-auto py-3 px-3" style="max-width: 362px;">
-                <div class="display-2 font-weight-normal border-color mr-4">4</div>
-                <div class="pl-2">
-                  <p class="mb-3 pt-1">Siparişlerinizi kapınıza kadar istediğiniz zaman getiriyoruz</p>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-
-
-   
-      </section>
 
 
 
 
-    <div class="container mb-3">
-        <%- include('./_partial/foods-slider.ejs', {mode: 'food', allUrl:'/et-yemekleri', showDesc: true, title: 'Et Yemekleri', text: '', foods: controller.foods}); %>
-    </div>
 
 
-
-    <div class="container mb-3">
-        <%- include('./_partial/category-products-slider', {category: 'populer-etler', reverse: true, img: 'img/category/premium.jpg'}); %>
-    </div>
 
     <div class="container mb-3">
        

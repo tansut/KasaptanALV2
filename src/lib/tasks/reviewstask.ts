@@ -40,7 +40,7 @@ export default class ButcherStats extends BaseTask {
                         model: Product
                     }]
                 }
-            ).map(oi => oi.product)
+            ).map(async oi => oi.product)
             if (products.length) {
                 r.settings = {
                     products: products.map(p => {
