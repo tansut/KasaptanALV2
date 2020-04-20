@@ -44,6 +44,9 @@
       </div>
       <button name="saveOrderStatus" value="true" class="btn btn-primary btn-sm">Durum Değiştir</button>
       <button name="makeManuelPayment" value="true" class="btn btn-primary btn-sm">Manuel Ödeme Yap</button>
+      <button name="makeManuelPaymentDebt" value="true" class="btn btn-primary btn-sm">Kasaba Borç Yaz</button>
+      
+      
       <button name="loadPuans" value="true" class="btn btn-primary btn-sm">Puan Yükle</button>
       
       <p><%-controller.markdown.render(order.statusDesc || '')%></p>
@@ -73,6 +76,8 @@
 
 
     </form>
+
+    Kasabın Borcu: <%- include('./_partial/currency.ejs', {value: controller.butcherDebt}) %> <br>
 
 
 <% if (controller.shouldBePaid > 0) { %>
@@ -185,6 +190,7 @@
 
 
 
+      <%- include('./_partial/accounts-view.ejs', { title: 'Kasap Borç Hesabı', accounts: controller.order.butcherDeptAccounts }) %>
 
 
 

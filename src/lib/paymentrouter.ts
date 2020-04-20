@@ -28,7 +28,7 @@ export class PaymentRouter extends ViewRouter  {
     _paymentProvider: CreditcardPaymentProvider;
     threeDhtml: string;
 
-    async paymentSuccess(payment: PaymentResult) {
+    async paymentSuccess(request: PaymentRequest, payment: PaymentResult) {
     }
 
     get pageHasPaymentId() {

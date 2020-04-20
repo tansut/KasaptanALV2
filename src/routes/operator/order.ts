@@ -50,48 +50,55 @@ export default class Route extends ViewRouter {
     earnedPuanTotal = 0.00;
     mayEarnPuanTotal = 0.00;
 
+    butcherDebt = 0.00
+
+
     possiblePuanList: PuanResult[] = [];
 
     puanAccountsKalitte: AccountModel[] = []
     puanAccountsButcher: AccountModel[] = []
 
-    async getOrderSummary() {        
+    async getOrderSummary() {
         let acountingSummary = await this.api.getWorkingAccounts(this.order);
         if (acountingSummary.length == 1) {
             let initial = this.api.generateInitialAccounting(this.order);
             await this.api.saveAccountingOperations([initial]);
             await this.getOrder();
-        }        
-            this.productTotal = this.api.calculateProduct(this.order);
-            this.teslimatTotal = this.api.calculateTeslimat(this.order);
-    
-            this.balance = this.order.workedAccounts.find(p=>p.code == 'total')
-            this.shouldBePaid = Helper.asCurrency(this.balance.alacak - this.balance.borc);
-            this.paid = this.api.calculatePaid(this.order);
-            this.puanBalanceKalitte = this.order.kalittePuanAccounts.find(p=>p.code == 'total');  
-            this.puanBalanceButcher = this.order.butcherPuanAccounts.find(p=>p.code == 'total');  
-            this.earnedPuanKalitte = this.puanBalanceKalitte ? Helper.asCurrency(this.puanBalanceKalitte.alacak -   this.puanBalanceKalitte.borc):0.00
-            this.earnedPuanButcher = this.puanBalanceButcher ? Helper.asCurrency(this.puanBalanceButcher.alacak -   this.puanBalanceButcher.borc):0.00
-            this.earnedPuanTotal = Helper.asCurrency(this.earnedPuanKalitte + this.earnedPuanButcher)
-            if (this.shouldBePaid > 0) {
-                this.possiblePuanList = this.api.getPossiblePuanGain(this.order, this.shouldBePaid);
-                this.possiblePuanList.forEach(pg=>this.mayEarnPuanTotal+=pg.earned)
-                this.mayEarnPuanTotal = Helper.asCurrency(this.mayEarnPuanTotal)
-            }
-        
+        }
+        this.productTotal = this.api.calculateProduct(this.order);
+        this.teslimatTotal = this.api.calculateTeslimat(this.order);
+
+        this.balance = this.order.workedAccounts.find(p => p.code == 'total')
+        this.shouldBePaid = Helper.asCurrency(this.balance.alacak - this.balance.borc);
+        this.paid = this.api.calculatePaid(this.order);
+        this.puanBalanceKalitte = this.order.kalittePuanAccounts.find(p => p.code == 'total');
+        this.puanBalanceButcher = this.order.butcherPuanAccounts.find(p => p.code == 'total');
+        this.earnedPuanKalitte = this.puanBalanceKalitte ? Helper.asCurrency(this.puanBalanceKalitte.alacak - this.puanBalanceKalitte.borc) : 0.00
+        this.earnedPuanButcher = this.puanBalanceButcher ? Helper.asCurrency(this.puanBalanceButcher.alacak - this.puanBalanceButcher.borc) : 0.00
+        this.earnedPuanTotal = Helper.asCurrency(this.earnedPuanKalitte + this.earnedPuanButcher)
+        if (this.shouldBePaid > 0) {
+            this.possiblePuanList = this.api.getPossiblePuanGain(this.order, this.shouldBePaid);
+            this.possiblePuanList.forEach(pg => this.mayEarnPuanTotal += pg.earned)
+            this.mayEarnPuanTotal = Helper.asCurrency(this.mayEarnPuanTotal)
+        }
+
         let calc = new ComissionHelper(this.order.butcher.commissionRate, this.order.butcher.commissionFee);
         this.butcherFee = calc.calculateButcherComission(this.paid);
 
-        let kalitteByButcherPuanAccounts = this.order.kalitteByButcherPuanAccounts.find(p=>p.code == 'total')
-        
+        let kalitteByButcherPuanAccounts = this.order.kalitteByButcherPuanAccounts.find(p => p.code == 'total')
+
         let butcherToCustomer = Helper.asCurrency((kalitteByButcherPuanAccounts.alacak - kalitteByButcherPuanAccounts.borc) + (this.puanBalanceButcher.alacak - this.puanBalanceButcher.borc));
 
         if (butcherToCustomer <= 0) {
             this.possiblePuanList = this.api.getPossiblePuanGain(this.order, this.paid);
-            this.possiblePuanList.forEach(pg=>butcherToCustomer+=pg.earned)
+            this.possiblePuanList.forEach(pg => butcherToCustomer += pg.earned)
         }
 
         this.butcherFee.butcherToCustomer = Helper.asCurrency(butcherToCustomer);
+        await  this.api.fillButcherDebtAccounts(this.order)
+
+        let butcherDebptAccounts = await AccountModel.summary([Account.generateCode("kasaplardan-alacaklar", [this.order.butcherid])]);
+        this.butcherDebt = butcherDebptAccounts.borc - butcherDebptAccounts.alacak;
 
     }
 
@@ -100,7 +107,7 @@ export default class Route extends ViewRouter {
             let payment = CreditcardPaymentFactory.getInstance();
             let log = new SiteLogRoute(this.constructorParams);
             payment.logger = log;
-            payment.userid = this.req.user ? this.req.user.id: null;
+            payment.userid = this.req.user ? this.req.user.id : null;
             payment.ip = this.req.header("x-forwarded-for") || this.req.connection.remoteAddress;
             this._paymentProvider = payment
         }
@@ -115,36 +122,45 @@ export default class Route extends ViewRouter {
         let userMessage = "";
 
         await this.getOrder();
-        await this.getOrderSummary()     
+        await this.getOrderSummary()
 
         if (!this.order)
             return this.next();
 
         if (this.req.body.saveOrderStatus == "true" && this.order.status != this.req.body.orderStatus) {
             this.order.statusDesc ? null : (this.order.statusDesc = '')
-            this.order.statusDesc += `\n- ${Helper.formatDate(Helper.Now(), true)} tarihinde ${this.order.status} -> ${this.req.body.orderStatus}` 
+            this.order.statusDesc += `\n- ${Helper.formatDate(Helper.Now(), true)} tarihinde ${this.order.status} -> ${this.req.body.orderStatus}`
             await this.api.completeOrderStatus(this.order, this.req.body.orderStatus);
             // this.order.status = this.req.body.orderStatus;
             // await this.order.save()
         }
 
-        if (this.req.body.makeManuelPayment == "true") {    
-            if(this.shouldBePaid > 0) {
-                await this.api.completeManuelPayment(this.order, this.shouldBePaid)
-            } else  userMessage = "Ödemesi yok siparişin";            
-        } 
-
-
-        if (this.req.body.loadPuans == "true") {    
+        if (this.req.body.makeManuelPayment == "true") {
             if (this.shouldBePaid > 0) {
-                userMessage = "Ödemesi henüz yapılmamış siparişin"; 
-                
-            } else await this.api.completeLoadPuan(this.order, this.paid)
-            
-        }        
+                await this.api.completeManuelPayment(this.order, this.shouldBePaid)
+            } else userMessage = "Ödemesi yok siparişin";
+        }
 
-        
-        if (this.req.body.approveOrderSubMerchant == "true") {            
+        if (this.req.body.makeManuelPaymentDebt == "true") {
+            if (this.paid > 0) {
+                let toKalitte = Helper.asCurrency(this.butcherFee.kalitteFee + this.butcherFee.kalitteVat)
+                await this.api.completeManualPaymentDept(this.order, toKalitte, this.butcherFee.butcherToCustomer)
+            } else userMessage = "Ödemesi yok siparişin";
+        }
+
+
+
+
+        if (this.req.body.loadPuans == "true") {
+            if (this.shouldBePaid > 0) {
+                userMessage = "Ödemesi henüz yapılmamış siparişin";
+
+            } else await this.api.completeLoadPuan(this.order, this.paid)
+
+        }
+
+
+        if (this.req.body.approveOrderSubMerchant == "true") {
             await this.paymentProvider.approveItem({
                 paymentTransactionId: this.order.paymentTransactionId
             })
@@ -152,7 +168,7 @@ export default class Route extends ViewRouter {
             userMessage = `${this.order.ordernum} subMerchant ONAYLANDI`
             await this.order.save();
         }
-        if (this.req.body.disApproveOrderSubMerchant == "true") {            
+        if (this.req.body.disApproveOrderSubMerchant == "true") {
             await this.paymentProvider.disApproveItem({
                 paymentTransactionId: this.order.paymentTransactionId
             })
@@ -165,9 +181,9 @@ export default class Route extends ViewRouter {
 
         //
 
-        
+
         await this.getOrder();
-        await this.getOrderSummary()     
+        await this.getOrderSummary()
 
         this.sendView("pages/operator.manageorder.ejs", { ...{ _usrmsg: { text: userMessage } }, ...this.api.getView(this.order), ...{ enableImgContextMenu: true } });
 
@@ -183,10 +199,10 @@ export default class Route extends ViewRouter {
     async ordersListRoute() {
         this.api = new OrderApi(this.constructorParams);
         let orders = await this.api.getOrders();
-        this.sendView('pages/operator.orders.ejs', {orders: orders})
+        this.sendView('pages/operator.orders.ejs', { orders: orders })
     }
 
-    
+
     async orderItemUpdateRoute() {
         await this.getOrder();
         if (!this.order)
@@ -195,11 +211,11 @@ export default class Route extends ViewRouter {
 
         let itemid = this.req.body.itemid;
 
-        let orderitem = this.order.items.find(p=>p.id == parseInt(itemid))
+        let orderitem = this.order.items.find(p => p.id == parseInt(itemid))
         let userMessage = "";
 
         try {
-            if (this.req.body.approveSubMerchant) {            
+            if (this.req.body.approveSubMerchant) {
                 await this.paymentProvider.approveItem({
                     paymentTransactionId: orderitem.paymentTransactionId
                 })
@@ -207,7 +223,7 @@ export default class Route extends ViewRouter {
                 userMessage = `${orderitem.productName} subMerchant ONAYLANDI`
                 await orderitem.save();
             }
-            if (this.req.body.disApproveSubMerchant) {            
+            if (this.req.body.disApproveSubMerchant) {
                 await this.paymentProvider.disApproveItem({
                     paymentTransactionId: orderitem.paymentTransactionId
                 })
@@ -217,36 +233,37 @@ export default class Route extends ViewRouter {
                 await orderitem.save();
             }
 
-            if (this.req.body.saveOrderItemStatus == "true") {   
+            if (this.req.body.saveOrderItemStatus == "true") {
                 if (orderitem.status != this.req.body.orderItemStatus) {
                     orderitem.statusDesc ? null : (orderitem.statusDesc = '')
                     orderitem.statusDesc += `\n- ${Helper.formatDate(Helper.Now(), true)} tarihinde ${orderitem.status} -> ${this.req.body.orderItemStatus}\n`
                     await this.api.completeOrderItemStatus(orderitem, this.req.body.orderItemStatus)
                     userMessage = `${orderitem.productName} yeni durum: ${orderitem.status}`
-                }                         
-            }            
-        } catch(err) {
+                }
+            }
+        } catch (err) {
             userMessage = err.message || err.errorMessage
         }
 
         await this.getOrder();
-        await this.getOrderSummary();            
+        await this.getOrderSummary();
 
-        this.sendView("pages/operator.manageorder.ejs", { 
-            ...{ _usrmsg: { text: userMessage } },             
-         ...this.api.getView(this.order), ...{ enableImgContextMenu: true } });
+        this.sendView("pages/operator.manageorder.ejs", {
+            ...{ _usrmsg: { text: userMessage } },
+            ...this.api.getView(this.order), ...{ enableImgContextMenu: true }
+        });
 
     }
 
-    
+
     async orderViewRoute() {
         await this.getOrder();
         if (!this.order)
             return this.next();
 
-        await this.getOrderSummary();            
+        await this.getOrderSummary();
 
-            this.sendView("pages/operator.manageorder.ejs", { ...this.api.getView(this.order), ...{ enableImgContextMenu: true } });
+        this.sendView("pages/operator.manageorder.ejs", { ...this.api.getView(this.order), ...{ enableImgContextMenu: true } });
     }
 
     //approveSubMerchant

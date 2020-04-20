@@ -50,13 +50,13 @@ export default class Route extends PaymentRouter {
         if (this.pageHasPaymentId) {
             let threedPaymentMade = await this.created3DPayment();
             if (threedPaymentMade) {
-                await this.paymentSuccess(threedPaymentMade);
+                //await this.paymentSuccess(threedPaymentMade);
                 userMessage = "Başarılı 3d ödemesi"
             } else {
                 userMessage = "Hatalı 3d ödemesi"
             }
         } else if (this.req.body.makepayment == "true") {
-            let req = this.paymentProvider.requestFromOrder(this.orders);
+            let req = await this.paymentProvider.requestFromOrder(this.orders);
             let paymentResult: PaymentResult;
 
             if (this.threeDPaymentRequested) {
@@ -69,7 +69,7 @@ export default class Route extends PaymentRouter {
                 let creditCard = this.getCreditCard();
                 try {
                     paymentResult = await this.createPayment(req, creditCard);
-                    await this.paymentSuccess(paymentResult)
+                    await this.paymentSuccess(req, paymentResult)
                     userMessage = "başarılı"
                 } catch (err) {
                     userMessage = err.message || err.errorMessage

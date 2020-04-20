@@ -33,7 +33,7 @@ class Order extends BaseModel<Order> {
     kalitteOnlyPuanAccounts: AccountModel[] = [];
     kalitteByButcherPuanAccounts: AccountModel[] = [];
     
-    
+    butcherDeptAccounts: AccountModel[] = [];
 
 
 

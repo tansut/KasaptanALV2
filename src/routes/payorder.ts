@@ -93,20 +93,31 @@ export default class Route extends PaymentRouter {
     }
 
 
-    async paymentSuccess(payment: PaymentResult) {
-        await this.api.completeCreditcardPayment([this.order], payment);
+    async paymentSuccess(request: PaymentRequest, payment: PaymentResult) {
+        await this.api.completeCreditcardPayment([this.order], request, payment);
         await this.getOrder();
         await this.getOrderSummary()
     }
 
-    getPaymentRequest() {
+    async getPaymentRequest() {
         let total = this.order.workedAccounts.find(p => p.code == 'total');
+
+
+        
         let shouldBePaid = Helper.asCurrency(total.alacak - total.borc);
         if (shouldBePaid <= 0.00)
             throw new Error("Geçersiz ödeme işlemi, siparişin borcu yoktur");
 
         this.api.fillPuanAccounts(this.order, shouldBePaid);
-        let request = this.paymentProvider.requestFromOrder([this.order]);
+
+        let butcherDebptAccounts = await AccountModel.summary([Account.generateCode("kasaplardan-alacaklar", [this.order.butcherid, 1]), Account.generateCode("kasaplardan-alacaklar", [this.order.butcherid, 2])])
+        let butcherDebt = Helper.asCurrency(butcherDebptAccounts.borc - butcherDebptAccounts.alacak);
+
+        let debt = {};
+
+        debt[this.order.butcherid] = butcherDebt;
+        
+        let request = this.paymentProvider.requestFromOrder([this.order], debt);
 
         if (shouldBePaid != request.paidPrice)
             throw new Error("Geçersiz sipariş ve muhasebesel tutarlar");
@@ -126,11 +137,10 @@ export default class Route extends PaymentRouter {
 
         try {
             if (this.pageHasPaymentId) {
-
-                this.getPaymentRequest();
+                let req = await this.getPaymentRequest();
                 let threedPaymentMade = await this.created3DPayment();
                 if (threedPaymentMade) {
-                    await this.paymentSuccess(threedPaymentMade);
+                    await this.paymentSuccess(req, threedPaymentMade);
                     userMessage = "Ödemeniz başarıyla alındı"
                 } else {
                     throw new Error("Ödeme işlemi başarısız")
@@ -147,13 +157,13 @@ export default class Route extends PaymentRouter {
 
                 let paymentResult: PaymentResult;
 
-                let req: PaymentRequest = this.getPaymentRequest();
+                let req: PaymentRequest = await this.getPaymentRequest();
                 if (this.threeDPaymentRequested) {
                     await this.init3dPayment(req);
                 } else {
                     let creditCard = this.getCreditCard();
                     paymentResult = await this.createPayment(req, creditCard);
-                    await this.paymentSuccess(paymentResult)
+                    await this.paymentSuccess(req, paymentResult)
                     userMessage = "Ödemenizi başarıyla aldık"
                 }
 
@@ -166,7 +176,7 @@ export default class Route extends PaymentRouter {
             })            
         }
 
-secret:          this.renderPage(userMessage);
+        this.renderPage(userMessage);
 
     }
 

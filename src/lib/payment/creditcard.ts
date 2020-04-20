@@ -73,8 +73,9 @@ export interface BasketItem {
     category1: string,
     itemType: string,
     price: number;
-     subMerchantKey?: string;
-     subMerchantPrice?:number;
+    subMerchantKey?: string;
+    subMerchantPrice?:number;
+    merchantDebtApplied?: number;
 }
 
 export interface PaymentRequest {
@@ -182,29 +183,40 @@ export class CreditcardPaymentProvider {
         return false
     }
 
+    getMerchantMoney(o: Order, shouldBePaid: number) {
+        let butcherPuanEarned = o.butcherPuanAccounts.find(p => p.code == 'total');
+        let kalitteOnlyPuanEarned = o.kalitteOnlyPuanAccounts.find(p => p.code == 'total');
+        let kalitteByButcherEarned = o.kalitteByButcherPuanAccounts.find(p => p.code == 'total');
+        let calc = new ComissionHelper(o.butcher.commissionRate, o.butcher.commissionFee);
+        let totalFee = calc.calculateButcherComission(shouldBePaid);
+        let merchantPrice = Helper.asCurrency(totalFee.inputTotal - totalFee.kalitteFee - totalFee.kalitteVat);
+        let butcherPuan = Helper.asCurrency(butcherPuanEarned.alacak - butcherPuanEarned.borc);
+        let kalitteByButcherPuan = Helper.asCurrency(kalitteByButcherEarned.alacak - kalitteByButcherEarned.borc);
+        let totalPuanByButcher = Helper.asCurrency(butcherPuan + kalitteByButcherPuan);
+        merchantPrice = Helper.asCurrency(merchantPrice - totalPuanByButcher);
+        return merchantPrice;
+    }
 
-    requestFromOrder(ol: Order[]): PaymentRequest {
+
+    requestFromOrder(ol: Order[], debts: { [key: string]: number; } = {}): PaymentRequest {
         let basketItems: BasketItem [] = [];
         let price = 0.00, paidPrice = 0.00;
         ol.forEach((o, j) => {            
             let total = o.workedAccounts.find(p => p.code == 'total');
-            let butcherPuanEarned = o.butcherPuanAccounts.find(p => p.code == 'total');
-            let kalitteOnlyPuanEarned = o.kalitteOnlyPuanAccounts.find(p => p.code == 'total');
-            let kalitteByButcherEarned = o.kalitteByButcherPuanAccounts.find(p => p.code == 'total');
 
             let shouldBePaid = Helper.asCurrency(total.alacak - total.borc);
 
-            let merchantPrice = 0.00;                                          
+            let merchantPrice = 0.00;       
             
-            if (this.marketPlace) {
-                let calc = new ComissionHelper(o.butcher.commissionRate, o.butcher.commissionFee);
-                let totalFee = calc.calculateButcherComission(shouldBePaid)
-                merchantPrice = Helper.asCurrency(totalFee.inputTotal - totalFee.kalitteFee - totalFee.kalitteVat);
-                let butcherPuan = Helper.asCurrency(butcherPuanEarned.alacak - butcherPuanEarned.borc);
-                let kalitteByButcherPuan = Helper.asCurrency(kalitteByButcherEarned.alacak - kalitteByButcherEarned.borc);
-                let totalPuanByButcher = Helper.asCurrency(butcherPuan + kalitteByButcherPuan);
-
-                merchantPrice = Helper.asCurrency(merchantPrice - totalPuanByButcher)
+            let butcherDebt = 0.00, debtApplied = 0.00;
+            
+            if (this.marketPlace) {                
+                merchantPrice = this.getMerchantMoney(o, shouldBePaid);                               
+                butcherDebt = debts[o.butcherid];
+                if (merchantPrice <= butcherDebt) {
+                    debtApplied = merchantPrice - 1.00;
+                } else debtApplied = butcherDebt;
+                merchantPrice = Helper.asCurrency(this.getMerchantMoney(o, shouldBePaid) - debtApplied); 
 
             }
             basketItems.push({
@@ -213,6 +225,7 @@ export class CreditcardPaymentProvider {
                 itemType: 'PHYSICAL',
                 name: o.name + ' ' + o.ordernum + ' nolu ' + 'ürün siparişi',
                 price: Helper.asCurrency(shouldBePaid),
+                merchantDebtApplied: debtApplied,
                 subMerchantKey: this.marketPlace ? this.getSubmerchantId(o): undefined,
                 subMerchantPrice: merchantPrice > 0.00 ? merchantPrice: undefined
             }) 
