@@ -58,7 +58,10 @@ export default class IyziPayment extends CreditcardPaymentProvider {
                 this.logOperation("creditcard-3d-init", request, result).then(() => {
                     if (err) reject(err);
                     else if (result.status == 'failure') reject(result);
-                    else resolve(result);
+                    else {
+                        let buff = new Buffer(result.threeDSHtmlContent, 'base64');
+                        result.threeDSHtmlContent = buff.toString('ascii');
+                    } resolve(result);
                 }).catch(err=>reject(err))
             });
         })

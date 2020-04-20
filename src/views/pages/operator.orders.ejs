@@ -37,6 +37,8 @@
               <th>Tarih</th>
               <th>Kasap</th>
               <th>Durum</th>
+              <th>Ödeme Tipi</th>
+              <th>Payment</th>
           </tr>
       </thead>
       <tbody>
@@ -48,6 +50,9 @@
               <td><%= __helper.formatDate(orders[i].creationDate) %></td>
               <td><%= orders[i].butcherName %></td>
               <td><%= orders[i].status %></td>
+              <td><%= orders[i].paymentType %></td>
+              <td><%= orders[i].subMerchantStatus %></td>
+
           </tr>
 
 

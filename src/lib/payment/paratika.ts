@@ -24,13 +24,13 @@ export default class ParatikaPayment extends CreditcardPaymentProvider {
         this.config = config;
     }
 
-    post(body: any, handler: any) {
+    post(body: any, handler: any, uri: string = null) {
         const config = {
             headers: {
                 'Content-Type': 'application/x-www-form-urlencoded'
             }
         }
-        axios.post(this.config.uri, qs.stringify(body), config).then((result) => {
+        axios.post(uri || this.config.uri, qs.stringify(body), config).then((result) => {
             console.log("----------");
             console.log(body);
             console.log(result.data)
@@ -64,7 +64,7 @@ export default class ParatikaPayment extends CreditcardPaymentProvider {
             SESSIONTYPE: "PAYMENTSESSION",
             AMOUNT: request.paidPrice,
             CURRENCY: "TRY",
-            RETURNURL: "http://localhost/pay-session",
+            RETURNURL: request.callbackUrl,
             MERCHANTPAYMENTID: request.conversationId,
             MERCHANTUSER: this.config.merchantUser,
             MERCHANTPASSWORD: this.config.merchantPassword,
@@ -150,19 +150,47 @@ export default class ParatikaPayment extends CreditcardPaymentProvider {
         })
     }
 
-    async pay3dInit(request: PaymentRequest, card: Creditcard): Promise<PaymentResult> {
-        let req = this.createParatikaPaymentReq(request, card);
 
+    async pay3dInit(request: PaymentRequest, card: Creditcard): Promise<PaymentResult> {
+        let req = this.createParatikaSessionReq(request, card);
         return new Promise((resolve, reject) => {
-            this.iyzipay.threedsInitialize.create(req, (err, result) => {
-                this.logOperation("creditcard-3d-init", request, result).then(() => {
+            this.post(req, (err, sessionResult) => {
+                this.logOperation("creditcard-payment-3d-session-create", request, sessionResult).then(() => {
                     if (err) reject(err);
-                    else if (result.status == 'failure') reject(result);
-                    else resolve(result);
+                    else if (sessionResult.responseCode != '00')
+                        reject(this.generateErrorResponse(sessionResult));
+                    else {
+
+                        let pr = {
+                            cardOwner: card.cardHolderName,
+                            pan: card.cardNumber,
+                            expiryMonth: card.expireMonth,
+                            expiryYear: card.expireYear,
+                            cvv: card.expireYear,
+                            installmentCount: 1,
+                                                
+                        }
+
+                        this.post(pr, (err, result) => {
+                            if (err) reject(err);
+                            else {
+                                resolve({
+                                    status: 'success',
+                                    conversationId: request.conversationId,
+                                    threeDSHtmlContent: result,
+                                    itemTransactions: [],
+                                    paidPrice: request.paidPrice,
+                                    paymentId: request.conversationId,
+                                    price: request.price
+                                })                                                          
+                            }
+                        }, `${this.config.uri}/post/sale3d/${sessionResult.sessionToken}`)
+                    }
                 }).catch(err => reject(err))
             });
         })
     }
+
 
     pay3dHandshakeSuccess(result: any) {
         result = result || {};

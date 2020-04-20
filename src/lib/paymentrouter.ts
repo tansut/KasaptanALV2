@@ -45,9 +45,8 @@ export class PaymentRouter extends ViewRouter  {
         let paymentResult: PaymentResult;
 
         try {
-            paymentResult = await this.paymentProvider.pay3dInit(req, creditCard);
-            let buff = new Buffer(paymentResult.threeDSHtmlContent, 'base64');
-            this.req.session.threeDhtml = buff.toString('ascii');
+            paymentResult = await this.paymentProvider.pay3dInit(req, creditCard);            
+            this.req.session.threeDhtml = paymentResult.threeDSHtmlContent;
             await new Promise((resolve, reject) => {
                 this.req.session.save(err => (err ? reject(err) : resolve()))
             })

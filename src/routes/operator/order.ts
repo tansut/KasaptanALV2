@@ -144,7 +144,7 @@ export default class Route extends ViewRouter {
         if (this.req.body.makeManuelPaymentDebt == "true") {
             if (this.paid > 0) {
                 let toKalitte = Helper.asCurrency(this.butcherFee.kalitteFee + this.butcherFee.kalitteVat)
-                await this.api.completeManualPaymentDept(this.order, toKalitte, this.butcherFee.butcherToCustomer)
+                await this.api.completeManualPaymentDept(this.order, this.butcherFee.butcherToCustomer, toKalitte)
             } else userMessage = "Ödemesi yok siparişin";
         }
 

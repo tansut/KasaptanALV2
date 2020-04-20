@@ -192,7 +192,7 @@ export default class Route extends ApiRouter {
         order.kalittePuanAccounts = await this.getKalittePuanAccounts(order);
         this.arrangeKalittePuans(order);
         if (checkFirst) {
-            order.isFirstButcherOrder = await Order.findOne({ where: { userid: order.userId, butcherid: order.butcherid, ordernum: { [Op.ne]: order.ordernum } } }) == null;
+            order.isFirstButcherOrder = await Order.findOne({ where: { userid: order.userId, butcherid: order.butcherid, status: OrderItemStatus.success, ordernum: { [Op.ne]: order.ordernum } } }) == null;
             order.isFirstOrder = await Order.findOne({ where: { userid: order.userId } }) == null;
         }
         return order;
