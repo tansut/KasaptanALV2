@@ -301,7 +301,7 @@ let tasks = ['copy:topublic', 'compile:tsc:admin', 'compile:tsc:app', 'copy:imag
 
 gulp.task(
     'client.deploy',
-    gulp.series('set:env', 'clean', gulp.parallel(tasks), "aws.deploy")
+    gulp.series('set:env', 'clean', gulp.parallel(tasks))
 );
 
 
