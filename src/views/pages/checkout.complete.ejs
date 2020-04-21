@@ -31,16 +31,16 @@
       <div class="pt-5">
         <div class="card py-3 mt-sm-3">
           <div class="card-body text-center">
-            <h2 class="h4 pb-3">Siparişinizi başarıyla aldık, teşekkürler!</h2>
-            <p class="font-size-sm mb-2">Siparişiniz başarıyla alındı ve en kısa zamanda teslimat ve diğer konularda sizi bilgilendireceğiz.</p>
-            <p class="font-size-sm mb-2">Sipariş numaranızı not edebilir veya profilim sayfasından siparişini takip edebilirsiniz:
+            <h2 class="h4 pb-3">Teşekkürler!</h2>
+            <p class="font-size-sm mb-2">Siparişiniz başarıyla aldık. En kısa zamanda ödeme, teslimat ve diğer konularda sizi bilgilendireceğiz.</p>
+            <p class="font-size-sm mb-2">Sipariş numaranızı not edebilir veya profilim sayfasından siparişinizi takip edebilirsiniz:
               
               <% orders.forEach(order=> { %>
                 <div class="mt-5">
                   <span data-orderid="<%= order.ordernum %>" class='font-weight-medium'><%= order.ordernum %></span></p>
                   <p class="font-size-sm">Birazdan e-posta adresinize de gerekli bilgileri ulaştırıyor olacağız. Çok teşekkürler!</p>
                   
-                  <a class="btn btn-primary mt-3" href="/user/orders/<%=order.ordernum%>"><i class="czi-bag"></i>&nbsp;Siparişi Takip Et</a>
+                  <a class="btn btn-primary mt-3" href="/user/orders/<%=order.ordernum%>"><i class="czi-bag"></i>&nbsp;Sipariş Takip Et</a>
                 </div>
               <% }) %>
 

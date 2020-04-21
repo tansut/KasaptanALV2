@@ -365,8 +365,8 @@ window.initComponents = function initComponents() {
                 quantity: 0,
                 selectedUnit: null,
                 note: '',
-                newlyAddedItem: null
-               
+                newlyAddedItem: null,
+                shopCardIndex: -1,
             }
         },
         mounted: function () {
@@ -513,17 +513,30 @@ window.initComponents = function initComponents() {
 
             },
 
+            setShopcardItem() {      
+                debugger;          
+                let sc = window.shopcard.card.data.items[this.shopCardIndex];
+                this.quantity = sc.quantity;
+                this.note = sc.note;
+                this.selectedUnit = this.product.purchaseOptions.find(function(po) {
+                    return po.unit == sc.purchaseoption.unit
+                }) 
+            },
+
 
             addToShopcard(event) {
                 if ((!event) || event.target.checkValidity()) {
                     $('#addtoscbtn').attr("disabled", true)
 
-                    return App.Backend.post('shopcard/add', {
+                    var url = this.shopCardIndex >= 0 ? 'shopcard/add': 'shopcard/add'
+
+                    return App.Backend.post(url, {
                         id: this.product.id,
                         butcher: this.product.butcher,
                         quantity: this.quantity,
                         purchaseoption: this.selectedUnit,
-                        note: this.note
+                        note: this.note,
+                        shopcardIndex: this.shopCardIndex
                     }).then(result => {
                         this.newlyAddedItem = result.items[result.items.length-1];
                         this.$nextTick(function () {
@@ -546,9 +559,12 @@ window.initComponents = function initComponents() {
                 if (newVal) {
                     this.quantity = null;
                     this.$nextTick(function () {
-                        this.loadFromUrl();
-                        this.selectedUnit = this.selectedUnit || ((this.product.purchaseOptions.length > 1) ? null : this.product.purchaseOptions[0]);
-
+                        if (this.shopCardIndex >= 0) {
+                            this.setShopcardItem();
+                        } else {
+                            this.loadFromUrl();
+                            this.selectedUnit = this.selectedUnit || ((this.product.purchaseOptions.length > 1) ? null : this.product.purchaseOptions[0]);
+                        }                         
                     })
 
 

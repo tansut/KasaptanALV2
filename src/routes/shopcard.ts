@@ -292,8 +292,14 @@ export default class Route extends ViewRouter {
             let api = new OrderApi(this.constructorParams);
             let orders = await api.create(this.shopcard, null);
             await ShopCard.empty(this.req);
+            // if (orders.length == 1 && orders[0].paymentType == 'onlinepayment') {
+            //     this.res.redirect(`/user/orders/${orders[0].ordernum}?new=1`)
+            // }
+            // else 
+            
             this.res.render("pages/checkout.complete.ejs", this.viewData({
-                orders: orders
+                orders: orders,
+                
             }));
         } catch (err) {
             await this.reviewViewRoute({ _usrmsg: { text: err.message || err.errorMessage } })

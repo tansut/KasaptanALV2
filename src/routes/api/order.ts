@@ -387,7 +387,7 @@ export default class Route extends ApiRouter {
                 let total = Helper.asCurrency(o.total);
                 remaining = Helper.asCurrency(remaining - total);
                 if (remaining >= 0.00) {
-                    let op = new AccountingOperation(`${o.name} ${o.ordernum} siparişi ön provizyon ödeme işlemi`, o.ordernum);
+                    let op = new AccountingOperation(`${o.name} ${o.ordernum} siparişi ön provizyon ödeme işlemi`);
                     op.accounts.push(new Account("kredi-karti-provizyon", [o.userId, o.ordernum, paymentInfo.paymentId]).inc(total))
                     op.accounts.push(new Account("havuz-hesabi", [o.userId, o.ordernum, paymentInfo.paymentId]).inc(total))
                     op.validate()
@@ -458,7 +458,7 @@ export default class Route extends ApiRouter {
         // let calc = new ComissionHelper(this.order.butcher.commissionRate, this.order.butcher.commissionFee);
         // this.butcherFee = calc.calculateButcherComission(this.paid);   
         
-        let result: AccountingOperation = new AccountingOperation(`${o.ordernum} nolu ${o.butcherName} siparişi kasaptan alacak`, o.ordernum);
+        let result: AccountingOperation = new AccountingOperation(`${o.ordernum} nolu ${o.butcherName} siparişi kasaptan alacak`);
         result.accounts.push(new Account("kasaplardan-alacaklar", [o.butcherid, 1, o.ordernum], `${o.ordernum} nolu sipariş komisyonu`).inc(butcherDebt))
         result.accounts.push(new Account("kasaplardan-alacaklar", [o.butcherid, 2, o.ordernum], `${o.ordernum} nolu sipariş müşteriye iletilen`).inc(customerPuan))
         result.accounts.push(new Account("kasap-borc-tahakkuk", [1, o.butcherid, o.ordernum], `${o.ordernum} nolu sipariş ödemesi`).inc(Helper.asCurrency(butcherDebt + customerPuan)))
@@ -585,7 +585,7 @@ export default class Route extends ApiRouter {
     getPuanAccounts(o: Order, total: number): AccountingOperation {
 
         let gains = this.getPossiblePuanGain(o, total);
-        let result: AccountingOperation = new AccountingOperation(`${o.ordernum} nolu ${o.butcherName} siparişi puan kazancı`, o.ordernum);
+        let result: AccountingOperation = new AccountingOperation(`${o.ordernum} nolu ${o.butcherName} siparişi puan kazancı`);
 
         gains.forEach(pg => {
             if (pg.earned > 0.00) {
@@ -684,7 +684,7 @@ export default class Route extends ApiRouter {
 
         let paymentId = "manuel";
 
-        let op = new AccountingOperation(`${o.ordernum} ödemesi - ${paymentId}`, o.ordernum);
+        let op = new AccountingOperation(`${o.ordernum} ödemesi - ${paymentId}`);
         op.accounts.push(new Account("odeme-bekleyen-satislar", [o.userId, o.ordernum, 600]).dec(total))
         op.accounts.push(new Account("satis-alacaklari", [o.userId, o.ordernum]).dec(total))
         ops.push(op);
@@ -706,7 +706,7 @@ export default class Route extends ApiRouter {
             if (it.itemId == o.ordernum) {
                 let req = paymentRequest.basketItems.find(pr=>pr.id == o.ordernum);
                 if (req.merchantDebtApplied) {
-                    let result: AccountingOperation = new AccountingOperation(`${o.ordernum} nolu ${o.butcherName} siparişi düşülen borç`, o.ordernum);
+                    let result: AccountingOperation = new AccountingOperation(`${o.ordernum} nolu ${o.butcherName} siparişi düşülen borç`);
                     result.accounts.push(new Account("kasaplardan-alacaklar", [o.butcherid, 5], `${o.ordernum} nolu sipariş düşülen tutar`).dec(req.merchantDebtApplied))
                     result.accounts.push(new Account("kasap-borc-tahakkuk", [1, o.butcherid, o.ordernum], `${o.ordernum} nolu siparişten düşülen ödemesi`).dec(req.merchantDebtApplied))
                     promises = promises.concat(this.saveAccountingOperations([result], t))
@@ -724,7 +724,7 @@ export default class Route extends ApiRouter {
 
         for (let i = 0; i < ol.length; i++) {
             let o = ol[i];
-            let op = new AccountingOperation(`${o.ordernum} kredi kartı ödemesi - ${paymentInfo.paymentId}`, o.ordernum);
+            let op = new AccountingOperation(`${o.ordernum} kredi kartı ödemesi - ${paymentInfo.paymentId}`);
             op.accounts.push(new Account("odeme-bekleyen-satislar", [o.userId, o.ordernum, 500]).dec(paymentInfo.paidPrice))
             op.accounts.push(new Account("satis-alacaklari", [o.userId, o.ordernum]).dec(paymentInfo.paidPrice))
             ops.push(op);
@@ -747,7 +747,7 @@ export default class Route extends ApiRouter {
 
     generateInitialAccounting(o: Order): AccountingOperation {
 
-        let op = new AccountingOperation(`${o.ordernum} numaralı sipariş`, o.ordernum);
+        let op = new AccountingOperation(`${o.ordernum} numaralı sipariş`);
 
         op.accounts.push(new Account("odeme-bekleyen-satislar", [o.userId, o.ordernum, 100], "Ürün Bedeli").inc(o.subTotal));
         if (o.shippingTotal > 0.00) {

@@ -24,7 +24,7 @@ import { PreferredAddress } from '../db/models/user';
 var MarkdownIt = require('markdown-it')
 import * as _ from "lodash";
 import { ResourceCacheItem, ProductCacheItem } from '../lib/cache';
-import { ShopCard } from '../models/shopcard';
+import { ShopCard, ShopcardItem } from '../models/shopcard';
 import config from '../config';
 import { Op, Sequelize, where } from 'sequelize';
 import { ProductLd } from '../models/ProductLd';
@@ -48,6 +48,7 @@ export default class Route extends ViewRouter {
     butcherResources: Resource[] = [];
     productLd: ProductLd;
     reviews: Review[] = [];
+    shopCardIndex: number = -1;
 
     async tryBestFromShopcard(serving: Dispatcher[], others: Dispatcher[] = []) {
         let shopcard = await ShopCard.createFromRequest(this.req);
@@ -128,9 +129,16 @@ export default class Route extends ViewRouter {
         await product.loadResources();
         this.reviews = await api.loadReviews(product.id);
 
-        let dapi = new DispatcherApi(this.constructorParams);
+        let shopcard = await ShopCard.createFromRequest(this.req);
 
-        let butcher: Butcher = this.req.query.butcher ? await Butcher.getBySlug(this.req.query.butcher) : null;
+
+         let butcher: Butcher;
+         this.shopCardIndex = this.req.query.shopcarditem ? parseInt(this.req.query.shopcarditem): -1;
+         let shopcardItem = (this.shopCardIndex >= 0 && shopcard.items)  ? shopcard.items[this.shopCardIndex]: null;
+    
+        
+        butcher = shopcardItem ? await Butcher.getBySlug(shopcardItem.product.butcher.slug): (this.req.query.butcher ? await Butcher.getBySlug(this.req.query.butcher) : null);
+    
         this.foods = await api.getTarifVideos([product])
         if (this.req.query.semt) {
             let l3 = await Area.getBySlug(this.req.query.semt);

@@ -110,13 +110,13 @@ export default class Route extends PaymentRouter {
 
         this.api.fillPuanAccounts(this.order, shouldBePaid);
 
-        let butcherDebptAccounts = await AccountModel.summary([Account.generateCode("kasaplardan-alacaklar", [this.order.butcherid, 1]), Account.generateCode("kasaplardan-alacaklar", [this.order.butcherid, 2])])
+        let butcherDebptAccounts = await AccountModel.summary([Account.generateCode("kasaplardan-alacaklar", [this.order.butcherid])])
         let butcherDebt = Helper.asCurrency(butcherDebptAccounts.borc - butcherDebptAccounts.alacak);
 
         let debt = {};
 
-        //debt[this.order.butcherid] = butcherDebt;
-        debt[this.order.butcherid] = 0.00;
+        debt[this.order.butcherid] = butcherDebt;
+        //debt[this.order.butcherid] = 0.00;
         
         let request = this.paymentProvider.requestFromOrder([this.order], debt);
 

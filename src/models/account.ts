@@ -166,9 +166,9 @@ export class AccountingOperation {
     opcode: string;
     accounts: Account[] = [];
 
-    constructor(desc: string, opcode: string = null) {
+    constructor(desc: string) {
         this.desc = desc;
-        this.opcode = opcode || orderid.generate();
+        this.opcode = orderid.generate();
     }
 
     summary() {

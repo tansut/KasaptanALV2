@@ -29,9 +29,9 @@
 
   <!-- Page Content-->
   <div class="container mb-4 ">
-    <form class="needs-validation" method="post" novalidate action="/alisveris-sepetim/savereview">
+    <form onsubmit="beforeSubmit()" class="needs-validation" method="post" novalidate action="/alisveris-sepetim/savereview">
       <div>
-        <section >
+        <section>
        
 
           <%- include('./_partial/checkout-steps.ejs', {   step: 4        }); %>
@@ -313,7 +313,11 @@
   <% include ./_partial/footer %>
   <% include ./_partial/scripts %>
 
-
+<script>
+  function beforeSubmit() {
+    setTimeout(function() { $('#save-adres').text('Siparişinizi Oluşturuyorum...'); $('#save-adres').attr('disabled', true);})
+  }
+</script>
 
 </body>
 
