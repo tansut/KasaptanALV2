@@ -115,7 +115,8 @@ export default class Route extends PaymentRouter {
 
         let debt = {};
 
-        debt[this.order.butcherid] = butcherDebt;
+        //debt[this.order.butcherid] = butcherDebt;
+        debt[this.order.butcherid] = 0.00;
         
         let request = this.paymentProvider.requestFromOrder([this.order], debt);
 
