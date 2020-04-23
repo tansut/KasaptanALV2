@@ -26,6 +26,14 @@
         </nav>
       </div>
 
+      <div class="media-body pt-2">
+
+
+        <h1 class="h3 text-light">Online Ödeme Talep</h1>
+        <h2 class=" text-light h4 lead">Müşterilerinizden online ödeme alın.</h2>     
+     
+      </div>
+
 
     </div>
 
@@ -41,7 +49,7 @@
       <form method="POST" class="needs-validation" onsubmit="return sendPayment()" id="pay-form" novalidate autocomplete="off">
         <div class="form-group">
           <label for="mphone">Müşteri Cep Telefonu</label>
-          <input class="form-control form-control-lg" minlength="10" maxlength="11" type="number" id="mphone"
+          <input autocomplete="off" class="form-control form-control-lg" minlength="10" maxlength="11" type="number" id="mphone"
             placeholder="5xx" required>
           <div class="invalid-feedback">Geçersiz tel
 
