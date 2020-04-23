@@ -8,61 +8,88 @@
 <body>
   <% include ./_partial/header %>
 
-  <!-- Page Title (Light)-->
-  <div class="bg-secondary pt-4 mb-3 ">
-    <div class="container d-lg-flex justify-content-between py-2 py-lg-3">
-      <div class="order-lg-2 mb-3 mb-lg-0 pt-lg-2">
-        <nav aria-label="breadcrumb">
-          <ol class="breadcrumb flex-lg-nowrap justify-content-center justify-content-lg-star">
-            <li class="breadcrumb-item"><a class="text-nowrap" href="/"><i class="czi-home"></i></a></li>
+  <body">
+    <form
+  action="https://entegrasyon.paratika.com.tr/paratika/api/v2/post/sale3d/LP2R57YDCUYMDSAJV6DYGZEJ3F7LSYCOV4QUGCGO6VQF7KTK"
+  method="post">
+       <div class="container">
+          <div id="cardPANData">
+             <p>
+                <label for="cardOwner">Card Owner Name</label>
+                <input type="text" name="cardOwner" id="cardOwner"
+          autocomplete="off" maxlength="32" />
+             </p>
+             <p>
+                <label for="pan">Card Number (PAN)</label>
+                <input type="text" id="pan" name="pan"
+          autocomplete="off" maxlength="19" />
+             </p>
+             <p>
+                <label for="expiryMonth">Expiration Date</label>
+                <select name="expiryMonth" id="expiryMonth">
+                   <option value="01">January</option>
+                   <option value="02">February</option>
+                   <option value="03">March</option>
+                   <option value="04">April</option>
+                   <option value="05">May</option>
+                   <option value="06">June</option>
+                   <option value="07">July</option>
+                   <option value="08">August</option>
+                   <option value="09">September</option>
+                   <option value="10">October</option>
+                   <option value="11">November</option>
+                   <option value="12">December</option>
+                </select>
+                <select name="expiryYear" id="expiryYear">
+                   <option value="2016">2016</option>
+                   <option value="2017">2017</option>
+                   <option value="2018">2018</option>
+                   <option value="2019">2019</option>
+                   <option value="2020">2020</option>
+                   <option value="2021">2021</option>
+                   <option value="2022">2022</option>
+                   <option value="2023">2023</option>
+                   <option value="2024">2024</option>
+                   <option value="2025">2025</option>
+                   <option value="2026">2026</option>
+                   <option value="2027">2027</option>
+                   <option value="2028">2028</option>
+                   <option value="2029">2029</option>
+                   <option value="2030">2030</option>
+                   <option value="2031">2031</option>
+                   <option value="2032">2032</option>
+                   <option value="2033">2033</option>
+                   <option value="2034">2034</option>
+                </select>
+             </p>
+             <p>
+                <label for="cvv">Security Code (CVV)</label>
+                <input type="input" name="cvv" id="cvv"
+          autocomplete="off" maxlength="4" />
+             </p>
+           
+          
+           
+             <input type="hidden" value="" name="points" id="points" />
+       <input type="hidden" value="" name="paymentSystem"
+        id="paymentSystem" />
+          </div>
+       </div>
+       <input type="submit" value="Submit" />
+      </form>
 
+      <!-- TMX Profiling -->
+<script type="text/javascript"
+src="https://h.online-metrix.net/fp/tags.js?org_id=6bmm5c3v&amp&session_id=LP2R57YDCUYMDSAJV6DYGZEJ3F7LSYCOV4QUGCGO6VQF7KTK&pageid=1">
+</script>
+<noscript>
+<iframe
+          style="width: 100px; height: 100px; border: 0; position: absolute; top: -5000px;"
+          src="https://h.online-metrix.net/fp/tags.js?org_id=6bmm5c3v&amp&session_id=LP2R57YDCUYMDSAJV6DYGZEJ3F7LSYCOV4QUGCGO6VQF7KTK&pageid=1 "></iframe>
+</noscript>
 
-          </ol>
-        </nav>
-      </div>
-      <div class="order-lg-1 pr-lg-4 text-center text-lg-left">
-        <h1 class="h3">kredi</h1>
-
-
-
-      </div>
-    </div>
-
-
-
-  </div>
-
-
-
-
-
-
-
-  <div class="container mb-3 ">
-
-    <form method="POST" id="pageForm">
-      <div class="form-group">
-        <input type="hidden" name="paymentId" id="paymentId">
-        <input value="2070-288553-3982,2070-261296-0852" class="form-control" name="ordernum" type="text" id="ordernum"
-            placeholder="" required>
-
-    </div>      
-    <button id= "makepayment" name="makepayment" value="true"  class="btn btn-primary btn-block" type="submit">Ödeme Yap</button>
-    
-
-
-    <%- include('./_partial/creditcard', {}) %>
-
-
-
-
-
-
-
-
-  </form>
-
-  </div>
+<!- End profiling tags -->
+  
 
 
 
@@ -70,18 +97,7 @@
   <% include ./_partial/footer %>
   <% include ./_partial/scripts %>
 
-<script>
-<% if (controller.threeDhtml) { %>
-$(window).on('load',function(){
-  $('#threeDmodal').modal('show');
-})
 
-
-
-
-<% } %>
-
-</script>
 
 </body>
 

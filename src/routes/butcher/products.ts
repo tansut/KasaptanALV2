@@ -253,8 +253,8 @@ export default class Route extends ButcherRouter {
     }
 
     static SetRoutes(router: express.Router) {
-        router.get("/products", Route.BindRequest(this.prototype.viewRoute));
-        router.get("/product-list", Route.BindRequest(this.prototype.viewListRoute));
+        router.get("/urunler", Route.BindRequest(this.prototype.viewRoute));
+        router.get("/urunlistesi", Route.BindRequest(this.prototype.viewListRoute));
         router.get("/product/save", Route.BindRequest(this.prototype.viewRoute));
         router.post("/product/save", Route.BindRequest(this.prototype.saveProductRoute));
     }

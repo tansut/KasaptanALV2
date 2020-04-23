@@ -4,7 +4,7 @@ import Helper from '../../lib/helper';
 import { ShopCard, ShopcardItem, firstOrderDiscount } from '../../models/shopcard';
 import Product from './product';
 import Butcher from './butcher';
-import { OrderItemStatus } from '../../models/order';
+import { OrderItemStatus, OrderSource } from '../../models/order';
 import Dispatcher from './dispatcher';
 import { GeoLocation } from '../../models/geo';
 import AccountModel from './accountmodel';
@@ -61,6 +61,12 @@ class Order extends BaseModel<Order> {
     paymentId: string;    
 
     @Column({
+        allowNull: false,
+        defaultValue: OrderSource.kasaptanal
+    })
+    orderSource: string;    
+
+    @Column({
         allowNull: true        
     })
     paymentTransactionId: string;        
@@ -111,17 +117,17 @@ class Order extends BaseModel<Order> {
     phone: string;
 
     @Column({
-        allowNull: false
+        allowNull: true
     })
     areaLevel1Id: number;
 
     @Column({
-        allowNull: false
+        allowNull: true
     })
     areaLevel2Id: number;
 
     @Column({
-        allowNull: false
+        allowNull: true
     })
     areaLevel3Id: number;
 
@@ -132,22 +138,22 @@ class Order extends BaseModel<Order> {
     saveAddress: boolean;
 
     @Column({
-        allowNull: false
+        allowNull: true
     })
     address: string;
 
     @Column({
-        allowNull: false
+        allowNull: true
     })
     areaLevel1Text: string;
 
     @Column({
-        allowNull: false
+        allowNull: true
     })
     areaLevel2Text: string;
 
     @Column({
-        allowNull: false
+        allowNull: true
     })
     areaLevel3Text: string;
 

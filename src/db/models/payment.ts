@@ -40,7 +40,7 @@ class Payment extends BaseModel<Payment> {
     ip: string;
 
     @Column({
-        allowNull: true,
+        defaultValue: 'unused'        
     })
     status: string;    
 
@@ -60,7 +60,9 @@ class Payment extends BaseModel<Payment> {
         allowNull: true,
         type: DataType.TEXT
     })
-    response: string;       
+    response: string;   
+    
+ 
 
 }
 

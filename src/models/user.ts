@@ -1,6 +1,7 @@
 
 export interface SignupModel {
     phone: string;
+    name?: string;
 }
 
 export interface SignupResult {

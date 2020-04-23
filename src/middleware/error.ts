@@ -58,7 +58,7 @@ class ErrorMiddleware extends Middleware {
             return res.redirect(redirect.toUrl + (q), redirect.permanent ? 301: 302)
         }
         if (ErrorMiddleware.isXhr(req))
-            res.res.status(404).send("Sorry can't find that!")
+            res.status(404).send("Sorry can't find that!")
         else
         new ErrorRoute({
             req: req, res: res, next: next

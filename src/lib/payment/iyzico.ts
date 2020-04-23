@@ -11,6 +11,8 @@ export interface IyzicoConfig {
 export default class IyziPayment extends CreditcardPaymentProvider {
     static key = "iyzico";
     private iyzipay: any;
+
+
     constructor(config: IyzicoConfig) {
         super(config);
         this.iyzipay = new Iyzipay(config);

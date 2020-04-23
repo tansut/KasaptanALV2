@@ -13,12 +13,17 @@
       <div class="order-lg-2 mb-3 mb-lg-0 pt-lg-2">
         <nav aria-label="breadcrumb">
           <ol class="breadcrumb breadcrumb-light flex-lg-nowrap justify-content-center justify-content-lg-star">
-            <li class="breadcrumb-item"><a class="text-nowrap" href="/pages/butcher"><i class="czi-home"></i></a></li>
+            <li class="breadcrumb-item"><a class="text-nowrap" href="/kasapsayfam"><i class="czi-home"></i></a></li>
             <li class="breadcrumb-item text-nowrap active" aria-current="page"><%= controller.butcher ? controller.butcher.name: "Kasap" %></li>
           </ol>
         </nav>
       </div>
+      <div class="media-body pt-2">
 
+
+        <h1 class="h3 text-light"><%= controller.butcher ? controller.butcher.name + ' Sayfam': "Kasap Sayfam" %></h1>
+        <h2 class=" text-light h4 lead">Hayırlı işler, bol kazançlar.</h2>         
+      </div>
     </div>
   </div>
 
@@ -28,17 +33,22 @@
     <div class="bg-light box-shadow-lg px-4 py-4 mb-3 ">
       <% if (controller.butcher) { %>
       <ul class="list-group">
+        <% if (__req.user.hasRole('admin')) { %>
         <li class="list-group-item">
-          <a href="/pages/butcher/products">Ürün Yönetimi</a>
+          <a href="/kasapsayfam/urunler">Ürün Yönetimi</a>
+        </li>
+        <% }%>
+        <li class="list-group-item">
+          <a href="/kasapsayfam/urunlistesi">Ürün Listesi</a>
         </li>
         <li class="list-group-item">
-          <a href="/pages/butcher/product-list">Ürün Listesi</a>
+          <a href="/kasapsayfam/odemeal">Online Ödeme Al</a>
         </li>
       </ul>
 <%}%>
     <% if (__req.user.hasRole('admin')) { %>
     <div>
-<form method="POST" action="/pages/butcher/setbutcher">
+<form method="POST" action="/kasapsayfam/setbutcher">
   <table class="table table-hover">
     <thead>
         <tr>

@@ -19,7 +19,7 @@ import { Sms } from '../../lib/sms';
 import { AccountingOperation, Account } from '../../models/account';
 import Helper from '../../lib/helper';
 import { Creditcard, CreditcardPaymentFactory, PaymentTotal, PaymentRequest, PaymentResult } from '../../lib/payment/creditcard';
-import { OrderPaymentStatus, OrderItemStatus } from '../../models/order';
+import { OrderPaymentStatus, OrderItemStatus, OrderSource } from '../../models/order';
 import config from '../../config';
 import { PuanCalculator } from '../../lib/commissionHelper';
 import { PuanResult, Puan } from '../../models/puan';
@@ -725,39 +725,59 @@ export default class Route extends ApiRouter {
         for (let i = 0; i < ol.length; i++) {
             let o = ol[i];
             let op = new AccountingOperation(`${o.ordernum} kredi kartı ödemesi - ${paymentInfo.paymentId}`);
-            op.accounts.push(new Account("odeme-bekleyen-satislar", [o.userId, o.ordernum, 500]).dec(paymentInfo.paidPrice))
-            op.accounts.push(new Account("satis-alacaklari", [o.userId, o.ordernum]).dec(paymentInfo.paidPrice))
-            ops.push(op);
-            let puanAccounts = this.getPuanAccounts(o, paymentInfo.paidPrice)
-            ops.push(puanAccounts);
-            promises = promises.concat(this.updateOrderByCreditcardPayment(o, paymentInfo, t));
-            promises = promises.concat(this.updateButcherDebtAfterPayment(o, paymentRequest, paymentInfo, t));
-
+            if (o.orderSource == OrderSource.butcher) {
+                op.accounts.push(new Account("odeme-bekleyen-satislar", [o.userId, o.ordernum, 600]).dec(paymentInfo.paidPrice))
+                op.accounts.push(new Account("satis-alacaklari", [o.userId, o.ordernum]).dec(paymentInfo.paidPrice))
+                ops.push(op);
+                promises = promises.concat(this.updateOrderByCreditcardPayment(o, paymentInfo, t));                
+            } else {
+                op.accounts.push(new Account("odeme-bekleyen-satislar", [o.userId, o.ordernum, 500]).dec(paymentInfo.paidPrice))
+                op.accounts.push(new Account("satis-alacaklari", [o.userId, o.ordernum]).dec(paymentInfo.paidPrice))
+                ops.push(op);
+                let puanAccounts = this.getPuanAccounts(o, paymentInfo.paidPrice)
+                ops.push(puanAccounts);
+                promises = promises.concat(this.updateOrderByCreditcardPayment(o, paymentInfo, t));
+                promises = promises.concat(this.updateButcherDebtAfterPayment(o, paymentRequest, paymentInfo, t));
+            }
         }
 
         promises = promises.concat(this.saveAccountingOperations(ops, t));
-
+        
         for (let i = 0; i < ol.length; i++) {
+            let notifyMobilePhones = (ol[i].butcher.notifyMobilePhones || "").split(',');
             if (config.nodeenv == 'production') {
                 email.send(ol[i].email, "siparişinizin ödemesi yapıldı", "order.paid.ejs", this.getView(ol[i]));
             }
+            for(var p = 0; p < notifyMobilePhones.length;p++) {
+                let payUrl = `${this.url}/pay/${ol[i].ordernum}`;
+                await Sms.send(notifyMobilePhones[p].trim(), `Tebrikler, ${ol[i].name} ${Helper.formattedCurrency(paymentInfo.paidPrice)} online ödemeniz yapıldı. Detaylı bilgi için ${payUrl} `, false, new SiteLogRoute(this.constructorParams))
+            }
+
         }
+
+
+        
         return Promise.all(promises)
     }
 
     generateInitialAccounting(o: Order): AccountingOperation {
 
         let op = new AccountingOperation(`${o.ordernum} numaralı sipariş`);
-
-        op.accounts.push(new Account("odeme-bekleyen-satislar", [o.userId, o.ordernum, 100], "Ürün Bedeli").inc(o.subTotal));
-        if (o.shippingTotal > 0.00) {
-            op.accounts.push(new Account("odeme-bekleyen-satislar", [o.userId, o.ordernum, 200], "Teslimat Bedeli").inc(o.shippingTotal));
+        if (o.orderSource == OrderSource.butcher) {
+            op.accounts.push(new Account("odeme-bekleyen-satislar", [o.userId, o.ordernum, 200], "Sipariş Bedeli").inc(o.subTotal));
+            op.accounts.push(new Account("satis-alacaklari", [o.userId, o.ordernum]).inc(o.total))
+        } else {
+            op.accounts.push(new Account("odeme-bekleyen-satislar", [o.userId, o.ordernum, 100], "Ürün Bedeli").inc(o.subTotal));
+            if (o.shippingTotal > 0.00) {
+                op.accounts.push(new Account("odeme-bekleyen-satislar", [o.userId, o.ordernum, 200], "Teslimat Bedeli").inc(o.shippingTotal));
+            }
+            if (Math.abs(o.discountTotal) > 0.00) {
+                op.accounts.push(new Account("satis-indirimleri", [o.userId, o.ordernum, 100], "Uygulanan İndirimler").inc(Math.abs(o.discountTotal)));
+    
+            }
+            op.accounts.push(new Account("satis-alacaklari", [o.userId, o.ordernum]).inc(o.total))
         }
-        if (Math.abs(o.discountTotal) > 0.00) {
-            op.accounts.push(new Account("satis-indirimleri", [o.userId, o.ordernum, 100], "Uygulanan İndirimler").inc(Math.abs(o.discountTotal)));
 
-        }
-        op.accounts.push(new Account("satis-alacaklari", [o.userId, o.ordernum]).inc(o.total))
 
         op.validate()
 
@@ -837,7 +857,26 @@ export default class Route extends ApiRouter {
         return orders;
     }
 
-    async create(card: ShopCard, paymentInfo: PaymentTotal): Promise<Order[]> {
+    async createAsButcherOrder(o: Order): Promise<Order> {
+        o.orderSource = "butcher";
+        o.ordernum = orderid.generate();
+        
+        let result: Promise<any>[] = [];
+        let res = db.getContext().transaction((t: Transaction) => {
+                result.push(o.save({
+                    transaction: t
+                }))
+                let accOperation = this.generateInitialAccounting(o);
+                result.push(this.saveAccountingOperations([accOperation], t))                       
+            return Promise.all(result)
+        })
+
+        await res;
+
+        return o;
+    }
+
+    async create(card: ShopCard): Promise<Order[]> {
 
         let result: Promise<any>[] = [];
 

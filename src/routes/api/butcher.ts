@@ -405,7 +405,7 @@ export default class Route extends ApiRouter {
     static SetRoutes(router: express.Router) {
         router.get("/butcher/googlesearch", Route.BindRequest(this.prototype.googleSearchRoute));
         router.post("/butcher/googlesync", Route.BindRequest(this.prototype.googleSyncRoute));
-        router.get("/butcher/googlesyncphotos/:id", Route.BindRequest(this.prototype.googleSyncPhotosRoute));
+        //router.get("/butcher/googlesyncphotos/:id", Route.BindRequest(this.prototype.googleSyncPhotosRoute));
         //router.get("/butcher/dbsync", Route.BindRequest(this.prototype.dbSyncAllFromCachedGoogle));
 
 

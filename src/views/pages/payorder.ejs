@@ -19,10 +19,11 @@
       </div>
       <div class="order-lg-1 pr-lg-4 text-center text-lg-left">
         <h1 class="h3">Online Ödeme</h1>
-        <h2 class="lead h4" >
+        <h2 class="lead h4">
           <%=order.name%>
         </h2>
-        <h2 class="lead h4"><%= __helper.formatDate(order.creationDate) + ' tarihli ' + 'kasaptanAl.com ' + 'siparişim' %></h2>
+        <h2 class="lead h4">
+          <%= __helper.formatDate(order.creationDate) + ' tarihli ' + order.butcherName + ' siparişim' %></h2>
         <a class="font-size-xs text-muted" href="#orderdetails">Sipariş Bilgileri<i class="czi-arrow-right"></i></a>
       </div>
     </div>
@@ -33,7 +34,7 @@
 
 
 
-<!-- <div class="table-responsive mb-3" data-simplebar>
+  <!-- <div class="table-responsive mb-3" data-simplebar>
     <div class="d-flex pb-2">
 
         <% order.items.forEach(oi => { %>
@@ -58,76 +59,67 @@
 </div>  -->
   <div class="container mb-3 ">
 
-  <form class="interactive-credit-card" onsubmit="beforeSubmit()" method="POST" id="pageForm">
-      <input type="hidden" name="paymentId" id="paymentId">
+    <% if (controller.shouldBePaid > 0) { %>
 
 
-<% if (controller.shouldBePaid > 0) { %>
+    <% if (controller.mayEarnPuanTotal) { %>
+    <div class="mt-3 mb-3 alert alert-success text-center">
 
 
-<% if (controller.mayEarnPuanTotal) { %>
-  <div class="mt-3 mb-3 alert alert-success text-center">
+      <strong>Tebrikler!</strong> <br> kasaptanAl.com alışverişiniz size
+      <strong><%- include('./_partial/currency.ejs', {value: controller.mayEarnPuanTotal}) %></strong> değerinde puan
+      kazandırdı.
 
-    
-      <strong>Tebrikler!</strong> <br> kasaptanAl.com alışverişiniz size <strong><%- include('./_partial/currency.ejs', {value: controller.mayEarnPuanTotal}) %></strong> değerinde puan kazandırdı.
-   
-  </div>
-  <div>
+    </div>
+    <div>
 
 
-    <% if (controller.possiblePuanList.length > 0) { %>
-      <div class="mb-3">     
-       <% controller.possiblePuanList.forEach(pg => { %>
+      <% if (controller.possiblePuanList.length > 0) { %>
+      <div class="mb-3">
+        <% controller.possiblePuanList.forEach(pg => { %>
         <ul>
           <li>
             <strong><%- include('./_partial/currency.ejs', {value: pg.earned}) %></strong>, <%=pg.title%>
           </li>
-        </ul>         
-      <% }) %> 
+        </ul>
+        <% }) %>
 
-    </div>
+      </div>
       <%}%>
-    
-
-
-  
-  </div>
-<% } %>
-  <div class="mt-3 mb-3 p-2 border bg-secondary">
-
-    <p class="mt-3 text-muted text-center">
-
-      <%- include('./_partial/currency.ejs', {value: controller.shouldBePaid}) %> 
-  
-    </p>
-
-    <div class="form-group ">
-      <div class="form-check  ">
-        <input <%= order.noInteraction ? "checked" : "" %>   type="checkbox" name="secureship" class="form-check-input" id="3d">
-        <label class="form-check-label" for="secureship"><span class="font-weight-bold">Güvenli teslimat istiyorum.</span> Ürünlerimi kapıma bırakın ve bana haber verin</label>
-      </div>
-    </div>
-  
-    <%- include('./_partial/creditcard', {}) %>
-  
-  
-  </div>
+          
+      
+      
+        
+        </div>
+      <% } %>
 
 
 
+      <p class="mt-3 text-muted text-center">
+
+        <%- include('./_partial/currency.ejs', {value: controller.shouldBePaid}) %>
+
+      </p>
+
+      <!-- <div class="form-group ">
+          <div class="form-check  ">
+            <input <%= order.noInteraction ? "checked" : "" %>   type="checkbox" name="secureship" class="form-check-input" id="3d">
+            <label class="form-check-label" for="secureship"><span class="font-weight-bold">Güvenli teslimat istiyorum.</span> Ürünlerimi kapıma bırakın ve bana haber verin</label>
+          </div>
+        </div> -->
 
 
+      <%}%>
 
-      <div class="text-center">
-        <button id="pay-btn" name="makepayment" value="true" class="btn btn-success" type="submit"><i class="czi-thumb-up mr-2"></i>Ödeme Yap</button>
-      </div>
-<% } else { %>
+      <% if (controller.shouldBePaid > 0) { %>
 
- 
+        <%- include(`./_partial/paymentprovider/${controller.paymentProvider.providerKey}.payform.ejs`) %>
 
 
-<% } %>
-  <a id="orderdetails"></a>
+      <% } %>
+
+
+      <a id="orderdetails"></a>
       <div class="mb-3">
         <%- include('./_partial/order.details.ejs', {
           order: order,
@@ -142,10 +134,10 @@
 
 
 
-    
 
 
-  </form>
+
+
     </div>
 
 
@@ -155,31 +147,37 @@
 
 
 
-  <% include ./_partial/footer %>
-  <% include ./_partial/scripts %>
+    <% include ./_partial/footer %>
+    <% include ./_partial/scripts %>
 
-<script>
+    <script>
 
 
-function beforeSubmit() {
-  setTimeout(function() { $('#pay-btn').text(' Ödemenizi yapıyorum ... '); $('#pay-btn').attr('disabled', true);})
-}
+      function beforeSubmit() {
+        setTimeout(function () { $('#pay-btn').text(' Ödemenizi yapıyorum ... '); $('#pay-btn').attr('disabled', true); })
+      }
 
 <% if (controller.threeDhtml) { %>
-  
-  $(window).on('load',function() {
-    $('#threeDmodal').modal('show');
-    setTimeout(function() { $(document.body).removeClass("d-none")}, 250);
-  })
 
-<% } %>
+        $(window).on('load', function () {
+          $('#threeDmodal').modal('show');
+          setTimeout(function () { $(document.body).removeClass("d-none") }, 250);
+        })
 
-new Card({
-      form: document.querySelector('.interactive-credit-card'),
-      container: '.card-wrapper'
-  });
+        <% } %>
 
-</script>
+          new Card({
+            form: document.querySelector('.interactive-credit-card'),
+            container: '.card-wrapper',
+            formSelectors: {
+              numberInput: 'input#pan', // optional — default input[name="number"]
+              expiryInput: 'input#expiry', // optional — default input[name="expiry"]
+              cvcInput: 'input#cvv', // optional — default input[name="cvc"]
+              nameInput: 'input#cardOwner' // optional - defaults input[name="name"]
+            },
+          });
+
+    </script>
 
 </body>
 

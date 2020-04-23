@@ -71,13 +71,20 @@
 
 
 <div>
-  <div class="d-flex flex-nowrap justify-content-between align-items-center pt-1 pb-1 mb-2">
-    <h3 class="h4 mb-0 mr-2">Adres</h3>
-  </div>
+  <% if(order.address) { %>
+    <h3 class="h4 ">Adres</h3>
+  <%}%>
+
   <ul class="list-unstyled font-size-sm">
     <li><span class="text-muted">İsim:&nbsp;</span><%= order.name %></li>
+    <% if(order.address) { %>
     <li><span class="text-muted">Adres:&nbsp;</span><%= order.address%>
       <%= order.areaLevel3Text%>/<%= order.areaLevel1Text%></li>
+      <%}%>
+      <% if(order.note) { %>
+        <li><span class="text-muted">Not:&nbsp;</span><%= order.note%>
+          </li>
+      <%}%>
     <% if (order.noInteraction) { %>
     <li>Güvenli Teslimat: <%= order.noInteraction ? 'Evet': 'Hayır'%></li>
     <% } %>

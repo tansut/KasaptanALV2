@@ -107,6 +107,22 @@ export default class UserRoute extends ApiRouter {
         await this.authenticateRoute()
     }
 
+    async createAsButcherCustomer(model: SignupModel, butcherId: number): Promise<UserModel> {
+        if (!validator.isMobilePhone(model.phone))
+            throw new http.ValidationError('Cep telefonu geçersiz:' + model.phone);        
+        var user = new UserModel();
+        user.mphone = Helper.getPhoneNumber(model.phone);
+        user.email = user.mphone + '@unverified.kasaptanal.com';
+        user.name = model.name;
+        user.ivCode = (Math.random() * 999999).toString();
+        user.source = "butcher";
+        user.sourceId = butcherId;
+        let pwd = await this.generatePwd()
+        user.setPassword(pwd);
+        await user.save();
+        return user;
+    }
+
     @Auth.Anonymous()
     async signupRoute() {
         var model = <SignupModel>this.req.body;
@@ -114,7 +130,7 @@ export default class UserRoute extends ApiRouter {
         if (validator.isEmpty(model.phone))
             throw new http.ValidationError('Cep telefonu gereklidir');
         if (!validator.isMobilePhone(model.phone))
-            throw new http.ValidationError('Cep telefonu geçersiz');
+            throw new http.ValidationError('Cep telefonu geçersiz:' + model.phone);
         // if (!validator.isLength(model.password, {
         //     min: 6,
         //     max: 20

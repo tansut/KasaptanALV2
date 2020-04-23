@@ -62,7 +62,7 @@ export default class Route extends ButcherRouter {
     async setButcherRoute() {
         let id = parseInt(this.req.body.butcherid);
         this.req.session.__butcherid = id;
-        this.res.redirect("/pages/butcher");
+        this.res.redirect("/kasapsayfam");
     }
 
     static SetRoutes(router: express.Router) {

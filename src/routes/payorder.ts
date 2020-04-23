@@ -29,11 +29,13 @@ import { PaymentRouter } from '../lib/paymentrouter';
 import { PuanCalculator } from '../lib/commissionHelper';
 import { PuanResult } from '../models/puan';
 import email from '../lib/email';
+import { OrderSource } from '../models/order';
 
 export default class Route extends PaymentRouter {
     order: Order;
     api: OrderApi;
     balance: AccountModel;
+    paySession = {};
     shouldBePaid = 0.00;
     puanBalanceButcher: AccountModel;
     puanBalanceKalitte: AccountModel;
@@ -44,7 +46,7 @@ export default class Route extends PaymentRouter {
 
     possiblePuanList: PuanResult[] = [];
 
-    renderPage(userMessage?: string) {
+    renderPage(userMessage: string, view: string) {
         let pageInfo = {};
         if (this.shouldBePaid > 0.00) {
             let pageTitle = '', pageDescription = '';
@@ -67,7 +69,7 @@ export default class Route extends PaymentRouter {
 
         }
 
-        this.sendView("pages/payorder.ejs", { ...pageInfo, ...{ _usrmsg: { text: userMessage } }, ...this.api.getView(this.order), ...{ enableImgContextMenu: true } });
+        this.sendView(view, { ...pageInfo, ...{ _usrmsg: { text: userMessage } }, ...this.api.getView(this.order), ...{ enableImgContextMenu: true } });
 
     }
 
@@ -85,7 +87,7 @@ export default class Route extends PaymentRouter {
         this.earnedPuanKalitte = this.puanBalanceKalitte ? Helper.asCurrency(this.puanBalanceKalitte.alacak - this.puanBalanceKalitte.borc) : 0.00
         this.earnedPuanButcher = this.puanBalanceButcher ? Helper.asCurrency(this.puanBalanceButcher.alacak - this.puanBalanceButcher.borc) : 0.00
         this.earnedPuanTotal = Helper.asCurrency(this.earnedPuanKalitte + this.earnedPuanButcher)
-        if (this.shouldBePaid > 0) {
+        if (this.shouldBePaid > 0 && this.order.orderSource == OrderSource.kasaptanal) {
             this.possiblePuanList = this.api.getPossiblePuanGain(this.order, this.shouldBePaid);
             this.possiblePuanList.forEach(pg => this.mayEarnPuanTotal += pg.earned)
             this.mayEarnPuanTotal = Helper.asCurrency(this.mayEarnPuanTotal)
@@ -95,32 +97,28 @@ export default class Route extends PaymentRouter {
 
     async paymentSuccess(request: PaymentRequest, payment: PaymentResult) {
         await this.api.completeCreditcardPayment([this.order], request, payment);
+        await super.paymentSuccess(request, payment);
         await this.getOrder();
         await this.getOrderSummary()
     }
 
     async getPaymentRequest() {
-        let total = this.order.workedAccounts.find(p => p.code == 'total');
-
-
-        
-        let shouldBePaid = Helper.asCurrency(total.alacak - total.borc);
-        if (shouldBePaid <= 0.00)
+        if (this.shouldBePaid <= 0.00)
             throw new Error("Geçersiz ödeme işlemi, siparişin borcu yoktur");
+        let debt = {};     
+        debt[this.order.butcherid] = 0.00;       
+        if (this.order.orderSource == OrderSource.kasaptanal) {
+            this.api.fillPuanAccounts(this.order, this.shouldBePaid);
+            let butcherDebptAccounts = await AccountModel.summary([Account.generateCode("kasaplardan-alacaklar", [this.order.butcherid])])
+            let butcherDebt = Helper.asCurrency(butcherDebptAccounts.borc - butcherDebptAccounts.alacak);
+            debt[this.order.butcherid] = butcherDebt;            
+        }
 
-        this.api.fillPuanAccounts(this.order, shouldBePaid);
 
-        let butcherDebptAccounts = await AccountModel.summary([Account.generateCode("kasaplardan-alacaklar", [this.order.butcherid])])
-        let butcherDebt = Helper.asCurrency(butcherDebptAccounts.borc - butcherDebptAccounts.alacak);
-
-        let debt = {};
-
-        debt[this.order.butcherid] = butcherDebt;
-        //debt[this.order.butcherid] = 0.00;
         
         let request = this.paymentProvider.requestFromOrder([this.order], debt);
-
-        if (shouldBePaid != request.paidPrice)
+        request.callbackUrl = this.url + '/3dnotify?provider=' + this.paymentProvider.providerKey;        
+        if (this.shouldBePaid != request.paidPrice)
             throw new Error("Geçersiz sipariş ve muhasebesel tutarlar");
 
         return request;
@@ -135,10 +133,10 @@ export default class Route extends PaymentRouter {
         await this.getOrderSummary();
 
         let userMessage = "";
-
+        let req: PaymentRequest = null;
         try {
-            if (this.pageHasPaymentId) {
-                let req = await this.getPaymentRequest();
+            if (this.pageHasPaymentId) {           
+                req = await this.getPaymentRequest();     
                 let threedPaymentMade = await this.created3DPayment();
                 if (threedPaymentMade) {
                     await this.paymentSuccess(req, threedPaymentMade);
@@ -148,6 +146,8 @@ export default class Route extends PaymentRouter {
                 }
 
             } else if (this.req.body.makepayment == "true") {
+                req = await this.getPaymentRequest();     
+
                 if (this.req.body.secureship == 'on') {
                     this.order.noInteraction = true;
                     await this.order.save()
@@ -156,9 +156,7 @@ export default class Route extends PaymentRouter {
                     await this.order.save()
                 }
 
-                let paymentResult: PaymentResult;
-
-                let req: PaymentRequest = await this.getPaymentRequest();
+                let paymentResult: PaymentResult;                
                 if (this.threeDPaymentRequested) {
                     await this.init3dPayment(req);
                 } else {
@@ -167,17 +165,17 @@ export default class Route extends PaymentRouter {
                     await this.paymentSuccess(req, paymentResult)
                     userMessage = "Ödemenizi başarıyla aldık"
                 }
-
             }
         } catch (err) {
             userMessage = err.message || err.errorMessage;
+            this.paySession = await this.paymentProvider.paySession(req);
             email.send('tansut@gmail.com', 'hata/payment: kasaptanAl.com', "error.ejs", {
                 text: JSON.stringify(err || {}) + '/' + userMessage + ' ' + this.order.ordernum,
                 stack: err.stack
             })            
         }
 
-        this.renderPage(userMessage);
+        this.renderPage(userMessage, "pages/payorder.ejs");
 
     }
 
@@ -194,10 +192,16 @@ export default class Route extends PaymentRouter {
             return this.next();
 
         await this.getOrderSummary();
+        
+        if (this.shouldBePaid > 0) {
+            let payRequest = await this.getPaymentRequest();
+            this.paySession = await this.paymentProvider.paySession(payRequest);
+        }   
 
-
-        this.renderPage();
+        this.renderPage(null, "pages/payorder.ejs");
     }
+
+
 
 
 

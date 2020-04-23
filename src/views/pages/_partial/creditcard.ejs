@@ -34,10 +34,10 @@ var threeDhtml = typeof (controller.threeDhtml) == 'undefined' ? '': controller.
             value="5890040000000016"
           <% } %> 
           
-          name="number" autocomplete="cc-number" placeholder="Kart Numarası" required>
+          id="pan" name="pan" autocomplete="cc-number" placeholder="Kart Numarası" required>
         </div>
         <div class="form-group col-sm-6">
-          <input class="form-control" type="text" name="name" autocomplete="cc-name" placeholder="Kartın Üzerindeki İsim" 
+          <input class="form-control" type="text" name="cardOwner" id="cardOwner" autocomplete="cc-name" placeholder="Kartın Üzerindeki İsim" 
           <% if (__config.nodeenv == 'development') { %>  
             value="xxx"
           <% } %> 
@@ -62,7 +62,7 @@ var threeDhtml = typeof (controller.threeDhtml) == 'undefined' ? '': controller.
             value="112" 
           <% } %> 
           
-          name="cvc" autocomplete="cc-csc" placeholder="CVC" required>
+          name="cvv" id="cvv" autocomplete="cc-csc" placeholder="CVC" required>
         </div>
         <div class="col-sm-6">
           <div class="form-group ">

@@ -290,7 +290,7 @@ export default class Route extends ViewRouter {
             //     }
             // }
             let api = new OrderApi(this.constructorParams);
-            let orders = await api.create(this.shopcard, null);
+            let orders = await api.create(this.shopcard);
             await ShopCard.empty(this.req);
             // if (orders.length == 1 && orders[0].paymentType == 'onlinepayment') {
             //     this.res.redirect(`/user/orders/${orders[0].ordernum}?new=1`)

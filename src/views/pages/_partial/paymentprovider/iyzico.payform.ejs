@@ -1,0 +1,13 @@
+<form class="interactive-credit-card" onsubmit="beforeSubmit()" method="POST" id="pageForm">
+    <input type="hidden" name="paymentId" id="paymentId">
+
+    <div class="mt-3 mb-3 p-2 border bg-secondary">
+      <%- include('../creditcard', {}) %>
+    </div>
+
+    <div class="text-center">
+      <button id="pay-btn" name="makepayment" value="true" class="btn btn-success" type="submit"><i
+          class="czi-thumb-up mr-2"></i>Ödeme Yap</button>
+    </div>
+
+  </form>

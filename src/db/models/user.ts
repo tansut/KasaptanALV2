@@ -103,6 +103,18 @@ export default class User extends BaseModel<User> {
     }
 
     @Column({
+        allowNull: false       ,
+        defaultValue:"kasaptanal.com" 
+    })
+    source: string;     
+    
+    @Column({
+        allowNull: false       ,
+        defaultValue:0 
+    })
+    sourceId: number;         
+
+    @Column({
         allowNull: true        
     })
     lastLevel1Id: number;  

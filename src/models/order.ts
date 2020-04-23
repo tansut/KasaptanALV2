@@ -16,3 +16,7 @@ export enum OrderPaymentStatus {
     manualPayment = 'Manuel Ödeme Yapılacak'
 }
 
+export enum OrderSource {
+    kasaptanal = 'kasaptanal.com',
+    butcher = 'butcher'
+}

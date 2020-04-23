@@ -55,6 +55,12 @@ export default class BaseRouter {
         return this._markdown;
     }
 
+    get url() {
+        let proto = this.req.header("x-forwarded-proto") || this.req.protocol;
+        let host = config.nodeenv == "development" ? this.req.get('Host'): 'www.kasaptanal.com';
+        return proto + '://' + host;              
+    }
+
     forceAuthenticate(req, res, next) {
         return auth.force(req, res, next);
     }
@@ -203,11 +209,7 @@ export class ViewRouter extends BaseRouter {
         }
     }
 
-    get url() {
-        let proto = this.req.header("x-forwarded-proto") || this.req.protocol;
-        let host = config.nodeenv == "development" ? this.req.get('Host'): 'www.kasaptanal.com';
-        return proto + '://' + host;              
-    }
+
 
 
     protected renderView(view: string, pageKey: string = null, vdata = {}) {

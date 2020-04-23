@@ -1,0 +1,24 @@
+<!doctype html>
+<html lang="tr">
+<head>
+    <title></title>
+</head>
+<body>
+    <div style="text-align: center; padding: 15px;">
+        <img src="<%=__config.staticDomain %>/resource/img/ajax-loader.gif" alt="Yükleniyor ...">
+        <h4>Ödemeniz tamamlanmak üzere ...</h4>
+    </div>
+    <form action="/pay/<%=ordernum%>?provider=paratika"  method="POST" id="pageForm">
+        <input type="hidden" name="paymentId" id="paymentId">
+      </form>
+
+<script type="text/javascript">     
+      document.getElementById("paymentId").value = '<%=paymentId%>';
+      document.getElementById("pageForm").submit();
+
+    
+</script>
+</body>
+</html>
+
+

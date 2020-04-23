@@ -248,6 +248,26 @@ class Butcher extends BaseModel<Butcher> {
     iyzicoSubMerchantKey: string;   
 
     @Column({
+        allowNull: true
+    })
+    notifyMobilePhones: string;   
+
+    @Column({
+        allowNull: false,
+        type: DataType.DECIMAL(5, 2),
+        defaultValue: 0.02
+    })
+    payCommissionRate: number;    
+
+    @Column({
+        allowNull: false,
+        type: DataType.DECIMAL(13, 2),
+        defaultValue: 0.00
+    })
+    payCommissionFee: number;      
+
+
+    @Column({
         allowNull: false,
         type: DataType.DECIMAL(5, 2),
         defaultValue: 0.1

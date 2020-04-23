@@ -21,6 +21,11 @@ export default class Helper {
         return parseInt(val) == NaN ? def: parseInt(val);
     }
 
+    static parseFloat(val) {
+        return parseFloat(val.replace(/,/g, ''));
+    }
+
+
     static distance(p1: GeoLocation, p2: GeoLocation) {
         return Helper._distance(p1.coordinates[0], p1.coordinates[1], p2.coordinates[0], p2.coordinates[1], 'K')
     }
@@ -126,7 +131,7 @@ export default class Helper {
     }
 
     static formattedCurrency(n: number, symbol: string = 'TL') {
-        let parts = Helper.splitCurrency(n);
+        let parts = Helper.splitCurrency(Helper.asCurrency(n));
         if (parts.krs <= 0) return numeral(parts.val).format('0,0') + 'TL'
         else return numeral(parts.val).format('0,0') + '.' + numeral(parts.krs).format('0,0') + 'TL'
     }

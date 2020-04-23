@@ -10,6 +10,7 @@ import Payment from '../../db/models/payment';
 import { ComissionHelper } from '../commissionHelper';
 import AccountModel from '../../db/models/accountmodel';
 import { Account } from '../../models/account';
+import { OrderSource } from '../../models/order';
 
 const paymentConfig = require(path.join(config.projectDir, `payment.json`));
 
@@ -28,7 +29,7 @@ export interface SubMerchantCreateRequest {
 
     iban: string;
     subMerchantExternalId: string;
-    subMerchantType: SubMerchantType;    
+    subMerchantType: SubMerchantType;
 }
 
 export interface SubMerchantCreateResult {
@@ -36,7 +37,14 @@ export interface SubMerchantCreateResult {
     status: string;
     errorCode?: string;
     errorMessage?: string;
-} 
+}
+
+export interface SubMerchantUpdateResult {
+    status: string;
+    errorCode?: string;
+    errorMessage?: string;
+}
+
 
 export interface Creditcard {
     cardNumber: string;
@@ -74,7 +82,7 @@ export interface BasketItem {
     itemType: string,
     price: number;
     subMerchantKey?: string;
-    subMerchantPrice?:number;
+    subMerchantPrice?: number;
     merchantDebtApplied?: number;
 }
 
@@ -89,7 +97,7 @@ export interface PaymentRequest {
     billingAddress: Address;
     conversationId: string;
     basketId: string;
-    basketItems: BasketItem[];    
+    basketItems: BasketItem[];
     callbackUrl?: string;
 }
 
@@ -106,9 +114,8 @@ export interface PaymentResult {
 export interface ItemTransaction {
     itemId: string;
     paymentTransactionId: string;
-    //transactionStatus: number,
     price: number,
-    paidPrice: number    
+    paidPrice: number
 }
 
 export interface SubMerchantItemApproveRequest {
@@ -121,7 +128,7 @@ export interface SubMerchantItemApproveResponse {
     conversationId?: string;
     status: string;
     errorCode: string;
-    errorMessage:string;
+    errorMessage: string;
 }
 
 
@@ -144,7 +151,7 @@ export class CreditcardPaymentProvider {
     logger: SiteLogRoute;
     userid: number;
     ip: string;
-    marketPlace: boolean = false;
+    marketPlace: boolean = true;
 
     constructor(config: any) {
         this.marketPlace = config.marketPlace == "true";
@@ -179,44 +186,46 @@ export class CreditcardPaymentProvider {
         return o.butcher[this.providerKey + "SubMerchantKey"]
     }
 
-    async paySession(request: PaymentRequest, card: Creditcard) {
-        return false
+    async paySession(request: PaymentRequest): Promise<any> {
+
     }
 
     getMerchantMoney(o: Order, shouldBePaid: number) {
-        let butcherPuanEarned = o.butcherPuanAccounts.find(p => p.code == 'total');
-        let kalitteOnlyPuanEarned = o.kalitteOnlyPuanAccounts.find(p => p.code == 'total');
-        let kalitteByButcherEarned = o.kalitteByButcherPuanAccounts.find(p => p.code == 'total');
-        let calc = new ComissionHelper(o.butcher.commissionRate, o.butcher.commissionFee);
+        let calc = new ComissionHelper(o.orderSource == OrderSource.kasaptanal ? o.butcher.commissionRate : o.butcher.payCommissionRate, o.orderSource == OrderSource.kasaptanal ? o.butcher.commissionFee : o.butcher.payCommissionFee);
         let totalFee = calc.calculateButcherComission(shouldBePaid);
         let merchantPrice = Helper.asCurrency(totalFee.inputTotal - totalFee.kalitteFee - totalFee.kalitteVat);
-        let butcherPuan = Helper.asCurrency(butcherPuanEarned.alacak - butcherPuanEarned.borc);
-        let kalitteByButcherPuan = Helper.asCurrency(kalitteByButcherEarned.alacak - kalitteByButcherEarned.borc);
-        let totalPuanByButcher = Helper.asCurrency(butcherPuan + kalitteByButcherPuan);
-        merchantPrice = Helper.asCurrency(merchantPrice - totalPuanByButcher);
+        if (o.orderSource == OrderSource.kasaptanal) {
+            let butcherPuanEarned = o.butcherPuanAccounts.find(p => p.code == 'total');
+            let kalitteOnlyPuanEarned = o.kalitteOnlyPuanAccounts.find(p => p.code == 'total');
+            let kalitteByButcherEarned = o.kalitteByButcherPuanAccounts.find(p => p.code == 'total');
+            let butcherPuan = Helper.asCurrency(butcherPuanEarned.alacak - butcherPuanEarned.borc);
+            let kalitteByButcherPuan = Helper.asCurrency(kalitteByButcherEarned.alacak - kalitteByButcherEarned.borc);
+            let totalPuanByButcher = Helper.asCurrency(butcherPuan + kalitteByButcherPuan);
+            merchantPrice = Helper.asCurrency(merchantPrice - totalPuanByButcher);
+        }
         return merchantPrice;
     }
 
 
     requestFromOrder(ol: Order[], debts: { [key: string]: number; } = {}): PaymentRequest {
-        let basketItems: BasketItem [] = [];
+        let basketItems: BasketItem[] = [];
         let price = 0.00, paidPrice = 0.00;
-        ol.forEach((o, j) => {            
+        ol.forEach((o, j) => {
             let total = o.workedAccounts.find(p => p.code == 'total');
 
             let shouldBePaid = Helper.asCurrency(total.alacak - total.borc);
 
-            let merchantPrice = 0.00;       
-            
+            let merchantPrice = 0.00;
+
             let butcherDebt = 0.00, debtApplied = 0.00;
-            
-            if (this.marketPlace) {                
-                merchantPrice = this.getMerchantMoney(o, shouldBePaid);                               
+
+            if (this.marketPlace) {
+                merchantPrice = this.getMerchantMoney(o, shouldBePaid);
                 butcherDebt = debts[o.butcherid];
                 if (merchantPrice <= butcherDebt) {
                     debtApplied = merchantPrice - 1.00;
                 } else debtApplied = butcherDebt;
-                merchantPrice = Helper.asCurrency(this.getMerchantMoney(o, shouldBePaid) - debtApplied); 
+                merchantPrice = Helper.asCurrency(this.getMerchantMoney(o, shouldBePaid) - debtApplied);
 
             }
             basketItems.push({
@@ -226,15 +235,15 @@ export class CreditcardPaymentProvider {
                 name: o.name + ' ' + o.ordernum + ' nolu ' + 'ürün siparişi',
                 price: Helper.asCurrency(shouldBePaid),
                 merchantDebtApplied: debtApplied,
-                subMerchantKey: this.marketPlace ? this.getSubmerchantId(o): undefined,
-                subMerchantPrice: merchantPrice > 0.00 ? merchantPrice: undefined
-            }) 
+                subMerchantKey: this.marketPlace ? this.getSubmerchantId(o) : undefined,
+                subMerchantPrice: merchantPrice > 0.00 ? merchantPrice : undefined
+            })
 
-            price += Helper.asCurrency(shouldBePaid); 
-            paidPrice += Helper.asCurrency(shouldBePaid); 
+            price += Helper.asCurrency(shouldBePaid);
+            paidPrice += Helper.asCurrency(shouldBePaid);
         })
 
-        let orderids = ol.map(o=>o.ordernum).join(',');
+        let orderids = ol.map(o => o.ordernum).join(',');
         let o = ol[0];
 
         let result = {
@@ -250,7 +259,7 @@ export class CreditcardPaymentProvider {
                 address: o.address,
                 city: o.areaLevel1Text,
                 contactName: o.name,
-                country: 'Turkey'                
+                country: 'Turkey'
             },
             basketId: orderids,
             conversationId: orderids,
@@ -265,7 +274,7 @@ export class CreditcardPaymentProvider {
                 ip: this.ip,
                 name: o.name,
                 registrationAddress: o.address,
-                surname: o.name                
+                surname: o.name
             },
             currency: 'TRY',
             installment: '1',
@@ -349,9 +358,9 @@ export class CreditcardPaymentProvider {
             legalCompanyTitle: b.legalName,
             subMerchantExternalId: b.id.toString(),
             subMerchantType: <any>b.companyType,
-            taxNumber: b.companyType == 'LIMITED_OR_JOINT_STOCK_COMPANY' ? b.taxNumber: undefined,
+            taxNumber: b.companyType == 'LIMITED_OR_JOINT_STOCK_COMPANY' ? b.taxNumber : undefined,
             taxOffice: b.taxOffice,
-            identityNumber: b.companyType != 'LIMITED_OR_JOINT_STOCK_COMPANY' ? b.taxNumber: undefined
+            identityNumber: b.companyType != 'LIMITED_OR_JOINT_STOCK_COMPANY' ? b.taxNumber : undefined
         }
     }
 
@@ -361,13 +370,13 @@ export class CreditcardPaymentProvider {
                 request: request,
                 response: result
             }
-            return await this.logger.log( 
-                {                    
+            return await this.logger.log(
+                {
                     logData: JSON.stringify(data),
                     logtype: logType,
                     f1: request.conversationId,
                     f2: result.paymentId,
-                    status: result.status              
+                    status: result.status
                 }
             )
         } else return Promise.resolve();
@@ -375,11 +384,11 @@ export class CreditcardPaymentProvider {
 
     async approveItem(request: SubMerchantItemApproveRequest): Promise<SubMerchantItemApproveResponse> {
         return null;
-    }    
+    }
 
     async disApproveItem(request: SubMerchantItemApproveRequest): Promise<SubMerchantItemApproveResponse> {
         return null;
-    }        
+    }
 
     async pay(request: PaymentRequest, card: Creditcard): Promise<PaymentResult> {
         return null;
@@ -389,13 +398,19 @@ export class CreditcardPaymentProvider {
         return null;
     }
 
-    async pay3dComplete(request: any): Promise<PaymentResult> {     
-        return null   
+    async pay3dComplete(request: any): Promise<PaymentResult> {
+        return null
     }
 
     async createSubMerchant(request: SubMerchantCreateRequest): Promise<SubMerchantCreateResult> {
         return null;
-    }    
+    }
+
+
+    async updateSubMerchant(request: SubMerchantCreateRequest): Promise<SubMerchantUpdateResult> {
+        return null;
+    }
+
 }
 
 export class CreditcardPaymentFactory {

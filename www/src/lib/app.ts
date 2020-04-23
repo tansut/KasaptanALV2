@@ -6,6 +6,7 @@ import { Auth } from "./auth";
 import { ShopCard } from "./shopcard";
 import AppBase from "./appbase";
 import numeral from "numeral";
+import ButcherApp from "./butcherapp"
 
 declare global {
     interface Window { App: App; }
@@ -28,6 +29,7 @@ export class App extends AppBase {
     public static Auth = Auth;
     public static ShopCard = ShopCard;
     public static User = null;    
+    public static ButcherApp = ButcherApp;
 
 
     public static ComponentMap: ComponentMap = {};

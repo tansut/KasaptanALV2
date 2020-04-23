@@ -1,4 +1,4 @@
-import { PaymentRequest, CreditcardPaymentProvider, CreditcardPaymentFactory, PaymentResult, Creditcard, SubMerchantCreateRequest, SubMerchantCreateResult, SubMerchantItemApproveRequest, SubMerchantItemApproveResponse } from "./creditcard";
+import { PaymentRequest, CreditcardPaymentProvider, CreditcardPaymentFactory, PaymentResult, Creditcard, SubMerchantCreateRequest, SubMerchantCreateResult, SubMerchantItemApproveRequest, SubMerchantItemApproveResponse, SubMerchantUpdateResult } from "./creditcard";
 import axios, { AxiosResponse } from "axios";
 import { response } from "express";
 import { Order } from "../../db/models/order";
@@ -9,6 +9,7 @@ export interface ParatikaConfig {
     apiKey: string,
     secretKey: string,
     uri: string;
+    tdpost:string;
     merchantUser: string,
     merchantPassword: string,
     merchant: string,
@@ -31,9 +32,9 @@ export default class ParatikaPayment extends CreditcardPaymentProvider {
             }
         }
         axios.post(uri || this.config.uri, qs.stringify(body), config).then((result) => {
-            console.log("----------");
-            console.log(body);
-            console.log(result.data)
+            // console.log("----------");
+            // console.log(body);
+            // console.log(result.data)
             handler(null, result.data)
         }).catch((err) => handler(err));
     }
@@ -42,7 +43,25 @@ export default class ParatikaPayment extends CreditcardPaymentProvider {
         return o.butcherid.toString()
     }
 
-    createParatikaSessionReq(request: PaymentRequest, card: Creditcard) {
+    async paySession(request: PaymentRequest) {
+        let sessionRequest = this.createParatikaSessionReq(request);
+
+        return new Promise((resolve, reject) => {
+            this.post(sessionRequest, (err, sessionResult) => {
+                this.logOperation("creditcard-pay-session-create",
+                    request, sessionResult).then(() => {
+                        if (err) reject(err);
+                        else if (sessionResult.responseCode != '00')
+                            reject(this.generateErrorResponse(sessionResult));
+                        else {
+                            resolve(sessionResult)
+                        }
+                    })
+            })
+        })
+    }
+
+    createParatikaSessionReq(request: PaymentRequest) {
 
         let sellerTotal = 0.00
         let oi = request.basketItems.map(bi => {
@@ -57,7 +76,6 @@ export default class ParatikaPayment extends CreditcardPaymentProvider {
                 quantity: 1
             }
         })
-
 
         return {
             ACTION: "SESSIONTOKEN",
@@ -74,7 +92,6 @@ export default class ParatikaPayment extends CreditcardPaymentProvider {
             CUSTOMEREMAIL: request.buyer.email,
             CUSTOMERIP: request.buyer.ip,
             CUSTOMERUSERAGENT: "Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/43.0.2357.81 Safari/537.36",
-            NAMEONCARD: card.cardHolderName,
             CUSTOMERPHONE: request.buyer.gsmNumber,
             CUSTOMERBIRTHDAY: "01-01-2001",
             BILLTOADDRESSLINE: request.billingAddress.address,
@@ -87,9 +104,6 @@ export default class ParatikaPayment extends CreditcardPaymentProvider {
             SHIPTOCOUNTRY: "Turkey",
             SHIPTOPOSTALCODE: "11105",
             SHIPTOPHONE: request.buyer.gsmNumber,
-            CARDPAN: card.cardNumber,
-            CARDEXPIRY: `${card.expireMonth}.${card.expireYear}`,
-            CARDCVV: card.cvc,
             ORDERITEMS: JSON.stringify(oi),
             TOTALSELLERPAYMENTAMOUNT: sellerTotal
 
@@ -97,22 +111,13 @@ export default class ParatikaPayment extends CreditcardPaymentProvider {
     }
 
     createParatikaPaymentReq(req: any, token) {
-        // req.ACTION = "SALE";
-        // //req.ORDERITEMS = undefined;
-        // req.INSTALLMENTS = 1;
-        // req.SESSIONTOKEN = token;
-        // return req
         return {
             ACTION: "SALE",
-            // MERCHANTUSER: this.config.merchantUser,
-            // MERCHANTPASSWORD: this.config.merchantPassword,
-            // MERCHANTPAYMENTID: req.MERCHANTPAYMENTID,
-            // MERCHANT: this.config.merchant,
-                CARDPAN: req.CARDPAN,
-                CARDEXPIRY: req.CARDEXPIRY,
-                NAMEONCARD: req.NAMEONCARD,
-                CARDCVV: req.CARDCVV,
-                SESSIONTOKEN: token
+            CARDPAN: req.CARDPAN,
+            CARDEXPIRY: req.CARDEXPIRY,
+            NAMEONCARD: req.NAMEONCARD,
+            CARDCVV: req.CARDCVV,
+            SESSIONTOKEN: token
         }
     }
 
@@ -152,7 +157,7 @@ export default class ParatikaPayment extends CreditcardPaymentProvider {
 
 
     async pay3dInit(request: PaymentRequest, card: Creditcard): Promise<PaymentResult> {
-        let req = this.createParatikaSessionReq(request, card);
+        let req = this.createParatikaSessionReq(request);
         return new Promise((resolve, reject) => {
             this.post(req, (err, sessionResult) => {
                 this.logOperation("creditcard-payment-3d-session-create", request, sessionResult).then(() => {
@@ -168,8 +173,10 @@ export default class ParatikaPayment extends CreditcardPaymentProvider {
                             expiryYear: card.expireYear,
                             cvv: card.expireYear,
                             installmentCount: 1,
-                                                
+
                         }
+
+                        return;
 
                         this.post(pr, (err, result) => {
                             if (err) reject(err);
@@ -182,7 +189,7 @@ export default class ParatikaPayment extends CreditcardPaymentProvider {
                                     paidPrice: request.paidPrice,
                                     paymentId: request.conversationId,
                                     price: request.price
-                                })                                                          
+                                })
                             }
                         }, `${this.config.uri}/post/sale3d/${sessionResult.sessionToken}`)
                     }
@@ -194,20 +201,32 @@ export default class ParatikaPayment extends CreditcardPaymentProvider {
 
     pay3dHandshakeSuccess(result: any) {
         result = result || {};
-        if (result.mdStatus == "1" && result.status == 'success') return true;
+        if (result.responseMsg == "Approved" && result.responseCode == '00') return true;
         else return false;
     }
 
     async pay3dComplete(request: any): Promise<PaymentResult> {
-        let req = request;
+        
+        let result: PaymentResult = {
+            conversationId: request.merchantPaymentId,
+            paidPrice: parseFloat(request.amount),
+            paymentId: request.pgTranId,
+            status: 'success',
+            price: parseFloat(request.amount),
+            itemTransactions: [
+                {
+                    itemId: request.merchantPaymentId,
+                    paidPrice: parseFloat(request.amount),
+                    paymentTransactionId: request.pgTranId,
+                    price: parseFloat(request.amount)
+                }
+            ]
+        }
         return new Promise((resolve, reject) => {
-            this.iyzipay.threedsPayment.create(req, (err, result) => {
                 this.logOperation("creditcard-3d-complete", request, result).then(() => {
-                    if (err) reject(err);
-                    else if (result.status == 'failure') reject(result);
-                    else return this.savePayment("3d-iyzico", request, result).then(() => resolve(result)).catch(err => reject(err));
+                    return this.savePayment("3d-paratika", request, result).then(() => resolve(result)).catch(err => reject(err));
                 }).catch(err => reject(err))
-            });
+
         })
     }
 
@@ -243,14 +262,14 @@ export default class ParatikaPayment extends CreditcardPaymentProvider {
                     itemId: bi.id,
                     paymentTransactionId: result.merchantPaymentId,
                     price: bi.price,
-                    paidPrice: bi.price                   
+                    paidPrice: bi.price
                 }
             })
         }
     }
 
     async pay(request: PaymentRequest, card: Creditcard): Promise<PaymentResult> {
-        let req = this.createParatikaSessionReq(request, card);
+        let req = this.createParatikaSessionReq(request);
         return new Promise((resolve, reject) => {
             this.post(req, (err, result) => {
                 this.logOperation("creditcard-payment-session-create", request, result).then(() => {
@@ -267,7 +286,7 @@ export default class ParatikaPayment extends CreditcardPaymentProvider {
                             else {
                                 let paymentRes: PaymentResult = this.convertParatikaPaymentResult(request, result)
                                 this.savePayment('pos-paratika', pr, paymentRes)
-                                .then(() => resolve(paymentRes))
+                                    .then(() => resolve(paymentRes))
                                     .catch(err => reject(err));
                             }
                         })
@@ -275,6 +294,36 @@ export default class ParatikaPayment extends CreditcardPaymentProvider {
                 }).catch(err => reject(err))
             });
         })
+    }
+
+    async updateSubMerchant(request: SubMerchantCreateRequest): Promise<SubMerchantUpdateResult> {
+        let req = {
+            ACTION: "SELLEREDIT",
+            MERCHANT: this.config.merchant,
+            MERCHANTUSER: this.config.merchantUser,
+            MERCHANTPASSWORD: this.config.merchantPassword,
+            SELLERID: request.subMerchantExternalId,
+            NAME: request.legalCompanyTitle,
+            LASTNAME: request.legalCompanyTitle,
+            EMAIL: request.email,
+            MOBILENUMBER: '05555551111',
+            IBAN: request.iban,
+            COMMISSIONAPPLYTYPE: "CA",
+            STATUS: 'OK'
+        }      
+        
+        return new Promise((resolve, reject) => {
+            this.post(req, (err, result) => {
+                this.logOperation("submerchant-update", req, result).then(() => {
+                    if (err) reject(err);
+                    else if (result.responseCode != '00')
+                        reject(this.generateErrorResponse(result));
+                    else resolve({                        
+                        status: "success"
+                    });
+                }).catch(err => reject(err))
+            });
+        })        
     }
 
     async createSubMerchant(request: SubMerchantCreateRequest): Promise<SubMerchantCreateResult> {
@@ -289,14 +338,18 @@ export default class ParatikaPayment extends CreditcardPaymentProvider {
             EMAIL: request.email,
             MOBILENUMBER: '05555551111',
             IBAN: request.iban,
-            COMMISSIONAPPLYTYPE: "CA"
+            COMMISSIONAPPLYTYPE: "CA",
+            STATUS: 'OK'
         }
         return new Promise((resolve, reject) => {
             this.post(req, (err, result) => {
                 this.logOperation("submerchant-create", req, result).then(() => {
                     if (err) reject(err);
-                    else if (result.responseCode != '00')
+                    else if (result.responseCode != '00') {
+                        this.updateSubMerchant(request).then((r)=>resolve(<any>r)).catch(err=>reject(err));
                         reject(this.generateErrorResponse(result));
+                    }
+                        
                     else resolve({
                         subMerchantKey: result.seller.sellerId,
                         status: "success"

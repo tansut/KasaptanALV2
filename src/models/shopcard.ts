@@ -183,7 +183,9 @@ export class ShopCard {
     getShippingCost(bi) {
         let shipment = this.shipment[bi];
         let butcher = this.butchers[bi];
-        return shipment.dispatcher ? (Math.max(0.00, (shipment.dispatcher.totalForFree - butcher.subTotal > 0) ? shipment.dispatcher.fee : 0)) : 0.00
+        if (shipment.howTo == "take")
+            return 0.00;
+        else return shipment.dispatcher ? (Math.max(0.00, (shipment.dispatcher.totalForFree - butcher.subTotal > 0) ? shipment.dispatcher.fee : 0)) : 0.00
     }
 
     calculateShippingCosts() {
