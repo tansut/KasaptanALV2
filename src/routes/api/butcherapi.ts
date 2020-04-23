@@ -75,7 +75,7 @@ export default class Route extends ApiRouter {
         let o = new Order();
         o.total = tutar;
         o.subTotal = tutar;
-        o.phone = phone;
+        o.phone = user.mphone;
         o.name = name;
         o.note = this.req.body.desc;
         o.paymentType = "onlinepayment"
@@ -96,7 +96,7 @@ export default class Route extends ApiRouter {
         let payUrl = `${this.url}/pay/${o.ordernum}`;
         let text = `${this.butcher.name} ${ Helper.formattedCurrency(tutar)} siparişiniz güvenli ödeme yapmak için lütfen ${payUrl} adresini ziyaret edin. ${this.req.body.desc}`
         let log = new SiteLogRoute(this.constructorParams)
-        await Sms.send(o.phone, text, true, log);
+        await Sms.send('90' + o.phone, text, true, log);
         this.res.send({
             text: text,
             url: payUrl

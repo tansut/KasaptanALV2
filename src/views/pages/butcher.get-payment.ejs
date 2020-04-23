@@ -95,7 +95,7 @@
           pay: $("#pay").val(),
           desc: $("#desc").val()
         }).then(function (result) {
-          var conf = "LÜTFEN ONAYLAYIN:\n" + result.text;
+          var conf = "AŞAĞIDAKİ SMS GİDECEKTİR. LÜTFEN ONAYLAYIN:\n" + result.text;
           if (window.confirm(conf)) {
             App.Backend.post('butcher/payment/send', {
               phone: $("#mphone").val(),

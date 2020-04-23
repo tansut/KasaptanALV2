@@ -750,7 +750,7 @@ export default class Route extends ApiRouter {
             }
             for(var p = 0; p < notifyMobilePhones.length;p++) {
                 let payUrl = `${this.url}/pay/${ol[i].ordernum}`;
-                await Sms.send(notifyMobilePhones[p].trim(), `Tebrikler, ${ol[i].name} ${Helper.formattedCurrency(paymentInfo.paidPrice)} online ödemeniz yapıldı. Detaylı bilgi için ${payUrl} `, false, new SiteLogRoute(this.constructorParams))
+                await Sms.send("90" + Helper.getPhoneNumber(notifyMobilePhones[p].trim()), `Tebrikler, ${ol[i].name} ${Helper.formattedCurrency(paymentInfo.paidPrice)} online odeme basarili. Bilgi icin ${payUrl} `, false, new SiteLogRoute(this.constructorParams))
             }
 
         }
