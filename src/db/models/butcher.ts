@@ -254,7 +254,7 @@ class Butcher extends BaseModel<Butcher> {
 
     @Column({
         allowNull: false,
-        type: DataType.DECIMAL(5, 2),
+        type: DataType.DECIMAL(10, 4),
         defaultValue: 0.02
     })
     payCommissionRate: number;    
@@ -269,7 +269,7 @@ class Butcher extends BaseModel<Butcher> {
 
     @Column({
         allowNull: false,
-        type: DataType.DECIMAL(5, 2),
+        type: DataType.DECIMAL(10, 4),
         defaultValue: 0.1
     })
     commissionRate: number;    
