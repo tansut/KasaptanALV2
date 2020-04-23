@@ -94,9 +94,9 @@ export default class Route extends ApiRouter {
         o.areaLevel1Text = this.butcher.areaLevel1.name;
         await this.api.createAsButcherOrder(o);
         let payUrl = `${this.url}/pay/${o.ordernum}`;
-        let text = `${this.butcher.name} ${ Helper.formattedCurrency(tutar)} tutarlı siparişiniz güvenli ödeme yapmak için lütfen ${payUrl} adresini ziyaret edin. ${this.req.body.desc}`
+        let text = `${this.butcher.name} ${ Helper.formattedCurrency(tutar)} siparişiniz güvenli ödeme yapmak için lütfen ${payUrl} adresini ziyaret edin. ${this.req.body.desc}`
         let log = new SiteLogRoute(this.constructorParams)
-        //await Sms.send(o.phone, text, true, log);
+        await Sms.send(o.phone, text, true, log);
         this.res.send({
             text: text,
             url: payUrl
@@ -106,7 +106,7 @@ export default class Route extends ApiRouter {
     async getPaymentSmsTextRoute() {
         await this.setButcher();
         let tutar = Helper.parseFloat(this.req.body.pay);
-        let text = `${this.butcher.name} ${ Helper.formattedCurrency(tutar)} tutarlı siparişiniz güvenli ödeme yapmak için lütfen xxxx adresini ziyaret edin. ${this.req.body.desc}`
+        let text = `${this.butcher.name} ${ Helper.formattedCurrency(tutar)} siparişiniz güvenli ödeme yapmak için lütfen adresini ziyaret edin. ${this.req.body.desc}`
         this.res.send({text:text})
     }
 

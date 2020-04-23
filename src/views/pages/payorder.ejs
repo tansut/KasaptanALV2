@@ -154,6 +154,8 @@
 
 
       function beforeSubmit() {
+        var n = $("#pan").val() || "";
+        $("#pan").val(n.replace(/\s+/g, ''))       
         setTimeout(function () { $('#pay-btn').text(' Ödemenizi yapıyorum ... '); $('#pay-btn').attr('disabled', true); })
       }
 
