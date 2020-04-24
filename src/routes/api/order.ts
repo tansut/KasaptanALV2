@@ -726,7 +726,7 @@ export default class Route extends ApiRouter {
             let o = ol[i];
             let op = new AccountingOperation(`${o.ordernum} kredi kartı ödemesi - ${paymentInfo.paymentId}`);
             if (o.orderSource == OrderSource.butcher) {
-                op.accounts.push(new Account("odeme-bekleyen-satislar", [o.userId, o.ordernum, 600]).dec(paymentInfo.paidPrice))
+                op.accounts.push(new Account("odeme-bekleyen-satislar", [o.userId, o.ordernum, 1000]).dec(paymentInfo.paidPrice))
                 op.accounts.push(new Account("satis-alacaklari", [o.userId, o.ordernum]).dec(paymentInfo.paidPrice))
                 ops.push(op);
                 promises = promises.concat(this.updateOrderByCreditcardPayment(o, paymentInfo, t));                
