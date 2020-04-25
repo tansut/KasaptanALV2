@@ -69,10 +69,13 @@ export default class IyziPayment extends CreditcardPaymentProvider {
         })
     }
 
-    pay3dHandshakeSuccess(result: any) {
+    async pay3dHandshakeSuccess(result: any) {
         result = result || {};
         if (result.mdStatus == "1" && result.status == 'success') return true;
-        else return false;        
+        else {
+            await this.logOperation("3d-handshake-fail", result, {})
+            return false;      
+        }   
     }
 
     async pay3dComplete(request: any): Promise<PaymentResult> {        

@@ -199,10 +199,13 @@ export default class ParatikaPayment extends CreditcardPaymentProvider {
     }
 
 
-    pay3dHandshakeSuccess(result: any) {
+    async pay3dHandshakeSuccess(result: any) {
         result = result || {};
         if (result.responseMsg == "Approved" && result.responseCode == '00') return true;
-        else return false;
+        else {
+            await this.logOperation("3d-handshake-fail", result, {})
+            return false;
+        } 
     }
 
     async pay3dComplete(request: any): Promise<PaymentResult> {

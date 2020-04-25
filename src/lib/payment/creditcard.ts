@@ -161,7 +161,7 @@ export class CreditcardPaymentProvider {
 
     }
 
-    pay3dHandshakeSuccess(result: any): boolean {
+    async pay3dHandshakeSuccess(result: any): Promise<boolean> {
         return false;
     }
 

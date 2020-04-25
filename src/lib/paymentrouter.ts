@@ -99,15 +99,16 @@ export class PaymentRouter extends ViewRouter {
         let result = this.req.body;
         let view = `pages/_partial/paymentprovider/${this.paymentProvider.providerKey}.3dcomplete.ejs`;
         try {
-            if (!this.paymentProvider.pay3dHandshakeSuccess(result))
+            let shakeResult = await this.paymentProvider.pay3dHandshakeSuccess(result);
+            if (!shakeResult)
                 throw new Error("3d işlemi başarısız");
             let threedResult = await this.paymentProvider.pay3dComplete(result);
             this.res.render(view, {
                 paymentId: threedResult.paymentId,
                 ordernum: result.merchantPaymentId,
             })
-        } catch (err) {
-            this.res.status(500);
+        } catch (err) {            
+            this.res.status(500);            
             this.res.render(view, {
                 paymentId: 'NONE',
                 ordernum: result.merchantPaymentId
