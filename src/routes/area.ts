@@ -131,10 +131,42 @@ export default class Route extends ViewRouter {
             else return this.renderPage(area, butchers)        
     }
 
+    @Auth.Anonymous()
+    async allRoute() {
+        let where = (<any>{})
+        where["approved"] = true;
+
+        let butchers = await ButcherModel.findAll({
+            where: where,
+            limit: 15,
+            order: [["updatedon", "DESC"]],
+            include: [{
+                all: true
+            }]
+        })
+
+        let subs = await AreaModel.findAll({
+            where: {
+                level: 1,
+                status: "active"
+            },
+            order: [['displayOrder', 'desc']]
+        })
+
+        this.res.render('pages/butchers.ejs', this.viewData({ 
+            
+            subs: subs, ellipsis: ellipsis, 
+            pageDescription: `Online Kasaplar: En doğal ve lezzetli et ürünleri kasaptanAl.com'da. Şimdi kasaplarımızdan online et siparişi verin, kapınıza gelsin!`, 
+            pageTitle: 'Online Kasaplar: Online et siparişi verebileceğiniz kazaplarımız',
+            butchers: butchers 
+            }))
+    }
+
     static SetRoutes(router: express.Router) {
         // router.get("/:areal1-:areal2-:area3", Route.BindRequest(Route.prototype.areal3Route));
         // router.get("/:areal1-:areal2", Route.BindRequest(Route.prototype.areal2Route));
         router.get("/:area-kasap", Route.BindRequest(Route.prototype.arealRoute));
         router.get("/:area", Route.BindRequest(Route.prototype.arealRouteOld));
+        router.get("/kasaplar", Route.BindRequest(Route.prototype.allRoute));
     }
 }
