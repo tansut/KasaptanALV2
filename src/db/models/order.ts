@@ -346,7 +346,7 @@ class Order extends BaseModel<Order> {
         o.phone = c.address.phone;
         o.name = c.address.name;
         o.saveAddress = c.address.saveaddress;
-
+        o.noInteraction = c.shipment[bi].nointeraction;
         if (c.shipment[bi].dispatcher) {
             o.dispatcherid = c.shipment[bi].dispatcher.id;
             o.dispatcherFee = c.shipment[bi].dispatcher.fee;

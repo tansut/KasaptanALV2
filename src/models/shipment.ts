@@ -68,6 +68,7 @@ export class Shipment {
     daysText: string[] = [];
     hoursText: string [] = []    
     dispatcher: DispatcherView = null;
+    nointeraction: boolean = true;
 
     static  availableTimes(date: Date = Helper.Now()): Object {        
         var isToday = (Helper.Now().toDateString() === date.toDateString());

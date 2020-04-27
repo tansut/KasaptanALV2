@@ -255,6 +255,8 @@ export default class Route extends ViewRouter {
             let butcher = this.shopcard.butchers[k];
             this.shopcard.payment[k].type = this.req.body[`paymentmethod${k}`];
             this.shopcard.payment[k].desc = PaymentTypeDesc[this.shopcard.payment[k].type];
+            this.shopcard.shipment[k].nointeraction = this.req.body[`nointeraction${k}`] == "on";
+
         }
         this.shopcard.arrangeButchers();
         this.setDispatcher();

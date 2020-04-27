@@ -39,6 +39,7 @@
               <th>Durum</th>
               <th>Ödeme Tipi</th>
               <th>Payment</th>
+              <th>Ödenen</th>
           </tr>
       </thead>
       <tbody>
@@ -52,6 +53,13 @@
               <td><%= orders[i].status %></td>
               <td><%= orders[i].paymentType %></td>
               <td><%= orders[i].subMerchantStatus %></td>
+              <td>
+    <%- include('./_partial/currency.ejs', {value: orders[i].paidTotal}) %>
+                
+            
+              
+              
+              </td>
 
           </tr>
 

@@ -203,7 +203,7 @@ export default class UserRoute extends ApiRouter {
                     this.req && (this.req.user = doc);
                     doc.save().then(() => resolve(doc), (err) => reject(err));
                 }
-                else reject(new http.PermissionError())
+                else reject(new http.PermissionError("Giriş bilgileriniz hatalı:" + email))
             })
         });
     }

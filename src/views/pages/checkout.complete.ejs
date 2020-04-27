@@ -40,7 +40,14 @@
                   <span data-orderid="<%= order.ordernum %>" class='font-weight-medium'><%= order.ordernum %></span></p>
                   <p class="font-size-sm">Birazdan e-posta adresinize de gerekli bilgileri ulaştırıyor olacağız. Çok teşekkürler!</p>
                   
-                  <a class="btn btn-primary mt-3" href="/user/orders/<%=order.ordernum%>"><i class="czi-bag"></i>&nbsp;Sipariş Takip Et</a>
+                  <a class="btn btn-primary mt-3 mr-2" href="/user/orders/<%=order.ordernum%>"><i class="czi-bag"></i>&nbsp;Sipariş Takip Et</a>
+
+                  <% if (order.paymentType == 'onlinepayment') { %>
+                    <a class="btn mt-3 btn-success" href="/pay/<%=order.ordernum%>">Önline Ödeme</a>
+
+                
+
+                  <% } %>
                 </div>
               <% }) %>
 
