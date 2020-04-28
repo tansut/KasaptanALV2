@@ -26,7 +26,8 @@ export default class Route extends ViewRouter {
         //this.res.status(httpErr && httpErr.statusCode ? httpErr.statusCode : 500).send({ error: httpErr ? httpErr.message : err.message })
         this.res.status(status)
         this.res.render(page, this.viewData({
-            error: JSON.stringify(err)
+            error: err,
+            JSON: JSON
         }))
     }
 

@@ -29,6 +29,7 @@ import { PaymentRouter } from '../../lib/paymentrouter';
 import { stringify } from 'querystring';
 import { ComissionResult, ComissionHelper } from '../../lib/commissionHelper';
 import { PuanResult } from '../../models/puan';
+import Review from '../../db/models/review';
 var MarkdownIt = require('markdown-it')
 
 export default class Route extends ViewRouter {
@@ -176,6 +177,48 @@ export default class Route extends ViewRouter {
             userMessage = `${this.order.ordernum} subMerchant ONAY KALDIRILDI`
 
             await this.order.save();
+        }
+
+        if (this.req.body.addcomment) {
+            let comment = this.req.body.comment;
+            let puan = Helper.parseFloat(this.req.body.commentpuan);
+            let review = await Review.findOne({
+                where: {
+                    userId: this.order.userId,
+                    type: 'order',
+                    ref1: this.order.id
+                }
+            })
+            if (review == null) {
+                review = new Review();
+                review.userId = this.order.userId;
+                review.type = 'order';
+                review.ref1 = this.order.id;
+                review.ref2 = this.order.butcherid,
+                review.itemDate = this.order.creationDate;
+                review.ref2Text = this.order.butcher.name;
+                review.ref2slug = this.order.butcher.slug;
+                review.content = comment;
+                review.level1Id = this.order.areaLevel1Id;
+                review.level2Id = this.order.areaLevel2Id;
+                review.level3Id = this.order.areaLevel3Id;
+                review.level1Text = this.order.areaLevel1Text;
+                review.level2Text = this.order.areaLevel2Text;
+                review.level3Text = this.order.areaLevel3Text;
+                review.areaSlug = (await AreaModel.findByPk(review.level3Id)).slug;
+                review.userRating1 = puan;
+                let words = this.order.name.match(/\S+/g).map(w=> `${w}`)
+                if (words.length >= 2)
+                    review.displayUser = words[0]  + ' ' + words[1] + '.';
+                else  review.displayUser = words[0]  + '.'
+
+            } else {
+                review.content = comment;
+                review.userRating1 = puan;
+            }
+
+            await review.save();
+            userMessage = "Yorum eklendi"
         }
 
 

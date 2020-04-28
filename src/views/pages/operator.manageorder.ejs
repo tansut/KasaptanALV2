@@ -53,6 +53,20 @@
 
      </div>
 
+     <div>
+       <textarea name="comment" id="comment" cols="30" rows="10"></textarea>
+       <select name="commentpuan" id="commentpuan">
+        <option value="3.0">3.0</option>
+        <option value="3.5">3.5</option>
+        <option value="4.0">4.0</option>
+        <option value="4.5">4.5</option>        
+        <option value="5.0" selected>5.0</option>
+
+       </select>
+       <button name="addcomment" value="true" class="btn btn-primary btn-sm">Yorum Yaz</button>
+
+     </div>
+
      <div class="alert alert-info">
       <div>
         PaymentId: <%=order.paymentId%> 
