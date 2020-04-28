@@ -209,7 +209,7 @@ export default class Route extends ViewRouter {
                 review.userRating1 = puan;
                 let words = this.order.name.match(/\S+/g).map(w=> `${w}`)
                 if (words.length >= 2)
-                    review.displayUser = words[0]  + ' ' + words[1] + '.';
+                    review.displayUser = words[0]  + ' ' + words[1][0] + '.';
                 else  review.displayUser = words[0]  + '.'
 
             } else {
