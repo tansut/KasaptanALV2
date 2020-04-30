@@ -87,8 +87,9 @@
 
 
         <% var viewCats = ['reyon', 'list'] %>
-        <% viewCats.forEach(cat => { %>
         <div class="row justify-content-center">
+        <% viewCats.forEach(cat => { %>
+       
           <% var reyonlar = __categories.filter(p=>p.type.includes(cat) && p.status == 'active') %>
 
           <% for(var c=0; c< reyonlar.length; c++) {%>
@@ -107,8 +108,9 @@
 
           </div>
           <%}%>
-        </div>
+       
               <%})%>
+            </div>
 
 
 
