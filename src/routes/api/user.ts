@@ -52,9 +52,9 @@ export default class UserRoute extends ApiRouter {
 
     cleanSMS(sms: string) {
         sms = sms || "";
-        return  sms.match(/\S+/g)[0]
-
+        return  sms.match(/\S+/g)[0].toLowerCase();
     }
+    
     @Auth.Anonymous()
     async verifysignupRoute() {
         

@@ -114,7 +114,7 @@
                  </div> 
               
 
-              <% } else if (shopcard.getShippingCost(bi) > 0) { %>
+              <% } else if ((shopcard.getShippingCost(bi) > 0) && (shipment.dispatcher.totalForFree > 0)) { %>
                 <div class="alert alert-info mx-4 mb-4" v-if="card && card.shipment['<%=bi%>'].howTo == 'ship'">
                   <p class="font-size-sm">
                   Alışveriş toplamınız <%- include('./_partial/currency.ejs', {value: shopcard.butchers[bi].subTotal}) %> olarak gözüküyor.

@@ -264,7 +264,7 @@
                               <% } if (d.fee == 0.00) { %>
                               <span>Ücretsiz Gönderim</span>
                               <%} else if (d.fee > 0.00 && d.totalForFree == 0.00) { %>
-                              <span><%- include('./_partial/currency.ejs', {value: d.totalForFree}) %> gönderim ücreti</span>
+                              <span><%- include('./_partial/currency.ejs', {value: d.fee}) %> gönderim ücreti</span>
                               <%} else if (d.fee > 0.00) { %>
                               <span><%- include('./_partial/currency.ejs', {value: d.totalForFree}) %> ve üzeri ücretsiz gönderim,
                                 altı siparişlerde <%- include('./_partial/currency.ejs', {value: d.fee}) %> gönderim ücreti.</span>
