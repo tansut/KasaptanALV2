@@ -7,6 +7,11 @@ import ButcherProduct from './butcherproduct';
 import { OrderItem, Order } from './order';
 import { PreferredAddress } from './user';
 
+export enum DispatcherSelection {    
+    full = 'tam',
+    listOnly = 'sadece liste'
+}
+
 @Table({
     tableName: "Dispatchers",
     indexes: [{
@@ -23,6 +28,7 @@ import { PreferredAddress } from './user';
         fields: ['type', 'typeid']
     }]
 })
+
 class Dispatcher extends BaseModel<Dispatcher> {
 
     @ForeignKey(() => Area)
@@ -108,6 +114,12 @@ class Dispatcher extends BaseModel<Dispatcher> {
         allowNull: true,
     })
     note: string;
+
+    @Column({
+        allowNull: false,
+        defaultValue: 'tam'
+    })
+    selection: string;    
 
     @Column({
         allowNull: false,

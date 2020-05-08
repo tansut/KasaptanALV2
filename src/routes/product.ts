@@ -19,7 +19,7 @@ import ProductApi from './api/product';
 import DispatcherApi from './api/dispatcher';
 import Area from '../db/models/area';
 import ButcherProduct from '../db/models/butcherproduct';
-import Dispatcher from '../db/models/dispatcher';
+import Dispatcher, { DispatcherSelection } from '../db/models/dispatcher';
 import { PreferredAddress } from '../db/models/user';
 var MarkdownIt = require('markdown-it')
 import * as _ from "lodash";
@@ -61,16 +61,18 @@ export default class Route extends ViewRouter {
     }
 
     async tryBestFromOrders(serving: Dispatcher[]) {
-        serving.forEach(s => s.lastorderitemid = s.lastorderitemid || 0);
-        let orderedByDate = _.orderBy(serving, 'lastorderitemid', 'asc');
+        let fullServing = serving.filter(s=>s.selection == DispatcherSelection.full);
+        if (fullServing.length == 0) fullServing = serving;
+        fullServing.forEach(s => s.lastorderitemid = s.lastorderitemid || 0);
+        let orderedByDate = _.orderBy(fullServing, 'lastorderitemid', 'asc');
         let orderedByKasapCard = _.orderBy(orderedByDate, 'butcher.enablePuan', 'desc');
         return orderedByKasapCard.length ? orderedByKasapCard[0] : null;
     }
 
-    tryBestAsRandom(serving: Dispatcher[], others: Dispatcher[] = []) {
-        let res = (serving.length > 0 ? serving[0] : null);
-        res = res || (others.length > 0 ? others[0] : null);
-
+    tryBestAsRandom(serving: Dispatcher[]) {
+        let fullServing = serving.filter(s=>s.selection == DispatcherSelection.full);
+        if (fullServing.length == 0) fullServing = serving;
+        let res = (fullServing.length > 0 ? fullServing[0] : null);
         return res;
     }
 

@@ -385,6 +385,12 @@
                                                     <input type="text" name="free<%=d.id%>" value="<%=d.totalForFree%>">
 
                                                 </td>
+                                                <td>
+                                                    <select name="dsel<%=d.id%>">
+                                                        <option <%= d.selection == 'tam'? 'selected':'' %> value="tam">Tam</option>
+                                                        <option <%= d.selection == 'sadece liste'? 'selected':'' %> value="sadece liste">sadece liste</option>
+                                                    </select>
+                                                </td>
 
                                                 <td>
 

@@ -147,6 +147,7 @@ class KasaptanAlApp {
 
         if (config.nodeenv == 'development') {
             this.app.use('/static/resource', express.static(path.join(__dirname, '../public')));            
+            this.app.use('/static', express.static(path.join(__dirname, '../public')));            
         } else {
 
         }
