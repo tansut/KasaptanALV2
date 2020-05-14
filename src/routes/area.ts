@@ -9,6 +9,7 @@ import Helper from '../lib/helper';
 import Area from '../db/models/area';
 import { PreferredAddress } from '../db/models/user';
 import Dispatcher from '../db/models/dispatcher';
+import * as _ from "lodash";
 
 import DispatcherApi from './api/dispatcher';
 
@@ -22,9 +23,9 @@ export default class Route extends ViewRouter {
     async checkSave(area: AreaModel) {
         if (this.req.query.save) {
             var adr: PreferredAddress = {
-                level1Id:null,
-                level2Id:null,
-                level3Id:null
+                level1Id: null,
+                level2Id: null,
+                level3Id: null
             };
             switch (area.level) {
                 case 3: {
@@ -35,17 +36,18 @@ export default class Route extends ViewRouter {
                     break;
                 }
             }
-        
-        }        
+
+        }
     }
 
     async renderPage(area: AreaModel, butchers: ButcherModel[], subs?: AreaModel[]) {
-        
-        this.res.render('pages/areal1.ejs', this.viewData({ 
-            
-            subs: subs, ellipsis: ellipsis, 
-            pageDescription: `${this.address.display} Kasaplar: En doğal ve lezzetli et ürünleri kasaptanAl.com'da. Şimdi kasaplarımızdan online et siparişi verin, kapınıza gelsin!`, 
-            pageTitle: `${this.address.display} Kasaplar: Online et siparişi`, area: area, butchers: butchers }))
+
+        this.res.render('pages/areal1.ejs', this.viewData({
+
+            subs: subs, ellipsis: ellipsis,
+            pageDescription: `${this.address.display} Kasaplar: En doğal ve lezzetli et ürünleri kasaptanAl.com'da. Şimdi kasaplarımızdan online et siparişi verin, kapınıza gelsin!`,
+            pageTitle: `${this.address.display} Kasaplar: Online et siparişi`, area: area, butchers: butchers
+        }))
     }
 
     @Auth.Anonymous()
@@ -54,11 +56,13 @@ export default class Route extends ViewRouter {
             return this.next();
         }
         let areaSlug = this.req.params.area;
-        let area = await AreaModel.findOne({ where: { slug: areaSlug }, include: [{
-            all:true
-        }] });
+        let area = await AreaModel.findOne({
+            where: { slug: areaSlug }, include: [{
+                all: true
+            }]
+        });
         if (!area) return this.next();
-         this.res.redirect('/' + areaSlug + '-kasap', 301);
+        this.res.redirect('/' + areaSlug + '-kasap', 301);
     }
 
     @Auth.Anonymous()
@@ -69,9 +73,11 @@ export default class Route extends ViewRouter {
         let areas = this.req.params.area.split("-");
         let areaSlug = this.req.params.area;
 
-        let area = await AreaModel.findOne({ where: { slug: areaSlug }, include: [{
-            all:true
-        }] });
+        let area = await AreaModel.findOne({
+            where: { slug: areaSlug }, include: [{
+                all: true
+            }]
+        });
         if (!area) return this.next();
 
         await this.checkSave(area);
@@ -84,7 +90,7 @@ export default class Route extends ViewRouter {
             let where = (<any>{})
             where[field] = area.id;
             where["approved"] = true;
-    
+
             butchers = await ButcherModel.findAll({
                 where: where,
                 order: [["updatedon", "DESC"]],
@@ -95,22 +101,24 @@ export default class Route extends ViewRouter {
         } else {
             let dp = new DispatcherApi(this.constructorParams);
             let dispatchers = await dp.getButchersDispatches(this.address);
-            butchers = dispatchers.map(b=>b.butcher);
+            butchers = dispatchers.map(b => b.butcher);
             if (butchers.length == 0 && area.level == 3) {
                 let parent = area.parent;
                 let address = await parent.getPreferredAddress();
                 dispatchers = await dp.getButchersDispatches(address);
-                butchers = dispatchers.map(b=>b.butcher);
+                butchers = dispatchers.map(b => b.butcher);
+                butchers = _.uniqBy(butchers, 'id');
             } else if (butchers.length == 0 && area.level == 2) {
                 let children = await Area.findAll({
                     attributes: ['id'],
                     where: {
                         parentid: area.id
                     }
-                }).map(a=>a.id)   
+                }).map(a => a.id)
                 dispatchers = await dp.getButchersDispatchesForAll(children);
-                butchers = dispatchers.map(b=>b.butcher);                
-                
+                butchers = dispatchers.map(b => b.butcher);
+                butchers = _.uniqBy(butchers, 'id');
+
 
             }
         }
@@ -120,15 +128,15 @@ export default class Route extends ViewRouter {
             return;
         }
 
-            if (area.level != 3) {
-                return Area.findAll({
-                    where: {
-                        parentid: area.id,
-                        status: 'active'
-                    }
-                }).then(subs => this.renderPage(area, butchers, subs))
-            }
-            else return this.renderPage(area, butchers)        
+        if (area.level != 3) {
+            return Area.findAll({
+                where: {
+                    parentid: area.id,
+                    status: 'active'
+                }
+            }).then(subs => this.renderPage(area, butchers, subs))
+        }
+        else return this.renderPage(area, butchers)
     }
 
     @Auth.Anonymous()
@@ -153,13 +161,13 @@ export default class Route extends ViewRouter {
             order: [['displayOrder', 'desc']]
         })
 
-        this.res.render('pages/butchers.ejs', this.viewData({ 
-            
-            subs: subs, ellipsis: ellipsis, 
-            pageDescription: `Online Kasaplar: En doğal ve lezzetli et ürünleri kasaptanAl.com'da. Şimdi kasaplarımızdan online et siparişi verin, kapınıza gelsin!`, 
+        this.res.render('pages/butchers.ejs', this.viewData({
+
+            subs: subs, ellipsis: ellipsis,
+            pageDescription: `Online Kasaplar: En doğal ve lezzetli et ürünleri kasaptanAl.com'da. Şimdi kasaplarımızdan online et siparişi verin, kapınıza gelsin!`,
             pageTitle: 'Online Kasaplar: Online et siparişi verebileceğiniz kazaplarımız',
-            butchers: butchers 
-            }))
+            butchers: butchers
+        }))
     }
 
     static SetRoutes(router: express.Router) {

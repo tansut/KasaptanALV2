@@ -5,6 +5,7 @@ import Product from './product';
 import Category from './category';
 import Butcher from './butcher';
 import ProductCategory from './productcategory';
+import { PriceView } from '../../models/common';
 
 @Table({
     tableName: "ButcherProducts",
@@ -14,6 +15,8 @@ import ProductCategory from './productcategory';
         unique: true
     }]
 })
+
+
 
 class ButcherProduct extends BaseModel<ButcherProduct> {
     @ForeignKey(() => Butcher)
@@ -27,6 +30,33 @@ class ButcherProduct extends BaseModel<ButcherProduct> {
 
     @BelongsTo(() => Product, "productid")
     product: Product;
+
+
+    get priceView(): PriceView {
+        if (this.kgPrice > 0) {
+            return {
+                price: this.kgPrice,
+                unit: 'kg',
+                unitTitle: 'KG'
+            }
+        } else {
+            let units = ['unit1', 'unit2', 'unit3'];
+            for(let i = 0; i< units.length;i++) {
+                let done = this[`${units[i]}enabled`] && this[`${units[i]}price`] > 0;
+                if (done) return {
+                    unit: this.product[`${units[i]}`],
+                    unitTitle: this.product[`${units[i]}title`],
+                    price: this[`${units[i]}price`]
+                }
+            }
+
+            return {
+                unit:'',
+                price: 0.00,
+                unitTitle:''
+            }
+        }
+    }
 
     @Column({
         allowNull: true,

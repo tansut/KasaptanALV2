@@ -7,6 +7,8 @@ import ButcherProduct from './butcherproduct';
 import Resource from './resource';
 import { Op, QueryTypes } from 'sequelize';
 
+
+
 @Table({
     tableName: "Products",
     indexes: [{
@@ -16,6 +18,8 @@ import { Op, QueryTypes } from 'sequelize';
     },
     { type: 'FULLTEXT', name: 'product_fts', fields: ['name', 'shortdesc', 'slug', 'keywords'] }]
 })
+
+
 
 class Product extends BaseModel<Product> {
     @Column({

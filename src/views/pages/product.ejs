@@ -133,31 +133,9 @@
               
               </div>
 
-                <!-- <% chunks.forEach((group, i) => { %>
-                <div class="row justify-content-center">
-                  <% group.forEach((resource, i) => { %>
-
-                  
-                    <%if (!nonDisplayedResources.find(n=>n == resource)) {%>
-
-                      <div class="col-4">
-                      <%- include('./_partial/product-resource-view.ejs', {first: false, note: false, resource: resource}) %>
-                    </div>
-                    <%}%>
-                                         
-                                        
-                                        <%})%>
-
-
-                  </div>
-                  <%})%> -->
+              
                 </div>
-                <div class="">
-
-
-
-                </div>
-            
+ 
 
 
               </div>
@@ -310,11 +288,7 @@
 
                      
                        
-                          <!-- <a class="align-self-center mb-2  text-dark font-size-xs" href="#tarifVideos"> <i
-                            class="czi-arrow-right font-size-xs align-middle"></i></a>     -->
                         </div>
-                          <!-- <label class=""><span
-                            class="badge badge-primary font-size-xs mr-2">Bu yemekler için uygun:</span><span class=""></span></label> -->
                             <div class="mb-2">
                             <% bilgiResources.forEach(t=> { %>
                             
@@ -390,13 +364,6 @@
                     <div>
 
 
-                      <!-- <div v-if="product && product.notePlaceholder">
-                        <h5 class="h6 mb-2">Şu şekilde hazırlıyoruz</h5>
-
-                          <p  class="font-size-sm">
-                            {{product && product.notePlaceholder }} 
-                            </p>
-                      </div> -->
                      
                      <div class="">
 
@@ -473,30 +440,7 @@
 
                                <%}%>
 
-                              <% if (view.butcher && __req.prefAddr) { %>
-                                <div class="mb-3  ">
-                                  <div class="mb-3">
-                  
-                        
-        
-                                     <!-- <p class="mt-2 text-center text-muted font-size-sm">
-                                      Satın almak için alışveriş sepetinize ekleyebilirsiniz.
-        
-                                      <%if (false) {%>
-                                        <span>
-                                          veya <a class="alert-link" href="javascript:showOtherButchers()">bir başka kasap</a>  seçebilirsiniz.
-                                        </span>
-                                        <%}%>
-                                    </p>  -->
-                                    
-                            
-                                   
-        
-                            
-                                  </div>
-                                </div>
-        
-                              <%}%>
+              
 
 
                               <div class="mt-2 d-flex align-items-center justify-content-center mb-1">
@@ -970,13 +914,15 @@ function gotoComments() {
                    })
                   }
 
-                  <% if (!view.butcher && __req.prefAddr && __req.query.action == 'add2sc') {%>
+                  <% if (!view.butcher && __req.prefAddr) {%>
 
                
                               
 $(document).ready(function() {
-  $('.productnotavailable-msg').html("<%=__req.prefAddr.level1Text%>/<%=__req.prefAddr.level3Text%> için bu ürün ulaşılabilir değil.")
+  $('.productnotavailable-msg').html("<%=__req.prefAddr.level1Text%>/<%=__req.prefAddr.level3Text%> semtine bu ürünü sağlayabilen kasabımız bulunmamaktadır.")
+  <% if (__req.query.action == 'add2sc') { %>
   $('#shopcard-productnotavailable-toast').toast('show');                   
+  <% } %>
 })
 
 

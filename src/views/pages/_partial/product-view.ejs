@@ -24,9 +24,9 @@
         </h3>
 
         <% if (typeof(butcherProduct) != 'undefined') { %>
-            <% var price = butcherProduct.kgPrice || butcherProduct.unit1price, unit = butcherProduct.kgPrice > 0 ? 'KG': butcherProduct.product.unit1title  %>
+            <% var view = butcherProduct.priceView;  %>
             <div class="d-flex justify-content-center">
-                <div class=" text-accent font-size-sm"><%- include('./currency.ejs', {value: price, unit: unit}) %></div>
+                <div class=" text-accent font-size-sm"><%- include('./currency.ejs', {value: view.price, unit: view.unitTitle}) %></div>
              
               </div>
             <span>

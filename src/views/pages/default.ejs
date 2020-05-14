@@ -43,7 +43,7 @@
                 <div
                 class=" pt-4 pb-md-4 text-center ">
                 
-                <h1 class="h2 line-h-extra  font-weight-light  ">güvenilir kasaplardan <br /> <b>doğal, online, kârlı</b> <br />et
+                <h1 class="h2 line-h-extra  font-weight-light  ">en iyi kasaplardan <br /> <b>doğal, online, kârlı</b> <br />et
                     siparişi</h1>
                 <a class="btn btn-primary  "
                     href="/kasap-urunleri">Alışverişe Başla<i
@@ -109,13 +109,9 @@
         <%- include('./_partial/category-slider', { header: false, titles: false, viewCats: ['reyon', 'list'], title: 'Tüm Ürünlerimiz', allUrl: '/kasap-urunleri' }); %>      
       </div> -->
 
-      <div class="container  ">
-  
+
+
        
-            <%-include('./_partial/fact-counter.ejs', {stats: controller.stats}) %>
-        
-       
-                  </div>
 
       <div class="container mb-3">
           <div class="border bg-secondary">
@@ -129,11 +125,16 @@
                 
                 <div class="col-sm-8 ">
                     <h3 class="h4 pl-3 pt-3 h3">
-                        Kasap Kart&trade; ile kârlı kasap alışverişi
+                        Kolay ve pratik online kasap siparişi
+                        
                     </h3>
                     <p class="pl-3 lead">
-                        Düzenli et alışverişlerinizi kasaptanAl.com ile yapın, puan kazanın.
-                Puanlarınızı sonraki alışverişlerinizde kullanın. 
+                      Semtinize hizmet veren güvenilir kasapları bir arada görün, istediğiniz kasaptan et siparişi verin, kapınıza gelsin. 
+
+                    
+                    </p>
+                    <p class="pl-3 lead">
+                        Kasap Kart&trade; ile puan kazanın, kârlı çıkın.
                     </p>
                     <div class="pl-3 mb-3 text-lg-left text-center ">
                         <a class="btn btn-primary "
@@ -150,8 +151,16 @@
         
       </div>
 
+      <div class="container  ">
+  
+       
+        <%-include('./_partial/fact-counter.ejs', {stats: controller.stats}) %>
+    
+   
+              </div>
+
       <div class="container mb-3">
-        <%- include('./_partial/category-products-slider', {category: 'populer-etler', limit: 12, reverse: true, img: 'img/category/premium.jpg'}); %>
+        <%- include('./_partial/category-products-slider', {category: 'populer-etler', limit: 8, reverse: true, img: 'img/category/premium.jpg'}); %>
     </div>
 
     <section class="container mb-3">
