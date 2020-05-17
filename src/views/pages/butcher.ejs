@@ -44,9 +44,9 @@
 
 
 
-  <div class="bg-primary pt-4">
+  <div class="bg-accent pt-3">
     <div class="text-center container ">
-      <h1 class="h3 text-light"><%= butcher.name %></h1>
+ 
       <% if (__req.user && __req.user.hasRole('admin')) {%>
       <a target="_blank" class=" btn btn-dark btn-sm" href="/pages/admin/butcher/<%=butcher.slug%>">Düzenle</a>
       <%}%>
@@ -55,26 +55,17 @@
       <a target="_blank" class=" btn btn-dark btn-sm" href="/kasapsayfam">Kasap Sayfam</a>
       <%}%>
 
-      <h2 class="lead text-light h4"><%= butcher.areaLevel3.name %>/<%= butcher.areaLevel1.name %></h2>
-      <% var puanData = butcher.getPuanData() %>
-      <% if (puanData) { %>
-        <div class="mb-3  text-center text-light">
-          <h4 class="h5 text-light">Kasap Kart&trade; İş Ortağı</h4>
 
-        <%- include('./_partial/puan-data-view.ejs', {puan: puanData}) %>
-        </div>
-
-      <% } %>
       <% var butcherVideo = images.find(br=>br.type == 'butcher-videos') %>
 
       <% if (butcherVideo) { %>
 
-      <button onclick="javascript:window.App.openSlider(<%=butcherVideo.id%>)" type="button"
-        class="btn btn btn-dark mb-4"><i class="czi-video mr-2"> </i>Yakından Tanıyın</button>
+      <!-- <button onclick="javascript:window.App.openSlider(<%=butcherVideo.id%>)" type="button"
+        class="btn btn btn-dark mb-4"><i class="czi-video mr-2"> </i>Yakından Tanıyın</button> -->
 
       <% } else if(butcher.videoInstagramStr) { %>
-      <button onclick="$('#videomodal').modal().show()" type="button" class="btn btn btn-dark mb-4"><i
-          class="czi-video mr-2"> </i>Yakından Tanıyın</button>
+      <!-- <button onclick="$('#videomodal').modal().show()" type="button" class="btn btn btn-dark mb-4"><i
+          class="czi-video mr-2"> </i>Yakından Tanıyın</button> -->
       <% } %>
 
 
@@ -90,59 +81,94 @@
 
     </div>
 
-<div class="bg-dark pt-3">
+    <div class=" container d-flex flex-wrap flex-sm-nowrap justify-content-center justify-content-sm-between align-items-center pt-2">
+      <div class="media media-ie-fix align-items-center pb-3">
+        <div class="img-thumbnail rounded-circle position-relative" style="width: 6.375rem;">
+          
+
+          <img class="rounded-circle"
+          src="<%= `${__req.helper.imgUrl('butcher-google-photos', butcher.slug)}` %>" alt="<%=butcher.name%>">
+        
+        </div>
+        <div class="media-body pl-3">
+          <h1 class="text-light font-size-lg mb-0"><%=butcher.name%></h1><span class="d-block text-light font-size-ms opacity-60 py-1">
+            <%= butcher.areaLevel3.name %>/<%= butcher.areaLevel1.name %>
 
 
-  <% if (butcher.getBadgeList().length > 0 ) { %>
-    <div class="butcher-badges  mb-3 text-center">
+          </span>
+          <% if (butcher.getBadgeList().length > 0 ) { %>
+            <div class="butcher-badges  mb-3 text-center">
+        
+            
+          <% butcher.getBadgeList().forEach(b=> {  %>
+            <span class="badge badge-success font-size-xs" data-toggle="tooltip" data-original-title="<%=b.tip%>"  title="">
+              <i class="<%=b.icon %> mr-1"></i>
+              <%=b.name%>
+        
+            </span>
+          <% }) %>
+        </div>
+          <% } %>
 
+          
+        </div>
+      </div>
+      
+      <div class="d-flex">
     
-  <% butcher.getBadgeList().forEach(b=> {  %>
-    <span class="badge badge-primary font-size-xs" data-toggle="tooltip" data-original-title="<%=b.tip%>"  title="">
-      <i class="<%=b.icon %> mr-1"></i>
-      <%=b.name%>
+        
+          <div class="container row">
+            <div class="col-sm-6">
+              <div class="font-size-sm text-light mb-2">Ürün Memnuniyeti</div>
+              <div class="progress mb-3">
+                <div class="progress-bar font-weight-medium bg-info" role="progressbar" style="width: <%=butcher.userRatingAsPerc %>%" aria-valuenow="<%=butcher.userRatingAsPerc %>" aria-valuemin="0" aria-valuemax="100">
+                  <%=butcher.userRatingAsPerc %>%
+                </div>  
+              </div>
+            </div>
+        
+        
+        <div class="col-sm-6">
+          <div class="font-size-sm text-light mb-2">Teslimat Başarısı</div>
+        
+          <div class="progress mb-3">
+            <div class="progress-bar font-weight-medium bg-info" role="progressbar" style="width: <%=butcher.shipRatingAsPerc %>%" aria-valuenow="<%=butcher.shipRatingAsPerc %>" aria-valuemin="0" aria-valuemax="100">
+              <%=butcher.shipRatingAsPerc %>%
+            </div>  
+          </div>
+        </div>
+        
+          </div>
+       
+      </div>
+    </div>
 
-    </span>
-  <% }) %>
-</div>
+<div class=" pt-3">
+
+
+
+
+
+  <% var puanData = butcher.getPuanData() %>
+  <% if (puanData) { %>
+    <div class="mb-3  text-center text-light">
+      <p class="lead text-light">Kasap Kart&trade; İş Ortağı</p>
+
+    <%- include('./_partial/puan-data-view.ejs', {puan: puanData}) %>
+    </div>
+
   <% } %>
 
 
 
-
-<div class="d-flex justify-content-center">
-  <div class="container row w-50 justify-content-center">
-    <div class="col-sm-6">
-      <div class="font-size-sm text-light mb-2">Ürün Memnuniyeti</div>
-      <div class="progress mb-3">
-        <div class="progress-bar font-weight-medium bg-info" role="progressbar" style="width: <%=butcher.userRatingAsPerc %>%" aria-valuenow="<%=butcher.userRatingAsPerc %>" aria-valuemin="0" aria-valuemax="100">
-          <%=butcher.userRatingAsPerc %>%
-        </div>  
-      </div>
-    </div>
-
-
-<div class="col-sm-6">
-  <div class="font-size-sm text-light mb-2">Teslimat Başarısı</div>
-
-  <div class="progress mb-3">
-    <div class="progress-bar font-weight-medium bg-info" role="progressbar" style="width: <%=butcher.shipRatingAsPerc %>%" aria-valuenow="<%=butcher.shipRatingAsPerc %>" aria-valuemin="0" aria-valuemax="100">
-      <%=butcher.shipRatingAsPerc %>%
-    </div>  
-  </div>
-</div>
-
-  </div>
-</div>
-
-  <div class="table-responsive cz-gallery bg-dark" data-simplebar>
-    <div class="d-flex mx-2 pb-2 ">
+  <div class="table-responsive cz-gallery " data-simplebar>
+    <div class="d-flex ">
       <% for(var i=0; i<images.length; i++) {%>
 
-      <div class="mr-2 ">
-        <div class="item-slider item-slider-sm p-3">
+      <div class="mr-2">
+        <div class="item-slider item-slider-sm">
 
-
+          <div class="card product-card pb-0 card-static item-card">
 
 
           <a data-gtrack="1" data-restype="<%=images[i].type%>" data-resref="<%= butcher.slug %>"
@@ -150,11 +176,11 @@
             class="gallery-item <%= images[i].contentType == 'video-youtube' ? 'video-item':''%>"
             href="<%= `${images[i].fileUrl}`  %>"
             data-sub-html="&lt;h6 class=&quot;font-size-sm text-light&quot;&gt;<%= images[i].title %>&lt;/h6&gt;"><img
-              style="width: 8rem; height: auto;" class="" src="<%= `${images[i].thumbnailFileUrl}` %>" /><span
+              style="" class="" src="<%= `${images[i].thumbnailFileUrl}` %>" /><span
               class="gallery-item-caption"><%= images[i].title %></span></a>
 
 
-
+          </div>
 
 
         </div>
@@ -374,7 +400,7 @@
 
             <section class="col-md-9 pb-md-4  ml-md-0 pl-md-0 order-2 order-md-2">
 
-              <nav id="products" class="navbar navbar-expand-md navbar-dark bg-dark">
+              <nav id="products" class="navbar navbar-expand-md navbar-light bg-light font-weight-medium">
                 <a class="navbar-brand d-lg-none d-block" href="#">Ürünler</a>
                 <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarCollapse" aria-controls="navbarCollapse" aria-expanded="false" aria-label="Toggle navigation">
                   <span class="navbar-toggler-icon"></span>

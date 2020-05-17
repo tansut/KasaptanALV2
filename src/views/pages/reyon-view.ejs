@@ -27,14 +27,66 @@
   </div>
   <% if (!__req.prefAddr ) { %>
 
-    <div class="alert alert-primary alert-with-icon rounded-0 mb-0 border-0" role="alert">
-      <div class="alert-icon-box">
-        <i class="alert-icon czi-bell"></i>
-      </div>
+
+
+
+
+    <div class="alert alert-secondary rounded-0 mb-0 border-0" role="alert">
+
       <button type="button" class="close u-alert-close--light" data-dismiss="alert" aria-label="Close">
-        <span class="g-color-white" aria-hidden="true">×</span>
+        <span class="bg-color-white" aria-hidden="true">×</span>
         </button>
-        Sitemizden alışveriş yapabilmek için önce semtinizi seçin.
+        <section class="container  pt-3">
+                
+          <h2 class="h5 text-center mb-grid-gutter">Online Sipariş Süreci</h2>
+       
+              
+          <div class="row no-gutters  ">
+              <div class="col-xl-4 col-lg-12 col-md-4  ">
+                  <div class="py-3">
+                    <div class="d-flex align-items-center mx-auto py-3 px-3" style="max-width: 362px;">
+                      <div class="display-2 font-weight-normal border-color mr-4">1</div>
+                      <div class="pl-2">
+                          <h4 class="h6">Semtinizi Seçin
+                              </h4>
+                        <p class="font-size-sm mb-3 pt-1">İl, ilçe ve semt seçimi yaparak teslimat adresinizi belirtin.</p>
+                      </div>
+                    </div>
+                    <hr class="d-md-none d-lg-block d-xl-none">
+                  </div>
+                </div>   
+      
+            <div class="col-xl-4 col-lg-12 col-md-4  ">
+              <div class="py-3">
+                <div class="d-flex align-items-center mx-auto py-3 px-3" style="max-width: 362px;">
+                  <div class="display-2 font-weight-normal border-color mr-4">2</div>
+                  <div class="pl-2">
+                      <h4 class="h6">Ürünü Belirleyin</h4>
+                    <p class="font-size-sm mb-3 pt-1">%100 doğal, %100 sağlıklı ürünleri keşfedin.</p>
+                  </div>
+                </div>
+                <hr class="d-md-none d-lg-block d-xl-none">
+              </div>
+            </div>
+            
+            <div class="col-xl-4 col-lg-12 col-md-4">
+              <div class="py-3">
+                <div class="d-flex align-items-center mx-auto py-3 px-3" style="max-width: 362px;">
+                  <div class="display-2 font-weight-normal border-color mr-4">3</div>
+                  <div class="pl-2">
+                      <h4 class="h6">Kasabınızı Seçin</h4>
+                    <p class="font-size-sm mb-3 pt-1">Semtinize hizmet veren kasapları ve fiyatlarını görün.</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+            
+          </div>
+      
+      
+      
+        </section>
+    
     
       
       <hr class="mb-3 mt-3">
@@ -43,6 +95,7 @@
       </div>
       
     </div>
+
 
     <% }  %>
 
