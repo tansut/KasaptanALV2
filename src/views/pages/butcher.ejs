@@ -97,7 +97,7 @@
 
           </span>
           <% if (butcher.getBadgeList().length > 0 ) { %>
-            <div class="butcher-badges  mb-3 text-center">
+            <div class="butcher-badges  mb-3">
         
             
           <% butcher.getBadgeList().forEach(b=> {  %>
@@ -143,7 +143,7 @@
       </div>
     </div>
 
-<div class=" pt-3">
+<div class="">
 
 
 
@@ -151,7 +151,7 @@
 
   <% var puanData = butcher.getPuanData() %>
   <% if (puanData) { %>
-    <div class="mb-3  text-center text-light">
+    <div class="mb-3 p-3  text-center text-light">
       <p class="lead text-light">Kasap Kart&trade; İş Ortağı</p>
 
     <%- include('./_partial/puan-data-view.ejs', {puan: puanData}) %>

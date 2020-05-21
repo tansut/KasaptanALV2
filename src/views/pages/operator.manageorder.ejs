@@ -179,7 +179,7 @@
             </li>
             <li><span class="text-muted">Ödeme:&nbsp;</span><%= order.paymentTypeText%> </li>
           </ul>
-          <% if (order.shipLocation && order.shipLocation.coordinates) { %>
+          <% if (order.shipLocation && order.shipLocation.coordinates && order.shipLocationAccuracy < 1000) { %>
 
 
             <div class="">
