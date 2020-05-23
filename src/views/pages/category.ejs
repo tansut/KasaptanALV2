@@ -65,7 +65,7 @@
         </div>
         <input data-search="product" id="page-searchbox" class="form-control searchBox prepended-form-control"
           data-noresults-text="Maalesef bulamadık." autocomplete="off" type="text"
-          placeholder="<%=controller.category.name %> kategorisinde arayın">
+          placeholder="<%=controller.category.searchhint ? 'örneğin ' + controller.category.searchhint: 'ürünler içerisinde arayın' %>">
         <div>
 
         </div>

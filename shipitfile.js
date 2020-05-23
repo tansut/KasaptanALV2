@@ -36,6 +36,12 @@ module.exports = function (shipit) {
         // await shipit.remote();
     });
 
+    shipit.blTask('aws', async function () {
+
+        await shipit.remote("cd " + this.currentPath + "; ./node_modules/gulp/bin/gulp.js aws.deploy");
+
+    });    
+
 
     shipit.blTask('restart', async function () {
         var self = this
@@ -61,6 +67,6 @@ module.exports = function (shipit) {
     });
 
     shipit.on('published', function () {
-        shipit.start('install', 'restart');
+        shipit.start('install', 'restart', 'aws');
     });
 };

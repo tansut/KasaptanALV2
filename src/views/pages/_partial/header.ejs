@@ -12,7 +12,13 @@
 
 
 <% var homeUrl = (config.nodeenv == 'production') ? '/': '/' %>
-
+<%
+  var searchHints = __categories.filter(p=>p.searchhint).map(c=>c.searchhint) 
+  var index = __helper.getRandomInt(searchHints.length);
+  var searchHint = 'arayın: ' + (searchHints[index] || 'haşlamalık')
+  
+  %>
+%>
 
 
 <header class="box-shadow-sm d-print-none">
@@ -81,7 +87,7 @@
 
     </div>
   </div>
-  <!-- Remove "navbar-sticky" class to make navigation bar scrollable with the page.-->
+  
   <div class=" bg-primary-darkest">
     <div class="navbar navbar-expand-lg navbar-dark">
       <div class="container">
@@ -103,7 +109,7 @@
             </span>
           </div>
           <input class="form-control searchBox prepended-form-control" data-noresults-text="Maalesef bulamadık."
-            autocomplete="off" type="text" placeholder="arayın: örneğin mangallık et">
+            autocomplete="off" type="text" placeholder="<%=searchHint%>">
          
         </div>
         <div class="navbar-toolbar d-flex flex-shrink-0 align-items-center">
@@ -144,7 +150,7 @@
             </span>
           </div>
           <input class="form-control searchBox prepended-form-control" data-noresults-text="Maalesef bulamadık."
-            autocomplete="off" type="text" placeholder="arayın: örneğin mangallık et">
+            autocomplete="off" type="text" placeholder="<%=searchHint%>">
         </div>
 
         <div class="collapse navbar-collapse" id="navbarCollapse3">

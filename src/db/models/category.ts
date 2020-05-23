@@ -25,6 +25,11 @@ class Category extends BaseModel<Category> {
     })
     type: string;
 
+    @Column({
+        allowNull: true
+    })
+    searchhint: string;    
+
     @Column
     keywords: string;    
 

@@ -53,8 +53,10 @@
    <%} else { %>
     <div id="sc" class="table-responsive" data-simplebar>
         <div class="d-flex pb-2">
+            <% var allAdded = false; %>
             <% viewCats.forEach(cat => { %>
             <% var reyonlar = (__categories.filter(p=>p.type == cat && p.status == 'active')) %>
+            
             <% for(var c=0; c< reyonlar.length; c++) {%>
             <div class="mr-3">
 
@@ -62,7 +64,10 @@
                     <%subUrl = reyonlar[c].type == 'resource' ? 'et-yemekleri/':'' %>
                     <div class="">
 
-                        
+                        <%if (!allAdded) { %>
+                            <%allAdded=true%>
+                    
+                        <%}%>
                     
                         <a  class="text-center btn rounded-0 btn-secondary  text-nowrap" href="<%= `/${subUrl}${reyonlar[c].slug}#items`%>">
                             
