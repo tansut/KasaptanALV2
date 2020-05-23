@@ -68,14 +68,15 @@ $(document).ajaxComplete(function(){
     },
     events: {
 
-      search: function (qry, callback) {
+      search: function (qry, callback,el) {
               // let's do a custom ajax call
+              debugger;
               $('.notsearching').addClass('d-none');
               $('.searching').removeClass('d-none');
 							$.ajax(
 								'/api/v1/fts',
 								{
-									data: { 'q': qry}
+									data: { t: $(el).data('search'), c: $(el).data('category'), 'q': qry}
 								}
 							).done(function (res) {
                 $('.searching').addClass('d-none');

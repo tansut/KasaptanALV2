@@ -3,11 +3,6 @@
 
 <head>
     <% include ./_partial/head %>
-
-    <style>
-
-    </style>
-
 </head>
 
 <body>
@@ -19,6 +14,10 @@
 
     <% var reyonlar = __categories.filter(p=>p.type.includes('reyon')).slice(0,4) %>
 
+
+    <div class=" ">
+        <%- include('./_partial/category-slider', { header: false, titles: false, viewCats: ['reyon', 'list'], title: 'Tüm Ürünlerimiz', allUrl: '/kasap-urunleri' }); %>      
+      </div>  
 
     <section class="bg-faded-primary pt-2">
         <div class="container mb-3">
@@ -42,7 +41,7 @@
                 <% } %>
            
                  <div class="pt-4 pb-md-4 text-center">
-                <span class="h2 d-block font-weight-light pb-1 ">kasaptanAl.com</span>
+                <span class="h2 d-block font-weight-light pb-1 ">KasaptanAl.com</span>
                 <h2 class="h1 d-block display-4  ">popüler ürünler</h2>
                 <span class="h5 d-block  font-weight-light pb-3 ">müşterilerimizin tercihleri</span>
 
@@ -52,9 +51,9 @@
             </div> 
 
             <div class="pt-4 pb-md-4 text-center">
-                <span class="h2 d-block font-weight-light pb-1 ">kasaptanAl.com</span>
+                <span class="h2 d-block font-weight-light pb-1 ">KasaptanAl.com</span>
                 <h2 class="h1 d-block display-4  ">mangallık etler</h2>
-                <span class="h5 d-block  font-weight-light pb-3 ">lezzetli ve eğlenceli yemek keyfi</span>
+                <span class="h5 d-block  font-weight-light pb-3 ">lezzetli ve eğlenceli</span>
 
                 <a class="btn btn-primary "
                     href="/barbeku-dokum-tava-etleri">Göz At<i
@@ -62,7 +61,7 @@
             </div> 
 
             <div class="pt-4 pb-md-4 text-center">
-                <span class="h2 d-block font-weight-light pb-1 ">kasaptanAl.com</span>
+                <span class="h2 d-block font-weight-light pb-1 ">KasaptanAl.com</span>
                 <h2 class="h1 d-block display-4  ">beyaz et</h2>
                 <span class="h5 d-block  font-weight-light pb-3 ">doğal ve sağlıklı ürünler</span>
 
@@ -72,7 +71,7 @@
             </div>             
 
             <div class="pt-4 pb-md-4 text-center">
-                <span class="h2 d-block font-weight-light pb-1 ">kasaptanAl.com</span>
+                <span class="h2 d-block font-weight-light pb-1 ">KasaptanAl.com</span>
                 <h2 class="h1 d-block display-4  ">haftanın ürünleri</h2>
                 <span class="h5 d-block  font-weight-light pb-3 ">sizin için seçtiklerimiz</span>
 
@@ -87,8 +86,8 @@
                                
                                 <div
                                     class=" pt-4 pb-md-4 text-center ">
-                                    <span class="h2 d-block font-weight-light pb-1 ">en iyisini sunuyoruz</span>
-                                    <h2 class="h1 d-block display-4  ">çünkü usta kasaplarla</h2>
+                                    <span class="h2 d-block font-weight-light pb-1 ">en iyisi çünkü</span>
+                                    <h2 class="h1 d-block display-4  ">usta kasaplarla</h2>
                                     <span class="h5 d-block font-weight-light pb-3 ">çalışıyoruz.</span>
 
                                     <a class="btn btn-primary "
@@ -117,9 +116,7 @@
     </section>
 
 
-    <!-- <div class=" mb-3">
-        <%- include('./_partial/category-slider', { header: false, titles: false, viewCats: ['reyon', 'list'], title: 'Tüm Ürünlerimiz', allUrl: '/kasap-urunleri' }); %>      
-      </div> -->
+
 
 
 

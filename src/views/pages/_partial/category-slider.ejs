@@ -1,6 +1,7 @@
 <% header = typeof(header) == 'undefined' ? true: header %>
 <% titles = typeof(titles) == 'undefined' ? true: titles %>
 <% selected = typeof(selected) == 'undefined' ? null: selected %>
+<% mode = typeof(mode) == 'undefined' ? 'list': mode %>
 
 
 
@@ -18,38 +19,75 @@
 
     <% } %>
 
-   
-        <div class="table-responsive" data-simplebar>
-            <div class="d-flex pb-2">
-                <% viewCats.forEach(cat => { %>
-                <% var reyonlar = (__categories.filter(p=>p.type == cat && p.status == 'active')) %>
-                <% for(var c=0; c< reyonlar.length; c++) {%>
-                <div class="mr-2">
+   <%if (mode=='list') { %>
+    <div class="table-responsive" data-simplebar>
+        <div class="d-flex <%=titles ? 'pb-2': 'pb-0'%>">
+            <% viewCats.forEach(cat => { %>
+            <% var reyonlar = (__categories.filter(p=>p.type == cat && p.status == 'active')) %>
+            <% for(var c=0; c< reyonlar.length; c++) {%>
+            <div class="<%=titles ? 'mr-2': 'mr-0'%>">
 
-                    <div id="<%=reyonlar[c].slug%>" class="item-slider item-slider-sm <%= selected ? (selected == reyonlar[c].slug ? 'item-slider-selected': 'item-slider-unselected') : ''%>">
-                        <%subUrl = reyonlar[c].type == 'resource' ? 'et-yemekleri/':'' %>
-                        <div class="card product-card pb-0 card-static item-card">
-                            <a class="" href="<%= `/${subUrl}${reyonlar[c].slug}`%>"><img class="shadow-lg"
-                                    src="<%=`${__req.helper.imgUrl('category-photos', reyonlar[c].slug)}`%>" alt="<%=reyonlar[c].name%>"></a>
+                <div id="<%=reyonlar[c].slug%>" class="item-slider item-slider-sm <%= selected ? (selected == reyonlar[c].slug ? 'item-slider-selected': 'item-slider-unselected') : ''%>">
+                    <%subUrl = reyonlar[c].type == 'resource' ? 'et-yemekleri/':'' %>
+                    <div class="card product-card pb-0 card-static item-card">
+                        <a class="" href="<%= `/${subUrl}${reyonlar[c].slug}`%>"><img class="shadow-lg"
+                                src="<%=`${__req.helper.imgUrl('category-photos', reyonlar[c].slug)}`%>" alt="<%=reyonlar[c].name%>"></a>
 <% if (titles) {%>
-                            <div class="card-body pb-0 mb-0 pl-0 text-center">
-                                <h3 class="product-title pb-0 mb-0 font-size-md"><a
-                                        href="<%= `/${subUrl}${reyonlar[c].slug}`%>"><%= reyonlar[c].name %></a>
-                                </h3>
-                            </div>
-                            <% } %>
+                        <div class="card-body pb-0 mb-0 pl-0 text-center">
+                            <h3 class="product-title pb-0 mb-0 font-size-md"><a
+                                    href="<%= `/${subUrl}${reyonlar[c].slug}`%>"><%= reyonlar[c].name %></a>
+                            </h3>
                         </div>
+                        <% } %>
+                    </div>
+
+                </div>
+
+
+
+            </div>
+            <%}%>
+        <%})%>
+        </div>
+    </div>    
+   <%} else { %>
+    <div id="sc" class="table-responsive" data-simplebar>
+        <div class="d-flex pb-2">
+            <% viewCats.forEach(cat => { %>
+            <% var reyonlar = (__categories.filter(p=>p.type == cat && p.status == 'active')) %>
+            <% for(var c=0; c< reyonlar.length; c++) {%>
+            <div class="mr-3">
+
+                <div id="cat-item-<%=reyonlar[c].slug%>" class="<%= selected ? (selected == reyonlar[c].slug ? 'item-slider-selected': 'item-slider-unselected') : ''%>">
+                    <%subUrl = reyonlar[c].type == 'resource' ? 'et-yemekleri/':'' %>
+                    <div class="">
+
+                        
+                    
+                        <a  class="text-center btn rounded-0 btn-secondary  text-nowrap" href="<%= `/${subUrl}${reyonlar[c].slug}#items`%>">
+                            
+                          
+                            <span>
+                                <%= reyonlar[c].name %>
+
+                            </span>
+                        </a>
 
                     </div>
 
-
-
                 </div>
-                <%}%>
-            <%})%>
+
+
+
             </div>
+            <%}%>
+        <%})%>
         </div>
+    </div>  
+    <% } %>
+
   
 
 
+    
 

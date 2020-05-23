@@ -16,6 +16,9 @@
     var foodCategoryParams = {allUrl: relatedFoodCategory ? '/et-yemekleri/' + relatedFoodCategory.slug: '/' + controller.category.slug + '/et-yemekleri', mode: 'yemek', foods: controller.foods, title: relatedFoodCategory ? relatedFoodCategory.name: controller.category.tarifTitle || 'Yemekler'}    
   %>
 
+
+
+
   <div class="page-title-overlap bg-primary pt-4">
     <div class="container d-lg-flex justify-content-between py-2 py-lg-3">
       <div class="order-lg-2 mb-3 mb-lg-0 pt-lg-2">
@@ -45,8 +48,28 @@
 
 
 
-  <div class="container px-0">
+  <div id="items-container" class="container px-0">
+    
     <div class="bg-light box-shadow-lg px-4 py-4 mb-3 ">
+      <div class="mb-1 ">
+        <%- include('./_partial/category-slider', { selected: controller.category.slug, mode:'browse', header: false, titles: false, viewCats: ['reyon', 'list'], title: 'Tüm Ürünlerimiz', allUrl: '/kasap-urunleri' }); %>      
+      </div> 
+      <div  class="input-group-overlay mb-3">
+
+        <div class="input-group-prepend-overlay">
+
+          <span class="input-group-text">
+            <i class="notsearching czi-search"></i>
+            <span class="searching d-none spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
+          </span>
+        </div>
+        <input data-search="product" id="page-searchbox" class="form-control searchBox prepended-form-control"
+          data-noresults-text="Maalesef bulamadık." autocomplete="off" type="text"
+          placeholder="<%=controller.category.name %> kategorisinde arayın">
+        <div>
+
+        </div>
+      </div>
       <div class="row">
         <% var foodsInserted = false %>
         <% for(var j=0; j< controller.products.length; j++) {%>
@@ -90,6 +113,28 @@
 
   <% include ./_partial/footer %>
   <% include ./_partial/scripts %>
+
+  <script>
+
+    $(document).ready(function() {
+        var el = document.getElementById('sc');
+        var sb = SimpleBar.instances.get(el);
+        var scel = sb.getScrollElement();
+        var selected = $("#cat-item-<%=controller.category.slug%>").offset();
+        var left = selected.left - 70;
+        setTimeout(function() {
+          $(scel).animate({scrollLeft: left  }, 50);
+
+          if (location.hash == '#items') {
+            window.App.scrollToAnchor('#items-container');
+
+          }
+
+        })
+
+ 
+    })
+    </script>
 
 </body>
 

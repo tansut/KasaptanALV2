@@ -25,10 +25,18 @@ export default class Route extends ApiRouter {
         let words = text.match(/\S+/g).filter(w=>w.length>2).map(w=> `+${w}*`)
         let search = words.join()
 
-        let prods = await User.sequelize.query("select name, slug as url, '' as type, match(name, shortdesc, slug, keywords) against (:search IN BOOLEAN MODE) as RELEVANCE " +
-            "from Products where match(name, shortdesc, slug, keywords)  against (:search IN BOOLEAN MODE) ORDER BY RELEVANCE DESC LIMIT 10",
+        let psql = this.req.query.c ? 
+        "select p.name as name, p.slug as url, '' as type, match(p.name, p.shortdesc, p.slug, p.keywords) against (:search IN BOOLEAN MODE) as RELEVANCE " +
+        "from Products p, ProductCategories pc, Categories c where pc.productid = p.id and c.id = pc.categoryid and c.slug = :category and match(p.name, p.shortdesc, p.slug, p.keywords)  against (:search IN BOOLEAN MODE) ORDER BY RELEVANCE DESC LIMIT 10"
+
+        : 
+        
+        "select name, slug as url, '' as type, match(name, shortdesc, slug, keywords) against (:search IN BOOLEAN MODE) as RELEVANCE " +
+        "from Products where match(name, shortdesc, slug, keywords)  against (:search IN BOOLEAN MODE) ORDER BY RELEVANCE DESC LIMIT 10"
+
+        let prods =  await User.sequelize.query(psql,
             {
-                replacements: { search: search },
+                replacements: { search: search, category: this.req.query.c },
                 type: sq.QueryTypes.SELECT,
                 mapToModel: false,
                 raw: true
@@ -46,7 +54,7 @@ export default class Route extends ApiRouter {
             }
         })
 
-        let cats = await User.sequelize.query("select name, slug as url, 'Kategoriler' as type, match(name, shortdesc, slug, keywords) against (:search IN BOOLEAN MODE) as RELEVANCE " +
+        let cats = this.req.query.t == 'product' ? []: await User.sequelize.query("select name, slug as url, 'Kategoriler' as type, match(name, shortdesc, slug, keywords) against (:search IN BOOLEAN MODE) as RELEVANCE " +
             "from Categories where match(name, shortdesc, slug, keywords)  against (:search IN BOOLEAN MODE) ORDER BY Categories.type, RELEVANCE DESC LIMIT 10",
             {
                 replacements: { search: search },
@@ -67,7 +75,7 @@ export default class Route extends ApiRouter {
             }
         })        
 
-        let areas = await User.sequelize.query("select name, slug as url, 'Bölgeler' as type, match(name, slug, keywords) against (:search IN BOOLEAN MODE) as RELEVANCE " +
+        let areas = this.req.query.t == 'product' ? []: await User.sequelize.query("select name, slug as url, 'Bölgeler' as type, match(name, slug, keywords) against (:search IN BOOLEAN MODE) as RELEVANCE " +
         "from Areas where status='active' and match(name, slug, keywords)  against (:search IN BOOLEAN MODE) ORDER BY RELEVANCE DESC LIMIT 10",
         {
             replacements: { search: search },
@@ -88,7 +96,7 @@ export default class Route extends ApiRouter {
         }
     })              
 
-        let butchers = await User.sequelize.query("select name, slug as url, 'Kasaplar' as type, match(name, slug, keywords) against (:search IN BOOLEAN MODE) as RELEVANCE " +
+        let butchers = this.req.query.t == 'product' ? []: await User.sequelize.query("select name, slug as url, 'Kasaplar' as type, match(name, slug, keywords) against (:search IN BOOLEAN MODE) as RELEVANCE " +
             "from Butchers where approved=true and match(name, slug, keywords)  against (:search IN BOOLEAN MODE) ORDER BY RELEVANCE DESC LIMIT 10",
             {
                 replacements: { search: search },

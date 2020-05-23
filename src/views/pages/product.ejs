@@ -203,7 +203,7 @@
     
                           <a href="/alisveris-sepetim"  class="btn btn-sm btn-accent mr-1"><i
                             class="czi-cart mr-1"></i>Sepete Git</a>
-                          <a href="/kasap-urunleri"  class="btn btn-sm btn-primary">Alışverişe Devam<i class="czi-arrow-right"></i></a>
+                          <a onclick="return goBack()" class="btn btn-sm btn-primary">Alışverişe Devam<i class="czi-arrow-right"></i></a>
                           
     
                         </div>
@@ -379,7 +379,7 @@
                         <div v-if="product && product.purchaseOptions.length > 1">
                           <ul class="nav nav-pills nav-pills-dark nav-fill mb-2">
                             <li v-for="(option, index) in product.purchaseOptions" class="nav-item h-100">
-                              <a class="nav-link h-100 shadow-none " href="#option" v-bind:class="{ active: option == selectedUnit }"
+                              <a class="nav-link h-100 shadow-none "  v-bind:class="{ active: option == selectedUnit }"
                                 @click="selectedUnit = option">{{option.unitTitle}}
                                 <%if (false) { %>
                                 <span class="d-block" class="font-size-sm text-muted">
@@ -890,6 +890,21 @@
                   window.App.ProductApp.product = prod;
                   window.App.WeightCalculatorApp.product = prod;
                   //window.App.AlternativeButchersApp.product = prod;
+
+function goBack() {
+  if (document.referrer.indexOf(location.protocol + "//" + location.host) === 0) {
+    var current = location.protocol + "//" + location.host + location.pathname;
+    if (document.referrer.indexOf(current) === 0) {
+      window.location.href= "/kasap-urunleri"
+    }
+    else {      
+      window.history.go(-1);
+      return false
+    } 
+  }
+  else window.location.href= "/kasap-urunleri"
+  
+}
 
 function gotoComments() {
   window.App.activaTab('comments'); 
