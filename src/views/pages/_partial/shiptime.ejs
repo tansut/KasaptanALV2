@@ -1,6 +1,8 @@
+<%
+    var onchange = typeof(onchange) == 'undefined' ? '': onchange;
+%>
 
-
-<select class="form-control custom-select" id="<%= id %>" name="<%= id %>">  
+<select onchange="<%=onchange%>" class="form-control custom-select" id="<%= id %>" name="<%= id %>">  
     <% Object.keys(nextHours ? controller.Shipment.availableTimes(): controller.shipmentHours).forEach(key=> { %>
         <%if (nextHours) { %>
         <option <%= key == selected? 'selected':'' %> value="<%=key%>"><%= hours[key]%></option>        

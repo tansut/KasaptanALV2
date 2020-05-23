@@ -29,18 +29,20 @@
 
   <!-- Page Content-->
   <div class="container mb-4 ">
+
     <form onsubmit="beforeSubmit()" class="needs-validation" method="post" novalidate action="/alisveris-sepetim/savereview">
       <div>
         <section>
        
 
           <%- include('./_partial/checkout-steps.ejs', {   step: 4        }); %>
+          
           <% if (shopcard.address.name) { %>
           <div>
             <div class="d-flex flex-nowrap justify-content-between align-items-center pt-1 pb-1 mb-2">
               <h3 class="h4 mb-0 mr-2">Adres</h3>
 
-              <a href="/alisveris-sepetim/adres" class="btn btn-sm btn-light">Düzenle<i
+              <a href="/alisveris-sepetim/adres" class="text-muted btn btn-sm btn-light">Değiştir<i
                   class="czi-arrow-right ml-1 mr-n1"></i></a>
 
             </div>
@@ -57,7 +59,7 @@
             <div class="d-flex flex-nowrap justify-content-between align-items-center pt-1  pb-1 mb-2">
               <h3 class="h4 mb-0 mr-2">Teslimat ve Ödeme</h3>
 
-              <a href="/alisveris-sepetim/ship" class="btn btn-sm btn-light">Düzenle<i
+              <a href="/alisveris-sepetim/ship" class="btn btn-sm btn-light text-muted">Değiştir<i
                   class="czi-arrow-right ml-1 mr-n1"></i></a>
 
             </div>
@@ -69,8 +71,8 @@
               <div class="bg-secondary p-3  mb-4"><a class="media align-items-center"
                   href="/<%=shopcard.butchers[bi].slug%>"><img class="rounded-circle header-img"
                     src="<%= `${__req.helper.imgUrl('butcher-google-photos', shopcard.butchers[bi].slug)}` %>" alt="<%=shopcard.butchers[bi].name%>">
-                  <div class="media-body pl-2"><span class="font-size-ms text-muted">Teslimat ve Ödeme</span>
-                    <h3 class="h4 mb-0 mr-2"><%= shopcard.butchers[bi].name %></h3>
+                  <div class="media-body pl-2"><span class="font-size-ms text-muted"></span>
+                    <h3 class="h5 mb-0 mr-2"><%= shopcard.butchers[bi].name %></h3>
                   </div>
                 </a></div>
 
@@ -117,10 +119,18 @@
 
  
         
-        
+<div class="d-flex flex-nowrap justify-content-between align-items-center pt-1 pb-1 mb-2">
+  <h3 class="h4 mb-0 mr-2">Ürünlerim</h3>
+
+  <a href="/alisveris-sepetim" class="text-muted btn btn-sm btn-light">Değiştir<i
+      class="czi-arrow-right ml-1 mr-n1"></i></a>
+
+</div>
           <div class="p-3 mb-3 border">
             <div class="widget">
-              <h2 class="widget-title text-center">Siparişim</h2>
+
+
+              
               <% for (let bi in shopcard.butchers) { %>
             <% let butcher = shopcard.butchers[bi]%>
 

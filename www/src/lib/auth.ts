@@ -39,9 +39,12 @@ export class Auth {
                     $('#si-email').val(tel);                    
                     App.activaTab("signin-tab");
                     setTimeout(() => {
+                        let msg = err.response.data.msg || err.response.data;
+                        $("#signinMsg").removeClass("d-none");
+                        $("#signinMsg").text(msg)
                         $('#si-password').focus();
                     }, 250);
-                    App.HandleError(err)
+                    //App.HandleError(err)
 
                 } else {
                     App.gTag('signup', 'error-send-sms-code', tel);

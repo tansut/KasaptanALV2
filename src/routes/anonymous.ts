@@ -20,6 +20,8 @@ var MarkdownIt = require('markdown-it')
 export default class Route extends ViewRouter {
 
     showLogin = false;
+    loginUser = '';
+    redirect = ""
 
     renderPage(msg: any = undefined) {        
         this.sendView(`pages/resetpassword.ejs`, {
@@ -41,7 +43,9 @@ export default class Route extends ViewRouter {
                 if (user.email.toLowerCase() == email) {
                     await userRoute.sendNewPassword(user);
                     this.showLogin = true;
-                    this.renderPage({text: "Yeni şifreniz telefonunuza gönderildi.", type: "info"});    
+                    this.loginUser = Helper.getPhoneNumber(phone);
+                    this.redirect = this.req.query.r
+                    this.renderPage({text: "Yeni şifreniz telefonunuza gönderildi. Şifrenizi kullanarak giriş yapabilirsiniz.", type: "info"});    
                 } else {
                     this.renderPage({text: "Geçersiz e-posta adresi/telefon numarası.",type: "danger"}); 
                 }

@@ -17,8 +17,8 @@
           <div class="tab-content p-0 m-0 " id="butchers-serving-tabContent">
             <% if (dispatchers.length > 0) { %>
             <div  class="tab-pane fade show active" id="serving" role="tabpanel">
-              
-                <div v-if="product" v-for="(alt, index) in product.alternateButchers" class="bg-secondary border-bottom p-3">
+              <div v-if="product">
+                <div  v-for="(alt, index) in product.alternateButchers" class="bg-secondary border-bottom p-3">
                   <a class="media align-items-center" :data-butcher="alt.butcher.slug" href="#newbutcher" @click="selectNewButcher(alt.butcher)">
                    
                       <img
@@ -41,8 +41,8 @@
                         </span>
                      
                     </div>
-                        <money-view v-if="!alt.butcher.kgPrice" :unit="selectedUnit.unitTitle" 
-                        v-if="selectedUnitForAlternate(alt.butcher)" 
+                        <money-view v-if="!alt.butcher.kgPrice && selectedUnitForAlternate(alt.butcher)" :unit="selectedUnit.unitTitle" 
+                        
                         class="font-size-sm text-accent" :money="selectedUnitForAlternate(alt.butcher).unitPrice"></money-view>
                         <money-view v-else unit="Kg" 
                         
@@ -81,6 +81,8 @@
                         </div>
                     </div>
                   </a></div> 
+              </div>
+         
              
             </div>
             <% } %>

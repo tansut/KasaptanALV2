@@ -329,6 +329,15 @@ class Butcher extends BaseModel<Butcher> {
         this.setDataValue('videoinstagram', Buffer.from(value));
     }
 
+    get lat(): number {
+        return this.location ? (<any>this.location).coordinates[0]: 0
+    }
+
+    get lng(): number {
+        return this.location ? (<any>this.location).coordinates[1]: 0
+    }    
+
+
     getProducts(): Product[] {
         let result = [];
         for (let i = 0; i < this.products.length; i++) {

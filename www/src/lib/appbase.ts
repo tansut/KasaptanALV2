@@ -42,6 +42,10 @@ export default class AppBase {
     static showSignupDlg(returnUrl: string = null, showAd: boolean = false) {
         this.activaTab("signup-tab");
         this.RunConfig['returnUrl'] = returnUrl;
+        $("#si-resetpwd").attr("href", "/reset-password");
+        if (returnUrl) {
+            $("#si-resetpwd").attr("href", "/reset-password?r=" + encodeURIComponent(returnUrl));
+        }        
         showAd ? this.jq('#signupad').show(): this.jq('#signupad').hide();
         this.jq('#signin-modal').modal('show');
         $('#signin-modal').one('shown.bs.modal', function () {
@@ -52,14 +56,22 @@ export default class AppBase {
 
     }    
 
-    static showLoginDlg(returnUrl: string = null, showAd: boolean = false) {
+    static showLoginDlg(returnUrl: string = null, showAd: boolean = false, user: string = '') {
         this.activaTab("signin-tab")
         this.RunConfig['returnUrl'] = returnUrl;
+        $("#si-resetpwd").attr("href", "/reset-password");
+        if (returnUrl) {
+            $("#si-resetpwd").attr("href", "/reset-password?r=" + encodeURIComponent(returnUrl));
+        }
         showAd ? this.jq('#signupad').show(): this.jq('#signupad').hide();
+        user ?  this.jq('#si-email').val(user):null;
         this.jq('#signin-modal').modal('show');
 
         $('#signin-modal').one('shown.bs.modal', function () {
-            $('#si-email').focus();
+            if ($('#si-email').val()) {
+                $('#si-password').focus();                
+            }
+            else $('#si-email').focus();
           })
     }
 }

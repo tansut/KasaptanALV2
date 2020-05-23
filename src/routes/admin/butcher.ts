@@ -285,7 +285,12 @@ export default class Route  extends ViewRouter {
             this.butcher.facebook = this.req.body.butcherfacebook;
             this.butcher.description = this.req.body.butcherdesc;
             this.butcher.keywords = this.req.body.keywords;
-
+            if (this.req.body.butcherlat && this.req.body.butcherlng) {
+                this.butcher.location = {                                
+                    type: 'Point',
+                    coordinates: [parseFloat(this.req.body.butcherlat), parseFloat(this.req.body.butcherlng)]
+            }
+            }
             await this.butcher.save();
 
             //return this.res.redirect(`/pages/admin/butcher/${this.butcher.slug}`)

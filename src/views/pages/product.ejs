@@ -886,9 +886,10 @@
 
                 <script>
                   window.App.ProductApp.shopCardIndex = <%= controller.shopCardIndex %>;                   
-                  window.App.ProductApp.product = <%- JSON.stringify(view) %>;
-                  window.App.WeightCalculatorApp.product = window.App.ProductApp.product;
-                  window.App.AlternativeButchersApp.product = window.App.ProductApp.product;
+                  var prod = <%- JSON.stringify(view) %>;
+                  window.App.ProductApp.product = prod;
+                  window.App.WeightCalculatorApp.product = prod;
+                  //window.App.AlternativeButchersApp.product = prod;
 
 function gotoComments() {
   window.App.activaTab('comments'); 

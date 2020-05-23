@@ -111,7 +111,13 @@
                                         value="<%= butcher.postal %>">
                                 </div>
 
-
+                                <div class="form-group">
+                                    <label>Lat & Long [<a href="https://www.google.com/maps/search/?api=1&query=<%=butcher.lat%>,<%=butcher.lng%>">Git</a>]</label>
+                                    <input type="text" class="form-control" name="butcherlat" id="butcherlat"
+                                        value="<%= butcher.lat %>">
+                                    <input type="text" class="form-control" name="butcherlng" id="butcherlng"
+                                        value="<%= butcher.lng %>">                                        
+                                </div>
 
                             </div>
 
@@ -408,7 +414,9 @@
 
                                                    
 
-                                                </td>                                                
+                                                </td>             
+                                                
+                                                
 
                                                 <td>
                                                     <button type="submit" class="btn btn-sm btn-primary" name="update" value="<%=d.id%>">Kaydet</button>

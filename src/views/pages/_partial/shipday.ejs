@@ -1,4 +1,10 @@
-<select class="form-control custom-select" id="<%= id %>" name="<%= id %>">
+<%
+    var onchange = typeof(onchange) == 'undefined' ? '': onchange;
+%>
+
+
+
+<select onchange="<%=onchange%>" class="form-control custom-select" id="<%= id %>" name="<%= id %>">
     <% let days = controller.Shipment.availableDays()%>
     <% Object.keys(days).forEach(key=> { %>
       

@@ -4,8 +4,9 @@
 <head>
   <% include ./_partial/head %>
   <% if (!butcher.approved) {%>
-  <meta name="robots" content="noindex,follow">
+    <meta name="robots" content="noindex,follow">
   <%}%>
+  <link href="https://www.kasaptanal.com/<%=butcher.slug%>" rel="canonical">
 
 </head>
 

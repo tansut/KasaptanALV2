@@ -35,6 +35,12 @@
           <section class="col-lg-8 " v-cloak id="shopcardshipment">
         
             <%- include('./_partial/checkout-steps.ejs', {   step: 1        }); %>
+
+            <div class="alert alert-warning">
+              <p class="lead">
+                <strong>İyi bayramlar!</strong> Siparişinizi oluşturun ancak en erken <strong>27 Mayıs Çarşamba</strong> günü gönderebiliriz.
+              </p>
+            </div>
             <% for (let bi in shopcard.shipment) { %>
             <% let shipment = shopcard.shipment[bi]%>
 
@@ -45,20 +51,20 @@
             <div class="border mb-4">
               <div class="bg-secondary p-3  mb-4"><a class="media align-items-center" href="/<%=shopcard.butchers[bi].slug%>"><img class="rounded-circle header-img"  
                 src="<%= `${__req.helper.imgUrl('butcher-google-photos', shopcard.butchers[bi].slug)}` %>" alt="<%=shopcard.butchers[bi].name%>">
-                <div class="media-body pl-2"><span class="font-size-ms text-muted">Teslimatı planlayalım</span>
+                <div class="media-body pl-2"><span class="font-size-ms text-muted"></span>
                   <h3 class="h4 mb-0 mr-2"><%= shopcard.butchers[bi].name %></h3>
                 </div></a></div>
 
             <div class="px-3">
               <p class="font-size-md text-center"></p>
-              <nav class="text-center pl-1 pr-1 nav nav-pills nav-pills-dark nav-fill mb-4">
+              <nav class="text-center pl-1 pr-1 nav nav-pills nav-pills-dark  mb-4">
                 <div class="row w-100">
-                  <div class="col-sm-6">
-                    <a class="nav-item shadow-none nav-link" @click="card.shipment[<%=bi%>].howTo = 'ship'" v-bind:class="{ active: card && card.shipment['<%=bi%>'].howTo == 'ship' }">Adresime Gönderin</a>
+                  <div class="col-6">
+                    <a id="ship-ship" class="nav-item shadow-none nav-link" @click="card.shipment[<%=bi%>].howTo = 'ship'" v-bind:class="{ active: card && card.shipment['<%=bi%>'].howTo == 'ship' }">Adrese Teslim</a>
 
                   </div>
-                  <div class="col-sm-6">
-                    <a class="nav-item shadow-none nav-link" @click="card.shipment[<%=bi%>].howTo = 'take'" v-bind:class="{ active: card && card.shipment['<%=bi%>'].howTo == 'take' }">Ben Gelip Alacağım</a>
+                  <div class="col-6">
+                    <a id="ship-take" class="nav-item shadow-none nav-link" @click="card.shipment[<%=bi%>].howTo = 'take'" v-bind:class="{ active: card && card.shipment['<%=bi%>'].howTo == 'take' }">Gel-Al</a>
 
                   </div>
                 </div>
@@ -70,13 +76,18 @@
               </div> -->
              <input type="hidden" v-bind:value="card && card.shipment['<%=bi%>'].howTo" name="howto<%=bi%>" id="howto<%=bi%>"> 
           
+             <div class="alert alert-info mx-4 mb-4" v-if="card && card.shipment['<%=bi%>'].howTo == 'take'">
+              <p class="font-weight-bold">Pratik Gel-Al Siparişi</p>
+              <p>Siparişinizi oluşturun, ödemenizi yapın. Kasabınız paketinizi istediğiniz saate hazır etsin, geçerken hızlıca teslim alın, zamandan kazanın. </p>
+            </div>
+
              <% if (!shipment.dispatcher) {  %>
              <div v-if="card && card.shipment['<%=bi%>'].howTo == 'ship'">
                 
                  <div class="alert alert-warning mx-4 mb-4">
                   
                     <p class="">
-                      <span class="font-weight-medium">Ben Gelip Alacağım</span> seçeneği ile siparişinizi kasabımız hazırlayabilir ve beklemeden hızlıca teslim alabilirsiniz. 
+                      <span class="font-weight-medium">Gel-Al</span> seçeneği ile siparişinizi kasabımız hazırlayabilir ve beklemeden hızlıca teslim alabilirsiniz. 
 
                     </p>
 
@@ -102,25 +113,27 @@
                  </div> 
 
               <% } else if (shipment.dispatcher && (shipment.dispatcher.min > shopcard.butchers[bi].subTotal)) { %>
-                <div class="alert alert-accent mx-4 mb-4" v-if="card && card.shipment[<%=bi%>].howTo == 'ship'">
-                  <p class="font-size-sm">
+                <div class="alert alert-danger  mx-4 mb-4" v-if="card && card.shipment[<%=bi%>].howTo == 'ship'">
+                  <p class="font-weight-bold">Bir miktar daha ürün alın</p>
+                  <p>
                  
                   <%=shipment.dispatcher.name%>, <%- include('./_partial/currency.ejs', {value: shipment.dispatcher.min}) %> ve üzeri siparişleri bu bölgeye teslim etmekte.
                   Alışveriş toplamınız <%- include('./_partial/currency.ejs', {value: shopcard.butchers[bi].subTotal}) %> olarak gözüküyor.
                 </p>  
-                <p class="font-size-sm"> 
-                  <a class="alert-link" href="/<%=shopcard.butchers[bi].slug%>"><%= shopcard.butchers[bi].name %></a> ürünlerine göz atabilirsiniz.                    
-                </p>
+                <div>
+                  <a href="/kasap-urunleri" class="btn btn-sm btn-accent">Yeni Ürün Ekle</a>
+                  <a href="#gelal" @click="card.shipment[<%=bi%>].howTo = 'take'" class="btn btn-sm btn-accent">Gel-Al Yap</a>
+                </div>
                  </div> 
               
 
               <% } else if ((shopcard.getShippingCost(bi) > 0) && (shipment.dispatcher.totalForFree > 0)) { %>
                 <div class="alert alert-info mx-4 mb-4" v-if="card && card.shipment['<%=bi%>'].howTo == 'ship'">
-                  <p class="font-size-sm">
+                  <p >
                   Alışveriş toplamınız <%- include('./_partial/currency.ejs', {value: shopcard.butchers[bi].subTotal}) %> olarak gözüküyor.
                   <%=shipment.dispatcher.name%>, <%- include('./_partial/currency.ejs', {value: shipment.dispatcher.totalForFree}) %> ve üzeri siparişleri bu bölgeye ücretsiz teslim etmekte.
                 </p>  
-                <p class="font-size-sm"> 
+                <p > 
                   <a class="alert-link" href="/<%=shopcard.butchers[bi].slug%>"><%= shopcard.butchers[bi].name %></a> ürünlerine göz atabilirsiniz veya bu şekilde devam edebilirsiniz.                    
                 </p>
                  </div> 
@@ -128,6 +141,7 @@
 
               
              <div class="table-responsive">
+             
                 <table class="table font-size-sm ">
                   <tbody>                   
                     <tr>
@@ -172,6 +186,7 @@
                           </span>
                           <div class="mt-2">
                             <%- include('./_partial/shiptime.ejs', {
+                              onchange:`$("#sameday${bi}").prop("checked", true)`,
                               nextHours: true,
                               id: 'samedaytime' + bi,
                               selected: shipment.hours[0] ,
@@ -201,12 +216,14 @@
                                   </span>
                               <div class="mt-2">
                                   <%- include('./_partial/shipday.ejs', {
+                                    onchange:`$("#plan${bi}").prop("checked", true)`,
                                     id: 'planday' +bi,
                                     selected: shipment.days[0]                             
                                   }) %>
                                 </div>                          
                               <div class="mt-2">
                                   <%- include('./_partial/shiptime.ejs', {
+                                    onchange:`$("#plan${bi}").prop("checked", true)`,
                                     nextHours: false,
                                     id: 'plantime' + bi,
                                     selected: shipment.hours[0] ,
@@ -246,7 +263,7 @@
         <div class="row d-lg-none">
           <div class="col-lg-8">
             <div class="d-flex pt-4 mt-3">
-              <div class="w-50 pr-3"><a class="btn btn-secondary btn-block" href="/alisveris-sepetim/adres"><i class="czi-arrow-left mt-sm-0 mr-1"></i><span class="d-none d-sm-inline">Önceki</span><span class="d-inline d-sm-none">Geri</span></a></div>              <div class="w-50 pl-2"><button type="submit" id="save-adres" name="save-adres" class="btn btn-accent btn-block"><span class="d-none d-sm-inline">Sonraki Adım</span><span class="d-inline d-sm-none">Next</span><i class="czi-arrow-right mt-sm-0 ml-1"></i></button></div>
+              <div class="w-50 pr-3"><a class="btn btn-secondary btn-block" href="/alisveris-sepetim/adres"><i class="czi-arrow-left mt-sm-0 mr-1"></i><span class="d-none d-sm-inline">Önceki</span><span class="d-inline d-sm-none">Geri</span></a></div>              <div class="w-50 pl-2"><button type="submit" id="save-adres" name="save-adres" class="btn btn-accent btn-block"><span class="d-none d-sm-inline">Sonraki Adım</span><span class="d-inline d-sm-none">Sonraki Adım</span><i class="czi-arrow-right mt-sm-0 ml-1"></i></button></div>
             </div>
           </div>
         </div></form>

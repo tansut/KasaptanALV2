@@ -127,7 +127,7 @@ export default class Route extends ViewRouter {
 
                     }
                     if (dispatch.min > this.shopcard.butchers[o].subTotal) {
-                        this.shopcard.shipment[o].howTo = 'take';
+                        this.shopcard.shipment[o].howTo = 'ship';
                     }
                     else if (dispatch.takeOnly) {
                         this.shopcard.shipment[o].howTo = 'take';

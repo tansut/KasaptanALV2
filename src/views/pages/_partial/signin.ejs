@@ -1,5 +1,6 @@
 <div id="signin-tab" class="tab-pane fade ">
     <form class="needs-validation" onsubmit="App.Auth.signin()" autocomplete="off" novalidate id="signin-form">
+        <div class="d-none alert text-center alert-info" id="signinMsg"></div>
         <div class="form-group">
             <!-- <label for="si-email">Cep Telefonun veya e-Posta Adresin</label> -->
             <input class="form-control" autocomplete="username" minlength="5" maxlength="30" type="text" id="si-email"
@@ -22,7 +23,7 @@
             <div class="custom-control custom-checkbox mb-2">
                 <input class="custom-control-input" type="checkbox" id="si-remember">
                 <label class="custom-control-label" for="si-remember">Beni Hatırla</label>
-            </div><a class="font-size-sm" href="/reset-password">Şifremi Unuttum?</a>
+            </div><a class="font-size-sm" id="si-resetpwd" href="/reset-password">Şifremi Unuttum</a>
         </div>
         <button id= "signin-btn" class="btn btn-primary btn-block" type="submit">Giriş Yap</button>
     </form>

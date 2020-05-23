@@ -103,10 +103,10 @@
             <ul>
               <li>
               
-                <strong class="<%=pg.earned <= 0.00 ? 'text-muted':''%>"><%- include('./_partial/currency.ejs', {value: pg.earned}) %></strong>, <%=pg.title%>
+                <strong class="font-weight-bold <%=pg.earned <= 0.00 ? 'text-danger':''%>"><%- include('./_partial/currency.ejs', {value: pg.earned}) %></strong>, <%=pg.title%>
                 <% if (pg.earned <= 0.00) {%>
                   <% showShopBtn = true%>
-                  <div class="text-dark font-size-sm">
+                  <div class="text-dark font-weight-bold font-size-sm">
                     <%- include('./_partial/puan-data-view.ejs', {puan: pg.based, hideMinPuanForUsage: true}) %>
                   
                       
