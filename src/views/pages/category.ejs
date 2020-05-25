@@ -5,8 +5,9 @@
   <% include ./_partial/head %>
 </head>
 
-<body>
+<body style="<%=__req.query.go == '1' ? 'opacity: 0;':''%>">
   <% include ./_partial/header %>
+  <link href="https://www.kasaptanal.com/<%=controller.category.slug%>" rel="canonical">
 
   <%-include('./_partial/food-select-alternatives.ejs', {}) %>
 
@@ -40,7 +41,7 @@
 
 
           <h1 class="h3 text-light"><%= controller.category.name %></h1>
-          <h2 class=" text-light h4 lead"><%= controller.category.shortdesc %></h2>         
+          <h2 class=" text-light h4 lead"><%= controller.category.shortdesc %></h2>
         </div>
       </div>
     </div>
@@ -49,12 +50,12 @@
 
 
   <div id="items-container" class="container px-0">
-    
+
     <div class="bg-light box-shadow-lg px-4 py-4 mb-3 ">
       <div class="mb-1 ">
-        <%- include('./_partial/category-slider', { selected: controller.category.slug, mode:'browse', header: false, titles: false, viewCats: ['reyon', 'list'], title: 'Tüm Ürünlerimiz', allUrl: '/kasap-urunleri' }); %>      
-      </div> 
-      <div  class="input-group-overlay mb-3">
+        <%- include('./_partial/category-slider', { selected: controller.category.slug, mode:'browse', header: false, titles: false, viewCats: ['reyon', 'list'], title: 'Tüm Ürünlerimiz', allUrl: '/kasap-urunleri' }); %>
+      </div>
+      <div class="input-group-overlay mb-3">
 
         <div class="input-group-prepend-overlay">
 
@@ -89,21 +90,22 @@
         <% } %>
 
       </div>
-<div class="mb-3">
-  <%- include('./_partial/category-slider', { viewCats: ['reyon', 'list'], title: 'Ürünler', allUrl: '/kasap-urunleri' }); %>
+      <div class="mb-3">
+        <%- include('./_partial/category-slider', { viewCats: ['reyon', 'list'], title: 'Ürünler', allUrl: '/kasap-urunleri' }); %>
 
-</div>
+      </div>
 
-<% if (controller.category.mddesc) { %>
-<div class="collapse-container page-footer-text">
-  <div class="collapse" id="collapseSummary">
-    <%- controller.category.mddesc && controller.Markdown.render(controller.category.mddesc) %>
+      <% if (controller.category.mddesc) { %>
+      <div class="collapse-container page-footer-text">
+        <div class="collapse" id="collapseSummary">
+          <%- controller.category.mddesc && controller.Markdown.render(controller.category.mddesc) %>
 
-  </div>
-  <a class="collapsed text-dark" data-toggle="collapse" href="#collapseSummary" aria-expanded="false" aria-controls="collapseSummary"></a>
-</div>
+        </div>
+        <a class="collapsed text-dark" data-toggle="collapse" href="#collapseSummary" aria-expanded="false"
+          aria-controls="collapseSummary"></a>
+      </div>
 
-<%}%>
+      <%}%>
 
 
     </div>
@@ -112,29 +114,37 @@
 
 
   <% include ./_partial/footer %>
-  <% include ./_partial/scripts %>
+      <% include ./_partial/scripts %>
 
-  <script>
+      <script>
 
-    $(document).ready(function() {
-        var el = document.getElementById('sc');
-        var sb = SimpleBar.instances.get(el);
-        var scel = sb.getScrollElement();
-        var selected = $("#cat-item-<%=controller.category.slug%>").offset();
-        var left = selected.left - 70;
-        setTimeout(function() {
-          $(scel).animate({scrollLeft: left  }, 50);
+        $(document).ready(function () {
+          var el = document.getElementById('sc');
+          var sb = SimpleBar.instances.get(el);
+          var scel = sb.getScrollElement();
+          var selected = $("#cat-item-<%=controller.category.slug%>").offset();
+          var left = selected.left - 70;
 
+
+          $(scel).animate({ scrollLeft: left }, 50, function () {
+
+          });
           if (location.hash == '#items') {
-            window.App.scrollToAnchor('#items-container');
+            window.App.scrollToAnchor('#items-container', function () {
+              $("body").animate({ opacity: 1 }, "slow", function () {
 
+              });
+            });
+            location.hash = "";
+
+          } else {
+            $("body").css("opacity",1)
           }
 
-        })
 
- 
-    })
-    </script>
+
+        })
+      </script>
 
 </body>
 

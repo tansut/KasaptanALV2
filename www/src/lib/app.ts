@@ -47,9 +47,9 @@ export class App extends AppBase {
         } else Promise.reject('not supported')
     }
 
-    static scrollToAnchor(aid){
-        var aTag = $(aid);
-        $('html,body').animate({scrollTop: aTag.offset().top},'slow');
+    static scrollToAnchor(aid, handler){
+        var aTag = $(aid); 
+        $('html,body').animate({scrollTop: aTag.offset().top}, 'slow', "swing", handler);
     }
 
     static jump(h){
