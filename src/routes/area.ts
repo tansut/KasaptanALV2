@@ -164,8 +164,8 @@ export default class Route extends ViewRouter {
         this.res.render('pages/butchers.ejs', this.viewData({
 
             subs: subs, ellipsis: ellipsis,
-            pageDescription: `Online Kasaplar: En doğal ve lezzetli et ürünleri kasaptanAl.com'da. Şimdi kasaplarımızdan online et siparişi verin, kapınıza gelsin!`,
-            pageTitle: 'Online Kasaplar: Online et siparişi verebileceğiniz kazaplarımız',
+            pageDescription: `En doğal ve lezzetli et ürünleri kasaptanAl.com'da. Şimdi kasaplarımızdan online et siparişi verin, kapınıza gelsin!`,
+            pageTitle: 'KasaptanAl.com Online Kasaplar | Güvenilir Kasaplarımızla Tanışın',
             butchers: butchers
         }))
     }
@@ -175,6 +175,6 @@ export default class Route extends ViewRouter {
         // router.get("/:areal1-:areal2", Route.BindRequest(Route.prototype.areal2Route));
         router.get("/:area-kasap", Route.BindRequest(Route.prototype.arealRoute));
         router.get("/:area", Route.BindRequest(Route.prototype.arealRouteOld));
-        router.get("/kasaplar", Route.BindRequest(Route.prototype.allRoute));
+        router.get("/onlinekasap", Route.BindRequest(Route.prototype.allRoute));
     }
 }

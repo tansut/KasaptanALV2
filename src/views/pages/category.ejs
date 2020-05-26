@@ -18,8 +18,6 @@
   %>
 
 
-
-
   <div class="page-title-overlap bg-primary pt-4">
     <div class="container d-lg-flex justify-content-between py-2 py-lg-3">
       <div class="order-lg-2 mb-3 mb-lg-0 pt-lg-2">
@@ -131,7 +129,9 @@
           });
           if (location.hash == '#items') {
             $('html,body').animate({scrollTop: $('#items-container').offset().top}, 10, function () {
-              $("body").css("opacity", 1)
+              $("body").animate({ opacity: 1 }, 50, function () {
+
+              });
             });
             location.hash = "";
 

@@ -4,5 +4,5 @@
 /kasap-urunleri
 /blog
 /hikayemiz
-/kasaplar
+/onlinekasap
 /et-fiyatlari
