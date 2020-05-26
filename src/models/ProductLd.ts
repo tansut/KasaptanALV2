@@ -21,7 +21,7 @@ export interface IProductLd {
     image: string[];
     description: string;
     sku: string;
-    //brand: IBrand;
+    brand: IBrand;
     identifier_exists: string;
     offers?: IOffer
     aggregateRating: IAggregateRating;
@@ -42,7 +42,7 @@ export class ProductLd implements IProductLd {
     image: string [];
     description: string;    
     sku: string;
-    //brand: IBrand;
+    brand: IBrand;
     offers?: IOffer;
     identifier_exists = 'no'
     aggregateRating: IAggregateRating;
@@ -62,9 +62,9 @@ export class ProductLd implements IProductLd {
             ratingCount: product.reviewCount,
             ratingValue: product.ratingValue
         }
-        // this.brand = {
-        //     '@type': 'Thing',
-        //     name: 'kasaptanAl.com'
-        // }
+        this.brand = {
+            '@type': 'Thing',
+            name: 'kasaptanAl.com'
+        }
     }
 }

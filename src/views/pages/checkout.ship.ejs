@@ -36,11 +36,6 @@
         
             <%- include('./_partial/checkout-steps.ejs', {   step: 1        }); %>
 
-            <div class="alert alert-warning">
-              <p class="lead">
-                <strong>İyi bayramlar!</strong> Siparişinizi oluşturun ancak en erken <strong>27 Mayıs Çarşamba</strong> günü gönderebiliriz.
-              </p>
-            </div>
             <% for (let bi in shopcard.shipment) { %>
             <% let shipment = shopcard.shipment[bi]%>
 

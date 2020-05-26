@@ -130,10 +130,8 @@
 
           });
           if (location.hash == '#items') {
-            window.App.scrollToAnchor('#items-container', function () {
-              $("body").animate({ opacity: 1 }, "slow", function () {
-
-              });
+            $('html,body').animate({scrollTop: $('#items-container').offset().top}, 10, function () {
+              $("body").css("opacity", 1)
             });
             location.hash = "";
 
