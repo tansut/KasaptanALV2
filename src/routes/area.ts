@@ -43,10 +43,9 @@ export default class Route extends ViewRouter {
     async renderPage(area: AreaModel, butchers: ButcherModel[], subs?: AreaModel[]) {
 
         this.res.render('pages/areal1.ejs', this.viewData({
-
             subs: subs, ellipsis: ellipsis,
-            pageDescription: `${this.address.display} Kasaplar: En doğal ve lezzetli et ürünleri kasaptanAl.com'da. Şimdi kasaplarımızdan online et siparişi verin, kapınıza gelsin!`,
-            pageTitle: `${this.address.display} Kasaplar: Online et siparişi`, area: area, butchers: butchers
+            pageDescription: `${this.address.display} Online Kasaplar, kasaptanAl.com güvenli kasap kriterlerini karşılayan güvenilir kasap iş ortaklarımızdır. ${this.address.display} bölgesinden güvenle et siparişi verebilirsiniz!`,
+            pageTitle: `${this.address.display} Online Kasaplar | Et Siparişi & Kasap Alışverişi`, area: area, butchers: butchers
         }))
     }
 
@@ -164,8 +163,8 @@ export default class Route extends ViewRouter {
         this.res.render('pages/butchers.ejs', this.viewData({
 
             subs: subs, ellipsis: ellipsis,
-            pageDescription: `En doğal ve lezzetli et ürünleri kasaptanAl.com'da. Şimdi kasaplarımızdan online et siparişi verin, kapınıza gelsin!`,
-            pageTitle: 'KasaptanAl.com Online Kasaplar | Güvenilir Kasaplarımızla Tanışın',
+            pageDescription: `Online kasaplar, kasaptanAl.com güvenilir kasap kriterlerini karşılayan konusunda usta kasap iş ortaklarımızdır. Güvenle online et siparişi verebilirsiniz.`,
+            pageTitle: 'Online Kasaplar | Güvenilir Kasaplarımızla Tanışın',
             butchers: butchers
         }))
     }
