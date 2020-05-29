@@ -145,7 +145,7 @@ export default class Route extends ViewRouter {
 
         let butchers = await ButcherModel.findAll({
             where: where,
-            limit: 15,
+            limit: 25,
             order: [["updatedon", "DESC"]],
             include: [{
                 all: true

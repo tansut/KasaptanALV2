@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="tr-TR" prefix="og: http://ogp.me/ns#">
+
+<head>
+  <% include ./_partial/head %>
+</head>
+
+<body>
+  <% include ./_partial/header %>
+
+  <div class="page-title-overlap bg-primary pt-4">
+    <div class="container d-lg-flex justify-content-between py-2 py-lg-3">
+      <div class="order-lg-2 mb-3 mb-lg-0 pt-lg-2">
+        <nav aria-label="breadcrumb">
+          <ol class="breadcrumb breadcrumb-light flex-lg-nowrap justify-content-center justify-content-lg-star">
+            <li class="breadcrumb-item"><a class="text-nowrap" href="/kasapsayfam"><i class="czi-home"></i></a></li>
+            <li class="breadcrumb-item text-nowrap active" aria-current="page"><%= controller.butcher ? controller.butcher.name: "Kasap" %></li>
+          </ol>
+        </nav>
+      </div>
+      <div class="media-body pt-2">
+
+
+        <h1 class="h3 text-light"><%= controller.butcher ? controller.butcher.name + ' Sayfam': "Kasap Sayfam" %></h1>
+        <h2 class=" text-light h4 lead">Siparişlerim</h2>         
+      </div>
+    </div>
+  </div>
+
+
+
+  <div class="container px-0">
+    <div class="bg-light box-shadow-lg px-4 py-4 mb-3 ">
+      <ul class="nav nav-pills mb-3">
+        <li class="nav-item">
+          <a class="nav-link active" href="/kasapsayfam/siparislerim?q=7days">Son 7 gün</a>
+        </li>
+        <li class="nav-item dropdown">
+          <a class="nav-link dropdown-toggle" data-toggle="dropdown" href="#" role="button" aria-haspopup="true" aria-expanded="false">Filtrele</a>
+          <div class="dropdown-menu">
+            <a class="dropdown-item" href="/kasapsayfam/siparislerim?q=thismonth">Bu ay</a>
+            <a class="dropdown-item" href="/kasapsayfam/siparislerim?q=lastmonth">Geçen Ay</a>
+          </div>
+        </li>
+      </ul>      
+
+
+<div>
+  <table class="table table-hover">
+    <thead>
+        <tr>
+            <th>Müşteri</th>
+            <th>Tarih</th>
+            <th>Durum</th>
+            <th>Ödeme Tipi</th>
+            <th>Ödenen</th>
+        </tr>
+    </thead>
+    <tbody>
+        <% 
+                for(var i=0; i<orders.length; i++) {%>
+        <tr>
+            <td>
+              <% if (__req.user.hasRole('admin')) { %>
+              <a target="_blank" href="<%= `/pay/${orders[i].ordernum}` %>"><%= orders[i].name %> </a>
+              <%} else { %>
+                <a target="_blank" href=""><%= orders[i].name %> </a>
+
+              <%}%>
+
+            </td>
+            <td><%= __helper.formatDate(orders[i].creationDate) %></td>
+            <td><%= orders[i].status %></td>
+            <td><%= orders[i].paymentType %></td>
+            <td>
+  <%- include('./_partial/currency.ejs', {value: orders[i].paidTotal}) %>
+              
+          
+            
+            
+            </td>
+
+        </tr>
+
+
+        <% } 
+            
+            %>
+
+    </tbody>
+</table>
+</div>
+
+    </div>
+  </div>
+
+
+
+  <% include ./_partial/footer %>
+  <% include ./_partial/scripts %>
+
+</body>
+
+</html>
