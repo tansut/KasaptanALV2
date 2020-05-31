@@ -151,8 +151,14 @@
       <div class="col-sm-6">
         <p>
           Sipariş No : <%=order.ordernum%> <br>
+         
+            <a href="<%=controller.url%>/pay/<%=order.ordernum%>">
+              <%=controller.url%>/pay/<%=order.ordernum%>
+            </a><br>
+         
           Toplam (<%=order.items.length%>) adet ürün
         </p>
+
         <p>
 
           <ul class="list-unstyled font-size-sm">
@@ -172,8 +178,8 @@
           <ul class="list-unstyled ">
             <li><span class="text-muted">Teslimat planı:&nbsp;</span><%= order.shipmentHowToText %></li>
             <% if (order.shipmentHowTo != 'callme') {%>
-            <li><span class="text-muted">Gün:&nbsp;</span><strong><%= __helper.formatDate(order.shipmentdate) %></strong></li>
-            <li><span class="text-muted">Saat Aralığı:&nbsp;</span><strong><%= order.shipmenthourText%></strong> </li>
+            <li><span class="text-muted">Gün:&nbsp;</span><strong>*<%= __helper.formatDate(order.shipmentdate) %>*</strong></li>
+            <li><span class="text-muted">Saat Aralığı:&nbsp;</span><strong>*<%= order.shipmenthourText%>*</strong> </li>
             <%}%>
                         <li><span class="text-muted">Paketim çıkmadan bana haber ver:&nbsp;</span><%= __helper.boolStr(order.shipmentInformMe)%>
             </li>
@@ -219,7 +225,9 @@
               Ürün Bedeli: <%- include('./_partial/currency.ejs', {value: controller.productTotal}) %>  <br>
               Teslimat Bedeli: <%- include('./_partial/currency.ejs', {value: controller.teslimatTotal}) %> <br>
               <%}%>
-             Toplam Borç:  <%- include('./_partial/currency.ejs', {value: controller.shouldBePaid}) %>
+
+              FATURA BEDELİ:  *<%- include('./_partial/currency.ejs', {value: controller.productTotal + controller.teslimatTotal}) %>*<br>
+              YAPILAN ÖDEME:  <%- include('./_partial/currency.ejs', {value: controller.shouldBePaid}) %>
 
         </div>
       </div>

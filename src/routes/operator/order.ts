@@ -30,6 +30,7 @@ import { stringify } from 'querystring';
 import { ComissionResult, ComissionHelper } from '../../lib/commissionHelper';
 import { PuanResult } from '../../models/puan';
 import Review from '../../db/models/review';
+import { OrderItemStatus } from '../../models/order';
 var MarkdownIt = require('markdown-it')
 
 export default class Route extends ViewRouter {
@@ -132,8 +133,8 @@ export default class Route extends ViewRouter {
             this.order.statusDesc ? null : (this.order.statusDesc = '')
             this.order.statusDesc += `\n- ${Helper.formatDate(Helper.Now(), true)} tarihinde ${this.order.status} -> ${this.req.body.orderStatus}`
             await this.api.completeOrderStatus(this.order, this.req.body.orderStatus);
-            // this.order.status = this.req.body.orderStatus;
-            // await this.order.save()
+            if (this.req.body.orderStatus == OrderItemStatus.success)
+                 userMessage = "KASABA MAKBUZ İLETMEYİ UNUTMAYIN"
         }
 
         if (this.req.body.makeManuelPayment == "true") {
@@ -282,6 +283,7 @@ export default class Route extends ViewRouter {
                     orderitem.statusDesc += `\n- ${Helper.formatDate(Helper.Now(), true)} tarihinde ${orderitem.status} -> ${this.req.body.orderItemStatus}\n`
                     await this.api.completeOrderItemStatus(orderitem, this.req.body.orderItemStatus)
                     userMessage = `${orderitem.productName} yeni durum: ${orderitem.status}`
+                    
                 }
             }
         } catch (err) {
