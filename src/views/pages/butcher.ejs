@@ -45,7 +45,7 @@
 
 
 
-  <div class="bg-accent pt-3">
+  <div class="bg-primary pt-3">
     <div class="text-center container ">
  
       <% if (__req.user && __req.user.hasRole('admin')) {%>
@@ -84,7 +84,7 @@
 
     <div class=" container d-flex flex-wrap flex-sm-nowrap justify-content-center justify-content-sm-between align-items-center pt-2">
       <div class="media media-ie-fix align-items-center pb-3">
-        <div class="img-thumbnail rounded-circle position-relative" style="width: 6.375rem;">
+        <div class="img-thumbnail rounded-circle position-relative" style="width: 9rem;">
           
 
           <img class="rounded-circle"
@@ -92,17 +92,17 @@
         
         </div>
         <div class="media-body pl-3">
-          <h1 class="text-light font-size-lg mb-0"><%=butcher.name%></h1><span class="d-block text-light font-size-ms opacity-60 py-1">
+          <h1 class="h3 text-light  mb-0"><%=butcher.name%></h1><h2 class="h4 d-block text-light font-size-ms opacity-60 py-1">
             <%= butcher.areaLevel3.name %>/<%= butcher.areaLevel1.name %>
 
 
-          </span>
+          </h2>
           <% if (butcher.getBadgeList().length > 0 ) { %>
             <div class="butcher-badges  mb-3">
         
             
           <% butcher.getBadgeList().forEach(b=> {  %>
-            <span class="badge badge-success font-size-xs" data-toggle="tooltip" data-original-title="<%=b.tip%>"  title="">
+            <span class="badge badge-secondary font-size-xs" data-toggle="tooltip" data-original-title="<%=b.tip%>"  title="">
               <i class="<%=b.icon %> mr-1"></i>
               <%=b.name%>
         
@@ -122,7 +122,7 @@
             <div class="col-sm-6">
               <div class="font-size-sm text-light mb-2">Ürün Memnuniyeti</div>
               <div class="progress mb-3">
-                <div class="progress-bar font-weight-medium bg-info" role="progressbar" style="width: <%=butcher.userRatingAsPerc %>%" aria-valuenow="<%=butcher.userRatingAsPerc %>" aria-valuemin="0" aria-valuemax="100">
+                <div class="progress-bar font-weight-medium bg-dark" role="progressbar" style="width: <%=butcher.userRatingAsPerc %>%" aria-valuenow="<%=butcher.userRatingAsPerc %>" aria-valuemin="0" aria-valuemax="100">
                   <%=butcher.userRatingAsPerc %>%
                 </div>  
               </div>
@@ -133,7 +133,7 @@
           <div class="font-size-sm text-light mb-2">Teslimat Başarısı</div>
         
           <div class="progress mb-3">
-            <div class="progress-bar font-weight-medium bg-info" role="progressbar" style="width: <%=butcher.shipRatingAsPerc %>%" aria-valuenow="<%=butcher.shipRatingAsPerc %>" aria-valuemin="0" aria-valuemax="100">
+            <div class="progress-bar font-weight-medium bg-dark" role="progressbar" style="width: <%=butcher.shipRatingAsPerc %>%" aria-valuenow="<%=butcher.shipRatingAsPerc %>" aria-valuemin="0" aria-valuemax="100">
               <%=butcher.shipRatingAsPerc %>%
             </div>  
           </div>
@@ -151,14 +151,7 @@
 
 
   <% var puanData = butcher.getPuanData() %>
-  <% if (puanData) { %>
-    <div class="mb-3 p-3  text-center text-light">
-      <p class="lead text-light">Kasap Kart&trade; İş Ortağı</p>
 
-    <%- include('./_partial/puan-data-view.ejs', {puan: puanData}) %>
-    </div>
-
-  <% } %>
 
 
 
@@ -166,7 +159,7 @@
     <div class="d-flex ">
       <% for(var i=0; i<images.length; i++) {%>
 
-      <div class="mr-2">
+      <div class="">
         <div class="item-slider item-slider-sm">
 
           <div class="card product-card pb-0 card-static item-card">
@@ -210,10 +203,26 @@
 
               <div class="accordion" id="payment-method" role="tablist">
 
+                <% if (puanData) { %>
+
+                  <div class="card">
+                    <div class="card-header" role="tab">
+                      <h3 class="accordion-heading"><a href="#kasapkart" data-toggle="collapse"><i class="font-size-lg mr-2 mt-n1 align-middle"></i>Kasap Kart&trade;<span class="accordion-indicator"><i data-feather="chevron-up"></i></span></a></h3>
+                    </div>
+                    <div class="collapse" id="kasapkart" data-parent="#payment-method" role="tabpanel">
+                      <div class="card-body ">
+                  <%- include('./_partial/puan-data-view.ejs', {puan: puanData}) %>
+                      </div>
+                    </div>
+
+                  </div>
+            
+                <% } %>
+
                 <%if (controller.reviews.length > 0 ) { %>
                   <div class="card">
                     <div class="card-header" role="tab">
-                      <h3 class="accordion-heading"><a href="#revires" data-toggle="collapse"><i class="font-size-lg mr-2 mt-n1 align-middle"></i><%='Yorumlar (' + controller.reviews.length + ')'%><span class="accordion-indicator"><i data-feather="chevron-up"></i></span></a></h3>
+                      <h3 class="accordion-heading"><a href="#revires" data-toggle="collapse"><i class="font-size-lg mr-2 mt-n1 align-middle"></i><%='Yorumlar'%><span class="accordion-indicator"><i data-feather="chevron-up"></i></span></a></h3>
                     </div>
                     <div class="collapse" id="revires" data-parent="#payment-method" role="tabpanel">
                       <div class="card-body ">
@@ -265,7 +274,7 @@
                   </div>
                   <% } %>
              
-         
+      
 
                 <div class="card">
                   <div class="card-header" role="tab">
@@ -397,32 +406,50 @@
           </div>
         </aside>
  
-        <% var categories = __categories.filter(p=>p.type.includes('reyon')) %>
+        <% var reyonlar = (__categories.filter(p=>p.type == 'reyon' && p.status == 'active')) %>
 
-            <section class="col-md-9 pb-md-4  ml-md-0 pl-md-0 order-2 order-md-2">
 
-              <nav id="products" class="navbar navbar-expand-md navbar-light bg-light font-weight-medium">
-                <a class="navbar-brand d-lg-none d-block" href="#">Ürünler</a>
-                <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarCollapse" aria-controls="navbarCollapse" aria-expanded="false" aria-label="Toggle navigation">
-                  <span class="navbar-toggler-icon"></span>
-                </button>
-                <div class="collapse navbar-collapse" id="navbarCollapse">
-                  <ul class="navbar-nav mr-auto">
-                    <% for(var i=0; i< categories.length; i++) {%>
-                      <% var category = categories[i] %>
-                      <li class="nav-item">
-                        <a class="nav-link" href="#<%=category.slug%>"><%=category.name%></a>
-                      </li>
+
+
+
+            <section class="col-md-9 pt-3 px-3 order-2">
+
+              <div id="sc" class="table-responsive mb-1" data-simplebar>
+                <div id="products" class="d-flex pb-2">
+                    
+                    <% var reyonlar = (__categories.filter(p=>p.type == 'reyon' && p.status == 'active')) %>
+                    
+                    <% for(var c=0; c< reyonlar.length; c++) {%>
+                    <div class="mr-3">
+        
+                        <div id="cat-item-<%=reyonlar[c].slug%>" class="<%= selected ? (selected == reyonlar[c].slug ? 'item-slider-selected': 'item-slider-unselected') : ''%>">
+                            <div>
+        
+                            
+                            
+                                <a  class="text-center btn rounded-0 btn-secondary  text-nowrap" href="<%= `#${reyonlar[c].slug} `%>">
+                                    
+                                  
+                                    <span>
+                                        <%= reyonlar[c].name %>
+        
+                                    </span>
+                                </a>
+        
+                            </div>
+        
+                        </div>
+        
+        
+        
+                    </div>
                     <%}%>
-                 
-                 
-                  </ul>
-          
-                </div>
-              </nav>
               
-                <% for(var i=0; i< categories.length; i++) {%>
-                  <% var category = categories[i] %>
+                </div>
+            </div> 
+              
+                <% for(var i=0; i< reyonlar.length; i++) {%>
+                  <% var category = reyonlar[i] %>
 
                       <div id="<%=category.slug%>" class="bg-secondary  p-2 d-flex flex-nowrap justify-content-between align-items-center">
         <a class="media align-items-center align-self-center" href="#">
