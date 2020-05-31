@@ -10,6 +10,7 @@ import Area from '../db/models/area';
 import { PreferredAddress } from '../db/models/user';
 import Dispatcher from '../db/models/dispatcher';
 import * as _ from "lodash";
+import * as sq from 'sequelize';
 
 import DispatcherApi from './api/dispatcher';
 
@@ -84,6 +85,8 @@ export default class Route extends ViewRouter {
 
         let butchers: ButcherModel[] = [];
 
+        let subs: AreaModel[] = [];
+
         if (area.level == 1) {
             let field = `areaLevel1Id`;
             let where = (<any>{})
@@ -97,6 +100,23 @@ export default class Route extends ViewRouter {
                     all: true
                 }]
             })
+
+            subs = await AreaModel.sequelize.query(`select * from Areas ap where ap.level=2 and ap.parentid=:id and ( ap.id in 
+                (
+                SELECT distinct a.parentid FROM  Areas a where 
+                (a.id in (SELECT distinct d.toareaid FROM Dispatchers d where d.toarealevel=3))
+                ) or 
+                (ap.id in (SELECT distinct d.toareaid FROM Dispatchers d where d.toarealevel=2))
+                )`,
+                {
+                replacements: { id: area.id },
+
+                    type: sq.QueryTypes.SELECT,
+                    mapToModel: true,
+                })
+
+
+
         } else {
             let dp = new DispatcherApi(this.constructorParams);
             let dispatchers = await dp.getButchersDispatches(this.address);
@@ -120,6 +140,20 @@ export default class Route extends ViewRouter {
 
 
             }
+
+
+            if (area.level == 2) {
+                subs = await AreaModel.sequelize.query(`
+            SELECT a.* FROM  Areas a where a.parentid=:id and
+(a.id in (SELECT distinct d.toareaid FROM Dispatchers d where d.toarealevel=3))
+            `,
+                    {
+                replacements: { id: area.id },
+
+                        type: sq.QueryTypes.SELECT,
+                        mapToModel: true,
+                    })
+            }
         }
 
         if (this.req.query.save && butchers.length == 0) {
@@ -127,15 +161,7 @@ export default class Route extends ViewRouter {
             return;
         }
 
-        if (area.level != 3) {
-            return Area.findAll({
-                where: {
-                    parentid: area.id,
-                    status: 'active'
-                }
-            }).then(subs => this.renderPage(area, butchers, subs))
-        }
-        else return this.renderPage(area, butchers)
+        await this.renderPage(area, butchers, subs)
     }
 
     @Auth.Anonymous()

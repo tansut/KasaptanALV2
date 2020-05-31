@@ -10,6 +10,8 @@ import Content from "../db/models/content";
 import Butcher from "../db/models/butcher";
 import Area from "../db/models/area";
 import PriceCategory from "../db/models/pricecategory";
+import * as sq from 'sequelize';
+
 
 export default class SiteMapManager {
     static baseUrl = 'https://www.kasaptanal.com';
@@ -20,16 +22,31 @@ export default class SiteMapManager {
     }
 
     static async fillArea(stream: SitemapStream) {
-        let items = await Area.findAll({
-            attributes: ['slug'],
-            raw: true,
-            where: {
-                status: 'active'
-            }
-        });
+        let items = await Area.sequelize.query(`
+        
+        select slug from Areas where level=1 and status='active'
+        union
+        select slug from Areas ap where ap.level=2 and ( ap.id in 
+        (
+        SELECT distinct a.parentid FROM  Areas a where 
+        (a.id in (SELECT distinct d.toareaid FROM Dispatchers d where d.toarealevel=3))
+        ) or 
+        (ap.id in (SELECT distinct d.toareaid FROM Dispatchers d where d.toarealevel=2))
+        )
+        union SELECT a.slug FROM  Areas a where 
+        (a.id in (SELECT distinct d.toareaid FROM Dispatchers d where d.toarealevel=3))
+            
+            `,
+            {
+
+                type: sq.QueryTypes.SELECT,
+                mapToModel: false,
+                raw: true
+            })
+
         items.forEach(item=>{
             stream.write({
-                url: `${this.baseUrl}/${item.slug}-kasap`
+                url: `${this.baseUrl}/${item['slug']}-kasap`
             })
         })
     }
