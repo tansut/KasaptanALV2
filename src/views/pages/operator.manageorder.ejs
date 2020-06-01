@@ -150,7 +150,7 @@
       <% } %>
       <div class="col-sm-6">
         <p>
-          Sipariş No : <%=order.ordernum%> <br>
+          <!-- Sipariş No : <%=order.ordernum%> <br> -->
          
             <a href="<%=controller.url%>/pay/<%=order.ordernum%>">
               <%=controller.url%>/pay/<%=order.ordernum%>
@@ -227,7 +227,7 @@
               <%}%>
 
               FATURA BEDELİ:  *<%- include('./_partial/currency.ejs', {value: controller.productTotal + controller.teslimatTotal}) %>*<br>
-              YAPILAN ÖDEME:  <%- include('./_partial/currency.ejs', {value: controller.shouldBePaid}) %>
+              <!-- YAPILAN ÖDEME:  <%- include('./_partial/currency.ejs', {value: controller.shouldBePaid}) %> -->
 
         </div>
       </div>

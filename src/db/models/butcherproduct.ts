@@ -130,6 +130,44 @@ class ButcherProduct extends BaseModel<ButcherProduct> {
     })
     kgPrice: number;     
 
+
+    @Column({
+        allowNull: false,
+        defaultValue: 0,
+        type: DataType.DECIMAL(8, 3)
+    })
+    unit1kgRatio: number;     
+
+    @Column({
+        allowNull: false,
+        defaultValue: 0,
+        type: DataType.DECIMAL(8, 3)
+    })
+    unit2kgRatio: number; 
+    
+    @Column({
+        allowNull: false,
+        defaultValue: 0,
+        type: DataType.DECIMAL(8, 3)
+    })
+    unit3kgRatio: number;     
+
+    @Column({
+        allowNull: true,
+    })
+    unit1weight: string;
+
+    @Column({
+        allowNull: true,
+    })
+    unit2weight: string;
+
+    @Column({
+        allowNull: true,
+    })
+    unit3weight: string;
+
+
     @Column({
         allowNull: true,
     })

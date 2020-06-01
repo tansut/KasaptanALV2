@@ -46,6 +46,9 @@ export default class Route extends ButcherRouter {
             desc: product.unit1desc,
             enabled: bp.unit1enabled,
             butcherNote: product.unit1ButcherNote,
+            butcherUnitWeight: bp.unit1weight,
+            butcherkgRatio: bp.unit1kgRatio,
+
             price: Helper.asCurrency(bp.unit1price > 0 ? bp.unit1price: product.unit1kgRatio * bp.kgPrice)
     
         }) : null;
@@ -55,6 +58,10 @@ export default class Route extends ButcherRouter {
                 unitTitle: product.unit2title,
                 unitWeight: product.unit2weight,
                 kgRatio: product.unit2kgRatio,
+
+                butcherUnitWeight: bp.unit2weight,
+                butcherkgRatio: bp.unit2kgRatio,
+
                 desc: product.unit2desc,
                 enabled: bp.unit2enabled,
                 butcherNote: product.unit2ButcherNote,
@@ -68,6 +75,8 @@ export default class Route extends ButcherRouter {
                 unit: product.unit3,
                 unitTitle: product.unit3title,
                                 unitWeight: product.unit3weight,
+                                butcherUnitWeight: bp.unit3weight,
+                                butcherkgRatio: bp.unit3kgRatio,
 
                 kgRatio: product.unit3kgRatio,
                 desc: product.unit3desc,
@@ -95,6 +104,14 @@ export default class Route extends ButcherRouter {
             unit1enabled: butcherProduct.unit1enabled,
             unit2enabled: butcherProduct.unit2enabled,
             unit3enabled: butcherProduct.unit3enabled,
+            unit1kgRatio: butcherProduct.unit1kgRatio,
+            unit2kgRatio: butcherProduct.unit2kgRatio,
+            unit3kgRatio: butcherProduct.unit3kgRatio,
+
+            unit1weight: butcherProduct.unit1weight,
+            unit2weight: butcherProduct.unit2weight,
+            unit3weight: butcherProduct.unit3weight,
+
             vitrin: butcherProduct.vitrin,
             kgPrice: butcherProduct.kgPrice,
             mddesc: butcherProduct.mddesc
@@ -109,6 +126,12 @@ export default class Route extends ButcherRouter {
                 unit3enabled: true,
                 vitrin: false,
                 kgPrice: 0,
+                unit1kgRatio: 0,
+                unit2kgRatio: 0,
+                unit3kgRatio: 0,
+                unit1weight: '',
+                unit2weight: '',
+                unit3weight: '',
                 mddesc: "",
                 product: product
             }
@@ -196,6 +219,15 @@ export default class Route extends ButcherRouter {
         newItem.unit1enabled = this.req.body.unit1enabled =="on";
         newItem.unit2enabled = this.req.body.unit2enabled =="on";
         newItem.unit3enabled = this.req.body.unit3enabled =="on";
+
+        newItem.unit1kgRatio = this.req.body.unit1butcherkgRatio ? parseFloat(this.req.body.unit1butcherkgRatio) : 0;
+        newItem.unit2kgRatio = this.req.body.unit2butcherkgRatio ? parseFloat(this.req.body.unit2butcherkgRatio) : 0;
+        newItem.unit3kgRatio = this.req.body.unit3butcherkgRatio ? parseFloat(this.req.body.unit3butcherkgRatio) : 0;
+
+        newItem.unit1weight = this.req.body.unit1butcherunitWeight;
+        newItem.unit2weight = this.req.body.unit2butcherunitWeight;
+        newItem.unit3weight = this.req.body.unit3butcherunitWeight;
+
 
         if (
             newItem.enabled && ( 

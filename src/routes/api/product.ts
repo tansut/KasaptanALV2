@@ -272,12 +272,12 @@ export default class Route extends ApiRouter {
                 notePlaceholder: product[`${col}note`],
                 desc: this.markdown.render(product[`${col}desc`] || ""),
                 kgRatio: product[`${col}kgRatio`],
-                unitWeight: product[`${col}weight`],
+                unitWeight: (butcherProduct && butcherProduct[`${col}weight`]) || product[`${col}weight`],
                 unitPrice: butcherProduct ?
                      (
                          Helper.asCurrency(butcherProduct[`${col}price`]) > 0 ?
                          Helper.asCurrency(butcherProduct[`${col}price`]):
-                         Helper.asCurrency(product[`${col}kgRatio`] * kgPrice)
+                         Helper.asCurrency( (butcherProduct[`${col}kgRatio`] || product[`${col}kgRatio`]) * kgPrice)
                      ):
                      0.00,
                 unit: p,

@@ -21,10 +21,10 @@
                 <div  v-for="(alt, index) in product.alternateButchers" class="bg-secondary border-bottom p-3">
                   <a class="media align-items-center" :data-butcher="alt.butcher.slug" href="#newbutcher" @click="selectNewButcher(alt.butcher)">
                    
-                      <img
+                      <!-- <img
                       class="rounded-circle header-img"  :src="alt.butcher.thumbnail" :alt="alt.butcher.name">
 
-                 
+                  -->
 
                     
                     <div class="media-body pl-2">
@@ -34,11 +34,11 @@
               
                         
                      
-                        <span v-for="(badge, index) in alt.butcher.badges" class="badge badge-secondary border font-size-xs mr-1">
+                         <span v-for="(badge, index) in alt.butcher.badges" class="badge badge-secondary border font-size-xs mr-1">
                           <i v-if="badge.icon" :class="badge.icon || '' + 'mr-1'"></i>
                           {{badge.name}}
               
-                        </span>
+                        </span> 
                      
                     </div>
                         <money-view v-if="!alt.butcher.kgPrice && selectedUnitForAlternate(alt.butcher)" :unit="selectedUnit.unitTitle" 

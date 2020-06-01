@@ -234,7 +234,7 @@ class Butcher extends BaseModel<Butcher> {
         if (this.enableCreditCard) {
             list.push({
                 icon: 'czi-card',
-                name: 'online/kapıda ödeme',
+                name: 'Online/Kapıda Ödeme',
                 tip: 'Online veya kapıda ödeme yapabilirsiniz'
             })
         } 
