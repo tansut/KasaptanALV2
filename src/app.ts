@@ -1,4 +1,6 @@
 import * as express from 'express';
+const compression = require('compression')
+
 import * as bp from 'body-parser';
 import * as http from 'http';
 import { AppRequest } from './lib/http'
@@ -79,6 +81,7 @@ class KasaptanAlApp {
 
         let dbinstance = await db.init();        
         this.app = express();
+        this.app.use(compression())
         this.app.use(fileUpload())
         this.app.use(cors({
 

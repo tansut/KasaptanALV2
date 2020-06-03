@@ -189,14 +189,14 @@ $(document).ajaxComplete(function(){
     })
 
 
-    // $(window).scroll(function () {
-    //   if (($(document).scrollTop() >= $(document).height() / 3) && !userGuide.autoPopuped) {
-    //     //userGuide.autoPopuped = true;
-    //     //window.App.setCookie("guidewindow", "1", 30);
-    //     //window.App.showSignupDlg(null, true);
-    //     //userGuide.open();
-    //   }
-    // });
+    $(window).scroll(function () {
+      if (($(document).scrollTop() >= $(document).height() / 3) && !userGuide.autoPopuped) {
+        userGuide.autoPopuped = true;
+        window.App.setCookie("guidewindow", "1", 30);
+        window.App.showSignupDlg(null, true);
+        //userGuide.open();
+      }
+    });
 
   })
 
