@@ -7,22 +7,14 @@
   gtag('js', new Date());
 
   gtag('config', 'UA-146976156-1');
-  //gtag('config', 'AW-668491776');
 </script>
 <% } %>
 
-<script  src="<%=__config.staticDomain %>/resource/js/vendor.min.js?v=<%=__config.versionKey%>"></script>
-<script  src="<%=__config.staticDomain %>/resource/js/site.min.js?v=<%=__config.versionKey%>"></script>
-
-
+<script src="<%=__config.staticDomain %>/resource/js/vendor.min.js?v=<%=__config.versionKey%>"></script>
+<script src="<%=__config.staticDomain %>/resource/js/site.min.js?v=<%=__config.versionKey%>"></script>
 <script src="<%=__config.staticDomain %>/resource/js/app.js?v=<%=__config.versionKey%>"></script>
 
-
-
-
 <script>
-
-
 
   window.shopcard = {
     card: {
@@ -38,11 +30,9 @@
   })
 
   $(document).ajaxStart(function(){
-  // Show image container
   $("#loader").show();
 });
 $(document).ajaxComplete(function(){
-  // Hide image container
   $("#loader").hide();
 });
 
@@ -136,8 +126,6 @@ $(document).ajaxComplete(function(){
     var guideinited = false;
     var inited = false;
 
-
-
     var userGuide = {
       guideinited: false,
       autoPopuped: window.App.getCookie("guidewindow"),
@@ -224,19 +212,11 @@ $(document).ajaxComplete(function(){
 
     if (window.lgData && window.lgData.lg0) {
       $(window.lgData.lg0.el).on('onBeforeOpen.lg',function(event){
-          
           scroll = $(window).scrollTop();
-          //$("html").scrollTop(0);
-          
-
       })
 
       $(window.lgData.lg0.el).on('onCloseAfter.lg',function(event){
-        //$("html").scrollTop(scroll);
       })
-
-      
-
       
       $(window.lgData.lg0.el).on('onAfterSlide.lg',function(event){
         var node = window.lgData.lg0.items[event.detail.index];
@@ -246,24 +226,15 @@ $(document).ajaxComplete(function(){
             var type = $(node).data('restype');
             var ref = $(node).data('resref');
             var title = $(node).data('restitle');
-            //console.log(type, ref + '/' + title, href)
             window.App.gTag('gallery/' + type, ref + '/' + title, href)
           }
         }
       });
 
-      //  $(window.lgData.lg0.el).on('onSlideItemLoad.lg', function (event, index) { if (true) { 
-      //    setTimeout(function () { 
-          
-      //      $('.lg-current .lg-object').removeClass('lg-image'); setTimeout(function () { $('.lg-current .lg-object').addClass('lg-image'); }, 10); }, 300); 
-        
-      //    } });
-
     }
 
     $(window).on('show.bs.modal', function(e) { 
       scroll = $(window).scrollTop();
-      //$("html").scrollTop(0);
     });
     
 

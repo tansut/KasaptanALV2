@@ -27,7 +27,7 @@
 
 .collapse-container {
   font-size: 14px;
-  line-height: 1.5;
+  line-height: 1.8;
 }
 
 .collapse-container div.collapse:not(.show) {
@@ -164,19 +164,7 @@ img{
   touch-action: manipulation;
 }
 
-@media only screen and (max-width: 768px) {
-  // .lg-toolbar {
-  //   margin-top: 40px !important;
-  // }
-  
-  // .modal-dialog {
-  //   margin-top: 3rem !important;
-  // }
 
-  // .toast-top-left, .toast-top-center, .toast-top-right {
-  //   top: 3rem !important;
-  // }
-}
 
 .bootstrap-autocomplete {
   max-height: 12rem;

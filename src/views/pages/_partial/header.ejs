@@ -1,14 +1,10 @@
 <% if (config.pagetrack == "true" && (!__req.user || !__req.user.hasRole('admin') )) { %>
-<!-- Google Tag Manager (noscript) -->
 <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-TJ6248F"
   height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
-  <!-- End Google Tag Manager (noscript) -->
 <% } %>
 <% if (!__req.user) { %>
 <%- include ./signinup %>
 <% } %>
-
-
 
 
 <% var homeUrl = (config.nodeenv == 'production') ? '/': '/' %>
@@ -77,10 +73,6 @@
 
 
         <% } %>
-
-
-        <!-- <a href="/kurumsal" class="dropdown-item">Hakkımızda</a> -->
-
 
       </div>
 

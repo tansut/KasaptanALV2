@@ -17,7 +17,7 @@
           <div class="row no-gutters">
             <div class="col-12 mb-3" v-for="item in list">
               <div class="card border-bottom rounded-0 product-card card-static h-100 item-card">
-                <a class=" d-flex overflow-hidden justify-content-center" :href="item.link"><img class="rounded-0" :src="item.src"
+                <a class=" d-flex overflow-hidden justify-content-center" :href="item.link"><img class="rounded-0" alt="" :src="item.src"
                     :alt="item.name"></a>
                 <div class="card-body pl-0 text-center">
                   <h3 v-if="item && item.name" class="product-title font-size-md mb-1"><a :href="item.link">{{item.name}}</a>
