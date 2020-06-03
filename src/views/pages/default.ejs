@@ -7,9 +7,9 @@
 
 <body>
     <% include ./_partial/header %>
-    <% var viewCats = ['reyon', 'amac'] %>
-    <% var reyonlar = __categories.filter(p=>p.type.includes('reyon')).slice(0,4) %>
-    <%- include('./_partial/category-slider', { idprefix: 't', header: false, titles: false, viewCats: ['reyon', 'list'], title: 'Tüm Ürünlerimiz', allUrl: '/kasap-urunleri' }); %>
+    <!-- <%- include('./_partial/category-slider', { idprefix: 't', header: false, titles: false, viewCats: ['reyon', 'list'], title: 'Tüm Ürünlerimiz', allUrl: '/kasap-urunleri' }); %> -->
+    <%-include('./_partial/food-select-alternatives.ejs', {}) %>
+    
     <section class="bg-faded-primary pt-2">
         <div id="myCarousel" class="carousel slide mb-3" data-interval="false" data-ride="carousel">
             <ol class="carousel-indicators">
@@ -165,6 +165,11 @@
     <div class="container mb-3">
         <%- include('./_partial/category-products-slider', {category: 'populer-etler', limit: 8, reverse: true, img: 'img/category/premium.jpg'}); %>
     </div>
+
+    <div class="container mb-3">
+        <%- include('./_partial/foods-slider.ejs', {mode: 'food', title: 'Et Yemekleri', limit:8, text: '', foods: controller.foods}); %>
+      </div>
+
 
     <div class="container mb-3">
         <%- include('./_partial/category-products-slider', {limit: 8, category: 'bu-hafta', reverse: true, img: 'img/category/premium.jpg'}); %>

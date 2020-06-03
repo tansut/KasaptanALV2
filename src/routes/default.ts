@@ -73,17 +73,17 @@ export default class Route extends ViewRouter {
             CacheManager.dataCache.set("recent-butchers", recentButchers.map(b => b.get({ plain: true })));
         }
 
-        // this.foods = await new ProductsApi(this.constructorParams).getResources({
-        //     type: ['product-videos', 'product-photos'],
-        //     list: true,
-        //     tag1: {
-        //         [Op.or]: [{
-        //             [Op.like]: '%yemek%'
+        this.foods = await new ProductsApi(this.constructorParams).getResources({
+            type: ['product-videos', 'product-photos'],
+            list: true,
+            tag1: {
+                [Op.or]: [{
+                    [Op.like]: '%yemek%'
 
-        //         }, { [Op.like]: '%tarif%' }]
-        //     }
-        // }, null, 10);
-        //this.foodsTitle = 'Yemekler ve Tarifler'
+                }, { [Op.like]: '%tarif%' }]
+            }
+        }, null, 10);
+        this.foodsTitle = 'Yemekler ve Tarifler'
 
         //this.foods = CacheManager.dataCache.get("recent-foods");
         this.blogItems = await this.getBlogItems();

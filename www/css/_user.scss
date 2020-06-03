@@ -10,15 +10,12 @@
 
 .home-carousel-item {
   text-align: center;
-  height: 325px;
+
+  min-height: 18rem;
+
 }
 
-
-@media only screen and (max-width: 768px) {
-  .home-carousel-item {
-    text-align: center;
-    height: 400px;
-  }
+.carousel-caption {
 }
 
 
