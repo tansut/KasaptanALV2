@@ -8,13 +8,31 @@
   }
 }
 
+.home-carousel-item {
+  text-align: center;
+  height: 325px;
+}
+
+
+@media only screen and (max-width: 768px) {
+  .home-carousel-item {
+    text-align: center;
+    height: 400px;
+  }
+}
+
+
+
+
+
+
 .butcher-badge {
   font-size: $font-size-xs;
   margin-right: 2px;  
 }
 
 .item-slider-selected {
-  border: gray 1px solid;
+  border-bottom: $primary 2px solid;
 }
 
 .item-slider-unselected {
@@ -61,9 +79,6 @@
   }
 }
 
-html {
-  //touch-action: manipulation;
-}
 
 .product-card, .touch-support {
   touch-action: manipulation;
@@ -73,21 +88,6 @@ html {
      -webkit-user-select: none;
      -moz-user-select: none;
      -ms-user-select: none;
-
-  // a {
-  //   touch-action: manipulation;
-  //   user-select: none;
-  //   -ms-touch-action: manipulation;
-  //   touch-action: manipulation;
-  //   -webkit-user-select: none;
-  //   -moz-user-select: none;
-  //   -ms-user-select: none;
-
-
-  //   img {
-  //     touch-action: manipulation;
-  //   }
-  //}
 }
 
 a {
