@@ -49,7 +49,7 @@ export default class Route extends ViewRouter {
 
     @Auth.Anonymous()
     async kasapViewRoute() {
-        this.foods = await new ProductsApi(this.constructorParams).getFoodResources(null, 10);
+         this.foods = await new ProductsApi(this.constructorParams).getFoodResources(null, 10);
         this.sendView("pages/content.kasap-basvuru.ejs", this.viewData({
 
         }))
@@ -73,21 +73,21 @@ export default class Route extends ViewRouter {
             CacheManager.dataCache.set("recent-butchers", recentButchers.map(b => b.get({ plain: true })));
         }
 
-        this.foods = await new ProductsApi(this.constructorParams).getResources({
-            type: ['product-videos', 'product-photos'],
-            list: true,
-            tag1: {
-                [Op.or]: [{
-                    [Op.like]: '%yemek%'
+        // this.foods = await new ProductsApi(this.constructorParams).getResources({
+        //     type: ['product-videos', 'product-photos'],
+        //     list: true,
+        //     tag1: {
+        //         [Op.or]: [{
+        //             [Op.like]: '%yemek%'
 
-                }, { [Op.like]: '%tarif%' }]
-            }
-        }, null, 10);
+        //         }, { [Op.like]: '%tarif%' }]
+        //     }
+        // }, null, 10);
         //this.foodsTitle = 'Yemekler ve Tarifler'
 
         //this.foods = CacheManager.dataCache.get("recent-foods");
         this.blogItems = await this.getBlogItems();
-        this.stats = await SiteStats.get();
+        //this.stats = await SiteStats.get();
 
 
         this.res.render("pages/default.ejs", this.viewData({

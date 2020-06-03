@@ -3,6 +3,7 @@
   var mode = typeof(mode) == 'undefined' ? 'tarif': 'food';
   var targetUrl = typeof(allUrl) == 'undefined' ? (mode == 'tarif' ? '/et-yemekleri': '/et-yemekleri'): allUrl;
   var subUrl = mode == 'tarif' ? 'yemek-tarifi': 'ile-yapin';
+ var limit = typeof(limit) == 'undefined' ? 8: limit;
 
 %>
 
@@ -70,12 +71,12 @@
 
   <div class="table-responsive cz-gallery" data-simplebar>
       <div class="d-flex pb-2 ">
-              <% foods.forEach((resource, i)=> {%>
-                 
+        <% for(var i = 0; i < foods.length;i++) {%>
+                <% if (i < limit) { %>
               <div class="mr-2 ">
                   <div class="item-slider item-slider-sm">
                     
-                    <%- include(`./resource-item.ejs`, {resource: resource, subUrl: subUrl  }) %>
+                    <%- include(`./resource-item.ejs`, {resource: foods[i], subUrl: subUrl  }) %>
                
 
                  
@@ -84,24 +85,27 @@
 
               </div>  
              
-              <%})%>
-              <% if (foods.length >= 10) { %>
-              <div class="mr-2 ">
-                <div class="item-slider item-slider-sm-all">
-                  <a class="d-block h-100" href="<%=targetUrl%>">
-                    <div class="d-flex h-100 justify-content-end">
-                      <img alt="Tümünü Göster" class="w-auto h-50 align-self-center" src="<%=__config.staticDomain %>/resource/img/view-all.png" alt="Tamamını Göster">
+              <%} else { %>
+                  <div class="mr-2 ">
+                    <div class="item-slider item-slider-sm-all">
+                      <a class="d-block h-100" href="<%=targetUrl%>">
+                        <div class="d-flex h-100 justify-content-end">
+                          <img alt="Tümünü Göster" class="w-auto h-50 align-self-center" src="<%=__config.staticDomain %>/resource/img/view-all.png" alt="Tamamını Göster">
+                        </div>
+    
+                      </a>
+                 
+    
+                   
+    
                     </div>
+    
+                </div>  
+                <%break%>
+              <% } %>
 
-                  </a>
-             
+              <%}%>
 
-               
-
-                </div>
-
-            </div>  
-            <% } %>
       </div>
 </div>
 

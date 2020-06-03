@@ -138,7 +138,7 @@
                         
                     </h1>
                     <p class="pl-3 lead">
-                      Semtinize hizmet veren güvenilir kasaplar bir arada!
+                      Semtinize hizmet veren güvenilir kasaplar bir arada!<br>
                       
                       İstediğiniz kasabı seçin, online et siparişi verin, kapınıza gelsin. 
 
@@ -173,13 +173,7 @@
       </div>
 
 
-      <div class="container  ">
-  
-       
-        <%-include('./_partial/fact-counter.ejs', {stats: controller.stats}) %>
-    
-    
-              </div>
+
     
 
       <div class="container mb-3">
@@ -244,13 +238,11 @@
   </section>
 
 
-  <div class="container mb-3">
-    <%- include('./_partial/foods-slider.ejs', {mode: 'food', allUrl:'/et-yemekleri', showDesc: true, title: 'Et Yemekleri', text: '', foods: controller.foods}); %>
-</div>
+
 
 
     <div class="container mb-3">
-        <%- include('./_partial/category-products-slider', {category: 'bu-hafta', reverse: true, img: 'img/category/premium.jpg'}); %>
+        <%- include('./_partial/category-products-slider', {limit: 8, category: 'bu-hafta', reverse: true, img: 'img/category/premium.jpg'}); %>
     </div>
 
 
@@ -259,13 +251,6 @@
 
 
 
-
-
-
-
-    <div class="container mb-3">
-        <%- include('./_partial/category-slider', { viewCats: ['reyon', 'list'], title: 'Tüm Ürünlerimiz', allUrl: '/kasap-urunleri' }); %>      
-      </div>
 
     <section class="container">
 
@@ -325,79 +310,32 @@
     </section>
 
 
-
-
- 
-
-
-
-
-
- 
-
-
-
     <div class="container mb-3">
-
-
-
-            <div class="bg-secondary  p-2 d-flex flex-nowrap justify-content-between align-items-center">
-                <a class="media align-items-center align-self-center" href="/blog">
-                    <div class="media-body pl-2">
-                        <h3 class="h6 mb-0 mr-2">Et Kültür Blog</h3>
-                        <span class="font-size-ms text-muted"></span>
-                    </div>
-                </a>
-                <a class="align-self-center d-md-block btn btn-sm" href="/blog">Tümü <i
-                        class="czi-arrow-right font-size-xs align-middle ml-1"></i></a>
-            </div>
-            <div class="">
-                <div class="table-responsive " data-simplebar>
-                    <div class="d-flex pb-2">
-
-
-                        <% var items =  controller.blogItems %>
-                        <% items.forEach((item, i) => {%>
-                        <div class="mr-2">
-
-                            <div class="item-slider item-slider-sm">
-
-                                <div class="card h-100 shadow-sm product-card card-static item-card">
-                                    <a  href="<%= `/blog/${item.slug}` %>">
-                                        <img class=""
-                                            src="<%=`${__config.staticDomain}/content-resimleri/${item.slug}-thumbnail.jpg` %>"
-                                            alt="<%=item.title%>"></a>
-
-                                    <div class="card-body pb-0 mb-0 pl-0 text-center">
-                                        <h3 class="product-title pb-0 mb-0 font-size-md"><a
-                                                href="<%= `/blog/${item.slug}` %>"><%= item.title %></a>
-                                        </h3>
-                                    </div>
-                                </div>
-
-                            </div>
-
-
-
-                        </div>
-                        <%})%>
-
-                    </div>
-                </div>
-            </div>
-
-
-
-
-
-    </div>
+        <%- include('./_partial/category-slider', { viewCats: ['reyon', 'list'], title: 'Tüm Ürünlerimiz', allUrl: '/kasap-urunleri' }); %>      
+      </div>
 
 
 
 
 
 
-    <!-- Blog + Instagram info cards-->
+ 
+
+
+
+
+
+ 
+
+
+
+
+
+
+
+
+
+
     <section class="container-fluid px-0 mb-3">
         <div class="row no-gutters">
             <div class="col-md-6"><a class="card border-0 rounded-0 text-decoration-none py-md-4 bg-faded-accent"
@@ -490,120 +428,6 @@
 
     <% include ./_partial/scripts %>
 
-    <script>
-(function ($) {
-	$.fn.countTo = function (options) {
-		options = options || {};
-		
-		return $(this).each(function () {
-			// set options for current element
-			var settings = $.extend({}, $.fn.countTo.defaults, {
-				from:            $(this).data('from'),
-				to:              $(this).data('to'),
-				speed:           $(this).data('speed'),
-				refreshInterval: $(this).data('refresh-interval'),
-				decimals:        $(this).data('decimals')
-			}, options);
-			
-			// how many times to update the value, and how much to increment the value on each update
-			var loops = Math.ceil(settings.speed / settings.refreshInterval),
-				increment = (settings.to - settings.from) / loops;
-			
-			// references & variables that will change with each update
-			var self = this,
-				$self = $(this),
-				loopCount = 0,
-				value = settings.from,
-				data = $self.data('countTo') || {};
-			
-			$self.data('countTo', data);
-			
-			// if an existing interval can be found, clear it first
-			if (data.interval) {
-				clearInterval(data.interval);
-			}
-			data.interval = setInterval(updateTimer, settings.refreshInterval);
-			
-			// initialize the element with the starting value
-			render(value);
-			
-			function updateTimer() {
-				value += increment;
-				loopCount++;
-				
-				render(value);
-				
-				if (typeof(settings.onUpdate) == 'function') {
-					settings.onUpdate.call(self, value);
-				}
-				
-				if (loopCount >= loops) {
-					// remove the interval
-					$self.removeData('countTo');
-					clearInterval(data.interval);
-					value = settings.to;
-					
-					if (typeof(settings.onComplete) == 'function') {
-						settings.onComplete.call(self, value);
-					}
-				}
-			}
-			
-			function render(value) {
-				var formattedValue = settings.formatter.call(self, value, settings);
-				$self.html(formattedValue);
-			}
-		});
-	};
-	
-	$.fn.countTo.defaults = {
-		from: 0,               // the number the element should start at
-		to: 0,                 // the number the element should end at
-		speed: 1000,           // how long it should take to count between the target numbers
-		refreshInterval: 100,  // how often the element should be updated
-		decimals: 0,           // the number of decimal places to show
-		formatter: formatter,  // handler for formatting the value before rendering
-		onUpdate: null,        // callback method for every time the element is updated
-		onComplete: null       // callback method for when the element finishes updating
-	};
-	
-	function formatter(value, settings) {
-		return value.toFixed(settings.decimals);
-	}
-}(jQuery));
-
-jQuery(function ($) {
-  // custom formatting example
-  $('.count-number').data('countToOptions', {
-	formatter: function (value, options) {
-	  return value.toFixed(options.decimals).replace(/\B(?=(?:\d{3})+(?!\d))/g, ',');
-	}
-  });
-
-  $('.count-percent').data('countToOptions', {
-	formatter: function (value, options) {
-      var val = value.toFixed(options.decimals).replace(/\B(?=(?:\d{3})+(?!\d))/g, ',');
-      return val + '%'
-	}
-  });
-
-  $('.count-kg').data('countToOptions', {
-	formatter: function (value, options) {
-      var val = value.toFixed(options.decimals).replace(/\B(?=(?:\d{3})+(?!\d))/g, ',');
-      return val + 'kg'
-	}
-  });
-  
-  // start all the timers
-  $('.timer').each(count);  
-  
-  function count(options) {
-	var $this = $(this);
-	options = $.extend({}, options || {}, $this.data('countToOptions') || {});
-	$this.countTo(options);
-  }
-});
-    </script>
 </body>
 
 </html>
