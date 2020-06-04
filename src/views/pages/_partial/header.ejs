@@ -1,41 +1,42 @@
+<%if(__req.query.header != '0') { %>
+
 <% if (config.pagetrack == "true" && (!__req.user || !__req.user.hasRole('admin') )) { %>
-<noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-TJ6248F"
-  height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+<noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-TJ6248F" height="0" width="0"
+    style="display:none;visibility:hidden"></iframe></noscript>
 <% } %>
+
+
 <% if (!__req.user) { %>
 <%- include ./signinup %>
 <% } %>
 
 
-<% var homeUrl = (config.nodeenv == 'production') ? '/': '/' %>
+
 <%
   var searchHints = __categories.filter(p=>p.searchhint).map(c=>c.searchhint) 
   var index = __helper.getRandomInt(searchHints.length);
   var searchHint = 'arayın: ' + (searchHints[index] || 'haşlamalık')
   
-  %>
+  
 %>
 
 
-<header class="box-shadow-sm d-print-none">
-  <!-- Topbar-->
+<header class=" d-print-none">
 
   <div class="topbar topbar-dark bg-primary-darkest d-none d-lg-block ">
     <div class="container">
-
-
-
       <div class="topbar-text dropdown d-none d-md-none"><a class="topbar-link dropdown-toggle" href="#"
           data-toggle="dropdown">Hızlı Erişim</a>
         <ul class="dropdown-menu">
-          <li><a class="dropdown-item" href="/kasap-urunleri"><i class="czi-view-grid text-muted mr-2"></i>Lezzetler</a></li>
+          <li><a class="dropdown-item" href="/kasap-urunleri"><i class="czi-view-grid text-muted mr-2"></i>Lezzetler</a>
+          </li>
           <li>
           <li><a class="dropdown-item" href="tel:8503054216"><i class="czi-support text-muted mr-2"></i>
               0 850 305 4216</a></li>
           <li>
 
             <% if ( __req.prefAddr) { %>
-            <a  class="dropdown-item select-area-action"><i class=" czi-location text-muted mr-2">
+            <a class="dropdown-item select-area-action"><i class=" czi-location text-muted mr-2">
 
               </i><%= __req.prefAddr.level1Text + '/' + __req.prefAddr.level3Text %> (değiştir)</a>
 
@@ -62,12 +63,12 @@
 
         <% if ( __req.prefAddr ) { %>
 
-        <a  class="select-area-action topbar-link  d-md-inline-block" href="#"><i
+        <a class="select-area-action topbar-link  d-md-inline-block" href="#"><i
             class="text-light czi-location"></i><%= __req.prefAddr.level1Text + '/' + __req.prefAddr.level3Text %></a>
 
 
         <% } else { %>
-        <a  class="select-area-action topbar-link d-md-inline-block" href="#"><i
+        <a class="select-area-action topbar-link d-md-inline-block" href="#"><i
             class="text-light czi-location"></i>Semtinizi Seçin</a>
 
 
@@ -79,7 +80,7 @@
 
     </div>
   </div>
-  
+
   <div class=" bg-primary-darkest">
     <div class="navbar navbar-expand-lg navbar-dark">
       <div class="container">
@@ -88,13 +89,14 @@
           <div class="navbar-tool-icon-box"><i class="navbar-tool-icon czi-menu"></i></div>
           <div class="navbar-tool-text ml-n3"></div>
         </a>
-        <a class="navbar-brand d-none d-lg-block mr-3 flex-shrink-0" href="<%=homeUrl%>" style="min-width: 7rem;"><img
-            style="width: 11rem;" src="<%=__config.staticDomain %>/resource/img/logo-nav.png" title="KasaptanAl.com" alt="kasaptanal.com" /></a><a
-          class="navbar-brand d-lg-none mr-2" href="<%=homeUrl%>" style="min-width: 2.125rem;"><img style="width: 8rem;"
-            src="<%=__config.staticDomain %>/resource/img/logo-nav.png" title="KasaptanAl.com" alt="kasaptanal.com" /></a>
+        <a class="navbar-brand d-none d-lg-block mr-3 flex-shrink-0" href="/" style="min-width: 7rem;"><img
+            style="width: 11rem;" src="<%=__config.staticDomain %>/resource/img/logo-nav.png" title="KasaptanAl.com"
+            alt="kasaptanal.com" /></a><a class="navbar-brand d-lg-none mr-2" href="/" style="min-width: 2.125rem;"><img
+            style="width: 8rem;" src="<%=__config.staticDomain %>/resource/img/logo-nav.png" title="KasaptanAl.com"
+            alt="kasaptanal.com" /></a>
         <div class="input-group-overlay d-none d-lg-flex mx-4">
           <div class="input-group-prepend-overlay">
-            
+
             <span class="input-group-text">
               <i class="notsearching czi-search"></i>
               <span class="searching d-none spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
@@ -102,7 +104,7 @@
           </div>
           <input class="form-control searchBox prepended-form-control" data-noresults-text="Maalesef bulamadık."
             autocomplete="off" type="text" placeholder="<%=searchHint%>">
-         
+
         </div>
         <div class="navbar-toolbar d-flex flex-shrink-0 align-items-center">
 
@@ -112,7 +114,8 @@
             <div class="navbar-tool-text ml-n2"><small><%= req.user.name %></small>Hesabım</div>
           </a>
           <% } else { %>
-          <a class="d-none d-lg-flex  text-dark navbar-tool ml-1 ml-lg-0 mr-n1 mr-lg-2" href="javascript:window.App.showSignupDlg()">
+          <a class="d-none d-lg-flex  text-dark navbar-tool ml-1 ml-lg-0 mr-n1 mr-lg-2"
+            href="javascript:window.App.showSignupDlg()">
             <div class="navbar-tool-icon-box bg-primary"><i class="navbar-tool-icon czi-user"></i></div>
             <div class="navbar-tool-text ml-n2"><small>Giriş veya</small>Kayıt</div>
           </a>
@@ -135,7 +138,7 @@
       <div class="container">
         <div class="input-group-overlay d-lg-none my-3">
           <div class="input-group-prepend-overlay">
-            
+
             <span class="input-group-text">
               <i class="notsearching czi-search"></i>
               <span class="searching d-none spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
@@ -152,16 +155,16 @@
               <a class="nav-link" href="/kasap-urunleri">Ürünler</a>
 
             </li>
- 
+
 
           </ul>
 
-     
+
 
           <ul class="navbar-nav ">
             <li class="nav-item">
               <a class="nav-link  pl-0" href="/et-yemekleri">Et Yemekleri</a>
-             
+
 
             </li>
 
@@ -172,12 +175,12 @@
 
           </ul>
 
-       
+
 
 
           <ul class="text-nowrap navbar-nav ">
 
-      
+
 
             <li class="nav-item"><a class="nav-link" href="/onlinekasap">Kasaplar</a>
 
@@ -190,16 +193,18 @@
             <li class="d-lg-none nav-item"><a class="nav-link" href="/user/orders">Siparişlerim</a>
             </li>
             <%} else {%>
-            <li class="d-lg-none nav-item"><a href="javascript:window.App.showSignupDlg()" data-label="" class="nav-link">Kullanıcı Girişi/Kayıt</a>
+            <li class="d-lg-none nav-item"><a href="javascript:window.App.showSignupDlg()" data-label=""
+                class="nav-link">Kullanıcı Girişi/Kayıt</a>
             </li>
             <%}%>
             <% if ( __req.prefAddr ) { %>
 
-            <li class="d-lg-none nav-item"><a  class="select-area-action nav-link" href="#">Semt:<%= __req.prefAddr.level1Text + '/' + __req.prefAddr.level3Text %></a>
+            <li class="d-lg-none nav-item"><a class="select-area-action nav-link"
+                href="#">Semt:<%= __req.prefAddr.level1Text + '/' + __req.prefAddr.level3Text %></a>
             </li>
 
             <% } else { %>
-            <li class="d-lg-none nav-item"><a  class="select-area-action nav-link" href="#">Semtinizi Seçin</a></li>
+            <li class="d-lg-none nav-item"><a class="select-area-action nav-link" href="#">Semtinizi Seçin</a></li>
 
 
 
@@ -209,11 +214,10 @@
 
           <ul class="nav navbar-nav ml-auto">
             <li class="nav-item">
-                     <a class="nav-link" 
-                href="/blog">
+              <a class="nav-link" href="/blog">
                 Blog</a>
 
-              </li>
+            </li>
 
             <li class="nav-item  d-lg-none">
 
@@ -230,8 +234,6 @@
 
 
 
-
-
-
 <div class="d-print-none" id="__whatsup"></div>
 
+<%}%>

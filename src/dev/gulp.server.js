@@ -7,7 +7,6 @@ var uglify = require('gulp-uglify');
 minifyejs = require('gulp-minify-ejs')
 
 
-
 const deployDir = "";
 
 let tsc = (dest, debug) => {
@@ -57,7 +56,7 @@ gulp.task('server.dev', () => {
 gulp.task('server.tsc', tsh);
 
 function deployClean() {
-    return del([deployDir + "bin"])
+    return del([deployDir + "bin_"])
 }
 
 // function deployViews() {
@@ -66,7 +65,7 @@ function deployClean() {
 // }
 
 function deployBin() {
-    return tsc(deployDir + "bin", false);
+    return tsc(deployDir + "bin_", false);
 }
 
 // function deployRemaning() {

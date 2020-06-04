@@ -84,11 +84,11 @@ class="gallery-item-caption"><%= butcherVideo.title %></span></a>
       </div>
     <% } %>
     
-    <div class="px-3 row">
+    <div class="pt-3 px-3 row">
       <% if (view.butcher.userRatingAsPerc > 0 ) { %>
         <div class="col">
           <div class="font-size-xs text-muted ">Ürün Memnuniyeti</div>
-          <div class="progress mb-3">
+          <div class="progress mb-2">
             <div class="progress-bar font-weight-medium bg-info" role="progressbar" style="width: <%=view.butcher.userRatingAsPerc %>%" aria-valuenow="<%=view.butcher.userRatingAsPerc %>" aria-valuemin="0" aria-valuemax="100">
               <%=view.butcher.userRatingAsPerc %>%
             </div>  
@@ -101,7 +101,7 @@ class="gallery-item-caption"><%= butcherVideo.title %></span></a>
         <div class="col">
           <div class="font-size-xs text-muted">Teslimat Başarısı</div>
   
-          <div class="progress mb-3">
+          <div class="progress mb-2">
             <div class="progress-bar font-weight-medium bg-info" role="progressbar" style="width: <%=view.butcher.shipRatingAsPerc %>%" aria-valuenow="<%=view.butcher.shipRatingAsPerc %>" aria-valuemin="0" aria-valuemax="100">
               <%=view.butcher.shipRatingAsPerc %>%
             </div>  
@@ -112,9 +112,9 @@ class="gallery-item-caption"><%= butcherVideo.title %></span></a>
     </div>
 
     <% if (view.butcher.puanData) { %>
-      <div class="text-accent px-3 font-size-sm mt-3">
-        <span class="text-dark"><%=view.butcher.name%>, Kasap Kart&trade; iş ortağıdır, alışverişlerinizden puan kazanabilirsiniz.</span>
-        <!-- <%- include('./puan-data-view.ejs', {puan: view.butcher.puanData, hideMinPuanForUsage: true}) %> -->
+      <div class="px-3 font-size-sm mt-3">
+        <span class="text-dark"><%=view.butcher.name%>, Kasap Kart&trade; iş ortağıdır.</span>
+        <%- include('./puan-data-view.ejs', {puan: view.butcher.puanData, hideMinPuanForUsage: true}) %> 
     
       </div>
     <% } %>    

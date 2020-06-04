@@ -259,7 +259,7 @@
                           </div>
   
                           <div class="text-center">
-                            <button @click="selectArea(null, '<%=__req.prefAddr ? `Maalesef ürünümüz ${__req.prefAddr.level1Text}/${__req.prefAddr.level2Text}/${__req.prefAddr.level3Text} için ulaşılabilir değil. Lütfen bir başka adres seçin.`: ``%>')" type="button"  id="add2scSetAddrBtn" class="btn btn-accent btn-sm"><i
+                            <button @click="selectArea(null, '<%=__req.prefAddr ? `Maalesef ürünümüz ${__req.prefAddr.level1Text}/${__req.prefAddr.level2Text}/${__req.prefAddr.level3Text} için ulaşılabilir değil. Lütfen bir başka adres seçin.`: ``%>')" type="button" class="btn btn-accent btn-sm"><i
                               class="czi-location font-size-lg mr-2"></i>Semt Seç</button>
                           </div>
                           
@@ -487,12 +487,6 @@
                           
                           </div>
 
-                          <div class="mb-3">
-                            <span class="text-accent font-weight-medium"> Sorularınız mı var ?</span>  <br> <a title="WhatsApp Canlı Destek" 
-  target="_blank" href="https://wa.me/908503054216?text=<%-`Merhaba, kasaptanal.com üzerinden size ulaşıyorum. ${product.name} ile ilgili whatsapp üzerinden yardımcı olabilir misiniz?`%>" class=" font-weight-medium  text-success">
-  <img src="<%=__config.staticDomain %>/resource/img/messaging-whatsapp.svg" width="24">
-  Destek için hazırız.</a>
-                          </div>
 
                           
            
@@ -598,7 +592,7 @@
                               class="czi-cart font-size-lg mr-2"></i><%= controller.shopCardIndex >= 0 ? 'Sepeti Güncelle': 'Sepete Ekle' %></button>
                           
                           <% } else { %>
-                              <button @click="selectArea(null, '<%=__req.prefAddr ? `Maalesef ürünümüz ${__req.prefAddr.level1Text}/${__req.prefAddr.level2Text}/${__req.prefAddr.level3Text} için ulaşılabilir değil. Lütfen bir başka adres seçin.`: ``%>')" type="button"  id="add2scSetAddrBtn" class="btn btn-accent btn-block"><i
+                              <button @click="selectArea(null, '<%=__req.prefAddr ? `Maalesef ürünümüz ${__req.prefAddr.level1Text}/${__req.prefAddr.level2Text}/${__req.prefAddr.level3Text} için ulaşılabilir değil. Lütfen bir başka adres seçin.`: ``%>')" type="button"   class="btn btn-accent btn-block"><i
                                 class="czi-location font-size-lg mr-2"></i>Semt Seç</button>
                           <% } %>
 
@@ -614,14 +608,7 @@
 
 
                 </form>
-                <!-- Product panels-->
-
-                <!-- Sharing-->
-                <!-- <h6 class="d-inline-block align-middle font-size-base my-2 mr-2">Payaşın:</h6><a
-                                class="share-btn sb-twitter mr-2 my-2" href="#"><i class="czi-twitter"></i></a><a
-                                class="share-btn sb-instagram mr-2 my-2" href="#"><i
-                                    class="czi-instagram"></i></a><a class="share-btn sb-facebook my-2"
-                                href="#"><i class="czi-facebook"></i></a> -->
+         
               </div>
             </div>
           </div>
@@ -641,12 +628,7 @@
 
 
 
-          <% if (otherButcherAlternatives > 0) { %>
-          <!-- <li class="nav-item">
-            <a class="nav-link" id="vendors-tab" data-toggle="tab" href="#vendors" role="tab" aria-controls="contact"
-              aria-selected="false">Diğer Kasaplar</a>
-          </li>   -->
-         <% } %>        
+     
         </ul>
         
         <div class="tab-content px-4" id="myTabContent">
@@ -730,7 +712,7 @@
                     <%}%>
 
                
-                      <h3 class="border-bottom h4"><%=product.name%> Fiyat</h3>
+                      <h3 class="border-bottom h4"><%=product.name%> Fiyatı</h3>
                  
                  
 
@@ -774,7 +756,7 @@
                     <h3 class="border-bottom h4"><%=product.name%> Online Siparişi</h3>
                    
 <p>
-  Usta kasaplarımızdan <strong><%=product.name%></strong> online sipariş vermek için:
+  Yerel usta kasaplarımızdan <strong><%=product.name%> online siparişi </strong> verebilir ve kasaplarımızın <strong>eve servis</strong> veya <strong>paket servis</strong> olarak adlandırabileceğimiz hizmetlerinden faydalanabilirsiniz:
 
 </p>
 
@@ -790,7 +772,7 @@
                       </li>
                     </ul>
 <p>
-  Çoğu kasabımız <strong>online ödeme</strong> kabul etmektedir. Sepetinizdeki et ve et ürünlerini online ödeyerek zamandan kazanın.
+  Tüm kasap iş ortaklarımız <strong>online ödeme</strong> kabul etmektedir. Sepetinizdeki et ve et ürünlerini online ödeyerek zamandan kazanın.
 </p>
                  
           </div>

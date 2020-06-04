@@ -1,7 +1,13 @@
-<footer class="bg-primary-darker pt-3 d-print-none">
+<%if(__req.query.footer != '0') { %>
+ 
+
+
+
+
+<footer class="bg-primary-darker pt-4 d-print-none">
     <div class="container">
 
-        <h3 class="h4 text-center text-light mb-grid-gutter">kasaptanAl.com'u kullanmak için 4 sebep</h3>
+        <h3 class="h4 text-center text-light mb-grid-gutter">KasaptanAl.com'u kullanmak için 4 sebep</h3>
 
         <div class="row pb-3">
             <div class="col-md-3 col-sm-6 mb-4">
@@ -48,7 +54,7 @@
 
     <hr class="hr-light pb-4 mb-3">
 
-    <div class="container">
+    <div class="container mb-3">
         <!-- <div class="text-center cookiealert" role="alert">
             <p>
                 <b>Kullanıcı deneyiminizi artırmak için çerez kullanıyoruz.</b>
@@ -212,11 +218,11 @@
                 </div>
             </div>
         </div>
-        <div class="pt-3 bg-primary-darkest">
+        <div class="pt-4 bg-primary-darkest">
 
-            <div class="container">
+            <div class="container ">
 
-                <div class="row pb-2">
+                <div class="row pb-3">
                     <div class="col-md-6 text-center text-md-left mb-4">
                         <div class="text-nowrap mb-4"><a class="d-inline-block align-middle mt-n1 mr-3" href="#"><img
                                     class="d-block" title="KasaptanAl.com" style="width: 8rem;"
@@ -275,3 +281,5 @@
 </div>
 
 <% include ../_partial/meat-guide-dialog %>
+
+<%}%>

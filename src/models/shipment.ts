@@ -8,9 +8,11 @@ export let ShipmentHours = {
     812: 'Sabah 8-10 arası',
     1012: 'Sabah 10-12 arası',
     1214: 'Öğlen 12-2 arası',
-    1416: 'Öğlen 2-4 arası',
+    1416: 'Öğleden sonra 2-4 arası',
     1618: 'Akşama doğru 4-6 arası',
-    1820: 'Akşam 6-8 arası',
+    1819: 'Akşam 6-7 arası',
+    1920: 'Akşam 7-8 arası',
+    2021: 'Akşam 8-9 arası',
 }
 
 export let ShipmentDays = {
