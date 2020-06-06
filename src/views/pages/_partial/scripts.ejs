@@ -1,321 +1,349 @@
 <% if (config.pagetrack == "true" && (!__req.user || !__req.user.hasRole('admin') )) { %>
-
-<script async src="https://www.googletagmanager.com/gtag/js?id=UA-146976156-1"></script>
-<script>
-  window.dataLayer = window.dataLayer || [];
-  function gtag() { dataLayer.push(arguments); }
-  gtag('js', new Date());
-
-  gtag('config', 'UA-146976156-1');
-</script>
-<% } %>
-
-<script src="<%=__config.staticDomain %>/resource/js/vendor.min.js?v=<%=__config.versionKey%>"></script>
-<script src="<%=__config.staticDomain %>/resource/js/site.min.js?v=<%=__config.versionKey%>"></script>
-<script src="<%=__config.staticDomain %>/resource/js/app.js?v=<%=__config.versionKey%>"></script>
-
-<script>
-
-
-
-
-
-
-
-  $(document).ready(function () {
-
-
-  window.shopcard = {
-    card: {
-      data: <%- JSON.stringify(__shopcard() || { items: [] }) %>,
-    }
-  };
-
-  window.shopcard.count = new Vue({
-    el: '#shopcardcount',
-    data: {
-      card: window.shopcard.card
-    }
-  })
-
-  $(document).ajaxStart(function () {
+  
+  <script async src="https://www.googletagmanager.com/gtag/js?id=UA-146976156-1"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag() { dataLayer.push(arguments); }
+    gtag('js', new Date());
+  
+    gtag('config', 'UA-146976156-1');
+  </script>
+  <% } %>
+  
+  <script src="<%=__config.staticDomain %>/resource/js/vendor.min.js?v=<%=__config.versionKey%>"></script>
+  <script src="<%=__config.staticDomain %>/resource/js/site.min.js?v=<%=__config.versionKey%>"></script>
+  <script src="<%=__config.staticDomain %>/resource/js/app.js?v=<%=__config.versionKey%>"></script>
+  
+  <script>
+  
+    window.shopcard = {
+      card: {
+        data: <%- JSON.stringify(__shopcard() || { items: [] }) %>,
+      }
+    };
+  
+    window.shopcard.count = new Vue({
+      el: '#shopcardcount',
+      data: {
+        card: window.shopcard.card
+      }
+    })
+  
+    $(document).ajaxStart(function(){
     $("#loader").show();
   });
-  $(document).ajaxComplete(function () {
+  $(document).ajaxComplete(function(){
     $("#loader").hide();
   });
-
-  $('.searchBox').autoComplete({
-    resolver: 'custom',
-    minLength: 3,
-
-    formatResult: function (item) {
-      return {
-        value: item.id,
-        text: item.text,
-        html: [
-          $('<img>').attr('src', item.thumb).css("height", 48), ' ',
-          item.text,
-          item.type ? $('<span>').text(' /' + item.type + '').addClass('text-accent') : ''
-        ]
-      };
-    },
-
-    resolverSettings: {
-      url: '/api/v1/fts',
-      requestThrottling: 2000
-    },
-    events: {
-
-      search: function (qry, callback, el) {
-        // let's do a custom ajax call
-        debugger;
-        $('.notsearching').addClass('d-none');
-        $('.searching').removeClass('d-none');
-        $.ajax(
-          '/api/v1/fts',
-          {
-            data: { t: $(el).data('search'), c: $(el).data('category'), 'q': qry }
-          }
-        ).done(function (res) {
-          $('.searching').addClass('d-none');
-          $('.notsearching').removeClass('d-none');
-          callback(res);
-
-        });
+  
+    $('.searchBox').autoComplete({
+      resolver: 'custom',
+      minLength: 3,
+  
+      formatResult: function (item) {
+              return {
+                value: item.id,
+                text:  item.text,
+                html: [ 
+                    $('<img>').attr('src', item.thumb).css("height", 48), ' ', 
+                    item.text, 
+                    item.type ? $('<span>').text(' /' + item.type + '').addClass('text-accent'):'' 
+                  ] 
+              };
+            },
+            
+      resolverSettings: {
+        url: '/api/v1/fts',
+        requestThrottling: 2000
       },
-
-      searchPost: function (res, el) {
-        window.__searchResult = res;
-        window.dataLayer = window.dataLayer || [];
-        window.dataLayer.push({
-          'event': 'custom',
-          'category': 'search',
-          'action': 'search/autocomplete',
-          'label': el.val()
-        });
-
-        return res.map(function (p) {
-          return {
-            id: p.id,
-            text: p.name,
-            type: p.type,
-            thumb: p.thumb
-          }
-        })
-        // return window.__searchResult;
-      }
-
-    }
-  });
-
-  $('.searchBox').on('autocomplete.select', function (evt, item) {
-    let go = window.__searchResult.find(function (result) {
-      return result.id == item.id
-    });
-    window.location.href = go.url;
-  });
-
-<% if (typeof _usrmsg != 'undefined' && _usrmsg.text) { %>
-
-  window.App.alert("<%=_usrmsg.text%>", "<%=_usrmsg.type %>")
-
-<% } %>
-
-
-
-    var ulg = window.kb.userlocation();
-    var guideinited = false;
-    var inited = false;
-
-    var userGuide = {
-      guideinited: false,
-      autoPopuped: window.App.getCookie("guidewindow"),
-      open: function () {
-        if (!this.guideinited) {
-          this.guideinited = true;
-          ulg.init({
-            openDistricts: false,
-            cityDomSelector: "#guidecityselectpicker",
-            districtDomSelector: "#guidedistrictselectpicker"
-          }, function () {
-            $('#meatGuideModal').modal();
-            $("#meat-guide-close-button").click(function () {
-              f = $("#meat-guide-form")[0]
-              if (f.checkValidity()) {
-
-                $.ajax({
-                  type: "POST",
-                  url: "/api/v1/sitelog/create",
-                  data: {
-                    //district: ulg.selectedDistrict.name,
-                    city: ulg.selectedCity.name,
-                    email: $("#user-email").val(),
-                    logtype: "anonymous-user-download-meat-guide"
-                  },
-                  success: function () {
-                    window.App.gTag('meat-guide', ulg.selectedCity.name, $("#user-email").val())
-                    $('#meatGuideModal').modal("hide");
-                    alert("Teşekkürler")
+      events: {
+  
+        search: function (qry, callback,el) {
+                // let's do a custom ajax call
+                debugger;
+                $('.notsearching').addClass('d-none');
+                $('.searching').removeClass('d-none');
+                $.ajax(
+                  '/api/v1/fts',
+                  {
+                    data: { t: $(el).data('search'), c: $(el).data('category'), 'q': qry}
                   }
-                }
-                )
-              }
-            });
-            $('#meatGuideModal').on('shown.bs.modal', function () {
-
-            })
-          });
-        } else $('#meatGuideModal').modal("show")
-
-      }
-    }
-
-
-    $(".select-area-action").click(function () {
-      window.kb.selectArea(function (sender, ul) {
-        window.location.href = "/adres-belirle/" + ul.selectedDistrict.slug + '?r=' + window.location.href;
-        //window.location.reload(true) // = "/" + window.App.ProductApp.product.slug + "?semt=" + ul.selectedDistrict.slug
-
-      });
-    })
-
-    $(".explore-area-action").click(function () {
-      window.kb.selectArea(function (sender, ul) {
-        window.location.href = "/" + ul.selectedDistrict.slug + "-kasap?save=1"
-      });
-    })
-
-    $(".get-userguide-action").click(function () {
-      userGuide.open();
-    })
-
-
-    $(window).scroll(function () {
-      if (($(document).scrollTop() >= $(document).height() / 3) && !userGuide.autoPopuped) {
-        userGuide.autoPopuped = true;
-        window.App.setCookie("guidewindow", "1", 30);
-        window.App.showSignupDlg(null, true);
-        //userGuide.open();
+                ).done(function (res) {
+                  $('.searching').addClass('d-none');
+                $('.notsearching').removeClass('d-none');
+                  callback(res);
+                  
+                });
+              },
+              
+        searchPost: function (res, el) {
+          window.__searchResult = res;
+          window.dataLayer = window.dataLayer || [];
+                      window.dataLayer.push({
+                      'event': 'custom',
+                      'category': 'search',
+                      'action':'search/autocomplete',
+                      'label': el.val()
+                      });
+  
+          return res.map(function (p) {
+            return {
+              id: p.id,
+              text: p.name,
+              type: p.type,
+              thumb: p.thumb
+            }
+          })
+          // return window.__searchResult;
+        }
+  
       }
     });
-
-    var scroll = 0;
-
-    if (window.lgData && window.lgData.lg0) {
-      $(window.lgData.lg0.el).on('onBeforeOpen.lg', function (event) {
-        scroll = $(window).scrollTop();
+  
+    $('.searchBox').on('autocomplete.select', function (evt, item) {
+      let go = window.__searchResult.find(function (result) {
+        return result.id == item.id
+      });
+      window.location.href = go.url;
+    });
+  </script>
+  <% if (typeof _usrmsg != 'undefined' && _usrmsg.text) { %>
+  <script>
+    window.App.alert("<%=_usrmsg.text%>", "<%=_usrmsg.type %>")
+  </script>
+  <% } %>
+  
+  
+  <script>
+  
+  
+  
+  
+  
+    $(document).ready(function () {
+  
+      var ulg = window.kb.userlocation();
+      var guideinited = false;
+      var inited = false;
+  
+      var userGuide = {
+        guideinited: false,
+        autoPopuped: window.App.getCookie("guidewindow"),
+        open: function () {
+          if (!this.guideinited) {
+            this.guideinited = true;
+            ulg.init({
+              openDistricts: false,
+              cityDomSelector: "#guidecityselectpicker",
+              districtDomSelector: "#guidedistrictselectpicker"
+            }, function () {
+              $('#meatGuideModal').modal();
+              $("#meat-guide-close-button").click(function () {
+                f = $("#meat-guide-form")[0]
+                if (f.checkValidity()) {
+                  
+                  $.ajax({
+                    type: "POST",
+                    url: "/api/v1/sitelog/create",
+                    data: {
+                      //district: ulg.selectedDistrict.name,
+                      city: ulg.selectedCity.name,
+                      email: $("#user-email").val(),
+                      logtype: "anonymous-user-download-meat-guide"
+                    },
+                    success: function () {
+                      window.App.gTag('meat-guide', ulg.selectedCity.name, $("#user-email").val())
+                      $('#meatGuideModal').modal("hide");
+                      alert("Teşekkürler")
+                    }
+                  }
+                  )
+                }
+              });
+              $('#meatGuideModal').on('shown.bs.modal', function () {
+  
+              })
+            });
+          } else $('#meatGuideModal').modal("show")
+  
+        }
+      }
+  
+  
+      $(".select-area-action").click(function () {
+        window.kb.selectArea(function (sender, ul) {
+          window.location.href = "/adres-belirle/" + ul.selectedDistrict.slug + '?r=' + window.location.href;
+          //window.location.reload(true) // = "/" + window.App.ProductApp.product.slug + "?semt=" + ul.selectedDistrict.slug
+  
+        });
       })
-
-      $(window.lgData.lg0.el).on('onCloseAfter.lg', function (event) {
+  
+      $(".explore-area-action").click(function () {
+        window.kb.selectArea(function (sender, ul) {
+          window.location.href = "/" + ul.selectedDistrict.slug + "-kasap?save=1"
+        });
       })
-
-      $(window.lgData.lg0.el).on('onAfterSlide.lg', function (event) {
-        var node = window.lgData.lg0.items[event.detail.index];
-        if (node) {
-          if ($(node).data('gtrack')) {
-            var href = $(node).attr('href');
-            var type = $(node).data('restype');
-            var ref = $(node).data('resref');
-            var title = $(node).data('restitle');
-            window.App.gTag('gallery/' + type, ref + '/' + title, href)
-          }
+  
+      $(".get-userguide-action").click(function () {
+        userGuide.open();
+      })
+  
+  
+      $(window).scroll(function () {
+        if (($(document).scrollTop() >= $(document).height() / 3) && !userGuide.autoPopuped) {
+          userGuide.autoPopuped = true;
+          window.App.setCookie("guidewindow", "1", 30);
+          window.App.showSignupDlg(null, true);
+          //userGuide.open();
         }
       });
-
-    }
-
-    setTimeout(function() {
-      $('#__whatsup').floatingWhatsApp({
-    phone: '908503054216',
-    popupMessage: 'Nasıl yardımcı olabilirim ?',
-    showPopup: false,
-    showOnIE: false,
-    headerTitle: 'Hoşgeldiniz!',
-    position: 'right',
-    zIndex: '1030',
-    message: '<%= typeof(__supportMessage) == "undefined" ? '': __supportMessage %>',
-    size: '3.2rem',
-  });
-    }, 3000);
-
-    $(window).on('show.bs.modal', function (e) {
-      scroll = $(window).scrollTop();
-    });
-
-
-
-    $('#areaModal').on('shown.bs.modal', function () {
-      window.App.gTag('dialogs', 'open', 'location')
-
+  
     })
-
-    $('#meatGuideModal').on('shown.bs.modal', function () {
-      window.App.gTag('dialogs', 'open', 'meat-guide')
-
-    })
-
-    $('#signin-modal').on('shown.bs.modal', function () {
-      window.App.gTag('dialogs', 'open', 'login')
-
-    })
-
-
-    $('#signup-tab-a').on('shown.bs.tab', function (e) {
-      $('#su-tel').focus();
-    })
-
-    $('#signin-tab-a').on('shown.bs.tab', function (e) {
-      $('#si-email').focus();
-    })
-
-    <% if (typeof (enableImgContextMenu) == 'undefined') { %>
-    var allImages = document.querySelectorAll(".gallery-item");
-        allImages.forEach((value) => {
-          value.oncontextmenu = (e) => {
-            e.preventDefault()
-            return false;
-          }
+  
+  </script>
+  
+  
+  
+  <script>
+  
+  
+    $(document).ready(function () {
+      var scroll = 0; 
+  
+      if (window.lgData && window.lgData.lg0) {
+        $(window.lgData.lg0.el).on('onBeforeOpen.lg',function(event){
+            scroll = $(window).scrollTop();
         })
-          <%}%>
+  
+        $(window.lgData.lg0.el).on('onCloseAfter.lg',function(event){
+        })
+        
+        $(window.lgData.lg0.el).on('onAfterSlide.lg',function(event){
+          var node = window.lgData.lg0.items[event.detail.index];
+          if (node) {
+            if ($(node).data('gtrack')) {
+              var href = $(node).attr('href');
+              var type = $(node).data('restype');
+              var ref = $(node).data('resref');
+              var title = $(node).data('restitle');
+              window.App.gTag('gallery/' + type, ref + '/' + title, href)
+            }
+          }
+        });
+  
+      }
+  
+      $(window).on('show.bs.modal', function(e) { 
+        scroll = $(window).scrollTop();
+      });
+      
+  
+  
+       $('#areaModal').on('shown.bs.modal', function () {
+              window.App.gTag('dialogs', 'open', 'location')
+      
+            })
+  
+      $('#meatGuideModal').on('shown.bs.modal', function () {
+              window.App.gTag('dialogs', 'open', 'meat-guide')
+      
+            })
+  
+      $('#signin-modal').on('shown.bs.modal', function () {
+              window.App.gTag('dialogs', 'open', 'login')
+      
+            })
+          
+  
+      $('#signup-tab-a').on('shown.bs.tab', function (e) {
+        $('#su-tel').focus();
+      })
+  
+      $('#signin-tab-a').on('shown.bs.tab', function (e) {
+        $('#si-email').focus();
+      })
+  
+      <% if (typeof(enableImgContextMenu) == 'undefined') { %>
+      var allImages = document.querySelectorAll(".gallery-item");
+      allImages.forEach((value) => {
+        value.oncontextmenu = (e) => {
+          e.preventDefault()
+          return false;
+        }
+      })
+      <%}%>
+    });
+  
+  
+  </script>
+  
+  <script>
+  $('#__whatsup').floatingWhatsApp({
+      phone: '908503054216',
+      popupMessage: 'Nasıl yardımcı olabilirim ?',
+      showPopup: false,
+      showOnIE: false,
+      headerTitle: 'Hoşgeldiniz!',
+      position: 'right',
+      zIndex: '1030',
+      message: '<%= typeof(__supportMessage) == "undefined" ? '': __supportMessage %>',
+      size: '3.2rem',
+      
+    });
+  
+  </script>
+  <% if (!__req.user) { %>
+  
+  <script>
+    window.App.User = {
+      isAuthenticated: false
+    }
+  </script>
+  
+  
+  
+  <% } else { %>
+  
+  <script>
+    window.App.User = {
+      isAuthenticated: <%=__req.user ? true : false %>,
+  
+      prefAdr: <%- JSON.stringify(__req.prefAddr || {}) %>
+    }
+  
+  </script>
+  
+  <% if (__req.user && !__req.user.hasRole('admin')) {%>
+  <script>  
+    window.App.gTag('pageView', '<%=__req.path%>',  '<%=__req.user.mphone%>' )
+  </script>
+  
+    <% } %>
+  
+  
+  <%}%>
 
-  })
+  <!-- <script defer src="https://unpkg.com/web-vitals@0.2.2/dist/web-vitals.es5.umd.min.js"></script>
+<script>
+addEventListener('DOMContentLoaded', function() {
+  webVitals.getCLS(console.log);
+  webVitals.getFID(console.log);
+  webVitals.getLCP(console.log);
+});
+</script> -->
 
+<script>
+        $('.search-sample').click(function (el) {
+        var search = el.currentTarget.textContent;
+        $('#page-searchbox').autoComplete('set', { value: search, text: search });
+        $('#page-searchbox').trigger('keyup');
+        el.stopImmediatePropagation();
+        el.preventDefault();
 
+        setTimeout(function() {
+          $('#page-searchbox').focus();
 
-
-
-
-<% if (!__req.user) { %>
-
-
-  window.App.User = {
-    isAuthenticated: false
-  }
-
-
-
-
-<% } else { %>
-
-
-  window.App.User = {
-    isAuthenticated: <%=__req.user ? true : false %>,
-
-    prefAdr: <%- JSON.stringify(__req.prefAddr || {}) %>
-  }
-
-
-
-<% if (__req.user && !__req.user.hasRole('admin')) {%>
-
-  window.App.gTag('pageView', '<%=__req.path%>', '<%=__req.user.mphone%>')
-  window.App.gTag('userTrack', '<%=__req.user.mphone%>', '<%=__req.path%>')
-
-
-<% } %>
-
-
-<%}%>
-
+        }, 100 );
+        return false;
+      })
 </script>

@@ -11,6 +11,8 @@
     <!-- <%-include('./_partial/food-select-alternatives.ejs', {}) %> -->
     
     <section class="bg-faded-primary pt-2">
+
+        <%if(__req.query.car != '0') { %>
         <div id="myCarousel" class="carousel slide mb-3" data-interval="false" data-ride="carousel">
             <ol class="carousel-indicators">
                 <li data-target="#myCarousel" data-slide-to="0" class="active"></li>
@@ -31,11 +33,20 @@
                         <h2 class="h1 d-block display-4">%3 kârlı çıkın</h2>
                         <span class="h5 d-block font-weight-light pb-3 ">ilk siparişinize özel ek
                             puan kazanın</span>
-                        <a class="btn btn-primary" href="javascript:window.App.showSignupDlg()">Fırsatı Yakala<i
-                                class="czi-arrow-right ml-2 mr-n1"></i></a>
+                        <a class="btn btn-primary" href="javascript:window.App.showSignupDlg()">Fırsatı Yakala</a>
                     </div>
                 </div>
                 <% } %>
+                <div class="carousel-item home-carousel-item <%=__req.user ? 'active':''%>">
+                    <div class="py-3 mb-3 carousel-caption">
+                        <h2 class="h1 d-block display-4  ">güvenilir kasaplardan</h2>
+                        <span class="h5 d-block  font-weight-light pb-3 ">online sipariş verin</span>
+    
+                        <a class="btn btn-primary " href="/kasap-urunleri">Alışverişe Başla<i
+                                class="czi-arrow-right ml-2 mr-n1"></i></a>
+                    </div>
+                </div>
+
                 <div class="carousel-item home-carousel-item <%=__req.user ? 'active':''%>">
                     <div class="py-3 mb-3 carousel-caption">
                         <h2 class="h1 d-block display-4  ">popüler ürünler</h2>
@@ -110,7 +121,7 @@
                 <span class="carousel-control-next-icon"></span>
             </a>
         </div>
-
+        <% } %>
 
     </section>
 
@@ -125,7 +136,7 @@
                     </a>
                 </div>
 
-                <div class="col-sm-8 ">
+                <div class="col-sm-8 font-weight-light font-size-lg">
                     <h1 class="h2 pl-3 pt-4 h3">
                         Online Kasap Alışverişi & Et Siparişi
 
@@ -157,6 +168,75 @@
     <div class="container mb-3">
         <%- include('./_partial/category-products-slider', {category: 'populer-etler', limit: 8, reverse: true, img: 'img/category/premium.jpg'}); %>
     </div>
+
+    <section class="container">
+        <div class="row">
+
+
+
+            <div class="col-md-6 mb-3">
+                <div class="d-flex flex-column h-100 justify-content-center bg-size-cover bg-position-center rounded-lg"
+                    style="background-image: url(<%=__config.staticDomain %>/resource/img/banner-bg.jpg);">
+                    <div class="py-4 my-2 my-md-0 py-md-5 px-2 ml-md-3 text-center text-sm-left">
+                        <!-- <h4 class="h6 font-size-lg font-weight-light mb-2">Size bugün nasıl yardımcı olalım?</h4> -->
+                        <h3 class="mb-2 h5">Size bugün nasıl yardımcı olalım?</h3>
+                        
+                        <div  class="input-group-overlay mb-1">
+
+                            <div class="input-group-prepend-overlay">
+                
+                              <span class="input-group-text">
+                                <i class="notsearching czi-search"></i>
+                                <span class="searching d-none spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
+                              </span>
+                            </div>
+                            <input id="page-searchbox" class="form-control font-size-sm searchBox prepended-form-control"
+                              data-noresults-text="Maalesef bulamadık." autocomplete="off" type="text"
+                              placeholder="arayın: et, semt, yemek veya kasap">
+                            <div>
+                
+                            </div>
+                          </div>
+
+                            <div class="font-size-lg text-center">
+            <a class="search-sample font-weight-light text-white  badge badge-primary mr-1">mangallık et</a>
+            <a class="search-sample font-weight-light text-white   badge badge-primary mr-1">dana eti</a>
+            <a class="search-sample font-weight-light text-white  badge badge-primary mr-1">assado</a>
+            <a class="search-sample font-weight-light text-white  badge badge-primary mr-1">tavuk</a>
+            <a class="search-sample font-weight-light text-white  badge badge-primary mr-1">bahçelievler</a>
+            <a class="search-sample font-weight-light text-white  badge badge-primary mr-1">tüm kuzu</a>
+            <a class="search-sample font-weight-light text-white  badge badge-primary mr-1">fırınlık et</a>
+            <a class="search-sample font-weight-light text-white  badge badge-primary mr-1">çiğ süt</a>
+            <a class=" font-weight-light text-white  badge badge-primary mr-1" href="/kasap-urunleri">...</a>
+  
+          </div> 
+                    </div>
+                </div>
+            </div>
+          
+
+            <div class="col-md-6 mb-3">
+                <div class="d-flex flex-column h-100 justify-content-center bg-size-cover bg-position-center rounded-lg"
+                    style="background-image: url(<%=__config.staticDomain %>/resource/img/banner-bg.jpg);">
+                    <div class="py-4 my-2 my-md-0 py-md-5 px-4 ml-md-3 text-center text-sm-left">
+                        <h4 class="h6 font-size-lg font-weight-light mb-2">Yerel usta kasaplarımızın</h4>
+                        <h3 class="mb-4 h5">Doğal Ürünlerini Keşfedin</h3>
+
+                        <a class="btn btn-primary " href="/kasap-urunleri">Tüm Ürünler<i
+                            class="czi-arrow-right ml-2 mr-n1"></i></a>
+
+
+                    </div>
+                </div>
+
+
+            </div>
+
+
+
+
+        </div>
+    </section>
 
 
     <div class="container mb-3">
@@ -202,7 +282,10 @@
                         <h3 class="mb-4 h5">Lezzetli Yemekler, Pratik Tarifler</h3>
 
 
-                        <a href="/et-yemekleri" class="btn btn btn-primary">Et Yemekleri</a>
+                        <a href="/et-yemekleri" class="btn btn btn-primary">Et Yemekleri
+                            <i
+                            class="czi-arrow-right ml-2 mr-n1"></i>
+                        </a>
 
                     </div>
                 </div>
@@ -216,10 +299,11 @@
         </div>
     </section>
 
-
+    <%if(__req.query.catlider != '0') { %>
     <div class="container mb-3">
         <%- include('./_partial/category-slider', { viewCats: ['reyon', 'list'], title: 'Tüm Ürünlerimiz', allUrl: '/kasap-urunleri' }); %>
     </div>
+    <%}%>
 
     <section class="container-fluid px-0 mb-3">
         <div class="row no-gutters">
@@ -242,6 +326,7 @@
         </div>
     </section>
 
+    <% if (__req.query.nodesc!='1') { %>
     <div class="container mb-3">
         <div class="collapse-container page-footer-text">
             <div class="collapse" id="collapseSummary">
@@ -317,7 +402,7 @@
                 aria-controls="collapseSummary"></a>
         </div>
     </div>
-
+    <% } %>
 
     <% include ./_partial/footer %>
 

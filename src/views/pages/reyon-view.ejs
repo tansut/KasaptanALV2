@@ -201,16 +201,7 @@
     <% include ./_partial/scripts %>
 
     <script>
-      $('.search-sample').click(function (el) {
-        var search = el.currentTarget.textContent;
-        $('#page-searchbox').autoComplete('set', { value: search, text: search });
-        $('#page-searchbox').trigger('keyup');
-        setTimeout(function() {
-          $('#page-searchbox').focus();
 
-        }, 100 )
-        el.stopImmediatePropagation()
-      })
 
 
       if (('webkitSpeechRecognition' in window)) {
