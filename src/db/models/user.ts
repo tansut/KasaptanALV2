@@ -25,6 +25,10 @@ export interface PreferredAddress {
     level2Slug?: string;
     level3Slug?: string;    
 
+    level1Status?: string;
+    level2Status?: string;
+    level3Status?: string;
+
     display?: string;
 }
 

@@ -24,6 +24,7 @@ let ellipsis = require('text-ellipsis');
 export default class Route extends ViewRouter {
 
     //tarifs: Resource[];
+    hide4Sebep = true;
     foods: Resource[];
     blogItems: Content[];
     foodsTitle = "Et Yemekleri";
@@ -58,40 +59,40 @@ export default class Route extends ViewRouter {
 
     @Auth.Anonymous()
     async defaultRoute() {
-        let recentButchers: ButcherModel[] = CacheManager.dataCache.get("recent-butchers");
-        if (!recentButchers) {
-            recentButchers = await ButcherModel.findAll({
-                order: [["updatedon", "DESC"]],
-                limit: 10,
-                include: [
-                    { all: true }
-                ],
-                where: {
-                    approved: true
-                }
-            });
-            CacheManager.dataCache.set("recent-butchers", recentButchers.map(b => b.get({ plain: true })));
-        }
+        // let recentButchers: ButcherModel[] = CacheManager.dataCache.get("recent-butchers");
+        // if (!recentButchers) {
+        //     recentButchers = await ButcherModel.findAll({
+        //         order: [["updatedon", "DESC"]],
+        //         limit: 10,
+        //         include: [
+        //             { all: true }
+        //         ],
+        //         where: {
+        //             approved: true
+        //         }
+        //     });
+        //     CacheManager.dataCache.set("recent-butchers", recentButchers.map(b => b.get({ plain: true })));
+        // }
 
-        this.foods = await new ProductsApi(this.constructorParams).getResources({
-            type: ['product-videos', 'product-photos'],
-            list: true,
-            tag1: {
-                [Op.or]: [{
-                    [Op.like]: '%yemek%'
+        // this.foods = await new ProductsApi(this.constructorParams).getResources({
+        //     type: ['product-videos', 'product-photos'],
+        //     list: true,
+        //     tag1: {
+        //         [Op.or]: [{
+        //             [Op.like]: '%yemek%'
 
-                }, { [Op.like]: '%tarif%' }]
-            }
-        }, null, 10);
-        this.foodsTitle = 'Yemekler ve Tarifler'
+        //         }, { [Op.like]: '%tarif%' }]
+        //     }
+        // }, null, 10);
+        // this.foodsTitle = 'Yemekler ve Tarifler'
 
         //this.foods = CacheManager.dataCache.get("recent-foods");
-        this.blogItems = await this.getBlogItems();
+        //this.blogItems = await this.getBlogItems();
         //this.stats = await SiteStats.get();
 
 
         this.res.render("pages/default.ejs", this.viewData({
-            recentButchers: recentButchers,
+            //recentButchers: recentButchers,
             ellipsis: ellipsis
         }));
 

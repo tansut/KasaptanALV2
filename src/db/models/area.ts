@@ -102,7 +102,8 @@ class Area extends BaseModel<Area> {
                 level1Id: this.id,
                 level1Slug: this.slug,
                 level1Text: this.name,
-                display: this.name
+                display: this.name,
+                level1Status: this.status
             }
         } else if (this.level == 2) {
             let parent = this.parent || await Area.findByPk(this.parentid);
@@ -110,11 +111,12 @@ class Area extends BaseModel<Area> {
                 level1Id: parent.id,
                 level1Slug: parent.slug,
                 level1Text: parent.name,
+                level1Status: parent.status,
 
                 level2Id: this.id,
                 level2Slug: this.slug,
                 level2Text: this.name,
-
+                level2Status: this.status,
                 display: this.name + '/' + parent.name
             }
         } else {
@@ -128,14 +130,17 @@ class Area extends BaseModel<Area> {
                 level1Id: parentOfParent.id,
                 level1Slug: parentOfParent.slug,
                 level1Text: parentOfParent.name,
+                level1Status: parentOfParent.status,
 
                 level2Id: parent.id,
                 level2Slug: parent.slug,
                 level2Text: parent.name,
+                level2Status: parent.status,
 
                 level3Id: this.id,
                 level3Slug: this.slug,
                 level3Text: this.name           ,
+                level3Status: this.status          ,
                 
                 display: this.name + ', ' + parent.name + '/' + parentOfParent.name 
             }            

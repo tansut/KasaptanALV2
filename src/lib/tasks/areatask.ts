@@ -34,7 +34,11 @@ export default class AreaTask extends BaseTask {
         )
         union SELECT a.id FROM  Areas a where 
         (a.id in (SELECT distinct d.toareaid FROM Dispatchers d where d.toarealevel=3))
-            
+        union select id from Areas ap where ap.level=3 and ( ap.id in 
+            (
+            SELECT distinct a.id FROM  Areas a where 
+            (a.parentid in (SELECT distinct d.toareaid FROM Dispatchers d where d.toarealevel=2))
+            )) 
             `,
             {
 

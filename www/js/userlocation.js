@@ -12,11 +12,20 @@
                             $(options.ilceDomSelector).append('<option value="' + list[i].id + '">' + list[i].name + '</option>');
                         }
 
+
+
+                        var defaultIlce = list.find(function (element) {
+                            if (options && options.defaultIlce)
+                                return element.id == options.defaultIlce 
+                            else return false;
+                        });
+                        defaultIlce = defaultIlce || list[0];
                         $(options.ilceDomSelector).selectpicker("refresh");
-                        self.selectedIlce = list[0];
+
+                        self.selectedIlce = defaultIlce;
                         setTimeout(function () {
                             self.ilcesloaded = list;
-                            //$(options.ilceDomSelector).selectpicker('toggle');
+                            $(options.ilceDomSelector).selectpicker('val', defaultIlce.id.toString());
                             self.loadDistricts(self.selectedIlce);
                         });
 
@@ -33,12 +42,25 @@
                             $(options.districtDomSelector).append('<option value="' + list[i].id + '">' + list[i].name + '</option>');
                         }
 
+
+
+debugger;
+                        var defaultDistrict = list.find(function (element) {
+                            if (options && options.defaultDistrict)
+                                return element.id == options.defaultDistrict 
+                            else return false;
+                        });
+                        defaultDistrict = defaultDistrict || list[0];
+                        self.selectedDistrict = defaultDistrict;
+                        self.districtsloaded = list;
                         $(options.districtDomSelector).selectpicker("refresh");
-                        self.selectedDistrict = list[0];
+
                         setTimeout(function () {
                             //self.districtsloaded || (self.options && self.options.openDistricts) ? $(options.districtDomSelector).selectpicker('toggle') : null;
                             //$(options.districtDomSelector).selectpicker('toggle');
-                            self.districtsloaded = list;
+                            
+                            $(options.districtDomSelector).selectpicker('val', defaultDistrict.id.toString());
+                            self.selectedDistrict = defaultDistrict;
                         });
 
                     }
@@ -61,6 +83,7 @@
                 $(options.districtDomSelector).selectpicker(defaultProps);
 
                 $(options.districtDomSelector).on('changed.bs.select', function (e, clickedIndex, isSelected, previousValue) {
+                    debugger
                     let district = self.districtsloaded[clickedIndex];
                     self.selectedDistrict = district;
                     $(window).trigger('kb.userloction.districtselected', [self]);
@@ -96,8 +119,11 @@
                             }
 
                             var defaultCity = list.find(function (element) {
-                                return element.id == (options && options.defaultCity) ? element.id == options.defaultCity : element.name == "Ankara";
+                                if (options && options.defaultCity)
+                                    return element.id == options.defaultCity 
+                                else return false;
                             });
+                            defaultCity = defaultCity || list[0];
                             $(options.cityDomSelector).selectpicker("refresh");
                             $(options.cityDomSelector).selectpicker('val', defaultCity.id.toString());
                             self.selectedCity = defaultCity;
@@ -118,10 +144,18 @@
     window.kb.selectArea = function (done, options) {
         var self = this;
         options = options || {}
+        debugger
+        options.defaultCity = window.__useraddr ? window.__useraddr.level1Id: undefined;
+        options.defaultIlce = window.__useraddr ? window.__useraddr.level2Id: undefined;
+        options.defaultDistrict = window.__useraddr ? window.__useraddr.level3Id: undefined;
+        
+        
+        //{"level3Id":12510,"level1Id":40,"level2Id":2638,"level1Text":"Istanbul","level2Text":"Arnavutköy","level3Text":"Baklalı","level1Slug":"istanbul","level2Slug":"istanbul-arnavutkoy","level3Slug":"istanbul-arnavutkoy-baklali","display":"Baklalı, Arnavutköy/Istanbul"}
+  
         if (!self.areainited) {
             var ul = window.kb.userlocation();
             self.areainited = true;
-            ul.init({}, function () {
+            ul.init(options, function () {
                 $('#exploreAreaMsg').html(options.msg || '')
                 $('#areaModal').modal();
                 $("#exploreAreaButton").click(function () {

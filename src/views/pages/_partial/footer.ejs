@@ -5,6 +5,8 @@
 
 
 <footer class="bg-primary-darker pt-4 d-print-none">
+
+    <% if (!controller.hide4Sebep) { %>
     <div class="container">
 
         <h3 class="h4 text-center text-light mb-grid-gutter">KasaptanAl.com'u kullanmak için 4 sebep</h3>
@@ -14,7 +16,7 @@
                 <div class="media"><i class="czi-check
                 text-primary" style="font-size: 2.25rem;"></i>
                     <div class="media-body pl-3">
-                        <h6 class="font-size-base text-light mb-1">Güvenilir Et</h6>
+                        <h6 class="font-size-base text-light mb-1">Kaliteli Et</h6>
                         <p class="mb-0 font-size-ms text-light opacity-50">Yerel kasaplardan %100 doğal, %100 helal
                             yerli kesim et sağlıyoruz.
                         </p>
@@ -52,7 +54,11 @@
         </div>
     </div>
 
+  
+
     <hr class="hr-light pb-4 mb-3">
+
+    <%}%>
 
     <div class="container mb-3">
         <!-- <div class="text-center cookiealert" role="alert">

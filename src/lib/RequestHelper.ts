@@ -57,6 +57,8 @@ export class RequestHelper {
                     ]
                 })
 
+                
+
                 let pa = await Area.findByPk(area.parent.id, {
                     include: [
                         { all: true }
@@ -66,6 +68,7 @@ export class RequestHelper {
                 adr.level1Id = pa.parent.id;
                 adr.level2Id = pa.id;
                 adr.level3Id = area.id;
+                
 
                 adr.level1Text = pa.parent.name;
                 adr.level2Text = pa.name;
@@ -74,6 +77,10 @@ export class RequestHelper {
                 adr.level1Slug = pa.parent.slug;
                 adr.level2Slug = pa.slug;
                 adr.level3Slug = area.slug;
+
+                adr.level1Status = pa.parent.status;
+                adr.level2Status = pa.status;
+                adr.level3Status = area.status;
 
                 adr.display = `${adr.level3Text}, ${adr.level2Text}/${adr.level1Text}`;
 
@@ -92,7 +99,6 @@ export class RequestHelper {
                         })
                     }
                 }
-
             }
         }
         else delete this.req.prefAddr;

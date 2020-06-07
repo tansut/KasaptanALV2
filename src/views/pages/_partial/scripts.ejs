@@ -15,6 +15,10 @@
   <script src="<%=__config.staticDomain %>/resource/js/app.js?v=<%=__config.versionKey%>"></script>
   
   <script>
+
+  <% if (__req.prefAddr) { %>
+      window.__useraddr = <%- JSON.stringify(__req.prefAddr) %>
+  <% } %>
   
     window.shopcard = {
       card: {

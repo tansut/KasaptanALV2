@@ -89,7 +89,7 @@ export class App extends AppBase {
             let msg = err.response.data.msg || err.response.data;
             let type = err.response.data.type || 'danger';
             if (msg == 'Unauthorized')
-              msg = "Yetkiniz yok veya kullanıcı adı/şifre kombinasyonu doğru değil"
+              msg = "<p>Kullanıcı adı/şifre doğru gözükmüyor.</p><p>Şifrenizi hatırlamıyorsanız yeni şifre almak için <a href='/reset-password'>tıklayın</a>.</p>"
             App.alert(msg, type);
         }
         else App.alert(err.message || err, 'danger')

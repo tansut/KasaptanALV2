@@ -7,6 +7,8 @@
 
 <body>
     <% include ./_partial/header %>
+    
+    
     <!-- <%- include('./_partial/category-slider', { idprefix: 't', header: false, titles: false, viewCats: ['reyon', 'list'], title: 'Tüm Ürünlerimiz', allUrl: '/kasap-urunleri' }); %> -->
     <!-- <%-include('./_partial/food-select-alternatives.ejs', {}) %> -->
     
@@ -30,9 +32,8 @@
                 <% if (!__req.user) { %>
                 <div class="carousel-item home-carousel-item active">
                     <div class="py-3 mb-3 carousel-caption">
-                        <h2 class="h1 d-block display-4">%3 kârlı çıkın</h2>
-                        <span class="h5 d-block font-weight-light pb-3 ">ilk siparişinize özel ek
-                            puan kazanın</span>
+                        <h2 class="h1 d-block display-4">şimdi üyemiz olun</h2>
+                        <span class="h5 d-block font-weight-light pb-3 ">ilk siparişinizde %3 Kasap Kart&trade; puan kazanın</span>
                         <a class="btn btn-primary" href="javascript:window.App.showSignupDlg()">Fırsatı Yakala</a>
                     </div>
                 </div>
@@ -40,17 +41,17 @@
                 <div class="carousel-item home-carousel-item <%=__req.user ? 'active':''%>">
                     <div class="py-3 mb-3 carousel-caption">
                         <h2 class="h1 d-block display-4  ">güvenilir kasaplardan</h2>
-                        <span class="h5 d-block  font-weight-light pb-3 ">online sipariş verin</span>
+                        <span class="h5 d-block  font-weight-light pb-3 ">online sipariş verin, aynı gün kapınıza gelsin</span>
     
                         <a class="btn btn-primary " href="/kasap-urunleri">Alışverişe Başla<i
                                 class="czi-arrow-right ml-2 mr-n1"></i></a>
                     </div>
                 </div>
 
-                <div class="carousel-item home-carousel-item <%=__req.user ? 'active':''%>">
+                <div class="carousel-item home-carousel-item">
                     <div class="py-3 mb-3 carousel-caption">
                         <h2 class="h1 d-block display-4  ">popüler ürünler</h2>
-                        <span class="h5 d-block  font-weight-light pb-3 ">müşterilerimizin tercihleri</span>
+                        <span class="h5 d-block  font-weight-light pb-3 ">müşterilerimizin en çok tercih ettiği ürünlerimiz</span>
     
                         <a class="btn btn-primary " href="/populer-etler">Göz At<i
                                 class="czi-arrow-right ml-2 mr-n1"></i></a>
@@ -69,8 +70,8 @@
 
                 <div class="carousel-item home-carousel-item">
                     <div class="py-3 mb-3 carousel-caption">
-                        <h2 class="h1 d-block display-4  ">beyaz etler</h2>
-                        <span class="h5 d-block  font-weight-light pb-3 ">sağlıklı ve doğal ürünlerimiz</span>
+                        <h2 class="h1 d-block display-4  ">beyaz et ürünleri</h2>
+                        <span class="h5 d-block  font-weight-light pb-3 ">sağlıklı, doğal ve lezzetli beyaz et ürünleri</span>
     
                         <a class="btn btn-primary " href="/beyaz-et">Göz At<i class="czi-arrow-right ml-2 mr-n1"></i></a>
     
@@ -80,29 +81,18 @@
                 <div class="carousel-item home-carousel-item">
                     <div class="py-3 mb-3 carousel-caption">
                         <h2 class="h1 d-block display-4  ">haftanın ürünleri</h2>
-                        <span class="h5 d-block  font-weight-light pb-3 ">bu haftaya özel seçtiklerimiz</span>
+                        <span class="h5 d-block  font-weight-light pb-3 ">bu haftaya özel seçtiğimiz ürünler</span>
     
                         <a class="btn btn-primary " href="/bu-hafta">Göz At<i class="czi-arrow-right ml-2 mr-n1"></i></a>
     
                     </div>
                 </div>
 
-                <div class="carousel-item home-carousel-item">
-                    <div class="py-3 mb-3 carousel-caption">
-                        <h2 class="h1 d-block display-4  ">usta ve yerel kasaplar</h2>
-                        <span class="h5 d-block font-weight-light pb-3 ">sadece en iyilerle çalışıyoruz</span>
-    
-                        <a class="btn btn-primary " href="/kasap-secim-kriterleri">Daha Fazlası<i
-                                class="czi-arrow-right ml-2 mr-n1"></i></a>
-
-                                
-                    </div>
-                </div>
 
                 <div class="carousel-item home-carousel-item">
                     <div class="py-3 mb-3 carousel-caption">
                         <h2 class="h1 d-block display-4  ">et kültür blog</h2>
-                        <span class="h5 d-block font-weight-light pb-3 ">kısa ve öz içerikler</span>
+                        <span class="h5 d-block font-weight-light pb-3 ">ilginizi çekecek kısa ve öz içeriklerimiz</span>
     
                         <a class="btn btn-primary " href="/blog">Göz
                             at<i class="czi-arrow-right ml-2 mr-n1"></i></a>
@@ -169,75 +159,132 @@
         <%- include('./_partial/category-products-slider', {category: 'populer-etler', limit: 8, reverse: true, img: 'img/category/premium.jpg'}); %>
     </div>
 
-    <section class="container">
-        <div class="row">
+
+
+    <section class="container mb-3">
+        <h2 class="h3 text-center mb-grid-gutter">KasaptanAl.com'u kullanmak için 4 sebep</h2>
+
+    <div class="row no-gutters border ">
+      <div class="col-xl-3 col-lg-12 col-md-3 border-right ">
+        <div class="py-1">
+          <div class="d-flex align-items-center mx-auto py-3 px-3" style="max-width: 362px;">
+            <div class="display-2 font-weight-normal border-color mr-4">1</div>
+            <div class="pl-2">
+                <h4 class="h6">Kaliteli Et</h4>
+              <p class="font-size-sm mb-1 pt-1">Güvenilir kasaplardan %100 doğal, %100 helal yerli kesim et sağlıyoruz.</p>
+            </div>
+          </div>
+          <hr class="d-md-none d-lg-block d-xl-none">
+        </div>
+      </div>
+      <div class="col-xl-3 col-lg-12 col-md-3 border-right ">
+        <div class="py-1">
+          <div class="d-flex align-items-center mx-auto py-3 px-3" style="max-width: 362px;">
+            <div class="display-2 font-weight-normal border-color mr-4">2</div>
+            <div class="pl-2">
+                <h4 class="h6">Kasap Kart&trade;</h4>
+              <p class="font-size-sm mb-1 pt-1">Kasap Kart&trade; ile düzenli kasap alışverişlerinizden puan kazandırıyoruz.</p>
+            </div>
+          </div>
+          <hr class="d-md-none d-lg-block d-xl-none">
+        </div>
+      </div>          
+      <div class="col-xl-3 col-lg-12 col-md-3 border-right">
+        <div class="py-1">
+          <div class="d-flex align-items-center mx-auto py-3 px-3" style="max-width: 362px;">
+            <div class="display-2 font-weight-normal border-color mr-4">3</div>
+            <div class="pl-2">
+                <h4 class="h6">Fiyat Avantajı</h4>
+              <p class="font-size-sm mb-1 pt-1">Farklı kasap alternatifleri sunarak fiyat avantajı sunuyoruz.</p>
+            </div>
+          </div>
+          <hr class="d-md-none d-lg-block d-xl-none">
+        </div>
+      </div>
+      <div class="col-xl-3 col-lg-12 col-md-3">
+        <div class="py-1">
+          <div class="d-flex align-items-center mx-auto py-3 px-3" style="max-width: 362px;">
+            <div class="display-2 font-weight-normal border-color mr-4">4</div>
+            <div class="pl-2">
+                <h4 class="h6">Hızlı Teslimat</h4>
+              <p class="font-size-sm mb-1 pt-1">Siparişlerinizi kapınıza kadar istediğiniz zaman getiriyoruz.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
 
 
 
-            <div class="col-md-6 mb-3">
-                <div class="d-flex flex-column h-100 justify-content-center bg-size-cover bg-position-center rounded-lg"
-                    style="background-image: url(<%=__config.staticDomain %>/resource/img/banner-bg.jpg);">
-                    <div class="py-4 my-2 my-md-0 py-md-5 px-2 ml-md-3 text-center text-sm-left">
-                        <!-- <h4 class="h6 font-size-lg font-weight-light mb-2">Size bugün nasıl yardımcı olalım?</h4> -->
-                        <h3 class="mb-2 h5">Size bugün nasıl yardımcı olalım?</h3>
-                        
-                        <div  class="input-group-overlay mb-1">
+  </section>
 
-                            <div class="input-group-prepend-overlay">
-                
-                              <span class="input-group-text">
-                                <i class="notsearching czi-search"></i>
-                                <span class="searching d-none spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
-                              </span>
-                            </div>
-                            <input id="page-searchbox" class="form-control font-size-sm searchBox prepended-form-control"
-                              data-noresults-text="Maalesef bulamadık." autocomplete="off" type="text"
-                              placeholder="arayın: et, semt, yemek veya kasap">
-                            <div>
-                
-                            </div>
-                          </div>
+  <section class="container">
+    <div class="row">
 
-                            <div class="font-size-lg text-center">
-            <a class="search-sample font-weight-light text-white  badge badge-primary mr-1">mangallık et</a>
-            <a class="search-sample font-weight-light text-white   badge badge-primary mr-1">dana eti</a>
-            <a class="search-sample font-weight-light text-white  badge badge-primary mr-1">assado</a>
-            <a class="search-sample font-weight-light text-white  badge badge-primary mr-1">tavuk</a>
-            <a class="search-sample font-weight-light text-white  badge badge-primary mr-1">bahçelievler</a>
-            <a class="search-sample font-weight-light text-white  badge badge-primary mr-1">tüm kuzu</a>
-            <a class="search-sample font-weight-light text-white  badge badge-primary mr-1">fırınlık et</a>
-            <a class="search-sample font-weight-light text-white  badge badge-primary mr-1">çiğ süt</a>
-            <a class=" font-weight-light text-white  badge badge-primary mr-1" href="/kasap-urunleri">...</a>
-  
-          </div> 
-                    </div>
+
+
+        <div class="col-md-6 mb-3">
+            <div class="d-flex flex-column h-100 justify-content-center bg-size-cover bg-position-center rounded-lg"
+                style="background-image: url(<%=__config.staticDomain %>/resource/img/banner-bg.jpg);">
+                <div class="py-4 my-2 my-md-0 py-md-5 px-2 ml-md-3 text-center text-sm-left">                        
+                    <h3 class="mb-2 h5">Size bugün nasıl yardımcı olalım?</h3>
+                    
+                    <div  class="input-group-overlay mb-1">
+
+                        <div class="input-group-prepend-overlay">
+            
+                          <span class="input-group-text">
+                            <i class="notsearching czi-search"></i>
+                            <span class="searching d-none spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
+                          </span>
+                        </div>
+                        <input id="page-searchbox" class="form-control font-size-sm searchBox prepended-form-control"
+                          data-noresults-text="Maalesef bulamadık." autocomplete="off" type="text"
+                          placeholder="arayın: et, semt, yemek veya kasap">
+                        <div>
+            
+                        </div>
+                      </div>
+
+                        <div class="font-size-lg text-center">
+        <a class="search-sample font-weight-light text-white  badge badge-primary mr-1">mangallık et</a>
+        <a class="search-sample font-weight-light text-white   badge badge-primary mr-1">dana eti</a>
+        <a class="search-sample font-weight-light text-white  badge badge-primary mr-1">assado</a>
+        <a class="search-sample font-weight-light text-white  badge badge-primary mr-1">tavuk</a>
+        <a class="search-sample font-weight-light text-white  badge badge-primary mr-1">bahçelievler</a>
+        <a class="search-sample font-weight-light text-white  badge badge-primary mr-1">tüm kuzu</a>
+        <a class="search-sample font-weight-light text-white  badge badge-primary mr-1">fırınlık et</a>
+        <a class="search-sample font-weight-light text-white  badge badge-primary mr-1">çiğ süt</a>
+        <a class=" font-weight-light text-white  badge badge-primary mr-1" href="/kasap-urunleri">...</a>
+
+      </div> 
                 </div>
             </div>
-          
+        </div>
+      
 
-            <div class="col-md-6 mb-3">
-                <div class="d-flex flex-column h-100 justify-content-center bg-size-cover bg-position-center rounded-lg"
-                    style="background-image: url(<%=__config.staticDomain %>/resource/img/banner-bg.jpg);">
-                    <div class="py-4 my-2 my-md-0 py-md-5 px-4 ml-md-3 text-center text-sm-left">
-                        <h4 class="h6 font-size-lg font-weight-light mb-2">Yerel usta kasaplarımızın</h4>
-                        <h3 class="mb-4 h5">Doğal Ürünlerini Keşfedin</h3>
+        <div class="col-md-6 mb-3">
+            <div class="d-flex flex-column h-100 justify-content-center bg-size-cover bg-position-center rounded-lg"
+                style="background-image: url(<%=__config.staticDomain %>/resource/img/banner-bg.jpg);">
+                <div class="py-4 my-2 my-md-0 py-md-5 px-4 ml-md-3 text-center text-sm-left">
+                    <h4 class="h6 font-size-lg font-weight-light mb-2">Kasap alışverişlerinizden</h4>
+                    <h3 class="mb-4 h5">Kasap Kart&trade; ile puan kazanın</h3>
 
-                        <a class="btn btn-primary " href="/kasap-urunleri">Tüm Ürünler<i
-                            class="czi-arrow-right ml-2 mr-n1"></i></a>
+                    <a class="btn btn-primary " href="/blog/kasap-kart">Daha Fazla Bilgi<i
+                        class="czi-arrow-right ml-2 mr-n1"></i></a>
 
 
-                    </div>
                 </div>
-
-
             </div>
-
-
 
 
         </div>
-    </section>
 
+
+
+
+    </div>
+</section>
 
     <div class="container mb-3">
         <%- include('./_partial/category-products-slider', {limit: 8, category: 'bu-hafta', reverse: true, img: 'img/category/premium.jpg'}); %>
@@ -250,8 +297,8 @@
                 <div class="d-flex flex-column h-100 justify-content-center bg-size-cover bg-position-center rounded-lg"
                     style="background-image: url(<%=__config.staticDomain %>/resource/img/banner-bg.jpg);">
                     <div class="py-4 my-2 my-md-0 py-md-5 px-4 ml-md-3 text-center text-sm-left">
-                        <h4 class="h6 font-size-lg font-weight-light mb-2">Şimdi üyemiz olun, ilk siparişinize</h4>
-                        <h3 class="h5 mb-4">%3 ek puan kazanın</h3>
+                        <h4 class="h6 font-size-lg font-weight-light mb-2">Şimdi üyemiz olun, ilk siparişinizde</h4>
+                        <h3 class="h5 mb-4">%3 ek Kasap Kart&trade; puan kazanın</h3>
 
                         <a href="javascript:window.App.showSignupDlg()" class="btn btn btn-primary ">Fırsatı Yakala</a>
                     </div>
