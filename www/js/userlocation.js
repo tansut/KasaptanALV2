@@ -44,7 +44,7 @@
 
 
 
-debugger;
+
                         var defaultDistrict = list.find(function (element) {
                             if (options && options.defaultDistrict)
                                 return element.id == options.defaultDistrict 
@@ -83,7 +83,6 @@ debugger;
                 $(options.districtDomSelector).selectpicker(defaultProps);
 
                 $(options.districtDomSelector).on('changed.bs.select', function (e, clickedIndex, isSelected, previousValue) {
-                    debugger
                     let district = self.districtsloaded[clickedIndex];
                     self.selectedDistrict = district;
                     $(window).trigger('kb.userloction.districtselected', [self]);
@@ -144,7 +143,6 @@ debugger;
     window.kb.selectArea = function (done, options) {
         var self = this;
         options = options || {}
-        debugger
         options.defaultCity = window.__useraddr ? window.__useraddr.level1Id: undefined;
         options.defaultIlce = window.__useraddr ? window.__useraddr.level2Id: undefined;
         options.defaultDistrict = window.__useraddr ? window.__useraddr.level3Id: undefined;

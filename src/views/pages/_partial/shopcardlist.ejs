@@ -1,34 +1,27 @@
+<% let scItem = 0 %>
 <% for (let bi in shopcard.butchers) { %>
 <% let butcher = shopcard.butchers[bi]%>
 
 
 
-  
-<div class="mt-4 border-top border-left border-right mb-2">
-  <!-- <div class="d-flex flex-nowrap justify-content-between align-items-center pt-1 border-bottom pb-1 mb-2">
-                      <h4 class="h5 mb-0 mr-2"><%=butcher.name%></h4>
-                      <a href="/<%= butcher.slug %>" class="btn btn-sm btn-light">Ürünler<i
-                        class="czi-arrow-right ml-1 mr-n1"></i></a>
-                  </div> -->
 
+<div class="mt-4 border-top border-left border-right mb-2">
   <div class="bg-secondary p-3  mb-3"><a class="media align-items-center" href="/<%=shopcard.butchers[bi].slug%>"><img
-        class="rounded-circle header-img" src="<%= `${__req.helper.imgUrl('butcher-google-photos', shopcard.butchers[bi].slug)}` %>"
+        class="rounded-circle header-img"
+        src="<%= `${__req.helper.imgUrl('butcher-google-photos', shopcard.butchers[bi].slug)}` %>"
         alt="<%=shopcard.butchers[bi].name%>">
       <div class="media-body pl-2"><span class="font-size-ms text-muted"></span>
         <h3 class="h4 mb-0 mr-2"><%= shopcard.butchers[bi].name %></h3>
       </div>
     </a></div>
-    <% var totalDiscount = shopcard.getButcherDiscountTotal(bi) %>
-    <% if (totalDiscount < 0 ) { %>
-      <div class="mx-3 alert alert-info rounded-0 ">
-        
-          <span>Tebrikler, <%=shopcard.butcherDiscounts[bi].map(cdd=>cdd.name).join('+') %> </span>
-          <strong><%- include('./currency.ejs', {value: -totalDiscount}) %></strong> indirim kazandınız. İndirimi yakalamak için Sonraki Adım butonu ile devam edin.
-      
-    
-       
-      </div>
-      <% } %>
+  <% var totalDiscount = shopcard.getButcherDiscountTotal(bi) %>
+  <% if (totalDiscount < 0 ) { %>
+  <div class="mx-3 alert alert-info rounded-0 ">
+    <span>Tebrikler, <%=shopcard.butcherDiscounts[bi].map(cdd=>cdd.name).join('+') %> </span>
+    <strong><%- include('./currency.ejs', {value: -totalDiscount}) %></strong> indirim kazandınız. İndirimi yakalamak
+    için Sonraki Adım butonu ile devam edin.
+  </div>
+  <% } %>
 
   <% butcher.products.forEach((pi, i) => { %>
   <% let item = shopcard.items[pi] %>
@@ -44,37 +37,33 @@
             href="/<%=item.product.slug%>?butcher=<%=item.product.butcher.slug%>"><%=item.product.name%></a>
         </h3>
         <div class="font-size-normal"><span class="font-weight-medium"><%=item.quantity%></span> <span
-            class="text-muted"><%=item.purchaseoption.unitTitle%> 
+            class="text-muted"><%=item.purchaseoption.unitTitle%>
 
           </span>
-      
-            <span>/</span>
+
+          <span>/</span>
           <span class="font-size-sm">
             <%- include('./currency.ejs', {value: item.price}) %>
           </span>
           <% if (item.purchaseoption.unitWeight) { %>
-            <span class="d-block text-muted font-size-xs">1 <%=item.purchaseoption.unit%> <%=item.purchaseoption.unitWeight%></span>
+          <span class="d-block text-muted font-size-xs">1 <%=item.purchaseoption.unit%>
+            <%=item.purchaseoption.unitWeight%></span>
           <% } %>
-        </div>
-        <div class="text-nowrap">
-
         </div>
         <% if (item.note) {%>
         <div class="font-size-sm text-muted"><%=item.note%></div>
         <%}%> 
-                           <!-- <div>
-                             <%= item.product.butcher ? item.product.butcher.name:''%>
-      </div> -->
-      <!-- <div class="font-size-sm text-accent pt-2">
-                                <%- include('./currency.ejs', {value: item.product.viewUnitPrice, unit: item.product.viewUnit}) %>
-                              </div> -->
     </div>
   </div>
   <div class="pt-2 pt-sm-0 pl-sm-3 mx-auto mx-sm-0 text-center text-sm-left" style="max-width: 9rem;">
-    <a id="editshopcardbtn" data-tag="true" data-category="shopcard/edit" data-action="<%=shopcard.butchers[bi].slug%>" data-label="<%=item.product.slug%>" class="btn btn-link px-0 text-muted" href="/<%=item.product.slug%>?shopcarditem=<%=i%>"  type="button"><i
-      class="czi-edit mr-2"></i><span class="font-size-sm">Değiştir</span></a>    
+    <a id="editshopcardbtn" data-tag="true" data-category="shopcard/edit" data-action="<%=shopcard.butchers[bi].slug%>"
+      data-label="<%=item.product.slug%>" class="btn btn-link px-0 text-muted"
+      href="/<%=item.product.slug%>?shopcarditem=<%=pi%>" type="button"><i class="czi-edit mr-2"></i><span
+        class="font-size-sm">Değiştir</span></a>
     <% if (enableRemove) { %>
-    <button id="rmshopcardbtn" data-tag="true" data-category="shopcard/remove" data-action="<%=shopcard.butchers[bi].slug%>" data-label="<%=item.product.slug%>" class="btn btn-link px-0 text-muted" onclick="App.ShopCard.remove('<%=i%>')" type="button"><i
+    <button id="rmshopcardbtn" data-tag="true" data-category="shopcard/remove"
+      data-action="<%=shopcard.butchers[bi].slug%>" data-label="<%=item.product.slug%>"
+      class="btn btn-link px-0 text-muted" onclick="App.ShopCard.remove('<%=pi%>')" type="button"><i
         class="czi-close-circle mr-2"></i><span class="font-size-sm">Çıkar</span></button>
     <% } %>
   </div>

@@ -31,281 +31,205 @@
 
   <%
   
-  var showShopBtn = false;
+  var showShopBtn = true;
   
   %>
   <form method="POST" onsubmit="return App.Auth.checkAuthentication('/alisveris-sepetim/ship')" novalidate
-  class="needs-validation" action="/alisveris-sepetim/savecard">
-  <div class="container pb-5 mb-3 ">
-    <div class="row">
-      <!-- List of items-->
-      <section class="col-lg-8">
-        <!-- <%- include('./_partial/checkout-steps.ejs', {   step: 0        }); %> -->
-     
-        <div class="p-3 border bg-secondary">
+    class="needs-validation" action="/alisveris-sepetim/savecard">
+    <div class="container pb-5 mb-3 ">
 
 
-          <h4 class="h4">Güvendesiniz.</h4>
-          <!-- <p>
-            Çünkü en güncel teknolojiyi kullanıyoruz, sipariş vermek hızlı, kolay ve güvenli.
-          </p> -->
+      <div class="row">
 
-          <ul class="list-unstyled mb-4"> <li><i class="czi-check text-primary mr-1"></i>Online veya kapıda ödeyebilirsiniz.</li>
-          <li><i class="czi-check text-primary mr-1"></i> Usta kasaplarımız %100 memnuniyet oranına sahipler.</li>
-        </ul>
+        <section class="col-lg-8">
+    
+          <div class="p-3 border rounded-lg bg-white">
+    
+    
+            
+    
+    
+            <ul class="list-unstyled mb-4">
+              <li><i class="czi-check text-primary mr-1"></i>Usta kasaplarımız <strong>%100 memnuniyet</strong> oranına sahipler.</li>
+              <li><i class="czi-check text-primary mr-1"></i>Online veya kapıda ödeyebilirsiniz.</li>
 
-        <div>
-          <% var partners = controller.Butchers.filter(p=>p.enablePuan) %>
-          <% if (partners.length > 0) { %>
-
-            <div class="border p-3 mb-3">
-              <h5 class="h5 mb-0">Kasap Kart&trade; İş Ortakları</h5>
-              <p>
-                Kasap Kart iş ortaklarımız kasap alışverişlerinizde size puan kazandırır.
-              </p>
-              <% controller.Butchers.forEach(b=> {  %>
-                <% var puan = b.getPuanData()  %>
-  
-                <% if (puan != null) { %>
-                  <div class="mb-3">
-                  <a class="d-flex flex-nowrap justify-content-between align-items-center" href="/<%=b.slug%>"><img
-                    class="rounded-circle header-img" src="<%= `${__req.helper.imgUrl('butcher-google-photos', b.slug)}` %>"
-                    alt="<%=b.name%>">
-                  <div class="media-body  pl-2">
-                   
-                      <h6 class="h6 mb-0"><%= b.name %></h6>
-                      <span class="font-size-sm text-dark">
-                   
-                 
-                  <%- include('./_partial/puan-data-view.ejs', {puan: puan, hideMinPuanForUsage: true}) %>
-                    
-
-                    </span>
-                  </div>
-                </a></div>
-            </div>
-
-
-          
-  
-              <% } %>
-            <% }) %>
-          <% } %>
-
-        </div>
-          
-        <% if (controller.possiblePuanList.length > 0) { %>
-          <div class="mb-3 text-info border p-3">
-         
-            <h5 class="h5">Bu alışverişinizle kazandığınız puanlar</h4>
-         
-           <% controller.possiblePuanList.forEach(pg => { %>
-            <ul>
-              <li>
-              
-                <strong class="font-weight-bold <%=pg.earned <= 0.00 ? 'text-danger':''%>"><%- include('./_partial/currency.ejs', {value: pg.earned}) %></strong>, <%=pg.title%>
-                <% if (pg.earned <= 0.00) {%>
-                  <% showShopBtn = true%>
-                  <div class="text-dark font-weight-bold font-size-sm">
-                    <%- include('./_partial/puan-data-view.ejs', {puan: pg.based, hideMinPuanForUsage: true}) %>
-                  
-                      
-              
-                  </div>
-
-                <% } %>
-              </li>
             </ul>
-             
-           
-          <% }) %> 
-          <% if (controller.mayEarnPuanTotal > 0.00) { %>
-          <span class="d-block">           
-            Toplam <strong><%- include('./_partial/currency.ejs', {value: controller.mayEarnPuanTotal}) %></strong> değerinde puanı hesabınıza yüklüyoruz. 
-          </span>
-          <% } %>
-        </div>
-          <%}%>
+    
+    
+            <% var partners = controller.Butchers.filter(p=>p.enablePuan) %>
 
-          <div class="text-center">
-            <% if (shopcard.items.length) { %>   
-              <% if (showShopBtn) { %>
-              <a class="btn btn-sm btn-accent" href="/kasap-urunleri">Alışverişe Devam</a>
+    
+            <% if (controller.possiblePuanList.length > 0) { %>
+            <div class="mb-3 bg-secondary text-info border p-3">
+    
+              <h5 class="h5">Kasap Kart&trade; ile kârlısınız!</h5>
+              <p class="text-dark">
+                Düzenli kasap alışverişinizi KasaptanAl.com ile yapın, puan kazanın, sonraki alışverişlerinizde puanlarınızı kullanın.
+              </p>
+                <% controller.possiblePuanList.forEach(pg => { %>
+                <ul>
+                  <li>
+    
+                    <strong  class="font-weight-bold <%=pg.earned <= 0.00 ? 'text-danger':''%>"><%- include('./_partial/currency.ejs', {value: pg.earned}) %></strong>,
+                    <%=pg.title%>
+                    <% if (pg.earned <= 0.00) {%>
+                    <% showShopBtn = true%>
+                    <% if (pg.earned <= 0.00) { %>
+                    <div class="text-dark font-size-sm">  
+                        <% 
+                        var butcherTotal = shopcard.getButcherTotal(parseInt(pg.id));
+                        var puanButcher = shopcard.butchers[pg.id];
+                        var more = __helper.asCurrency(pg.based.minSales - butcherTotal)
+                        %>                   
+                        
+                        
+                        Bu kasabımızdan <strong><%- include('./_partial/currency.ejs', {value: more}) %> daha </strong> alışveriş yapın,  <strong>                  
+                                    
+                      <%- include('./_partial/puan-data-view.ejs', {puan: pg.based, hideMinPuanForUsage: true, hideMinSales: true}) %></strong>   
+                      
+                    
+    
+    
+                    </div>
+                    <a class="font-size-sm" href="<%=puanButcher ? '/' + puanButcher.slug +'#products': '/kasap-urunleri'%>">
+                      <i class="czi-arrow-right-circle mr-2"></i>
+                      Ürünlerine Gözat</a>
+                    <%}%>       
+    
+                    <% } %>
+                  </li>
+                </ul>
+    
+    
+                <% }) %>
+                <% if (controller.mayEarnPuanTotal > 0.00) { %>
+                <span class="text-dark d-block">
+                  Toplam
+                  <strong><%- include('./_partial/currency.ejs', {value: controller.mayEarnPuanTotal}) %></strong>
+                  değerinde puanı hesabınıza yüklüyoruz.
+                </span>
                 <% } %>
-
-
-              <button data-tag="true" data-category="checkout" data-action="view/start" data-label="<%=__req.user ? __req.user.mphone: ''  %>" data-value="<%=shopcard.items.length%>" class="btn btn-primary btn-sm  " type="submit" value="true" name="checkout"
-              id="checkout">Sonraki Adım <i class="czi-arrow-right ml-1"></i></button>
+            </div>
+            <%}%>
+    
+          <div class="text-center">
+            <% if (shopcard.items.length) { %>
+            <% if (showShopBtn) { %>
+            <a class="btn btn-sm btn-primary" href="/kasap-urunleri">Alışverişe Devam</a>
+            <% } %>
+    
+    
+            <button data-tag="true" data-category="checkout" data-action="view/start"
+              data-label="<%=__req.user ? __req.user.mphone: ''  %>" data-value="<%=shopcard.items.length%>"
+              class="btn btn-accent btn-sm  " type="submit" value="true" name="checkout" id="checkout">Sonraki Adım <i
+                class="czi-arrow-right ml-1"></i></button>
             <%} else { %>
-              <!-- <a href="/kasap-urunleri" class="btn btn-sm btn-primary ">Alışverişe Başla</a> -->
-
-              <%}%>
+            <!-- <a href="/kasap-urunleri" class="btn btn-sm btn-primary ">Alışverişe Başla</a> -->
+    
+            <%}%>
           </div>
-
-        </div>
+    
         
-         <% if (!shopcard.items.length) { %>   
-          <div class="text-center alert alert-secondary">
-            <a class="btn btn-sm btn-accent" href="/kasap-urunleri">Alışverişe Başla<i class="czi-arrow-right ml-2 mr-n1"></i></a>
-
-
-          </div>          
-         <% } %> 
-        <!-- <% if (shopcard.discountTotal != 0 && shopcard.items.length) { %>
-        <div class=" alert alert-success">
-          Size özel sunduğumuz indirimlerden faydalanabilirsiniz.
-        </div>
-        <% } %> -->
-        <%- include('./_partial/shopcardlist.ejs', {
+        
+         <% if (!shopcard.items.length) { %>
+            <div class="text-center alert alert-secondary">
+              <a class="btn btn-sm btn-accent" href="/kasap-urunleri">Alışverişe Başla<i
+                  class="czi-arrow-right ml-2 mr-n1"></i></a>
+    
+    
+            </div>
+            <% } %>
+    
+            <%- include('./_partial/shopcardlist.ejs', {
           shopcard: shopcard,
           enableRemove: true
         }) %>
-      </section>
-      <!-- Sidebar-->
-      <aside class="col-lg-4 pt-4 pt-lg-0">
-
-       
-          <div class="cz-sidebar-static rounded-lg box-shadow-lg ml-lg-auto">
-            <!-- <div class="text-center mb-4 pb-3 border-bottom">
-                  <h2 class="h6 mb-3 pb-1">Subtotal</h2>
-                  <h3 class="font-weight-normal"><%=shopcard.totalFormatted%><small>00</small></h3>
-                </div> -->
-                <% if (true) { %>
-            <div class="accordion mb-4" id="order-options">
-                
-              <div class="card">
-                <div class="card-header ">
-                  <h3 class="accordion-heading"><a class="" href="#order-discounts" role="button"
-                      data-toggle="collapse" aria-expanded="true" aria-controls="order-discounts">Toplamlar<span
-                        class="accordion-indicator"></span></a></h3>
-                </div>
-                <div class="collapse show" id="order-discounts" data-parent="#order-options">
-                  <div class="card-body">
-                    <div class="text-center font-weight-medium">
-                      <div>
-                        <h6 class="h6">
-                          Sipariş Toplamı
-                        </h6>
-                      </div>
-                      <%- include('./_partial/currency.ejs', {value: shopcard.total}) %> 
-                      <% if (shopcard.discountTotal != 0) { %>
-                      <br>
-                      <span class="text-muted">
-                        <del><%- include('./_partial/currency.ejs', {value: shopcard.subTotal}) %> </del>
-
-                      </span>
-                      <% } %>
-                    </div>
-<% if (controller.mayEarnPuanTotal > 0.00) { %>
-  <div class="text-info mt-3 text-center font-weight-medium">
-    <h6>
-      Kazandığınız Puan
-    </h6>
-<div class="text-center ">
-  <%- include('./_partial/currency.ejs', {value: controller.mayEarnPuanTotal}) %>
-
-</div>
-  </div>
-
-<% } %>
-
-                  </div>
-                </div>
-              </div>
-
-
-
-
-
-              <%}%>
-              <!-- <div class="accordion" id="order-options"> -->
-                <!-- <div class="card">
-                  <div class="card-header">
-                    <h3 class="accordion-heading"><a class="collapsed" href="#shipping-estimates" role="button"
-                        data-toggle="collapse" aria-expanded="true" aria-controls="shipping-estimates">Tebrikler<span
-                          class="accordion-indicator"></span></a></h3>
-                  </div>
-                  <div class="collapse show" id="shipping-estimates" data-parent="#order-options">
-                    <div class="card-body">
-                      <p>Doğal ve taze et seçiminizle aynı zamanda yerel üreticileri destekliyorsunuz.</p>
-                    </div>
-                  </div>
-                </div> -->
-                <!-- <div class="card">
-                  <div class="card-header">
-                    <h3 class="accordion-heading"><a href="#promo-code" role="button" data-toggle="collapse"
-                        aria-expanded="true" aria-controls="promo-code">İndirim Kodu<span
-                          class="accordion-indicator"></span></a></h3>
-                  </div>
-                  <div class="collapse" id="promo-code" data-parent="#order-options">
-                    <div class="card-body " method="post" novalidate>
-                      <div class="form-group">
-                        <input class="form-control" type="text" placeholder="Kod">
-                        <div class="invalid-feedback">Lütfen kod girin</div>
-                      </div>
-                      <button class="btn btn-outline-primary btn-block" value="true" id="apply-promo" name="apply-promo"
-                        type="submit">Uygula</button>
-                    </div>
-                  </div>
-                </div> -->
-
-              <!-- </div> -->
-
-            
-            <% if (shopcard.items.length > 0) { %>  
-            <!-- <div class="form-group">
-                <label class="mb-3" for="order-comments"><span class="badge badge-accent font-size-xs mr-2">Notunuz</span><span
-                    class="font-weight-medium">Varsa alabiliriz.</span></label>
-                <textarea class="form-control" rows="6" name="order-comments"
-                  id="order-comments"><%=shopcard.note%></textarea>
-          </div> -->
-          
-          <!-- <ul class="list-unstyled font-size-sm pb-2 border-bottom">
-              <li class="d-flex justify-content-between align-items-center"><span class="mr-2">Ara Toplam:</span><span
-                  class="text-right">
-                  <%- include('./_partial/currency.ejs', {value: shopcard.subTotal}) %>
-
-                </span></li>
-              <% shopcard.discounts.forEach(d=>{ %>
-              <li class="d-flex justify-content-between align-items-center"><span class="mr-2">
-                  <%=d.name %></span><span class="text-right">
-                  <%- include('./_partial/currency.ejs', {value: d.calculated}) %>
-                </span></li>
-              <%})%>
-              <li class="d-flex justify-content-between align-items-center"><span class="mr-2">
-                  Toplam:</span><span class="font-size-normal ">
-                      <%- include('./_partial/currency.ejs', {value: shopcard.total}) %>
-                </span></li>
-
-            </ul>         -->
-            
-            <button data-tag="true" data-category="checkout" data-action="view/start" data-label="<%=__req.user ? __req.user.mphone: ''  %>" data-value="<%=shopcard.items.length%>" class="btn btn-primary btn-block mt-4  " type="submit" value="true" name="checkout"
-              id="checkout">Sonraki Adım <i class="czi-arrow-right ml-1"></i></button>
-
-
-           <% } %>
           </div>
-       
+        </section>
+    
+        <aside class="col-lg-4 pt-4 pt-lg-0">
 
+
+          <div class="cz-sidebar-static rounded-lg box-shadow-lg ml-lg-auto">
+      
+            
+              <div class="accordion mb-4" id="order-options">
+      
+                  <div class="card">
+                      <div class="card-header ">
+                          <h3 class="accordion-heading"><a class="" href="#order-discounts" role="button"
+                                  data-toggle="collapse" aria-expanded="true" aria-controls="order-discounts">Toplamlar<span
+                                      class="accordion-indicator"></span></a></h3>
+                      </div>
+                      <div class="collapse show" id="order-discounts" data-parent="#order-options">
+                        <div class="card-body">
+                            <div class="text-center font-weight-medium">
+                                <div>
+                                    <h6 class="h6">
+                                        Sipariş Toplamı
+                                    </h6>
+                                </div>
+                                <%- include('./_partial/currency.ejs', {value: shopcard.total}) %>
+                                <% if (shopcard.discountTotal != 0) { %>
+                                <br>
+                                <span class="text-muted">
+                                    <del><%- include('./_partial/currency.ejs', {value: shopcard.subTotal}) %> </del>
+        
+                                </span>
+                                <% } %>
+                            </div>
+                            <% if (controller.mayEarnPuanTotal > 0.00) { %>
+                            <div class="text-info mt-3 text-center font-weight-medium">
+                                <h6>
+                                    Kazandığınız Puan
+                                </h6>
+                                <div class="text-center ">
+                                    <%- include('./_partial/currency.ejs', {value: controller.mayEarnPuanTotal}) %>
+        
+                                </div>
+                            </div>
+        
+                            <% } %>
+        
+                        </div>
+                    </div>
+                  </div>
+              
+              </div>
+      
+              <% if (shopcard.items.length > 0) { %>
+              <button data-tag="true" data-category="checkout" data-action="view/start"
+                  data-label="<%=__req.user ? __req.user.mphone: ''  %>" data-value="<%=shopcard.items.length%>"
+                  class="btn btn-accent btn-block mt-4  " type="submit" value="true" name="checkout" id="checkout">Sonraki
+                  Adım <i class="czi-arrow-right ml-1"></i></button>
+      
+      <%}%>
+              
+          </div>
+      
+      
       </aside>
+      </div>
+
+
+      
     </div>
-  </div>
-</form>
+  </form>
 
 
   <% include ./_partial/footer %>
   <% include ./_partial/scripts %>
 
   <script>
-    window.App.gTag('checkout', 'view/shopcard', "<%=__req.user ? __req.user.mphone: ''  %>", <%=shopcard.items.length%>);
+    window.App.gTag('checkout', 'view/shopcard', "<%=__req.user ? __req.user.mphone: ''  %>", <%=shopcard.items.length %>);
     
     <% Object.keys(shopcard.butchers).forEach(item => { %>
       window.App.gTag('checkout', 'view/shopcard/butcher', "<%=shopcard.butchers[item].slug%>", 1);
-    <%})%>
+    <%}) %>
 
     <% shopcard.items.forEach(item => { %>
-      window.App.gTag('checkout', 'view/shopcard/item', "<%=item.product.slug%>", 1);
-    <%})%>
+        window.App.gTag('checkout', 'view/shopcard/item', "<%=item.product.slug%>", 1);
+    <%}) %>
   </script>
 
 </body>

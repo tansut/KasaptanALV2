@@ -514,7 +514,7 @@ window.initComponents = function initComponents() {
             },
 
             setShopcardItem() {      
-                debugger;          
+       
                 let sc = window.shopcard.card.data.items[this.shopCardIndex];
                 this.quantity = sc.quantity;
                 this.note = sc.note;

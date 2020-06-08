@@ -21,7 +21,6 @@ export class Backend {
 
     static Backend() {
         console.log("static backend");
-        debugger;
     }
 
     static getBaseUrl(): string {

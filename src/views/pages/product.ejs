@@ -41,7 +41,8 @@
         <h1 class="h3 text-light"><%= view.name %></h1>
         <h2 class="lead h4 text-light"><%= view.shortDesc %></h2>
         <% if (__req.user && __req.user.hasRole('admin')) {%>
-          <a target="_blank" class="btn btn-dark btn-sm" href="/pages/admin/product/<%=product.slug%>">Düzenle <%=product.id%></a>
+        <a target="_blank" class="btn btn-dark btn-sm" href="/pages/admin/product/<%=product.slug%>">Düzenle
+          <%=product.id%></a>
         <%}%>
       </div>
     </div>
@@ -68,217 +69,151 @@
 
 
 
-<div>
 
 
 
-  <div class="container px-0 cz-gallery">
-    
+        <div class="container px-0 cz-gallery">
 
 
-    <div class="bg-light box-shadow-lg mb-3 pb-4 ">
-      <div>
-        <div class="row no-gutters">
-          <!-- Product gallery-->
 
-          <div class="col-lg-7 ">
-            <div class="">
+          <div class="bg-light box-shadow-lg mb-3 pb-4 ">
 
-              <div class="">
+
+            <div class="row no-gutters">
+
+              <div class="col-lg-7 ">
                 <% if (firstImage) { %>
-<div class="mb-3">
-  <%- include('./_partial/product-resource-view.ejs', {first: true, note: false, resource: firstImage}) %>
-
-</div>
-
-               
-
-                 
-
+                <div class="mb-3">
+                  <%- include('./_partial/product-resource-view.ejs', {first: true, note: false, resource: firstImage}) %>
+                </div>
                 <% } %>
 
-                <div>
+                <div class="table-responsive" data-simplebar>
+                  <div class="d-flex">
+
+                    <% for(var c=0; c< alternativeimages.length; c++) {%>
+                    <div class="mr-2">
+
+                      <div class="item-slider item-slider-sm">
+
+                        <div class="card product-card card-static item-card">
+                          <%- include('./_partial/product-resource-view.ejs', {first: false, note: false, resource: alternativeimages[c]}) %>
+                        </div>
+
+                      </div>
+                    </div>
+                    <%}%>
 
 
-
-              
-                  <div class="">
-                      <div class="table-responsive" data-simplebar>
-                          <div class="d-flex">
-                              
-                              
-                              <% for(var c=0; c< alternativeimages.length; c++) {%>
-                              <div class="mr-2">
-              
-                                  <div class="item-slider item-slider-sm">
-                                      
-                                      <div class="card product-card card-static item-card">
-                      <%- include('./_partial/product-resource-view.ejs', {first: false, note: false, resource: alternativeimages[c]}) %>
+                  </div>
+                </div>
 
 
-                                  
-                                      </div>
-              
-                                  </div>
-              
-              
-              
+              </div>
+
+              <div id="productapp" v-cloak class="col-lg-5 pt-lg-3 px-3 px-lg-4">
+                <% if (view.butcher) {%>
+                    <%- include('./_partial/butcher-alternatives.ejs', { alternates:  view.alternateButchers }) %>
+                    <%}%>
+                <% if (view.butcher) { %>
+                    <div class="toast-container toast-top-center">
+                      <div id="shopcard-added-toast" class="toast mb-3" id="accent-toast" data-delay="50000"
+                        role="alert" aria-live="assertive" aria-atomic="true">
+                        <div class="toast-header bg-accent text-white"><i class="czi-cart  mr-2"></i>
+                          <h6 class="font-size-sm text-white mb-0 mr-auto">Sepetiniz güncellendi</h6>
+                          <button class="close text-white ml-2 mb-1" type="button" data-dismiss="toast"
+                            aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                        </div>
+                        <div class="toast-body p-0 text-accent">
+
+                          <div v-if="newlyAddedItem" class="mb-2">
+
+                            <div class="bg-secondary p-2 mb-3"><a class="media align-items-center"
+                                href="/<%=view.butcher.slug%>"><img class="rounded-circle header-img"
+                                  src="<%= `${__req.helper.imgUrl('butcher-google-photos', view.butcher.slug)}` %>"
+                                  alt="<%=view.butcher.name%>">
+                                <div class="media-body pl-2">
+                                  <h3 class="h4 mb-0 mr-2"><%= view.butcher.name %></h3>
+                                  <span class="font-size-ms text-muted">Özenle hazırlıyoruz</span>
+                                </div>
+                              </a></div>
+
+                            <div class="text-center">
+                              <div class="text-center mb-3">
+                                <img class="w-50" src="<%= `${__req.helper.imgUrl('product-photos', product.slug)}` %>"
+                                  alt="<%=product.name%>">
                               </div>
-                              <%}%>
-                         
-                          </div>
-                      </div>
-                  </div>
-              
-              
-              </div>
+                              <div>
+                                <h3 class="product-title font-size-base mb-2"><a
+                                    href="/<%=product.slug%>?butcher=<%=view.butcher.slug%>"><%=product.name%></a>
+                                </h3>
+                                <div class="font-size-normal"><span
+                                    class="font-weight-medium">{{newlyAddedItem.quantity}}</span> <span
+                                    class="text-muted">{{newlyAddedItem.purchaseoption.unitTitle }}
 
-              
-                </div>
- 
+                                  </span>
 
-
-              </div>
-            </div>
+                                  <span>/</span>
+                                  <span class="font-size-sm">
+                                    {{ formatCurrency(newlyAddedItem.price).val}}.<small>{{formatCurrency(newlyAddedItem.price).krs}}</small>
+                                    TL
 
 
-            <div id="productapp" v-cloak class="col-lg-5 pt-lg-3 px-3 px-lg-4">
-              <% if (view.butcher) {%>
-                <%- include('./_partial/butcher-alternatives.ejs', 
-                { alternates:  view.alternateButchers
-                
-                }) %>
-            <%}%>
-              <% if (view.butcher) { %>
-              <div class="toast-container toast-top-center">
-                <div id="shopcard-added-toast" class="toast mb-3" id="accent-toast" data-delay="50000" role="alert" aria-live="assertive" aria-atomic="true">
-                  <div class="toast-header bg-accent text-white"><i
-                    class="czi-cart  mr-2"></i>
-                    <h6 class="font-size-sm text-white mb-0 mr-auto">Sepetiniz güncellendi</h6>
-                    <button class="close text-white ml-2 mb-1" type="button" data-dismiss="toast" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-                  </div>
-                  <div class="toast-body p-0 text-accent">
-    
-                    <div v-if="newlyAddedItem" class="mb-2">
-                    
-                      <div class="bg-secondary p-2 mb-3"><a class="media align-items-center" href="/<%=view.butcher.slug%>"><img
-                            class="rounded-circle header-img" src="<%= `${__req.helper.imgUrl('butcher-google-photos', view.butcher.slug)}` %>"
-                            alt="<%=view.butcher.name%>">
-                          <div class="media-body pl-2">
-                            <h3 class="h4 mb-0 mr-2"><%= view.butcher.name %></h3>
-                            <span class="font-size-ms text-muted">Özenle hazırlıyoruz</span>
-                          </div>
-                        </a></div>
-    
-                        <div class="text-center">
-                            <div class="text-center mb-3">
-                              <img class="w-50" src="<%= `${__req.helper.imgUrl('product-photos', product.slug)}` %>" alt="<%=product.name%>">
+                                     
+                                  </span>
+
+                                  <span v-if="newlyAddedItem.purchaseoption.unitWeight"
+                                    class="d-block text-muted font-size-xs">1
+                                    {{newlyAddedItem.purchaseoption.unit}}
+                                    {{newlyAddedItem.purchaseoption.unitWeight}}</span>
+
+                                </div>
+                              </div>
                             </div>
-                            <div>
-                              <h3 class="product-title font-size-base mb-2"><a
-                                href="/<%=product.slug%>?butcher=<%=view.butcher.slug%>"><%=product.name%></a>
-                            </h3>
-                            <div class="font-size-normal"><span class="font-weight-medium">{{newlyAddedItem.quantity}}</span> <span
-                              class="text-muted">{{newlyAddedItem.purchaseoption.unitTitle }}
-                  
-                            </span>
-                        
-                              <span>/</span>
-                            <span class="font-size-sm">
-                              {{ formatCurrency(newlyAddedItem.price).val}}.<small>{{formatCurrency(newlyAddedItem.price).krs}}</small> TL
-                              
-    
-                               
-                            </span> 
-    
-                              <span v-if="newlyAddedItem.purchaseoption.unitWeight" class="d-block text-muted font-size-xs">1 {{newlyAddedItem.purchaseoption.unit}} {{newlyAddedItem.purchaseoption.unitWeight}}</span>
-                    
-                          </div>                        
+                          </div>
+
+                          <div class="px-3 py-2">
+                            <div class="d-flex d-flex justify-content-around">
+
+                              <a href="/alisveris-sepetim" class="btn btn-sm btn-accent mr-1"><i
+                                  class="czi-cart mr-1"></i>Sepete Git</a>
+                              <a onclick="return goBack()" class="btn btn-sm btn-primary">Alışverişe Devam<i
+                                  class="czi-arrow-right"></i></a>
+
+
                             </div>
-                        </div>
-                    </div>
-                        
-                      <div class="px-3 py-2">
-                        <div class="d-flex d-flex justify-content-around">
-    
-                          <a href="/alisveris-sepetim"  class="btn btn-sm btn-accent mr-1"><i
-                            class="czi-cart mr-1"></i>Sepete Git</a>
-                          <a onclick="return goBack()" class="btn btn-sm btn-primary">Alışverişe Devam<i class="czi-arrow-right"></i></a>
-                          
-    
+                          </div>
+                          <div>
+
+                          </div>
+
                         </div>
                       </div>
-                      <div>
-    
-                      </div>
-                
-                </div>
-                </div>
-        </div>
-
-        <%} %>
-              <div class=" pb-0">
-                
-                <form id="product-form" class="" @submit.prevent="addToShopcard">
-                  <% if (controller.reviews.length) { %>
-                    <div class="text-center mb-3">
-                      <div class="mb-1">
-                        <%- include('./_partial/star-rating.ejs', {val: product.ratingValue }) %>
-
-                      </div>
-                      <a href="javascript:gotoComments()"  class="font-size-sm text-dark font-weight-medium" ><span>Yorumlar (</span><span class="text-primary"><%=controller.reviews.length %></span><span>)</span></a>
-                      
                     </div>
-                  <% } %>
-                  <% if (product.featuresText) { %>
-                    <% var notes = product.featuresText.split('\n') %>
-                    <div class="border-bottom mb-3  ">
-                      <!-- <h5 class="h6 font-size-md mb-2">Şu şekilde hazırlıyoruz</h5> -->
-                      <ul class="list-unstyled mb-2">
-                        <%notes.forEach((note, i) => { %>
-                            <li><i class="czi-check text-primary mr-1"></i> <%=note%></li>
-                        <%})%>
+                    <%} %>
+
+
+
+                    <form id="product-form" class="" @submit.prevent="addToShopcard">
+                      <% if (controller.reviews.length) { %>
+                      <div class="text-center mb-3">
+                        <div class="mb-1">
+                          <%- include('./_partial/star-rating.ejs', {val: product.ratingValue }) %>
+                        </div>
+                        <a href="javascript:gotoComments()"
+                          class="font-size-sm text-dark font-weight-medium"><span>Yorumlar
+                            (</span><span class="text-primary"><%=controller.reviews.length %></span><span>)</span></a>
+
+                      </div>
+                      <% } %>
+                      <% if (product.featuresText) { %>
+                      <% var notes = product.featuresText.split('\n') %>
+                      <div class="border-bottom mb-3  ">
+                        <ul class="list-unstyled mb-2">
+                          <%notes.forEach((note, i) => { %>
+                          <li><i class="czi-check text-primary mr-1"></i> <%=note%></li>
+                          <%})%>
                         </ul>
-                      
-                    </div>
- 
-                    <% } %>
-
-
-
-                    <% if (bilgiResources.length) { %>
-                      <div>
-                        <div class="mb-3">
-                         
-                        <div class="d-flex flex-nowrap justify-content-between align-items-center">
-                         
-
-                          
-                             <h5 class="h6 mb-2 text-accent "></i>Yardımcı videolar</h5> 
-
-
-                     
-                       
-                        </div>
-                            <div class="mb-2">
-                            <% bilgiResources.forEach(t=> { %>
-                            
-<div class="d-flex mb-2 pb-1 align-items-center flex-nowrap justify-content-between border-bottom">
-  <a class="text-primary" href="javascript:openSlider(<%=t.id%>)"><i class="text-primary <%= t.contentType == 'video-youtube' ? 'czi-youtube': 'czi-camera' %> mr-1"></i><%=t.title%></a>
-  
-  
-
-
-  
-</div>
-                             
-                         
-                              
-  
-                              
-                            <%})%>
-                          </div>
-                          </div>
 
                       </div>
 
@@ -286,632 +221,697 @@
 
 
 
-                    <% if (tarifsAndFoods.length) { %>
-                      <div>
-                        <div class="mb-3">
-                         
+                      <% if (bilgiResources.length) { %>
+
+                      <div class="mb-3">
+
+                        <div class="d-flex flex-nowrap justify-content-between align-items-center">
+
+
+
+                          <h5 class="h6 mb-2 text-accent "></i>Yardımcı videolar</h5>
+
+
+
+
+                        </div>
+                        <div class="mb-2">
+                          <% bilgiResources.forEach(t=> { %>
+
+                          <div
+                            class="d-flex mb-2 pb-1 align-items-center flex-nowrap justify-content-between border-bottom">
+                            <a class="text-primary" href="javascript:openSlider(<%=t.id%>)"><i
+                                class="text-primary <%= t.contentType == 'video-youtube' ? 'czi-youtube': 'czi-camera' %> mr-1"></i><%=t.title%></a>
+
+
+
+
+
+                          </div>
+
+
+
+
+
+                          <%})%>
+                        </div>
+                      </div>
+
+
+
+                      <% } %>
+
+
+
+                      <% if (tarifsAndFoods.length) { %>
+
+                      <div class="mb-3">
+
                         <div class="d-flex flex-nowrap justify-content-between align-items-center">
                           <a href="#tarifVideos">
 
-                         
+
                             <h5 class="h6 mb-2 text-accent ">Bu yemekler için hazırlıyoruz</h5>
 
 
-                     
-                        </a>
+
+                          </a>
                           <!-- <a class="align-self-center mb-2  text-dark font-size-xs" href="#tarifVideos"> <i
-                            class="czi-arrow-right font-size-xs align-middle"></i></a>     -->
+                                    class="czi-arrow-right font-size-xs align-middle"></i></a>     -->
                         </div>
-                          <!-- <label class=""><span
-                            class="badge badge-primary font-size-xs mr-2">Bu yemekler için uygun:</span><span class=""></span></label> -->
-                            <div class="mb-2">
-                            <% tarifsAndFoods.forEach(t=> { %>
-                            
-<div class="d-flex mb-2 pb-1 align-items-center flex-nowrap justify-content-between border-bottom">
-  <a class="text-primary" href="javascript:openSlider(<%=t.id%>)"><i class="text-primary <%= t.contentType == 'video-youtube' ? 'czi-youtube': 'czi-camera' %> mr-1"></i><%=t.title%></a>
-  
-  
-   <a class="text-primary" title="Eti Bizden" data-tag="true" data-category="food" data-action="eti-bizden" data-label="<%= t.slug%>"
-   href="javascript:<%= include('./_partial/addtonote.ejs', {resource: t, options: {hideProduct: true} }) %>"><span class="color-primary">
-     <i class=" czi-add-circle"></i></span>  </a> 
+                        <!-- <label class=""><span
+                                    class="badge badge-primary font-size-xs mr-2">Bu yemekler için uygun:</span><span class=""></span></label> -->
+                        <div class="mb-2">
+                          <% tarifsAndFoods.forEach(t=> { %>
+
+                          <div
+                            class="d-flex mb-2 pb-1 align-items-center flex-nowrap justify-content-between border-bottom">
+                            <a class="text-primary" href="javascript:openSlider(<%=t.id%>)"><i
+                                class="text-primary <%= t.contentType == 'video-youtube' ? 'czi-youtube': 'czi-camera' %> mr-1"></i><%=t.title%></a>
 
 
-  
-</div>
-                             
-                         
-                              
-  
-                              
-                            <%})%>
-                          </div>
+                            <a class="text-primary" title="Eti Bizden" data-tag="true" data-category="food"
+                              data-action="eti-bizden" data-label="<%= t.slug%>"
+                              href="javascript:<%= include('./_partial/addtonote.ejs', {resource: t, options: {hideProduct: true} }) %>"><span
+                                class="color-primary">
+                                <i class=" czi-add-circle"></i></span> </a>
+
+
+
                           </div>
 
+
+
+
+
+                          <%})%>
+                        </div>
                       </div>
+
+
 
                       <% } %>
 
                       <a id="aftersetloc"></a>
 
-                    <% if (!view.butcher) { %>
+                      <% if (!view.butcher) { %>
                       <% if (!__req.prefAddr) { %>
-                      
-                        <div class="alert border-none rounded-0 alert-accent alert-with-icon font-size-sm mb-2" role="alert">
-  
-  
-                          <div class="alert-icon-box rounded-0"><i class="alert-icon czi-announcement"></i></div> 
-                          
-                          <div class="mb-3 d-block font-size-sm text-info text-center">
-                            <h5 class="h6 text-info">Önce Semt</h5>                            
-                            <span class="font-weight-medium">Ürün fiyatları</span> ve alışveriş yapmak için önce semtinizi seçin.
-                          
-                          </div>
-  
-                          <div class="text-center">
-                            <button @click="selectArea(null)" type="button" class="btn btn-accent btn-sm"><i
-                              class="czi-location font-size-lg mr-2"></i>Semt Seç</button>
-                          </div>
-                          
+
+                      <div class="alert border-none rounded-0 alert-accent alert-with-icon font-size-sm mb-2"
+                        role="alert">
+
+
+                        <div class="alert-icon-box rounded-0"><i class="alert-icon czi-announcement"></i>
+                        </div>
+
+                        <div class="mb-3 d-block font-size-sm text-info text-center">
+                          <h5 class="h6 text-info">Önce Semt</h5>
+                          <span class="font-weight-medium">Ürün fiyatları</span> ve alışveriş yapmak için
+                          önce semtinizi seçin.
 
                         </div>
-                       <%} else { %>
-                        <div class="alert border-none rounded-0 alert-secondary alert-with-icon font-size-sm mb-2" role="alert">
-  
-  
-                          <div class="alert-icon-box rounded-0"><i class="alert-icon czi-announcement"></i></div> 
-                          
-                          <div class="mb-3 d-block font-size-sm text-info text-center">
-                           
-                              <% if (__req.prefAddr.level3Status != 'active') { %>
-                                <h5 class="h6 text-info">Henüz Semtinizde Değiliz</h5>    
-                                <span class="font-weight-medium">
 
-                                  Kasap seçim kriterlerimiz oldukça detaylı ve belirli bir planda ilerliyoruz. Çünkü sizlere en iyiyi sunmak için çalışıyoruz. 
+                        <div class="text-center">
+                          <button @click="selectArea(null)" type="button" class="btn btn-accent btn-sm"><i
+                              class="czi-location font-size-lg mr-2"></i>Semt Seç</button>
+                        </div>
 
-                                </span> 
 
-                              <%} else { %>
-                                <h5 class="h6 text-info"><i class="czi-thumb-up mr-2"></i>Semtinize Hizmet Veriyoruz</h5>    
-                                <span class="font-weight-medium">Ancak semtinize hizmet veren hiçbir kasabımız bu ürünü şu anda sağlayamıyor.</span> 
+                      </div>
+                      <%} else { %>
+                      <div class="alert border-none rounded-0 alert-secondary alert-with-icon font-size-sm mb-2"
+                        role="alert">
 
-                              <% } %>
-                                                    
-                          
-                          </div>
+
+                        <div class="alert-icon-box rounded-0"><i class="alert-icon czi-announcement"></i>
+                        </div>
+
+                        <div class="mb-3 d-block font-size-sm text-info text-center">
+
                           <% if (__req.prefAddr.level3Status != 'active') { %>
-                          <div class="d-flex justify-content-center">
-                            <button @click="selectArea(null)" type="button" class="btn mr-2 btn-accent btn-sm"><i
-                              class="czi-location font-size-lg mr-2"></i>Semt Seç</button>
-                              <a class="btn btn-sm btn-accent " href="/onlinekasap">Kasaplarımız<i
-                                class="czi-arrow-right ml-2 mr-n1"></i></a>                              
-                          </div>
-                          <%} else {%>
-                            <div class="text-center">
-                              <a class="btn btn-sm btn-accent " href="/kasap-urunleri">Alışverişe Devam<i
-                                class="czi-arrow-right ml-2 mr-n1"></i></a>
-                            </div>
-                          <%}%>
+                          <h5 class="h6 text-info">Henüz Semtinizde Değiliz</h5>
+                          <span class="font-weight-medium">
+
+                            Kasap seçim kriterlerimiz oldukça detaylı ve belirli bir planda ilerliyoruz.
+                            Çünkü sizlere en iyiyi sunmak için çalışıyoruz.
+
+                          </span>
+
+                          <%} else { %>
+                          <h5 class="h6 text-info"><i class="czi-thumb-up mr-2"></i>Semtinize Hizmet
+                            Veriyoruz</h5>
+                          <span class="font-weight-medium">Ancak semtinize hizmet veren hiçbir kasabımız
+                            bu ürünü şu anda sağlayamıyor.</span>
+
+                          <% } %>
+
 
                         </div>
-                      <%}%>
-                   
-                    <% } %>
-                    
+                        <% if (__req.prefAddr.level3Status != 'active') { %>
+                        <div class="d-flex justify-content-center">
+                          <button @click="selectArea(null)" type="button" class="btn mr-2 btn-accent btn-sm"><i
+                              class="czi-location font-size-lg mr-2"></i>Semt Seç</button>
+                          <a class="btn btn-sm btn-accent " href="/onlinekasap">Kasaplarımız<i
+                              class="czi-arrow-right ml-2 mr-n1"></i></a>
+                        </div>
+                        <%} else {%>
+                        <div class="text-center">
+                          <a class="btn btn-sm btn-accent " href="/kasap-urunleri">Alışverişe Devam<i
+                              class="czi-arrow-right ml-2 mr-n1"></i></a>
+                        </div>
+                        <%}%>
+                  
+                                </div>
+                              <%}%>
+
+                        <% } %>
 
 
-                
-
-                     
-                     
-                      <% if (view.butcher && __req.prefAddr) { %>
-                    <div>
 
 
-                     
-                     <div class="">
 
-                     
 
-                      
-                      <h5 v-if="product && product.purchaseOptions.length > 1" class="h6 mb-2 text-accent">
-                        <i class="czi-arrow-right-circle mr-1"></i>
-                        Lütfen seçim yapın
-                      </h5> 
-                      <input type="hidden" id="product-id" value="<%= product.id %>" />
-                      <div class="xform-group">
+
+                        <% if (view.butcher && __req.prefAddr) { %>
+
+
+                        <h5 v-if="product && product.purchaseOptions.length > 1" class="h6 mb-2 text-accent">
+                          <i class="czi-arrow-right-circle mr-1"></i>
+                          Lütfen seçim yapın
+                        </h5>
+                        <input type="hidden" id="product-id" value="<%= product.id %>" />
+
                         <div v-if="product && product.purchaseOptions.length > 1">
                           <ul class="nav nav-pills nav-pills-dark nav-fill mb-2">
                             <li v-for="(option, index) in product.purchaseOptions" class="nav-item h-100">
-                              <a class="nav-link h-100 shadow-none "  v-bind:class="{ active: option == selectedUnit }"
+                              <a class="nav-link h-100 shadow-none " v-bind:class="{ active: option == selectedUnit }"
                                 @click="selectedUnit = option">{{option.unitTitle}}
                                 <%if (false) { %>
                                 <span class="d-block" class="font-size-sm text-muted">
-                                  {{  formatCurrency(option.unitPrice).val}}.<small>{{formatCurrency(option.unitPrice).krs}}</small> TL 
-                                  
-              
-                               
-                                </span> 
+                                  {{  formatCurrency(option.unitPrice).val}}.<small>{{formatCurrency(option.unitPrice).krs}}</small>
+                                  TL
+
+
+                                   
+                                </span>
 
                                 <%}%>
-                              </a>
-                                
-                            </li>
-
-                          </ul>
-
-                        </div>
-
-
-                      </div>
-
-                      
-                      
-                      <div v-if="selectedUnit" class="">
-                        <div>
-                          <!-- <div v-if="selectedUnit.unit != 'kg' && selectedUnit.kgRatio > 0">
-                            <span v-if="option.unit == 'kg'">&nbsp;</span>  <weight-view class="text-muted font-size-xs" v-if="option.unit != 'kg'" :kg="option.kgRatio"></weight-view>
-
-                          </div> -->
-                          <div class="md-content mb-3" v-html="selectedUnit.desc" v-if="selectedUnit.desc">
-                             
-                          </div>
-               
-                 
-                          <a id="noteanchor"></a>
-                          <div class="d-flex  flex-nowrap justify-content-between align-items-center">
-                            <h5 class="h6 mb-2 text-accent "><i class="czi-thumb-up mr-2"></i>Şimdi satın alın</h5>
-        
-                            <button title="<%= __req.prefAddr ? __req.prefAddr.level3Text: 'Semt Seçin' %>"  @click="selectArea(null, '')" type="button"  class="rounded-0 btn btn-secondary btn-sm"><i
-                              class="czi-location font-size-lg "></i>
-                              
-                               
-
-                              
-                            </button>
-                              
-                      
-        
-                           
-                           </div>
-                            <div class="mb-1 bg-secondary border">
-                              <%if (view.butcher) {  %>
-
-                              <div class="border-bottom">
-                                <%- include('./_partial/butcher-product-panel.ejs', { butcherVideo: butcherVideo }) %>
-                              
-                               </div>
-
-                               <%}%>
-
-              
-
-
-                              <div class="mt-2 d-flex align-items-center justify-content-center mb-1">
-                                <span v-if="selectedUnit.unit != 'kg'">Kaç <b>{{ selectedUnit.unitTitle }}</b> hazırlayalım?</span>
-                                <span v-if="selectedUnit.unit == 'kg'"><b>Ne kadar</b> hazırlayalım?</span>
-                             
-                                
-    
-                              </div>
-
-                             <div class="text-center" v-if="selectedUnit && selectedUnit.unitWeight">
-                              <span class="d-block text-muted font-size-xs">1 {{selectedUnit.unit}} {{selectedUnit.unitWeight}}</span>
-
-                             </div>
-                    
-                             
-
-                            <amount-input :def="quantity || selectedUnit.default" :min="selectedUnit.min"
-                            :max="selectedUnit.max" :step="selectedUnit.step" v-model="quantity"
-                            :unit="selectedUnit.unitTitle" >
-                       
-                          </amount-input>
-                          
-
-
-
-                          </div>
-           
-                <%if (view.butcher) { %>
-                <div v-if="selectedUnit" class="mb-3 p-2 d-flex justify-content-end border bg-secondary"> 
-                  <span class="text-muted d-block mr-2">
-                  Tutar: 
-                </span>  
-                
-                  <money-view class="d-block text-center text-accent"  :money="price"></money-view>
+                                      </a>
+                                        
+                                    </li>
                   
-              </div> 
-              <%}%>  
-
-                          <div class="  d-flex align-items-center justify-content-center">
-<p> <a @click="showCalculator(selectedUnit)"
-  class="text-accent font-weight-medium " href="#size-chart"><i class="czi-calculator mr-1"></i>Miktar Hesaplama Aracı</a> ihtiyacınız kadar almanıza yardımcı olabilir. </p>
-                        
-                          
-                          </div>
-
-
-                          
-           
-                     
-                      
+                                  </ul>
+                  
+                                
+                  
+                  
+                              </div>
+                  
+                              
+                              
+                              <div v-if="selectedUnit">
+                              
+                                  <div class="md-content mb-3" v-html="selectedUnit.desc" v-if="selectedUnit.desc">
+                                     
+                                  </div>
+                       
                          
+                                  <a id="noteanchor"></a>
+                                  <div class="d-flex  flex-nowrap justify-content-between align-items-center">
+                                    <h5 class="h6 mb-2 text-accent "><i class="czi-thumb-up mr-2"></i>Şimdi satın alın</h5>
+                  
+                                    <button title="<%= __req.prefAddr ? __req.prefAddr.level3Text: 'Semt Seçin' %>"
+                                @click="selectArea(null, '')" type="button" class="rounded-0 btn
+                                btn-secondary btn-sm"><i class="czi-location font-size-lg "></i>
+
+
+
+
+                                </button>
+
+
+
+
                         </div>
+                        <div class="mb-1 bg-secondary border">
+                          <%if (view.butcher) {  %>
 
+                          <div class="border-bottom">
+                            <%- include('./_partial/butcher-product-panel.ejs', { butcherVideo: butcherVideo }) %>
 
-
-                       
-                        <% if (hazirlanisResources.length) { %>
-                          <div>
-                            <div class="mb-3">
-                              <h5 class="h6 mb-2">Şu şekilde hazırlayabiliriz</h5>
-                              <!-- <label class=""><span
-                                class="badge badge-primary font-size-xs mr-2">Bu yemekler için uygun:</span><span class=""></span></label> -->
-                                <div class="mb-2">
-                                <% hazirlanisResources.forEach(t=> { %>
-                                
-    <div class="d-flex mb-2 pb-1  flex-wrap justify-content-between border-bottom">
-      <a href="javascript:openSlider(<%=t.id%>)"><i class=" czi-youtube mr-1"></i><%=t.title%></a>
-      
-      <a title="Bu şekilde hazırlayın" href="javascript:<%= include('./_partial/addtonote.ejs', {resource: t, options: {hideProduct: true} }) %>"><span class="color-primary"><i class=" czi-add-circle"></i></span>  </a>
-    
-    </div>
-                                 
-                             
-                                  
-      
-                                  
-                                <%})%>
-                              </div>
-                              </div>
-    
                           </div>
-    
-                          <% } %>
-                          
-                        <div class="form-group" >
-                          <label class="mb-2" for="note"><span
-                              class="badge badge-accent font-size-xs mr-2">Notunuz</span><span class="font-size-sm"></span>
-                              
-                          
-  
-                             
-                            </label>
-                          <textarea v-model="note"
-                            :placeholder="(selectedUnit && selectedUnit.notePlaceholder) || (product && product.notePlaceholder) || 'İletmek istediğiniz notunuz varsa burayı kullanabilirsiniz.'"
-                            class="form-control font-size-sm" rows="3" name="note" id="note">
 
-                                                            <%=view.note%>
-                                                        </textarea>
+                          <%}%>
+                  
+                      
+                  
+                  
+                                      <div class="mt-2 d-flex align-items-center justify-content-center mb-1">
+                                        <span v-if="selectedUnit.unit != 'kg'">Kaç <b>{{ selectedUnit.unitTitle }}</b> hazırlayalım?</span>
+                                        <span v-if="selectedUnit.unit == 'kg'"><b>Ne kadar</b> hazırlayalım?</span>
+                                     
+                                        
+                  
+                                      </div>
+                  
+                                     <div class="text-center" v-if="selectedUnit && selectedUnit.unitWeight">
+                                      <span class="d-block text-muted font-size-xs">1 {{selectedUnit.unit}} {{selectedUnit.unitWeight}}</span>
+                  
+                                     </div>
+                            
+                                     
+                  
+                                    <amount-input :def="quantity || selectedUnit.default" :min="selectedUnit.min"
+                                    :max="selectedUnit.max" :step="selectedUnit.step" v-model="quantity"
+                                    :unit="selectedUnit.unitTitle" >
+                               
+                                  </amount-input>
+                                  
+                  
+                  
+                  
+                                  </div>
+                   
+                        <%if (view.butcher) { %>
+                          <div v-if="selectedUnit" class="mb-3 p-2 d-flex justify-content-end border bg-secondary">
+                            <span class="text-muted d-block mr-2">
+                              Tutar:
+                            </span>
+
+                            <money-view class="d-block text-center text-accent" :money="price">
+                            </money-view>
+
+                          </div>
+                          <%}%>  
+                  
+                                  <div class="d-flex align-items-center justify-content-center">
+                  <p> <a @click="showCalculator(selectedUnit)"
+                  class="text-accent font-weight-medium " href="#size-chart"><i class="czi-calculator mr-1"></i>Miktar Hesaplama Aracı</a> ihtiyacınız kadar almanıza yardımcı olabilir. </p>
+                                
+                                  
+                                  </div>
+                  
+                                <% if (hazirlanisResources.length) { %>
+
+                          <div class="mb-3">
+                            <h5 class="h6 mb-2">Şu şekilde hazırlayabiliriz</h5>
+                            <div class="mb-2">
+                              <% hazirlanisResources.forEach(t=> { %>
+
+                              <div class="d-flex mb-2 pb-1  flex-wrap justify-content-between border-bottom">
+                                <a href="javascript:openSlider(<%=t.id%>)"><i
+                                    class=" czi-youtube mr-1"></i><%=t.title%></a>
+
+                                <a title="Bu şekilde hazırlayın"
+                                  href="javascript:<%= include('./_partial/addtonote.ejs', {resource: t, options: {hideProduct: true} }) %>"><span
+                                    class="color-primary"><i class=" czi-add-circle"></i></span>
+                                </a>
+
+                              </div>
+
+
+
+
+
+                              <%})%>
+                            </div>
+                          </div>
+
+
+
+                          <% } %>
+
+                          <div class="form-group">
+                            <label class="mb-2" for="note"><span
+                                class="badge badge-accent font-size-xs mr-2">Notunuz</span><span
+                                class="font-size-sm"></span>
+
+                            </label>
+                            <textarea v-model="note"
+                              :placeholder="(selectedUnit && selectedUnit.notePlaceholder) || (product && product.notePlaceholder) || 'İletmek istediğiniz notunuz varsa burayı kullanabilirsiniz.'"
+                              class="form-control font-size-sm" rows="3" name="note" id="note">
+
+                                                                    <%=view.note%>
+                                                                </textarea>
+                          </div>
+
+
+
+
+                          <% if (view.butcher && __req.prefAddr) { %>
+
+                          <button data-tag="true" data-category="shopcard/add" data-action="<%=view.butcher.slug%>"
+                            data-label="<%=product.slug%>" id="addtoscbtn" class="btn btn-accent btn-block"
+                            type="submit"><i
+                              class="czi-cart font-size-lg mr-2"></i><%= controller.shopCardIndex >= 0 ? 'Sepeti Güncelle': 'Sepete Ekle' %></button>
+
+                          <% } else { %>
+                          <% } %>
+
+
                         </div>
 
 
+
+                        <%}%>
+                  
+                                  </form>
+                         
+                  
                   
                        
-                          <% if (view.butcher && __req.prefAddr) { %>
-                                                      
-                            <button data-tag="true" data-category="shopcard/add" data-action="<%=view.butcher.slug%>" data-label="<%=product.slug%>" id="addtoscbtn" class="btn btn-accent btn-block" type="submit"><i
-                              class="czi-cart font-size-lg mr-2"></i><%= controller.shopCardIndex >= 0 ? 'Sepeti Güncelle': 'Sepete Ekle' %></button>
-                          
-                          <% } else { %>
-                              <!-- <button @click="selectArea(null, '<%=__req.prefAddr ? `Maalesef ürünümüz ${__req.prefAddr.level1Text}/${__req.prefAddr.level2Text}/${__req.prefAddr.level3Text} için ulaşılabilir değil. Lütfen bir başka adres seçin.`: ``%>')" type="button"   class="btn btn-accent btn-block"><i
-                                class="czi-location font-size-lg mr-2"></i>Semt Seç</button> -->
+
+
+
+                  </div> <!-- product app -->
+
+
+                </div>
+
+
+                <div id="tabpc"></div>
+
+
+                <div>
+
+                  <ul class="nav nav-tabs" id="optionsTab" role="tablist">
+                    <li class="nav-item">
+                      <a class="nav-link active" id="home-tab" data-toggle="tab" href="#home" role="tab"
+                        aria-controls="home" aria-selected="true">Bilgi</a>
+                    </li>
+                    <%if (controller.reviews.length) { %>
+                       
+                        <li id="usercomments" class="nav-item">
+                          <a class="nav-link" id="comments-tab" data-toggle="tab" href="#comments" role="tab"
+                            aria-controls="comments" aria-selected="false">Yorumlar</a>
+                        </li>
+                        <% } %>
+
+
+
+
+                        </ul>
+
+                        <div class="tab-content px-4" id="myTabContent">
+                          <div class="tab-pane fade show active" id="home" role="tabpanel" aria-labelledby="home-tab">
+
+                            <%if (product.mddesc) { %>
+
+                            <%- controller.markdown.render(product.mddesc || '') %>
+
+                            <%}%>
+            
+                   
+                     
+                 
+            
+                  <% if (videoTarifs.length) {%>
+                            <div id="tarifVideos"
+                              class="d-flex flex-wrap justify-content-between align-items-center pt-1 border-bottom pb-1 mb-2">
+                              <h3 class="h5 mb-0 mr-2">Et Yemek Tarifleri</h3>
+                            </div>
+
+                            <p>
+                            <span class="btn btn-sm btn-primary mr-2"><i class=" czi-thumb-up mr-2">
+
+                              </i>Eti Bizden</span>seçeneği ile etinizi istediğiniz yemeğe uygun olarak
+                            hazırlıyoruz.</p>
+
+
+
+
+                            <div class="row mb-3 ">
+                              <% tarifsAndFoods.forEach((resource,i) => {%>
+                              <% if (resource.contentType == "video-youtube") { %>
+                              <div class="col-md-4 col-sm-6">
+                                <%- include('./_partial/product-resource-view.ejs', {first: false, note: true, resource: resource}) %>
+
+
+
+
+                              </div>
+                              <% } %>
+                              <%})%>
+
+
+
+                            </div>
+                            <%}%>
+            
+                    <% if (nonDisplayedResources.length) { %>
+                            <% nonDisplayedResources.forEach((resource,i) => {%>
+                            <div class="d-none">
+                              <%- include('./_partial/product-resource-view.ejs', {first: false, note: false, resource: resource}) %>
+
+
+                            </div>
+                            <%})%>
+
+                            <%}%>
+            
+                    <% if (otherVideos.length) {%>
+
+                            <h3 class="border-bottom h4">Diğer kaynaklar</h3>
+
+
+
+
+
+
+
+
+                            <div class="row mb-3">
+                              <% otherVideos.forEach((resource,i) => {%>
+
+                              <div class="col-md-4 col">
+
+
+                                <%- include('./_partial/product-resource-view.ejs', {first: false, note: false, resource: resource}) %>
+
+
+                              </div>
+                              <%})%>
+                            </div>
+                            <%}%>
+            
+                     
+                            <h3 class="border-bottom h4"><%=product.name%> Fiyatı</h3>
+
+
+
+
+
+                            <p>
+
+
+
+                              <strong><%=product.name%> fiyatları</strong> semtinize ve kasaplarımıza
+                              göre farklılık göstermektedir. <strong>En uygun <%=product.name%>
+                                fiyat</strong> bilgisi semt ve ürünü online olarak sağlayabilecek kasap
+                              seçiminiz ardından otomatik olarak hesaplanmaktadır.
+                            </p>
+
+                            <% var categories = product.getCategories() %>
+
+                            <% var priceCategories = [];
+                           categories.forEach(c=>{
+                             var pc = controller.req.__pricecategories.find(p=> (p.categoryid == c.id));
+                             pc && priceCategories.push(pc)
+                           })
+                            
+                           
+                           %>
+                            <% if (priceCategories.length) { %>
+                            <p>
+                              Aşağıdaki kategorilerdeki ürünlerimiz için <strong>et fiyatlarını</strong>
+                              da incelemek isteyebilirsiniz.
+                            <ul>
+
+
+                              <% priceCategories.forEach(pc=> { %>
+                              <li>
+                                <a href="/<%=pc.slug %>"><%=pc.name %></a>
+                              </li>
+
+                              <% }) %>
+                            </ul>
+                            </p>
+                            <%  } %>
+                            <p>
+                              Ayrıca <strong>online kasap</strong>larımızın <a href="/et-fiyatlari">tüm
+                                et fiyatlarını</a> da görüntülemek isteyebilirsiniz.
+                            </p>
+                            <h3 class="border-bottom h4"><%=product.name%> Online Siparişi</h3>
+
+                            <p>
+                              Yerel usta kasaplarımızdan <strong><%=product.name%> online siparişi
+                              </strong> verebilir ve kasaplarımızın <strong>eve servis</strong> veya
+                              <strong>paket servis</strong> olarak adlandırabileceğimiz hizmetlerinden
+                              faydalanabilirsiniz:
+
+                            </p>
+
+                            <ul>
+                              <li>
+                                Semt seçimi yapın ve kasaptanAl.com anlaşmalı kasaplarımızı
+                                görüntüleyin.
+                              </li>
+                              <li>
+                                <strong>Online et siparişi</strong> vermek istediğiniz kasabımızı seçin
+                                ve ürününüzü sepetine ekleyin.
+                              </li>
+                              <li>
+                                Adresinizi girin ve siparişinizi tamamlayın.
+                              </li>
+                            </ul>
+                            <p>
+                              Tüm kasap iş ortaklarımız <strong>online ödeme</strong> kabul etmektedir.
+                              Sepetinizdeki et ve et ürünlerini online ödeyerek zamandan kazanın.
+                            </p>
+
+                          </div>
+
+                          <%if (controller.reviews.length) { %>
+                          <div class="tab-pane fade" id="comments" role="tabpanel" aria-labelledby="comments-tab">
+
+                            <% controller.reviews.forEach(r => {  %>
+                            <div class="product-review pb-4 mb-4 border-bottom">
+                              <div class="d-flex mb-3">
+                                <div class="media media-ie-fix align-items-center mr-4 pr-2">
+                                  <div class="avatar">
+
+                                    <img src="<%=__config.staticDomain %>/resource/img/avatar.jpg"
+                                      alt="<%=r.displayUser%>">
+
+                                  </div>
+
+                                  <%
+                      
+                        const dateops = { year: 'numeric', month: 'long'};
+            
+                      %>
+
+                                  <div class="media-body pl-3">
+                                    <h6 class="font-size-sm mb-0"><%=r.displayUser%></h6>
+                                    <span class="">
+                                      <a class="font-size-ms text-muted" href="/<%=r.areaSlug%>"><%=r.level3Text%></a>
+
+                                    </span>
+                                  </div>
+                                </div>
+                                <div>
+                                  <%- include('./_partial/star-rating.ejs', {val: r.userRating1 }) %>
+
+                                  <div class="font-size-ms text-muted">
+                                    <%=r.itemDate.toLocaleDateString('tr-TR', dateops)%> tarihli
+                                    <%if (view.butcher) { %>
+                                    <a
+                                      href="javascript: window.App.ProductApp.selectNewButcher('<%=r.ref2slug%>')"><%=r.ref2Text%></a>
+                                    <% } else  { %>
+                                    <a href="/<%=r.ref2slug%>"><%=r.ref2Text%></a>
+
+                                    <% } %>
+                                    siparişi
+                                  </div>
+                                </div>
+                              </div>
+                              <p class="font-size-md mb-2">
+                                <em>
+                                  <%= r.content %>
+
+                                </em>
+                              </p>
+                              <% if (r.settings && r.settings.products) { %>
+                              <span class="d-block mb-1 font-weight-medium font-size-xs">
+                                Sipariş verilen ürünler:
+                              </span>
+
+
+                              <% r.settings.products.forEach(p => { %>
+
+                              <a class="mr-2 font-size-xs " href="/<%=p.slug%>"><i
+                                  class="mr-1 czi-check-circle"></i><%=p.name%></a>
+
+
+
+
+                              <% })%>
+
+
+                              <% } %>
+                            </div>
+                            <% }) %>
+
+                          </div>
+
                           <% } %>
 
-
                         </div>
-                      </div>
-                     
-                    </div>
-                    <%}%>
 
+                      </div> <!-- product desc & comments -->
 
                   </div>
+                  <!--bglightbox-->
 
 
-                </form>
-         
-              </div>
-            </div>
-          </div>
-        </div>
-        <div id="tabpc"></div>
-        <ul class="nav nav-tabs" id="optionsTab" role="tablist">
-          <li class="nav-item">
-            <a class="nav-link active" id="home-tab" data-toggle="tab" href="#home" role="tab" aria-controls="home"
-              aria-selected="true">Bilgi</a>
-          </li>
-          <%if (controller.reviews.length) { %>
-            <a id="usercomments"></a>
-           <li class="nav-item">
-                      <a class="nav-link" id="comments-tab" data-toggle="tab" href="#comments" role="tab" aria-controls="comments" aria-selected="false">Yorumlar</a>
-                    </li> 
-          <% } %>
-
-
-
-     
-        </ul>
-        
-        <div class="tab-content px-4" id="myTabContent">
-          <div class="tab-pane fade show active" id="home" role="tabpanel" aria-labelledby="home-tab">
-          
-            <%if (product.mddesc) { %>
-                      
-              <%- controller.markdown.render(product.mddesc || '') %>
-
-              <%}%>
-
-             
-               
-           
-
-            <% if (videoTarifs.length) {%>
-          <div id="tarifVideos" class="d-flex flex-wrap justify-content-between align-items-center pt-1 border-bottom pb-1 mb-2">
-                    <h3 class="h5 mb-0 mr-2">Et Yemek Tarifleri</h3>
-                </div>    
-      
-
-            <span  class="btn btn-sm btn-primary mr-2"><i class=" czi-thumb-up mr-2">
-            
-            </i>Eti Bizden</span>seçeneği ile etinizi istediğiniz yemeğe uygun olarak hazırlıyoruz.</p>
-           
-
-
-              
-                <div class="row mb-3 ">
-                  <% tarifsAndFoods.forEach((resource,i) => {%>
-                    <% if (resource.contentType == "video-youtube") { %>
-                  <div class="col-md-4 col-sm-6">
-                      <%- include('./_partial/product-resource-view.ejs', {first: false, note: true, resource: resource}) %>
-                   
-              
-
-                                             
-                  </div>
-                  <% } %>
-                  <%})%>
-
-
-                  
-                </div>
-              <%}%>
-
-              <% if (nonDisplayedResources.length) { %>
-                <% nonDisplayedResources.forEach((resource,i) => {%>
-                  <div class="d-none">
-                    <%- include('./_partial/product-resource-view.ejs', {first: false, note: false, resource: resource}) %>
-                 
-                                           
-                </div>
-                  <%})%>
-
-              <%}%>
-
-              <% if (otherVideos.length) {%>
-              
-                          <h3 class="border-bottom h4">Diğer kaynaklar</h3>
-                          
-                
-            
-      
-                
-      
-      
-                    
-                      <div class="row mb-3">
-                        <% otherVideos.forEach((resource,i) => {%>
-                        
-                        <div class="col-md-4 col">
-
-
-                          <%- include('./_partial/product-resource-view.ejs', {first: false, note: false, resource: resource}) %>
-
-                                               
-                        </div>
-                        <%})%>
-                      </div>
-                    <%}%>
-
-               
-                      <h3 class="border-bottom h4"><%=product.name%> Fiyatı</h3>
-                 
-                 
-
-
-                    
-                    <p>
-                      
-    
-                      
-                      <strong><%=product.name%> fiyatları</strong> semtinize ve kasaplarımıza göre farklılık göstermektedir. <strong>En uygun <%=product.name%> fiyat</strong> bilgisi semt ve ürünü online olarak sağlayabilecek kasap seçiminiz ardından otomatik olarak hesaplanmaktadır.
-                    </p>
-    
-                    <% var categories = product.getCategories() %>
-    
-                    <% var priceCategories = [];
-                     categories.forEach(c=>{
-                       var pc = controller.req.__pricecategories.find(p=> (p.categoryid == c.id));
-                       pc && priceCategories.push(pc)
-                     })
-                      
-                     
-                     %>
-                     <% if (priceCategories.length) { %>
-                    <p>
-                      Aşağıdaki kategorilerdeki ürünlerimiz için <strong>et fiyatlarını</strong> da incelemek isteyebilirsiniz.
-                      <ul>
-
-                      
-                      <% priceCategories.forEach(pc=> { %>
-                        <li>
-                          <a href="/<%=pc.slug %>"><%=pc.name %></a>
-                        </li>
-                        
-                        <% }) %>
-                      </ul>
-                    </p>
-                    <%  } %>
-                    <p>
-                      Ayrıca <strong>online kasap</strong>larımızın <a href="/et-fiyatlari">tüm et fiyatlarını</a> da görüntülemek isteyebilirsiniz.
-                    </p>
-                    <h3 class="border-bottom h4"><%=product.name%> Online Siparişi</h3>
-                   
-<p>
-  Yerel usta kasaplarımızdan <strong><%=product.name%> online siparişi </strong> verebilir ve kasaplarımızın <strong>eve servis</strong> veya <strong>paket servis</strong> olarak adlandırabileceğimiz hizmetlerinden faydalanabilirsiniz:
-
-</p>
-
-                    <ul>
-                      <li>
-                        Semt seçimi yapın ve kasaptanAl.com anlaşmalı kasaplarımızı görüntüleyin.
-                      </li>
-                      <li>
-                        <strong>Online et siparişi</strong> vermek istediğiniz kasabımızı seçin ve ürününüzü sepetine ekleyin.
-                      </li>
-                      <li>
-                        Adresinizi girin ve siparişinizi tamamlayın.
-                      </li>
-                    </ul>
-<p>
-  Tüm kasap iş ortaklarımız <strong>online ödeme</strong> kabul etmektedir. Sepetinizdeki et ve et ürünlerini online ödeyerek zamandan kazanın.
-</p>
-                 
-          </div>
-
-          <%if (controller.reviews.length) { %>
-          <div class="tab-pane fade" id="comments" role="tabpanel" aria-labelledby="comments-tab">
-          
-          <% controller.reviews.forEach(r => {  %> 
-            <div class="product-review pb-4 mb-4 border-bottom">
-            <div class="d-flex mb-3">
-              <div class="media media-ie-fix align-items-center mr-4 pr-2">
-                <div class="avatar">
-              
-                  <img  src="<%=__config.staticDomain %>/resource/img/avatar.jpg" alt="<%=r.displayUser%>">
-
-                </div> 
-
-                <%
-                
-                  const dateops = { year: 'numeric', month: 'long'};
-
-                %>
-                
-                <div class="media-body pl-3">
-                  <h6 class="font-size-sm mb-0"><%=r.displayUser%></h6>
-                  <span class="">
-                    <a class="font-size-ms text-muted" href="/<%=r.areaSlug%>"><%=r.level3Text%></a>
-                    
-                  </span>
-                </div>
-              </div>
-              <div>
-                <%- include('./_partial/star-rating.ejs', {val: r.userRating1 }) %>
-
-                <div class="font-size-ms text-muted">
-                  <%=r.itemDate.toLocaleDateString('tr-TR', dateops)%> tarihli 
-                  <%if (view.butcher) { %>
-                  <a href="javascript: window.App.ProductApp.selectNewButcher('<%=r.ref2slug%>')"><%=r.ref2Text%></a> 
-                  <% } else  { %>
-                  <a href="/<%=r.ref2slug%>"><%=r.ref2Text%></a> 
-
-                  <% } %>
-                  siparişi
-                </div>
-              </div>
-            </div>
-            <p class="font-size-md mb-2">
-              <em>
-                <%= r.content %>
-
-              </em>
-            </p>
-            <% if (r.settings && r.settings.products) { %>
-              <span class="d-block mb-1 font-weight-medium font-size-xs">
-                Sipariş verilen ürünler:
-              </span>
-             
-            
-              <% r.settings.products.forEach(p => { %>
-              
-                <a class="mr-2 font-size-xs " href="/<%=p.slug%>"><i class="mr-1 czi-check-circle"></i><%=p.name%></a>
-
-              
-
-               
-              <% })%>
-           
-
-            <% } %>
-          </div>
-          <% }) %>
-                           
-          </div>
-
-          <% } %>
-
-                  </div>          
-         
-    </div>
-
-
-    </div>
-
-
-  </div>
+                </div> <!-- cz-gallery conrainer  -->
 
 
 
 
 
-    <% include ./_partial/footer %>
+
+
+
+
+
+                <% include ./_partial/footer %>
                 <% include ./_partial/scripts %>
 
                 <script>
-                  window.App.ProductApp.shopCardIndex = <%= controller.shopCardIndex %>;                   
+                  window.App.ProductApp.shopCardIndex = <%= controller.shopCardIndex %>;
                   var prod = <%- JSON.stringify(view) %>;
                   window.App.ProductApp.product = prod;
                   window.App.WeightCalculatorApp.product = prod;
-                  //window.App.AlternativeButchersApp.product = prod;
 
-function goBack() {
-  if (document.referrer.indexOf(location.protocol + "//" + location.host) === 0) {
-    var current = location.protocol + "//" + location.host + location.pathname;
-    if (document.referrer.indexOf(current) === 0) {
-      window.location.href= "/kasap-urunleri"
-    }
-    else {      
-      window.history.go(-1);
-      return false
-    } 
-  }
-  else window.location.href= "/kasap-urunleri"
-  
-}
+                  function goBack() {
+                    var toBack;
+                    if (document.referrer.indexOf(location.protocol + "//" + location.host) === 0) {
+                      var current = location.protocol + "//" + location.host + location.pathname;                      
+                      if (document.referrer.indexOf(current) === 0) {
+                        toBack = false;
+                      }
+                      else if (document.referrer.indexOf('/alisveris-sepetim') >= 0) {
+                        toBack = false;
+                      } else toBack = true;
+                    } else toBack = false;
+                    if (toBack) {
+                      window.history.go(-1);
+                      return false;
+                    }
+                    else window.location.href = "/kasap-urunleri"
+                  }
 
-function gotoComments() {
-  window.App.activaTab('comments'); 
-  window.App.scrollToAnchor('#usercomments')
-}
+                  function gotoComments() {
+                    window.App.activaTab('comments');
+                    window.App.scrollToAnchor('#usercomments')
+                  }
 
                   function showOtherButchers() {
                     $('#butcher-alternatives').appendTo("body").modal('show');
 
-                    //$('#butcher-alternatives').modal();
-                     //window.App.scrollToAnchor("#tabpc");
-                     //window.App.activaTab("vendors");
-                    
+
+
                   }
 
                   function openSlider(i) {
                     var node = $('a[data-resid=' + i + ']')[0];
                     window.lgData.lg0.items.forEach(function (item, i) {
-                   if (item == node || ((item.id && node.id) && (item.id == node.id))) {
-                     window.location.hash = "lg=1&slide=" + i;
-                     window.lgData.lg0.init()
-                    }
-                   })
+                      if (item == node || ((item.id && node.id) && (item.id == node.id))) {
+                        window.location.hash = "lg=1&slide=" + i;
+                        window.lgData.lg0.init()
+                      }
+                    })
                   }
 
                   <% if (!view.butcher && __req.prefAddr) {%>
@@ -922,49 +922,51 @@ function gotoComments() {
 
 <% } else if (view.butcher && __req.prefAddr && __req.query.action == 'add2sc') { %>
 
-  $(document).ready(function() {
-    window.App.scrollToAnchor("#noteanchor")
+                    $(document).ready(function () {
+                      window.App.scrollToAnchor("#noteanchor")
 
-  })      
+                    })
 
- 
-<% } %> 
+
+                    <% } %> 
 
                   
                 <% if (__req.query.r) { %>
-                  
-                  $(document).ready(function() {
+
+                    $(document).ready(function () {
 
    
                   
-                    <% if (!__req.query.autoNote) { %>                    
-                       openSlider(<%=__req.query.r%>);    
-                      
-                      
-                    setTimeout(() => {                
-                      $(document.body).removeClass("d-none")
-                    }, 100);
-                    <% } else { 
-                    var r = product.resources.find(p=>p.id == parseInt(__req.query.r))
-                    var defaultImg = product.resources.find(p=>p.contentType == 'image/jpeg');
-                    if (defaultImg && r && (r != defaultImg)) {
-                      r.thumbnailUrl = defaultImg.thumbnailUrl;
-                      r.contentUrl = defaultImg.contentUrl;
-                      r.contentType = defaultImg.contentType;
-                      r.folder = defaultImg.folder;
-                    } 
+                    <% if (!__req.query.autoNote) { %>
+                        openSlider(<%=__req.query.r %>);
+
+
+                        setTimeout(() => {
+                          $(document.body).removeClass("d-none")
+                        }, 100);
+                    <% } else {
+                        var r = product.resources.find(p => p.id == parseInt(__req.query.r))
+                        var defaultImg = product.resources.find(p => p.contentType == 'image/jpeg');
+                        if (defaultImg && r && (r != defaultImg)) {
+                          r.thumbnailUrl = defaultImg.thumbnailUrl;
+                          r.contentUrl = defaultImg.contentUrl;
+                          r.contentType = defaultImg.contentType;
+                          r.folder = defaultImg.folder;
+                        } 
                     %>
                     <% if (!__req.query.disableSlider) { %>
-                      // openSlider(<%=__req.query.r%>);    
-                      //openSlider($('a[data-resid').first().data('resid'));    
+   
+                      
 
-                     <% } %>  
-                    
-                    setTimeout(() => {                
-                      $(document.body).removeClass("d-none");
-                      <%- include('./_partial/addtonote.ejs', {resource: r, options: {
-                        hideProduct: __req.query.hideproduct
-                      } }) %>
+                     <% } %>
+
+                          setTimeout(() => {
+                            $(document.body).removeClass("d-none");
+                      <%- include('./_partial/addtonote.ejs', {
+                              resource: r, options: {
+                                hideProduct: __req.query.hideproduct
+                              }
+                            }) %>
                     }, 100);
 
                    
@@ -976,16 +978,16 @@ function gotoComments() {
 
 
 
-             
-                <%} else { %>
-                  $(document.body).removeClass("d-none")
-                <%}%>
+
+                    <%} else { %>
+                      $(document.body).removeClass("d-none")
+                      <%}%>
 
 
                 </script>
 
- 
 
-</body>
+
+                </body>
 
 </html>

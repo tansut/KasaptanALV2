@@ -112,7 +112,7 @@ class="gallery-item-caption"><%= butcherVideo.title %></span></a>
     </div>
 
     <% if (view.butcher.puanData) { %>
-      <div class="px-3 font-size-sm mt-3">
+      <div class="px-3 mb-3 font-size-sm mt-3">
         <span class="text-dark"><%=view.butcher.name%>, Kasap Kart&trade; iş ortağıdır.</span>
         <%- include('./puan-data-view.ejs', {puan: view.butcher.puanData, hideMinPuanForUsage: true}) %> 
     

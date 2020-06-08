@@ -1,10 +1,13 @@
 <% var hideMinPuanForUsage = typeof(hideMinPuanForUsage) == 'undefined' ? false: hideMinPuanForUsage %>
+<% var hideMinSales = typeof(hideMinSales) == 'undefined' ? false: hideMinSales %>
+
+
 
       <span>
-        <% if (puan.minSales > 0.00) { %>
+        <% if (puan.minSales > 0.00 && !hideMinSales) { %>
           <%- include('./currency.ejs', {value: puan.minSales}) %> ve üzeri alışveriş yapın,
   
-        <% } else { %>
+        <% } else if (!hideMinSales) { %>
           Tüm alışverişlerinizden
         <% } %>
   
