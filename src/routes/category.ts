@@ -17,9 +17,10 @@ import ProductsApi from './api/product';
 import { ResourceCacheItem } from '../lib/cache';
 import { Op } from 'sequelize';
 import config from '../config';
+var MarkdownIt = require('markdown-it')
 
 export default class Route extends ViewRouter {
-
+    markdown = new MarkdownIt();
     category: Category;
     products: Product[];
     foods: Resource[] = [];

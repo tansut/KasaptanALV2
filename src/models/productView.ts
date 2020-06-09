@@ -77,6 +77,7 @@ export interface ProductView {
     slug: string;
     kgPrice: number;
     name: string;
+    productType: string;
     // viewUnitPrice: number;
     // viewUnit: string;
     // viewUnitDesc: string;

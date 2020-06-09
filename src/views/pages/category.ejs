@@ -18,7 +18,7 @@
   %>
 
 
-  <div class="page-title-overlap bg-primary pt-4">
+  <div class="page-title-overlap bg-primary pt-4 <%=controller.category.slug%>">
     <div class="container d-lg-flex justify-content-between py-2 py-lg-3">
       <div class="order-lg-2 mb-3 mb-lg-0 pt-lg-2">
         <nav aria-label="breadcrumb">
@@ -47,9 +47,10 @@
 
 
 
-  <div id="items-container" class="container px-0">
+  <div id="items-container" style="" class="container px-0">
 
     <div class="bg-light box-shadow-lg px-4 py-4 mb-3 ">
+      <%if (controller.category.slug != 'kurban') { %>
       <div class="mb-1 ">
         <%- include('./_partial/category-slider', { selected: controller.category.slug, mode:'browse', header: false, titles: false, viewCats: ['reyon', 'list'], title: 'Tüm Ürünlerimiz', allUrl: '/kasap-urunleri' }); %>
       </div>
@@ -69,14 +70,91 @@
 
         </div>
       </div>
-      <div class="row">
-        <% var foodsInserted = false %>
-        <% for(var j=0; j< controller.products.length; j++) {%>
-        <div class="col-md-3 col-6 ">
-          <%- include('./_partial/product-view.ejs', {product: controller.products[j]}) %>
+
+      <% } else { %>
+        <div class="text-dark mb-4 px-4 py-4 text-center" style="background-image: url(<%=__config.staticDomain %>/resource/img/islam-bg.jpeg);background-repeat: repeat">
+
+            <div class="container ">
+              <h2 class="h3 text-dark">İbadetin doğru yapılması konusunda hassasız.</h2>
+              <!-- <p class="lead">
+                Dini ibadetleriniz doğru yapma hassasiyetinizi paylaşıyoruz ve biz de bu konuda titiz çalışmaya özen gösteriyoruz</p> -->
+                <p class="lead">
+                  Kurban ibadetinizi en doğru şekilde yapabilmeniz için belirlenen usullere uygun olarak kesim ve hazırlama işlemlerini yürütüyoruz. </p>
+                  <p class="lead">
+                  
+                  Çalıştığımız iş ortaklarımız ibadet amacıyla hayvan hazırlama, kesim ve tüm İslâmi usuller konusunda usta, yerel ve inançlı kasaplardır.
+              </p>              
+              <p><a class="btn btn-shadow btn-warning" href="/blog/kurban-adaklik" role="button">Daha Fazla Bilgi »</a></p>
+            </div>
+      
         </div>
-        <% } %>
-      </div>
+      <% } %>
+
+      <% if (controller.category.subCategories.length) { %>
+        <% var displayed = [] %>
+        <% for (var k=0; k < controller.category.subCategories.length; k++) { %>
+          <% var subCat = controller.category.subCategories[k] %>
+          <div class="mb-3 border-bottom">
+            <h4 class="h5 mb-2"><%= subCat.title %></h4>
+            <span class="font-weight-light">
+              <%-controller.markdown.render(subCat.description || '')%>            
+            </span>
+          </div>
+          <div class="row mb-3">
+            <% 
+            
+             var products = controller.products.filter(
+              
+             p => { return p.categories.find(pc=>pc.subcategoryid == subCat.id) } 
+            
+            ) 
+              displayed = displayed.concat(products.map(p=>p.id))
+            %>
+            
+            <% for(var j=0; j< products.length; j++) {%>
+            <div class="col-md-3 col-6 ">
+              <%- include('./_partial/product-view.ejs', {product: products[j]}) %>
+            </div>
+            <% } %>
+    
+    
+    
+          </div>
+
+
+          
+          <% } %>
+    
+          <% if (displayed.length != controller.products.length) { %>
+            <%var remain = controller.products.filter(p=> {return displayed.indexOf(p.id) < 0 })  %>
+            <div class="border-bottom mb-3">
+              <h4 class="h5 mb-2">Diğer</h4>
+            </div>            
+            <div class="row">
+            <% for(var j=0; j< remain.length; j++) {%>
+              <div class="col-md-3 col-6 ">
+                <%- include('./_partial/product-view.ejs', {product: remain[j]}) %>
+              </div>
+              <% } %>
+            </div>
+          <% } %>          
+
+      <% } else { %>
+        <div class="row">
+ 
+          <% for(var j=0; j< controller.products.length; j++) {%>
+          <div class="col-md-3 col-6 ">
+            <%- include('./_partial/product-view.ejs', {product: controller.products[j]}) %>
+          </div>
+          <% } %>
+  
+  
+  
+        </div>
+      <% } %>
+      
+
+
 
       <div>
 

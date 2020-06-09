@@ -528,13 +528,25 @@ window.initComponents = function initComponents() {
                 if ((!event) || event.target.checkValidity()) {
                     $('#addtoscbtn').attr("disabled", true)
 
-                    var url = this.shopCardIndex >= 0 ? 'shopcard/add': 'shopcard/add'
+                    var url = this.shopCardIndex >= 0 ? 'shopcard/add': 'shopcard/add';
+
+                    let productTypeData = {};
+
+                    if (this.product.productType == 'adak') {
+                        productTypeData = {
+                            vekalet: $('#adak-vekalet').val(),
+                            video: $('#adak-video').val(),
+                            hisse: $('#adak-hisse').val(),
+                        }
+                    }
+
 
                     return App.Backend.post(url, {
                         id: this.product.id,
                         butcher: this.product.butcher,
                         quantity: this.quantity,
                         purchaseoption: this.selectedUnit,
+                        productTypeData: productTypeData,
                         note: this.note,
                         shopcardIndex: this.shopCardIndex
                     }).then(result => {

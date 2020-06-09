@@ -153,7 +153,7 @@
                   </h6>
                   <div class="d-flex justify-content-between mb-2">
                     <div>
-                      <div class="font-size-sm"><span class="font-weight-medium"><%=item.quantity%></span> 
+                      <div class="mb-3 font-size-sm"><span class="font-weight-medium"><%=item.quantity%></span> 
                         <span
                           class="text-muted  mr-2"> <%=item.purchaseoption.unitTitle%> </span>
                           <% if (item.purchaseoption.unitWeight) { %>
@@ -162,7 +162,16 @@
                             
                             </span>
                           <% } %>
+
                         </div>
+
+                        <div class="text-muted">
+                          <%- include(`./_partial/product.${item.product.productType}-view.ejs`, {man: controller.getProductTypeManager(pi)}) %>
+                        </div>
+
+                        <% if (item.note) {%>
+                          <div class="font-size-sm text-muted"><%=item.note%></div>
+                          <%}%>                         
 
                     </div>
                     <div class="text-nowrap font-size-sm">

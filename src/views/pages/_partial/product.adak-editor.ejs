@@ -1,0 +1,40 @@
+<div class="rounded-lg bg-secondary border p-3">
+    <div class="form-group">
+        <h5 class="h5 text-center text-warning">Adağınızın hayırlara vesile olmasını diliyoruz</h5>
+    
+        <div class="form-group">
+            <label for="adak-vekalet">Vekâletinizi nasıl alalım?</label>
+            <select id="adak-vekalet" class="form-control bsselect" >
+                <% for (var k in man.constructor.vekaletData) { %>
+                    <option <%= man.vekalet == k ? 'selected':'' %> value="<%=k%>"><%=man.constructor.vekaletData[k]%></option>
+    
+                    
+                <% } %>
+            </select>
+        </div>
+    
+        <div class="form-group">
+            <label for="adak-video">Kesim videosu ister misiniz?</label>
+            <select id="adak-video" class="form-control bsselect" >
+                <% for (var k in man.constructor.videoData) { %>
+                    <option <%= man.video == k ? 'selected':'' %> value="<%=k%>"><%=man.constructor.videoData[k]%></option>
+                <% } %>
+            </select>
+        </div>
+    
+        <div class="form-group">
+            <label for="adak-hisse">Hisseleri nasıl ayarlayalım?</label>
+            <select id="adak-hisse" class="form-control bsselect" >
+                <% for (var k in man.constructor.hisseData) { %>
+                    <option <%= man.hisse == k ? 'selected':'' %> value="<%=k%>"><%=man.constructor.hisseData[k]%></option>
+                <% } %>
+            </select>
+        </div>    
+    
+    </div>
+</div>
+
+
+
+
+

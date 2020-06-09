@@ -41,7 +41,7 @@ export default class Route extends ApiRouter {
         if (item.shopcardIndex >= 0) {
             shopcard.remove(item.shopcardIndex);
         }
-        shopcard.addProduct(productView, item.quantity, item.purchaseoption, item.note);
+        shopcard.addProduct(productView, item.quantity, item.purchaseoption, item.note, item.productTypeData || {});
         await shopcard.saveToRequest(this.req);
         this.res.send(shopcard);
     }
@@ -62,7 +62,7 @@ export default class Route extends ApiRouter {
                 }]
         }): null;
         let productView = await api.getProductView(product, butcher)
-        shopcard.addProduct(productView, item.quantity, item.purchaseoption, item.note);
+        shopcard.addProduct(productView, item.quantity, item.purchaseoption, item.note, item.productTypeData || {});
         await shopcard.saveToRequest(this.req);
         this.res.send(shopcard);
     }    

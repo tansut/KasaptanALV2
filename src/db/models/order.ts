@@ -9,6 +9,7 @@ import Dispatcher from './dispatcher';
 import { GeoLocation } from '../../models/geo';
 import AccountModel from './accountmodel';
 import { PuanResult } from '../../models/puan';
+import { ProductTypeManager, ProductTypeFactory } from '../../lib/common';
 const orderid = require('order-id')('dkfjsdklfjsdlkg450435034.,')
 
 @Table({
@@ -34,8 +35,6 @@ class Order extends BaseModel<Order> {
     kalitteByButcherPuanAccounts: AccountModel[] = [];
     
     butcherDeptAccounts: AccountModel[] = [];
-
-
 
     puanSummary: PuanResult [] = [];
 
@@ -87,6 +86,8 @@ class Order extends BaseModel<Order> {
     })
     note: string;
 
+
+    
     
 
     @ForeignKey(() => Butcher)
@@ -100,6 +101,7 @@ class Order extends BaseModel<Order> {
         defaultValue: 'belli değil'        
     })
     butcherName: string;
+
 
     @Column({
         allowNull: false,
@@ -316,6 +318,8 @@ class Order extends BaseModel<Order> {
     shipmentInformMe: boolean;    
 
 
+
+
     get shopcard(): Object {
         return JSON.parse((<Buffer>this.getDataValue('shopcardjson')).toString())
     }
@@ -396,6 +400,38 @@ class OrderItem extends BaseModel<Order> {
 
     @BelongsTo(() => Product, "productid")
     product: Product;
+
+    @Column({
+        allowNull: false,
+        defaultValue: 'generic'        
+    })
+    productType: string;    
+
+    @Column({
+        allowNull: true
+    })
+    custom1: string;   
+
+    @Column({
+        allowNull: true
+    })
+    custom2: string;   
+    
+    @Column({
+        allowNull: true
+    })
+    custom3: string;   
+    
+    
+    @Column({
+        allowNull: true
+    })
+    custom4: string;   
+
+    @Column({
+        allowNull: true
+    })
+    custom5: string;    
 
     @Column({
         allowNull: false,
@@ -631,6 +667,12 @@ class OrderItem extends BaseModel<Order> {
     })
     note: string;
 
+    get productTypeManager() {
+        let result = ProductTypeFactory.create(this.productType, {});
+        result.loadFromOrderItem(this);
+        return result;
+    }
+
     static fromShopcardItem(sc: ShopCard, i: ShopcardItem) {
         let c = new OrderItem();
         c.productid = i.product.id;
@@ -639,6 +681,9 @@ class OrderItem extends BaseModel<Order> {
         c.productName = i.product.name;
         c.kgPrice = i.product.kgPrice;
         c.orderitemnum = orderid.generate();
+        c.productType = i.product.productType;
+        let prodMan = ProductTypeFactory.create(c.productType, i.productTypeData);
+        prodMan.saveToOrderItem(c);
         // c.viewUnit = i.product.viewUnit;
         // c.viewUnitAmount = i.product.viewUnitAmount;
         // c.viewUnitDesc = i.product.viewUnitDesc;

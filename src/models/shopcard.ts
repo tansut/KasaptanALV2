@@ -242,7 +242,7 @@ export class ShopCard {
         this.payment = payment;
     }
 
-    addProduct(product: ProductView, quantity: number, purchaseoption: PurchaseOption, note: string) {
+    addProduct(product: ProductView, quantity: number, purchaseoption: PurchaseOption, note: string, productTypeData: any = {}) {
         quantity = Number(quantity.toFixed(3));
         let price = ShopCard.calculatePrice(product, quantity, purchaseoption);
         let found = null; // this.items.find(p => p.note == note && p.product.id == product.id && p.purchaseoption.id == purchaseoption.id && p.product.butcher.id == product.butcher.id);
@@ -250,7 +250,7 @@ export class ShopCard {
         //     found.quantity = quantity + found.quantity;
         //     found.price = price + found.price;
         // }
-        found || this.items.push(new ShopcardItem(product, quantity, price, purchaseoption, note));
+        found || this.items.push(new ShopcardItem(product, quantity, price, purchaseoption, note, productTypeData));
         this.arrangeButchers();
         this.calculateShippingCosts();
     }
@@ -261,7 +261,7 @@ export class ShopCard {
         values = values || {};
         values.items = values.items || [];
         values.items.forEach(i => {
-            let item = new ShopcardItem(i.product, i.quantity, i.price, i.purchaseoption, i.note);
+            let item = new ShopcardItem(i.product, i.quantity, i.price, i.purchaseoption, i.note,i.productTypeData || {});
             this.items.push(item)
         })
         values.address = values.address || this.address;
@@ -465,7 +465,7 @@ export class ShopcardItem {
     // public discount: number = 0.00;
     constructor(public product: ProductView,
         public quantity: number, public price: number,
-        public purchaseoption: PurchaseOption, public note: string) {
+        public purchaseoption: PurchaseOption, public note: string, public productTypeData: Object) {
         if (!product) throw new ValidationError('geçersiz ürün');
         if (!quantity) throw new ValidationError('geçersiz miktar:' + product.name);
         if (!price) throw new ValidationError('geçersiz bedel: ' + product.name);

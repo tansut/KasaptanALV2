@@ -6,8 +6,13 @@ import Category from './category';
 import ButcherProduct from './butcherproduct';
 import Resource from './resource';
 import { Op, QueryTypes } from 'sequelize';
+import { AdakProductManager } from '../../lib/common';
 
-
+export enum ProductType {
+    generic = 'generic',
+    kurban = 'kurban',
+    adak = 'adak'
+}
 
 @Table({
     tableName: "Products",
@@ -29,6 +34,24 @@ class Product extends BaseModel<Product> {
 
     @Column
     keywords: string;    
+
+    @Column({
+        type: DataType.TEXT
+    })
+    producttypedatajson: string
+
+    get asAdak(): AdakProductManager {
+        let obj = this.producttypedata || {};
+        return Object.assign(new AdakProductManager(), obj)        
+    } 
+
+    get producttypedata(): any {
+        return this.producttypedatajson ? JSON.parse(this.getDataValue('producttypedatajson')) : null
+    }
+
+    set producttypedata(value: any) {
+        this.setDataValue('producttypedatajson', JSON.stringify(value));
+    }    
 
     get generatedDesc() {
         let start = "";
@@ -119,6 +142,8 @@ class Product extends BaseModel<Product> {
         allowNull: true,
     })
     pageDescription: string;
+
+    
 
     @Column({
         allowNull: true,

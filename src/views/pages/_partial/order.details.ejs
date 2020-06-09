@@ -179,8 +179,13 @@
           <span class="text-muted font-size-sm d-block">1 <%=item.pounitTitle%> <%=item.pounitWeight%></span>
           <% } %>
         </div>
-        <div class="text-nowrap text-muted">
+        <div class="mb-3 text-nowrap text-muted">
           Durum: <%=item.status%>
+        </div>
+        <div>
+          <%- include(`./product.${item.productType}-view.ejs`, {man: item.productTypeManager}) %>
+
+          
         </div>
         <% if (item.note) {%>
         <div class="font-size-sm text-info"><%=item.note%></div>

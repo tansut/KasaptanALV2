@@ -3,6 +3,7 @@ import BaseModel from "./basemodel"
 import Helper from '../../lib/helper';
 import Product from './product';
 import Category from './category';
+import SubCategory from './subcategory';
 
 @Table({
     tableName: "ProductCategories",
@@ -30,6 +31,14 @@ class ProductCategory extends BaseModel<ProductCategory> {
         allowNull: true,
     })
     displayOrder: number;
+
+    @ForeignKey(() => Category)
+    subcategoryid: number
+
+    @BelongsTo(() => SubCategory, "subcategoryid")
+    subcategory: SubCategory;
+
+ 
 }
 
 export default ProductCategory;

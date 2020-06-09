@@ -17,6 +17,7 @@ import Content from "../db/models/content";
 import WebPage from "../db/models/webpage";
 import Redirect from "../db/models/redirect";
 import PriceCategory from "../db/models/pricecategory";
+import SubCategory from "../db/models/subcategory";
 
 
 let cache: Cache;
@@ -180,13 +181,19 @@ export class CacheManager {
         let categories = <Category[]>this.dataCache.get("categories")
         if (!categories) {
             categories = await Category.findAll({
-                raw: true,
+                raw: false,
+                include: [
+                    {
+                        model: SubCategory,    
+                                            
+                    } 
+                ],
                 order: [["type", 'desc'], ["displayOrder", 'desc']]
             });
-
+            categories = JSON.parse(JSON.stringify(categories))
             this.dataCache.set("categories", categories);
-        }
-        return categories;
+        } 
+        return categories; 
     }
 
     static async fillPriceCategories(cats: Category[]): Promise<PriceCategory[]> {

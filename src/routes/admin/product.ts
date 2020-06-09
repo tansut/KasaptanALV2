@@ -62,12 +62,14 @@ export default class Route extends ViewRouter {
     getProductCategory(categoryid: number) {
         let productCategory = this.product.categories.find(c => c.categoryid == categoryid)
         return productCategory ? {
+            subcategoryid: productCategory.subcategoryid,
             displayOrder: productCategory.displayOrder,
             enabled: true,
             productCategory: productCategory
         } : {
                 displayOrder: "",
-                enabled: false
+                enabled: false,
+                subcategoryid: ""
             }
     }
 
@@ -237,6 +239,7 @@ export default class Route extends ViewRouter {
                 newItem.categoryid = categoryid;
 
                 newItem.displayOrder = (this.req.body.categorydisplayorder ? parseInt(this.req.body.categorydisplayorder) : 0)
+                newItem.subcategoryid = (this.req.body.categorysubcategoryid ? parseInt(this.req.body.categorysubcategoryid) : null)
                 await newItem.save();
             }
             this.product = await this.getProduct(this.req.params.product);

@@ -2,7 +2,7 @@ import { ApiRouter, ViewRouter } from '../lib/router';
 import * as express from "express";
 import * as maps from "@google/maps"
 import ProductModel from '../db/models/product';
-import { Auth } from '../lib/common';
+import { Auth, ProductTypeManager, ProductTypeFactory } from '../lib/common';
 import Helper from '../lib/helper';
 import Resource from '../db/models/resource';
 import ResourceRoute from './resource';
@@ -47,8 +47,26 @@ export default class Route extends ViewRouter {
     foods: Resource[] = [];
     butcherResources: Resource[] = [];
     productLd: ProductLd;
+    product: Product;
     reviews: Review[] = [];
     shopCardIndex: number = -1;
+    shopCardItem: ShopcardItem = null;
+
+
+    productTypeManager: ProductTypeManager = null;
+
+
+    get ProductTypeManager() {
+        let params = {
+            product: this.product
+        }
+        if (this.shopCardItem && this.shopCardItem.productTypeData) {
+            params = {...params, ...this.shopCardItem.productTypeData }
+        }
+        let result = this.productTypeManager || (this.productTypeManager = ProductTypeFactory.create(this.product.productType, params))
+        return result;
+    }
+
 
     async tryBestFromShopcard(serving: Dispatcher[], others: Dispatcher[] = []) {
         let shopcard = await ShopCard.createFromRequest(this.req);
@@ -61,7 +79,7 @@ export default class Route extends ViewRouter {
     }
 
     async tryBestFromOrders(serving: Dispatcher[]) {
-        let fullServing = serving.filter(s=>s.selection == DispatcherSelection.full);
+        let fullServing = serving.filter(s => s.selection == DispatcherSelection.full);
         if (fullServing.length == 0) fullServing = serving;
         fullServing.forEach(s => s.lastorderitemid = s.lastorderitemid || 0);
         let orderedByDate = _.orderBy(fullServing, 'lastorderitemid', 'asc');
@@ -70,7 +88,7 @@ export default class Route extends ViewRouter {
     }
 
     tryBestAsRandom(serving: Dispatcher[]) {
-        let fullServing = serving.filter(s=>s.selection == DispatcherSelection.full);
+        let fullServing = serving.filter(s => s.selection == DispatcherSelection.full);
         if (fullServing.length == 0) fullServing = serving;
         let res = (fullServing.length > 0 ? fullServing[0] : null);
         return res;
@@ -91,14 +109,14 @@ export default class Route extends ViewRouter {
         servingL3 = Helper.shuffle(servingL3)
         servingL2 = Helper.shuffle(servingL2)
 
-        let mybest: Dispatcher = await this.tryBestFromShopcard(serving) || 
-            await this.tryBestFromOrders(servingL3) || 
+        let mybest: Dispatcher = await this.tryBestFromShopcard(serving) ||
+            await this.tryBestFromOrders(servingL3) ||
             await this.tryBestFromOrders(servingL2) || this.tryBestAsRandom(serving);
 
-        
 
-        if (mybest) {            
-            mybest = (userBest ? (serving.find(s=>s.butcherid == userBest.id)): null) || mybest;
+
+        if (mybest) {
+            mybest = (userBest ? (serving.find(s => s.butcherid == userBest.id)) : null) || mybest;
         }
 
         return {
@@ -124,7 +142,7 @@ export default class Route extends ViewRouter {
             ], where: { slug: this.req.params.product }
         });
         if (!product) return this.next();
-
+        this.product = product;
         let api = new ProductApi(this.constructorParams);
 
 
@@ -133,14 +151,12 @@ export default class Route extends ViewRouter {
 
         let shopcard = await ShopCard.createFromRequest(this.req);
 
+        this.shopCardIndex = this.req.query.shopcarditem ? parseInt(this.req.query.shopcarditem) : -1;
+        this.shopCardItem = (this.shopCardIndex >= 0 && shopcard.items) ? shopcard.items[this.shopCardIndex] : null;
 
-         let butcher: Butcher;
-         this.shopCardIndex = this.req.query.shopcarditem ? parseInt(this.req.query.shopcarditem): -1;
-         let shopcardItem = (this.shopCardIndex >= 0 && shopcard.items)  ? shopcard.items[this.shopCardIndex]: null;
-    
-        
-        butcher = shopcardItem ? await Butcher.getBySlug(shopcardItem.product.butcher.slug): (this.req.query.butcher ? await Butcher.getBySlug(this.req.query.butcher) : null);
-    
+
+        let butcher = this.shopCardItem ? await Butcher.getBySlug(this.shopCardItem.product.butcher.slug) : (this.req.query.butcher ? await Butcher.getBySlug(this.req.query.butcher) : null);
+
         this.foods = await api.getTarifVideos([product])
         if (this.req.query.semt) {
             let l3 = await Area.getBySlug(this.req.query.semt);
@@ -168,14 +184,14 @@ export default class Route extends ViewRouter {
 
 
 
-        
-        let view = await api.getProductView(product, selectedButchers.best ? selectedButchers.best.butcher : null, null,  true)
+
+        let view = await api.getProductView(product, selectedButchers.best ? selectedButchers.best.butcher : null, null, true)
         let serving = selectedButchers.servingL3.concat(selectedButchers.servingL2).concat(<any>selectedButchers.takeOnly);
 
 
         serving.forEach(s => {
-            let butcher = s instanceof Dispatcher ? s.butcher: s;
-            let dispatcher = s instanceof Dispatcher ? s: null;
+            let butcher = s instanceof Dispatcher ? s.butcher : s;
+            let dispatcher = s instanceof Dispatcher ? s : null;
             if (view.butcher && (butcher.id != view.butcher.id)) {
                 let bp = butcher.products.find(bp => bp.productid == product.id);
                 view.alternateButchers.push({
@@ -189,7 +205,7 @@ export default class Route extends ViewRouter {
                         name: butcher.name,
                         puanData: butcher.getPuanData(),
                         earnedPuan: 0.00,
-                        kgPrice: bp ? bp.kgPrice: 0,
+                        kgPrice: bp ? bp.kgPrice : 0,
                         productNote: bp ? bp.mddesc || "" : "",
                         thumbnail: this.req.helper.imgUrl("butcher-google-photos", butcher.slug)
                     },
@@ -202,7 +218,7 @@ export default class Route extends ViewRouter {
                         priceInfo: dispatcher.priceInfo,
                         userNote: dispatcher.userNote,
                         takeOnly: dispatcher.takeOnly
-                    }: null,
+                    } : null,
                     purchaseOptions: api.getPurchaseOptions(product, bp).map(po => {
                         return {
                             unit: po.unit,
@@ -220,16 +236,16 @@ export default class Route extends ViewRouter {
                     priceInfo: dispatcher.priceInfo,
                     userNote: dispatcher.userNote,
                     takeOnly: dispatcher.takeOnly
-                }: null
+                } : null
             }
         })
 
 
 
 
-        if (view.butcher) {            
+        if (view.butcher) {
             let calculator = new PuanCalculator();
-            view.butcher.earnedPuan = this.req.user ? await calculator.getEarnedButcherPuan(this.req.user.id, view.butcher.id): 0.00
+            view.butcher.earnedPuan = this.req.user ? await calculator.getEarnedButcherPuan(this.req.user.id, view.butcher.id) : 0.00
             this.butcherProducts = await ButcherProduct.findAll({
                 where: {
                     butcherid: view.butcher.id,
@@ -265,30 +281,30 @@ export default class Route extends ViewRouter {
                 ]
             })
         }
-            if (view.butcher) {
-                this.butcherResources = await Resource.findAll({
-                    where: {
-                        type: ["butcher-google-photos", "butcher-videos"],
-                        ref1: view.butcher.id,
-                        list: true
-                    },
-                    order: [["displayOrder", "DESC"], ["updatedOn", "DESC"]]
-                })
-            }
-            
-            this.productLd = product.reviewCount > 0 ? await api.getProductLd(product): null;
-            this.res.render('pages/product', this.viewData({
-                butcherProducts: this.butcherProducts.map(p => p.product), butchers: selectedButchers,
-                pageTitle: product.name + ' Siparişi ve Fiyatları',
-                // pageDescription: product.pageDescription + ' ', 
+        if (view.butcher) {
+            this.butcherResources = await Resource.findAll({
+                where: {
+                    type: ["butcher-google-photos", "butcher-videos"],
+                    ref1: view.butcher.id,
+                    list: true
+                },
+                order: [["displayOrder", "DESC"], ["updatedOn", "DESC"]]
+            })
+        }
+
+        this.productLd = product.reviewCount > 0 ? await api.getProductLd(product) : null;
+        this.res.render('pages/product', this.viewData({
+            butcherProducts: this.butcherProducts.map(p => p.product), butchers: selectedButchers,
+            pageTitle: product.name + ' Siparişi ve Fiyatları',
+            // pageDescription: product.pageDescription + ' ', 
 
 
-                pageThumbnail: this.req.helper.imgUrl('product-photos', product.slug),
-                pageDescription: product.generatedDesc,
-                product: product, view: view,
-                __supportMessage: `${`Merhaba, kasaptanal.com üzerinden size ulaşıyorum. ${product.name} ile ilgili whatsapp üzerinden yardımcı olabilir misiniz?`}`
-            }))
-        
+            pageThumbnail: this.req.helper.imgUrl('product-photos', product.slug),
+            pageDescription: product.generatedDesc,
+            product: product, view: view,
+            __supportMessage: `${`Merhaba, kasaptanal.com üzerinden size ulaşıyorum. ${product.name} ile ilgili whatsapp üzerinden yardımcı olabilir misiniz?`}`
+        }))
+
     }
 
 

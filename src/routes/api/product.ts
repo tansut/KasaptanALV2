@@ -345,6 +345,7 @@ export default class Route extends ApiRouter {
             slug: product.slug,
             name: product.name,
             kgPrice: kgPrice,
+            productType: product.productType,
             shortDesc: product.shortdesc,
             notePlaceholder: product.notePlaceholder,
             // viewUnitPrice: defaultUnitPrice,

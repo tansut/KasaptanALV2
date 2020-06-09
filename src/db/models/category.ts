@@ -3,6 +3,7 @@ import BaseModel from "./basemodel"
 import Helper from '../../lib/helper';
 import ProductCategory from './productcategory';
 import ButcherProduct from './butcherproduct';
+import SubCategory from './subcategory';
 
 @Table({
     tableName: "Categories",
@@ -42,6 +43,7 @@ class Category extends BaseModel<Category> {
         allowNull: true
     })
     tarifTitle: string;
+
 
     @Column({
         allowNull: true
@@ -103,6 +105,13 @@ class Category extends BaseModel<Category> {
         onDelete: "CASCADE"
     })
     products: ProductCategory[];
+
+    @HasMany(() => SubCategory, {
+        sourceKey: "id",
+        foreignKey: "categoryid",
+        onDelete: "CASCADE"
+    })
+    subCategories: SubCategory[];     
 
     // @HasMany(() => ButcherProduct, {
     //     sourceKey: "id",

@@ -1,4 +1,4 @@
-import { Auth } from '../../lib/common';
+import { Auth, ProductTypeFactory } from '../../lib/common';
 import { ApiRouter } from '../../lib/router';
 import * as express from "express";
 import { ShopCard, firstOrderDiscount } from '../../models/shopcard';
@@ -285,7 +285,12 @@ export default class Route extends ApiRouter {
         let butchers = {}
 
         order.items.forEach((item, i) => {
-            let bi = item.butcher.id
+            let bi = item.butcher.id;
+
+            let prodMan = ProductTypeFactory.create(item.productType,{});
+            prodMan.loadFromOrderItem(item);
+
+
             if (!butchers[bi]) {
                 butchers[bi] = item.butcher;
                 butchers[bi].products = [i];

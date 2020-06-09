@@ -3,7 +3,7 @@ import * as express from "express";
 import * as maps from "@google/maps"
 import ButcherModel from '../db/models/butcher';
 import moment = require('moment');
-import { Auth } from '../lib/common';
+import { Auth, ProductTypeManager, ProductTypeFactory } from '../lib/common';
 import AreaModel from '../db/models/area';
 import Helper from '../lib/helper';
 import Area from '../db/models/area';
@@ -103,6 +103,16 @@ export default class Route extends ViewRouter {
         }
 
         this.renderPage("pages/checkout.adres.ejs");
+    }
+
+    getProductTypeManager(i: number): ProductTypeManager {             
+        let item = this.shopcard.items[i];
+        let params = {
+           
+        }
+        params = {...params, ...item.productTypeData }
+        let result = ProductTypeFactory.create(item.product.productType, params)
+        return result;
     }
 
     async setDispatcher() {
