@@ -291,7 +291,7 @@ gulp.task('aws.deploy', () => {
 
 
 
-let tasks = ['copy:topublic', 'compile:tsc:admin', 'compile:tsc:app', 'copy:images', 'copy:fonts', 'copy:resources', 'concat:js', 'move:js', 'concat:css', 'move:css', 'uglify:js', 'sass:minified', 'sass:expanded'];
+let tasks = ['copy:topublic', 'compile:tsc:admin', 'compile:tsc:app', 'copy:images', 'copy:fonts', 'copy:resources', 'concat:js', 'move:js', 'concat:css', 'uglify:js', 'sass:minified', 'sass:expanded'];
 
 gulp.task(
     'client.deploy',

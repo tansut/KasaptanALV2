@@ -7,9 +7,107 @@
 
 <body>
     <% include ./_partial/header %>
-     
 
-    <div class="container mb-3 pt-3">
+    <section class="bg-faded-primary pt-2">
+
+        <%if(__req.query.car != '0') { %>
+        <div id="myCarousel" class="carousel slide mb-3" data-interval="false" data-ride="carousel">
+            <ol class="carousel-indicators">
+                <li data-target="#myCarousel" data-slide-to="0" class="active"></li>
+                <li data-target="#myCarousel" data-slide-to="1"></li>
+                <li data-target="#myCarousel" data-slide-to="2"></li>
+                <li data-target="#myCarousel" data-slide-to="3"></li>
+                <li data-target="#myCarousel" data-slide-to="4"></li>
+                <li data-target="#myCarousel" data-slide-to="5"></li>
+                <% if (!__req.user) { %>
+                    <li data-target="#myCarousel" data-slide-to="6"></li>
+
+                <%}%>
+            </ol>
+            <div class="carousel-inner">
+                <% if (!__req.user) { %>
+                <div class="carousel-item home-carousel-item active">
+                    <div class="py-3 mb-3 carousel-caption">
+                        <h2 class="h1 d-block display-4">şimdi üyemiz olun</h2>
+                        <span class="h5 d-block font-weight-light pb-3 ">ilk siparişinizde %3 ek puan kazanın</span>
+                        <a class="btn btn-primary" href="javascript:window.App.showSignupDlg()">Fırsatı Yakala</a>
+                    </div>
+                </div>
+                <% } %>
+                <div class="carousel-item home-carousel-item <%=__req.user ? 'active':''%>">
+                    <div class="py-3 mb-3 carousel-caption">
+                        <h2 class="h1 d-block display-4  ">güvenilir kasaplardan</h2>
+                        <span class="h5 d-block  font-weight-light pb-3 ">online sipariş verin, aynı gün kapınıza gelsin</span>
+    
+                        <a class="btn btn-primary " href="/kasap-urunleri">Alışverişe Başla »</a>
+                    </div>
+                </div>
+
+                <div class="carousel-item home-carousel-item">
+                    <div class="py-3 mb-3 carousel-caption">
+                        <h2 class="h1 d-block display-4  ">popüler ürünler</h2>
+                        <span class="h5 d-block  font-weight-light pb-3 ">müşterilerimizin en çok tercih ettiği ürünlerimiz</span>
+    
+                        <a class="btn btn-primary " href="/populer-etler">Göz At »</a>
+                    </div>
+                </div>
+
+                <div class="carousel-item home-carousel-item">
+                    <div class="py-3 mb-3 carousel-caption">
+                        <h2 class="h1 d-block display-4  ">mangallık etler</h2>
+                        <span class="h5 d-block  font-weight-light pb-3 ">eğlenceye başlamanın şimdi tam zamanı</span>
+    
+                        <a class="btn btn-primary " href="/barbeku-dokum-tava-etleri">Göz At »</a>
+                    </div>
+                </div>
+
+                <div class="carousel-item home-carousel-item">
+                    <div class="py-3 mb-3 carousel-caption">
+                        <h2 class="h1 d-block display-4  ">beyaz et ürünleri</h2>
+                        <span class="h5 d-block  font-weight-light pb-3 ">sağlıklı, doğal ve lezzetli ürünlerimiz</span>
+    
+                        <a class="btn btn-primary " href="/beyaz-et">Göz At »</a>
+    
+                    </div>
+                </div>
+
+                <div class="carousel-item home-carousel-item">
+                    <div class="py-3 mb-3 carousel-caption">
+                        <h2 class="h1 d-block display-4  ">haftanın ürünleri</h2>
+                        <span class="h5 d-block  font-weight-light pb-3 ">bu haftaya özel seçtiğimiz ürünler</span>
+    
+                        <a class="btn btn-primary " href="/bu-hafta">Göz At »</a>
+    
+                    </div>
+                </div>
+
+
+                <div class="carousel-item home-carousel-item">
+                    <div class="py-3 mb-3 carousel-caption">
+                        <h2 class="h1 d-block display-4  ">et kültür blog</h2>
+                        <span class="h5 d-block font-weight-light pb-3 ">ilginizi çekecek kısa ve öz içeriklerimiz</span>
+    
+                        <a class="btn btn-primary " href="/blog">Göz At »</a>
+
+                    </div>
+                </div>
+
+  
+
+            
+            </div>
+            <a class="carousel-control-prev" href="#myCarousel" data-slide="prev">
+                <span class="carousel-control-prev-icon"></span>
+            </a>
+            <a class="carousel-control-next" href="#myCarousel" data-slide="next">
+                <span class="carousel-control-next-icon"></span>
+            </a>
+        </div>
+        <% } %>
+
+    </section>
+
+    <div class="container mb-3">
         <div class=" bg-secondary">
             <div class="row">
                 <div class="col-sm-4">
@@ -26,7 +124,7 @@
 
                     </h1>
                     <p class="pl-3">
-                        Yerel ve güvenilir semt kasaplarımızdan online sipariş verin, kapınıza gelsin.
+                        Yerel ve güvenilir semt kasaplarından online sipariş verin, kapınıza gelsin.
                     </p>
 
 
@@ -46,99 +144,101 @@
         </div>
     </div>
 
-    
+    <%if(__req.query.prods != '0') { %>
     <div class="container mb-3">
         <%- include('./_partial/category-products-slider', {category: 'populer-etler', limit: 4, reverse: true, img: 'img/category/premium.jpg'}); %>
     </div>
-
+    <%}%>
     <section class="container">
         <div class="row">
             <% if (!__req.user) { %>
-            <div class="col-md-6 mb-3">
-                <div class="d-flex flex-column h-100 justify-content-center bg-size-cover bg-position-center rounded-lg"
-                    style="background-image: url(<%=__config.staticDomain %>/resource/img/banner-bg.jpg);">
-                    <div class="py-4 my-2 my-md-0 py-md-5 px-4 ml-md-3 text-center text-sm-left">
-                        <h4 class="h6 font-size-lg font-weight-light mb-2">Şimdi üyemiz olun, ilk siparişinizde</h4>
-                        <h3 class="h5 mb-4">%3 ek Kasap Kart&trade; puan kazanın</h3>
+    <div class="col-md-6 mb-3">
+        <div class="d-flex flex-column h-100 justify-content-center bg-size-cover bg-position-center rounded-lg"
+            style="background-image: url(<%=__config.staticDomain %>/resource/img/banner-bg.jpg);">
+            <div class="py-4 my-2 my-md-0 py-md-5 px-4 ml-md-3 text-center text-sm-left">
+                <h4 class="h6 font-size-lg font-weight-light mb-2">Şimdi üyemiz olun, ilk siparişinizde</h4>
+                <h3 class="h5 mb-4">%3 ek Kasap Kart&trade; puan kazanın</h3>
 
-                        <a href="javascript:window.App.showSignupDlg()" class="btn btn btn-primary "><i class="czi-thumb-up mr-2"></i>Fırsatı Yakala</a>
-                    </div>
-                </div>
+                <a href="javascript:window.App.showSignupDlg()" class="btn btn btn-primary "><i
+                        class="czi-thumb-up mr-2"></i>Fırsatı Yakala</a>
             </div>
-
-            <% } else { %>
-
-
-                <div class="col-md-6 mb-3">
-                    <div class="d-flex flex-column h-100 justify-content-center bg-size-cover bg-position-center rounded-lg"
-                        style="background-image: url(<%=__config.staticDomain %>/resource/img/banner-bg.jpg);">
-                        <div class="py-4 my-2 my-md-0 py-md-5 px-4 ml-md-3 text-center text-sm-left">
-                            <h4 class="h6 font-size-lg font-weight-light mb-2">Kasap alışverişlerinizden</h4>
-                            <h3 class="mb-4 h5">Kasap Kart&trade; ile puan kazanın</h3>
-        
-                            <a class="btn btn-primary btn-sm " href="/blog/kasap-kart">Daha Fazla Bilgi »</a>
-        
-        
-                        </div>
-                    </div>
-        
-        
-                </div>
-            <% } %>
-
-            <div class="col-md-6 mb-3">
-                <div class="d-flex flex-column h-100 justify-content-center bg-size-cover bg-position-center rounded-lg"
-                    style="background-image: url(<%=__config.staticDomain %>/resource/img/banner-bg.jpg);">
-                    <div class="py-4 my-2 my-md-0 py-md-5 px-2 ml-md-3 text-center text-sm-left">                        
-                        <h4 class="h6 font-size-lg font-weight-light mb-2">Hızlı aramayı kullanın</h4>
-                        
-                        <h3 class="mb-2 h5">Size nasıl yardımcı olalım?</h3>
-                        
-                        <div  class="input-group-overlay mb-1">
-    
-                            <div class="input-group-prepend-overlay">
-                
-                              <span class="input-group-text">
-                                <i class="notsearching czi-search"></i>
-                                <span class="searching d-none spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
-                              </span>
-                            </div>
-                            <input id="page-searchbox" class="form-control font-size-sm searchBox prepended-form-control"
-                              data-noresults-text="Maalesef bulamadık." autocomplete="off" type="text"
-                              placeholder="et, semt, yemek veya kasap">
-                            <div>
-                
-                            </div>
-                          </div>
-    
-                            <div class=" text-center">
-            <a class="search-sample font-weight-light text-white   badge badge-primary mr-1">mangallık et</a>
-            <a class="search-sample font-weight-light text-white  badge badge-primary mr-1">dana eti</a>
-            <a class="search-sample font-weight-light text-white  badge badge-primary mr-1">assado</a>
-            <a class="search-sample font-weight-light text-white  badge badge-primary mr-1">tavuk</a>
-            <a class="search-sample font-weight-light text-white  badge badge-primary mr-1">bahçelievler</a>
-            <a class="search-sample font-weight-light text-white  badge badge-primary mr-1">tüm kuzu</a>
-            <a class="search-sample font-weight-light text-white  badge badge-primary mr-1">fırınlık et</a>
-            <a class="search-sample font-weight-light text-white  badge badge-primary mr-1">çiğ süt</a>
-            <a class=" font-weight-light text-white  badge badge-primary mr-1" href="/kasap-urunleri">»</a>
-    
-          </div> 
-                    </div>
-                </div>
-            </div>
-
-
-
-
         </div>
+    </div>
+
+    <% } else { %>
+
+
+    <div class="col-md-6 mb-3">
+        <div class="d-flex flex-column h-100 justify-content-center bg-size-cover bg-position-center rounded-lg"
+            style="background-image: url(<%=__config.staticDomain %>/resource/img/banner-bg.jpg);">
+            <div class="py-4 my-2 my-md-0 py-md-5 px-4 ml-md-3 text-center text-sm-left">
+                <h4 class="h6 font-size-lg font-weight-light mb-2">Kasap alışverişlerinizden</h4>
+                <h3 class="mb-4 h5">Kasap Kart&trade; ile puan kazanın</h3>
+
+                <a class="btn btn-primary btn-sm " href="/blog/kasap-kart">Daha Fazla Bilgi »</a>
+
+
+            </div>
+        </div>
+
+
+    </div>
+    <% } %>
+
+    <div class="col-md-6 mb-3">
+        <div class="d-flex flex-column h-100 justify-content-center bg-size-cover bg-position-center rounded-lg"
+            style="background-image: url(<%=__config.staticDomain %>/resource/img/banner-bg.jpg);">
+            <div class="py-4 my-2 my-md-0 py-md-5 px-2 ml-md-3 text-center text-sm-left">
+                <h4 class="h6 font-size-lg font-weight-light mb-2">Hızlı aramayı kullanın</h4>
+
+                <h3 class="mb-2 h5">Size nasıl yardımcı olalım?</h3>
+
+                <div class="input-group-overlay mb-1">
+
+                    <div class="input-group-prepend-overlay">
+
+                        <span class="input-group-text">
+                            <i class="notsearching czi-search"></i>
+                            <span class="searching d-none spinner-border spinner-border-sm" role="status"
+                                aria-hidden="true"></span>
+                        </span>
+                    </div>
+                    <input id="page-searchbox" class="form-control font-size-sm searchBox prepended-form-control"
+                        data-noresults-text="Maalesef bulamadık." autocomplete="off" type="text"
+                        placeholder="et, semt, yemek veya kasap">
+                    <div>
+
+                    </div>
+                </div>
+
+                <div class=" text-center">
+                    <a class="search-sample font-weight-light text-white   badge badge-primary mr-1">mangallık et</a>
+                    <a class="search-sample font-weight-light text-white  badge badge-primary mr-1">dana eti</a>
+                    <a class="search-sample font-weight-light text-white  badge badge-primary mr-1">assado</a>
+                    <a class="search-sample font-weight-light text-white  badge badge-primary mr-1">tavuk</a>
+                    <a class="search-sample font-weight-light text-white  badge badge-primary mr-1">bahçelievler</a>
+                    <a class="search-sample font-weight-light text-white  badge badge-primary mr-1">tüm kuzu</a>
+                    <a class="search-sample font-weight-light text-white  badge badge-primary mr-1">fırınlık et</a>
+                    <a class="search-sample font-weight-light text-white  badge badge-primary mr-1">çiğ süt</a>
+                    <a class=" font-weight-light text-white  badge badge-primary mr-1" href="/kasap-urunleri">»</a>
+
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+
+
+    </div>
     </section>
 
 
-
+    <%if(__req.query.prods != '0') { %>
     <div class="container mb-3">
         <%- include('./_partial/category-products-slider', {limit: 4, category: 'bu-hafta', reverse: true, img: 'img/category/premium.jpg'}); %>
     </div>
-
+    <%}%>
 
 
     <%if(__req.query.catlider != '0') { %>
@@ -188,35 +288,43 @@
                     kasaplık özel etler, köfteler veya kebaplık et tarifleri elde edilmesi mümkündür. Üstelik sistemimiz
                     üzerinde bu et ürünlerin her biri online sipariş yöntemi ile istenilen her amaçla ve her gün temin
                     edilebilir.</p>
-                    <h2>
-Yerel, güvenilir usta <strong>kasaplar</strong> bir arada
-                    </h2>
-                    <p>
-                        Kasap seçiminde oldukça titiz davranıyoruz. İyi et için sadece konusunda deneyimli, yerel ve güvenilir kasap iş ortaklarıyla çalışıyoruz.
+                <h2>
+                    Yerel, güvenilir usta <strong>kasaplar</strong> bir arada
+                </h2>
+                <p>
+                    Kasap seçiminde oldukça titiz davranıyoruz. İyi et için sadece konusunda deneyimli, yerel ve
+                    güvenilir kasap iş ortaklarıyla çalışıyoruz.
 
-                    </p>
-                    <p>
-                        İş ortaklarımızın büyük çoğunluğu nesillerdir kasaplık mesleğini yapan ailelerden gelmekte. Kalan kesim ise genç, dinamik ve en kaliteli eti sağlama konusunda iddialı genç kasaplarımız.
-                    </p>
-                   <h3>
-                       Amacımız en kaliteli eti yerel usta kasaplardan sizlere sağlamak 
-                   </h3>
-                    <p>
-                        Ankara ve İstanbul'daki en iyi kasaplarla çalışıyoruz. Kasaplarımızdan sipariş vermeniz ardından mutlaka müşteri memnuniyeti çerçevesinde size ulaşıyor ve yorumlarınızı alıyoruz. Tüm yorumları kasaplarımıza iletiyoruz.
-                    </p>
-                    <h2>
-                        Kolay kullanım ve ve hızlı, online, güvenilir et siparişi
-                    </h2>
-                    <p>
-                        Zamanınızın değerli olduğunu biliyoruz. Usta <strong>kasaplar</strong> online alışveriş ve sipariş platformu olarak web sitemizi devamlı güncelliyoruz. Sizden gelen talepler doğrultusunda ürünlerimizi düzenliyoruz.
-                    </p>
-                    <h3>
-                        Et yemekleri ve yemeğe uygun et seçimi
-                    </h3>
-                    <p>
-                        Sitemizde pek çok et yemeği ve tarifi mevcut. Bu yemeklerde hangi etlerin kullanılabileceğini sitemiz size önerebiliyor. Aynı zamanda kişi sayısına göre miktar hesaplamasını kendisi yapabiliyor.
-                    </p>
-                <h3><strong>Online kasap</strong> alışverişi ve <strong>hızlı, güvenilir et siparişi</strong> ile hayatınız daha
+                </p>
+                <p>
+                    İş ortaklarımızın büyük çoğunluğu nesillerdir kasaplık mesleğini yapan ailelerden gelmekte. Kalan
+                    kesim ise genç, dinamik ve en kaliteli eti sağlama konusunda iddialı genç kasaplarımız.
+                </p>
+                <h3>
+                    Amacımız en kaliteli eti yerel usta kasaplardan sizlere sağlamak
+                </h3>
+                <p>
+                    Ankara ve İstanbul'daki en iyi kasaplarla çalışıyoruz. Kasaplarımızdan sipariş vermeniz ardından
+                    mutlaka müşteri memnuniyeti çerçevesinde size ulaşıyor ve yorumlarınızı alıyoruz. Tüm yorumları
+                    kasaplarımıza iletiyoruz.
+                </p>
+                <h2>
+                    Kolay kullanım ve hızlı, online, güvenilir et siparişi
+                </h2>
+                <p>
+                    Zamanınızın değerli olduğunu biliyoruz. Usta <strong>kasaplar</strong> online alışveriş ve sipariş
+                    platformu olarak web sitemizi devamlı güncelliyoruz. Sizden gelen talepler doğrultusunda
+                    ürünlerimizi düzenliyoruz.
+                </p>
+                <h3>
+                    Et yemekleri ve yemeğe uygun et seçimi
+                </h3>
+                <p>
+                    Sitemizde pek çok et yemeği ve tarifi mevcut. Bu yemeklerde hangi etlerin kullanılabileceğini
+                    sitemiz size önerebiliyor. Aynı zamanda kişi sayısına göre miktar hesaplamasını kendisi yapabiliyor.
+                </p>
+                <h3><strong>Online kasap</strong> alışverişi ve <strong>hızlı, güvenilir et siparişi</strong> ile
+                    hayatınız daha
                     kolay</h3>
                 <p>Evinizde veya işletmenizde hazırlayacağınız lezzetli yemekler için öncelikle online kasap
                     platformumuz üzerinden
@@ -236,10 +344,11 @@ Yerel, güvenilir usta <strong>kasaplar</strong> bir arada
                     bulunduğunuz bölgeyi seçerek, pratik bir şekilde yeni kasaplar keşfedebilir ve bir rehbere
                     ulaşabilirsiniz.</p>
 
-                    <h3><strong>Eve servis</strong> veya <strong>paket servis</strong> kasap siparişi güvenli ve hızlı</h3>
-<p>
-    KasaptanAl.com'un sağladığı en büyük faydalardan biri de <strong>paket servis</strong> veya <strong>eve servis</strong> olarak adlandırabileceğimiz et siparişini güvenle yapmanızı sağlamaktır.
-</p>
+                <h3><strong>Eve servis</strong> veya <strong>paket servis</strong> kasap siparişi güvenli ve hızlı</h3>
+                <p>
+                    KasaptanAl.com'un sağladığı en büyük faydalardan biri de <strong>paket servis</strong> veya
+                    <strong>eve servis</strong> olarak adlandırabileceğimiz et siparişini güvenle yapmanızı sağlamaktır.
+                </p>
                 <h3>Güncel <strong>2020 kırmızı et fiyatları</strong> kasaplardan gerçek zamanlı</h3>
                 <p>
                     Et fiyatlarını kasaplar belirlemektedir. kasaptanAl.com en doğru gerçek zamanlı kırmızı et
@@ -251,7 +360,7 @@ Yerel, güvenilir usta <strong>kasaplar</strong> bir arada
                     özel bir seçenek oluştururken, marine bu yapının daha fazla ön plana çıkmasına yardımcı olmaktadır.
                     Örneğin, seçilen bir dana veya kuzu pirzola ürünü marine edildikten sonra ızgarada pişirildiğinde
                     hem çocuklar hem yetişkinler için keyifli bir tüketim imkanı sağlayacaktır.</p>
-            
+
 
             </div>
             <a class="collapsed text-dark" data-toggle="collapse" href="#collapseSummary" aria-expanded="false"

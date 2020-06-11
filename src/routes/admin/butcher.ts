@@ -196,6 +196,7 @@ export default class Route  extends ViewRouter {
             d.toareaid = parseInt(this.req.body.dareal2);
             d.totalForFree = parseInt(this.req.body.free);
             d.fee = parseInt(this.req.body.fee);
+            d.min = parseInt(this.req.body.minsales);
             d.type = 'butcher';
             d.name = this.butcher.name;
             d.butcherid = this.butcher.id;
@@ -214,6 +215,7 @@ export default class Route  extends ViewRouter {
             d.toareaid = parseInt(this.req.body.dareal3);
             d.totalForFree = parseInt(this.req.body.free);
             d.fee = parseInt(this.req.body.fee);
+            d.min = parseInt(this.req.body.minsales);
             d.type = 'butcher';
             d.name = this.butcher.name;
             d.butcherid = this.butcher.id;

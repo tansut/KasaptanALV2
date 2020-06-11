@@ -22,27 +22,11 @@ export default class SiteMapManager {
     }
 
     static async fillArea(stream: SitemapStream) {
-        let items = await Area.sequelize.query(`
-        
-        select slug from Areas where level=1 and status='active'
-        union
-        select slug from Areas ap where ap.level=2 and ( ap.id in 
-        (
-        SELECT distinct a.parentid FROM  Areas a where 
-        (a.id in (SELECT distinct d.toareaid FROM Dispatchers d where d.toarealevel=3))
-        ) or 
-        (ap.id in (SELECT distinct d.toareaid FROM Dispatchers d where d.toarealevel=2))
-        )
-        union SELECT a.slug FROM  Areas a where 
-        (a.id in (SELECT distinct d.toareaid FROM Dispatchers d where d.toarealevel=3))
-            
-            `,
-            {
-
-                type: sq.QueryTypes.SELECT,
-                mapToModel: false,
-                raw: true
-            })
+        let items = await Area.findAll({
+            where: {
+                status: 'active'
+            }
+        })
 
         items.forEach(item=>{
             stream.write({

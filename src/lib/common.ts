@@ -39,7 +39,13 @@ export class AdakProductManager extends ProductTypeManager {
         '7': 'Yedi hisse tanzim edin',      
         '8': 'Sekiz hisse tanzim edin',      
         '9': 'Dokuz hisse tanzim edin',      
-        '10': 'On hisse tanzim edin'    
+        '10': 'On hisse tanzim edin',    
+        '11': 'Onbir hisse tanzim edin',    
+        '12': 'Oniki hisse tanzim edin',    
+        '13': 'Onüç hisse tanzim edin',    
+        '14': 'Ondört hisse tanzim edin' ,   
+        '15': 'Onbeş hisse tanzim edin',    
+        '15+': 'Onbeş ve üzeri hisse tanzim edin'    
     }       
     
     vekalet: string = 'online';
@@ -75,7 +81,7 @@ export class ProductTypeFactory {
 
 
     static create(key: string, params: any): ProductTypeManager {
-        const cls = ProductTypeFactory.items[key]
+        const cls = ProductTypeFactory.items[key] || ProductTypeFactory.items["generic"]
         return Object.assign(new cls(), params);
     }
 }

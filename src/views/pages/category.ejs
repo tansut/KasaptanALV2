@@ -74,14 +74,12 @@
       <% } else { %>
         <div class="text-dark mb-4 px-4 py-4 text-center" style="background-image: url(<%=__config.staticDomain %>/resource/img/islam-bg.jpeg);background-repeat: repeat">
             <div class="container ">
-              <h2 class="h3 text-dark">İbadetin doğru yapılması konusunda hassasız.</h2>
-              <!-- <p class="lead">
-                Dini ibadetleriniz doğru yapma hassasiyetinizi paylaşıyoruz ve biz de bu konuda titiz çalışmaya özen gösteriyoruz</p> -->
-                <p class="lead">
-                  Kurban ibadetinizi en doğru şekilde yapabilmeniz için belirlenen usullere uygun olarak kesim ve hazırlama işlemlerini yürütüyoruz. </p>
+              <h2 class="h3 text-dark">Kurban kutsal bir dinî ibadettir</h2>
+                       <p class="lead"><strong>İbadetin doğru yapılması</strong> konusunda hassasız.
+                        Bayram, adak veya diğer kurban ibadetlerinizi en doğru şekilde yapabilmeniz için çalışıyoruz.</p>
                   <p class="lead">
                   
-                  Çalıştığımız iş ortaklarımız ibadet amacıyla hayvan hazırlama, kesim ve tüm İslâmi usuller konusunda usta, yerel ve inançlı kasaplardır.
+                  İş ortaklarımız <strong>ibadet amacıyla hayvan seçimi, helâl kesim ve tüm İslâmi usuller</strong> konusunda usta, <strong>yerel ve inançlı</strong>  kasaplardır.
               </p>              
               <p><a class="btn btn-shadow btn-warning" href="/blog/dini-ibadetler" role="button">Daha Fazla Bilgi »</a></p>
             </div>
@@ -90,9 +88,14 @@
       <% } %>
 
       <% if (controller.category.subCategories.length) { %>
-        <% var displayed = [] %>
-        <% for (var k=0; k < controller.category.subCategories.length; k++) { %>
-          <% var subCat = controller.category.subCategories[k] %>
+        <% var displayed = [], 
+        subs = controller._.sortBy(controller.category.subCategories, ["displayOrder"]).reverse() ; 
+        subs = subs.filter(sc=>sc.visible == true)  
+        %>
+
+        <% for (var k=0; k < subs.length; k++) { %>
+          <% var subCat = subs[k] %>
+          
           <div class="mb-3 border-bottom">
             <h4 class="h5 mb-2"><%= subCat.title %></h4>
             <span class="font-weight-light">

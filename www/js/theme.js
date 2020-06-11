@@ -19,92 +19,19 @@
     */
 
     init: () => {
-      theme.masonryGrid();
-      theme.stickyNavbar();
       theme.stuckNavbarMenuToggle();
       theme.passwordVisibilityToggle();
       theme.customFileInput();
-      theme.fileDropArea();
       theme.formValidation();
-      theme.multilevelDropdown();
-      theme.smoothScroll();
-      theme.scrollTopButton();
-      theme.offcanvasSidebar();
       theme.tooltips();
-      theme.popovers();
       theme.toasts();
-      theme.disableDropdownAutohide();
       theme.carousel();
       theme.gallery();
-      theme.productGallery();
-      theme.imageZoom();
       theme.videoPopupBtn();
-      theme.ajaxifySubscribeForm();
-      theme.rangeSlider();
-      theme.filterList();
-      theme.dataFilter();
-      theme.labelUpdate();
-      theme.radioTabs();
-      theme.countdown();
-      theme.charts();
     },
 
 
-    /**
-     * Cascading (Masonry) grid layout
-     * @memberof theme
-     * @method masonryGrid
-     * @requires https://github.com/desandro/imagesloaded
-     * @requires https://github.com/Vestride/Shuffle
-    */
-    masonryGrid: () => {
-
-      let grid = document.querySelectorAll('.cz-masonry-grid'),
-          masonry;
-
-      if (grid === null) return;
-      
-      for (let i = 0; i < grid.length; i++) {
-        masonry = new Shuffle(grid[i], {
-          itemSelector: '.grid-item',
-          sizer: '.grid-item'
-        });
-
-        imagesLoaded(grid[i]).on('progress', () => {
-          masonry.layout();
-        });
-      }
-    },
-    
-
-    /**
-     * Enable sticky behaviour of navigation bar on page scroll
-     * @memberof theme
-     * @method stickyNavbar
-    */
-    stickyNavbar: () => {
-
-      let navbar = document.querySelector('.navbar-sticky');
-
-      if (navbar == null) return;
-
-      let navbarH = navbar.offsetHeight,
-          scrollOffset = 400;
-
-      window.addEventListener('scroll', (e) => {
-        if (e.currentTarget.pageYOffset > scrollOffset) {
-          if (! navbar.classList.contains('navbar-transparent')) {
-            document.body.style.paddingTop = navbarH + 'px';
-          }
-          navbar.classList.add('navbar-stuck');
-        } else {
-          document.body.style.paddingTop = '';
-          navbar.classList.remove('navbar-stuck');
-        }
-      });
-    },
-
-
+     
     /**
      * Stuck 3 level navbar menu toggle
      * @memberof theme
@@ -275,24 +202,7 @@
     },
 
 
-    /**
-     * Anchor smooth scrolling
-     * @memberof theme
-     * @method smoothScroll
-     * @requires https://github.com/cferdinandi/smooth-scroll/
-    */
-    smoothScroll: () => {
-      
-      let selector = '[data-scroll]',
-          fixedHeader = '[data-scroll-header]',
-          scroll = new SmoothScroll(selector, {
-            speed: 800,
-            speedAsDuration: true,
-            offset: 40,
-            header: fixedHeader,
-            updateURL: false
-          });
-    },
+
 
 
     /**

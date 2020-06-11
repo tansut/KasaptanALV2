@@ -29,7 +29,7 @@
   <div id="shop-card-item-<%=i%>"
     class="px-3 d-sm-flex justify-content-between align-items-center my-3 pb-3 border-bottom">
     <div class="media media-ie-fix d-block d-sm-flex align-items-center text-center text-sm-left"><a
-        class="d-inline-block mx-auto mr-sm-4" href="/<%=item.product.slug%>/<%=item.product.butcherSlug%>"
+        class="d-inline-block mx-auto mr-sm-4" href="/<%=item.product.slug%>?shopcarditem=<%=pi%>"
         style="width: 10rem;"><img src="<%=`${__req.helper.imgUrl('product-photos', item.product.slug)}`%>"
           class="roundedx" alt="<%=item.product.name%>"></a>
       <div class="media-body pt-2">
@@ -47,7 +47,7 @@
             <%- include('./currency.ejs', {value: item.price}) %>
           </span>
           <% if (item.purchaseoption.unitWeight) { %>
-          <span class="d-block text-muted font-size-xs">1 <%=item.purchaseoption.unit%>
+          <span class="d-block text-muted font-size-xs"><%=item.purchaseoption.unit != 'kg' ? '1 ' + item.purchaseoption.unit:''%>
             <%=item.purchaseoption.unitWeight%></span>
           <% } %>
         </div>

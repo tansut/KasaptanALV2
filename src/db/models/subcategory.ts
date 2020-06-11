@@ -31,6 +31,15 @@ class SubCategory extends BaseModel<SubCategory> {
         type: DataType.TEXT
     })
     description: string;      
+
+    @Column({
+        allowNull: false,
+        type: DataType.BOOLEAN,
+        defaultValue: true
+    })
+    visible: boolean;    
+
+    
 }
 
 export default SubCategory;

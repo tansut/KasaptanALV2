@@ -18,6 +18,7 @@ import { ResourceCacheItem } from '../lib/cache';
 import { Op } from 'sequelize';
 import config from '../config';
 var MarkdownIt = require('markdown-it')
+import * as _ from "lodash";
 
 export default class Route extends ViewRouter {
     markdown = new MarkdownIt();
@@ -26,6 +27,7 @@ export default class Route extends ViewRouter {
     foods: Resource[] = [];
     foodsWithCats = {}
     foodCategory = ""
+    _ = _;
     //categories: Category[];
 
 

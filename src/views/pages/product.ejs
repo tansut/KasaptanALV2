@@ -162,10 +162,10 @@
                                      
                                   </span>
 
-                                  <span v-if="newlyAddedItem.purchaseoption.unitWeight"
+                                  <!-- <span v-if="newlyAddedItem.purchaseoption.unitWeight"
                                     class="d-block text-muted font-size-xs">1
                                     {{newlyAddedItem.purchaseoption.unit}}
-                                    {{newlyAddedItem.purchaseoption.unitWeight}}</span>
+                                    {{newlyAddedItem.purchaseoption.unitWeight}}</span> -->
 
                                 </div>
                               </div>
@@ -475,7 +475,7 @@
                                       </div>
                   
                                      <div class="text-center" v-if="selectedUnit && selectedUnit.unitWeight">
-                                      <span class="d-block text-muted font-size-xs">1 {{selectedUnit.unit}} {{selectedUnit.unitWeight}}</span>
+                                      <span class="d-block text-muted font-size-xs">{{selectedUnit.unit != 'kg' ? '1 ' + selectedUnit.unit:''}} {{selectedUnit.unitWeight}}</span>
                   
                                      </div>
                             

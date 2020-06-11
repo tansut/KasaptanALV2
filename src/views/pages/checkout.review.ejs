@@ -158,7 +158,7 @@
                           class="text-muted  mr-2"> <%=item.purchaseoption.unitTitle%> </span>
                           <% if (item.purchaseoption.unitWeight) { %>
                             <span class="d-block text-muted font-size-xs">
-                              1 <%=item.purchaseoption.unit%> <%=item.purchaseoption.unitWeight%>                                
+                              <%=item.purchaseoption.unit != 'kg' ? '1 ' + item.purchaseoption.unit:''%> <%=item.purchaseoption.unitWeight%>                                
                             
                             </span>
                           <% } %>

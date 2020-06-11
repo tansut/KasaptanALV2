@@ -24,12 +24,12 @@ module.exports = function (shipit) {
 
 
     shipit.blTask('install', async function () {
-        // try {
-        //     await shipit.remote("nvm use v12.10.0");
-        //     await shipit.remote("pm2 stop kasaptanal && pm2 delete kasaptanal");
-        // } catch {
+        try {
+            await shipit.remote("nvm use v12.10.0");
+            await shipit.remote("pm2 stop kasaptanal && pm2 delete kasaptanal");
+        } catch {
 
-        // }
+        }
 
         await shipit.remote("nvm use v12.10.0" + "; export NODE_OPTIONS=--max-old-space-size=4096; cd " + this.currentPath + "; npm install --force; npm prune");
         // await shipit.remote();
@@ -64,8 +64,6 @@ module.exports = function (shipit) {
         }
 
         
-
-
         startScript = startScript.replace(/\{log\}/gi, '/var/log/nodejs/' + pkg.name + '.' + moment().format('YYYY-MM-DD') + '.log');
         startScript = startScript.replace(/\{outlog\}/gi, '/var/log/nodejs/' + pkg.name + '.out.' + moment().format('YYYY-MM-DD') + '.log');
         startScript = startScript.replace(/\{errorlog\}/gi, '/var/log/nodejs/' + pkg.name + '.error.' + moment().format('YYYY-MM-DD') + '.log');
