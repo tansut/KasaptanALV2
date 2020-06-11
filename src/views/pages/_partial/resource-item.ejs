@@ -19,7 +19,7 @@ var resourceUrl = targetUrl + '/' + (resource.slug || resource.id)  + (mode=='ta
         src="<%= (resource.thumbnailUrl ? resource.thumbnailFileUrl: null) ||  `${__req.helper.imgUrl('product-photos', resource.product.slug)}` %>"
         <% } else { %> src="<%= `${resource.thumbnailFileUrl}` %>" <% } %> alt="<%= resource.title  %>">
     </a>
-    <div class="card-body pl-0 text-center">
+    <div class="card-body text-center">
       <h3 class="product-title font-size-md"><a
           href="<%= `${resourceUrl}`  %>"><%= resource.title  %></a>
       </h3>
