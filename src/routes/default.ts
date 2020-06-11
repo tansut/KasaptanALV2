@@ -24,7 +24,7 @@ let ellipsis = require('text-ellipsis');
 export default class Route extends ViewRouter {
 
     //tarifs: Resource[];
-    hide4Sebep = true;
+    hide4Sebep = false;
     foods: Resource[];
     blogItems: Content[];
     foodsTitle = "Et Yemekleri";

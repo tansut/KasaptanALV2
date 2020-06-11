@@ -5,10 +5,12 @@
 <% idprefix = typeof(idprefix) == 'undefined' ? '': idprefix %>
 
 <% if (header) { %>
-<div class="bg-secondary ">
+<div class="bg-secondary  d-flex flex-nowrap justify-content-between align-items-center">
     <a class="d-block py-3 pl-3 " href="<%=allUrl%>">
         <h3 class="h6 mb-0"><%=title%></h3>
     </a>
+    <a class="align-self-center d-none d-md-block btn btn-sm" href="<%=`/kasap-urunleri` %>">Tümü<i
+        class="czi-arrow-right font-size-xs align-middle ml-1"></i></a>    
 </div>
 
 <% } %>
@@ -45,6 +47,12 @@
         <%}%>
         <%})%>
     </div>
+</div>
+<div class="d-xs-block border-bottom d-md-none text-center mb-3">
+    <a class="btn rounded-0 btn-sm btn-secondary" href="/kasap-urunleri">Tümü
+
+        <i class="czi-arrow-right font-size-xs align-middle ml-1"></i>
+    </a>
 </div>
 <%} else { %>
 <div id="sc" class="table-responsive" data-simplebar>
@@ -86,4 +94,5 @@
         <%})%>
     </div>
 </div>
+
 <% } %>

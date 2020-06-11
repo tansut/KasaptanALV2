@@ -193,7 +193,7 @@
   
   
       $(window).scroll(function () {
-        if (($(document).scrollTop() >= $(document).height() / 3) && !userGuide.autoPopuped) {
+        if (($(document).scrollTop() >= $(document).height() / 5) && !userGuide.autoPopuped) {
           userGuide.autoPopuped = true;
           window.App.setCookie("guidewindow", "1", 30);
           window.App.showSignupDlg(null, true);
