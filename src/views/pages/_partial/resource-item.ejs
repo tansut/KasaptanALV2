@@ -5,7 +5,7 @@ var targetUrl = (mode == 'tarif' ? '/et-yemekleri': '/et-yemekleri');
 var resourceUrl = targetUrl + '/' + (resource.slug || resource.id)  + (mode=='tarif' ? '':'')
 
 %>
-<div class="card h-100 shadow-sm pb-0 product-card card-static item-card rounded-0">
+<div class="card h-100 shadow-sm pb-0 product-card   rounded-0">
 
   <% if (typeof(showAll) != 'undedined') { %>
     <a data-gtrack="1" data-restype="<%=resource.tag1 %>" data-resref="<%= resource.slug %>" data-restitle="<%= resource.title %>" class="gallery-item d-block overflow-hidden gallery-item <%= resource.contentType == 'video-youtube' ? 'video-item':''%>"

@@ -39,7 +39,7 @@
           <% for(var c=0; c< reyonlar.length; c++) {%>
           <div class="col-md-3 col-6">
 
-            <div class="card product-card card-static item-card">
+            <div class="card product-card  ">
               <a class="card-img-top d-block overflow-hidden" href="<%= `/${reyonlar[c].slug}`%>">
                 <img class="rounded" src="<%=`${__req.helper.imgUrl('category-photos', reyonlar[c].category.slug)}`%>"
                   alt="<%= reyonlar[c].name %>"></a>

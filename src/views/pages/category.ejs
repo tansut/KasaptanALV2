@@ -200,9 +200,12 @@
           var el = document.getElementById('sc');
           var sb = SimpleBar.instances.get(el);
           var scel = sb.getScrollElement();
+          var scelOffset = $(scel).offset();
           var selected = $("#cat-item-<%=controller.category.slug%>").offset();
-          var left = selected.left - 70;
-
+          var left = -(scelOffset.left - selected.left);
+          left = left - 100
+          console.log(left)
+          console.log(scel.scrollWidth / 2)
 
           $(scel).animate({ scrollLeft: left }, 50, function () {
 

@@ -200,6 +200,6 @@ export default class Route extends ViewRouter {
         // router.get("/:areal1-:areal2", Route.BindRequest(Route.prototype.areal2Route));
         router.get("/:area-kasap", Route.BindRequest(Route.prototype.arealRoute));
         router.get("/:area", Route.BindRequest(Route.prototype.arealRouteOld));
-        router.get("/onlinekasap", Route.BindRequest(Route.prototype.allRoute));
+        router.get("/kasaplar", Route.BindRequest(Route.prototype.allRoute));
     }
 }

@@ -26,7 +26,7 @@
             <div id="<%=idprefix%><%=reyonlar[c].slug%>"
                 class="item-slider item-slider-sm <%= selected ? (selected == reyonlar[c].slug ? 'item-slider-selected': 'item-slider-unselected') : ''%>">
                 <%subUrl = reyonlar[c].type == 'resource' ? 'et-yemekleri/':'' %>
-                <div class="card product-card pb-0 card-static item-card">
+                <div class="card product-card pb-0  ">
                     <a class="" href="<%= `/${subUrl}${reyonlar[c].slug}`%>"><img
                             src="<%=`${__req.helper.imgUrl('category-photos', reyonlar[c].slug)}`%>"
                             alt="<%=reyonlar[c].name%>"></a>

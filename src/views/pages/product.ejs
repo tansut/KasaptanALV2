@@ -96,7 +96,7 @@
 
                       <div class="item-slider item-slider-sm">
 
-                        <div class="card product-card card-static item-card">
+                        <div class="card product-card  ">
                           <%- include('./_partial/product-resource-view.ejs', {first: false, note: false, resource: alternativeimages[c]}) %>
                         </div>
 
@@ -675,7 +675,7 @@
             
                     <% if (otherVideos.length) {%>
 
-                            <h3 class="border-bottom h4">Diğer kaynaklar</h3>
+                            <h3 class="border-bottom h5">Diğer kaynaklar</h3>
 
 
 
@@ -699,7 +699,7 @@
                             <%}%>
             
                      
-                            <h3 class="border-bottom h4"><%=product.name%> Fiyatı</h3>
+                            <h3 class="border-bottom h5"><%=product.name%> Fiyatı</h3>
 
 
 
@@ -745,7 +745,7 @@
                               Ayrıca <strong>online kasap</strong>larımızın <a href="/et-fiyatlari">tüm
                                 et fiyatlarını</a> da görüntülemek isteyebilirsiniz.
                             </p>
-                            <h3 class="border-bottom h4"><%=product.name%> Online Siparişi</h3>
+                            <h3 class="border-bottom h5"><%=product.name%> Online Siparişi</h3>
 
                             <p>
                               Yerel usta kasaplarımızdan <strong><%=product.name%> online siparişi
@@ -772,6 +772,18 @@
                               Tüm kasap iş ortaklarımız <strong>online ödeme</strong> kabul etmektedir.
                               Sepetinizdeki et ve et ürünlerini online ödeyerek zamandan kazanın.
                             </p>
+                            <% if (tarifsAndFoods.length) { %>
+                            <h3 class="border-bottom h5"><%=product.name%> Et Yemekleri</h3>
+                            <p>
+                              <%=product.name%> ile aşağıdaki <strong>et yemekleri</strong> yapılabilir.
+                            </p>
+                            <ul>
+                            <% tarifsAndFoods.forEach(tf=> { %>
+                              <li><a title="<%=tf.title%>" href="/et-yemekleri/<%=tf.slug%>"><%=tf.title%></a></li>
+                            <%})%>
+                          </ul>
+
+                            <% } %>
 
                           </div>
 
