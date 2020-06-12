@@ -105,7 +105,7 @@
         <% } %>
 
     </section>
-
+    <%if(__req.query.kart != '0') { %>
     <div class="container mb-3">
         <div class=" bg-secondary">
             <div class="row">
@@ -142,6 +142,7 @@
 
         </div>
     </div>
+    <% } %>
 
     <%if(__req.query.prods != '0') { %>
     <div class="container mb-3">
@@ -150,80 +151,43 @@
     <%}%>
     <section class="container">
         <div class="row">
-            <% if (!__req.user) { %>
-    <div class="col-md-6 mb-3">
-        <div class="d-flex flex-column h-100 justify-content-center bg-size-cover bg-position-center rounded-lg"
-            style="background-image: url(<%=__config.staticDomain %>/resource/img/banner-bg.jpg);">
-            <div class="py-4 my-2 my-md-0 py-md-5 px-4 ml-md-3 text-center text-sm-left">
-                <h4 class="h6 font-size-lg font-weight-light mb-2">Şimdi üyemiz olun, ilk siparişinizde</h4>
-                <h3 class="h5 mb-4">%3 ek Kasap Kart&trade; puan kazanın</h3>
+          
 
-                <a href="javascript:window.App.showSignupDlg()" class="btn btn btn-primary "><i
-                        class="czi-thumb-up mr-2"></i>Fırsatı Yakala</a>
-            </div>
-        </div>
-    </div>
-
-    <% } else { %>
+   
 
 
     <div class="col-md-6 mb-3">
         <div class="d-flex flex-column h-100 justify-content-center bg-size-cover bg-position-center rounded-lg"
             style="background-image: url(<%=__config.staticDomain %>/resource/img/banner-bg.jpg);">
             <div class="py-4 my-2 my-md-0 py-md-5 px-4 ml-md-3 text-center text-sm-left">
-                <h4 class="h6 font-size-lg font-weight-light mb-2">Kasap alışverişlerinizden</h4>
+                <h4 class="h6 font-size-lg font-weight-light mb-2">Tüm Kasap Alışverişinizden</h4>
                 <h3 class="mb-4 h5">Kasap Kart&trade; ile puan kazanın</h3>
-
-                <a class="btn btn-primary btn-sm " href="/blog/kasap-kart">Daha Fazla Bilgi »</a>
-
+               
+                <a class="btn btn-primary " href="/blog/kasap-kart">Daha Fazla Bilgi »</a>
+           
+       
 
             </div>
         </div>
 
 
     </div>
-    <% } %>
+   
 
     <div class="col-md-6 mb-3">
         <div class="d-flex flex-column h-100 justify-content-center bg-size-cover bg-position-center rounded-lg"
             style="background-image: url(<%=__config.staticDomain %>/resource/img/banner-bg.jpg);">
-            <div class="py-4 my-2 my-md-0 py-md-5 px-2 ml-md-3 text-center text-sm-left">
-                <h4 class="h6 font-size-lg font-weight-light mb-2">Hızlı aramayı kullanın</h4>
+            <div class="py-4 my-2 my-md-0 py-md-5 px-4 ml-md-3 text-center text-sm-left">
+                <h4 class="h6 font-size-lg font-weight-light mb-2">Kolay ve Hızlı Alışveriş Deneyimiyle</h4>
+                <h3 class="mb-4 h5">Doğal, Taze ve Lezzetli Ürünler</h3>
 
-                <h3 class="mb-2 h5">Size nasıl yardımcı olalım?</h3>
+                <a class="btn btn-primary " href="/kasap-urunleri">Tüm Ürünlerimiz »</a>
 
-                <div class="input-group-overlay mb-1">
 
-                    <div class="input-group-prepend-overlay">
-
-                        <span class="input-group-text">
-                            <i class="notsearching czi-search"></i>
-                            <span class="searching d-none spinner-border spinner-border-sm" role="status"
-                                aria-hidden="true"></span>
-                        </span>
-                    </div>
-                    <input id="page-searchbox" class="form-control font-size-sm searchBox prepended-form-control"
-                        data-noresults-text="Maalesef bulamadık." autocomplete="off" type="text"
-                        placeholder="et, semt, yemek veya kasap">
-                    <div>
-
-                    </div>
-                </div>
-
-                <div class=" text-center">
-                    <a class="search-sample font-weight-light text-white   badge badge-primary mr-1">mangallık et</a>
-                    <a class="search-sample font-weight-light text-white  badge badge-primary mr-1">dana eti</a>
-                    <a class="search-sample font-weight-light text-white  badge badge-primary mr-1">assado</a>
-                    <a class="search-sample font-weight-light text-white  badge badge-primary mr-1">tavuk</a>
-                    <a class="search-sample font-weight-light text-white  badge badge-primary mr-1">bahçelievler</a>
-                    <a class="search-sample font-weight-light text-white  badge badge-primary mr-1">tüm kuzu</a>
-                    <a class="search-sample font-weight-light text-white  badge badge-primary mr-1">fırınlık et</a>
-                    <a class="search-sample font-weight-light text-white  badge badge-primary mr-1">çiğ süt</a>
-                    <a class=" font-weight-light text-white  badge badge-primary mr-1" href="/kasap-urunleri">»</a>
-
-                </div>
             </div>
         </div>
+
+
     </div>
 
 
@@ -240,11 +204,7 @@
     <%}%>
 
 
-    <%if(__req.query.catlider != '0') { %>
-    <div class="container mb-3">
-        <%- include('./_partial/category-slider', { viewCats: ['reyon', 'list'], title: 'Ürünlerimiz', allUrl: '/kasap-urunleri' }); %>
-    </div>
-    <%}%>
+
 
     <section class="container-fluid px-0 mb-3">
         <div class="row no-gutters">

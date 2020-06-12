@@ -2,7 +2,7 @@
 <% var product = typeof(product) != 'undefined' ? product: butcherProduct.product %>
 <% var badge = typeof(badge) != 'undefined' ? badge: product.tag2 %>
 
-<div class="card product-card  ">
+<div class="card product-card">
     <% if (badge && typeof(hideBadge) == 'undefined') { %>
     <span class="badge badge-danger badge-shadow d-print-none"><%=badge%></span>
 
@@ -14,7 +14,7 @@
 
     
     <a class="d-block overflow-hidden" href="/<%=product.slug%><%=(butcher ? `?butcher=${butcher}`:'') %>"><img
-            class="rounded-0 d-print-w-75" src="<%= `${__req.helper.imgUrl('product-photos', product.slug)}` %>"
+         src="<%= `${__req.helper.imgUrl('product-photos', product.slug)}` %>"
             alt="<%= product.name  %>"></a>
             <% if (typeof(hideName) == 'undefined') { %>
     <div class="card-body text-center">
@@ -24,11 +24,11 @@
 
         <% if (typeof(butcherProduct) != 'undefined') { %>
             <% var view = butcherProduct.priceView;  %>
-            <div class="d-flex justify-content-center">
-                <div class=" text-accent font-size-sm"><%- include('./currency.ejs', {value: view.price, unit: view.unitTitle}) %>
+           
+                <div class="text-accent font-size-sm">
+                    <%- include('./currency.ejs', {value: view.price, unit: view.unitTitle}) %>
                 </div>
              
-              </div>
             <% } %>
 
         

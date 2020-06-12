@@ -13,7 +13,7 @@
 
 
 
-  <div class="page-title-overlap bg-accent pt-4">
+  <div class="bg-primary py-4">
     <div class="container d-lg-flex justify-content-between py-2 py-lg-3">
       <div class="order-lg-2 mb-3 mb-lg-0 pt-lg-2">
         <nav aria-label="breadcrumb">
@@ -36,14 +36,14 @@
   %>
   <form method="POST" onsubmit="return App.Auth.checkAuthentication('/alisveris-sepetim/ship')" novalidate
     class="needs-validation" action="/alisveris-sepetim/savecard">
-    <div class="container pb-5 mb-3 ">
+    <div class="container mb-3 ">
 
 
       <div class="row">
 
         <section class="col-lg-8">
     
-          <div class="p-3 border rounded-lg bg-white">
+          <div class="px-4 py-4 mb-3">
     
     
             
@@ -132,7 +132,7 @@
         
         
          <% if (!shopcard.items.length) { %>
-            <div class="text-center alert alert-secondary">
+            <div class="text-center ">
               <a class="btn btn-sm btn-accent" href="/kasap-urunleri">Alışverişe Başla<i
                   class="czi-arrow-right ml-2 mr-n1"></i></a>
     

@@ -57,14 +57,12 @@
 
         </ul>
       </div>
-      <div class="topbar-text text-nowrap d-none d-md-inline-block"><i class="czi-support text-light"></i><span
-          class="text-muted mr-1">Destek</span><a class="topbar-link" href="tel:08503054216">0 850 305 4216</a></div>
+      <div class="topbar-text text-nowrap d-none d-md-inline-block"><a class="topbar-link" href="tel:08503054216">0 850 305 4216</a></div>
       <div class="ml-3 text-nowrap w-100 text-right">
 
         <% if ( __req.prefAddr ) { %>
 
-        <a class="select-area-action topbar-link  d-md-inline-block" href="#"><i
-            class="text-light czi-location"></i><%= __req.prefAddr.level1Text + '/' + __req.prefAddr.level3Text %></a>
+        <a class="select-area-action topbar-link  d-md-inline-block" href="#"><%= __req.prefAddr.level1Text + '/' + __req.prefAddr.level3Text %></a>
 
 
         <% } else { %>

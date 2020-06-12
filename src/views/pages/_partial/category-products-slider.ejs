@@ -1,19 +1,16 @@
 <% var cat = __categories[__categories.findIndex(p=>p.slug == category)] %>
 <% var limit = typeof(limit) == 'undefined' ? 8: limit %>
 <% var products = controller.filterProductsByCategory(cat, limit) %>
-<div class="bg-secondary p-2 py-3 d-flex flex-nowrap justify-content-between align-items-center">
-    <a class="media align-items-center align-self-center" href="/<%=cat.slug%>">
-        <img class="mr-2 rounded-circle header-img d-none d-md-block"
-            src="<%=`${__req.helper.imgUrl('category-photos', cat.slug)}`%>" alt="<%=cat.name%>">
-        <h3 class="mr-2 h6 mb-0"><%= typeof(title) != 'undefined' ? title: cat.name %></h3>
+
+<div class="bg-secondary d-flex flex-nowrap justify-content-between align-items-center">
+    <a class="d-block py-3 pl-3" href="<%=`/${cat.slug}` %>">
+        <h3 class="h6 mb-0"><%= typeof(title) != 'undefined' ? title: cat.name %></h3>
     </a>
-    <a class="align-self-center d-none d-md-block btn btn-sm" href="<%=`/${cat.slug}` %>">Tümü<i
-            class="czi-arrow-right font-size-xs align-middle ml-1"></i></a>
+    <a class="d-none d-md-block btn btn-sm" href="<%=`/${cat.slug}` %>">Tümü »</a>    
 </div>
+
 <%- include('./products-view', {viewId: "", viewMode:'tab', products: products}); %>
 <div class="d-xs-block border-bottom d-md-none text-center mb-3">
-    <a class="btn rounded-0 btn-sm btn-secondary" href="/<%=cat.slug%>">Tümü
-
-        <i class="czi-arrow-right font-size-xs align-middle ml-1"></i>
+    <a class="btn rounded-0 btn-sm btn-secondary" href="/<%=cat.slug%>">Tümü »
     </a>
 </div>

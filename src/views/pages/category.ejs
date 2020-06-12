@@ -18,7 +18,7 @@
   %>
 
 
-  <div class="page-title-overlap bg-primary pt-4 <%=controller.category.slug%>">
+  <div class="bg-primary py-4 <%=controller.category.slug%>">
     <div class="container d-lg-flex justify-content-between py-2 py-lg-3">
       <div class="order-lg-2 mb-3 mb-lg-0 pt-lg-2">
         <nav aria-label="breadcrumb">
@@ -46,14 +46,16 @@
   </div>
 
 
+  <%if (controller.category.slug != 'kurban' || __req.query.go) { %>
+    <div id="items-container" class="mb-2 pt-1">
+      <%- include('./_partial/category-slider', { selected: controller.category.slug, mode:'browse', header: false, titles: false, viewCats: ['reyon', 'list'], title: 'Tüm Ürünlerimiz', allUrl: '/kasap-urunleri' }); %>
+    </div>
+    <% } %>
+  <div  class="container px-0">
 
-  <div id="items-container" class="container px-0">
-
-    <div class="bg-light box-shadow-lg px-4 py-4 mb-3 ">
+    <div class=" px-4 pb-4 mb-3 ">
       <%if (controller.category.slug != 'kurban' || __req.query.go) { %>
-      <div class="mb-1 ">
-        <%- include('./_partial/category-slider', { selected: controller.category.slug, mode:'browse', header: false, titles: false, viewCats: ['reyon', 'list'], title: 'Tüm Ürünlerimiz', allUrl: '/kasap-urunleri' }); %>
-      </div>
+
       <div class="input-group-overlay mb-3">
 
         <div class="input-group-prepend-overlay">
