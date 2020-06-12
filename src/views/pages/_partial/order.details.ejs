@@ -183,7 +183,7 @@
           Durum: <%=item.status%>
         </div>
         <div>
-          <%- include(`./product.${item.productType}-view.ejs`, {man: item.productTypeManager}) %>
+          <%- include(`./product.${item.productType || 'generic'}-view.ejs`, {man: item.productTypeManager}) %>
 
           
         </div>

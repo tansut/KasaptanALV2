@@ -20,13 +20,13 @@ export class GenericProductManager extends ProductTypeManager {
 export class AdakProductManager extends ProductTypeManager {
 
     static vekaletData = {
-        'online': 'Sipariş vererek size vekâletimi de veriyorum',
-        'callme': 'Kesimden önce vekâlet için beni arayın',        
+        'online': 'Sipariş vererek vekâletimi de veriyorum',
+        'callme': 'Vekâlet için beni arayın',        
     }
 
     static videoData = {
-        'yes': 'Whatsapp üzerinden kesim videosu gönderin',
-        'no': 'Kesim videosu göndermenizi istemiyorum',        
+        'yes': 'Kesim videosu gönderin',
+        'no': 'Kesim videosu istemiyorum',        
     } 
 
     static hisseData = {

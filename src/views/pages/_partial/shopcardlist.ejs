@@ -52,7 +52,7 @@
           <% } %>
         </div>
         <div class="text-left">
-          <%- include(`./product.${item.product.productType}-view.ejs`, {man: controller.getProductTypeManager(pi)}) %>
+          <%- include(`./product.${item.product.productType || 'generic'}-view.ejs`, {man: controller.getProductTypeManager(pi)}) %>
 
         </div>
         <% if (item.note) {%>

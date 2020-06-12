@@ -166,7 +166,7 @@
                         </div>
 
                         <div class="text-muted">
-                          <%- include(`./_partial/product.${item.product.productType}-view.ejs`, {man: controller.getProductTypeManager(pi)}) %>
+                          <%- include(`./_partial/product.${item.product.productType || 'generic'}-view.ejs`, {man: controller.getProductTypeManager(pi)}) %>
                         </div>
 
                         <% if (item.note) {%>

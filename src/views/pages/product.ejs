@@ -81,7 +81,7 @@
 
             <div class="row no-gutters">
 
-              <div class="col-lg-7 ">
+              <div class="col-lg-6 ">
                 <% if (firstImage) { %>
                 <div class="mb-3">
                   <%- include('./_partial/product-resource-view.ejs', {first: true, note: false, resource: firstImage}) %>
@@ -111,7 +111,7 @@
 
               </div>
 
-              <div id="productapp" v-cloak class="col-lg-5 pt-lg-3 px-3 px-lg-4">
+              <div id="productapp" v-cloak class="col-lg-6 pt-lg-3 px-3 px-lg-4">
                 <% if (view.butcher) {%>
                     <%- include('./_partial/butcher-alternatives.ejs', { alternates:  view.alternateButchers }) %>
                     <%}%>
