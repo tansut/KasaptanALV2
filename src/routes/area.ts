@@ -189,8 +189,8 @@ export default class Route extends ViewRouter {
         this.res.render('pages/butchers.ejs', this.viewData({
 
             subs: subs, ellipsis: ellipsis,
-            pageDescription: `Online kasaplar, kasaptanAl.com güvenilir kasap kriterlerini karşılayan konusunda usta kasap iş ortaklarımızdır. Güvenle online et siparişi verebilirsiniz.`,
-            pageTitle: 'Online Kasaplar | Güvenilir Kasaplarımızla Tanışın',
+            pageDescription: `Kasaplar, kasaptanAl.com güvenilir kasap kriterlerini karşılayan konusunda usta kasap iş ortaklarımızdır. Güvenle online et siparişi verebilirsiniz.`,
+            pageTitle: 'Kasaplar',
             butchers: butchers
         }))
     }
