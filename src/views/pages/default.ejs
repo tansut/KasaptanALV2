@@ -8,10 +8,10 @@
 <body>
     <% include ./_partial/header %>
 
-    <section class="bg-faded-primary pt-2">
+    <section class="bg-faded-primary">
 
         <%if(__req.query.car != '0') { %>
-        <div id="myCarousel" class="carousel slide mb-3" data-interval="false" data-ride="carousel">
+        <div id="myCarousel" class="carousel slide mb-3 text-white" data-interval="false" data-ride="carousel">
             <ol class="carousel-indicators">
                 <li data-target="#myCarousel" data-slide-to="0" class="active"></li>
                 <li data-target="#myCarousel" data-slide-to="1"></li>
@@ -28,7 +28,7 @@
                 <% if (!__req.user) { %>
                 <div class="carousel-item home-carousel-item active">
                     <div class="py-3 mb-3 carousel-caption">
-                        <h2 class="h1 d-block display-4">şimdi üyemiz olun</h2>
+                        <h2 class="h2  ">şimdi üyemiz olun</h2>
                         <span class="h5 d-block font-weight-light pb-3 ">ilk siparişinizde %3 ek puan kazanın</span>
                         <a class="btn btn-primary" href="javascript:window.App.showSignupDlg()">Fırsatı Yakala</a>
                     </div>
@@ -36,17 +36,16 @@
                 <% } %>
                 <div class="carousel-item home-carousel-item <%=__req.user ? 'active':''%>">
                     <div class="py-3 mb-3 carousel-caption">
-                        <h2 class="h1 d-block display-4  ">iyi kasaplar bir arada</h2>
-                        <span class="h5 d-block  font-weight-light pb-3 ">yerel kasaplardan online, doğal ve hızlı et siparişi</span>
-    
+                        <h2 class="h2">iyi kasaplar bir arada</h2>
+                        <span class="h5 d-block  font-weight-light pb-3">iyi et, kârlı alışveriş, hızlı teslimat</span>
                         <a class="btn btn-primary " href="/kasap-urunleri">Alışverişe Başla »</a>
                     </div>
                 </div>
 
                 <div class="carousel-item home-carousel-item">
                     <div class="py-3 mb-3 carousel-caption">
-                        <h2 class="h1 d-block display-4  ">popüler ürünler</h2>
-                        <span class="h5 d-block  font-weight-light pb-3 ">müşterilerimizin en çok tercih ettiği ürünlerimiz</span>
+                        <h2 class="h2   ">popüler ürünler</h2>
+                        <span class="h5 d-block  font-weight-light pb-3 ">en çok tercih edilen ürünlerimiz</span>
     
                         <a class="btn btn-primary " href="/populer-etler">Göz At »</a>
                     </div>
@@ -54,7 +53,7 @@
 
                 <div class="carousel-item home-carousel-item">
                     <div class="py-3 mb-3 carousel-caption">
-                        <h2 class="h1 d-block display-4  ">mangallık etler</h2>
+                        <h2 class="h2  ">mangallık etler</h2>
                         <span class="h5 d-block  font-weight-light pb-3 ">eğlenceye başlamanın şimdi tam zamanı</span>
     
                         <a class="btn btn-primary " href="/barbeku-dokum-tava-etleri">Göz At »</a>
@@ -63,8 +62,8 @@
 
                 <div class="carousel-item home-carousel-item">
                     <div class="py-3 mb-3 carousel-caption">
-                        <h2 class="h1 d-block display-4  ">beyaz et ürünleri</h2>
-                        <span class="h5 d-block  font-weight-light pb-3 ">sağlıklı, doğal ve lezzetli ürünlerimiz</span>
+                        <h2 class="h2  ">beyaz et ürünleri</h2>
+                        <span class="h5 d-block  font-weight-light pb-3 ">sağlıklı, doğal ve lezzetli ürünler</span>
     
                         <a class="btn btn-primary " href="/beyaz-et">Göz At »</a>
     
@@ -73,7 +72,7 @@
 
                 <div class="carousel-item home-carousel-item">
                     <div class="py-3 mb-3 carousel-caption">
-                        <h2 class="h1 d-block display-4  ">haftanın ürünleri</h2>
+                        <h2 class="h2   ">haftanın ürünleri</h2>
                         <span class="h5 d-block  font-weight-light pb-3 ">bu haftaya özel seçtiğimiz ürünler</span>
     
                         <a class="btn btn-primary " href="/bu-hafta">Göz At »</a>
@@ -84,8 +83,8 @@
 
                 <div class="carousel-item home-carousel-item">
                     <div class="py-3 mb-3 carousel-caption">
-                        <h2 class="h1 d-block display-4  ">et kültür blog</h2>
-                        <span class="h5 d-block font-weight-light pb-3 ">ilginizi çekecek kısa ve öz içeriklerimiz</span>
+                        <h2 class="h2    ">et kültür blog</h2>
+                        <span class="h5 d-block font-weight-light pb-3 ">ilginizi çekecek kısa ve öz içerikler</span>
     
                         <a class="btn btn-primary " href="/blog">Göz At »</a>
 
@@ -124,8 +123,7 @@
 
                     </h1>
                     <p class="pl-3">
-                        
-                        İstediğiniz kasabı seçin, sipariş verin, saatler içinde kapınıza gelsin.
+                        Güvenilir semt kasaplarından online sipariş verin, iyi et saatler içerisinde kapınıza gelsin.
                     </p>
 
 
