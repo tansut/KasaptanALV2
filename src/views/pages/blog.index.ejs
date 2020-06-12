@@ -64,30 +64,34 @@
 
 
       <section class="col-lg-9">
-        <!-- Entry-->
-        <% for(var i=0; i<controller.allcontent.length; i++) {%>
-        <article class="blog-list pb-2 mb-2">
-          <div class="left-column">
-            <h2 class="h5 blog-entry-title"><a
-                href="<%= `/blog/${controller.allcontent[i].slug}` %>"><%= controller.allcontent[i].title %></a>
-            </h2>
-            <p class="font-size-sm"><%= controller.allcontent[i].description %><a
-                href='<%= `/blog/${controller.allcontent[i].slug}` %>'
-                class='blog-entry-meta-link font-weight-medium'> [Devamı]</a></p>
-          </div>
-          <div class="right-column"><a class="blog-entry-thumb mb-3"
-              href="<%= `/blog/${controller.allcontent[i].slug}` %>">
-              <img src="<%= `${controller.getthumbnailurl(controller.allcontent[i])}` %>"
-                alt="<%= controller.allcontent[i].title %>"></a>
-            <div class="d-flex justify-content-between mb-1">
-              <div class="font-size-sm text-muted pr-2 mb-2">
-                <a href='#' class='blog-entry-meta-link'><%= controller.allcontent[i].category.title %></a></div>
+        <div class="row">
+          <% for(var i=0; i<controller.allcontent.length; i++) {%>
+            <article class="col-sm-6 blog-list pb-2 mb-2">
+              <div class="left-column">
+                <h2 class="h5 blog-entry-title"><a
+                    href="<%= `/blog/${controller.allcontent[i].slug}` %>"><%= controller.allcontent[i].title %></a>
+                </h2>
+                <p class="font-size-sm"><%= controller.allcontent[i].description %><a
+                    href='<%= `/blog/${controller.allcontent[i].slug}` %>'
+                    class='blog-entry-meta-link font-weight-medium'> [Devamı]</a></p>
+              </div>
+              <div class="right-column"><a class="blog-entry-thumb d-block mb-3"
+                  href="<%= `/blog/${controller.allcontent[i].slug}` %>">
+                  
+                  <img src="<%= `${controller.getthumbnailurl(controller.allcontent[i])}` %>"
+                    alt="<%= controller.allcontent[i].title %>"></a>
+                <div class="d-flex justify-content-between mb-1">
+                  <div class="font-size-sm text-muted pr-2 mb-2">
+                    <a href='#' class='blog-entry-meta-link'><%= controller.allcontent[i].category.title %></a></div>
+    
+                </div>
+    
+              </div>
+            </article>
+            <% } %>
+        </div>
+       
 
-            </div>
-
-          </div>
-        </article>
-        <% } %>
       </section>
 
       <div class="col-lg-3">
@@ -111,79 +115,6 @@
     </div>
   </div>
 
-
-  <div class="p-2 bg-light">
-
-    <div
-      class="bg-secondary border-bottom rounded-lg mb-2 p-2 d-flex flex-nowrap justify-content-between align-items-center">
-      <a class="media align-items-center align-self-center" href="/et-yemekleri">
-        <div class="media-body pl-2">
-          <h3 class="h4 mb-0 mr-2">Video Kültür</h3>
-          <span class="font-size-ms text-muted">Kısa ve öz izlemelikler</span>
-        </div>
-      </a>
-      <a class="align-self-center d-md-block btn btn-sm" href="/et-yemekleri"><i
-          class="czi-arrow-right font-size-xs align-middle ml-1"></i></a>
-    </div>
-
-    <div class="table-responsive" data-simplebar>
-      <div class="d-flex pb-2 ">
-        <% controller.resources.forEach((resource, i)=> {%>
-
-        <div class="mr-2 ">
-          <div class="item-slider item-slider-sm">
-
-            <div class="card product-card  ">
-              <a class="card-img-top d-block overflow-hidden gallery-item video-item"
-                href="/<%=`${resource.product.slug}?r=${resource.id}`  %>">
-                <!-- <img class="rounded" src="<%= `https://img.youtube.com/vi/${resource.contentUrl}/maxresdefault.jpg` %>" alt="<%= resource.title  %>"> -->
-                <img class="roundedx" src="<%=`${__req.helper.imgUrl('product-photos', resource.product.slug)}`%>"
-                  alt="<%= resource.title  %>">
-              </a>
-              <div class="card-body pl-0 text-center">
-                <h3 class="product-title font-size-md"><a href="/<%= resource.product.slug%>"><%= resource.title  %></a>
-                </h3>
-              </div>
-            </div>
-
-          </div>
-
-        </div>
-
-        <%})%>
-      </div>
-    </div>
-  </div>
-
-  <!-- <div class="container">
-
-
-
-    <div class="card-columns mx-3">
-      <% for(var i=0; i<controller.allcontent.length; i++) {%>
-      <div class="card mx-2">
-        <img src="<%= `${controller.getthumbnailurl(controller.allcontent[i])}` %>" class="card-img-top" alt="...">
-        <div class="card-body text-center">
-          <h5 class="card-title"><%= controller.allcontent[i].title %></h5>
-          <div class="card-text-container">
-            <p class="card-text text-muted"><%=controller.allcontent[i].description %></p>
-
-
-          </div>
-          <div class="text-center my-4">
-            <a href="<%= `/blog/${controller.allcontent[i].categorySlug}/${controller.allcontent[i].slug}` %>"
-              class="btn btn-primary">Devamı</a>
-
-          </div>
-        </div>
-      </div>
-      <% } %>
-    </div>
-
-
-
-
-  </div> -->
 
 
   <% include ./_partial/footer %>

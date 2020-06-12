@@ -8,7 +8,6 @@
 <body>
   <% include ./_partial/header %>
 
-  <!-- Page Title (Light)-->
   <div class="bg-secondary py-4">
     <div class="container d-lg-flex justify-content-between py-2 py-lg-3">
       <div class="order-lg-2 mb-3 mb-lg-0 pt-lg-2">
@@ -32,7 +31,7 @@
       </div>
       <div class="order-lg-1 pr-lg-4 text-center text-lg-left">
         <h1 class="h3"><%= controller.content.title %></h1>
-        <h2 class="h4 lead"><%= controller.content.description %></p>
+        <h2 class="h4 lead mb-1"><%= controller.content.description %></p>
       </div>
     </div>
   </div>
@@ -41,51 +40,34 @@
 
   <div class="container">
     <div class="row">
-      <div class="col-sm-6">
-        <div id="carouselExampleSlidesOnly" class="carousel slide mb-2" data-ride="carousel">
-          <div class="carousel-inner">
-            <% var contentImgs = controller.getContentImages() %>
-            <% for(var i=0; i<contentImgs.length; i++) {%>
-            <div class="carousel-item active">
-              <img src="<%= contentImgs[i].url %>" class="d-block w-100" alt="<%= controller.content.title %>">
-            </div>
+      <div class="col-sm-4">
 
-            <% } %>
-          </div>
-        </div>
+
+        <% var contentImgs = controller.getContentImages() %>
+        <% for(var i=0; i<contentImgs.length; i++) {%>
+      
+          <img src="<%= contentImgs[i].url %>" class="d-block w-100" alt="<%= controller.content.title %>">
+      
+
+        <% } %>
+
+
       </div>
-      <div class="col-sm-6 pt-2 user-content">
+      <div class="col-sm-8 pt-3 user-content">
         <%- include(`./content.${controller.content.slug}.ejs`) %>
       </div>
 
-      <div class="container mb-4">
-        <!-- <div class="d-flex flex-wrap justify-content-between align-items-center pt-1 border-bottom pb-1 mb-2">
-            <h2 class="h3 mb-0 mr-2">Reyonlar</h2>
-            <a class="btn btn-sm btn-light" href="/kasap-urunleri">Tümü<i class="czi-arrow-right ml-1 mr-n1"></i></a>
-        </div> -->
 
-        <div class="container mb-3">
-
-          <%- include('./_partial/category-slider', { viewCats: ['reyon', 'list'], title: 'Ürünler', allUrl: '/kasap-urunleri' }); %>
-  
-  
-  
-  
-      </div>
-
-      <div class="container mb-3">
-        <%- include('./_partial/category-slider', { viewCats: ['resource'], title: 'Et Yemekleri', allUrl: '/et-yemekleri' }); %>
-
-    </div>
-
-
-      </div>
 
 
     </div>
 
 
+    <div class="mb-3">
 
+      <%- include('./_partial/category-slider', { viewCats: ['reyon', 'list'], title: 'Ürünler', allUrl: '/kasap-urunleri' }); %>
+
+    </div>
 
 
   </div>

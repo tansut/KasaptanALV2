@@ -18,6 +18,7 @@ let ellipsis = require('text-ellipsis');
 var MarkdownIt = require('markdown-it')
 import ProductsApi from './api/product';
 import { Sequelize, QueryTypes } from 'sequelize';
+import { ProductCacheItem } from '../lib/cache';
 
 
 export default class Route extends ViewRouter {
@@ -26,6 +27,20 @@ export default class Route extends ViewRouter {
     allcontent: Content[];
     resources: Resource[] = [];
     categories: any;
+
+
+    filterProductsByCategory(category: Category, limit= 8) {
+        let result: ProductCacheItem[] = []
+        let prodSlugs = this.req.__categoryProducts[category.slug];
+        if (prodSlugs) {
+            for (let i = 0; i < prodSlugs.length; i++) {
+                let product = this.req.__products[prodSlugs[i].slug];
+                if (product) result.push(product);
+                if (result.length >= limit) break;
+            }
+        }
+        return result; //.slice(0, 8);
+    }
 
     async loadCategories() {
 

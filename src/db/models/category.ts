@@ -22,6 +22,11 @@ class Category extends BaseModel<Category> {
     name: string;
 
     @Column({
+        allowNull: true
+    })
+    listTitle: string;    
+
+    @Column({
         allowNull: false,
     })
     type: string;

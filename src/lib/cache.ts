@@ -27,6 +27,7 @@ export interface ResourceCacheItem {
     contentUrl: string;
     thumbnailUrl: string;
     folder: string;
+    tag1: string;
 }
 
 export interface ProductCacheItem {
@@ -248,7 +249,8 @@ export class CacheManager {
                     contentUrl: ri.contentUrl,
                     ref1: ri.ref1,
                     thumbnailUrl: ri.thumbnailUrl,
-                    folder: ri.folder
+                    folder: ri.folder,
+                    tag1: ri.tag1
                 }
                 //result[ri.type].push(obj)
                 result[ri.type + ri.ref1].push(obj)

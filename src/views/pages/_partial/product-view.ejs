@@ -17,7 +17,7 @@
             class="rounded-0 d-print-w-75" src="<%= `${__req.helper.imgUrl('product-photos', product.slug)}` %>"
             alt="<%= product.name  %>"></a>
             <% if (typeof(hideName) == 'undefined') { %>
-    <div class="card-body pl-0 text-center">
+    <div class="card-body text-center">
         <h3 class="product-title font-size-md mb-1"><a
                 href="/<%= product.slug%><%=(butcher ? `?butcher=${butcher}`:'') %>"><%= product.name  %></a>
         </h3>

@@ -103,9 +103,6 @@
 
         <div>
 
-          <!-- <h3 class="h4">Size nasıl yardımcı olalım?</h3> -->
-
-        <!-- <label>İstediğiniz ürünü bulmaya çalışabiliriz.</label> -->
 
         <div class="">
           <div  class="input-group-overlay mb-3">
@@ -124,30 +121,7 @@
 
             </div>
           </div>
-          <!-- <div class="mb-3 font-size-lg">
-            <a class="search-sample badge badge-secondary mr-1" href="#search">kuzu kıyma</a>
-            <a class="search-sample badge badge-secondary mr-1" href="#search">dana kıyma</a>
-            <a class="search-sample badge badge-secondary mr-1" href="#search">bonfile</a>
-            <a class="search-sample badge badge-secondary mr-1" href="#search">yumurta</a>
-            <a class="search-sample badge badge-secondary mr-1" href="#search">tavuk</a>
-            <a class="search-sample badge badge-secondary mr-1" href="#search">köfte</a>
-            <a class="search-sample badge badge-secondary mr-1" href="#search">mangallık</a>
-            <a class="search-sample badge badge-secondary mr-1" href="#search">tandır</a>
-            <a class="search-sample badge badge-secondary mr-1" href="#search">antrikot</a>
-            <a class="search-sample badge badge-secondary mr-1" href="#search">yemeklik kuşbaşı</a>
-            <a class="search-sample badge badge-secondary mr-1" href="#search">sucuk</a>
-            <a class="search-sample badge badge-secondary mr-1" href="#search">sakatat</a>
-            <a class="search-sample badge badge-secondary mr-1" href="#search">arnavut ciğeri</a>
-            <a class="search-sample badge badge-secondary mr-1" href="#search">pirzola</a>
-            <a class="search-sample badge badge-secondary mr-1" href="#search">fırınlık et</a>
-  
-          </div> -->
-<!-- <div class="text-center">
-  <button id="listen" onclick="startRecording()" class="d-none btn-sm btn btn-primary">
-    <i class="czi-message mr-1"></i>
-    <span id="listen-text">Sizi Dinleyebilirim</span>
-  </button>
-</div> -->
+        
       
         </div>
         </div>
@@ -155,7 +129,6 @@
 
 
 
-        <!-- <h4 class="h6">Ürün kategorilerimize göz atabilirsiniz. </h3> -->
 
 
 
@@ -170,11 +143,11 @@
 
             <div class="card product-card  ">
               <a class="card-img-top d-block overflow-hidden" href="<%= `/${reyonlar[c].slug}`%>">
-                <img class="rounded" src="<%=`${__req.helper.imgUrl('category-photos', reyonlar[c].slug)}`%>"
+                <img class="rounded" src="<%=`${__req.helper.imgUrl('category-photos', reyonlar[c].slug, 'thumbnail', true, 'list')}`%>"
                   alt="<%= reyonlar[c].name %>"></a>
-              <div class="card-body pl-0 text-center">
+              <div class="card-body text-center">
                 <h3 class="product-title font-size-md"><a
-                    href="<%= `/${reyonlar[c].slug}`%>"><%= reyonlar[c].name %></a>
+                    href="<%= `/${reyonlar[c].slug}`%>"><%= reyonlar[c].listTitle || reyonlar[c].name %></a>
                 </h3>
               </div>
             </div>
@@ -197,54 +170,6 @@
     <% include ./_partial/footer %>
     <% include ./_partial/scripts %>
 
-    <script>
-
-
-
-      if (('webkitSpeechRecognition' in window)) {
-        var recognition = new webkitSpeechRecognition();
-        recognition.lang = "tr-TR";
-        $('#listen').removeClass('d-none');
-
-        recognition.onstart = function () {
-          $('#listen-text').text('Dinliyorum ...')
-        };
-
-        recognition.onend = function () {
-          $('#listen-text').text('Sizi Dinleyebilirim')
-        };
-
-        recognition.onresult = function (event) {
-          var saidText = "";
-          for (var i = event.resultIndex; i < event.results.length; i++) {
-            if (event.results[i].isFinal) {
-              saidText = event.results[i][0].transcript;
-            } else {
-              saidText += event.results[i][0].transcript;
-            }
-          }
-          $('#page-searchbox').autoComplete('set', { value: saidText, text: saidText });
-          $('#page-searchbox').trigger('keyup');
-          $('#page-searchbox').focus();
-
-        }
-
-        function startRecording() {
-          try {
-            recognition.start();
-
-          } catch {
-            recognition.abort();
-
-          }
-        }
-
-      }
-
-
-
-
-    </script>
 
 </body>
 

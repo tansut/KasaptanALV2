@@ -745,7 +745,7 @@
                               Ayrıca <strong>online kasap</strong>larımızın <a href="/et-fiyatlari">tüm
                                 et fiyatlarını</a> da görüntülemek isteyebilirsiniz.
                             </p>
-                            <h3 class="border-bottom h5"><%=product.name%> Online Siparişi</h3>
+                            <h3 class="border-bottom h5">Online Sipariş</h3>
 
                             <p>
                               Yerel usta kasaplarımızdan <strong><%=product.name%> online siparişi
@@ -773,9 +773,12 @@
                               Sepetinizdeki et ve et ürünlerini online ödeyerek zamandan kazanın.
                             </p>
                             <% if (tarifsAndFoods.length) { %>
-                            <h3 class="border-bottom h5"><%=product.name%> Et Yemekleri</h3>
+                            <h3 class="border-bottom h5">Et Yemekleri</h3>
                             <p>
-                              <%=product.name%> ile aşağıdaki <strong>et yemekleri</strong> yapılabilir.
+                              <strong>
+                                <%=product.name%>
+                              </strong>
+                               ile aşağıdaki <strong>et yemekleri</strong> yapılabilir.
                             </p>
                             <ul>
                             <% tarifsAndFoods.forEach(tf=> { %>
@@ -940,7 +943,6 @@
 
                     $(document).ready(function () {
                       window.App.scrollToAnchor("#noteanchor")
-
                     })
 
 
@@ -956,10 +958,6 @@
                     <% if (!__req.query.autoNote) { %>
                         openSlider(<%=__req.query.r %>);
 
-
-                        setTimeout(() => {
-                          $(document.body).removeClass("d-none")
-                        }, 100);
                     <% } else {
                         var r = product.resources.find(p => p.id == parseInt(__req.query.r))
                         var defaultImg = product.resources.find(p => p.contentType == 'image/jpeg');
@@ -976,8 +974,8 @@
 
                      <% } %>
 
-                          setTimeout(() => {
-                            $(document.body).removeClass("d-none");
+                          setTimeout(function () {
+                            
                       <%- include('./_partial/addtonote.ejs', {
                               resource: r, options: {
                                 hideProduct: __req.query.hideproduct
@@ -996,12 +994,10 @@
 
 
                     <%} else { %>
-                      $(document.body).removeClass("d-none")
+                  
                       <%}%>
 
-$(document).ready(function() {
 
-})
 
                 </script>
 

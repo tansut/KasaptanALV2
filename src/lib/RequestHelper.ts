@@ -24,7 +24,7 @@ export class RequestHelper {
         return `${config.staticDomain}/${filePath}`;
     }
 
-    imgUrl(resourceType: string, slug: string, filename: string = 'thumbnail', thumbnail: boolean = true) {
+    imgUrl(resourceType: string, slug: string, filename: string = 'thumbnail', thumbnail: boolean = true, tag1: string = null) {
         let defaultFile = '';
         let ref1 = 0;
         if (resourceType == 'product-photos') {
@@ -39,8 +39,14 @@ export class RequestHelper {
             ref1 = this.req.__butchers[slug] ? this.req.__butchers[slug].id: 0;
             defaultFile = config.staticDomain + "/resource/img/butcher-default-thumbnail.jpg";
         }
-        let photo = filename == "thumbnail" ? this.req.helper.getResourcesOfType(resourceType + ref1).find(p => p.ref1 == ref1) :
-            this.req.helper.getResourcesOfType(resourceType + filename).find(p => p.contentUrl == filename);
+        let photo: ResourceCacheItem;
+        if (filename == "thumbnail") {
+            photo = tag1 ? (this.req.helper.getResourcesOfType(resourceType + ref1).find(p => p.ref1 == ref1 && p.tag1 == tag1) || this.req.helper.getResourcesOfType(resourceType + ref1).find(p => p.ref1 == ref1 )) :
+             this.req.helper.getResourcesOfType(resourceType + ref1).find(p => p.ref1 == ref1)
+        } else {
+            photo = this.req.helper.getResourcesOfType(resourceType + filename).find(p => p.contentUrl == filename);
+        }
+            
         return this._generateUrl(photo, thumbnail, defaultFile)
     }
 
