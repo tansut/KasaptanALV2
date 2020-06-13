@@ -149,6 +149,13 @@
         <%- include('./_partial/category-products-slider', {category: 'populer-etler', limit: 4, reverse: true, img: 'img/category/premium.jpg'}); %>
     </div>
     <%}%>
+
+    <%if(__req.query.prods != '0') { %>
+        <div class="container mb-3">
+            <%- include('./_partial/category-products-slider', {limit: 4, category: 'bu-hafta', reverse: true, img: 'img/category/premium.jpg'}); %>
+        </div>
+        <%}%>
+
     <section class="container">
         <div class="row">
           
@@ -160,7 +167,7 @@
         <div class="d-flex flex-column h-100 justify-content-center bg-size-cover bg-position-center rounded-lg"
             style="background-image: url(<%=__config.staticDomain %>/resource/img/banner-bg.jpg);">
             <div class="py-4 my-2 my-md-0 py-md-5 px-4 ml-md-3 text-center text-sm-left">
-                <h4 class="h6 font-size-lg font-weight-light mb-2">Tüm Kasap Alışverişinizden</h4>
+                <h4 class="h6 font-size-lg font-weight-light mb-2">Tüm Alışverişlerinizden</h4>
                 <h3 class="mb-4 h5">Kasap Kart&trade; ile puan kazanın</h3>
                
                 <a class="btn btn-primary " href="/blog/kasap-kart">Daha Fazla Bilgi »</a>
@@ -178,7 +185,7 @@
         <div class="d-flex flex-column h-100 justify-content-center bg-size-cover bg-position-center rounded-lg"
             style="background-image: url(<%=__config.staticDomain %>/resource/img/banner-bg.jpg);">
             <div class="py-4 my-2 my-md-0 py-md-5 px-4 ml-md-3 text-center text-sm-left">
-                <h4 class="h6 font-size-lg font-weight-light mb-2">Kolay ve Hızlı Alışveriş Deneyimiyle</h4>
+                <h4 class="h6 font-size-lg font-weight-light mb-2">Güvenilir Kasaplardan</h4>
                 <h3 class="mb-4 h5">Doğal, Taze ve Lezzetli Ürünler</h3>
 
                 <a class="btn btn-primary " href="/kasap-urunleri">Tüm Ürünlerimiz »</a>
@@ -197,11 +204,7 @@
     </section>
 
 
-    <%if(__req.query.prods != '0') { %>
-    <div class="container mb-3">
-        <%- include('./_partial/category-products-slider', {limit: 4, category: 'bu-hafta', reverse: true, img: 'img/category/premium.jpg'}); %>
-    </div>
-    <%}%>
+
 
 
 
