@@ -88,12 +88,12 @@
       
         </div>
       <% } %>
-      <% if (tags.length > 1) { %>
+      <% if (tags.length > 1 && controller.category.tag1Enabled) { %>
         <div  class="table-responsive mb-3 " data-simplebar>
           <div class="d-flex pb-2">
             <% for(var i = 0; i < tags.length; i++) {  %>
 <div class="tag-toggle mr-2" data-stag="<%=tags[i]%>">
-  <a onclick="toggleTag('<%=tags[i]%>')"  class="text-center btn btn-sm rounded-0 btn-secondary  text-nowrap">
+  <a onclick="toggleTag('<%=tags[i]%>')"  class="text-center btn btn-sm  btn-secondary  text-nowrap">
     <%=tags[i]%>
   </a>
 </div>
