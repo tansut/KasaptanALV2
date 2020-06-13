@@ -18,9 +18,8 @@
                 <li data-target="#myCarousel" data-slide-to="2"></li>
                 <li data-target="#myCarousel" data-slide-to="3"></li>
                 <li data-target="#myCarousel" data-slide-to="4"></li>
-                <li data-target="#myCarousel" data-slide-to="5"></li>
                 <% if (!__req.user) { %>
-                    <li data-target="#myCarousel" data-slide-to="6"></li>
+                    <li data-target="#myCarousel" data-slide-to="5"></li>
 
                 <%}%>
             </ol>
@@ -28,7 +27,7 @@
                 <% if (!__req.user) { %>
                 <div class="carousel-item home-carousel-item active">
                     <div class="py-3 mb-3 carousel-caption">
-                        <h2 class="h2  ">şimdi üyemiz olun</h2>
+                        <h2 class="h2 ">şimdi üyemiz olun</h2>
                         <span class="h5 d-block font-weight-light pb-3 ">ilk siparişinizde %3 ek puan kazanın</span>
                         <a class="btn btn-primary" href="javascript:window.App.showSignupDlg()">Fırsatı Yakala</a>
                     </div>
@@ -36,20 +35,14 @@
                 <% } %>
                 <div class="carousel-item home-carousel-item <%=__req.user ? 'active':''%>">
                     <div class="py-3 mb-3 carousel-caption">
-                        <h2 class="h2">iyi kasaplar bir arada</h2>
-                        <span class="h5 d-block  font-weight-light pb-3">iyi et, kârlı alışveriş, hızlı teslimat</span>
-                        <a class="btn btn-primary " href="/kasap-urunleri">Alışverişe Başla »</a>
-                    </div>
-                </div>
-
-                <div class="carousel-item home-carousel-item">
-                    <div class="py-3 mb-3 carousel-caption">
                         <h2 class="h2   ">popüler ürünler</h2>
                         <span class="h5 d-block  font-weight-light pb-3 ">en çok tercih edilen ürünlerimiz</span>
     
                         <a class="btn btn-primary " href="/populer-etler">Göz At »</a>
                     </div>
                 </div>
+
+  
 
                 <div class="carousel-item home-carousel-item">
                     <div class="py-3 mb-3 carousel-caption">
@@ -83,7 +76,7 @@
 
                 <div class="carousel-item home-carousel-item">
                     <div class="py-3 mb-3 carousel-caption">
-                        <h2 class="h2    ">et kültür blog</h2>
+                        <h2 class="h2">et kültür blog</h2>
                         <span class="h5 d-block font-weight-light pb-3 ">ilginizi çekecek kısa ve öz içerikler</span>
     
                         <a class="btn btn-primary " href="/blog">Göz At »</a>
@@ -110,7 +103,7 @@
         <div class=" bg-secondary">
             <div class="row">
                 <div class="col-sm-4">
-                    <a href="/blog/kasap-kart">
+                    <a class="d-block" href="/kasap-urunleri">
                         <img src="<%=__config.staticDomain%>/content-resimleri/kasap-kart-thumbnail.jpg"
                             alt="Kasap Kart™">
 
@@ -118,22 +111,25 @@
                 </div>
 
                 <div class="col-sm-8 font-weight-light font-size-lg">
-                    <h1 class="h2 pl-3 pt-4 h3">
-                        Online Kasap Alışverişi & Et Siparişi
+                    <div class="p-3">
+                        <h1 class="h2">
+                            Online Kasap Alışverişi & Et Siparişi
 
-                    </h1>
-                    <p class="pl-3">
-                        Güvenilir semt kasaplarından online sipariş verin, iyi et saatler içerisinde kapınıza gelsin.
-                    </p>
-
-
-                    <p class="pl-3">
-                        Kasap Kart&trade; ile puan kazanın, kârlı çıkın.
-                    </p>
-
-                    <div class="pl-3 mb-3 text-right mr-3 ">
-                        <a class="btn btn-primary " href="/kasap-urunleri">Alışverişe Başla »</a>
+                        </h1>
+                        <p class="lead">
+                            Şehrinizin en iyi kasaplarından en iyi etler saatler içerisinde kapınıza gelsin.
+                        </p>
+    
+    
+                        <p class="lead">
+                            Kasap Kart&trade; ile puan kazanın, kârlı çıkın.
+                        </p>
+    
+                        <div class="text-right">
+                            <a class="btn btn-primary " href="/kasap-urunleri">Alışverişe Başla »</a>
+                        </div>
                     </div>
+
 
                 </div>
 
@@ -167,7 +163,7 @@
         <div class="d-flex flex-column h-100 justify-content-center bg-size-cover bg-position-center rounded-lg"
             style="background-image: url(<%=__config.staticDomain %>/resource/img/banner-bg.jpg);">
             <div class="py-4 my-2 my-md-0 py-md-5 px-4 ml-md-3 text-center text-sm-left">
-                <h4 class="h6 font-size-lg font-weight-light mb-2">Tüm Alışverişlerinizden</h4>
+                <h4 class="h6 font-size-lg font-weight-light mb-2">Kârlı Kasap Alışverişi</h4>
                 <h3 class="mb-4 h5">Kasap Kart&trade; ile puan kazanın</h3>
                
                 <a class="btn btn-primary " href="/blog/kasap-kart">Daha Fazla Bilgi »</a>
@@ -185,13 +181,10 @@
         <div class="d-flex flex-column h-100 justify-content-center bg-size-cover bg-position-center rounded-lg"
             style="background-image: url(<%=__config.staticDomain %>/resource/img/banner-bg.jpg);">
             <div class="py-4 my-2 my-md-0 py-md-5 px-4 ml-md-3 text-center text-sm-left">
-                <h4 class="h6 font-size-lg font-weight-light mb-2">Güvenilir Kasaplardan</h4>
-                <h3 class="mb-4 h5">Doğal, Taze ve Lezzetli Ürünler</h3>
+                <h4 class="h6 font-size-lg font-weight-light mb-2">Doğal, Taze ve Lezzetli</h4>
+                <h3 class="mb-4 h5">Alışverişe buradan başlayın</h3>
 
-                <a class="btn btn-primary " href="/kasap-urunleri">Tüm Ürünlerimiz »</a>
-
-
-            </div>
+                <a class="btn btn-primary " href="/kasap-urunleri">Kasap Ürünleri »</a></div>
         </div>
 
 

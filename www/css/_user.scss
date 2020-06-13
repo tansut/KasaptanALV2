@@ -32,8 +32,7 @@ a:hover {
 
 }
 
-.carousel-caption {
-}
+
 
 
 
@@ -47,6 +46,10 @@ a:hover {
 
 .item-slider-selected {
   border-bottom: $primary 2px solid;
+}
+
+.item-slider-selected-info {
+  border-bottom: $info 2px solid;
 }
 
 .item-slider-unselected {

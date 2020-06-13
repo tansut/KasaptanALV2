@@ -9,12 +9,14 @@
   <% include ./_partial/header %>
   <link href="https://www.kasaptanal.com/<%=controller.category.slug%>" rel="canonical">
 
-  <%-include('./_partial/food-select-alternatives.ejs', {}) %>
 
   <%
     var relatedFoodCategory = controller.category.relatedFoodCategory ? __req.__categories.find(p => p.id == controller.category.relatedFoodCategory): 0;          
 
     var foodCategoryParams = {allUrl: relatedFoodCategory ? '/et-yemekleri/' + relatedFoodCategory.slug: '/' + controller.category.slug + '/et-yemekleri', mode: 'yemek', foods: controller.foods, title: relatedFoodCategory ? relatedFoodCategory.name: controller.category.tarifTitle || 'Yemekler'}    
+    var foodsInserted = false; 
+
+    var tags = _.uniq(controller.products.map(p=>p.tag1))
   %>
 
 
@@ -44,6 +46,7 @@
       </div>
     </div>
   </div>
+
 
 
   <%if (controller.category.slug != 'kurban' || __req.query.go) { %>
@@ -85,7 +88,24 @@
       
         </div>
       <% } %>
+      <% if (tags.length > 1) { %>
+        <div  class="table-responsive mb-3 " data-simplebar>
+          <div class="d-flex pb-2">
+            <% for(var i = 0; i < tags.length; i++) {  %>
+<div class="tag-toggle mr-2" data-stag="<%=tags[i]%>">
+  <a onclick="toggleTag('<%=tags[i]%>')"  class="text-center btn btn-sm rounded-0 btn-secondary  text-nowrap">
+    <%=tags[i]%>
+  </a>
+</div>
+         
 
+
+    
+            <% } %>
+          </div>
+
+        </div>
+        <% } %>
       <% if (controller.category.subCategories.length) { %>
         <% var displayed = [], 
         subs = controller._.sortBy(controller.category.subCategories, ["displayOrder"]).reverse() ; 
@@ -113,9 +133,18 @@
             %>
             
             <% for(var j=0; j< products.length; j++) {%>
-            <div class="col-md-3 col-6 ">
+            <div data-tag="<%=products[j].tag%>" class="col-md-3 col-6 ">
               <%- include('./_partial/product-view.ejs', {product: products[j]}) %>
             </div>
+            
+            <% if (controller.foods.length > 0 && !foodsInserted && j>controller.products.length/5) { %>
+              <% foodsInserted = true; %>
+              <div  class="col-md-3 col-6">
+                <%- include('./_partial/generic-item-view.ejs', {badge: 'et yemekleri', imgClass: 'rounded-circle', title: foodCategoryParams.title, href: `${foodCategoryParams.allUrl}`, src: `${ __req.helper.imgUrl('category-photos', controller.category.slug, 'thumbnail', true, 'list')}` }) %>
+              </div>
+            <%}%>
+
+
             <% } %>
     
     
@@ -133,7 +162,7 @@
             </div>            
             <div class="row">
             <% for(var j=0; j< remain.length; j++) {%>
-              <div class="col-md-3 col-6 ">
+              <div data-tag="<%=remain[j].tag1%>" class="col-md-3 col-6 ">
                 <%- include('./_partial/product-view.ejs', {product: remain[j]}) %>
               </div>
               <% } %>
@@ -142,32 +171,28 @@
 
       <% } else { %>
         <div class="row">
- 
           <% for(var j=0; j< controller.products.length; j++) {%>
-          <div class="col-md-3 col-6 ">
+          <div data-tag="<%=controller.products[j].tag1%>" class="col-md-3 col-6 ">
             <%- include('./_partial/product-view.ejs', {product: controller.products[j]}) %>
           </div>
+          <% if (controller.foods.length > 0 && !foodsInserted && j>controller.products.length/5) { %>
+          <% foodsInserted = true; %>
+          <div class="col-md-3 col-6">
+            <%- include('./_partial/generic-item-view.ejs', {badge: 'et yemekleri', imgClass: 'rounded-circle', title: foodCategoryParams.title, href: `${foodCategoryParams.allUrl}`, src: `${ __req.helper.imgUrl('category-photos', controller.category.slug, 'thumbnail', true, 'list')}` }) %>
+          </div>
+          <% } %>
           <% } %>
   
   
   
         </div>
       <% } %>
-      
-
-
-
-     
-
-        <% if (controller.foods.length > 0) { %>
-        <div class="mb-3 ">
-          <%- include('./_partial/foods-slider.ejs', foodCategoryParams) %>
-
-        </div>
-        <% } %>
+    
 
       
-
+        <div class=" mb-3">
+          <%- include('./_partial/category-slider', { viewCats: ['reyon', 'list'], mode:'list', title: 'Ürünlerimiz', allUrl: '/kasap-urunleri' }); %>
+      </div> 
 
       <% if (controller.category.mddesc) { %>
       <div class="collapse-container page-footer-text">
@@ -191,6 +216,19 @@
       <% include ./_partial/scripts %>
 
       <script>
+
+
+        function toggleTag(tag) {
+          if ($([event.currentTarget]).parent().hasClass('item-slider-selected-info')) {
+            $("[data-tag]").show();
+            $('.tag-toggle').removeClass('item-slider-selected-info');
+          } else {
+            $('.tag-toggle').removeClass('item-slider-selected-info');
+          $([event.currentTarget]).parent().addClass('item-slider-selected-info');
+          $("[data-tag]").hide();
+          $("[data-tag='" + tag + "']").fadeToggle()
+          }
+        }
 
         $(document).ready(function () {
           var el = document.getElementById('sc');

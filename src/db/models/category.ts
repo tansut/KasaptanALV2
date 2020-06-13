@@ -28,6 +28,12 @@ class Category extends BaseModel<Category> {
 
     @Column({
         allowNull: false,
+        defaultValue: false
+    })
+    tag1Enabled: boolean;    
+
+    @Column({
+        allowNull: false,
     })
     type: string;
 
