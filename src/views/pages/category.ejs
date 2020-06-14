@@ -9,7 +9,6 @@
   <% include ./_partial/header %>
   <link href="https://www.kasaptanal.com/<%=controller.category.slug%>" rel="canonical">
 
-
   <%
     var relatedFoodCategory = controller.category.relatedFoodCategory ? __req.__categories.find(p => p.id == controller.category.relatedFoodCategory): 0;          
 
@@ -73,7 +72,7 @@
       </div>
 
       <% } else { %>
-      <div class="text-dark mb-4 px-4 py-4 text-center"
+      <div class="text-dark mb-3 px-4 py-4 text-center"
         style="background-image: url(<%=__config.staticDomain %>/resource/img/islam-bg.jpeg);background-repeat: repeat">
         <div class="container ">
           <p class="lead">
@@ -87,13 +86,13 @@
       </div>
       <% } %>
       <%if (controller.category.slug != 'kurban' || __req.query.go) { %>
-      <div class="mb-1 pt-1">
+      <div class="py-1 mb-2">
         <%- include('./_partial/category-slider', { selected: controller.category.slug, mode:'browse', header: false, titles: false, viewCats: ['reyon', 'list'], title: 'Tüm Ürünlerimiz', allUrl: '/kasap-urunleri' }); %>
       </div>
       <% } %>
 
       <% if (tags.length > 1 && controller.category.subItemsMode == 'tag1') { %>
-      <div class="table-responsive mb-3 " data-simplebar>
+      <div class="table-responsive mb-2 " data-simplebar>
         <div class="d-flex pb-2">
           <% for(var i = 0; i < tags.length; i++) {  %>
           <% if (i == 0) { %>
@@ -146,14 +145,14 @@
     <% for (var k=0; k < subs.length; k++) { %>
     <% var subCat = subs[k] %>
     <% if (controller.category.subItemsMode == 'subitemsasslider' || controller.category.subItemsMode == 'subitems') { %>
-    <div data-tag="__helper.slugify(subCat.title)" id="<%= __helper.slugify(subs[k].title) %>" class="mb-3 border-bottom">
-      <h4 class="h5 mb-2"><%= subCat.title %></h4>
+    <div data-tag="" id="<%= __helper.slugify(subs[k].title) %>" class="mb-3 border-bottom">
+      <h4 class="h6 mb-2"><%= subCat.title %></h4>
       <span class="font-weight-light">
         <%-controller.markdown.render(subCat.description || '')%>
       </span>
     </div>
     <%}%>
-    <div  class="row mb-3">
+    <div class="row mb-3">
       <% 
             
              var products = controller.products.filter(
@@ -191,7 +190,7 @@
     <%var remain = controller.products.filter(p=> {return displayed.indexOf(p.id) < 0 })  %>
     <% if (controller.category.subItemsMode == 'subitemsasslider' || controller.category.subItemsMode == 'subitems') { %>
     <div id="<%= 'remain' %>"  class="border-bottom mb-3">
-      <h4 class="h5 mb-2">Diğer</h4>
+      <h4 class="h6 mb-2">Diğer</h4>
     </div>
     <% } %>
     <div class="row">
@@ -224,7 +223,7 @@
 
 
 
-    <div class=" mb-3">
+    <div class="mb-3">
       <%- include('./_partial/category-slider', { urlParams: 'go#items', viewCats: ['reyon', 'list'], mode:'list', title: 'Ürünlerimiz', allUrl: '/kasap-urunleri' }); %>
     </div>
 
@@ -300,7 +299,7 @@ function filterSubitem(tag) {
         });
         if (location.hash == '#items') {
           $('html,body').animate({ scrollTop: $('#items-container').offset().top }, 10, function () {
-            $("body").animate({ opacity: 1 }, 100, function () {
+            $("body").animate({ opacity: 1 }, 250, function () {
 
             });
           });
@@ -317,14 +316,7 @@ function filterSubitem(tag) {
           <% } else { %>
             filterSubitem(location.hash ? decodeURIComponent(location.hash.replace('#','')): '')
           <% } %>
-            
-    
-
-
         }
-
-
-
       })
     </script>
 

@@ -94,7 +94,7 @@
         </div>
         <%} else { %>
         <div id="sc" class="table-responsive" data-simplebar>
-            <div class="pt-2 d-flex pb-2">
+            <div class="pt-2 d-flex">
                 <% var allAdded = false; %>
                 <% viewCats.forEach(cat => { %>
                 <% var reyonlar = (__categories.filter(p=>p.type == cat && p.status == 'active')) %>
@@ -103,7 +103,7 @@
 
 
                 <div id="cat-item-<%=reyonlar[c].slug%>"
-                    class="mr-4 pb-2 <%= selected ? (selected == reyonlar[c].slug ? 'item-slider-selected': 'item-slider-unselected') : ''%>">
+                    class="mr-4 pb-1  <%= selected ? (selected == reyonlar[c].slug ? 'item-slider-selected': 'item-slider-unselected') : ''%>">
                     <%subUrl = reyonlar[c].type == 'resource' ? 'et-yemekleri/':'' %>
 
 
