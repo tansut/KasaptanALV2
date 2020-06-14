@@ -5,6 +5,14 @@ import ProductCategory from './productcategory';
 import ButcherProduct from './butcherproduct';
 import SubCategory from './subcategory';
 
+export enum CategorySubItemsMode {
+    none = 'none',
+    tag1 = 'tag1',
+    subitems = 'subitems',
+    subitemsasslider = 'subitemsasslider',
+    subitemshiddenasslider = 'subitemshiddenasslider'
+}
+
 @Table({
     tableName: "Categories",
     indexes: [{
@@ -28,9 +36,10 @@ class Category extends BaseModel<Category> {
 
     @Column({
         allowNull: false,
-        defaultValue: false
+        defaultValue: 'subitems'
     })
-    tag1Enabled: boolean;    
+    subItemsMode: string;    
+
 
     @Column({
         allowNull: false,
@@ -45,7 +54,7 @@ class Category extends BaseModel<Category> {
     @Column
     keywords: string;    
 
-    @Column({
+    @Column({ 
         allowNull: false,
     })
     slug: string;

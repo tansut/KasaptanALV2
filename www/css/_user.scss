@@ -46,6 +46,7 @@ a:hover {
 
 .item-slider-selected {
   border-bottom: $primary 2px solid;
+  font-weight: bold;
 }
 
 .item-slider-selected-info {
@@ -53,7 +54,11 @@ a:hover {
 }
 
 .item-slider-unselected {
-  opacity: 0.6;
+  opacity: 0.8;
+}
+
+.item-slider-selected-dark {
+  border-bottom: #7d879c 2px solid;
 }
 
 .line-h-extra {

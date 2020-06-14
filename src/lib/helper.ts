@@ -189,7 +189,7 @@ export default class Helper {
                 // return _img.getBufferAsync("image/jpeg").then(buff => {
                 //     this.res.set("jpeg")
                 //     this.res.send(new Buffer(buff))
-                // })
+                // })  
             })
     }
 

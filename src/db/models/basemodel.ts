@@ -13,7 +13,9 @@ export default abstract class BaseModel<T extends Model> extends Model<T> {
     // @DeletedAt
     // deletionDate: Date;
 
+    
     toClient<T extends Object>(c?: { new(): T; }): any {
+        
         var result;
         let doc = this;
         if (c) {

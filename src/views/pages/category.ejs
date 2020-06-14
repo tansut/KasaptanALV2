@@ -49,17 +49,13 @@
 
 
 
-  <%if (controller.category.slug != 'kurban' || __req.query.go) { %>
-    <div id="items-container" class="mb-2 pt-1">
-      <%- include('./_partial/category-slider', { selected: controller.category.slug, mode:'browse', header: false, titles: false, viewCats: ['reyon', 'list'], title: 'Tüm Ürünlerimiz', allUrl: '/kasap-urunleri' }); %>
-    </div>
-    <% } %>
-  <div  class="container px-0">
+  <a id="items-container"></a>
 
+  <div class="container pt-3 px-0">
     <div class=" px-4 pb-4 mb-3 ">
       <%if (controller.category.slug != 'kurban' || __req.query.go) { %>
 
-      <div class="input-group-overlay mb-3">
+      <div class="input-group-overlay">
 
         <div class="input-group-prepend-overlay">
 
@@ -77,52 +73,88 @@
       </div>
 
       <% } else { %>
-        <div class="text-dark mb-4 px-4 py-4 text-center" style="background-image: url(<%=__config.staticDomain %>/resource/img/islam-bg.jpeg);background-repeat: repeat">
-            <div class="container ">
-                             <p class="lead">                  
-                  İş ortaklarımız <strong>ibadet amacıyla hayvan seçimi, helâl kesim ve tüm İslâmi usuller</strong> konusunda usta, <strong>yerel ve inançlı</strong>  kasaplardır.
-              </p>              
-             <p>
-                <a class="btn btn-shadow btn-warning" href="/blog/kurban-ibadeti" role="button">Kurban İbadeti »</a></p> 
-            </div>
-      
+      <div class="text-dark mb-4 px-4 py-4 text-center"
+        style="background-image: url(<%=__config.staticDomain %>/resource/img/islam-bg.jpeg);background-repeat: repeat">
+        <div class="container ">
+          <p class="lead">
+            İş ortaklarımız <strong>ibadet amacıyla hayvan seçimi, helâl kesim ve tüm İslâmi usuller</strong> konusunda
+            usta, <strong>yerel ve inançlı</strong> kasaplardır.
+          </p>
+          <p>
+            <a class="btn btn-shadow btn-warning" href="/blog/kurban-ibadeti" role="button">Kurban İbadeti »</a></p>
         </div>
+
+      </div>
       <% } %>
-      <% if (tags.length > 1 && controller.category.tag1Enabled) { %>
-        <div  class="table-responsive mb-3 " data-simplebar>
-          <div class="d-flex pb-2">
-            <% for(var i = 0; i < tags.length; i++) {  %>
-<div class="tag-toggle mr-2" data-stag="<%=tags[i]%>">
-  <a onclick="toggleTag('<%=tags[i]%>')"  class="text-center btn btn-sm  btn-secondary  text-nowrap">
-    <%=tags[i]%>
-  </a>
-</div>
-         
+      <%if (controller.category.slug != 'kurban' || __req.query.go) { %>
+      <div class="mb-1 pt-1">
+        <%- include('./_partial/category-slider', { selected: controller.category.slug, mode:'browse', header: false, titles: false, viewCats: ['reyon', 'list'], title: 'Tüm Ürünlerimiz', allUrl: '/kasap-urunleri' }); %>
+      </div>
+      <% } %>
 
-
-    
-            <% } %>
+      <% if (tags.length > 1 && controller.category.subItemsMode == 'tag1') { %>
+      <div class="table-responsive mb-3 " data-simplebar>
+        <div class="d-flex pb-2">
+          <% for(var i = 0; i < tags.length; i++) {  %>
+          <% if (i == 0) { %>
+          <div id="subAll" class="tag-toggle mr-3 item-slider-selected-info" data-stag="">
+            <a onclick="toggleTag()" class="text-uppercase text-info font-size-sm text-center text-nowrap">
+              <%='Tümü'%>
+            </a>
           </div>
+          <%}%>
 
+        <div class="tag-toggle mr-3" data-stag="<%=__helper.slugify(tags[i])%>">
+          <a onclick="toggleTag('<%=__helper.slugify(tags[i])%>')" class="text-uppercase text-info font-size-sm text-center text-nowrap">
+            <%=tags[i]%>
+          </a>
         </div>
         <% } %>
-      <% if (controller.category.subCategories.length) { %>
-        <% var displayed = [], 
+      </div>
+    </div>
+    <% } else if (controller.category.subCategories.length && (controller.category.subItemsMode == 'subitemsasslider' || controller.category.subItemsMode == 'subitemshiddenasslider')) {   %>
+      
+      <div class="table-responsive mb-3 " data-simplebar>
+        <div class="d-flex pb-2">
+          <% for(var i = 0; i < controller.category.subCategories.length; i++) {  %>
+            <% if (i == 0 && controller.category.subItemsMode == 'subitemshiddenasslider') { %> 
+            <div id="subAll" class="tag-toggle mr-3 item-slider-selected-info" data-stag="">
+              <a onclick="filterSubitem()" class="text-uppercase text-info font-size-sm text-center text-nowrap">
+                <%='Tümü'%>
+              </a>
+            </div>
+
+            <% } %>
+
+
+        <div class="tag-toggle mr-3" data-stag="<%=__helper.slugify(controller.category.subCategories[i].title)%>">
+          <a onclick="<%= controller.category.subItemsMode == 'subitemsasslider' ? 'goSubitem':'filterSubitem'%>('<%=__helper.slugify(controller.category.subCategories[i].title)%>')" class="text-uppercase text-info font-size-sm text-center text-nowrap">
+            <%=controller.category.subCategories[i].title%>
+          </a>
+        </div>
+        <% } %>
+      </div>
+    </div>
+    <% } %>
+    
+    <% if (controller.category.subCategories.length) { %>
+    <% var displayed = [], 
         subs = controller._.sortBy(controller.category.subCategories, ["displayOrder"]).reverse() ; 
         subs = subs.filter(sc=>sc.visible == true)  
         %>
 
-        <% for (var k=0; k < subs.length; k++) { %>
-          <% var subCat = subs[k] %>
-          
-          <div class="mb-3 border-bottom">
-            <h4 class="h5 mb-2"><%= subCat.title %></h4>
-            <span class="font-weight-light">
-              <%-controller.markdown.render(subCat.description || '')%>            
-            </span>
-          </div>
-          <div class="row mb-3">
-            <% 
+    <% for (var k=0; k < subs.length; k++) { %>
+    <% var subCat = subs[k] %>
+    <% if (controller.category.subItemsMode == 'subitemsasslider' || controller.category.subItemsMode == 'subitems') { %>
+    <div data-tag="__helper.slugify(subCat.title)" id="<%= __helper.slugify(subs[k].title) %>" class="mb-3 border-bottom">
+      <h4 class="h5 mb-2"><%= subCat.title %></h4>
+      <span class="font-weight-light">
+        <%-controller.markdown.render(subCat.description || '')%>
+      </span>
+    </div>
+    <%}%>
+    <div  class="row mb-3">
+      <% 
             
              var products = controller.products.filter(
               
@@ -131,80 +163,82 @@
             ) 
               displayed = displayed.concat(products.map(p=>p.id))
             %>
-            
-            <% for(var j=0; j< products.length; j++) {%>
-            <div data-tag="<%=products[j].tag%>" class="col-md-3 col-6 ">
-              <%- include('./_partial/product-view.ejs', {product: products[j]}) %>
-            </div>
-            
-            <% if (controller.foods.length > 0 && !foodsInserted && j>controller.products.length/5) { %>
-              <% foodsInserted = true; %>
-              <div  class="col-md-3 col-6">
-                <%- include('./_partial/generic-item-view.ejs', {badge: 'et yemekleri', imgClass: 'rounded-circle', title: foodCategoryParams.title, href: `${foodCategoryParams.allUrl}`, src: `${ __req.helper.imgUrl('category-photos', controller.category.slug, 'thumbnail', true, 'list')}` }) %>
-              </div>
-            <%}%>
+
+      <% for(var j=0; j< products.length; j++) {%>
+      <div data-tag="<%= (controller.category.subItemsMode == 'subitemsasslider' || controller.category.subItemsMode ==  'subitemshiddenasslider') ? __helper.slugify(subCat.title): __helper.slugify(products[j].tag1)%>" class="col-md-3 col-6 ">
+        <%- include('./_partial/product-view.ejs', {product: products[j]}) %>
+      </div>
+
+      <% if (controller.foods.length > 0 && !foodsInserted && j>controller.products.length/5) { %>
+      <% foodsInserted = true; %>
+      <div data-tag="" class="col-md-3 col-6">
+        <%- include('./_partial/generic-item-view.ejs', {badge: 'et yemekleri', imgClass: 'rounded-circle', title: foodCategoryParams.title, href: `${foodCategoryParams.allUrl}`, src: `${ __req.helper.imgUrl('category-photos', controller.category.slug, 'thumbnail', true, 'list')}` }) %>
+      </div>
+      <%}%>
 
 
             <% } %>
-    
-    
-    
-          </div>
 
 
-          
-          <% } %>
-    
-          <% if (displayed.length != controller.products.length) { %>
-            <%var remain = controller.products.filter(p=> {return displayed.indexOf(p.id) < 0 })  %>
-            <div class="border-bottom mb-3">
-              <h4 class="h5 mb-2">Diğer</h4>
-            </div>            
-            <div class="row">
-            <% for(var j=0; j< remain.length; j++) {%>
-              <div data-tag="<%=remain[j].tag1%>" class="col-md-3 col-6 ">
-                <%- include('./_partial/product-view.ejs', {product: remain[j]}) %>
-              </div>
-              <% } %>
-            </div>
-          <% } %>          
 
-      <% } else { %>
-        <div class="row">
-          <% for(var j=0; j< controller.products.length; j++) {%>
-          <div data-tag="<%=controller.products[j].tag1%>" class="col-md-3 col-6 ">
-            <%- include('./_partial/product-view.ejs', {product: controller.products[j]}) %>
-          </div>
-          <% if (controller.foods.length > 0 && !foodsInserted && j>controller.products.length/5) { %>
-          <% foodsInserted = true; %>
-          <div class="col-md-3 col-6">
-            <%- include('./_partial/generic-item-view.ejs', {badge: 'et yemekleri', imgClass: 'rounded-circle', title: foodCategoryParams.title, href: `${foodCategoryParams.allUrl}`, src: `${ __req.helper.imgUrl('category-photos', controller.category.slug, 'thumbnail', true, 'list')}` }) %>
-          </div>
-          <% } %>
-          <% } %>
-  
-  
-  
-        </div>
-      <% } %>
-    
+    </div>
 
-      
-        <div class=" mb-3">
-          <%- include('./_partial/category-slider', { viewCats: ['reyon', 'list'], mode:'list', title: 'Ürünlerimiz', allUrl: '/kasap-urunleri' }); %>
-      </div> 
 
-      <% if (controller.category.mddesc) { %>
-      <div class="collapse-container page-footer-text">
-        <div class="collapse" id="collapseSummary">
-          <%- controller.category.mddesc && controller.Markdown.render(controller.category.mddesc) %>
 
-        </div>
-        <a class="collapsed text-dark" data-toggle="collapse" href="#collapseSummary" aria-expanded="false"
-          aria-controls="collapseSummary"></a>
+    <% } %>
+
+    <% if (displayed.length != controller.products.length) { %>
+    <%var remain = controller.products.filter(p=> {return displayed.indexOf(p.id) < 0 })  %>
+    <% if (controller.category.subItemsMode == 'subitemsasslider' || controller.category.subItemsMode == 'subitems') { %>
+    <div id="<%= 'remain' %>"  class="border-bottom mb-3">
+      <h4 class="h5 mb-2">Diğer</h4>
+    </div>
+    <% } %>
+    <div class="row">
+      <% for(var j=0; j< remain.length; j++) {%>
+      <div data-tag="<%= (controller.category.subItemsMode == 'subitemsasslider' || controller.category.subItemsMode ==  'subitemshiddenasslider') ? __helper.slugify(subCat.title): __helper.slugify(products[j].tag1)%>" class="col-md-3 col-6 ">
+        <%- include('./_partial/product-view.ejs', {product: remain[j]}) %>
       </div>
+      <% } %>
+    </div>
+    <% } %>
 
-      <%}%>
+    <% } else { %>
+    <div class="row">
+      <% for(var j=0; j< controller.products.length; j++) {%>
+      <div data-tag="<%=__helper.slugify(controller.products[j].tag1)%>" class="col-md-3 col-6 ">
+        <%- include('./_partial/product-view.ejs', {product: controller.products[j]}) %>
+      </div>
+      <% if (controller.foods.length > 0 && !foodsInserted && j>controller.products.length/5) { %>
+      <% foodsInserted = true; %>
+      <div data-tag="" class="col-md-3 col-6">
+        <%- include('./_partial/generic-item-view.ejs', {badge: 'et yemekleri', imgClass: 'rounded-circle', title: foodCategoryParams.title, href: `${foodCategoryParams.allUrl}`, src: `${ __req.helper.imgUrl('category-photos', controller.category.slug, 'thumbnail', true, 'list')}` }) %>
+      </div>
+      <% } %>
+      <% } %>
+
+
+
+    </div>
+    <% } %>
+
+
+
+    <div class=" mb-3">
+      <%- include('./_partial/category-slider', { urlParams: 'go#items', viewCats: ['reyon', 'list'], mode:'list', title: 'Ürünlerimiz', allUrl: '/kasap-urunleri' }); %>
+    </div>
+
+    <% if (controller.category.mddesc) { %>
+    <div class="collapse-container page-footer-text">
+      <div class="collapse" id="collapseSummary">
+        <%- controller.category.mddesc && controller.Markdown.render(controller.category.mddesc) %>
+
+      </div>
+      <a class="collapsed text-dark" data-toggle="collapse" href="#collapseSummary" aria-expanded="false"
+        aria-controls="collapseSummary"></a>
+    </div>
+
+    <%}%>
 
 
     </div>
@@ -213,53 +247,86 @@
 
 
   <% include ./_partial/footer %>
-      <% include ./_partial/scripts %>
+    <% include ./_partial/scripts %>
 
-      <script>
+    <script>
 
+function goSubitem(tag) {  
+  App.scrollToAnchor('#' + tag) 
+}
 
-        function toggleTag(tag) {
-          if ($([event.currentTarget]).parent().hasClass('item-slider-selected-info')) {
-            $("[data-tag]").show();
-            $('.tag-toggle').removeClass('item-slider-selected-info');
-          } else {
-            $('.tag-toggle').removeClass('item-slider-selected-info');
-          $([event.currentTarget]).parent().addClass('item-slider-selected-info');
+function filterSubitem(tag) {
+  var tag = decodeURI(tag || "");
+
+        $('.tag-toggle').removeClass('item-slider-selected-info');
+        if (tag && tag != 'all') {
           $("[data-tag]").hide();
-          $("[data-tag='" + tag + "']").fadeToggle()
-          }
+          $("[data-stag='" + tag + "']").addClass('item-slider-selected-info');
+          $("[data-tag='" + tag + "']").toggle();
+        } else {
+          $('#subAll').addClass('item-slider-selected-info') 
+          $("[data-tag]").show();
+        }
+        window.location.hash = tag ? '#' + (encodeURIComponent(tag) ) : '#all';
+
+
+      }
+
+      function toggleTag(tag) {
+        $('.tag-toggle').removeClass('item-slider-selected-info');
+        if (tag && tag != 'all') {
+          $("[data-tag]").hide();
+          $("[data-stag='" + tag + "']").addClass('item-slider-selected-info');
+          $("[data-tag='" + tag + "']").toggle();
+        } else {
+          $('#subAll').addClass('item-slider-selected-info') 
+          $("[data-tag]").show();
+        }
+        window.location.hash = tag ? '#' + (encodeURIComponent(tag) ) : '#all';
+
+      }
+
+      $(document).ready(function () {
+        var el = document.getElementById('sc');
+        var sb = SimpleBar.instances.get(el);
+        var scel = sb.getScrollElement();
+        var scelOffset = $(scel).offset();
+        var selected = $("#cat-item-<%=controller.category.slug%>").offset();
+        var left = -(scelOffset.left - selected.left);
+
+
+        $(scel).animate({ scrollLeft: left }, 50, function () {
+
+        });
+        if (location.hash == '#items') {
+          $('html,body').animate({ scrollTop: $('#items-container').offset().top }, 10, function () {
+            $("body").animate({ opacity: 1 }, 100, function () {
+
+            });
+          });
+          location.hash = "";
+
+        } else {
+          $("body").css("opacity", 1)
+          <% if (controller.category.subItemsMode == 'none') { %>
+
+          <% } else if (controller.category.subItemsMode == 'tag1') { %>
+            toggleTag(location.hash ? decodeURIComponent(location.hash.replace('#','')): '');
+          <%} else if (controller.category.subItemsMode == 'subitemsasslider') { %>
+            goSubitem(location.hash ? decodeURIComponent(location.hash.replace('#','')): '')
+          <% } else { %>
+            filterSubitem(location.hash ? decodeURIComponent(location.hash.replace('#','')): '')
+          <% } %>
+            
+    
+
+
         }
 
-        $(document).ready(function () {
-          var el = document.getElementById('sc');
-          var sb = SimpleBar.instances.get(el);
-          var scel = sb.getScrollElement();
-          var scelOffset = $(scel).offset();
-          var selected = $("#cat-item-<%=controller.category.slug%>").offset();
-          var left = -(scelOffset.left - selected.left);
-          left = left - 100
-          console.log(left)
-          console.log(scel.scrollWidth / 2)
-
-          $(scel).animate({ scrollLeft: left }, 50, function () {
-
-          });
-          if (location.hash == '#items') {
-            $('html,body').animate({scrollTop: $('#items-container').offset().top}, 10, function () {
-              $("body").animate({ opacity: 1 }, 100, function () {
-
-              });
-            });
-            location.hash = "";
-
-          } else {
-            $("body").css("opacity",1)
-          }
 
 
-
-        })
-      </script>
+      })
+    </script>
 
 </body>
 
