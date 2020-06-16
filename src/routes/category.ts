@@ -7,7 +7,7 @@ import { Auth } from '../lib/common';
 import AreaModel from '../db/models/area';
 import Helper from '../lib/helper';
 import Area from '../db/models/area';
-import Category from '../db/models/category';
+import Category, { CategorySubItemsMode } from '../db/models/category';
 import Resource from '../db/models/resource';
 let ellipsis = require('text-ellipsis');
 import ResourceRoute from './resource';
@@ -19,6 +19,7 @@ import { Op } from 'sequelize';
 import config from '../config';
 var MarkdownIt = require('markdown-it')
 import * as _ from "lodash";
+import SubCategory from '../db/models/subcategory';
 
 export default class Route extends ViewRouter {
     markdown = new MarkdownIt();
@@ -28,6 +29,7 @@ export default class Route extends ViewRouter {
     foodsWithCats = {}
     foodCategory = ""
     _ = _;
+    subCategories: SubCategory[] = [];
     //categories: Category[];
 
 
@@ -161,7 +163,51 @@ export default class Route extends ViewRouter {
     }
 
 
+    generateSubcategories(products: Product[]) {
+        if (this.category.subItemsMode == CategorySubItemsMode.subitems) {
+            this.subCategories = this.category.subCategories;
+        } else if (this.category.subItemsMode == CategorySubItemsMode.tag1) {
+            let tags = _.uniq(products.map(p=>p.tag1));
+            let i = 0;
+            tags.forEach(t=> {
+                let subCat = new SubCategory({
+                    id: i++,
+                    visible: true,
+                    categoryid: 0,
+                    displayOrder: i,
+                    title: t,
+                    description:'',
+                    category: null
+                })
+                this.subCategories.push(subCat)
+            })
+        }
 
+        if (this.subCategories.length == 0) {
+            let subCat = new SubCategory({
+                id: 0,
+                visible: false,
+                categoryid: 0,
+                displayOrder: 0,
+                title: 'tümü',
+                description:'',
+                category: null
+            })
+            this.subCategories.push(subCat)            
+        }
+
+        this.subCategories.forEach((sc,i) => {
+            if (this.subCategories.length == 1) {
+                sc.products = products 
+            } else {
+                if (this.category.subItemsMode == CategorySubItemsMode.subitems) {
+                    sc.products = products.filter(p => { return p.categories.find(pc=>pc.subcategoryid == sc.id) }) 
+                } else {
+                    sc.products = products.filter(p => { return p.tag1 == sc.title }) 
+                }
+            }
+        })
+    }
 
 
     @Auth.Anonymous()
@@ -180,24 +226,16 @@ export default class Route extends ViewRouter {
 
         else {
             this.products = await ProductManager.getProductsOfCategories([this.category.id]);
+
+            this.generateSubcategories(this.products);
+
+
             if (this.category.relatedFoodCategory) {
                 this.foods = await new ProductsApi(this.constructorParams).getFoodAndTarifResources(null, null, [this.category.relatedFoodCategory]);
 
             } else if (this.category.tarifTitle) {
                 this.foods = await new ProductsApi(this.constructorParams).getFoodAndTarifResources(this.products, 15);
             }
-            // if (this.req.query.loc == 'feat') {
-            //     let loc = await Area.findOne({
-            //         where: {
-            //             slug: 'ankara-cankaya-cayyolu'
-            //         }
-            //     })
-            //     if (loc) {
-            //         await this.req.helper.setPreferredAddress({
-            //             level3Id: loc.id
-            //         }, true)
-            //     }
-            // }
             this.renderPage('pages/category.ejs')
         }
     }

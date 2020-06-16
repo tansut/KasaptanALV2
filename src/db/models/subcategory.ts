@@ -39,6 +39,8 @@ class SubCategory extends BaseModel<SubCategory> {
     })
     visible: boolean;    
 
+    products: Product[];
+
     
 }
 
