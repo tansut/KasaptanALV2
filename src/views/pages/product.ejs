@@ -14,20 +14,22 @@
   <%}%>
 </head>
 
-<body>
+<body style="opacity:0">
 
-
-
+  <%if (__req.query.frame != '1') { %> 
   <% include ./_partial/header %>
+  <%}%>
+
   <%- include('./_partial/product-weight-calc.ejs', {    product: product}) %>
 
   <% otherButcherAlternatives = butchers.servingL3.length + butchers.servingL2.length  + butchers.takeOnly.length - 1 %>
 
 
-
+  <%if (__req.query.frame != '1') { %>
   <div class="bg-primary py-4 <%= product.categories && product.categories[0] ? product.categories[0].category.slug:'' %> <%=product.slug%>">
     <div class="container d-lg-flex justify-content-between py-2 py-lg-3">
       <div class="order-lg-2 mb-3 mb-lg-0 pt-lg-2">
+        
         <nav aria-label="breadcrumb">
           <ol class="breadcrumb breadcrumb-light flex-lg-nowrap justify-content-center justify-content-lg-star">
             <li class="breadcrumb-item"><a class="text-nowrap" href="/"><i class="czi-home"></i></a></li>
@@ -36,6 +38,7 @@
             <li class="breadcrumb-item text-nowrap active" aria-current="page"><%= view.name %></li>
           </ol>
         </nav>
+        
       </div>
       <div class="order-lg-1 pr-lg-4 text-center text-lg-left">
         <h1 class="h3 text-light"><%= view.name %></h1>
@@ -47,6 +50,8 @@
       </div>
     </div>
   </div>
+
+  <% } %>
 
   <%
   let resources = product.resources.filter(r=>r.list == true); 
@@ -174,13 +179,9 @@
 
                           <div class="px-3 py-2">
                             <div class="d-flex d-flex justify-content-around">
-
-                              <a href="/alisveris-sepetim" class="btn btn-sm btn-accent mr-1"><i
+                              <a onclick="return goShopcard()"  class="btn btn-sm btn-info mr-1"><i
                                   class="czi-cart mr-1"></i>Sepete Git</a>
-                              <a onclick="return goBack()" class="btn btn-sm btn-primary">Alışverişe Devam<i
-                                  class="czi-arrow-right"></i></a>
-
-
+                              <a onclick="return goBack()" class="btn btn-sm btn-primary">Alışverişe Devam »</a>
                             </div>
                           </div>
                           <div>
@@ -317,12 +318,11 @@
                       <% if (!view.butcher) { %>
                       <% if (!__req.prefAddr) { %>
 
-                      <div class="alert border-none rounded-0 alert-accent alert-with-icon font-size-sm mb-2"
+                      <div class="alert border-none rounded-0 alert-accent font-size-sm mb-2"
                         role="alert">
 
 
-                        <div class="alert-icon-box rounded-0"><i class="alert-icon czi-announcement"></i>
-                        </div>
+
 
                         <div class="mb-3 d-block font-size-sm text-info text-center">
                           <h5 class="h6 text-info">Önce Semt</h5>
@@ -332,19 +332,18 @@
                         </div>
 
                         <div class="text-center">
-                          <button @click="selectArea(null)" type="button" class="btn btn-accent btn-sm"><i
+                          <button @click="selectArea(null)" type="button" class="btn btn-info btn-sm"><i
                               class="czi-location font-size-lg mr-2"></i>Semt Seç</button>
                         </div>
 
 
                       </div>
                       <%} else { %>
-                      <div class="alert border-none rounded-0 alert-secondary alert-with-icon font-size-sm mb-2"
+                      <div class="alert border-none rounded-0 alert-secondary font-size-sm mb-2"
                         role="alert">
 
 
-                        <div class="alert-icon-box rounded-0"><i class="alert-icon czi-announcement"></i>
-                        </div>
+
 
                         <div class="mb-3 d-block font-size-sm text-info text-center">
 
@@ -369,16 +368,25 @@
                         </div>
                         <% if (__req.prefAddr.level3Status != 'active') { %>
                         <div class="d-flex justify-content-center">
-                          <button @click="selectArea(null)" type="button" class="btn mr-2 btn-accent btn-sm"><i
+
+                          <% if (__req.query.frame != '1') { %>
+                          <button @click="selectArea(null)" type="button" class="btn mr-2 btn-info btn-sm"><i
                               class="czi-location font-size-lg mr-2"></i>Semt Seç</button>
-                          <a class="btn btn-sm btn-accent " href="/kasaplar">Kasaplarımız<i
+                          <% } else { %>
+                            <button onclick="window.parent.purchase.selectAddress('<%=product.slug%>')" type="button" class="btn mr-2 btn-info btn-sm"><i
+                              class="czi-location font-size-lg mr-2"></i>Semt Seç</button>
+                          <% } %>
+                          <a class="btn btn-sm btn-info " onclick="return showButchers()">Kasaplarımız<i
                               class="czi-arrow-right ml-2 mr-n1"></i></a>
                         </div>
                         <%} else {%>
+       
+
                         <div class="text-center">
-                          <a class="btn btn-sm btn-accent " href="/kasap-urunleri">Alışverişe Devam<i
+                          <a class="btn btn-sm btn-info " onclick="return goBack()" >Alışverişe Devam<i
                               class="czi-arrow-right ml-2 mr-n1"></i></a>
                         </div>
+                       
                         <%}%>
                   
                                 </div>
@@ -391,6 +399,7 @@
 
 
 
+                        <a id="noteanchor"></a>
 
                         <% if (view.butcher && __req.prefAddr) { %>
 
@@ -410,11 +419,7 @@
                                 <span class="d-block" class="font-size-sm text-muted">
                                   {{  formatCurrency(option.unitPrice).val}}.<small>{{formatCurrency(option.unitPrice).krs}}</small>
                                   TL
-
-
-                                   
                                 </span>
-
                                 <%}%>
                                       </a>
                                         
@@ -436,15 +441,19 @@
                                   </div>
                        
                          
-                                  <a id="noteanchor"></a>
                                   <div class="d-flex  flex-nowrap justify-content-between align-items-center">
                                     <h5 class="h6 mb-2 text-accent "><i class="czi-thumb-up mr-2"></i>Şimdi satın alın</h5>
                   
+                                    <%if (__req.query.frame != '1') { %> 
                                     <button title="<%= __req.prefAddr ? __req.prefAddr.level3Text: 'Semt Seçin' %>"
                                 @click="selectArea(null, '')" type="button" class="rounded-0 btn
                                 btn-secondary btn-sm"><i class="czi-location font-size-lg "></i>
-
-
+                                      <% } else {  %>
+                                        <button title="<%= __req.prefAddr ? __req.prefAddr.level3Text: 'Semt Seçin' %>"
+                                          onclick="window.parent.purchase.selectAddress('<%=product.slug%>')" type="button" class="rounded-0 btn
+                                          btn-secondary btn-sm"><i class="czi-location font-size-lg "></i>
+                                        
+                              <% }%>
 
 
                                 </button>
@@ -506,7 +515,7 @@
                   
                                   <div v-if="selectedUnit && selectedUnit.perPerson" class="d-flex align-items-center justify-content-center">
                   <p> <a @click="showCalculator(selectedUnit)"
-                  class="text-accent font-weight-medium " href="#size-chart"><i class="czi-calculator mr-1"></i>Miktar Hesaplama Aracı</a> ihtiyacınız kadar almanıza yardımcı olabilir. </p>
+                  class="text-primary font-weight-medium " href="#size-chart"><i class="czi-calculator mr-1"></i>Miktar Hesaplama Aracı</a> ihtiyacınız kadar almanıza yardımcı olabilir. </p>
                                 
                                   
                                   </div>
@@ -547,7 +556,7 @@
 
                           <div class="form-group">
                             <label class="mb-2" for="note"><span
-                                class="badge badge-accent font-size-xs mr-2">Notunuz</span><span
+                                class="badge badge-info font-size-xs mr-2">Notunuz</span><span
                                 class="font-size-sm"></span>
 
                             </label>
@@ -565,7 +574,7 @@
                           <% if (view.butcher && __req.prefAddr) { %>
 
                           <button data-tag="true" data-category="shopcard/add" data-action="<%=view.butcher.slug%>"
-                            data-label="<%=product.slug%>" id="addtoscbtn" class="btn btn-accent btn-block"
+                            data-label="<%=product.slug%>" id="addtoscbtn" class="btn btn-info btn-block"
                             type="submit"><i
                               class="czi-cart font-size-lg mr-2"></i><%= controller.shopCardIndex >= 0 ? 'Sepeti Güncelle': 'Sepete Ekle' %></button>
 
@@ -698,6 +707,50 @@
                             </div>
                             <%}%>
             
+                            <h3 class="border-bottom h5">Online Sipariş</h3>
+
+                            <p>
+                              Yerel usta kasaplarımızdan <strong><%=product.name%> online siparişi
+                              </strong> verebilir ve kasaplarımızın <strong>eve servis</strong> veya
+                              <strong>paket servis</strong> olarak adlandırabileceğimiz hizmetlerinden
+                              faydalanabilirsiniz:
+
+                            </p>
+
+                            <ul>
+                              <li>
+                                Semt seçimi yapın ve kasaptanAl.com anlaşmalı kasaplarımızı
+                                görüntüleyin.
+                              </li>
+                              <li>
+                                <strong>Online et siparişi</strong> vermek istediğiniz kasabımızı seçin
+                                ve ürününüzü sepetine ekleyin.
+                              </li>
+                              <li>
+                                Adresinizi girin ve siparişinizi tamamlayın.
+                              </li>
+                            </ul>
+                            <p>
+                              Tüm kasap iş ortaklarımız <strong>online ödeme</strong> kabul etmektedir.
+                              Sepetinizdeki et ve et ürünlerini online ödeyerek zamandan kazanın.
+                            </p>
+                            <% if (tarifsAndFoods.length) { %>
+                            <h3 class="border-bottom h5">Et Yemekleri</h3>
+                            <p>
+                              <strong>
+                                <%=product.name%>
+                              </strong>
+                               ile aşağıdaki <strong>et yemekleri</strong> yapılabilir.
+                            </p>
+                            <ul>
+                            <% tarifsAndFoods.forEach(tf=> { %>
+                              <li><a title="<%=tf.title%>" href="/et-yemekleri/<%=tf.slug%>"><%=tf.title%></a></li>
+                            <%})%>
+                          </ul>
+
+                            <% } %>
+
+
                      
                             <h3 class="border-bottom h5"><%=product.name%> Fiyatı</h3>
 
@@ -745,48 +798,6 @@
                               Ayrıca <strong>online kasap</strong>larımızın <a href="/et-fiyatlari">tüm
                                 et fiyatlarını</a> da görüntülemek isteyebilirsiniz.
                             </p>
-                            <h3 class="border-bottom h5">Online Sipariş</h3>
-
-                            <p>
-                              Yerel usta kasaplarımızdan <strong><%=product.name%> online siparişi
-                              </strong> verebilir ve kasaplarımızın <strong>eve servis</strong> veya
-                              <strong>paket servis</strong> olarak adlandırabileceğimiz hizmetlerinden
-                              faydalanabilirsiniz:
-
-                            </p>
-
-                            <ul>
-                              <li>
-                                Semt seçimi yapın ve kasaptanAl.com anlaşmalı kasaplarımızı
-                                görüntüleyin.
-                              </li>
-                              <li>
-                                <strong>Online et siparişi</strong> vermek istediğiniz kasabımızı seçin
-                                ve ürününüzü sepetine ekleyin.
-                              </li>
-                              <li>
-                                Adresinizi girin ve siparişinizi tamamlayın.
-                              </li>
-                            </ul>
-                            <p>
-                              Tüm kasap iş ortaklarımız <strong>online ödeme</strong> kabul etmektedir.
-                              Sepetinizdeki et ve et ürünlerini online ödeyerek zamandan kazanın.
-                            </p>
-                            <% if (tarifsAndFoods.length) { %>
-                            <h3 class="border-bottom h5">Et Yemekleri</h3>
-                            <p>
-                              <strong>
-                                <%=product.name%>
-                              </strong>
-                               ile aşağıdaki <strong>et yemekleri</strong> yapılabilir.
-                            </p>
-                            <ul>
-                            <% tarifsAndFoods.forEach(tf=> { %>
-                              <li><a title="<%=tf.title%>" href="/et-yemekleri/<%=tf.slug%>"><%=tf.title%></a></li>
-                            <%})%>
-                          </ul>
-
-                            <% } %>
 
                           </div>
 
@@ -823,13 +834,11 @@
 
                                   <div class="font-size-ms text-muted">
                                     <%=r.itemDate.toLocaleDateString('tr-TR', dateops)%> tarihli
-                                    <%if (view.butcher) { %>
-                                    <a
-                                      href="javascript: window.App.ProductApp.selectNewButcher('<%=r.ref2slug%>')"><%=r.ref2Text%></a>
-                                    <% } else  { %>
+                                    
+              
                                     <a href="/<%=r.ref2slug%>"><%=r.ref2Text%></a>
 
-                                    <% } %>
+                                  
                                     siparişi
                                   </div>
                                 </div>
@@ -883,8 +892,9 @@
 
 
 
-
-                <% include ./_partial/footer %>
+                 <%if (__req.query.frame != '1') { %> 
+                  <% include ./_partial/footer %>
+                 <% } %> 
                 <% include ./_partial/scripts %>
 
                 <script>
@@ -892,8 +902,39 @@
                   var prod = <%- JSON.stringify(view) %>;
                   window.App.ProductApp.product = prod;
                   window.App.WeightCalculatorApp.product = prod;
+                  function setBody() {
+
+                    $("body").animate({ opacity: 1 }, 100, function () {
+
+                    });
+                  }
+
+
+                  <%if (__req.query.frame == '1') { %>
+                  $(document).ready(function() {
+                    $('#myTabContent a').attr('target','_blank');
+                  })
+                  <% } %>
+
+                  function goShopcard() {
+                    <%if (__req.query.frame != '1') { %>
+                      window.location.href = '/alisveris-sepetim';
+                    <%} else { %>
+                      window.parent.purchase.goShopcard();
+                    <% } %>
+                  }
+
+                  function showButchers() {
+                    <%if (__req.query.frame != '1') { %>
+                      location.href = '/kasaplar';
+                    <%} else { %>
+                      window.parent.purchase.go("/kasaplar");
+                    <% } %>
+                  }
 
                   function goBack() {
+                    <%if (__req.query.frame != '1') { %>
+                    
                     var toBack;
                     if (document.referrer.indexOf(location.protocol + "//" + location.host) === 0) {
                       var current = location.protocol + "//" + location.host + location.pathname;                      
@@ -909,6 +950,9 @@
                       return false;
                     }
                     else window.location.href = "/kasap-urunleri"
+                    <% } else { %>
+                    window.parent.purchase.closePurchaseDialog()
+                    <% } %>
                   }
 
                   function gotoComments() {
@@ -932,6 +976,10 @@
                       }
                     })
                   }
+
+                  $(document).ready(function() {
+                    setBody();
+                  })
 
                   <% if (!view.butcher && __req.prefAddr) {%>
 

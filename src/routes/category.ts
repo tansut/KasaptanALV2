@@ -207,6 +207,7 @@ export default class Route extends ViewRouter {
                 }
             }
         })
+        this.subCategories = _.sortBy(this.subCategories, ["displayOrder"]).reverse() ; 
     }
 
 

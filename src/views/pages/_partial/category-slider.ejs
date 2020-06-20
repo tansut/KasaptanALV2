@@ -42,12 +42,12 @@
         <%})%>
     </div>
 </div>
-<div class="d-xs-block border-bottom d-md-none text-center mb-3">
+<!-- <div class="d-xs-block border-bottom d-md-none text-center mb-3">
     <a class="btn rounded-0 btn-sm btn-secondary" href="<%=allUrl%>">Tümü
 
         <i class="czi-arrow-right font-size-xs align-middle ml-1"></i>
     </a>
-</div>
+</div> -->
 <%} else if (mode=='view') { %>
 <div class="row">
 
@@ -88,10 +88,10 @@
 
 
         </div>
-        <div class="d-xs-block border-bottom d-md-none text-center mb-3">
+        <!-- <div class="d-xs-block border-bottom d-md-none text-center mb-3">
             <a class="btn rounded-0 btn-sm btn-secondary" href="<%=allUrl%>">Tümü »
             </a>
-        </div>
+        </div> -->
         <%} else { %>
         <div id="sc" class="table-responsive" data-simplebar>
             <div class="pt-2 d-flex">
@@ -103,7 +103,7 @@
 
 
                 <div id="cat-item-<%=reyonlar[c].slug%>"
-                    class="mr-4 pb-1  <%= selected ? (selected == reyonlar[c].slug ? 'item-slider-selected': 'item-slider-unselected') : ''%>">
+                    class="category-slider-item mr-4 pb-1   <%= selected ? (selected == reyonlar[c].slug ? 'item-slider-selected': 'item-slider-unselected') : ''%>">
                     <%subUrl = reyonlar[c].type == 'resource' ? 'et-yemekleri/':'' %>
 
 
@@ -111,7 +111,7 @@
                     <%allAdded=true%>
 
                     <%}%>
-                    
+
                         <a  class="text-center text-uppercase text-dark text-nowrap" href="<%= `/${subUrl}${reyonlar[c].slug}?go=1#items`%>">
 
 

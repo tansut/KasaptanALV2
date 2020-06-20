@@ -121,7 +121,7 @@
     
             <button data-tag="true" data-category="checkout" data-action="view/start"
               data-label="<%=__req.user ? __req.user.mphone: ''  %>" data-value="<%=shopcard.items.length%>"
-              class="btn btn-accent btn-sm  " type="submit" value="true" name="checkout" id="checkout">Sonraki Adım <i
+              class="btn btn-info btn-sm  " type="submit" value="true" name="checkout" id="checkout">Sonraki Adım <i
                 class="czi-arrow-right ml-1"></i></button>
             <%} else { %>
             <!-- <a href="/kasap-urunleri" class="btn btn-sm btn-primary ">Alışverişe Başla</a> -->
@@ -133,7 +133,7 @@
         
          <% if (!shopcard.items.length) { %>
             <div class="text-center">
-              <a class="btn btn-sm btn-accent" href="/kasap-urunleri">Alışverişe Başla<i
+              <a class="btn btn-sm btn-info" href="/kasap-urunleri">Alışverişe Başla<i
                   class="czi-arrow-right ml-2 mr-n1"></i></a>
     
     
@@ -200,7 +200,7 @@
               <% if (shopcard.items.length > 0) { %>
               <button data-tag="true" data-category="checkout" data-action="view/start"
                   data-label="<%=__req.user ? __req.user.mphone: ''  %>" data-value="<%=shopcard.items.length%>"
-                  class="btn btn-accent btn-block mt-4  " type="submit" value="true" name="checkout" id="checkout">Sonraki
+                  class="btn btn-info btn-block mt-4  " type="submit" value="true" name="checkout" id="checkout">Sonraki
                   Adım <i class="czi-arrow-right ml-1"></i></button>
       
       <%}%>

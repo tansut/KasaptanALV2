@@ -139,8 +139,8 @@ export default class Route extends ViewRouter {
         let images = await Resource.findAll({
             where: {
                 type: ["butcher-google-photos", "butcher-videos"],
-                ref1: butcher.id,
-                list: true
+                ref1: butcher.id
+         
             },
             order: [["displayOrder", "DESC"], ["updatedOn", "DESC"]]
         })

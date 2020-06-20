@@ -9,6 +9,16 @@
     gtag('config', 'UA-146976156-1');
   </script>
   <% } %>
+
+
+  <script>
+
+
+
+
+
+
+  </script>
   
   <script src="<%=__config.staticDomain %>/resource/js/vendor.min.js?v=<%=__config.versionKey%>"></script>
   <script src="<%=__config.staticDomain %>/resource/js/site.min.js?v=<%=__config.versionKey%>"></script>
@@ -16,13 +26,19 @@
   
   <script>
 
+
+
+
+
+
+
   <% if (__req.prefAddr) { %>
       window.__useraddr = <%- JSON.stringify(__req.prefAddr) %>
   <% } %>
   
     window.shopcard = {
       card: {
-        data: <%- JSON.stringify(__shopcard() || { items: [] }) %>,
+        data: <%- JSON.stringify(__shopcard() || { items: [] }) %>
       }
     };
   
@@ -326,14 +342,7 @@
   
   <%}%>
 
-  <!-- <script defer src="https://unpkg.com/web-vitals@0.2.2/dist/web-vitals.es5.umd.min.js"></script>
-<script>
-addEventListener('DOMContentLoaded', function() {
-  webVitals.getCLS(console.log);
-  webVitals.getFID(console.log);
-  webVitals.getLCP(console.log);
-});
-</script> -->
+
 
 <script>
         $('.search-sample').click(function (el) {

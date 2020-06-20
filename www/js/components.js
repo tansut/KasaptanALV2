@@ -425,10 +425,13 @@ window.initComponents = function initComponents() {
                 var self = this;
                 var butcherSlug = typeof(butcher) == 'string' ? butcher: butcher.slug;
                 var urlParams = new URLSearchParams(window.location.search);
+                
                 var returnUrl = '/' + self.product.slug + '?butcher=' + butcherSlug;
                 self.selectedUnit && (returnUrl += '&selectedUnit=' + encodeURIComponent(self.selectedUnit.unit))
                 self.quantity && (returnUrl += '&quantity=' + encodeURIComponent(self.quantity))
-                self.note && (returnUrl += '&note=' + encodeURIComponent(self.note))
+                self.note && (returnUrl += '&note=' + encodeURIComponent(self.note));
+                debugger;
+                urlParams.has('frame') ? (returnUrl += '&frame=' + encodeURIComponent(urlParams.get('frame'))):null;
                 window.location.href = returnUrl + "#noteanchor";
             },
 
@@ -554,7 +557,7 @@ window.initComponents = function initComponents() {
                         this.$nextTick(function () {
                             $('#shopcard-added-toast').toast('show')
                         })
-
+                        window.parent && window.parent.shopcard && window.parent.shopcard.card && (window.parent.shopcard.card.data = result)
                         return window.shopcard.card.data = result
                     }
                     ).finally(() => {

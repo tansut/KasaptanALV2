@@ -15,6 +15,9 @@
 
   <% if(butcher.videoInstagramStr){ %>
 
+
+
+
   <div class="modal" id="videomodal" tabindex="-1" role="dialog">
     <div class="modal-dialog" role="document">
       <div class="modal-content" style="border-radius:0px">
@@ -40,38 +43,58 @@
 
   <%}%>
 
+  <% 
+  
+  var bgCover = images.find(br=>br.tag1 == 'cover'); 
+  var profile = images.find(br=>br.tag1 == 'profile'); 
+  var imageList = images.filter(br=>br.tag1 != 'cover' && br.list == true) 
+ 
+ %>
+ 
 
-  <div class="bg-primary pt-3">
-    <div class="text-center container">
-
-      <% if (__req.user && __req.user.hasRole('admin')) {%>
-      <a target="_blank" class=" btn btn-dark btn-sm" href="/pages/admin/butcher/<%=butcher.slug%>">Düzenle</a>
-      <%}%>
-
-      <% if (__req.user && (__req.user.hasRole('admin') || __req.user.hasRole('butcher'))) {%>
-      <a target="_blank" class=" btn btn-dark btn-sm" href="/kasapsayfam">Kasap Sayfam</a>
-      <%}%>
-
-
+  <div class="text-center">
+    
 
 
 
+    <% if (__req.user && __req.user.hasRole('admin')) {%>
+    <a target="_blank" class=" btn btn-dark btn-sm" href="/pages/admin/butcher/<%=butcher.slug%>">Düzenle</a>
+    <%}%>
 
-      <div>
+    <% if (__req.user && (__req.user.hasRole('admin') || __req.user.hasRole('butcher'))) {%>
+    <a target="_blank" class=" btn btn-dark btn-sm" href="/kasapsayfam">Kasap Sayfam</a>
+    <%}%>
+
+
+
+
+
+
+
+
+  </div>
+
+
+  <div class="bg-primary">
+
+    <% if (bgCover) { %>
+      <div class="bg-cover" style="background-image: url('<%=bgCover.fileUrl%>');">
 
       </div>
+    <% } %>
 
 
 
+    <div class="container pt-2"
+    
+    <% if (bgCover) { %>
+      style="position: relative; top: -4rem;"
+    <% } %>
+    >
 
 
 
-    </div>
-
-    <div class="container pt-2">
       <div class="text-center pb-3">
-
-
 
         <img class="img-thumbnail rounded-circle mx-auto mb-3 d-block" style="width: 12rem;"
           src="<%= `${__req.helper.imgUrl('butcher-google-photos', butcher.slug)}` %>" alt="<%=butcher.name%>">
@@ -152,21 +175,21 @@
 
 
 
-      <div class="table-responsive  cz-gallery " data-simplebar>
+      <div style="opacity: 0;" class="table-responsive  cz-gallery simplebar-slider" data-simplebar>
         <div class="ml-2 d-flex ">
-          <% for(var i=0; i<images.length; i++) {%>
-
+          <% for(var i=0; i<imageList.length; i++) {%>
+            <% var img = imageList[i] %>
           <div class="mr-2 mb-2">
             <div class="item-slider item-slider-sm">
 
               <div class="card product-card pb-0  ">
-                <a data-gtrack="1" data-restype="<%=images[i].type%>" data-resref="<%= butcher.slug %>"
-                  data-restitle="<%= images[i].title || butcher.name %>" data-resid="<%=images[i].id%>"
-                  class="gallery-item <%= images[i].contentType == 'video-youtube' ? 'video-item':''%>"
-                  href="<%= `${images[i].fileUrl}`  %>"
-                  data-sub-html="&lt;h6 class=&quot;font-size-sm text-light&quot;&gt;<%= images[i].title %>&lt;/h6&gt;"><img class="rounded"
-                    src="<%= `${images[i].thumbnailFileUrl}` %>" /><span
-                    class="gallery-item-caption"><%= images[i].title %></span></a>
+                <a data-gtrack="1" data-restype="<%=img.type%>" data-resref="<%= butcher.slug %>"
+                  data-restitle="<%= img.title || butcher.name %>" data-resid="<%=img.id%>"
+                  class="gallery-item <%= img.contentType == 'video-youtube' ? 'video-item':''%>"
+                  href="<%= `${img.fileUrl}`  %>"
+                  data-sub-html="&lt;h6 class=&quot;font-size-sm text-light&quot;&gt;<%= img.title %>&lt;/h6&gt;"><img class="rounded"
+                    src="<%= `${img.thumbnailFileUrl}` %>" /><span
+                    class="gallery-item-caption"><%= img.title %></span></a>
               </div>
 
 
@@ -421,7 +444,7 @@
 
         <section class="col-md-9 pt-3 px-3 order-2">
 
-          <div id="sc" class="table-responsive mb-1" data-simplebar>
+          <div id="sc" class="pl-2 table-responsive mb-1 simplebar-slider" style="opacity: 0;" data-simplebar>
             <div id="products" class="d-flex pb-2">
 
               <% var reyonlar = (__categories.filter(p=>p.type == 'reyon' && p.status == 'active')) %>
@@ -434,7 +457,7 @@
 
 
 
-                    <a class="text-center btn rounded-0 btn-secondary  text-nowrap"
+                    <a class="text-center text-uppercase text-dark text-nowrap"
                       href="<%= `#${reyonlar[c].slug} `%>">
 
 
@@ -499,6 +522,16 @@
 
   <% include ./_partial/footer %>
   <% include ./_partial/scripts %>
+
+
+  <script>
+    $(document).ready(function() {
+      setTimeout(function() {
+        $('.simplebar-slider').css('opacity', 1)
+      },50)
+      
+    })
+  </script>
 
 
 

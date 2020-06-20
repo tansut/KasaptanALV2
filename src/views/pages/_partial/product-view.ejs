@@ -1,6 +1,7 @@
 <% var butcher = typeof(butcher) != 'undefined' ? butcher: null %>
 <% var product = typeof(product) != 'undefined' ? product: butcherProduct.product %>
 <% var badge = typeof(badge) != 'undefined' ? badge: product.tag2 %>
+<% var showPurchase = typeof(showPurchase) != 'undefined' ? showPurchase: false %>
 
 <div class="card product-card">
     <% if (badge && typeof(hideBadge) == 'undefined') { %>
@@ -10,14 +11,25 @@
     <% if (product.badge == 'video' && typeof(hideBadge) == 'undefined') { %>
     <button class="btn-wishlist btn-sm d-print-none" type="button" data-toggle="tooltip" data-placement="left" title=""
         data-original-title="Zengin içerik"><i class="czi-video"></i></button>
+
+
+
     <% } %>
+    <% if (showPurchase) { %>
+  
+        <button data-product="<%=product.slug%>" class="btn-wishlist badge-shadow btn-primary btn-sm d-print-none" type="button" title="Hızlı Satın Al"
+        ><i class="czi-add-circle"></i></button>
+
+
+
+<% } %>
 
     
     <a class="d-block overflow-hidden" href="/<%=product.slug%><%=(butcher ? `?butcher=${butcher}`:'') %>"><img
          src="<%= `${__req.helper.imgUrl('product-photos', product.slug)}` %>"
             alt="<%= product.name  %>"></a>
             <% if (typeof(hideName) == 'undefined') { %>
-    <div class="card-body text-center">
+    <div class="card-body card-block d-flex flex-column text-center">
         <h3 class="product-title font-size-md mb-1"><a
                 href="/<%= product.slug%><%=(butcher ? `?butcher=${butcher}`:'') %>"><%= product.name  %></a>
         </h3>
@@ -31,7 +43,6 @@
              
             <% } %>
 
-        
     </div>
 
 

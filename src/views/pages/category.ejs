@@ -16,6 +16,7 @@
   %>
 
 
+
   <div class="bg-primary py-4 <%=controller.category.slug%>">
     <div class="container d-lg-flex justify-content-between py-2 py-lg-3">
       <div class="order-lg-2 mb-3 mb-lg-0 pt-lg-2">
@@ -28,6 +29,7 @@
           </ol>
         </nav>
       </div>
+      <a id="items-container" class="pb-2 d-block"></a>
       <div class="media media-ie-fix d-block d-sm-flex align-items-center text-center text-sm-left">
         <a class="d-inline-block mx-auto mr-sm-4" href="/<%= controller.category.slug%>" style="width: 10rem;">
 
@@ -45,7 +47,6 @@
 
 
 
-  <a id="items-container"></a>
   <div class="container pt-3 px-0">
     <div class=" px-4 pb-4 mb-3 ">
       <%if (controller.category.slug != 'kurban' || __req.query.go) { %>
@@ -89,33 +90,34 @@
 
       <div class="table-responsive mb-3 " data-simplebar>
         <div class="d-flex pb-2">
-        <% controller.subCategories.forEach((sc, i) => { %>
-        <div class="tag-toggle mr-3" data-stag="<%=__helper.slugify(sc.title)%>">
-          <a onclick="goSubitem('<%=__helper.slugify(sc.title)%>')" class="text-uppercase text-info font-size-sm text-center text-nowrap">
-            <%=sc.title%>
-          </a>
+          <% controller.subCategories.forEach((sc, i) => { %>
+          <div class="tag-toggle mr-3" data-stag="<%=__helper.slugify(sc.title)%>">
+            <a onclick="goSubitem('<%=__helper.slugify(sc.title)%>')"
+              class="text-uppercase text-info font-size-sm text-center text-nowrap">
+              <%=sc.title%>
+            </a>
+          </div>
+          <% }) %>
         </div>
-      <% }) %>
-    </div>
 
-  </div>
+      </div>
 
 
-  <% controller.subCategories.forEach((sc, i) => { %>
-    <%if (sc.visible) { %>
-    <div data-tag="" id="<%= __helper.slugify(sc.title) %>" class="mb-3 border-bottom">
-      <h4 class="h6 mb-2 text-capitalize"><%= sc.title %></h4>
-      <span class="font-weight-light">
-        <%-controller.markdown.render(sc.description || '')%>
-      </span>
-    </div>
-    <%}%>
+      <% controller.subCategories.forEach((sc, i) => { %>
+      <%if (sc.visible) { %>
+      <div data-tag="" id="<%= __helper.slugify(sc.title) %>" class="mb-3 border-bottom">
+        <h4 class="h6 mb-2 text-capitalize"><%= sc.title %></h4>
+        <span class="font-weight-light">
+          <%-controller.markdown.render(sc.description || '')%>
+        </span>
+      </div>
+      <%}%>
     <div class="row">
     <% sc.products.forEach((product,i) => { %>
-    <div data-tag="<%= __helper.slugify(product.tag1) %>" class="col-md-3 col-6 ">
-      <%- include('./_partial/product-view.ejs', {product: product}) %>
-    </div>
-    <% if (controller.foods.length > 0 && !foodsInserted && i>controller.products.length/5) { %>
+      <div data-tag="<%= __helper.slugify(product.tag1) %>" class="col-md-3 col-6 ">
+        <%- include('./_partial/product-view.ejs', {product: product, showPurchase: true}) %>
+      </div>
+      <% if (controller.foods.length > 0 && !foodsInserted && i>controller.products.length/5) { %>
       <% foodsInserted = true; %>
       <div data-tag="" class="col-md-3 col-6">
         <%- include('./_partial/generic-item-view.ejs', {badge: 'et yemekleri', imgClass: 'rounded-circle', title: foodCategoryParams.title, href: `${foodCategoryParams.allUrl}`, src: `${ __req.helper.imgUrl('category-photos', controller.category.slug, 'thumbnail', true, 'list')}` }) %>
@@ -125,61 +127,166 @@
     <%  }) %>
     </div>
 
-  <% }) %>
+    <% }) %>
 
-  <div class="mb-3">
-    <%- include('./_partial/category-slider', { urlParams: 'go=1#items', viewCats: ['reyon', 'list'], mode:'list', title: 'Ürünlerimiz', allUrl: '/kasap-urunleri' }); %>
-  </div>
-
+    <div class="mb-3">
+      <%- include('./_partial/category-slider', { urlParams: 'go=1#items', viewCats: ['reyon', 'list'], mode:'list', title: 'Ürünlerimiz', allUrl: '/kasap-urunleri' }); %>
     </div>
 
   </div>
 
 
+  <div class="modal fade h-100" id="purchasemodal">
+    <div class="modal-dialog modal-lg modal-dialog-scrollable" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h4 class="modal-title">Satın Al</h4>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">×</span>
+          </button>
+        </div>
+        <div class="modal-body  p-0">
+
+          <div id="purchasemodal-loading" class="mt-5 d-flex justify-content-center ">
+            <div class="spinner-grow text-primary" role="status">
+              <span class="sr-only">Yükleniyor...</span>
+            </div>
+          </div>
+            
+
+        </div>
+      </div>
+    </div>
+  </div>
+
+  </div>
+
+
+
+  <style>
+  </style>
+
 
   <% include ./_partial/footer %>
-    <% include ./_partial/scripts %>
+  <% include ./_partial/scripts %>
 
-    <script>
+  <script>
 
-function goSubitem(tag) {  
-  App.scrollToAnchor('#' + tag) 
+  var p = window.purchase = {};
+
+  p.closePurchaseDialog = function() {
+    $("#purchasemodal").modal('hide');
+  }
+
+  p.goShopcard = function() {
+    p.go('/alisveris-sepetim')
+  }
+
+  p.selectAddress = function(product) {
+    p.closePurchaseDialog();
+    window.kb.selectArea(function (sender, ul) {
+      window.location.href = "/adres-belirle/" + ul.selectedDistrict.slug + '?r=' + encodeURIComponent('/<%=`${controller.category.slug}?open=`%>' + product) ;
+  });
+  }
+
+  p.go = function(loc) {
+    window.location.href = loc
+  }
+
+
+
+    function goSubitem(tag) {
+      App.scrollToAnchor('#' + tag)
+    }
+
+    function setBody() {
+
+      $("body").animate({ opacity: 1 }, 250, function () {
+
+      });
+    }
+
+
+
+    $(document).ready(function () {
+
+
+
+$("#purchasemodal").on('hide.bs.modal', function () {
+  $(this).find('iframe').remove();
+  $('#purchasemodal-loading').hide();
+
+});
+
+$('#purchasemodal').on('show.bs.modal', function () {
+  $(this).find('.modal-body').css({
+    height: window.innerHeight + 'px'
+  });
+});
+
+function openPurchaseDialog(product) {
+  var iframe = document.createElement('iframe');
+    
+    iframe.onload = function() { iframe.classList.remove('d-none'); $('#purchasemodal-loading').hide();   }; 
+    iframe.width = "100%";
+    iframe.height = "100%";
+    iframe.classList.add('d-none');
+    iframe.src =  '/' + product + '?frame=1'; 
+    $('#purchasemodal-loading').show();
+    $("#purchasemodal").find('.modal-body').prepend(iframe);
+    $("#purchasemodal").modal('show');
 }
 
 
+$('[data-product]').click(function (e) {
+  <% if (__req.prefAddr) { %>
+    openPurchaseDialog($(e.currentTarget).data('product'))
+  <% } else { %>
+  window.kb.selectArea(function (sender, ul) {
+    window.location.href = "/adres-belirle/" + ul.selectedDistrict.slug + '?r=' + encodeURIComponent('/<%=`${controller.category.slug}?open=`%>' + $(e.currentTarget).data('product')) ;
+  });
+  <% } %>
+})
 
-      $(document).ready(function () {
-        var el = document.getElementById('sc');
-        var sb = SimpleBar.instances.get(el);
+
+
+
+
+      var el = document.getElementById('sc');
+      var sb = SimpleBar.instances.get(el);
+      if (sb) {
         var scel = sb.getScrollElement();
         var scelOffset = $(scel).offset();
         var selected = $("#cat-item-<%=controller.category.slug%>").offset();
         var left = -(scelOffset.left - selected.left);
 
+        $(".category-slider-item a").click(function (e) {
+          e.currentTarget.innerHTML = '<span class="spinner-border text-primary spinner-border-sm"></span>' + e.currentTarget.innerHTML
+        })
 
-        $(scel).animate({ scrollLeft: left }, 50, function () {
+
+        $(scel).animate({ scrollLeft: left }, 10, function () {
 
         });
-        if (location.hash == '#items') {
-          $('html,body').animate({ scrollTop: $('#items-container').offset().top }, 5, function () {
-            setTimeout(function() {
-            $("body").css("opacity", 1)
-              
-            }, 100);
-          });
-          location.hash = "";
+      }
+      if (location.hash == '#items') {
+        $('html,body').animate({ scrollTop: $('#items-container').offset().top }, 5, function () {
+          setBody();
+        });
+        location.hash = "";
 
-        } else {
-          setTimeout(function() {
-            $("body").css("opacity", 1)
-              
-            }, 100);
-          if (location.hash) {
-            goSubitem(decodeURIComponent(location.hash.replace('#','')));
-          }
+      } else {
+        setBody();
+        if (location.hash) {
+          goSubitem(decodeURIComponent(location.hash.replace('#', '')));
         }
-      })
-    </script>
+      }
+      <% if (__req.query.open) { %>
+        openPurchaseDialog('<%=__req.query.open%>')
+      <% } %>
+      
+    })
+  </script>
 
 </body>
 
