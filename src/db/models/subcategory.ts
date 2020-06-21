@@ -13,7 +13,7 @@ class SubCategory extends BaseModel<SubCategory> {
     @ForeignKey(() => Product)
     categoryid: number
 
-    @BelongsTo(() => Product, "categoryid")
+    @BelongsTo(() => Category, "categoryid")
     category: Category;
 
     @Column({

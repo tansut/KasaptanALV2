@@ -1,5 +1,4 @@
 
-
 .reyon-navbar {
   li {
     img {
@@ -45,7 +44,18 @@ a:hover {
   height: 20rem;
 }
 
+.fs-modal-dialog {
+  height: 100%;
+  padding: 0;
 
+  .modal-content {
+  height: 100%;
+  min-height: 100%;
+  height: auto;
+  border-radius: 0;
+}
+
+}
 
 
 

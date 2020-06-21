@@ -3,7 +3,6 @@
   border: 0;
 
   .product-card-actions,
-  > .btn-wishlist,
   .badge {
     position: absolute;
     top: $spacer * .75;
@@ -45,12 +44,18 @@
 // Wishlist button
 
 .btn-wishlist {
+  position: absolute;
+
+  z-index: 5;
+
   width: $btn-wishlist-size;
   height: $btn-wishlist-size;
   padding: 0 !important;
   transition: $btn-transition;
   border: 0;
-  border-radius: 50%;
+   border-radius: 0%;
+   top: 0;
+   right: 0;
   // background-color: $btn-wishlist-bg;
   // color: $btn-wishlist-color;
   text-align: center;
