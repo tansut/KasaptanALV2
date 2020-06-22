@@ -3,7 +3,8 @@
   var mode = typeof(mode) == 'undefined' ? 'tarif': 'food';
   var targetUrl = typeof(allUrl) == 'undefined' ? (mode == 'tarif' ? '/et-yemekleri': '/et-yemekleri'): allUrl;
   var subUrl = mode == 'tarif' ? 'yemek-tarifi': 'ile-yapin';
- var limit = typeof(limit) == 'undefined' ? 8: limit;
+  var limit = typeof(limit) == 'undefined' ? 8: limit;
+  var allUrl = typeof(allUrl) == 'undefined' ? '/et-yemekleri': allUrl
 
 %>
 

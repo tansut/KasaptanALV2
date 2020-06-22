@@ -16,14 +16,13 @@
 
   <!-- Page Content -->
 
-  <div class="page-title-overlap bg-accent pt-4">
+  <div class="bg-primary py-4">
     <div class="container d-lg-flex justify-content-between py-2 py-lg-3">
       <div class="order-lg-2 mb-3 mb-lg-0 pt-lg-2">
-        <nav aria-label="breadcrumb">
+        <nav aria-label="breadcrumb" class="d-none d-lg-block">
           <ol class="breadcrumb breadcrumb-light flex-lg-nowrap justify-content-center justify-content-lg-star">
             <li class="breadcrumb-item"><a class="text-nowrap" href="/"><i class="czi-home"></i></a></li>
             <li class="breadcrumb-item"><a class="text-nowrap" href="/kasaplar">Kasaplar</a></li>
-            <li class="breadcrumb-item active" aria-current="page"><%= controller.address.display %></li>
           </ol>
         </nav>
       </div>
@@ -45,7 +44,7 @@
 
 
 
-  <div class="container">
+  <div class="container mt-3">
 
     <section id="butchers-section">
 
@@ -59,7 +58,7 @@
 
           <div class="card h-100">
             <a href="<%= `/${butchers[i].slug}` %>">
-              <img src="<%= `${__req.helper.imgUrl('butcher-google-photos', butchers[i].slug)}` %>"
+              <img width="500" height="500" src="<%= `${__req.helper.imgUrl('butcher-google-photos', butchers[i].slug)}` %>"
                   class="card-img-top" alt="<%= `/${butchers[i].name}` %>">
           </a>
 

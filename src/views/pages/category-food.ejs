@@ -15,33 +15,27 @@
   <%-include('./_partial/food-select-alternatives.ejs', {}) %>
 
 
-  <div class=" bg-primary py-4">
+  <div class="bg-primary py-4">
     <div class="container d-lg-flex justify-content-between py-2 py-lg-3">
       <div class="order-lg-2 mb-3 mb-lg-0 pt-lg-2">
-        <nav aria-label="breadcrumb">
+        <nav aria-label="breadcrumb" class="d-none d-lg-block" >
           <ol class="breadcrumb breadcrumb-light flex-lg-nowrap justify-content-center justify-content-lg-star">
             <li class="breadcrumb-item"><a class="text-nowrap" href="/"><i class="czi-home"></i></a></li>
             <li class="breadcrumb-item text-nowrap"><a href="/et-yemekleri">Et Yemekleri</a>
             </li>
-            <li class="breadcrumb-item text-nowrap active" aria-current="page"><%= controller.category.name %></li>
           </ol>
         </nav>
       </div>
-      <div class="media media-ie-fix d-block d-sm-flex align-items-center text-center text-sm-left">
-        <a class="d-inline-block mx-auto mr-sm-4" href="/<%= controller.category.slug%>" style="width: 10rem;">
-
-          <img class="rounded-circle" src="<%=`${__req.helper.imgUrl('category-photos', controller.category.slug)}`%>"
-            alt="<%= controller.category.name%>"></a>
-        <div class="media-body pt-2">
-
-
-          <h1 class="h3 text-light "><%= controller.category.name %></h1>
-          <h2 class="lead h4 text-light"><%= controller.category.shortdesc %></h2>
-
-        </div>
+      <div class="order-lg-1 pr-lg-4 text-center text-lg-left">
+        <h1 class="h3 text-light "><%= controller.category.name %></h1>
+        <h2 class="lead h4 text-light"><%= controller.category.shortdesc %></h2>
       </div>
     </div>
   </div>
+
+
+
+
 
   <% var reyonlar = __helper.foodCategories.filter(p=>p.slug=='tarifler') %>
   <div class="container px-0">

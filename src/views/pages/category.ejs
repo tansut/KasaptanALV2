@@ -5,7 +5,7 @@
   <% include ./_partial/head %>
 </head>
 
-<body style="<%=__req.query.go == '1' ? 'opacity: 0;':'opacity: 0;'%>">
+<body>
   <% include ./_partial/header %>
   <link href="https://www.kasaptanal.com/<%=controller.category.slug%>" rel="canonical">
 
@@ -19,35 +19,33 @@
 
   <a id="items-container" class=" d-block"></a>
 
-  <div class="bg-primary py-4 <%=controller.category.slug%>">
+  <div class="bg-primary py-4">
     <div class="container d-lg-flex justify-content-between py-2 py-lg-3">
       <div class="order-lg-2 mb-3 mb-lg-0 pt-lg-2">
-        <nav aria-label="breadcrumb">
+        <nav aria-label="breadcrumb" class="d-none d-lg-block">
           <ol class="breadcrumb breadcrumb-light flex-lg-nowrap justify-content-center justify-content-lg-star">
             <li class="breadcrumb-item"><a class="text-nowrap" href="/"><i class="czi-home"></i></a></li>
             <li class="breadcrumb-item text-nowrap"><a href="/kasap-urunleri">Ürünler</a>
             </li>
-            <li class="breadcrumb-item text-nowrap active" aria-current="page"><%= controller.category.name %></li>
           </ol>
         </nav>
       </div>
-      <div class="media media-ie-fix d-block d-sm-flex align-items-center text-center text-sm-left">
-        <a class="d-inline-block mx-auto mr-sm-4" href="/<%= controller.category.slug%>" style="width: 10rem;">
-
-          <img width="500" height="500" class="rounded-circle" src="<%=`${__req.helper.imgUrl('category-photos', controller.category.slug)}`%>"
-            alt="<%= controller.category.name%>"></a>
-        <div class="media-body pt-2">
-
-
-          <h1 class="h3 text-light"><%= controller.category.name %></h1>
-          <h2 class=" text-light h4 lead"><%= controller.category.shortdesc %></h2>
-        </div>
+      <div class="order-lg-1 pr-lg-4 text-center text-lg-left">
+        <h1 class="h3 text-light"><%= controller.category.name %></h1>
+        <h2 class=" text-light h4 lead"><%= controller.category.shortdesc %></h2>
       </div>
     </div>
   </div>
 
 
-  <div id="main" class="container pt-3 px-0">
+
+  <div id="items-loading" class="mt-5 d-flex justify-content-center ">
+    <div class="spinner-grow text-primary" role="status">
+      <span class="sr-only">Yükleniyor...</span>
+    </div>
+  </div>
+
+  <div id="main" style="<%=__req.query.go == '1' ? 'opacity: 0;':'opacity: 0;'%>" class="container pt-3 px-0">
     <div class=" px-4 pb-4 mb-3 ">
       <%if (controller.category.slug != 'kurban' || __req.query.go) { %>
 
@@ -83,7 +81,7 @@
       </div>
       <% } %>
       <%if (controller.category.slug != 'kurban' || __req.query.go) { %>
-      <div class="py-1 mb-2">
+      <div id="cat-slider"  class="py-1 mb-2">
         <%- include('./_partial/category-slider', { selected: controller.category.slug, mode:'browse', header: false, titles: false, viewCats: ['reyon', 'list'], title: 'Tüm Ürünlerimiz', allUrl: '/kasap-urunleri' }); %>
       </div>
       <% } %>
@@ -93,7 +91,7 @@
           <% controller.subCategories.forEach((sc, i) => { %>
           <div class="tag-toggle mr-3" data-stag="<%=__helper.slugify(sc.title)%>">
             <a onclick="goSubitem('<%=__helper.slugify(sc.title)%>')"
-              class="text-uppercase text-info font-size-sm text-center text-nowrap">
+              class="text-uppercase <%= controller.subCategories.length == 1 ? 'text-dark':  'text-info' %> font-size-sm text-center text-nowrap">
               <%=sc.title%>
             </a>
           </div>
@@ -213,10 +211,13 @@
     }
 
     function setBody() {
+      setTimeout(function() {
+      $("#items-loading").remove();
+        $("#main").css('opacity', '1');        
+      }, 100);
+      // $("#main").animate({ opacity: 1 }, 50, function () {
 
-      $("body").animate({ opacity: 1 }, 100, function () {
-
-      });
+      // });
     }
 
 
@@ -286,9 +287,10 @@
         }
       }
       if (location.hash == '#items') {
-         $('html,body').animate({ scrollTop: $('#items-container').offset().top }, 5, function () {
-          setBody();
-         });
+        setBody();
+        //  $('html,body').animate({ scrollTop: $('#items-container').offset().top }, 5, function () {
+          
+        //  });
         location.hash = "";
 
       } else {
