@@ -34,7 +34,7 @@
       <div class="media media-ie-fix d-block d-sm-flex align-items-center text-center text-sm-left">
         <a class="d-inline-block mx-auto mr-sm-4" href="/<%= controller.category.slug%>" style="width: 10rem;">
 
-          <img class="rounded-circle" src="<%=`${__req.helper.imgUrl('category-photos', controller.category.slug)}`%>"
+          <img width="500" height="500" class="rounded-circle" src="<%=`${__req.helper.imgUrl('category-photos', controller.category.slug)}`%>"
             alt="<%= controller.category.name%>"></a>
         <div class="media-body pt-2">
 
@@ -77,7 +77,7 @@
             usta, <strong>yerel ve inançlı</strong> kasaplardır.
           </p>
           <p>
-            <a class="btn btn-shadow btn-warning" href="/blog/kurban-ibadeti" role="button">Kurban İbadeti »</a></p>
+            <a class="btn btn-shadow btn-warning" href="/blog/kurban-ibadeti" role="button">Kurban İbadeti &raquo;</a></p>
         </div>
 
       </div>
@@ -133,8 +133,22 @@
       <%- include('./_partial/category-slider', { urlParams: 'go=1#items', viewCats: ['reyon', 'list'], mode:'list', title: 'Ürünlerimiz', allUrl: '/kasap-urunleri' }); %>
     </div>
 
+ 
+    <% if (controller.category.mddesc) { %>
+      <div class="collapse-container page-footer-text">
+        <div class="collapse" id="collapseSummary">
+          <%- controller.category.mddesc && controller.Markdown.render(controller.category.mddesc) %>
+  
+        </div>
+        <a class="collapsed text-dark" data-toggle="collapse" href="#collapseSummary" aria-expanded="false"
+          aria-controls="collapseSummary"></a>
+      </div>
+  
+      <%}%> 
+
   </div>
 
+ 
 
 
 

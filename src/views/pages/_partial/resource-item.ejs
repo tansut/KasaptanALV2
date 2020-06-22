@@ -5,7 +5,7 @@ var targetUrl = (mode == 'tarif' ? '/et-yemekleri': '/et-yemekleri');
 var resourceUrl = targetUrl + '/' + (resource.slug || resource.id)  + (mode=='tarif' ? '':'')
 
 %>
-<div class="card h-100 shadow-sm pb-0 product-card   rounded-0">
+<div class="card h-100 shadow-sm pb-0 product-card rounded-0">
 
   <% if (typeof(showAll) != 'undedined') { %>
     <a data-gtrack="1" data-restype="<%=resource.tag1 %>" data-resref="<%= resource.slug %>" data-restitle="<%= resource.title %>" class="gallery-item d-block overflow-hidden gallery-item <%= resource.contentType == 'video-youtube' ? 'video-item':''%>"
@@ -15,7 +15,7 @@ var resourceUrl = targetUrl + '/' + (resource.slug || resource.id)  + (mode=='ta
         <%=  '<a data-tag="true" data-category="food" data-action="eti-bizden" data-label="'%><%=resource.slug%><%='" href="'%><%= include(`./addtonotelink.ejs`, {resource: resource, subUrl: subUrl, disableSlider: true  }) %>   <%='"class="btn btn-block btn-primary btn-sm rounded-0"><i class=" czi-thumb-up mr-2"></i>'%><%= 'Eti Bizden' + '</button>' %>
         <% } %>
         " <% } %>>
-      <img <% if (resource.contentType == 'video-youtube') { %>
+      <img width="500" height="500" <% if (resource.contentType == 'video-youtube') { %>
         src="<%= (resource.thumbnailUrl ? resource.thumbnailFileUrl: null) ||  `${__req.helper.imgUrl('product-photos', resource.product.slug)}` %>"
         <% } else { %> src="<%= `${resource.thumbnailFileUrl}` %>" <% } %> alt="<%= resource.title  %>">
     </a>

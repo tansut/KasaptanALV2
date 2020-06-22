@@ -42,12 +42,6 @@
 
 
   <div class="container mt-3">
-
-
-
-    
-
-
       <div class="row">
         <% for(var i=0; i<butchers.length; i++) {%>
 
@@ -97,7 +91,49 @@
 
   <% } %>
 
-
+  <% if (__req.query.nodesc!='1') { %>
+    <div class="container mb-3">
+        <div class="collapse-container page-footer-text">
+            <div class="collapse" id="collapseSummary">
+                <h2>Online Kasaplar</h2>
+              <p>
+                  Birbirinden seçkin kasaplar KasaptanAl.com ile, <strong>sağlıklı ve lezzetli et ürünlerine online</strong> ulaşmanızı sağlamakta.      
+                <strong>Şehrin en iyi kasaplarını</strong> saydam, ölçülebilir ve doğrulanabilir kriterlerle belirliyoruz. Örneğin <strong>mesleki deneyim olarak en az 10 yılı</strong> şart koşuyoruz.                 
+              </p>
+              <h3>
+                İyi Kasap, iyi et, sağlıklı yaşam
+              </h3>
+              <p>
+                Sağlıklı bir yaşam için sağlıklı beslenme şart. Kırmızı ve beyaz et ve et ürünleri de sağlıklı bir diyetin önemli parçalarından. Bu ürünleri nereden aldığınız belki de <strong>sağlıklı beslenmenin en kritik sorusu</strong>.
+                Bu aşamada KasaptanAl.com olarak iş ortaklarımız <strong>iyi eti size garanti ediyor</strong>. Çünkü tüm iş ortaklarımız; yerel, et konusunda deneyimli, kendi işini yapan <strong>dürüst kasaplar</strong>.                                
+              </p>
+              <h3>Neden Et Kasaptan Alınır?</h3>
+              <p>
+                Uzun yıllardır yaygın kullanılan bu sözün arkasında önemli gerçekler var.
+                <ul>
+                  <li>
+                    <strong>Kasaplar</strong> yerel işletmelerdir. Bir kasap müşterilerine en iyi eti sağlamalıdır ki işletmesini devam ettirebilsin.
+                  </li>
+                  <li>
+                    <strong>Kasaplar</strong> iyi eti bilmek zorundadır. Yerel bir işletme olarak et konusunda deneyim kazanırlar.
+                  </li>
+                  <li>
+                    <strong>Kasaplar</strong> hayvan seçimi konusunda deneyimlidir. Bazıları yerel tedarikçilerle çalışırken bazıları kendi çiftliklerine sahiptir.
+                  </li>
+                </ul>
+              </p>
+              <h3>
+                KasaptanAl.com ile En İyi Kasaplar Online
+              </h3>
+              <p>
+                Türkiye'nin <strong>online kasap platformu</strong> ile hedeflerimiz, şehrin en iyi ve <strong>en yakın kasaplarını</strong> keşfetmenizi sağlamak, hızlı, kolay ve kârlı bir kasap alışverişi deneyimi yaşamanız. Bu amacımızı gerçekleştirmek için web sitemizi devamlı güncelliyoruz, iş ortağı kasaplarımızdan ve sizlerden gelen yorumları titizlikle değerlendiriyoruz.
+              </p>
+            </div>
+            <a class="collapsed text-dark" data-toggle="collapse" href="#collapseSummary" aria-expanded="false"
+                aria-controls="collapseSummary"></a>
+        </div>
+    </div>
+    <% } %>
 
 
 

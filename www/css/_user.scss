@@ -20,6 +20,17 @@
   background-color: #cc7e23 !important;
 }
 
+img {
+  height: auto;
+  width: 100%;
+}
+
+.product-card {
+  
+
+  
+}
+
 a:hover {
   cursor:pointer;
  }
@@ -91,7 +102,7 @@ a:hover {
 }
 
 .collapse-container div.collapse:not(.show) {
-    height: 38px !important;
+    height: 6rem !important;
     overflow: hidden;
   
     display: -webkit-box;

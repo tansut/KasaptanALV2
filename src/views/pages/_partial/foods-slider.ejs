@@ -16,16 +16,15 @@
 <%}%> -->
 
 <div>
-  <div class="bg-secondary p-2 d-flex flex-nowrap justify-content-between align-items-center">
-      <a class="media align-items-center align-self-center" href="<%=targetUrl%>">
-        <img class="rounded-circle header-img d-none d-md-block"   src="<%= typeof(iconUrl) == 'undefined' ? __config.staticDomain + '/resource/img/logo-home.jpg': iconUrl%>" alt="<%=title%>">
-      <div class="media-body pl-2">
-        <h3 class="h6 mb-0 mr-2"><%= typeof(title) != 'undefined' ? title: 'Et Yemek Tarifleri' %></h3>
-        <span class="font-size-ms text-muted"><%= typeof(text) != 'undefined' ? text: ''%></span>
-      </div></a>
-      <a class=" align-self-center d-md-block btn btn-sm" href="<%=targetUrl%>">Tümü<i
-          class="czi-arrow-right font-size-xs align-middle ml-1"></i></a>                        
-  </div>
+
+  <div class="bg-secondary d-flex flex-nowrap justify-content-between align-items-center">
+    <a class="d-block py-3 pl-3" href="<%=allUrl%>">
+        <h3 class="h6 mb-0"><%= typeof(title) != 'undefined' ? title: 'Et Yemek Tarifleri' %></h3>
+    </a>
+    <a class="d-none d-md-block btn btn-sm" href="<%=targetUrl%>">Tümü &raquo;</a>
+</div>
+
+
 
 <% if(typeof (showDesc) != 'undefined') {  %>
 
@@ -90,7 +89,7 @@
                     <div class="item-slider item-slider-sm-all">
                       <a class="d-block h-100" href="<%=targetUrl%>">
                         <div class="d-flex h-100 justify-content-end">
-                          <img alt="Tümünü Göster" class="w-auto h-50 align-self-center" src="<%=__config.staticDomain %>/resource/img/view-all.png" alt="Tamamını Göster">
+                          <img width="500" height="500" alt="Tümünü Göster" class="w-auto h-50 align-self-center" src="<%=__config.staticDomain %>/resource/img/view-all.png" alt="Tamamını Göster">
                         </div>
     
                       </a>

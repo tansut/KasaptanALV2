@@ -48,6 +48,14 @@
 <link rel="stylesheet" media="screen" href="<%=__config.staticDomain %>/resource/css/vendor.min.css?v=<%=__config.versionKey%>">
 <link rel="stylesheet" media="screen" id="main-styles" href="<%=__config.staticDomain %>/resource/css/theme.min.css?v=<%=__config.versionKey%>">
 
+<script defer src="https://unpkg.com/web-vitals@0.2.2/dist/web-vitals.es5.umd.min.js"></script>
+<script>
+addEventListener('DOMContentLoaded', function() {
+  webVitals.getCLS(console.log);
+  webVitals.getFID(console.log);
+  webVitals.getLCP(console.log);
+});
+</script>
 
 <% if (config.pagetrack == "true" && (!__req.user || !__req.user.hasRole('admin') )) { %>
 
@@ -56,6 +64,8 @@
   j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
   'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
   })(window,document,'script','dataLayer','GTM-TJ6248F');</script>
+
+
 
 
 <!-- Hotjar Tracking Code for https://www.kasaptanal.com/ -->

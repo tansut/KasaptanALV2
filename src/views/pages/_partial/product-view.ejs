@@ -25,7 +25,7 @@
 <% } %>
 
     
-    <a class="d-block overflow-hidden" href="/<%=product.slug%><%=(butcher ? `?butcher=${butcher}`:'') %>"><img
+    <a class="d-block overflow-hidden" href="/<%=product.slug%><%=(butcher ? `?butcher=${butcher}`:'') %>"><img width="500" height="500"
          src="<%= `${__req.helper.imgUrl('product-photos', product.slug)}` %>"
             alt="<%= product.name  %>"></a>
             <% if (typeof(hideName) == 'undefined') { %>
