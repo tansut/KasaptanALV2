@@ -184,7 +184,7 @@ export default class Route extends ViewRouter {
         let serving = selectedButchers.servingL3.concat(selectedButchers.servingL2).concat(<any>selectedButchers.takeOnly);
 
 
-        if (selectedButchers.best && this.req.query.butcher && (selectedButchers.best.butcher.slug != this.req.query.butcher) {
+        if (selectedButchers.best && this.req.query.butcher && (selectedButchers.best.butcher.slug != this.req.query.butcher)) {
             serving = [];
             selectedButchers.best = null;
         }
