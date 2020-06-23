@@ -56,7 +56,7 @@ gulp.task('server.dev', () => {
 gulp.task('server.tsc', tsh);
 
 function deployClean() {
-    return del([deployDir + "bin_"])
+    return del([deployDir + "bin"])
 }
 
 // function deployViews() {
@@ -65,7 +65,7 @@ function deployClean() {
 // }
 
 function deployBin() {
-    return tsc(deployDir + "bin_", false);
+    return tsc(deployDir + "bin", false);
 }
 
 // function deployRemaning() {

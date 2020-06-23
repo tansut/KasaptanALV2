@@ -25,40 +25,44 @@ module.exports = function (shipit) {
 
     shipit.blTask('install', async function () {
         try {
-            await shipit.remote("nvm use v12.18.1");
-            await shipit.remote("pm2 stop kasaptanal && pm2 delete kasaptanal");
+            //await shipit.remote("nvm use v12.18.1");
+            //await shipit.remote("pm2 stop kasaptanal && pm2 delete kasaptanal");
         } catch {
 
         }
 
-        await shipit.remote("nvm use v12.18.1" + "; export NODE_OPTIONS=--max-old-space-size=4096; cd " + this.currentPath + "; npm install --force; npm prune");
-        // await shipit.remote();
-        // await shipit.remote();
+        await shipit.remote("nvm use v12.18.1");
+        await shipit.remote("export NODE_OPTIONS=--max-old-space-size=4096");
+        await shipit.remote("cd " + shipit.releasePath);
+        await shipit.remote("npm install --force; npm prune");
+
+
+        
     });
 
     shipit.blTask('aws', async function () {
 
-        await shipit.remote("nvm use v12.18.1; cd " + this.currentPath + "; ./node_modules/gulp/bin/gulp.js aws.deploy");
+        await shipit.remote("nvm use v12.18.1; cd " + shipit.releasePath + "; ./node_modules/gulp/bin/gulp.js aws.deploy");
 
     });    
 
 
     shipit.blTask('restart', async function () {
         var self = this
-            , script = `${this.currentPath}/bin/kasaptanal.js -i max --node-args="--icu-data-dir=${this.currentPath}/node_modules/full-icu"`
-            , startScript = 'source /home/ec2-user/{env}; pm2 start {script}'
+            , script = `${shipit.releasePath}/bin/kasaptanal.js -i max --node-args="--icu-data-dir=${shipit.releasePath}/node_modules/full-icu"`
+            , startScript = 'source /home/ec2-user/{env} && (pm2 restart kasaptanal || pm2 start {script})'
             , stopScript = 'pm2 stop kasaptanal && pm2 delete kasaptanal'
             , env = this.options.environment
             , envFile = (env === 'production') ? 'production.kasaptanal.env' : 'production.kasaptanal.env'
 
         try {
-            await shipit.remote(stopScript);
+            //await shipit.remote(stopScript);
         } catch {
 
         }
 
         try {
-            await shipit.remote(`mv ${this.currentPath}/bin_ ${this.currentPath}/bin`);
+            //await shipit.remote(`mv ${this.currentPath}/bin_ ${this.currentPath}/bin`);
         } catch {
 
         }
@@ -73,7 +77,7 @@ module.exports = function (shipit) {
         await shipit.remote(startScript);
     });
 
-    shipit.on('published', function () {
+    shipit.on('deployed',  () => {
         shipit.start('install', 'restart', 'aws');
     });
 };
