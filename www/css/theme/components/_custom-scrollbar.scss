@@ -3,6 +3,7 @@
 // based on https://github.com/Grsmto/simplebar
 // --------------------------------------------------
 
+$scrollbar-width:0.275rem;
 .simplebar-content {
   padding-right: 1rem !important;
 }
@@ -28,16 +29,16 @@
   }
 
   &.simplebar-horizontal {
-    height: $scrollbar-width !important;
+     height: $scrollbar-width !important;
     .simplebar-scrollbar {
       top: 0;
-      height: $scrollbar-width !important;
+       height: $scrollbar-width !important;
     }
   }
 }
 
 [data-simplebar] {
-  overflow-y: auto;
+  // overflow-y: auto;
   padding-right: 1rem !important;
   &::-webkit-scrollbar {
     width: $scrollbar-width;

@@ -19,7 +19,7 @@
 
   <a id="items-container" class=" d-block"></a>
 
-  <div class="bg-primary py-4">
+  <div class="bg-primary py-3" style="height: 14rem;">
     <div class="container d-lg-flex justify-content-between py-2 py-lg-3">
       <div class="order-lg-2 mb-3 mb-lg-0 pt-lg-2">
         <nav aria-label="breadcrumb" class="d-none d-lg-block">
@@ -39,7 +39,7 @@
 
 
 
-  <div style="<%=__req.query.go == '1' ? 'opacity: 0;':'opacity: 0;'%>" class="container pt-3 px-0 slider">
+  <div class="container pt-3 px-0">
     <div class=" px-4 pb-4 mb-3 ">
       <%if (controller.category.slug != 'kurban' || __req.query.go) { %>
 
@@ -75,8 +75,8 @@
       </div>
       <% } %>
       <%if (controller.category.slug != 'kurban' || __req.query.go) { %>
-      <div id="cat-slider"  class="py-1 mb-2">
-        <%- include('./_partial/category-slider', { selected: controller.category.slug, mode:'browse', header: false, titles: false, viewCats: ['reyon', 'list'], title: 'Tüm Ürünlerimiz', allUrl: '/kasap-urunleri' }); %>
+      <div id="cat-slider" class="py-2">
+        <%- include('./_partial/category-slider', { subUrl: '',  selected: controller.category.slug, mode:'browse', header: false, titles: false, viewCats: ['reyon', 'list'], title: 'Tüm Ürünlerimiz', allUrl: '/kasap-urunleri' }); %>
       </div>
       <% } %>
 

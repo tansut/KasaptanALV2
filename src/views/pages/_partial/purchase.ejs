@@ -58,7 +58,7 @@
     }
 
     function setBody() {
-      $(".slider").css('opacity', '1'); 
+       //$(".slider").css('opacity', '1'); 
     }
 
 
@@ -118,11 +118,15 @@
           $(".category-slider-item a").click(function (e) {
             e.currentTarget.innerHTML = '<span class="spinner-border text-primary spinner-border-sm"></span>' + e.currentTarget.innerHTML
           })
-
-
-          $(scel).animate({ scrollLeft: left }, 10, function () {
-              setBody();
-          });
+          scel.scrollLeft = left;
+          // setTimeout(function() {
+          //   sb.hideScrollbars()
+            
+          // });
+          // $(scel).animate({ scrollLeft: left }, 100, function () {
+          //     sb.hideScrollbars()
+          //     setBody();
+          // });
         }
       }
       if (location.hash == '#items') {

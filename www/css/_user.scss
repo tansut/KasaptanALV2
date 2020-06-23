@@ -25,6 +25,12 @@ img {
   width: 100%;
 }
 
+.simplebar-scrollbar::before {
+  background-color:$scrollbar-bg;
+}
+
+
+
 .product-card {
   
 
