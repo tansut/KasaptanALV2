@@ -31,10 +31,8 @@ module.exports = function (shipit) {
 
         }
 
-        await shipit.remote("nvm use v12.18.1");
-        await shipit.remote("export NODE_OPTIONS=--max-old-space-size=4096");
-        await shipit.remote("cd " + shipit.releasePath);
-        await shipit.remote("npm install --force; npm prune");
+        await shipit.remote("nvm use v12.18.1" + "; export NODE_OPTIONS=--max-old-space-size=4096; cd " + shipit.releasePath + "; npm install --force; npm prune");
+
 
 
         
