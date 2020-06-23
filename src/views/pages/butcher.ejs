@@ -429,12 +429,14 @@
             <div class="mb-3" data-simplebar>
               <div class="d-flex pb-2">
                 <% controller.subCategories.forEach((sc, i) => { %>
+                <% if (sc.products.length > 0) { %>
                 <div class="tag-toggle mr-3" data-stag="<%=__helper.slugify(sc.title)%>">
                   <a onclick="goSubitem('<%=__helper.slugify(sc.title)%>')"
                     class="text-uppercase <%= controller.subCategories.length == 1 ? 'text-dark':  'text-info' %> font-size-sm text-center text-nowrap">
                     <%=sc.title%>
                   </a>
                 </div>
+                <% } %>
                 <% }) %>
               </div>
 

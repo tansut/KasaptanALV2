@@ -153,7 +153,7 @@ export class PaymentRouter extends ViewRouter {
 
     get paymentProvider() {
         if (!this._paymentProvider) {
-            let payment = CreditcardPaymentFactory.getInstance(this.req.query.provider);
+            let payment = CreditcardPaymentFactory.getInstance(this.req.query.provider as string);
             let log = new SiteLogRoute(this.constructorParams);
             payment.logger = log;
             payment.userid = this.req.user ? this.req.user.id : null;

@@ -108,7 +108,7 @@ export default class Route extends ViewRouter {
             }, true)
         }
         if (this.req.query.r)
-            this.res.redirect(this.req.query.r);
+            this.res.redirect(this.req.query.r as string);
         else this.res.redirect('/')
     }
 

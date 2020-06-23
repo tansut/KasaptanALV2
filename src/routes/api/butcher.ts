@@ -12,7 +12,7 @@ import * as fs from "fs";
 import * as mime from "mime-types"
 import Butcher from '../../db/models/butcher';
 import * as Jimp2 from 'jimp'
-const Jimp = <Jimp2.default>require('jimp');
+const Jimp = <Jimp2>require('jimp');
 import * as path from "path"
 import * as stream from "stream"
 
@@ -22,7 +22,7 @@ export default class Route extends ApiRouter {
     @Auth.Anonymous()
     googleSearchRoute() {
         if (this.req.query.q)
-            return this.googleSearch(this.req.query.q).then((data) => this.res.send(data))
+            return this.googleSearch(this.req.query.q as string).then((data) => this.res.send(data))
         throw new ValidationError("Bişey gir")
     }
 

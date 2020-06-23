@@ -25,20 +25,20 @@ module.exports = function (shipit) {
 
     shipit.blTask('install', async function () {
         try {
-            await shipit.remote("nvm use v12.10.0");
+            await shipit.remote("nvm use v12.18.1");
             await shipit.remote("pm2 stop kasaptanal && pm2 delete kasaptanal");
         } catch {
 
         }
 
-        await shipit.remote("nvm use v12.10.0" + "; export NODE_OPTIONS=--max-old-space-size=4096; cd " + this.currentPath + "; npm install --force; npm prune");
+        await shipit.remote("nvm use v12.18.1" + "; export NODE_OPTIONS=--max-old-space-size=4096; cd " + this.currentPath + "; npm install --force; npm prune");
         // await shipit.remote();
         // await shipit.remote();
     });
 
     shipit.blTask('aws', async function () {
 
-        await shipit.remote("nvm use v12.10.0; cd " + this.currentPath + "; ./node_modules/gulp/bin/gulp.js aws.deploy");
+        await shipit.remote("nvm use v12.18.1; cd " + this.currentPath + "; ./node_modules/gulp/bin/gulp.js aws.deploy");
 
     });    
 

@@ -36,7 +36,7 @@ export default class Route extends ViewRouter {
     @Auth.Anonymous()
     async viewRoute() {
         if (this.req.query.go && this.req.query.total && this.req.query.rate) {
-            this.calculateRoute(parseFloat(this.req.query.total), parseFloat(this.req.query.rate))
+            this.calculateRoute(parseFloat(this.req.query.total as string), parseFloat(this.req.query.rate as string))
         }
         else this.renderPage();
     }

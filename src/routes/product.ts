@@ -10,7 +10,7 @@ import * as sq from 'sequelize';
 
 import * as path from "path"
 import * as Jimp2 from 'jimp'
-const Jimp = <Jimp2.default>require('jimp');
+const Jimp = <Jimp2>require('jimp');
 import * as fs from "fs"
 import moment = require('moment');
 import Category from '../db/models/category';
@@ -151,14 +151,14 @@ export default class Route extends ViewRouter {
 
         let shopcard = await ShopCard.createFromRequest(this.req);
 
-        this.shopCardIndex = this.req.query.shopcarditem ? parseInt(this.req.query.shopcarditem) : -1;
+        this.shopCardIndex = this.req.query.shopcarditem ? parseInt(this.req.query.shopcarditem as string) : -1;
         this.shopCardItem = (this.shopCardIndex >= 0 && shopcard.items) ? shopcard.items[this.shopCardIndex] : null;
 
-        let butcher = this.shopCardItem ? await Butcher.getBySlug(this.shopCardItem.product.butcher.slug) : (this.req.query.butcher ? await Butcher.getBySlug(this.req.query.butcher) : null);
+        let butcher = this.shopCardItem ? await Butcher.getBySlug(this.shopCardItem.product.butcher.slug) : (this.req.query.butcher ? await Butcher.getBySlug(this.req.query.butcher as string) : null);
 
         this.foods = await api.getTarifVideos([product])
         if (this.req.query.semt) {
-            let l3 = await Area.getBySlug(this.req.query.semt);
+            let l3 = await Area.getBySlug(this.req.query.semt as string);
             if (l3 && l3.level == 3) {
                 await this.req.helper.setPreferredAddress({
                     level3Id: l3.id
@@ -318,7 +318,7 @@ export default class Route extends ViewRouter {
 
         if (!product) return this.next();
 
-        let photo: ResourceCacheItem, thumbnail = this.req.query.thumbnail, url = "";
+        let photo: ResourceCacheItem, thumbnail = false, url = "";
 
         let res = new ResourceRoute(this.constructorParams)
 

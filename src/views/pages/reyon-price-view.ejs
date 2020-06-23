@@ -9,26 +9,26 @@
   <% include ./_partial/header %>
 
 
-  <div class="page-title-overlap bg-primary pt-4">
+  <div class="page-title bg-primary py-2">
     <div class="container d-lg-flex justify-content-between py-2 py-lg-3">
       <div class="order-lg-2 mb-3 mb-lg-0 pt-lg-2">
         <nav aria-label="breadcrumb" class="d-none d-lg-block">
           <ol class="breadcrumb breadcrumb-light flex-lg-nowrap justify-content-center justify-content-lg-star">
             <li class="breadcrumb-item"><a class="text-nowrap" href="/"><i class="czi-home"></i></a></li>
-            <li class="breadcrumb-item text-nowrap active" aria-current="page">Et Fiyatları</li>
           </ol>
         </nav>
       </div>
       <div class="order-lg-1 pr-lg-4 text-center text-lg-left">
         <h1 class="h3 text-light">Et Fiyatları</h1>
-        <h2 class=" text-light h4 lead">Kasaplarımızdan güncel kuzu, dana, sakatat ve diğer ürün fiyatları</h2>
+        <h2 class=" text-light h4 lead">Güncel kuzu, dana, sakatat ve diğer kasap ürünleri fiyatları</h2>
       </div>
     </div>
   </div>
 
-  <div class="container px-0">
-    <div class="bg-light box-shadow-lg  px-4 py-4 mb-3 ">
-      <div class="">
+  <div class="container pt-3">
+  
+    
+     
 
 
         <% var viewCats = ['all'] %>
@@ -39,7 +39,7 @@
           <% for(var c=0; c< reyonlar.length; c++) {%>
           <div class="col-md-3 col-6">
 
-            <div class="card product-card  ">
+            <div class="card product-card ">
               <a class="card-img-top d-block overflow-hidden" href="<%= `/${reyonlar[c].slug}`%>">
                 <img class="rounded" src="<%=`${__req.helper.imgUrl('category-photos', reyonlar[c].category.slug)}`%>"
                   alt="<%= reyonlar[c].name %>"></a>
@@ -53,12 +53,13 @@
           </div>
           <%}%>
         </div>
-              <%})%>
+        <%})%>
 
 
 
-        </div>
-      </div>
+    
+     
+        
     </div>
 
 

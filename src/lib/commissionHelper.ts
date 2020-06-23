@@ -1,5 +1,4 @@
 import * as Jimp2 from 'jimp'
-const Jimp = <Jimp2.default>require('jimp');
 import * as path from "path"
 import * as numeral from 'numeral';
 import moment = require('moment');

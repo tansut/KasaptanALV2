@@ -8,7 +8,7 @@ import Resource from '../db/models/resource';
 import ResourceRoute from './resource';
 import * as path from "path"
 import * as Jimp2 from 'jimp'
-const Jimp = <Jimp2.default>require('jimp');
+const Jimp = <Jimp2>require('jimp');
 import * as fs from "fs"
 import moment = require('moment');
 import Category from '../db/models/category';

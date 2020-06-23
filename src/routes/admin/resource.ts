@@ -22,7 +22,7 @@ export default class Route extends ViewRouter {
     async getResources() {
         return await Resource.findAll({
             where: {
-                type: [this.req.params.type, this.req.query.videotype],
+                type: [this.req.params.type as string, this.req.query.videotype as string],
                 ref1: this.req.params.ref1
             },
             include: [

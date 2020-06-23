@@ -20,6 +20,7 @@ import config from '../config';
 var MarkdownIt = require('markdown-it')
 import * as _ from "lodash";
 import SubCategory from '../db/models/subcategory';
+import { flatMap } from 'lodash';
 
 export default class Route extends ViewRouter {
     markdown = new MarkdownIt();
@@ -102,7 +103,7 @@ export default class Route extends ViewRouter {
 
     @Auth.Anonymous()
     async foodsAndTarifsRoute() {
-        this.foodCategory = this.req.query.tab;
+        this.foodCategory = this.req.query.tab as string;
         if (this.foodCategory == 'tarifler') {
             await this.fillTarifs();
         } else if (this.foodCategory == 'yemekler') {
@@ -142,7 +143,7 @@ export default class Route extends ViewRouter {
         this.category = this.req.__categories.find(p => p.slug == this.req.params.category);
         if (!this.category) return this.next();
 
-        this.foodCategory = this.req.query.tab;
+        this.foodCategory = this.req.query.tab as string;
 
         if (this.category.type == 'resource') {
             if (this.foodCategory == 'tarifler') {
@@ -201,7 +202,7 @@ export default class Route extends ViewRouter {
         if (!category)
             return this.next();
 
-        let photo: ResourceCacheItem, thumbnail = this.req.query.thumbnail, url = "";
+        let photo: ResourceCacheItem, thumbnail = false, url = "";
 
         let res = new ResourceRoute({
             req: this.req,

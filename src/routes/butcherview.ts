@@ -8,7 +8,7 @@ import Resource from '../db/models/resource';
 import ResourceRoute from './resource';
 import * as path from "path"
 import * as Jimp2 from 'jimp'
-const Jimp = <Jimp2.default>require('jimp');
+const Jimp = <Jimp2>require('jimp');
 import * as fs from "fs"
 import moment = require('moment');
 import ProductManager from '../lib/productManager';
@@ -208,7 +208,7 @@ export default class Route extends ViewRouter {
         if (!butcher)
             return this.next();
 
-        let photo: ResourceCacheItem, thumbnail = this.req.query.thumbnail, url = "";
+        let photo: ResourceCacheItem, thumbnail = false, url = "";
 
         let res = new ResourceRoute({
             req: this.req,

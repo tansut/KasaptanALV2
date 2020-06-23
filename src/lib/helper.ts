@@ -1,5 +1,4 @@
 import * as Jimp2 from 'jimp'
-const Jimp = <Jimp2.default>require('jimp');
 import * as path from "path"
 import * as numeral from 'numeral';
 import moment = require('moment');
@@ -169,9 +168,9 @@ export default class Helper {
     }
 
     static normalizePhoto(url: string, thumbnail?: string) {
-        return Jimp.read(path.resolve(url))
+        return Jimp2.read(path.resolve(url))
             .then(image => {
-                let _img = image.resize(1080, Jimp.AUTO);
+                let _img = image.resize(1080, Jimp2.AUTO);
                 
                 return new Promise((resolve, reject) => {
                     _img.write(path.resolve(url), (err) => {

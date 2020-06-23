@@ -1,5 +1,5 @@
 import * as Jimp2 from 'jimp'
-const Jimp = <Jimp2.default>require('jimp');
+const Jimp = <Jimp2>require('jimp');
 import * as path from "path"
 import Category, { CategorySubItemsMode } from '../db/models/category';
 import ProductCategory from '../db/models/productcategory';

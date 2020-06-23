@@ -18,7 +18,7 @@ export default class Route extends ApiRouter {
     async searchRoute() {
 
 
-        if (!this.req.query.q || this.req.query.length < 2)
+        if (!this.req.query.q || (this.req.query.q as string).length < 2)
             return this.res.send([])
 
         let text =  <string>this.req.query.q;

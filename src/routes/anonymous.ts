@@ -44,7 +44,7 @@ export default class Route extends ViewRouter {
                     await userRoute.sendNewPassword(user);
                     this.showLogin = true;
                     this.loginUser = Helper.getPhoneNumber(phone);
-                    this.redirect = this.req.query.r
+                    this.redirect = this.req.query.r as string
                     this.renderPage({text: "Yeni şifreniz telefonunuza gönderildi. Şifrenizi kullanarak giriş yapabilirsiniz.", type: "info"});    
                 } else {
                     this.renderPage({text: "Geçersiz e-posta adresi/telefon numarası.",type: "danger"}); 
