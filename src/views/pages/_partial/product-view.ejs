@@ -34,7 +34,7 @@
                 href="/<%= product.slug%><%=(butcher ? `?butcher=${butcher}`:'') %>"><%= product.name  %></a>
         </h3>
 
-        <% if (typeof(butcherProduct) != 'undefined') { %>
+        <% if (typeof(butcherProduct) != 'undefined' && butcherProduct) { %>
             <% var view = butcherProduct.priceView;  %>
            
                 <div class="text-accent font-size-sm">

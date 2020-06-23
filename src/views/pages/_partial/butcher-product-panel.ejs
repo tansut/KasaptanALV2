@@ -121,7 +121,7 @@ class="gallery-item-caption"><%= butcherVideo.title %></span></a>
 
 
 
-  <%if (otherButcherAlternatives) {%>
+  <%if (otherButcherAlternatives && !__req.query.butcher) {%>
     <div class="d-flex px-3 align-items-center justify-content-between mt-2 ">
 
         <p  class="mb-1 text-dark font-weight-medium font-size-sm ">

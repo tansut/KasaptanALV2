@@ -136,7 +136,7 @@
                         <div class="col">
                             <ul class="widget-list">
                                 <% for(var i=0; i<chunk.length; i++) {%>
-                                <% if (chunk[i].name == 'Ankara' || chunk[i].name == 'Istanbul') {%>
+                                <% if (chunk[i].name == 'Ankara' || chunk[i].name == 'Istanbul' || chunk[i].name == 'Izmir' || chunk[i].name == 'Eskişehir') {%>
                                 <li class="widget-list-item"><a class="widget-list-link"
                                         href="<%= `/${chunk[i].slug}-kasap` %>"><%= chunk[i].name %></a></li>
                                 <%}%>

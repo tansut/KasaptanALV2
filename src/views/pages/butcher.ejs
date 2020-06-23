@@ -6,18 +6,16 @@
   <% if (!butcher.approved) {%>
   <meta name="robots" content="noindex,follow">
   <%}%>
-  <link href="https://www.kasaptanal.com/<%=butcher.slug%>" rel="canonical">
-
+  <% if (__req.params.category) { %>
+    <link href="https://www.kasaptanal.com/<%=butcher.slug%>/<%=controller.category.slug%>" rel="canonical">
+  <% } else { %>
+    <link href="https://www.kasaptanal.com/<%=butcher.slug%>" rel="canonical">
+  <% } %>
 </head>
 
 <body>
   <% include ./_partial/header %>
-
   <% if(butcher.videoInstagramStr){ %>
-
-
-
-
   <div class="modal" id="videomodal" tabindex="-1" role="dialog">
     <div class="modal-dialog" role="document">
       <div class="modal-content" style="border-radius:0px">
@@ -39,21 +37,21 @@
       </div>
     </div>
   </div>
-
-
   <%}%>
 
   <% 
   
   var bgCover = images.find(br=>br.tag1 == 'cover'); 
   var profile = images.find(br=>br.tag1 == 'profile'); 
-  var imageList = images.filter(br=>br.tag1 != 'cover' && br.list == true) 
+  var imageList = images.filter(br=>br.tag1 != 'cover' && br.list == true);
+  var puanData = butcher.getPuanData();
+
  
  %>
- 
 
-  <div class="text-center">
-    
+
+  <div class="text-center bg-primary">
+
 
 
 
@@ -65,52 +63,46 @@
     <a target="_blank" class=" btn btn-dark btn-sm" href="/kasapsayfam">Kasap Sayfam</a>
     <%}%>
 
-
-
-
-
-
-
-
   </div>
 
 
-  <div class="bg-primary">
+  <div class="bg-primary mb-3">
 
     <% if (bgCover) { %>
-      <div class="bg-cover" style="background-image: url('<%=bgCover.fileUrl%>');">
+    <div class="bg-cover" style="background-image: url('<%=bgCover.fileUrl%>');">
 
-      </div>
+    </div>
     <% } %>
 
 
 
-    <div class="container pt-2"
-    
-    <% if (bgCover) { %>
-      style="position: relative; top: -4rem;"
-    <% } %>
-    >
-
-
+    <div class="container pt-2" 
+       <% if (bgCover) { %> 
+        
+          style="position: relative; top: -4rem;" <% 
+        
+      } %>>
 
       <div class="text-center pb-3">
-
-        <img class="img-thumbnail rounded-circle mx-auto mb-3 d-block" style="width: 12rem;"
+        <a class="d-block" href="javascript: window.App.openDefaultSlider()">
+          <img width="500" height="500" class="img-thumbnail rounded-circle mx-auto mb-3 d-block" style="width: 12rem;"
           src="<%= `${__req.helper.imgUrl('butcher-google-photos', butcher.slug)}` %>" alt="<%=butcher.name%>">
 
-          <% var butcherVideo = images.find(br=>br.type == 'butcher-videos') %>
+        </a>
 
-          <% if (butcherVideo) { %>
-    
-           <button onclick="javascript:window.App.openSlider(<%=butcherVideo.id%>)" type="button"
-            class="btn btn-sm btn-dark mb-3"><i class="czi-video mr-2"> </i>Yakından Tanıyın</button> 
-    
-          <% } else if(butcher.videoInstagramStr) { %>
-           <button onclick="$('#videomodal').modal().show()" type="button" class="btn btn-sm btn-dark mb-3"><i
-              class="czi-video mr-2"> </i>Yakından Tanıyın</button>
-          <% } %>
-          
+
+        <% var butcherVideo = images.find(br=>br.type == 'butcher-videos') %>
+
+        <% if (butcherVideo) { %>
+
+        <button onclick="javascript:window.App.openSlider(<%=butcherVideo.id%>)" type="button"
+          class="btn btn-sm btn-dark mb-3"><i class="czi-video mr-2"> </i>Yakından Tanıyın</button>
+
+        <% } else if(butcher.videoInstagramStr) { %>
+        <button onclick="$('#videomodal').modal().show()" type="button" class="btn btn-sm btn-dark mb-3"><i
+            class="czi-video mr-2"> </i>Yakından Tanıyın</button>
+        <% } %>
+
         <div>
           <h1 class="h2 text-light"><%=butcher.name%></h1>
           <h2 class="h5 text-light  opacity-60">
@@ -170,36 +162,35 @@
 
 
 
-      <% var puanData = butcher.getPuanData() %>
 
 
 
 
-      <div style="opacity: 0;" class="table-responsive  cz-gallery simplebar-slider" data-simplebar>
-        <div class="ml-2 d-flex ">
-          <% for(var i=0; i<imageList.length; i++) {%>
-            <% var img = imageList[i] %>
-          <div class="mr-2 mb-2">
-            <div class="item-slider item-slider-sm">
+    <div style="opacity: ;" class="cz-gallery slider" data-simplebar>
+      <div class="ml-2 d-flex ">
+        <% for(var i=0; i<imageList.length; i++) {%>
+        <% var img = imageList[i] %>
+        <div class="mr-2 mb-2">
+          <div class="item-slider item-slider-sm">
 
-              <div class="card product-card pb-0  ">
-                <a data-gtrack="1" data-restype="<%=img.type%>" data-resref="<%= butcher.slug %>"
-                  data-restitle="<%= img.title || butcher.name %>" data-resid="<%=img.id%>"
-                  class="gallery-item <%= img.contentType == 'video-youtube' ? 'video-item':''%>"
-                  href="<%= `${img.fileUrl}`  %>"
-                  data-sub-html="&lt;h6 class=&quot;font-size-sm text-light&quot;&gt;<%= img.title %>&lt;/h6&gt;"><img class="rounded"
-                    src="<%= `${img.thumbnailFileUrl}` %>" /><span
-                    class="gallery-item-caption"><%= img.title %></span></a>
-              </div>
-
-
+            <div class="card product-card pb-0  ">
+              <a data-gtrack="1" data-restype="<%=img.type%>" data-resref="<%= butcher.slug %>"
+                data-restitle="<%= img.title || butcher.name %>" data-resid="<%=img.id%>"
+                class="gallery-item <%= img.contentType == 'video-youtube' ? 'video-item':''%>"
+                href="<%= `${img.fileUrl}`  %>"
+                data-sub-html="&lt;h6 class=&quot;font-size-sm text-light&quot;&gt;<%= img.title %>&lt;/h6&gt;"><img
+                  width="500" height="500" src="<%= `${img.thumbnailFileUrl}` %>" /><span
+                  class="gallery-item-caption"><%= img.title %></span></a>
             </div>
+
 
           </div>
 
-          <% } %>
         </div>
+
+        <% } %>
       </div>
+    </div>
 
 
 
@@ -207,12 +198,12 @@
 
   </div>
 
-  <div class=" mb-5 pb-3">
-    <div class="bg-light box-shadow-lg  overflow-hidden">
+  <div class="container-fluid">
+    <div class="mb-3">
       <div class="row">
 
-        <aside class="col-md-3 mr-md-0 pr-md-0 order-md-1 order-1">
-          <div class="p-1 h-100 font-size-ms text-muted">
+        <div class="col-md-4">
+          <div class="h-100 font-size-ms text-muted">
 
 
 
@@ -424,92 +415,65 @@
               </div>
             </div>
 
-
-
-
-
-
-
-
-
-
           </div>
-        </aside>
-
-        <% var reyonlar = (__categories.filter(p=>p.type == 'reyon' && p.status == 'active')) %>
+        </div>
 
 
+        <div id="items" class="col-md-8 ">
+          <div id="cat-slider" class="py-1 mb-2 slider" style="opacity: 0;">
+            <%- include('./_partial/category-slider', { subUrl: butcher.slug + '/', selected: controller.category.slug, mode:'browse', header: false, titles: false, viewCats: ['reyon', 'list'], title: 'Tüm Ürünlerimiz', allUrl: '/kasap-urunleri' }); %>
+          </div>
 
+          <div>
 
-
-        <section class="col-md-9 pt-3 px-3 order-2">
-
-          <div id="sc" class="pl-2 table-responsive mb-1 simplebar-slider" style="opacity: 0;" data-simplebar>
-            <div id="products" class="d-flex pb-2">
-
-              <% var reyonlar = (__categories.filter(p=>p.type == 'reyon' && p.status == 'active')) %>
-
-              <% for(var c=0; c< reyonlar.length; c++) {%>
-              <div class="mr-3">
-
-                <div id="cat-item-<%=reyonlar[c].slug%>">
-                  <div>
-
-
-
-                    <a class="text-center text-uppercase text-dark text-nowrap"
-                      href="<%= `#${reyonlar[c].slug} `%>">
-
-
-                      <span>
-                        <%= reyonlar[c].name %>
-
-                      </span>
-                    </a>
-
-                  </div>
-
+            <div class="mb-3" data-simplebar>
+              <div class="d-flex pb-2">
+                <% controller.subCategories.forEach((sc, i) => { %>
+                <div class="tag-toggle mr-3" data-stag="<%=__helper.slugify(sc.title)%>">
+                  <a onclick="goSubitem('<%=__helper.slugify(sc.title)%>')"
+                    class="text-uppercase <%= controller.subCategories.length == 1 ? 'text-dark':  'text-info' %> font-size-sm text-center text-nowrap">
+                    <%=sc.title%>
+                  </a>
                 </div>
+                <% }) %>
+              </div>
+
+            </div>
 
 
-
+            <% controller.subCategories.forEach((sc, i) => { %>
+              <%if (sc.visible && sc.products.length > 0) { %>
+              <div data-tag="" id="<%= __helper.slugify(sc.title) %>" class="mb-3 border-bottom">
+                <h4 class="h6 mb-2 text-capitalize"><%= sc.title %></h4>
+                <span class="font-weight-light">
+                  <%-controller.markdown.render(sc.description || '')%>
+                </span>
               </div>
               <%}%>
-              
-                </div>
-            </div> 
-              
-                <% for(var i=0; i< reyonlar.length; i++) {%>
-              <% var category = reyonlar[i] %>
-
-              <div id="<%=category.slug%>"
-                class="bg-secondary  p-2 d-flex flex-nowrap justify-content-between align-items-center">
-                <a class="media align-items-center align-self-center" href="#">
-                  <div class="media-body pl-2">
-                    <h3 class="h6 mb-0 mr-2"><%=category.name%></h3>
-                    <span class="font-size-ms text-muted"></span>
-                  </div>
-                </a>
-                <a class="align-self-center d-md-block btn btn-sm" href="#products">Yukarı <i
-                    class="czi-arrow-up font-size-xs align-middle ml-1"></i></a>
+            <div class="row">
+            <% sc.products.forEach((product,i) => { %>
+              <div data-tag="<%= __helper.slugify(product.tag1) %>" class="col-md-3 col-6 ">
+                <%- include('./_partial/product-view.ejs', { showPurchase: true, butcher: butcher.slug, butcherProduct: butcher.products.find(p=>p.productid == product.id), product: product}) %>
               </div>
-
-              <% var butcherProducts = controller.filterProductsByCategory({slug: category.slug}) %>
-
-              <%- include('./_partial/products-view', {butcher: butcher.slug,  viewMode:'tab', butcherProducts: butcherProducts}); %>
-
-
-
-
-              <% } %>
-
-
-        </section>
-
+              <% if (controller.foods && controller.foods.length > 0 && !foodsInserted && i>controller.products.length/5) { %>
+              <% foodsInserted = true; %>
+              <div data-tag="" class="col-md-3 col-6">
+                <%- include('./_partial/generic-item-view.ejs', { imgClass: 'rounded-lg', title: foodCategoryParams.title, href: `${foodCategoryParams.allUrl}`, src: `${ __req.helper.imgUrl('category-photos', controller.category.slug, 'thumbnail', true, 'list')}` }) %>
+              </div>
+              <%}%>
+            <%  }) %>
+            </div>
+        
+            <% }) %>
+     
 
       </div>
+
     </div>
 
+
+    </div>
+  </div>
 
   </div>
 
@@ -524,14 +488,15 @@
   <% include ./_partial/scripts %>
 
 
-  <script>
-    $(document).ready(function() {
-      setTimeout(function() {
-        $('.simplebar-slider').css('opacity', 1)
-      },50)
-      
-    })
-  </script>
+
+
+
+  <%- include('./_partial/purchase', { url: butcher.slug + '/', butcher: butcher  }); %>
+
+
+
+
+
 
 
 

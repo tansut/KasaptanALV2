@@ -65,7 +65,7 @@
                 value: item.id,
                 text:  item.text,
                 html: [ 
-                    $('<img>').attr('src', item.thumb).css("height", 48), ' ', 
+                    $('<img>').attr('src', item.thumb).css("height", 64).css("width", 64), ' ', 
                     item.text, 
                     item.type ? $('<span>').text(' /' + item.type + '').addClass('text-accent'):'' 
                   ] 

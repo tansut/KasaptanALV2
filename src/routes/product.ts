@@ -154,7 +154,6 @@ export default class Route extends ViewRouter {
         this.shopCardIndex = this.req.query.shopcarditem ? parseInt(this.req.query.shopcarditem) : -1;
         this.shopCardItem = (this.shopCardIndex >= 0 && shopcard.items) ? shopcard.items[this.shopCardIndex] : null;
 
-
         let butcher = this.shopCardItem ? await Butcher.getBySlug(this.shopCardItem.product.butcher.slug) : (this.req.query.butcher ? await Butcher.getBySlug(this.req.query.butcher) : null);
 
         this.foods = await api.getTarifVideos([product])
@@ -182,11 +181,15 @@ export default class Route extends ViewRouter {
         } else
             selectedButchers = await this.bestButchersForProduct(product.id, this.req.prefAddr, butcher);
 
-
-
-
-        let view = await api.getProductView(product, selectedButchers.best ? selectedButchers.best.butcher : null, null, true)
         let serving = selectedButchers.servingL3.concat(selectedButchers.servingL2).concat(<any>selectedButchers.takeOnly);
+
+
+        if (selectedButchers.best && this.req.query.butcher && (selectedButchers.best.butcher.slug != this.req.query.butcher) {
+            serving = [];
+            selectedButchers.best = null;
+        }
+        
+        let view = await api.getProductView(product, selectedButchers.best ? selectedButchers.best.butcher : null, null, true)
 
 
         serving.forEach(s => {

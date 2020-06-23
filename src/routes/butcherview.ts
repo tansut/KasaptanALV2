@@ -27,6 +27,7 @@ import config from '../config';
 import {Op} from "sequelize";
 import Review from '../db/models/review';
 import * as sq from 'sequelize';
+import SubCategory from '../db/models/subcategory';
 
 
 
@@ -37,7 +38,10 @@ export default class Route extends ViewRouter {
     butcher: Butcher;
     dispatchers: Dispatcher[];
     reviews: Review[] = [];
-
+    category: Category;
+    categories: Category[];
+    _ = _;
+    subCategories: SubCategory[] = [];
 
     filterProductsByCategory(filter, chunk: number = 0) {
         let products = <Product []>ProductManager.filterProductsByCategory(this.products, filter, { productType: 'generic' }, { chunk: chunk })
@@ -117,6 +121,14 @@ export default class Route extends ViewRouter {
             return this.next();
         } 
 
+        if (!this.req.params.category) {
+            this.category = this.req.__categories[0]
+        } else 
+        {
+            this.category = this.req.__categories.find(p=>p.slug == this.req.params.category);
+        }
+        if (!this.category) return this.next();
+
         await this.loadReviews(butcher)
 
         if (!butcher.location && butcher.gpPlace && butcher.gpPlace['geometry'] && butcher.gpPlace['geometry']['location'])
@@ -129,13 +141,6 @@ export default class Route extends ViewRouter {
             await butcher.save()
         }
 
- 
-
-        butcher.products = butcher.products.filter(p => {
-            return p.enabled && (p.kgPrice > 0 || (p.unit1price > 0 && p.unit1enabled) || (p.unit2price > 0 && p.unit2enabled) || (p.unit3price > 0 && p.unit1enabled))
-        })
-        
-        butcher.products = _.sortBy(butcher.products, ["displayOrder", "updatedOn"]).reverse()
         let images = await Resource.findAll({
             where: {
                 type: ["butcher-google-photos", "butcher-videos"],
@@ -144,19 +149,6 @@ export default class Route extends ViewRouter {
             },
             order: [["displayOrder", "DESC"], ["updatedOn", "DESC"]]
         })
-
-        let productCategories = await ProductCategory.findAll({
-            include: [{
-                all: true
-            }]
-        });
-
-        this.products = butcher.products.map(p => {
-            p.product.categories = productCategories.filter(pc => pc.productid == p.productid)
-            return p.product
-        })
-
-        //this.vitrinProducts = butcher.products.filter(bp => bp.vitrin).map(bp => bp.product);
 
         this.dispatchers = await Dispatcher.findAll({
             where: {
@@ -174,6 +166,31 @@ export default class Route extends ViewRouter {
         for (let i = 0; i < this.dispatchers.length; i++) {
             this.dispatchers[i].address = await this.dispatchers[i].toarea.getPreferredAddress()
         }
+
+        this.categories = this.req.__categories;
+
+        butcher.products = butcher.products.filter(p => {
+            return p.enabled && (p.kgPrice > 0 || (p.unit1price > 0 && p.unit1enabled) || (p.unit2price > 0 && p.unit2enabled) || (p.unit3price > 0 && p.unit1enabled))
+        })
+
+
+        
+        butcher.products = _.sortBy(butcher.products, ["displayOrder", "updatedOn"]).reverse()
+
+        let productCategories = await ProductCategory.findAll({
+            include: [{
+                all: true
+            }]
+        });
+
+        this.products = butcher.products.map(p => {
+            p.product.categories = productCategories.filter(pc => pc.productid == p.productid)
+            return p.product
+        })
+
+        this.products = <Product []>ProductManager.filterProductsByCategory(this.products, {slug: this.category.slug}, { productType: 'generic' }, { chunk: 0 })
+        this.subCategories = ProductManager.generateSubcategories(this.category, this.products);
+ 
 
         let pageTitle = butcher.pageTitle || `${butcher.name}` ;
         let pageDescription = butcher.pageDescription || `${butcher.name}, ${butcher.address} ${butcher.areaLevel1.name}/${butcher.areaLevel2.name} adresinde hizmet vermekte olup ${(butcher.phone || '').trim().slice(0, -5) + " ..."} numaralı telefon ile ulaşabilirsiniz.`
@@ -215,6 +232,7 @@ export default class Route extends ViewRouter {
 
     static SetRoutes(router: express.Router) {
         router.get("/:butcher", Route.BindRequest(Route.prototype.butcherRoute));
+        router.get("/:butcher/:category", Route.BindRequest(Route.prototype.butcherRoute));
         config.nodeenv == 'development' ? router.get("/:butcher/fotograf/:filename", Route.BindRequest(Route.prototype.butcherPhotoRoute)) : null;
     }
 }

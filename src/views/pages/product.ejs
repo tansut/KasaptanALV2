@@ -345,23 +345,44 @@
 
 
                         <div class="mb-3 d-block font-size-sm text-info text-center">
+                          <% if (__req.query.butcher) {  %>
+                        
+                            <% if (__req.prefAddr.level3Status != 'active') { %>
+                              <h5 class="h6 text-info">Henüz Semtinizde Değiliz</h5>
+                              <span class="font-weight-medium">
+    
+                                Kasap seçim kriterlerimiz oldukça detaylı ve belirli bir planda ilerliyoruz.
+                                Çünkü sizlere en iyiyi sunmak için çalışıyoruz.
+    
+                              </span>
+    
+                              <%} else { %>
+                              <h5 class="h6 text-info"><i class="czi-thumb-up mr-2"></i>Semtinize hizmet
+                                veren kasaplarımız mevcut</h5>
+                              <span class="font-weight-medium">Ancak bu kasabımız semtinize hizmet veremiyor veya bu ürünü sağlayamıyor.</span>
+    
+                              <% } %>
 
-                          <% if (__req.prefAddr.level3Status != 'active') { %>
-                          <h5 class="h6 text-info">Henüz Semtinizde Değiliz</h5>
-                          <span class="font-weight-medium">
 
-                            Kasap seçim kriterlerimiz oldukça detaylı ve belirli bir planda ilerliyoruz.
-                            Çünkü sizlere en iyiyi sunmak için çalışıyoruz.
-
-                          </span>
-
-                          <%} else { %>
-                          <h5 class="h6 text-info"><i class="czi-thumb-up mr-2"></i>Semtinize Hizmet
-                            Veriyoruz</h5>
-                          <span class="font-weight-medium">Ancak semtinize hizmet veren hiçbir kasabımız
-                            bu ürünü şu anda sağlayamıyor.</span>
-
+                          <% } else { %>
+                            <% if (__req.prefAddr.level3Status != 'active') { %>
+                              <h5 class="h6 text-info">Henüz Semtinizde Değiliz</h5>
+                              <span class="font-weight-medium">
+    
+                                Kasap seçim kriterlerimiz oldukça detaylı ve belirli bir planda ilerliyoruz.
+                                Çünkü sizlere en iyiyi sunmak için çalışıyoruz.
+    
+                              </span>
+    
+                              <%} else { %>
+                              <h5 class="h6 text-info"><i class="czi-thumb-up mr-2"></i>Semtinize Hizmet
+                                Veriyoruz</h5>
+                              <span class="font-weight-medium">Ancak semtinize hizmet veren hiçbir kasabımız
+                                bu ürünü şu anda sağlayamıyor.</span>
+    
+                              <% } %>
                           <% } %>
+                         
 
 
                         </div>
@@ -381,10 +402,19 @@
                         <%} else {%>
        
 
-                        <div class="text-center">
-                          <a class="btn btn-sm btn-info " onclick="return goBack()" >Alışverişe Devam<i
-                              class="czi-arrow-right ml-2 mr-n1"></i></a>
+                        <div class="d-flex justify-content-center">
+                          <a class="btn btn-sm btn-primary mr-2" onclick="return goBack()" >Alışverişe Devam &raquo;</a>
+
+                          <% if (__req.query.frame != '1') { %>
+                            <button @click="selectArea(null)" type="button" class="btn mr-2 btn-info btn-sm"><i
+                                class="czi-location font-size-lg "></i>Semt Seç</button>
+                            <% } else { %>
+                              <button onclick="window.parent.purchase.selectAddress('<%=product.slug%>')" type="button" class="btn mr-2 btn-info btn-sm"><i
+                                class="czi-location font-size-lg "></i>Semt Seç</button>
+                            <% } %>
+
                         </div>
+
                        
                         <%}%>
                   

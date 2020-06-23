@@ -39,13 +39,7 @@
 
 
 
-  <div id="items-loading" class="mt-5 d-flex justify-content-center ">
-    <div class="spinner-grow text-primary" role="status">
-      <span class="sr-only">Yükleniyor...</span>
-    </div>
-  </div>
-
-  <div id="main" style="<%=__req.query.go == '1' ? 'opacity: 0;':'opacity: 0;'%>" class="container pt-3 px-0">
+  <div style="<%=__req.query.go == '1' ? 'opacity: 0;':'opacity: 0;'%>" class="container pt-3 px-0 slider">
     <div class=" px-4 pb-4 mb-3 ">
       <%if (controller.category.slug != 'kurban' || __req.query.go) { %>
 
@@ -86,7 +80,7 @@
       </div>
       <% } %>
 
-      <div class="table-responsive mb-3 " data-simplebar>
+      <div class="mb-3" data-simplebar>
         <div class="d-flex pb-2">
           <% controller.subCategories.forEach((sc, i) => { %>
           <div class="tag-toggle mr-3" data-stag="<%=__helper.slugify(sc.title)%>">
@@ -102,7 +96,7 @@
 
 
       <% controller.subCategories.forEach((sc, i) => { %>
-      <%if (sc.visible) { %>
+      <%if (sc.visible && sc.products.length > 0) { %>
       <div data-tag="" id="<%= __helper.slugify(sc.title) %>" class="mb-3 border-bottom">
         <h4 class="h6 mb-2 text-capitalize"><%= sc.title %></h4>
         <span class="font-weight-light">
@@ -115,13 +109,12 @@
       <div data-tag="<%= __helper.slugify(product.tag1) %>" class="col-md-3 col-6 ">
         <%- include('./_partial/product-view.ejs', {product: product, showPurchase: true}) %>
       </div>
-      <% if (controller.foods.length > 0 && !foodsInserted && i>controller.products.length/5) { %>
+      <% if (controller.foods && controller.foods.length > 0 && !foodsInserted && i>controller.products.length/5) { %>
       <% foodsInserted = true; %>
       <div data-tag="" class="col-md-3 col-6">
         <%- include('./_partial/generic-item-view.ejs', { imgClass: 'rounded-lg', title: foodCategoryParams.title, href: `${foodCategoryParams.allUrl}`, src: `${ __req.helper.imgUrl('category-photos', controller.category.slug, 'thumbnail', true, 'list')}` }) %>
       </div>
       <%}%>
-
     <%  }) %>
     </div>
 
@@ -152,28 +145,6 @@
 
   </div>
 
-  <div class=" modal fade" id="purchasemodal">
-    <div class="modal-dialog fs-modal-dialog modal-lg modal-dialog-scrollable" role="document">
-      <div class="modal-content">
-        <div class="modal-header">
-          <h4 class="modal-title">Satın Al</h4>
-          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-            <span aria-hidden="true">×</span>
-          </button>
-        </div>
-        <div class="modal-body h-100  p-0">
-
-          <div id="purchasemodal-loading" class="mt-5 d-flex justify-content-center ">
-            <div class="spinner-grow text-primary" role="status">
-              <span class="sr-only">Yükleniyor...</span>
-            </div>
-          </div>
-
-
-        </div>
-      </div>
-    </div>
-  </div>
 
 
 
@@ -181,130 +152,12 @@
   <% include ./_partial/footer %>
   <% include ./_partial/scripts %>
 
-  <script>
-
-    var p = window.purchase = {};
-
-    p.closePurchaseDialog = function () {
-      $("#purchasemodal").modal('hide');
-    }
-
-    p.goShopcard = function () {
-      p.go('/alisveris-sepetim')
-    }
-
-    p.selectAddress = function (product) {
-      p.closePurchaseDialog();
-      window.kb.selectArea(function (sender, ul) {
-        window.location.href = "/adres-belirle/" + ul.selectedDistrict.slug + '?r=' + encodeURIComponent('/<%=`${controller.category.slug}?open=`%>' + product);
-      });
-    }
-
-    p.go = function (loc) {
-      window.location.href = loc
-    }
-
-
-
-    function goSubitem(tag) {
-      App.scrollToAnchor('#' + tag)
-    }
-
-    function setBody() {
-      setTimeout(function() {
-      $("#items-loading").remove();
-        $("#main").css('opacity', '1');        
-      }, 100);
-      // $("#main").animate({ opacity: 1 }, 50, function () {
-
-      // });
-    }
-
-
-
-    $(document).ready(function () {
-
-
-
-
-      $("#purchasemodal").on('hide.bs.modal', function () {
-        $(this).find('iframe').remove();
-        $('#purchasemodal-loading').hide();
-
-      });
-
-      $('#purchasemodal').on('show.bs.modal', function () {
-        // $(this).find('.modal-body').css({
-        //   //height: window.innerHeight + 'px'
-        // });
-      });
-
-      function openPurchaseDialog(product) {
-        var iframe = document.createElement('iframe');
-
-        iframe.onload = function () { iframe.classList.remove('d-none'); $('#purchasemodal-loading').hide(); };
-        iframe.width = "100%";
-        iframe.height = "100%";
-        iframe.classList.add('d-none');
-        iframe.src = '/' + product + '?frame=1';
-        $('#purchasemodal-loading').show();
-        $("#purchasemodal").find('.modal-body').prepend(iframe);
-        $("#purchasemodal").modal('show');
-      }
-
-
-      $('[data-product]').click(function (e) {
-  <% if (__req.prefAddr) { %>
-          openPurchaseDialog($(e.currentTarget).data('product'))
-          <% } else { %>
-            window.kb.selectArea(function (sender, ul) {
-              window.location.href = "/adres-belirle/" + ul.selectedDistrict.slug + '?r=' + encodeURIComponent('/<%=`${controller.category.slug}?open=`%>' + $(e.currentTarget).data('product'));
-            });
-  <% } %>
-})
+  <%- include('./_partial/purchase', {  }); %>
 
 
 
 
 
-      var el = document.getElementById('sc');
-      var sb = SimpleBar.instances.get(el);
-      if (sb) {
-        var scel = sb.getScrollElement();
-        var scelOffset = $(scel).offset();
-        var selected = $("#cat-item-<%=controller.category.slug%>").offset();
-        if (selected) {
-          var left = -(scelOffset.left - selected.left);
-
-          $(".category-slider-item a").click(function (e) {
-            e.currentTarget.innerHTML = '<span class="spinner-border text-primary spinner-border-sm"></span>' + e.currentTarget.innerHTML
-          })
-
-
-          $(scel).animate({ scrollLeft: left }, 10, function () {
-
-          });
-        }
-      }
-      if (location.hash == '#items') {
-        setBody();
-        //  $('html,body').animate({ scrollTop: $('#items-container').offset().top }, 5, function () {
-          
-        //  });
-        location.hash = "";
-
-      } else {
-        setBody();
-        if (location.hash) {
-          goSubitem(decodeURIComponent(location.hash.replace('#', '')));
-        }
-      }
-      <% if (__req.query.open) { %>
-        openPurchaseDialog('<%=__req.query.open%>')
-        <% } %>
-      
-    })
-  </script>
 
 </body>
 

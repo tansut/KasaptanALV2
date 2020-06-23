@@ -30,7 +30,7 @@ export default class Route extends ViewRouter {
     foodCategory = ""
     _ = _;
     subCategories: SubCategory[] = [];
-    //categories: Category[];
+
 
 
 
@@ -163,53 +163,6 @@ export default class Route extends ViewRouter {
     }
 
 
-    generateSubcategories(products: Product[]) {
-        if (this.category.subItemsMode == CategorySubItemsMode.subitems) {
-            this.subCategories = this.category.subCategories;
-        } else if (this.category.subItemsMode == CategorySubItemsMode.tag1) {
-            let tags = _.uniq(products.map(p=>p.tag1));
-            let i = 0;
-            tags.forEach(t=> {
-                let subCat = new SubCategory({
-                    id: i++,
-                    visible: true,
-                    categoryid: 0,
-                    displayOrder: i,
-                    title: t,
-                    description:'',
-                    category: null
-                })
-                this.subCategories.push(subCat)
-            })
-        }
-
-        if (this.subCategories.length == 0) {
-            let subCat = new SubCategory({
-                id: 0,
-                visible: false,
-                categoryid: 0,
-                displayOrder: 0,
-                title: 'tümü',
-                description:'',
-                category: null
-            })
-            this.subCategories.push(subCat)            
-        }
-
-        this.subCategories.forEach((sc,i) => {
-            if (this.subCategories.length == 1) {
-                sc.products = products 
-            } else {
-                if (this.category.subItemsMode == CategorySubItemsMode.subitems) {
-                    sc.products = products.filter(p => { return p.categories.find(pc=>pc.subcategoryid == sc.id) }) 
-                } else {
-                    sc.products = products.filter(p => { return p.tag1 == sc.title }) 
-                }
-            }
-        })
-        this.subCategories = _.sortBy(this.subCategories, ["displayOrder"]).reverse() ; 
-    }
-
 
     @Auth.Anonymous()
     async viewProductCategoryRoute(back: boolean = false) {
@@ -228,7 +181,7 @@ export default class Route extends ViewRouter {
         else {
             this.products = await ProductManager.getProductsOfCategories([this.category.id]);
 
-            this.generateSubcategories(this.products);
+            this.subCategories = ProductManager.generateSubcategories(this.category, this.products);
 
 
             if (this.category.relatedFoodCategory) {
