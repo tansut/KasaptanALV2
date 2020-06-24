@@ -47,7 +47,7 @@ module.exports = function (shipit) {
 
     shipit.blTask('restart', async function () {
         var self = this
-            , script = `${shipit.releasePath}/bin/kasaptanal.js -i max --node-args="--icu-data-dir=${shipit.releasePath}/node_modules/full-icu"`
+            , script = `${shipit.releasePath}/bin/kasaptanal.js --node-args="--icu-data-dir=${shipit.releasePath}/node_modules/full-icu"`
             , startScript = 'source /home/ec2-user/{env} && pm2 start {script}'
             , stopScript = 'pm2 stop kasaptanal && pm2 delete kasaptanal'
             , env = this.options.environment
