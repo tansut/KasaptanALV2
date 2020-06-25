@@ -89,6 +89,16 @@ class Resource extends BaseModel<Resource> {
 
 
     @Column({
+        allowNull: true
+    })
+    w: string;    
+
+    @Column({
+        allowNull: true
+    })
+    h: string;     
+
+    @Column({
         allowNull: false,
     })
     ref1: number;

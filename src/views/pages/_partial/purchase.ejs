@@ -5,28 +5,29 @@
 
 %>
 
-<div class=" modal fade" id="purchasemodal">
-    <div class="modal-dialog fs-modal-dialog modal-lg modal-dialog-scrollable" role="document">
-      <div class="modal-content">
-        <div class="modal-header">
-          <h4 class="modal-title">Satın Al</h4>
-          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-            <span aria-hidden="true">×</span>
-          </button>
-        </div>
-        <div class="modal-body h-100  p-0">
+<div class="modal fade" id="purchasemodal">
+  <div class="modal-dialog fs-modal-dialog modal-lg modal-dialog-scrollable" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h4 class="modal-title">Satın Al</h4>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">×</span>
+        </button>
+      </div>
+      <div style="overflow: hidden;" class="modal-body h-100 m-0 p-0">
 
-          <div id="purchasemodal-loading" class="mt-5 d-flex justify-content-center ">
+       <div id="purchasemodal-loading">
+          <div class="mt-5 d-flex justify-content-center ">
             <div class="spinner-grow text-primary" role="status">
               <span class="sr-only">Yükleniyor...</span>
             </div>
           </div>
+        </div>  
 
-
-        </div>
       </div>
     </div>
   </div>
+</div>
 
   <script>
 
@@ -66,10 +67,11 @@
     $(document).ready(function () {
 
 
+      
 
 
       $("#purchasemodal").on('hide.bs.modal', function () {
-        $(this).find('iframe').remove();
+        $(this).find('.iframe-div').remove();
         $('#purchasemodal-loading').hide();
 
       });
@@ -81,15 +83,24 @@
       });
 
       function openPurchaseDialog(product) {
+        var div = $('<div class="d-none iframe-div w-100 h-100" overflow:auto;-webkit-overflow-scrolling:touch"></div>');
+
         var iframe = document.createElement('iframe');
 
-        iframe.onload = function () { iframe.classList.remove('d-none'); $('#purchasemodal-loading').hide(); };
+        iframe.onload = function () { 
+          $('#purchasemodal-loading').hide(); 
+          iframe.classList.remove('d-none');           
+          div.removeClass('d-none');           
+        };
         iframe.width = "100%";
         iframe.height = "100%";
+        iframe.style = "";
         iframe.classList.add('d-none');
         iframe.src = '/' + product + '?frame=1&' + '<%=butcher ? `butcher=${butcher.slug}`:`` %>';
         $('#purchasemodal-loading').show();
-        $("#purchasemodal").find('.modal-body').prepend(iframe);
+        
+        div.prepend(iframe);
+        $("#purchasemodal").find('.modal-body').prepend(div);
         $("#purchasemodal").modal('show');
       }
 

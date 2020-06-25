@@ -31,9 +31,17 @@
     <% } %>
     href="<%= `${resource.getFileUrl()}` %>">
     <img 
-    <% if (!first) { %>
-      width="500" height="500"
+    <% if (first && resource.w) { %>
+      width="<%=resource.w%>" 
+    <% } else { %>
+      width="500" 
+
     <% } %>
+    <% if (first && resource.h) { %>
+      height="<%=resource.h%>" 
+      <% } else { %>
+        height="500" 
+      <% } %>
     class="<%=first ? '': ''%>" src="<%=  `${first ? resource.getFileUrl(): resource.getThumbnailFileUrl(true)}` %>"
       alt="<%= resource.title || resource.product.name %>" /><span class="gallery-item-caption"><%=resource.title || ''%></span></a>
 

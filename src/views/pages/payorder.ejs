@@ -3,6 +3,43 @@
 
 <head>
   <% include ./_partial/head %>
+
+  <style>
+    @media print {
+    
+    
+    .d-print-w-75 {
+          width: 75% !important;
+      }
+      .d-print-w-50 {
+          width: 50% !important;
+      }
+    
+      .d-print-w-25 {
+          width: 25% !important;
+      }
+    
+      .d-print-none {
+        display: none !important
+      }
+    
+      .d-print-inline {
+        display: inline !important
+      }
+    
+      .d-print-inline-block {
+        display: inline-block !important
+      }
+    
+      .d-print-block {
+        display: block !important
+      }
+    
+  
+    
+    }
+    </style>
+
 </head>
 
 <body class="<%= controller.threeDhtml ? 'd-none':''%>">
@@ -17,7 +54,7 @@
           </ol>
         </nav>
       </div>
-      <div class="order-lg-1 pr-lg-4 text-center text-lg-left">
+      <div class="order-lg-1 pr-lg-4 text-center text-lg-left d-print-none">
         <h1 class="h3">Online Ödeme</h1>
         <h2 class="lead h4">
           <%=order.name%>
@@ -34,30 +71,11 @@
 
 
 
-  <!-- <div class="table-responsive mb-3" data-simplebar>
-    <div class="d-flex pb-2">
-
-        <% order.items.forEach(oi => { %>
-        <div class="mr-2">
-
-            <div id="<%=oi.product.slug%>" class="item-slider item-slider-sm %>">
-              
-                <div class="card product-card pb-0  ">
-                    <a class="" href="#orderdetails"><img class="shadow-lg"
-                            src="<%=`${__req.helper.imgUrl('product-photos', oi.product.slug)}`%>" alt="<%=oi.productName%>"></a>
-
-                </div>
-
-            </div>
-
-
-
-        </div>
-        <%})%>
-
-    </div>
-</div>  -->
   <div class="container mb-3 ">
+
+    <div class="d-print-none">
+
+    
 
     <% if (controller.shouldBePaid > 0) { %>
 
@@ -120,6 +138,7 @@
 
 
       <a id="orderdetails"></a>
+      </div>
       <div class="mb-3">
         <%- include('./_partial/order.details.ejs', {
           order: order,

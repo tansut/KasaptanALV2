@@ -49,7 +49,7 @@ module.exports = function (shipit) {
         var self = this
             , script = `${shipit.releasePath}/bin/kasaptanal.js --node-args="--icu-data-dir=${shipit.releasePath}/node_modules/full-icu"`
             , startScript = 'source /home/ec2-user/{env} && pm2 start {script}'
-            , stopScript = 'pm2 stop kasaptanal && pm2 delete kasaptanal'
+            , stopScript = 'nvm use v12.18.1 && pm2 stop kasaptanal && pm2 delete kasaptanal'
             , env = this.options.environment
             , envFile = (env === 'production') ? 'production.kasaptanal.env' : 'production.kasaptanal.env'
 
