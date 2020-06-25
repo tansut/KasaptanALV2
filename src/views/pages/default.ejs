@@ -47,7 +47,7 @@
                 <div class="carousel-item home-carousel-item">
                     <div class="py-3 mb-3 carousel-caption">
                         <h2 class="h2  ">mangallık etler</h2>
-                        <span class="h5 d-block  font-weight-light pb-3 ">eğlenceye başlamanın şimdi tam zamanı</span>
+                        <span class="h5 d-block  font-weight-light pb-3 ">eğlenceye başlamanın tam zamanı</span>
     
                         <a class="btn btn-primary " href="/barbeku-dokum-tava-etleri">Göz At &raquo;</a>
                     </div>
@@ -55,10 +55,10 @@
 
                 <div class="carousel-item home-carousel-item">
                     <div class="py-3 mb-3 carousel-caption">
-                        <h2 class="h2  ">beyaz et ürünleri</h2>
-                        <span class="h5 d-block  font-weight-light pb-3 ">sağlıklı, doğal ve lezzetli ürünler</span>
+                        <h2 class="h2  ">premium et ürünleri</h2>
+                        <span class="h5 d-block  font-weight-light pb-3 ">dry/wet aged premium et ürünlerimiz</span>
     
-                        <a class="btn btn-primary " href="/beyaz-et">Göz At &raquo;</a>
+                        <a class="btn btn-primary " href="/premium-etler">Göz At &raquo;</a>
     
                     </div>
                 </div>
@@ -140,17 +140,17 @@
     </div>
     <% } %>
 
-    <%if(__req.query.prods != '0') { %>
+
+
     <div class="container mb-3">
         <%- include('./_partial/category-products-slider', {category: 'populer-etler', limit: 4, reverse: true, img: 'img/category/premium.jpg'}); %>
     </div>
-    <%}%>
 
-    <%if(__req.query.prods != '0') { %>
+
         <div class="container mb-3">
             <%- include('./_partial/category-products-slider', {limit: 4, category: 'bu-hafta', reverse: true, img: 'img/category/premium.jpg'}); %>
         </div>
-        <%}%>
+ 
 
 
 

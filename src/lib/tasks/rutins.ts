@@ -32,7 +32,7 @@ export default class ButcherStats extends BaseTask {
         await Order.sequelize.query(`
         
         insert into ProductCategories (displayOrder,                      creationDate,   updatedOn,           productid,        categoryid)
-        SELECT count(*) as total, now(), now(), p.id, :popular  FROM OrderItems oi, Products p where p.id =oi.productid  group by p.id order by total desc limit 20;
+        SELECT count(*) as total, now(), now(), p.id, :popular  FROM OrderItems oi, Products p where p.id =oi.productid  group by p.id order by total desc limit 30;
         
 
         `,

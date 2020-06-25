@@ -59,11 +59,7 @@
     }
 
     function setBody() {
-       //$(".slider").css('opacity', '1'); 
 
-                 $(".slider").animate({ opacity: 1 }, 50, function () {
-         
-          });
 
     }
 
@@ -128,33 +124,38 @@
         var scel = sb.getScrollElement();
         var scelOffset = $(scel).offset();
         var selected = $("#cat-item-<%=controller.category.slug%>").offset();
-        if (selected) {
-          var left = -(scelOffset.left - selected.left);
+        $(".category-slider-item a").click(function (e) {
+            if (!scel.__progress) {
+              e.currentTarget.innerHTML = '<span class="spinner-border text-primary spinner-border-sm"></span>' + e.currentTarget.innerHTML
+              scel.__progress = true;
+            }  
+        })
 
-          $(".category-slider-item a").click(function (e) {
-            e.currentTarget.innerHTML = '<span class="spinner-border text-primary spinner-border-sm"></span>' + e.currentTarget.innerHTML
-          })
-          scel.scrollLeft = left;
-          setBody();
-          // setTimeout(function() {
-          //   sb.hideScrollbars()
-            
-          // });
-          // $(scel).animate({ scrollLeft: left }, 5000, function () {
-          //     sb.hideScrollbars()
-          //     setBody();
-          // });
+        if (selected) {
+          var urlParams = new URLSearchParams(window.location.search);
+          // if (urlParams.has('restore')) {
+          //     scel.scrollLeft = parseFloat(urlParams.get('restore'))
+          // } else scel.scrollLeft = -(scelOffset.left - selected.left);
+          var scroll = (selected.left - scelOffset.left);
+          if (scroll > $(scel).width() / 2) {
+            var labelSize = $("#cat-item-<%=controller.category.slug%>").width();
+            scel.scrollLeft = selected.left - scelOffset.left - ($(scel).width() - labelSize) / 2
+          }
+
+          
+          // scel.scrollLeft = selected.left + scelOffset.left - $(scel).width();
+          
+
+          // if (selected.left <  $(scel).width()) {
+
+          // } else {
+          //   scel.scrollLeft = (selected.left - scelOffset.left) + (selected.left - $(scel).width())
+          // }
+          // console.log(scel.scrollLeft, selected.left, scelOffset.left, $(scel).width())
         }
       }
       if (location.hash == '#items') {
-        setBody();
-        //  $('html,body').animate({ scrollTop: $('#items-container').offset().top }, 5, function () {
-          
-        //  });
-        //location.hash = "";
-
       } else {
-        setBody();
         if (location.hash) {
           goSubitem(decodeURIComponent(location.hash.replace('#', '')));
         }
