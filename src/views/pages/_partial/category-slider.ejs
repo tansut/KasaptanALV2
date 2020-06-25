@@ -17,7 +17,7 @@
 <% } %>
 
 <%if (mode=='list') { %>
-<div class="" data-simplebar>
+<div class="slider" data-simplebar>
     <div class="d-flex <%=titles ? 'pb-2': 'pb-0'%>">
         <% viewCats.forEach(cat => { %>
         <% var reyonlar = (__categories.filter(p=>p.type == cat && p.status == 'active')) %>
@@ -95,7 +95,7 @@
             </a>
         </div> -->
         <%} else { %>
-        <div class="slider w-100" id="sc" data-simplebar>
+        <div id="sc" data-simplebar>
             <div class="pt-6 d-flex">
                 <% var allAdded = false; %>
                 <% viewCats.forEach(cat => { %>

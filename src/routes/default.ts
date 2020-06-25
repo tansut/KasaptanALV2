@@ -87,7 +87,7 @@ export default class Route extends ViewRouter {
         // this.foodsTitle = 'Yemekler ve Tarifler'
 
         //this.foods = CacheManager.dataCache.get("recent-foods");
-        //this.blogItems = await this.getBlogItems();
+        this.blogItems = await this.getBlogItems();
         //this.stats = await SiteStats.get();
 
 
