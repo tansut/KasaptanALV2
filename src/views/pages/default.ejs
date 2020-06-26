@@ -8,98 +8,8 @@
 <body>
     <% include ./_partial/header %>
 
-    <section class="bg-faded-primary">
 
-        <%if(__req.query.car != '0') { %>
-        <div id="myCarousel" class="carousel slide mb-3 text-white" data-interval="false" data-ride="carousel">
-            <ol class="carousel-indicators">
-                <li data-target="#myCarousel" data-slide-to="0" class="active"></li>
-                <li data-target="#myCarousel" data-slide-to="1"></li>
-                <li data-target="#myCarousel" data-slide-to="2"></li>
-                <li data-target="#myCarousel" data-slide-to="3"></li>
-                <li data-target="#myCarousel" data-slide-to="4"></li>
-                <% if (!__req.user) { %>
-                    <li data-target="#myCarousel" data-slide-to="5"></li>
-
-                <%}%>
-            </ol>
-            <div class="carousel-inner">
-                <% if (!__req.user) { %>
-                <div class="carousel-item home-carousel-item active">
-                    <div class="py-3 mb-3 carousel-caption">
-                        <h2 class="h2 ">şimdi üyemiz olun</h2>
-                        <span class="h5 d-block font-weight-light pb-3 ">ilk siparişinizde %3 ek puan kazanın</span>
-                        <a class="btn btn-primary" href="javascript:window.App.showSignupDlg()">Fırsatı Yakala</a>
-                    </div>
-                </div>
-                <% } %>
-                <div class="carousel-item home-carousel-item <%=__req.user ? 'active':''%>">
-                    <div class="py-3 mb-3 carousel-caption">
-                        <h2 class="h2   ">popüler ürünler</h2>
-                        <span class="h5 d-block  font-weight-light pb-3 ">en çok tercih edilen ürünlerimiz</span>
-    
-                        <a class="btn btn-primary " href="/populer-etler">Göz At &raquo;</a>
-                    </div>
-                </div>
-
-  
-
-                <div class="carousel-item home-carousel-item">
-                    <div class="py-3 mb-3 carousel-caption">
-                        <h2 class="h2  ">mangallık etler</h2>
-                        <span class="h5 d-block  font-weight-light pb-3 ">eğlenceye başlamanın tam zamanı</span>
-    
-                        <a class="btn btn-primary " href="/barbeku-dokum-tava-etleri">Göz At &raquo;</a>
-                    </div>
-                </div>
-
-                <div class="carousel-item home-carousel-item">
-                    <div class="py-3 mb-3 carousel-caption">
-                        <h2 class="h2  ">premium et ürünleri</h2>
-                        <span class="h5 d-block  font-weight-light pb-3 ">dry/wet aged premium et ürünlerimiz</span>
-    
-                        <a class="btn btn-primary " href="/premium-etler">Göz At &raquo;</a>
-    
-                    </div>
-                </div>
-
-                <div class="carousel-item home-carousel-item">
-                    <div class="py-3 mb-3 carousel-caption">
-                        <h2 class="h2   ">haftanın ürünleri</h2>
-                        <span class="h5 d-block  font-weight-light pb-3 ">bu haftaya özel seçtiğimiz ürünler</span>
-    
-                        <a class="btn btn-primary " href="/bu-hafta">Göz At &raquo;</a>
-    
-                    </div>
-                </div>
-
-
-                <div class="carousel-item home-carousel-item">
-                    <div class="py-3 mb-3 carousel-caption">
-                        <h2 class="h2">et kültür blog</h2>
-                        <span class="h5 d-block font-weight-light pb-3 ">ilginizi çekecek kısa ve öz içerikler</span>
-    
-                        <a class="btn btn-primary " href="/blog">Göz At &raquo;</a>
-
-                    </div>
-                </div>
-
-  
-
-            
-            </div>
-            <a class="carousel-control-prev" href="#myCarousel" data-slide="prev">
-                <span class="carousel-control-prev-icon"></span>
-            </a>
-            <a class="carousel-control-next" href="#myCarousel" data-slide="next">
-                <span class="carousel-control-next-icon"></span>
-            </a>
-        </div>
-        <% } %>
-
-    </section>
-    <%if(__req.query.kart != '0') { %>
-    <div class="container mb-3">
+    <div class="container pt-3 mb-3">
         <div class=" bg-secondary">
             <div class="row">
                 <div class="col-sm-4">
@@ -138,29 +48,13 @@
 
         </div>
     </div>
-    <% } %>
+ 
 
 
 
     <div class="container mb-3">
         <%- include('./_partial/category-products-slider', {category: 'populer-etler', limit: 4, reverse: true, img: 'img/category/premium.jpg'}); %>
     </div>
-
-
-        <div class="container mb-3">
-            <%- include('./_partial/category-products-slider', {limit: 4, category: 'bu-hafta', reverse: true, img: 'img/category/premium.jpg'}); %>
-        </div>
- 
-
-
-
-        
-
-
-
-
-
- 
 
     <section class="container">
         <div class="row">
@@ -172,6 +66,21 @@
     <div class="col-md-6 mb-3">
         <div class="d-flex flex-column h-100 justify-content-center bg-size-cover bg-position-center rounded-lg"
             style="background-image: url(<%=__config.staticDomain %>/resource/img/banner-bg.jpg);">
+
+            <% if (!__req.user) { %>
+                <div class="py-4 my-2 my-md-0 py-md-5 px-4 ml-md-3 text-center text-sm-left">
+                    <h4 class="h6 font-size-lg font-weight-light mb-2">Şimdi Üyemiz Olun</h4>
+                    <h3 class="mb-4 h5">İlk Siparişinizi %3 Kârlı Verin</h3>
+                   
+                    <a class="btn btn-primary " href="javascript:window.App.showSignupDlg()">Fırsatı Yakala &raquo;</a>
+               
+           
+    
+                </div>
+
+
+                <% } else { %>
+
             <div class="py-4 my-2 my-md-0 py-md-5 px-4 ml-md-3 text-center text-sm-left">
                 <h4 class="h6 font-size-lg font-weight-light mb-2">Kârlı Kasap Alışverişi</h4>
                 <h3 class="mb-4 h5">Kasap Kart&trade; ile puan kazanın</h3>
@@ -181,6 +90,7 @@
        
 
             </div>
+            <%}%>
         </div>
 
 
@@ -206,6 +116,23 @@
     </div>
     </section>
 
+
+        <div class="container mb-3">
+            <%- include('./_partial/category-products-slider', {limit: 4, category: 'bu-hafta', reverse: true, img: 'img/category/premium.jpg'}); %>
+        </div>
+ 
+
+
+
+        
+
+
+
+
+
+ 
+
+
     <div class="container mb-3">
 
 
@@ -221,7 +148,7 @@
                 <div class="d-flex pb-2">
                     <% var items =  controller.blogItems %>
                     <% items.forEach((item, i) => {%>
-                        <% if (item.slug != 'kurban-ibadeti') { %>
+                      
                         
                     <div>
                                      <div class="mr-2 item-slider product-card item-card">
@@ -243,7 +170,7 @@
 
 
               
-                    <% } %>
+                   
                     <%})%>
 
                 </div>

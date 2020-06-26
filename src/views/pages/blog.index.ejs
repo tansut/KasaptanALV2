@@ -8,43 +8,6 @@
 <body>
   <% include ./_partial/header %>
 
-  <!-- Page Title (Light)-->
-  <div class="page-title bg-secondary py-2 ">
-    <div class="container d-lg-flex justify-content-between py-2 py-lg-3">
-      <div class="order-lg-2 mb-3 mb-lg-0 pt-lg-2">
-        <nav aria-label="breadcrumb" class="d-none d-lg-block">
-          <ol class="breadcrumb flex-lg-nowrap justify-content-center justify-content-lg-star">
-            <li class="breadcrumb-item"><a class="text-nowrap" href="/"><i class="czi-home"></i></a></li>
-
-            <% if(controller.req.params.category){ %>
-
-       
-            <li class="breadcrumb-item text-nowrap">
-              <%= controller.allcontent.length > 0 ? controller.allcontent[0].category: "" %></li>
-            <% } else { %>
-
-            <% } %>
-
-          </ol>
-        </nav>
-      </div>
-      <div class="order-lg-1 pr-lg-4 text-center text-lg-left">
-        <h1 class="h3">Blog</h1>
-        <h2 class="lead h4">
-          Kırmızı et ile ilgili kısa ve öz
-          içerikler
-        </h2>
-
-
-      </div>
-    </div>
-    <div class="text-right mr-4">
-      <button type="button" href="#" class="btn btn-primary get-userguide-action my-2">İyi Et
-        Rehberini İndir</button>
-    </div>
-
-
-  </div>
 
 
 
@@ -65,26 +28,26 @@
         <div class="row">
           <% for(var i=0; i<controller.allcontent.length; i++) {%>
             <article class="col-sm-6 blog-list pb-2 mb-2">
-              <div class="left-column">
-                <h2 class="h5 blog-entry-title"><a
-                    href="<%= `/blog/${controller.allcontent[i].slug}` %>"><%= controller.allcontent[i].title %></a>
-                </h2>
-                <p class="font-size-sm"><%= controller.allcontent[i].description %><a
-                    href='<%= `/blog/${controller.allcontent[i].slug}` %>'
-                    class='blog-entry-meta-link font-weight-medium'> [Devamı]</a></p>
-              </div>
-              <div class="right-column"><a class="blog-entry-thumb d-block mb-3"
-                  href="<%= `/blog/${controller.allcontent[i].slug}` %>">
+              <div class="card h-100">
+                <a href="<%= `/blog/${controller.allcontent[i].slug}` %>">
+                <img class="card-img-top" width="500" height="333" src="<%= `${controller.getthumbnailurl(controller.allcontent[i])}` %>"
+                alt="<%= controller.allcontent[i].title %>"> 
+                </a>
+                
+                <div class="card-body">
+                  <a href="<%= `/blog/${controller.allcontent[i].slug}` %>">
+                  <h5 class="card-title"><%= controller.allcontent[i].title %></h5>
+                </a>
+                  <p class="card-text"><%= controller.allcontent[i].description %> <a href="<%= `/blog/${controller.allcontent[i].slug}` %>">&raquo;</a></p>
                   
-                  <img width="500" height="333" src="<%= `${controller.getthumbnailurl(controller.allcontent[i])}` %>"
-                    alt="<%= controller.allcontent[i].title %>"></a>
-                <div class="d-flex justify-content-between mb-1">
-                  <div class="font-size-sm text-muted pr-2 mb-2">
-                    <a href='#' class='blog-entry-meta-link'><%= controller.allcontent[i].category.title %></a></div>
-    
+
                 </div>
-    
+               
               </div>
+
+
+       
+          
             </article>
             <% } %>
         </div>
@@ -93,15 +56,15 @@
       </section>
 
       <div class="col-lg-3">
-        <h3 class="h4 text-center border-bottom">
+        <h3 class="h4 text-center pb-2 border-bottom">
           Kategoriler
         </h3>
         <ul class="nav justify-content-center mb-4">
           <% var categories = controller.categories %>
 
           <% categories.forEach(function(cat){ %>
-          <li class="nav-item">
-            <a class="nav-link active" href="/blog/<%= cat.categorySlug %>"><%=cat.category %></a>
+          <li class="nav-item p-2">
+            <a class="btn btn-secondary btn-sm" href="/blog/<%= cat.categorySlug %>"><%=cat.category %></a>
           </li>
           <% }); %>
 
