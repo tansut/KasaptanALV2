@@ -20,14 +20,14 @@
 
 
 
-    <div class="row justify-content-center mb-3 ">
+   
 
 
 
-      <section class="col-lg-9">
+  
         <div class="row">
           <% for(var i=0; i<controller.allcontent.length; i++) {%>
-            <article class="col-sm-6 blog-list pb-2 mb-2">
+            <article class="col-sm-4 blog-list pb-2 mb-2">
               <div class="card h-100">
                 <a href="<%= `/blog/${controller.allcontent[i].slug}` %>">
                 <img class="card-img-top" width="500" height="333" src="<%= `${controller.getthumbnailurl(controller.allcontent[i])}` %>"
@@ -53,27 +53,26 @@
         </div>
        
 
-      </section>
 
-      <div class="col-lg-3">
-        <h3 class="h4 text-center pb-2 border-bottom">
-          Kategoriler
-        </h3>
-        <ul class="nav justify-content-center mb-4">
-          <% var categories = controller.categories %>
+        <div>
+          <h3 class="h4 text-center pb-2 border-bottom">
+            Kategoriler
+          </h3>
+          <ul class="nav justify-content-center mb-4">
+            <% var categories = controller.categories %>
+  
+            <% categories.forEach(function(cat){ %>
+            <li class="nav-item p-2">
+              <a class="btn btn-secondary btn-sm" href="/blog/<%= cat.categorySlug %>"><%=cat.category %></a>
+            </li>
+            <% }); %>
+  
+  
+          </ul>
+  
+        </div>
 
-          <% categories.forEach(function(cat){ %>
-          <li class="nav-item p-2">
-            <a class="btn btn-secondary btn-sm" href="/blog/<%= cat.categorySlug %>"><%=cat.category %></a>
-          </li>
-          <% }); %>
-
-
-        </ul>
-
-      </div>
-
-    </div>
+ 
   </div>
 
 
