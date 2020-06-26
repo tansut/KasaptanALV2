@@ -84,5 +84,3 @@ Payment = __decorate([
     })
 ], Payment);
 exports.default = Payment;
-
-//# sourceMappingURL=payment.js.map

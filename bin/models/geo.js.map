@@ -1,1 +1,0 @@
-{"version":3,"sources":["../src/models/geo.ts"],"names":[],"mappings":"","file":"geo.js","sourcesContent":["\n\n\nexport interface GeoLocation {\n    type: string;\n    coordinates: number[]\n}"],"sourceRoot":"../../src/"}

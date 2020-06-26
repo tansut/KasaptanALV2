@@ -192,5 +192,3 @@ __decorate([
     __metadata("design:returntype", Promise)
 ], Route.prototype, "butcherPhotoRoute", null);
 exports.default = Route;
-
-//# sourceMappingURL=butcherview.js.map

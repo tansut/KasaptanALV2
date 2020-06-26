@@ -14,5 +14,3 @@ class RouteLoader {
     }
 }
 exports.default = RouteLoader;
-
-//# sourceMappingURL=butcherapirouter.js.map

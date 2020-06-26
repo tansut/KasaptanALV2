@@ -66,5 +66,3 @@ __decorate([
     __metadata("design:returntype", void 0)
 ], Route.prototype, "getAreas", null);
 exports.default = Route;
-
-//# sourceMappingURL=area.js.map

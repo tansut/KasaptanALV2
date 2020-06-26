@@ -262,5 +262,3 @@ class Route extends router_1.ViewRouter {
     }
 }
 exports.default = Route;
-
-//# sourceMappingURL=order.js.map

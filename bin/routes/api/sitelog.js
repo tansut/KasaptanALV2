@@ -70,5 +70,3 @@ __decorate([
     __metadata("design:returntype", Promise)
 ], SiteLogRoute.prototype, "logRoute", null);
 exports.default = SiteLogRoute;
-
-//# sourceMappingURL=sitelog.js.map

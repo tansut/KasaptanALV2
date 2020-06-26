@@ -397,5 +397,3 @@ __decorate([
     __metadata("design:returntype", Promise)
 ], Route.prototype, "getProductLdById", null);
 exports.default = Route;
-
-//# sourceMappingURL=product.js.map

@@ -39,5 +39,3 @@ class EmailManager {
 }
 EmailManager.initTransport();
 exports.default = (new EmailManager());
-
-//# sourceMappingURL=email.js.map

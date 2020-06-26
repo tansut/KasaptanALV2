@@ -172,5 +172,3 @@ __decorate([
     __metadata("design:returntype", Promise)
 ], PaymentRouter.prototype, "threeDNotifyRoute", null);
 exports.PaymentRouter = PaymentRouter;
-
-//# sourceMappingURL=paymentrouter.js.map

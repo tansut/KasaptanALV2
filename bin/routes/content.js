@@ -142,5 +142,3 @@ __decorate([
     __metadata("design:returntype", Promise)
 ], Route.prototype, "viewRoute", null);
 exports.default = Route;
-
-//# sourceMappingURL=content.js.map

@@ -31,5 +31,3 @@ __decorate([
     __metadata("design:returntype", void 0)
 ], Route.prototype, "statusRoute", null);
 exports.default = Route;
-
-//# sourceMappingURL=status.js.map

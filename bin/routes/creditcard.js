@@ -99,5 +99,3 @@ __decorate([
     __metadata("design:returntype", Promise)
 ], Route.prototype, "payRoute", null);
 exports.default = Route;
-
-//# sourceMappingURL=creditcard.js.map

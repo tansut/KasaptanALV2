@@ -18,5 +18,3 @@ class Route extends router_1.ViewRouter {
     }
 }
 exports.default = Route;
-
-//# sourceMappingURL=error.js.map

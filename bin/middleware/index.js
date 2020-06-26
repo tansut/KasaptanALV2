@@ -9,5 +9,3 @@ class MiddlewareLoader {
     }
 }
 exports.default = MiddlewareLoader;
-
-//# sourceMappingURL=index.js.map

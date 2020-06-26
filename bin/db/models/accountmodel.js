@@ -176,5 +176,3 @@ AccountModel = AccountModel_1 = __decorate([
     })
 ], AccountModel);
 exports.default = AccountModel;
-
-//# sourceMappingURL=accountmodel.js.map

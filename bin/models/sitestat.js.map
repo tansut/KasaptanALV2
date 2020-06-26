@@ -1,1 +1,0 @@
-{"version":3,"sources":["../src/models/sitestat.ts"],"names":[],"mappings":"","file":"sitestat.js","sourcesContent":["\n\n\nexport interface SiteStatsData {\n    customer: number;\n    ship: number;\n    semt: number;\n    product: number;\n    kg: number;\n}"],"sourceRoot":"../../src/"}

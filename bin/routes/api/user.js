@@ -459,5 +459,3 @@ __decorate([
     __metadata("design:returntype", Promise)
 ], UserRoute.prototype, "authenticateRoute", null);
 exports.default = UserRoute;
-
-//# sourceMappingURL=user.js.map

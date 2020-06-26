@@ -193,5 +193,3 @@ Dispatcher = __decorate([
     })
 ], Dispatcher);
 exports.default = Dispatcher;
-
-//# sourceMappingURL=dispatcher.js.map

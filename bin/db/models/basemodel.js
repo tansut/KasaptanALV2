@@ -41,5 +41,3 @@ __decorate([
     __metadata("design:type", Date)
 ], BaseModel.prototype, "updatedOn", void 0);
 exports.default = BaseModel;
-
-//# sourceMappingURL=basemodel.js.map

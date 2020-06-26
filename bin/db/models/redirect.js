@@ -56,5 +56,3 @@ Redirect = __decorate([
     })
 ], Redirect);
 exports.default = Redirect;
-
-//# sourceMappingURL=redirect.js.map
