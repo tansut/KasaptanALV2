@@ -60,3 +60,5 @@ class Route extends router_1.ViewRouter {
     }
 }
 exports.default = Route;
+
+//# sourceMappingURL=category.js.map

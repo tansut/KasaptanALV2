@@ -249,3 +249,5 @@ class Route extends home_1.ButcherRouter {
     }
 }
 exports.default = Route;
+
+//# sourceMappingURL=products.js.map

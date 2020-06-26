@@ -48,3 +48,5 @@ ResourceCategory = __decorate([
     })
 ], ResourceCategory);
 exports.default = ResourceCategory;
+
+//# sourceMappingURL=resourcecategory.js.map

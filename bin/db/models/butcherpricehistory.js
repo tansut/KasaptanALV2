@@ -85,3 +85,5 @@ ButcherPriceHistory = __decorate([
     })
 ], ButcherPriceHistory);
 exports.default = ButcherPriceHistory;
+
+//# sourceMappingURL=butcherpricehistory.js.map

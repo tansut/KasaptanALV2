@@ -101,3 +101,5 @@ class Auth {
 }
 exports.Auth = Auth;
 ProductTypeFactory.registerAll();
+
+//# sourceMappingURL=common.js.map

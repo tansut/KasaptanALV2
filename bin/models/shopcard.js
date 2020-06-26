@@ -408,3 +408,5 @@ class ShopcardItem {
     }
 }
 exports.ShopcardItem = ShopcardItem;
+
+//# sourceMappingURL=shopcard.js.map

@@ -51,3 +51,5 @@ class BaseTask {
     }
 }
 exports.BaseTask = BaseTask;
+
+//# sourceMappingURL=basetask.js.map

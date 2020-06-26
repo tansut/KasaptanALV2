@@ -658,3 +658,5 @@ Product = Product_1 = __decorate([
     })
 ], Product);
 exports.default = Product;
+
+//# sourceMappingURL=product.js.map

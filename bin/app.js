@@ -181,3 +181,5 @@ class KasaptanAlApp {
     }
 }
 exports.default = () => (exports.App = new KasaptanAlApp());
+
+//# sourceMappingURL=app.js.map

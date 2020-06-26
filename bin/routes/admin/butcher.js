@@ -340,3 +340,5 @@ __decorate([
     __metadata("design:returntype", Promise)
 ], Route.prototype, "editViewRoute", null);
 exports.default = Route;
+
+//# sourceMappingURL=butcher.js.map

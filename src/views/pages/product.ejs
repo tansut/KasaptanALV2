@@ -26,7 +26,7 @@
 
 
   <%if (__req.query.frame != '1') { %>
-  <!-- <div  class="bg-primary page-title py-2 <%= product.categories && product.categories[0] ? product.categories[0].category.slug:'' %> <%=product.slug%>">
+  <div  class="bg-primary page-title py-2 <%= product.categories && product.categories[0] ? product.categories[0].category.slug:'' %> <%=product.slug%>">
     <div class="container d-lg-flex justify-content-between py-2 py-lg-3">
       <div class="order-lg-2 mb-3 mb-lg-0 pt-lg-2">
         
@@ -48,7 +48,7 @@
         <%}%>
       </div>
     </div>
-  </div> -->
+  </div> 
 
   <% } %>
 
@@ -85,7 +85,7 @@
 
             <div class="row no-gutters mb-3">
 
-              <div class="col-lg-6 mb-1">
+              <div class="col-lg-6 ">
                 <% if (firstImage) { %>
                 <div class="mb-3">
                   <%- include('./_partial/product-resource-view.ejs', {first: true, note: false, resource: firstImage}) %>
@@ -191,18 +191,11 @@
                       </div>
                     </div>
                     <%} %>
-                    <div>
-                    <h1 class="h3"><%= view.name %></h1>
-                    <h2 class="lead h4"><%= view.shortDesc %></h2>
-                    <% if (__req.user && __req.user.hasRole('admin')) {%>
-                    <a target="_blank" class="btn btn-dark btn-sm" href="/pages/admin/product/<%=product.slug%>">Düzenle
-                      <%=product.id%></a>
-                    <%}%>
-                  </div>
+
 
                     <form id="product-form" class="" @submit.prevent="addToShopcard">
                       <% if (controller.reviews.length) { %>
-                      <div class="mb-3">
+                      <div class="mb-3 text-center">
                         <div class="mb-1">
                           <%- include('./_partial/star-rating.ejs', {val: product.ratingValue }) %>
                         </div>
@@ -913,7 +906,7 @@
                       </div> <!-- product desc & comments -->
 
                       <%if (__req.query.frame != '1') { %> 
-                        <div class="container">
+                        <div class="">
         
                           <%- include('./_partial/category-slider', { header:true, viewCats: ['reyon', 'list'], title: 'Ürünlerimiz', allUrl: '/kasap-urunleri' }); %>
                     

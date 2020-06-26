@@ -143,3 +143,5 @@ class IyziPayment extends creditcard_1.CreditcardPaymentProvider {
 }
 exports.default = IyziPayment;
 IyziPayment.key = "iyzico";
+
+//# sourceMappingURL=iyzico.js.map

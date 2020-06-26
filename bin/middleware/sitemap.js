@@ -39,3 +39,5 @@ class SitemapMiddleware extends base_1.default {
     }
 }
 exports.default = (app) => exports.sm = new SitemapMiddleware(app);
+
+//# sourceMappingURL=sitemap.js.map

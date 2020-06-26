@@ -448,3 +448,5 @@ Butcher = Butcher_1 = __decorate([
     })
 ], Butcher);
 exports.default = Butcher;
+
+//# sourceMappingURL=butcher.js.map

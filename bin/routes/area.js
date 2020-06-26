@@ -209,3 +209,5 @@ __decorate([
     __metadata("design:returntype", Promise)
 ], Route.prototype, "allRoute", null);
 exports.default = Route;
+
+//# sourceMappingURL=area.js.map

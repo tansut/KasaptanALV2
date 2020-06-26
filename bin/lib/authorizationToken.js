@@ -145,3 +145,5 @@ refresh_token : (generic encrypted) {
 
  */
 exports.default = new AuthorizationTokenController();
+
+//# sourceMappingURL=authorizationToken.js.map

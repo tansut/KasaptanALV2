@@ -260,3 +260,5 @@ __decorate([
     __metadata("design:returntype", Promise)
 ], Route.prototype, "categoryPhotoRoute", null);
 exports.default = Route;
+
+//# sourceMappingURL=category.js.map

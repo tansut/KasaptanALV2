@@ -56,3 +56,5 @@ function deployBin() {
 //         .pipe(gulp.dest("deploy"));
 // }
 gulp.task('server.deploy', gulp.series(deployClean, gulp.parallel(deployBin)));
+
+//# sourceMappingURL=gulp.server.js.map

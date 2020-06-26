@@ -40,3 +40,5 @@ class TaskLoader {
 }
 exports.default = TaskLoader;
 TaskLoader.tasks = [];
+
+//# sourceMappingURL=index.js.map

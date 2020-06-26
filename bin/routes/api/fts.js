@@ -149,3 +149,5 @@ __decorate([
     __metadata("design:returntype", Promise)
 ], Route.prototype, "searchRoute", null);
 exports.default = Route;
+
+//# sourceMappingURL=fts.js.map

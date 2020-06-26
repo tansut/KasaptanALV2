@@ -67,3 +67,5 @@ class AreaTask extends basetask_1.BaseTask {
     }
 }
 exports.default = AreaTask;
+
+//# sourceMappingURL=areatask.js.map

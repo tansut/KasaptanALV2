@@ -6,3 +6,5 @@ class Route extends router_1.ApiRouter {
     }
 }
 exports.default = Route;
+
+//# sourceMappingURL=resource.js.map
