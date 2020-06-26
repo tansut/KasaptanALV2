@@ -8,7 +8,7 @@
 <body>
   <% include ./_partial/header %>
 
-  <div class="bg-secondary py-4">
+  <div class="py-2">
     <div class="container d-lg-flex justify-content-between py-2 py-lg-3">
       <div class="order-lg-2 mb-3 mb-lg-0 pt-lg-2">
         <nav aria-label="breadcrumb" class="d-none d-lg-block">
@@ -40,7 +40,7 @@
 
   <div class="container">
     <div class="row">
-      <div class="col-sm-4">
+      <div class="col-sm-5">
 
 
         <% var contentImgs = controller.getContentImages() %>
@@ -53,7 +53,7 @@
 
 
       </div>
-      <div class="col-sm-8 pt-3 user-content">
+      <div class="col-sm-7 pt-3 user-content">
         <%- include(`./content.${controller.content.slug}.ejs`) %>
       </div>
 
@@ -65,7 +65,7 @@
 
     <div class="mb-3">
 
-      <%- include('./_partial/category-slider', { viewCats: ['reyon', 'list'], title: 'Ürünler', allUrl: '/kasap-urunleri' }); %>
+      <%- include('./_partial/category-slider', { viewCats: ['reyon', 'list'], title: 'Ürünlerimiz', allUrl: '/kasap-urunleri' }); %>
 
     </div>
 

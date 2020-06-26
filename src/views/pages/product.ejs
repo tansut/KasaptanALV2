@@ -26,7 +26,7 @@
 
 
   <%if (__req.query.frame != '1') { %>
-  <div  class="bg-primary page-title py-2 <%= product.categories && product.categories[0] ? product.categories[0].category.slug:'' %> <%=product.slug%>">
+  <!-- <div  class="bg-primary page-title py-2 <%= product.categories && product.categories[0] ? product.categories[0].category.slug:'' %> <%=product.slug%>">
     <div class="container d-lg-flex justify-content-between py-2 py-lg-3">
       <div class="order-lg-2 mb-3 mb-lg-0 pt-lg-2">
         
@@ -48,7 +48,7 @@
         <%}%>
       </div>
     </div>
-  </div>
+  </div> -->
 
   <% } %>
 
@@ -85,7 +85,7 @@
 
             <div class="row no-gutters mb-3">
 
-              <div class="col-lg-6 ">
+              <div class="col-lg-6 mb-1">
                 <% if (firstImage) { %>
                 <div class="mb-3">
                   <%- include('./_partial/product-resource-view.ejs', {first: true, note: false, resource: firstImage}) %>
@@ -138,7 +138,7 @@
                                   alt="<%=view.butcher.name%>">
                                 <div class="media-body pl-2">
                                   <h3 class="h4 mb-0 mr-2"><%= view.butcher.name %></h3>
-                                  <span class="font-size-ms text-muted">Özenle hazırlıyoruz</span>
+                                  <span class="font-size-ms text-muted"></span>
                                 </div>
                               </a></div>
 
@@ -191,12 +191,18 @@
                       </div>
                     </div>
                     <%} %>
-
-
+                    <div>
+                    <h1 class="h3"><%= view.name %></h1>
+                    <h2 class="lead h4"><%= view.shortDesc %></h2>
+                    <% if (__req.user && __req.user.hasRole('admin')) {%>
+                    <a target="_blank" class="btn btn-dark btn-sm" href="/pages/admin/product/<%=product.slug%>">Düzenle
+                      <%=product.id%></a>
+                    <%}%>
+                  </div>
 
                     <form id="product-form" class="" @submit.prevent="addToShopcard">
                       <% if (controller.reviews.length) { %>
-                      <div class="text-center mb-3">
+                      <div class="mb-3">
                         <div class="mb-1">
                           <%- include('./_partial/star-rating.ejs', {val: product.ratingValue }) %>
                         </div>
@@ -229,7 +235,7 @@
 
 
 
-                          <h5 class="h6 mb-2 text-accent "></i>Yardımcı videolar</h5>
+                          <h5 class="h6 mb-2 text-dark "></i>Yardımcı videolar</h5>
 
 
 
@@ -271,7 +277,7 @@
                           <a href="#tarifVideos">
 
 
-                            <h5 class="h6 mb-2 text-accent ">Bu yemekler için hazırlıyoruz</h5>
+                            <h5 class="h6 mb-2 text-dark ">Bu yemekler için hazırlıyoruz</h5>
 
 
 
@@ -434,8 +440,8 @@
 
 
                         <h5 v-if="product && product.purchaseOptions.length > 1" class="h6 mb-2 text-accent">
-                          <i class="czi-arrow-right-circle mr-1"></i>
-                          Lütfen seçim yapın
+ 
+                          Seçim yapın:
                         </h5>
                         <input type="hidden" id="product-id" value="<%= product.id %>" />
 
@@ -544,7 +550,7 @@
                   
                                   <div v-if="selectedUnit && selectedUnit.perPerson" class="d-flex align-items-center justify-content-center">
                   <p> <a @click="showCalculator(selectedUnit)"
-                  class="text-primary font-weight-medium " href="#size-chart"><i class="czi-calculator mr-1"></i>Miktar Hesaplama Aracı</a> ihtiyacınız kadar almanıza yardımcı olabilir. </p>
+                  class="text-dark font-weight-medium " href="#size-chart"><i class="czi-calculator mr-1"></i>Miktar Hesaplama Aracı</a> ihtiyacınız kadar almanıza yardımcı olabilir. </p>
                                 
                                   
                                   </div>
@@ -629,7 +635,6 @@
 
 
                 </div>
-
 
                 <div id="tabpc"></div>
 
@@ -907,6 +912,13 @@
 
                       </div> <!-- product desc & comments -->
 
+                      <%if (__req.query.frame != '1') { %> 
+                        <div class="container">
+        
+                          <%- include('./_partial/category-slider', { header:true, viewCats: ['reyon', 'list'], title: 'Ürünlerimiz', allUrl: '/kasap-urunleri' }); %>
+                    
+                        </div>
+                        <%}%>
                   </div>
                   <!--bglightbox-->
 
