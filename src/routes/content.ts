@@ -24,9 +24,14 @@ import { ProductCacheItem } from '../lib/cache';
 export default class Route extends ViewRouter {
 
     content: Content;
-    allcontent: Content[];
+    allcontent: Content[]; 
     resources: Resource[] = [];
+    mangalFoods: Resource[] = [];
     categories: any;
+
+    async foods() {
+        return await new ProductsApi(this.constructorParams).getFoodAndTarifResources(null, 10);
+    }
 
 
     filterProductsByCategory(category: Category, limit= 8) {
@@ -126,6 +131,7 @@ export default class Route extends ViewRouter {
         }
 
         await this.loadCategories();
+        this.mangalFoods = this.req.params.content == 'antrikot' ? await this.foods(): [];
 
         this.renderPage()
 

@@ -30,6 +30,12 @@ class Route extends router_1.ViewRouter {
     constructor() {
         super(...arguments);
         this.resources = [];
+        this.mangalFoods = [];
+    }
+    foods() {
+        return __awaiter(this, void 0, void 0, function* () {
+            return yield new product_1.default(this.constructorParams).getFoodAndTarifResources(null, 10);
+        });
     }
     filterProductsByCategory(category, limit = 8) {
         let result = [];
@@ -117,6 +123,7 @@ class Route extends router_1.ViewRouter {
                 return this.res.redirect(this.req.originalUrl.toLowerCase().replace('/et-kulturu', '/blog'), 301);
             }
             yield this.loadCategories();
+            this.mangalFoods = this.req.params.content == 'antrikot' ? yield this.foods() : [];
             this.renderPage();
         });
     }
