@@ -181,7 +181,7 @@ export default class Route extends ViewRouter {
         "";
       
         let pageDesc = resource.tag1.includes('tarif') ?
-         `${resource.title} yapmak için ${products.map(p=>p.name).join(', ')} ${products.length == 1 ? 'ürünümüzü':'ürünlerimizi'} şimdi sipariş verin, kapınıza gelsin. ${resource.title} en kısa ve net tarifi kasaptanAl.com'da!`:
+         `${resource.title} yapmak için ${products.map(p=>p.name).join(', ')} ${products.length == 1 ? 'ürünümüzü':'ürünlerimizi'} şimdi sipariş verin, kapınıza gelsin!`:
          `${resource.title} yapmak için ${products.map(p=>p.name).join(', ')} uygun etlerdendir. En lezzetli halleriyle kasaptanAl.com'dan şimdi sipariş verin, kapınıza gelsin!`
 
         let thumbnail = resource.contentType == 'video-youtube' ? (resource.thumbnailUrl ? resource.getThumbnailFileUrl(): null): resource.getThumbnailFileUrl();

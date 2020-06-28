@@ -64,7 +64,7 @@ class Product extends BaseModel<Product> {
         this.availableUnits.slice(0, -1).join(', ').toLocaleLowerCase() + ' veya ' + this.availableUnits[this.availableUnits.length-1].toLocaleLowerCase()
         ;
 
-        let result = `${start} En iyi ${units} ${this.name} fiyat teklifleriyle online kasaplarımızdan satın alın, kapınıza gelsin!`
+        let result = `${start} En iyi ${units} fiyat teklifleriyle online sişariş verin, kapınıza gelsin!`
 
         return result;
     }
