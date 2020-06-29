@@ -374,6 +374,14 @@
                     <hr class="my-4">
                     <h6>İletişim</h6>
                     <p><%= butcher.address %>, <%= butcher.areaLevel2.name %>/<%= butcher.areaLevel1.name %></p>
+                    <% if (butcher.website) { %>
+                    <a target="_blank" class="font-size-xs nav-link-style d-flex align-items-center"
+                      href="<%= butcher.website %>"><i
+                        class="czi-globe opacity-60 mr-2"></i><%= butcher.website %></a>
+             
+
+
+                  <% } %>
 
                     <% if (!butcher.approved) { %>
                     <ul class="list-unstyled font-size-sm">

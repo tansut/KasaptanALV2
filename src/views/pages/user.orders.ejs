@@ -43,7 +43,7 @@
                 <!-- Toolbar-->
                 <div class="d-none d-lg-flex justify-content-between align-items-center pt-lg-3 pb-4 pb-lg-5 mb-lg-3">
                     <h6 class="font-size-base text-light mb-0">Siparişlerim</h6><a class="btn btn-primary btn-sm"
-                        href="/user/signoff"><i class="czi-sign-out mr-2"></i>Çıkış</a>
+                        href="/user/signoff" rel="nofollow"><i class="czi-sign-out mr-2"></i>Çıkış</a>
                 </div>
                 <!-- Orders list-->
                 <div class="table-responsive font-size-md">
@@ -60,7 +60,7 @@
                         <tbody>
                             <% orders.forEach(p=> { %>
                             <tr>
-                                <td class="py-3"><a class="btn btn-sm btn-dark"
+                                <td class="py-3"><a class="btn btn-sm btn-dark" rel="nofollow"
                                         href="/user/orders/<%=p.ordernum%>#order"><%=p.ordernum%></a></td>
                                 <td class="py-3"><%=__helper.formatDate(p.creationDate) %></td>
                                 <td class="py-3"><span class="badge badge-info m-0"><%=p.status%></span></td>
