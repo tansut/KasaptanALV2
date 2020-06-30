@@ -93,25 +93,26 @@ export default class Route extends ViewRouter {
 
             let fileName = `${fileprefix}-${this.req.params.ref1}-${resources.length + 1}-${random}.jpg`;
             let dest = this.publicDir + `${filedest}/${fileName}`
-            let thumbnailName = `${fileprefix}-${this.req.params.ref1}-${resources.length + 1}-${random}-thumbnail.jpg`;
+            let thumbnailName = `${fileprefix}-${this.req.params.ref1}-${resources.length + 1}-${random}-thumbnail.jpg`;   
 
             photofile.mv(dest, (err) => {
                 if (err)
                     return reject(err);
-                return Resource.create({
-                    type: this.req.params.type,
-                    ref1: this.req.params.ref1,
-                    contentType: "image/jpeg",
-                    contentLength: photofile.size,
-                    contentUrl: fileName,
-                    thumbnailUrl: thumbnailName,
-                    folder: filedest
-                }).then((res) => {
-                    return Helper.normalizePhoto(this.publicDir + `${filedest}/${fileName}`, this.publicDir + `${filedest}/${thumbnailName}`).then(() => resolve(res)).catch((e) => reject(e))
-                }).catch(err => reject(err))
+                return Helper.normalizePhoto(this.publicDir + `${filedest}/${fileName}`, this.publicDir + `${filedest}/${thumbnailName}`).then((img: any) => {
+                    return Resource.create({
+                        type: this.req.params.type,
+                        ref1: this.req.params.ref1,
+                        contentType: "image/jpeg",
+                        contentLength: photofile.size,
+                        contentUrl: fileName,
+                        thumbnailUrl: thumbnailName,
+                        folder: filedest,
+                        w: img.getWidth().toString(),
+                        h: img.getHeight().toString(),
+                    }).then(()=>resolve()).catch((err)=>reject(err))
+                }).catch(err=>reject(err))                    
             });
         })
-
     }
 
     async getCategories() {

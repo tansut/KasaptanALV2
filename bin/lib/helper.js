@@ -137,13 +137,13 @@ class Helper {
             return new Promise((resolve, reject) => {
                 _img.write(path.resolve(url), (err) => {
                     if (thumbnail) {
-                        _img = _img.cover(300, 300);
-                        _img.write(path.resolve(thumbnail), (err) => {
-                            err ? reject(err) : resolve();
+                        let _timg = _img.clone().cover(300, 300);
+                        _timg.write(path.resolve(thumbnail), (err) => {
+                            err ? reject(err) : resolve(_img);
                         });
                     }
                     else
-                        err ? reject(err) : resolve();
+                        err ? reject(err) : resolve(_img);
                 });
             });
             // return _img.getBufferAsync("image/jpeg").then(buff => {

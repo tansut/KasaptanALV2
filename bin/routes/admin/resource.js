@@ -103,16 +103,18 @@ class Route extends router_1.ViewRouter {
                 photofile.mv(dest, (err) => {
                     if (err)
                         return reject(err);
-                    return resource_1.default.create({
-                        type: this.req.params.type,
-                        ref1: this.req.params.ref1,
-                        contentType: "image/jpeg",
-                        contentLength: photofile.size,
-                        contentUrl: fileName,
-                        thumbnailUrl: thumbnailName,
-                        folder: filedest
-                    }).then((res) => {
-                        return helper_1.default.normalizePhoto(this.publicDir + `${filedest}/${fileName}`, this.publicDir + `${filedest}/${thumbnailName}`).then(() => resolve(res)).catch((e) => reject(e));
+                    return helper_1.default.normalizePhoto(this.publicDir + `${filedest}/${fileName}`, this.publicDir + `${filedest}/${thumbnailName}`).then((img) => {
+                        return resource_1.default.create({
+                            type: this.req.params.type,
+                            ref1: this.req.params.ref1,
+                            contentType: "image/jpeg",
+                            contentLength: photofile.size,
+                            contentUrl: fileName,
+                            thumbnailUrl: thumbnailName,
+                            folder: filedest,
+                            w: img.getWidth().toString(),
+                            h: img.getHeight().toString(),
+                        }).then(() => resolve()).catch((err) => reject(err));
                     }).catch(err => reject(err));
                 });
             });
