@@ -41,7 +41,7 @@
 
             <div class="card product-card ">
               <a class="card-img-top d-block overflow-hidden" href="<%= `/${reyonlar[c].slug}`%>">
-                <img class="rounded" src="<%=`${__req.helper.imgUrl('category-photos', reyonlar[c].category.slug)}`%>"
+                <img class="rounded lazyload" data-src="<%=`${__req.helper.imgUrl('category-photos', reyonlar[c].category.slug)}`%>"
                   alt="<%= reyonlar[c].name %>"></a>
               <div class="card-body text-center">
                 <h3 class="product-title font-size-md"><a

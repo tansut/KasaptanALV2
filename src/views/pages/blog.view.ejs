@@ -46,7 +46,7 @@
         <% var contentImgs = controller.getContentImages() %>
         <% for(var i=0; i<contentImgs.length; i++) {%>
       
-          <img width="1500" height="1000" src="<%= contentImgs[i].url %>" class="d-block" alt="<%= controller.content.title %>">
+          <img width="1080" height="720" data-src="<%= contentImgs[i].url %>" class="d-block lazyload" alt="<%= controller.content.title %>">
       
 
         <% } %>

@@ -51,7 +51,7 @@
             <article class="col-sm-4 blog-list pb-2 mb-2">
               <div class="card h-100">
                 <a href="<%= `/blog/${controller.allcontent[i].slug}` %>">
-                <img class="card-img-top" width="500" height="333" src="<%= `${controller.getthumbnailurl(controller.allcontent[i])}` %>"
+                <img class="card-img-top lazyload" width="360" height="240" data-src="<%= `${controller.getthumbnailurl(controller.allcontent[i])}` %>"
                 alt="<%= controller.allcontent[i].title %>"> 
                 </a>
                 

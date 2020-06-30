@@ -16,7 +16,7 @@ var resourceUrl = targetUrl + '/' + (resource.slug || resource.id)  + (mode=='ta
         <% } %>
         " <% } %>>
       <img width="500" height="500" <% if (resource.contentType == 'video-youtube') { %>
-        src="<%= (resource.thumbnailUrl ? resource.thumbnailFileUrl: null) ||  `${__req.helper.imgUrl('product-photos', resource.product.slug)}` %>"
+        class="lazyload" data-src="<%= (resource.thumbnailUrl ? resource.thumbnailFileUrl: null) ||  `${__req.helper.imgUrl('product-photos', resource.product.slug)}` %>"
         <% } else { %> src="<%= `${resource.thumbnailFileUrl}` %>" <% } %> alt="<%= resource.title  %>">
     </a>
     <div class="card-body text-center">
