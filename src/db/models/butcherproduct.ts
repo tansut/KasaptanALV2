@@ -33,14 +33,21 @@ class ButcherProduct extends BaseModel<ButcherProduct> {
 
 
     get priceView(): PriceView {
+        let units = ['unit1', 'unit2', 'unit3'];
         if (this.kgPrice > 0) {
+            let title = 'KG';
+            units.forEach(u=> {
+                if (this.product[`${u}`] == 'kg') {
+                    title = this.product[`${u}title`]
+                }
+            })
             return {
                 price: this.kgPrice,
                 unit: 'kg',
-                unitTitle: 'KG'
+                unitTitle: title
             }
         } else {
-            let units = ['unit1', 'unit2', 'unit3'];
+            
             for(let i = 0; i< units.length;i++) {
                 let done = this[`${units[i]}enabled`] && this[`${units[i]}price`] > 0;
                 if (done) return {
@@ -184,6 +191,14 @@ class ButcherProduct extends BaseModel<ButcherProduct> {
         type: DataType.TEXT
     })
     mddesc: string;   
+
+    @Column({
+        allowNull: true,
+        type: DataType.TEXT
+    })
+    longdesc: string;       
+
+    
 }
 
 export default ButcherProduct;

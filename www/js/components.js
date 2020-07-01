@@ -541,6 +541,13 @@ window.initComponents = function initComponents() {
                             video: $('#adak-video').val(),
                             hisse: $('#adak-hisse').val(),
                         }
+                    } else if (this.product.productType == 'kurban') {
+                        productTypeData = {
+                            vekalet: $('#kurban-vekalet').val(),
+                            video: $('#kurban-video').val(),
+                            teslimat: $('#kurban-hisse').val(),
+                            
+                        }
                     }
 
 

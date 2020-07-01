@@ -114,7 +114,8 @@ export default class Route extends ButcherRouter {
 
             vitrin: butcherProduct.vitrin,
             kgPrice: butcherProduct.kgPrice,
-            mddesc: butcherProduct.mddesc
+            mddesc: butcherProduct.mddesc,
+            longdesc: butcherProduct.longdesc
         } : {
                 displayOrder: "",
                 enabled: false,
@@ -133,13 +134,14 @@ export default class Route extends ButcherRouter {
                 unit2weight: '',
                 unit3weight: '',
                 mddesc: "",
+                longdesc:"",
                 product: product
             }
     }
 
     async setProducts() {
         let selling = this.butcher.products.filter(p => {
-            return p.enabled
+            return true
         })
         selling = _.sortBy(selling, ["displayOrder"]).reverse();
 
@@ -147,7 +149,7 @@ export default class Route extends ButcherRouter {
 
         let others = allproducts.filter(p => {
             let bp = this.butcher.products.find(bp => {
-                return bp.enabled == true && bp.productid == p.id
+                return bp.productid == p.id
             })
             return !bp
         })
@@ -215,6 +217,7 @@ export default class Route extends ButcherRouter {
         newItem.unit3price = this.req.body.unit3price ? parseFloat(this.req.body.unit3price) : 0;
         newItem.kgPrice = this.req.body.productkgPrice ? parseFloat(this.req.body.productkgPrice) : 0;
         newItem.mddesc = this.req.body.productmddesc;
+        newItem.longdesc = this.req.body.productlongdesc;
 
         newItem.unit1enabled = this.req.body.unit1enabled =="on";
         newItem.unit2enabled = this.req.body.unit2enabled =="on";

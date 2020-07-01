@@ -1,6 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.Auth = exports.IntegrationInfo = exports.UserRoles = exports.ProductTypeFactory = exports.AdakProductManager = exports.GenericProductManager = exports.ProductTypeManager = void 0;
+exports.Auth = exports.IntegrationInfo = exports.UserRoles = exports.ProductTypeFactory = exports.KurbanProductManager = exports.AdakProductManager = exports.GenericProductManager = exports.ProductTypeManager = void 0;
 require("reflect-metadata");
 class ProductTypeManager {
     saveToOrderItem(o) {
@@ -57,12 +57,64 @@ AdakProductManager.hisseData = {
     '15': 'Onbeş hisse tanzim edin',
     '15+': 'Onbeş ve üzeri hisse tanzim edin'
 };
+class KurbanProductManager extends ProductTypeManager {
+    constructor() {
+        super(...arguments);
+        this.kiminadina = '';
+        this.vekalet = 'online';
+        this.video = 'no';
+        this.teslimat = '0';
+        this.bagisTarget = '2';
+        this.bagis = false;
+        this.bagisNote = '';
+    }
+    saveToOrderItem(o) {
+        o.custom1 = this.vekalet;
+        o.custom2 = this.video;
+        o.custom3 = this.teslimat;
+        o.custom4 = this.kiminadina;
+        o.custom5 = this.bagisTarget;
+        o.custom6 = this.bagis ? 'yes' : 'no';
+        o.custom7 = this.bagisNote;
+    }
+    loadFromOrderItem(o) {
+        this.vekalet = o.custom1;
+        this.video = o.custom2;
+        this.teslimat = o.custom3;
+        this.kiminadina = o.custom4;
+        this.bagisTarget = o.custom5;
+        this.bagis = o.custom6 == 'yes' ? true : false;
+        this.bagisNote = o.custom7;
+    }
+}
+exports.KurbanProductManager = KurbanProductManager;
+KurbanProductManager.vekaletData = {
+    'online': 'Sipariş vererek vekâletimi de veriyorum',
+    'callme': 'Vekâlet için beni arayın',
+};
+KurbanProductManager.videoData = {
+    'yes': 'Kesim videosu gönderin',
+    'no': 'Kesim videosu istemiyorum',
+};
+KurbanProductManager.teslimatData = {
+    '0': 'Haberleşelim, bayramın 1. günü gelip alırım',
+    '1': 'Haberleşelim, bayramın 2. günü gelip alırım',
+    '2': 'Haberleşelim, bayramın 3. günü gelip alırım',
+    '10': 'Bayramın 2. günü adresime getirin',
+    '11': 'Bayramın 3. günü adresime getirin',
+    '12': 'Bayramın 4. günü adresime getirin',
+};
+KurbanProductManager.bagisTarget = {
+    '1': 'İhtiyaç sahibi aileye bağışlayın',
+    '2': 'Kurban kabul eden aşevi/dernek/vakfa bağışlayın',
+};
 class ProductTypeFactory {
     static register(key, cls) {
         ProductTypeFactory.items[key] = cls;
     }
     static registerAll() {
         ProductTypeFactory.register('adak', AdakProductManager);
+        ProductTypeFactory.register('kurban', KurbanProductManager);
         ProductTypeFactory.register('generic', AdakProductManager);
     }
     static create(key, params) {

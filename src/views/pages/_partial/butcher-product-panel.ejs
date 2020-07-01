@@ -6,7 +6,7 @@
                    
     <div id="butchervendor" class="bg-secondary">
    
-      <div class="d-flex">
+      <div class="d-flex mb-3">
 
      
      <% if (butcherVideo) {%>
@@ -74,13 +74,23 @@ class="gallery-item-caption"><%= butcherVideo.title %></span></a>
   </div> -->
 
     <% if (view.butcherNote) { %>
-      <div class="font-size-sm  p-3">
-        <!-- <span class="badge badge-accent font-size-xs mr-1">Kasabımızdan</span> -->
-        <span class="font-size-sm text-info">"<%= view.butcherNote %>"</span>
+      <div class="font-size-sm border shadow p-3 mx-2 mb-3">
+        <span class="font-size-sm font-weight-medium mb-1">Kasaptan Detaylı Açıklama</span> 
+        <div class="font-italic">
+          
+          <%- controller.markdown.render(view.butcherNote) %>
+        </div>
         
-
+        <% if (view.butcherLongNote) { %>
+         
+            <button onclick="$('#butchernotewindow').modal('show'); return false" class="btn btn-accent btn-sm">Daha Fazla Bilgi</button>
+          
+        <% } %>
       </div>
     <% } %>
+
+
+    
     
     <div class="pt-3 px-3 row">
       <% if (view.butcher.userRatingAsPerc > 0 ) { %>
@@ -138,3 +148,23 @@ class="gallery-item-caption"><%= butcherVideo.title %></span></a>
     
   </div>
 
+  <% if (view.butcherLongNote) { %>
+    <div class="modal fade" id="butchernotewindow">
+      <div class="modal-dialog fs-modal-dialog modal-lg modal-dialog-scrollable" role="document">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h4 class="modal-title"><%=view.butcher.name%></h4>
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+              <span aria-hidden="true">×</span>
+            </button>
+          </div>
+          <div class="modal-body note-content user-content p-3">
+            <%- controller.markdown.render(view.butcherLongNote) %>
+          </div>
+        </div>
+      </div>
+    </div>
+  <% } %>
+
+
+  

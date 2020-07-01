@@ -55,7 +55,15 @@ class CreditcardPaymentProvider {
         });
     }
     getMerchantMoney(o, shouldBePaid) {
-        let calc = new commissionHelper_1.ComissionHelper(o.orderSource == order_1.OrderSource.kasaptanal ? o.butcher.commissionRate : o.butcher.payCommissionRate, o.orderSource == order_1.OrderSource.kasaptanal ? o.butcher.commissionFee : o.butcher.payCommissionFee);
+        let max = 1200.00;
+        let rate = o.orderSource == order_1.OrderSource.kasaptanal ? o.butcher.commissionRate : o.butcher.payCommissionRate;
+        let fee = o.orderSource == order_1.OrderSource.kasaptanal ? o.butcher.commissionFee : o.butcher.payCommissionFee;
+        if (o.orderSource == order_1.OrderSource.kasaptanal) {
+            if (shouldBePaid >= max) {
+                rate = 0.05;
+            }
+        }
+        let calc = new commissionHelper_1.ComissionHelper(rate, fee);
         let totalFee = calc.calculateButcherComission(shouldBePaid);
         let merchantPrice = helper_1.default.asCurrency(totalFee.inputTotal - totalFee.kalitteFee - totalFee.kalitteVat);
         if (o.orderSource == order_1.OrderSource.kasaptanal) {
@@ -65,7 +73,8 @@ class CreditcardPaymentProvider {
             let butcherPuan = helper_1.default.asCurrency(butcherPuanEarned.alacak - butcherPuanEarned.borc);
             let kalitteByButcherPuan = helper_1.default.asCurrency(kalitteByButcherEarned.alacak - kalitteByButcherEarned.borc);
             let totalPuanByButcher = helper_1.default.asCurrency(butcherPuan + kalitteByButcherPuan);
-            merchantPrice = helper_1.default.asCurrency(merchantPrice - totalPuanByButcher);
+            let totalPuanByButcherIncVat = helper_1.default.asCurrency(totalPuanByButcher * 1.18);
+            merchantPrice = helper_1.default.asCurrency(merchantPrice - totalPuanByButcherIncVat);
         }
         return merchantPrice;
     }

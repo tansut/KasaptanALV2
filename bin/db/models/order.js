@@ -553,6 +553,30 @@ __decorate([
 ], OrderItem.prototype, "custom5", void 0);
 __decorate([
     sequelize_typescript_1.Column({
+        allowNull: true
+    }),
+    __metadata("design:type", String)
+], OrderItem.prototype, "custom6", void 0);
+__decorate([
+    sequelize_typescript_1.Column({
+        allowNull: true
+    }),
+    __metadata("design:type", String)
+], OrderItem.prototype, "custom7", void 0);
+__decorate([
+    sequelize_typescript_1.Column({
+        allowNull: true
+    }),
+    __metadata("design:type", String)
+], OrderItem.prototype, "custom8", void 0);
+__decorate([
+    sequelize_typescript_1.Column({
+        allowNull: true
+    }),
+    __metadata("design:type", String)
+], OrderItem.prototype, "custom9", void 0);
+__decorate([
+    sequelize_typescript_1.Column({
         allowNull: false,
         type: sequelize_typescript_1.DataType.DECIMAL(13, 2)
     }),

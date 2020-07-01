@@ -487,6 +487,8 @@ export default class Route extends ApiRouter {
 
 
     getPossiblePuanGain(o: Order, total: number, includeAvailable: boolean = false): PuanResult[] {
+
+        let max = 1200.00;
         let calculator = new PuanCalculator();
         let result: PuanResult[] = [];
 
@@ -500,7 +502,7 @@ export default class Route extends ApiRouter {
         }
 
         if (o.butcher.enableCreditCard) {
-            if (o.isFirstButcherOrder) {
+            if (o.isFirstButcherOrder && total < max) {
                 let firstOrderPuan = calculator.calculateCustomerPuan(firstOrder, total);
                 if (firstOrderPuan > 0.00 || includeAvailable) {
                     result.push({
@@ -530,7 +532,7 @@ export default class Route extends ApiRouter {
                             }
                         )
                     } else {
-                        let toKalitte = Helper.asCurrency(earnedPuanb * 0.2);
+                        let toKalitte = Helper.asCurrency(earnedPuanb * 0.5);
                         let toButcher = Helper.asCurrency(earnedPuanb - toKalitte);
                         if (toButcher > 0.00) {
                             result.push(
@@ -758,7 +760,7 @@ export default class Route extends ApiRouter {
                 for (var p = 0; p < notifyMobilePhones.length; p++) {
                     if (notifyMobilePhones[p].trim()) {
                         let payUrl = `${this.url}/pay/${ol[i].ordernum}`;
-                        Sms.send("90" + Helper.getPhoneNumber(notifyMobilePhones[p].trim()), `Tebrikler, ${ol[i].name} ${Helper.formattedCurrency(paymentInfo.paidPrice)} kasabınıza online odeme yapti. Bilgi icin ${payUrl} `, false, new SiteLogRoute(this.constructorParams))
+                        Sms.send("90" + Helper.getPhoneNumber(notifyMobilePhones[p].trim()), `Tebrikler, ${ol[i].name} ${Helper.formattedCurrency(paymentInfo.paidPrice)} online odeme yapti. Bilgi icin ${payUrl} `, false, new SiteLogRoute(this.constructorParams))
                     }
                 }
             }

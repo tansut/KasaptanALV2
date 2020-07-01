@@ -94,7 +94,8 @@ export default class Route  extends ViewRouter {
             unit3price: butcherProduct.unit3price,
             vitrin: butcherProduct.vitrin,
             kgPrice: butcherProduct.kgPrice,
-            mddesc: butcherProduct.mddesc
+            mddesc: butcherProduct.mddesc,
+            longdesc: butcherProduct.longdesc
         } : {
                 displayOrder: "",
                 enabled: false,
@@ -103,7 +104,8 @@ export default class Route  extends ViewRouter {
                 unit3price: 0,
                 vitrin: false,
                 kgPrice: 0,
-                mddesc: ""
+                mddesc: "",
+                longdesc:""
             }
     }
 
@@ -320,6 +322,7 @@ export default class Route  extends ViewRouter {
             newItem.unit3price = this.req.body.unit3price ? parseFloat(this.req.body.unit3price) : 0;
             newItem.kgPrice = this.req.body.productkgPrice ? parseFloat(this.req.body.productkgPrice) : 0;
             newItem.mddesc = this.req.body.productmddesc;
+            newItem.longdesc = this.req.body.productlongdesc;
             await newItem.save();
             this.butcher = await this.getButcher();
         }

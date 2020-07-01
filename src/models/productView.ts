@@ -73,6 +73,7 @@ export interface ProductView {
     id: number;
     butcher?: ProductButcherView;
     butcherNote?: string;
+    butcherLongNote?: string;
     dispatcher?: ProductDispatcherView
     slug: string;
     kgPrice: number;

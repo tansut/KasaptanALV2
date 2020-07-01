@@ -342,6 +342,7 @@ export default class Route extends ApiRouter {
                 kgPrice: kgPrice
             } : null,
             butcherNote: (butcherProduct && butcherProduct.mddesc) ? butcherProduct.mddesc: '',
+            butcherLongNote: (butcherProduct && butcherProduct.longdesc) ? butcherProduct.longdesc: '',
             slug: product.slug,
             name: product.name,
             kgPrice: kgPrice,

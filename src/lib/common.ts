@@ -65,6 +65,62 @@ export class AdakProductManager extends ProductTypeManager {
     }    
 }
 
+export class KurbanProductManager extends ProductTypeManager {
+
+    static vekaletData = {
+        'online': 'Sipariş vererek vekâletimi de veriyorum',
+        'callme': 'Vekâlet için beni arayın',        
+    }
+
+    static videoData = {
+        'yes': 'Kesim videosu gönderin',
+        'no': 'Kesim videosu istemiyorum',        
+    } 
+
+    static teslimatData = {
+        '0': 'Haberleşelim, bayramın 1. günü gelip alırım',
+        '1': 'Haberleşelim, bayramın 2. günü gelip alırım',
+        '2': 'Haberleşelim, bayramın 3. günü gelip alırım',
+        '10': 'Bayramın 2. günü adresime getirin',       
+        '11': 'Bayramın 3. günü adresime getirin',       
+        '12': 'Bayramın 4. günü adresime getirin',          
+    }   
+    
+    static bagisTarget = {
+        '1': 'İhtiyaç sahibi aileye bağışlayın',
+        '2': 'Kurban kabul eden aşevi/dernek/vakfa bağışlayın',
+    }     
+    kiminadina: string = '';
+    vekalet: string = 'online';
+    video: string = 'no';
+    teslimat: string = '0';
+    bagisTarget: string = '2';
+    bagis: boolean = false;
+    bagisNote: string = '';
+
+    saveToOrderItem(o:OrderItem) {
+        o.custom1 = this.vekalet ;
+        o.custom2 = this.video ;
+        o.custom3 = this.teslimat ;
+        o.custom4 = this.kiminadina;
+        o.custom5 = this.bagisTarget;
+        o.custom6 = this.bagis ? 'yes': 'no';
+        o.custom7 = this.bagisNote;
+    }
+
+    loadFromOrderItem(o:OrderItem) {
+        this.vekalet = o.custom1;
+        this.video = o.custom2;
+        this.teslimat = o.custom3;
+
+        this.kiminadina = o.custom4;
+        this.bagisTarget= o.custom5;
+        this.bagis = o.custom6 == 'yes' ? true: false;
+        this.bagisNote = o.custom7       
+    }    
+}
+
+
 
 export class ProductTypeFactory {
 
@@ -76,6 +132,7 @@ export class ProductTypeFactory {
 
     static registerAll() {
         ProductTypeFactory.register('adak', AdakProductManager);
+        ProductTypeFactory.register('kurban', KurbanProductManager);
         ProductTypeFactory.register('generic', AdakProductManager);
     }
 

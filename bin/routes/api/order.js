@@ -477,6 +477,7 @@ class Route extends router_1.ApiRouter {
         });
     }
     getPossiblePuanGain(o, total, includeAvailable = false) {
+        let max = 1200.00;
         let calculator = new commissionHelper_1.PuanCalculator();
         let result = [];
         let firstOrder = {
@@ -486,7 +487,7 @@ class Route extends router_1.ApiRouter {
             rate: 0.03
         };
         if (o.butcher.enableCreditCard) {
-            if (o.isFirstButcherOrder) {
+            if (o.isFirstButcherOrder && total < max) {
                 let firstOrderPuan = calculator.calculateCustomerPuan(firstOrder, total);
                 if (firstOrderPuan > 0.00 || includeAvailable) {
                     result.push({
@@ -514,7 +515,7 @@ class Route extends router_1.ApiRouter {
                         });
                     }
                     else {
-                        let toKalitte = helper_1.default.asCurrency(earnedPuanb * 0.2);
+                        let toKalitte = helper_1.default.asCurrency(earnedPuanb * 0.5);
                         let toButcher = helper_1.default.asCurrency(earnedPuanb - toKalitte);
                         if (toButcher > 0.00) {
                             result.push({
@@ -713,7 +714,7 @@ class Route extends router_1.ApiRouter {
                     for (var p = 0; p < notifyMobilePhones.length; p++) {
                         if (notifyMobilePhones[p].trim()) {
                             let payUrl = `${this.url}/pay/${ol[i].ordernum}`;
-                            sms_1.Sms.send("90" + helper_1.default.getPhoneNumber(notifyMobilePhones[p].trim()), `Tebrikler, ${ol[i].name} ${helper_1.default.formattedCurrency(paymentInfo.paidPrice)} kasabınıza online odeme yapti. Bilgi icin ${payUrl} `, false, new sitelog_1.default(this.constructorParams));
+                            sms_1.Sms.send("90" + helper_1.default.getPhoneNumber(notifyMobilePhones[p].trim()), `Tebrikler, ${ol[i].name} ${helper_1.default.formattedCurrency(paymentInfo.paidPrice)} online odeme yapti. Bilgi icin ${payUrl} `, false, new sitelog_1.default(this.constructorParams));
                         }
                     }
                 }

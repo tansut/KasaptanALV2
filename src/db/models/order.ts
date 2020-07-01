@@ -439,6 +439,26 @@ class OrderItem extends BaseModel<Order> {
     custom5: string;    
 
     @Column({
+        allowNull: true
+    })
+    custom6: string;       
+
+    @Column({
+        allowNull: true
+    })
+    custom7: string;   
+
+    @Column({
+        allowNull: true
+    })
+    custom8: string;   
+
+    @Column({
+        allowNull: true
+    })
+    custom9: string;       
+
+    @Column({
         allowNull: false,
         type: DataType.DECIMAL(13, 2)
     })

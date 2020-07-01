@@ -15,15 +15,21 @@ const product_1 = require("./product");
 const butcher_1 = require("./butcher");
 let ButcherProduct = class ButcherProduct extends basemodel_1.default {
     get priceView() {
+        let units = ['unit1', 'unit2', 'unit3'];
         if (this.kgPrice > 0) {
+            let title = 'KG';
+            units.forEach(u => {
+                if (this.product[`${u}`] == 'kg') {
+                    title = this.product[`${u}title`];
+                }
+            });
             return {
                 price: this.kgPrice,
                 unit: 'kg',
-                unitTitle: 'KG'
+                unitTitle: title
             };
         }
         else {
-            let units = ['unit1', 'unit2', 'unit3'];
             for (let i = 0; i < units.length; i++) {
                 let done = this[`${units[i]}enabled`] && this[`${units[i]}price`] > 0;
                 if (done)
@@ -203,6 +209,13 @@ __decorate([
     }),
     __metadata("design:type", String)
 ], ButcherProduct.prototype, "mddesc", void 0);
+__decorate([
+    sequelize_typescript_1.Column({
+        allowNull: true,
+        type: sequelize_typescript_1.DataType.TEXT
+    }),
+    __metadata("design:type", String)
+], ButcherProduct.prototype, "longdesc", void 0);
 ButcherProduct = __decorate([
     sequelize_typescript_1.Table({
         tableName: "ButcherProducts",

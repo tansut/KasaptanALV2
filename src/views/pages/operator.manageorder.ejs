@@ -131,7 +131,7 @@
         <span class="d-block">kasaptanAl.com hizmeti: <%- include('./_partial/currency.ejs', {value: controller.butcherFee.kalitteFee}) %> + KDV
         </span>
         <% if (controller.butcherFee.butcherToCustomer > 0) { %>
-        <span class="d-block">Müşterinize verdiğiniz sadakat puanı: <%- include('./_partial/currency.ejs', {value: controller.butcherFee.butcherToCustomer}) %> 
+        <span class="d-block">Müşterinize verdiğiniz sadakat puanı: <%- include('./_partial/currency.ejs', {value: controller.butcherFee.butcherToCustomer}) %> + KDV
         </span>      
         <% } %>
         <span>
@@ -149,9 +149,9 @@
 
       <% } %>
       <div class="col-sm-6">
-        <h5>**----KASAPTANAL YENİ SİPARİŞ----**</h5>
+        <h5>*----YENİ SİPARİŞ----*</h5>
         <p>
-           Siparişin **son durumuna** ve **ürün resimlerine** aşağıdaki bağlantıdan ulaşın: <br>
+           Siparişin *son durumuna* ve **ürün resimlerine** aşağıdaki bağlantıdan ulaşın: <br>
          
             <a href="<%=controller.url%>/pay/<%=order.ordernum%>">
               <%=controller.url%>/pay/<%=order.ordernum%>
@@ -203,12 +203,12 @@
             <%}%>
         </p>
         <p>
-          Toplam **(<%=order.items.length%>) adet** ürün
+          Toplam *(<%=order.items.length%>) adet* ürün
         </p>
         <div class="mb-2">
           <% order.items.forEach((item, i) => { %>
            
-            (**<%=i+1%>**) <%=item.product.name%> <br>
+            (*<%=i+1%>*) <%=item.product.name%> <br>
              <%=item.quantity%> <%=item.pounitTitle%>/ toplam 
                <%- include('./_partial/currency.ejs', {value: item.price}) %> <br>
             
