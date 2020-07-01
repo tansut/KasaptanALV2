@@ -65,12 +65,13 @@ export class Shipment {
 
     type: ShipmentType = "callme";    
     days: string[] = [];
+    securityCode: string='';
     hours: number [] = []
     informMe: boolean = true;
     daysText: string[] = [];
     hoursText: string [] = []    
     dispatcher: DispatcherView = null;
-    nointeraction: boolean = true;
+    nointeraction: boolean = false;
 
     static  availableTimes(date: Date = Helper.Now()): Object {        
         var isToday = (Helper.Now().toDateString() === date.toDateString());

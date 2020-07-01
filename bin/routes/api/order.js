@@ -302,6 +302,7 @@ class Route extends router_1.ApiRouter {
             if (!shipment[bi])
                 shipment[bi] = Object.assign(new shipment_1.Shipment(), {
                     howTo: item.shipmentHowTo,
+                    securityCode: order.securityCode,
                     type: item.shipmentType,
                     days: [item.shipmentdate ? item.shipmentdate.toDateString() : ''],
                     hours: [item.shipmenthour],
@@ -781,6 +782,7 @@ class Route extends router_1.ApiRouter {
                 order.butcherid = parseInt(bi);
                 order.butcher = yield butcher_1.default.findByPk(order.butcherid);
                 order.butcherName = butchers[bi].name;
+                order.securityCode = `${butchers[bi].name[0]}-${helper_1.default.getRandomInt(999) + 1000}`;
                 order.userId = this.req.user ? this.req.user.id : 0;
                 if (!order.userId) {
                     order.isFirstButcherOrder = true;
@@ -833,7 +835,16 @@ class Route extends router_1.ApiRouter {
                 let dbOrder = yield api.getOrder(order.ordernum);
                 let view = this.getView(dbOrder);
                 yield email_1.default.send(dbOrder.email, "siparişinizi aldık", "order.started.ejs", view);
-                yield sms_1.Sms.send(dbOrder.phone, 'kasaptanAl.com siparisinizi aldik, destek tel/whatsapp: 08503054216. Urunleriniz hazir oldugunda sizi bilgilendirecegiz.', false, new sitelog_1.default(this.constructorParams));
+                yield sms_1.Sms.send(dbOrder.phone, `KasaptanAl.com siparisinizi aldik, destek tel/whatsapp: 08503054216. Teslimat kodu: ${order.securityCode}`, false, new sitelog_1.default(this.constructorParams));
+                let notifyMobilePhones = (order.butcher.notifyMobilePhones || "").split(',');
+                if (config_1.default.nodeenv == 'production') {
+                    for (var p = 0; p < notifyMobilePhones.length; p++) {
+                        if (notifyMobilePhones[p].trim()) {
+                            let payUrl = `${this.url}/pay/${order.ordernum}`;
+                            sms_1.Sms.send("90" + helper_1.default.getPhoneNumber(notifyMobilePhones[p].trim()), `KasaptanAl.com yeni sipariş: Bilgi icin ${payUrl}, teslimat kodu: ${order.securityCode}`, false, new sitelog_1.default(this.constructorParams));
+                        }
+                    }
+                }
                 fres.push(dbOrder);
             }
             return fres;

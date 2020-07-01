@@ -94,13 +94,13 @@
     <% } %>
   </ul>
 
-  <% if (order.shipLocation && order.shipLocation.coordinates) { %>
+  <% if (order.shipLocation && order.shipLocation.coordinates && order.shipLocationAccuracy < 1000) { %>
 
 
   <div class="alert alert-info d-print-none">
     <div class="">
 
-      <img class="border " width="600"
+      <img class="border" style="width: 20rem;"
         src="https://maps.googleapis.com/maps/api/staticmap?center=<%=order.shipLocation.coordinates[0]%>+<%=order.shipLocation.coordinates[1]%>&zoom=16&scale=1&size=600x300&maptype=roadmap&key=AIzaSyBFqn2GNAhwbJnpga-3S3xQGBc0EcdAgH8&format=png&visual_refresh=true&markers=size:mid%7Ccolor:0xff0000%7Clabel:M%7C<%=order.shipLocation.coordinates[0]%>+<%=order.shipLocation.coordinates[1]%>">
 
     </div>
@@ -147,6 +147,7 @@
 
   <ul class="px-4 list-unstyled font-size-sm">
     <li><span class="text-muted">Teslimat:&nbsp;</span><%= shipment[bi].howToDesc %></li>
+    <li><span class="text-muted">Teslimat Kodu:&nbsp;</span><%= shipment[bi].securityCode %></li>
     <li><span class="text-muted">Teslimat planı:&nbsp;</span><%= shipment[bi].desc %></li>
     <% if (shipment[bi].type != 'callme') {%>
     <li><span class="text-muted">Gün:&nbsp;</span><strong><%= shipment[bi].daysText %></strong></li>
@@ -154,7 +155,7 @@
     <%}%>
                 <li><span class="text-muted">Paketim çıkmadan bana haber ver:&nbsp;</span><%= __helper.boolStr(shipment[bi].informMe)%>
     </li>
-    <li><span class="text-muted">Ödeme:&nbsp;</span><%= payment[bi].desc%> </li>
+    <li><span class="text-muted">Planlanan Ödeme:&nbsp;</span><%= payment[bi].desc%> </li>
   </ul>
 
   <% butcher.products.forEach((pi, i) => { %>

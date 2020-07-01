@@ -285,6 +285,11 @@ class Order extends BaseModel<Order> {
     @Column({
         allowNull: true
     })
+    securityCode: string;   
+
+    @Column({
+        allowNull: true
+    })
     shipmentdate: Date;
 
     @Column({
@@ -630,6 +635,8 @@ class OrderItem extends BaseModel<Order> {
         type: DataType.DECIMAL(13, 2)
     })
     dispatcherFee: number;     
+
+ 
 
     @Column({
         allowNull: true,

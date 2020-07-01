@@ -7,7 +7,10 @@
                 var options = this.options;
                 $.ajax({
                     url: "/api/v1/area/children/" + city.id + "?level=2", success: function (list) {
-                        $(options.ilceDomSelector).find('option').remove()
+                        $(options.ilceDomSelector).find('option').remove()   
+                        $(options.districtDomSelector).find('option').remove()   
+                        $(options.districtDomSelector).selectpicker("refresh");
+
                         for (var i = 0; i < list.length; i++) {
                             $(options.ilceDomSelector).append('<option value="' + list[i].id + '">' + list[i].name + '</option>');
                         }
@@ -112,21 +115,30 @@
                 if (!self.citiesloaded) {
                     $.ajax({
                         url: "/api/v1/area/children", success: function (list) {
-                            self.citiesloaded = list;
-                            for (var i = 0; i < list.length; i++) {
-                                $(options.cityDomSelector).append('<option value="' + list[i].id + '">' + list[i].name + '</option>');
+                            var cityList = [];
+                            cityList.push({
+                                id: 0,
+                                name: 'Şehrinizi seçin',
+                                slug:''
+                            })  
+                            cityList = cityList.concat(list)
+                          
+                            self.citiesloaded = cityList;
+                            for (var i = 0; i < cityList.length; i++) {
+                                $(options.cityDomSelector).append('<option value="' + cityList[i].id + '">' + cityList[i].name + '</option>');
                             }
 
-                            var defaultCity = list.find(function (element) {
+                            var defaultCity = cityList.find(function (element) {
                                 if (options && options.defaultCity)
                                     return element.id == options.defaultCity 
                                 else return false;
                             });
-                            defaultCity = defaultCity || list[0];
+                            defaultCity = defaultCity || cityList[0];
                             $(options.cityDomSelector).selectpicker("refresh");
                             $(options.cityDomSelector).selectpicker('val', defaultCity.id.toString());
                             self.selectedCity = defaultCity;
-                            self.loadIlces(defaultCity)
+                            if (defaultCity.id != 0)
+                                self.loadIlces(defaultCity)
                         }
                     });
                 }

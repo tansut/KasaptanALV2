@@ -26,7 +26,7 @@
 
     
     <a class="d-block overflow-hidden" href="/<%=product.slug%><%=(butcher ? `?butcher=${butcher}`:'') %>"><img width="500" height="500"
-         data-src="<%= `${__req.helper.imgUrl('product-photos', product.slug)}` %>" class="lazyload"
+         src="<%= `${__req.helper.imgUrl('product-photos', product.slug)}` %>" class="lazyload"
             alt="<%= product.name  %>"></a>
             <% if (typeof(hideName) == 'undefined') { %>
     <div class="card-body card-block d-flex flex-column text-center">

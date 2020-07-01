@@ -108,8 +108,8 @@
 <% } %>
 
 
-
-  <div class="alert alert-info">
+<button onclick="CopyToClipboard('butcherorder')" class="btn btn-sm btn-dark">Kopyala</button>
+  <div id="butcherorder" class="alert alert-info">
     <div class="row">
       <% if (controller.butcherFee && controller.shouldBePaid <= 0) { %>
       <div class="col-sm-6">
@@ -149,22 +149,23 @@
 
       <% } %>
       <div class="col-sm-6">
+        <h5>**----KASAPTANAL YENİ SİPARİŞ----**</h5>
         <p>
-          <!-- Sipariş No : <%=order.ordernum%> <br> -->
+           Siparişin **son durumuna** ve **ürün resimlerine** aşağıdaki bağlantıdan ulaşın: <br>
          
             <a href="<%=controller.url%>/pay/<%=order.ordernum%>">
               <%=controller.url%>/pay/<%=order.ordernum%>
             </a><br>
          
-          Toplam (<%=order.items.length%>) adet ürün
+         
         </p>
 
         <p>
 
           <ul class="list-unstyled font-size-sm">
-            <li><span class="text-muted">İsim:&nbsp;</span><%= order.name %></li>
+            <li><span class="text-muted">*İsim:*&nbsp;</span><%= order.name %></li>
             <% if(order.address) { %>
-            <li><span class="text-muted">Adres:&nbsp;</span><%= order.address%>
+            <li><span class="text-muted">*Adres:*&nbsp;</span><%= order.address%>
               <%= order.areaLevel3Text%>/<%= order.areaLevel1Text%></li>
               <%}%>
               <% if(order.note) { %>
@@ -177,13 +178,14 @@
           </ul>
           <ul class="list-unstyled ">
             <li><span class="text-muted">Teslimat planı:&nbsp;</span><%= order.shipmentHowToText %></li>
+            <li><span class="text-muted">Teslimat kodu:&nbsp;</span><%= order.securityCode %></li>
             <% if (order.shipmentHowTo != 'callme') {%>
             <li><span class="text-muted">Gün:&nbsp;</span><strong>*<%= __helper.formatDate(order.shipmentdate) %>*</strong></li>
             <li><span class="text-muted">Saat Aralığı:&nbsp;</span><strong>*<%= order.shipmenthourText%>*</strong> </li>
             <%}%>
                         <li><span class="text-muted">Paketim çıkmadan bana haber ver:&nbsp;</span><%= __helper.boolStr(order.shipmentInformMe)%>
             </li>
-            <li><span class="text-muted">Ödeme:&nbsp;</span><%= order.paymentTypeText%> </li>
+            <li><span class="text-muted">**Planlanan** Ödeme:&nbsp;</span><%= order.paymentTypeText%> </li>
           </ul>
           <% if (order.shipLocation && order.shipLocation.coordinates && order.shipLocationAccuracy < 1000) { %>
 
@@ -200,10 +202,13 @@
 
             <%}%>
         </p>
+        <p>
+          Toplam **(<%=order.items.length%>) adet** ürün
+        </p>
         <div class="mb-2">
           <% order.items.forEach((item, i) => { %>
            
-            (<%=i+1%>) <%=item.product.name%> <br>
+            (**<%=i+1%>**) <%=item.product.name%> <br>
              <%=item.quantity%> <%=item.pounitTitle%>/ toplam 
                <%- include('./_partial/currency.ejs', {value: item.price}) %> <br>
             
@@ -212,7 +217,7 @@
              <% } %>
          
            <% if (item.note) {%>
-             **<%=item.note%>** <br>
+             *<%=item.note%>* <br>
              <%}%> 
              -----------
              <br>
@@ -226,7 +231,9 @@
               Teslimat Bedeli: <%- include('./_partial/currency.ejs', {value: controller.teslimatTotal}) %> <br>
               <%}%>
 
-              FATURA BEDELİ:  *<%- include('./_partial/currency.ejs', {value: controller.productTotal + controller.teslimatTotal}) %>*<br>
+              YAPILAN ÖDEME: *<%- include('./_partial/currency.ejs', {value: controller.paid }) %>*<br>
+              FATURA BEDELİ: *<%- include('./_partial/currency.ejs', {value: controller.productTotal + controller.teslimatTotal}) %>*<br>
+              **yukarıdaki bedelle fatura kesip poşetin içine koymayı unutmayın**
               <!-- YAPILAN ÖDEME:  <%- include('./_partial/currency.ejs', {value: controller.shouldBePaid}) %> -->
 
         </div>
@@ -272,6 +279,25 @@
 
   <% include ./_partial/footer %>
   <% include ./_partial/scripts %>
+
+  <script>
+    function CopyToClipboard(containerid) {
+      
+      var range = document.createRange();
+                range.selectNode(document.getElementById(containerid));
+                window.getSelection().removeAllRanges(); // clear current selection
+                window.getSelection().addRange(range); // to select text
+  
+    // Now that we've selected the anchor text, execute the copy command
+    var successful = document.execCommand('copy');
+      if (successful) {
+         alert('Koyalanadı')
+      } else alert('HATA KOPYALANAMADI')
+
+
+    
+}
+  </script>
 
 </body>
 

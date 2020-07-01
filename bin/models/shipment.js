@@ -37,12 +37,13 @@ class Shipment {
         this.howTo = 'unset';
         this.type = "callme";
         this.days = [];
+        this.securityCode = '';
         this.hours = [];
         this.informMe = true;
         this.daysText = [];
         this.hoursText = [];
         this.dispatcher = null;
-        this.nointeraction = true;
+        this.nointeraction = false;
     }
     get howToDesc() {
         return exports.ShipmentHowToDesc[this.howTo];

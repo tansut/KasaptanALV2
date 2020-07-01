@@ -386,6 +386,12 @@ __decorate([
     sequelize_typescript_1.Column({
         allowNull: true
     }),
+    __metadata("design:type", String)
+], Order.prototype, "securityCode", void 0);
+__decorate([
+    sequelize_typescript_1.Column({
+        allowNull: true
+    }),
     __metadata("design:type", Date)
 ], Order.prototype, "shipmentdate", void 0);
 __decorate([

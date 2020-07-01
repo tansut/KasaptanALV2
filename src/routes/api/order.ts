@@ -304,6 +304,7 @@ export default class Route extends ApiRouter {
             if (!shipment[bi])
                 shipment[bi] = Object.assign(new Shipment(), {
                     howTo: item.shipmentHowTo,
+                    securityCode: order.securityCode,
                     type: item.shipmentType,
                     days: [item.shipmentdate ? item.shipmentdate.toDateString() : ''],
                     hours: [item.shipmenthour],
@@ -848,6 +849,7 @@ export default class Route extends ApiRouter {
             order.butcherid = parseInt(bi);
             order.butcher = await Butcher.findByPk(order.butcherid)
             order.butcherName = butchers[bi].name;
+            order.securityCode = `${butchers[bi].name[0]}-${Helper.getRandomInt(999) + 1000}`;         
             order.userId = this.req.user ? this.req.user.id : 0;
 
             if (!order.userId) {
@@ -907,7 +909,18 @@ export default class Route extends ApiRouter {
             let dbOrder = await api.getOrder(order.ordernum);
             let view = this.getView(dbOrder);
             await email.send(dbOrder.email, "siparişinizi aldık", "order.started.ejs", view);
-            await Sms.send(dbOrder.phone, 'kasaptanAl.com siparisinizi aldik, destek tel/whatsapp: 08503054216. Urunleriniz hazir oldugunda sizi bilgilendirecegiz.', false, new SiteLogRoute(this.constructorParams))
+            await Sms.send(dbOrder.phone, `KasaptanAl.com siparisinizi aldik, destek tel/whatsapp: 08503054216. Teslimat kodu: ${order.securityCode}`, false, new SiteLogRoute(this.constructorParams))
+
+            let notifyMobilePhones = (order.butcher.notifyMobilePhones || "").split(',');
+            if (config.nodeenv == 'production') {
+                for (var p = 0; p < notifyMobilePhones.length; p++) {
+                    if (notifyMobilePhones[p].trim()) {
+                        let payUrl = `${this.url}/pay/${order.ordernum}`;
+                        Sms.send("90" + Helper.getPhoneNumber(notifyMobilePhones[p].trim()), `KasaptanAl.com yeni sipariş: Bilgi icin ${payUrl}, teslimat kodu: ${order.securityCode}`, false, new SiteLogRoute(this.constructorParams))
+                    }
+                }
+            }
+
             fres.push(dbOrder)
         }
 

@@ -42,7 +42,7 @@
       <% } else { %>
         height="500" 
       <% } %>
-    class="lazyload <%=first ? '': ''%>" data-src="<%=  `${first ? resource.getFileUrl(): resource.getThumbnailFileUrl(true)}` %>"
+    class="<%=first ? '': ''%>" src="<%=  `${first ? resource.getFileUrl(): resource.getThumbnailFileUrl(true)}` %>"
       alt="<%= resource.title || resource.product.name %>" /><span class="gallery-item-caption"><%=resource.title || ''%></span></a>
 
 

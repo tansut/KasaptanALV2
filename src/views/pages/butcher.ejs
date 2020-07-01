@@ -179,7 +179,7 @@
                 class="gallery-item <%= img.contentType == 'video-youtube' ? 'video-item':''%>"
                 href="<%= `${img.fileUrl}`  %>"
                 data-sub-html="&lt;h6 class=&quot;font-size-sm text-light&quot;&gt;<%= img.title %>&lt;/h6&gt;"><img
-                  width="500" height="500" class="lazyload" data-src="<%= `${img.thumbnailFileUrl}` %>" /><span
+                  width="500" height="500" src="<%= `${img.thumbnailFileUrl}` %>" /><span
                   class="gallery-item-caption"><%= img.title %></span></a>
             </div>
 
