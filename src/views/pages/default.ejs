@@ -14,7 +14,8 @@
             <div class="row">
                 <div class="col-sm-4">
                     <a class="d-block" href="/kasap-urunleri">
-                        <img width="500" height="333" src="<%=__config.staticDomain%>/content-resimleri/kasap-kart-thumbnail.jpg"
+                        <img width="500" height="333"
+                            src="<%=__config.staticDomain%>/content-resimleri/kasap-kart-thumbnail.jpg"
                             alt="Kasap Kart™">
 
                     </a>
@@ -26,14 +27,16 @@
                             Online Kasap Alışverişi & Et Siparişi
                         </h1>
                         <p class="lead">
-                            <span class="font-weight-bolder">En iyi eti</span> sağlıyoruz, çünkü <span class="font-weight-bolder">şehrin en iyi kasaplarıyla</span> çalışıyoruz. 
+                            <span class="font-weight-bolder">En iyi eti</span> sağlıyoruz, çünkü <span
+                                class="font-weight-bolder">şehrin en iyi kasaplarıyla</span> çalışıyoruz.
                         </p>
-    
+
                         <p class="lead">
-                            Sipariş verin, en iyi etler saatler içerisinde kapınıza gelsin, <span class="font-weight-bolder">Kasap Kart&trade;</span> ile puan kazanın, kârlı çıkın.
+                            Sipariş verin, en iyi etler saatler içerisinde kapınıza gelsin, <span
+                                class="font-weight-bolder">Kasap Kart&trade;</span> ile puan kazanın, kârlı çıkın.
                         </p>
-                     
-    
+
+
                         <div class="text-right">
                             <a class="btn btn-primary " href="/kasap-urunleri">Alışverişe Başla &raquo;</a>
                         </div>
@@ -47,50 +50,45 @@
 
         </div>
     </div>
- 
 
 
-
-    <div class="container mb-3">
-        <%- include('./_partial/category-products-slider', {category: 'populer-etler', limit: 4, reverse: true, img: 'img/category/premium.jpg'}); %>
+    <div class="container mb-3 ">
+        <%- include('./_partial/category-products-slider', {limit: 4, category: 'bu-hafta', reverse: true, img: 'img/category/premium.jpg'}); %>
     </div>
 
+
+
     <section class="container">
-        <!-- <h3 class="h5 text-center border-bottom pb-1">Şehrin En İyi Kasaplarından Online Alışveriş</h2> -->
         <div class="row">
-          
+            <div class="col-md-6 mb-3">
+                <div class="d-flex flex-column h-100 justify-content-center bg-size-cover bg-position-center rounded-lg"
+                    style="background-image: url(<%=__config.staticDomain %>/resource/img/banner-bg.jpg);">
 
-   
+                    <% if (!__req.user) { %>
+                    <div class="py-4 my-2 my-md-0 py-md-5 px-4 ml-md-3 text-center text-sm-left">
+                        <h4 class="h6 font-size-lg font-weight-light mb-2">Şimdi Üyemiz Olun</h4>
+                        <h3 class="mb-4 h5">İlk siparişinizi %3 kârlı yapın</h3>
 
-
-    <div class="col-md-6 mb-3">
-        <div class="d-flex flex-column h-100 justify-content-center bg-size-cover bg-position-center rounded-lg"
-            style="background-image: url(<%=__config.staticDomain %>/resource/img/banner-bg.jpg);">
-
-            <% if (!__req.user) { %>
-                <div class="py-4 my-2 my-md-0 py-md-5 px-4 ml-md-3 text-center text-sm-left">
-                    <h4 class="h6 font-size-lg font-weight-light mb-2">Şimdi Üyemiz Olun</h4>
-                    <h3 class="mb-4 h5">İlk siparişinizi %3 kârlı yapın</h3>
-                   
-                    <a class="btn btn-primary " href="javascript:window.App.showSignupDlg()"><i class="czi-thumb-up mr-2"></i>Fırsatı Yakala</a>
-               
-           
-    
-                </div>
+                        <a class="btn btn-primary " href="javascript:window.App.showSignupDlg()"><i
+                                class="czi-thumb-up mr-2"></i>Fırsatı Yakala</a>
 
 
-                <% } else { %>
 
-            <div class="py-4 my-2 my-md-0 py-md-5 px-4 ml-md-3 text-center text-sm-left">
-                <h4 class="h6 font-size-lg font-weight-light mb-2">Kârlı Kasap Alışverişi</h4>
-                <h3 class="mb-4 h5">Kasap Kart&trade; ile puan kazanın</h3>
-               
-                <a class="btn btn-primary " href="/blog/kasap-kart">Daha Fazla Bilgi &raquo;</a>
-           
-       
+                    </div>
 
-            </div>
-            <%}%>
+
+                    <% } else { %>
+
+                    <div class="py-4 my-2 my-md-0 py-md-5 px-4 ml-md-3 text-center text-sm-left">
+                        <h4 class="h6 font-size-lg font-weight-light mb-2">Kârlı Kasap Alışverişi</h4>
+                        <h3 class="mb-4 h5">Kasap Kart&trade; ile puan kazanın</h3>
+
+                        <a class="btn btn-primary " href="/blog/kasap-kart">Daha Fazla Bilgi &raquo;</a>
+
+
+
+                    </div>
+                    <%}%>
         </div>
 
 
@@ -101,85 +99,87 @@
         <div class="d-flex flex-column h-100 justify-content-center bg-size-cover bg-position-center rounded-lg"
         style="background-image: url(<%=__config.staticDomain %>/resource/img/banner-bg.jpg);">
 
-            <div class="py-4 my-2 my-md-0 py-md-5 px-4 ml-md-3 text-center text-sm-left">
-                <h4 class="h6 font-size-lg font-weight-light mb-2">Siz Yemeğe Karar Verin</h4>
-                <h3 class="mb-4 h5">En uygun eti KasaptanAl.com önersin</h3>
-               
-                <a class="btn btn-primary " href="/et-yemekleri">Et Yemekleri &raquo;</a>
-           
-       
+                    <div class="py-4 my-2 my-md-0 py-md-5 px-4 ml-md-3 text-center text-sm-left">
+                        <h4 class="h6 font-size-lg font-weight-light mb-2">Siz Yemeğe Karar Verin</h4>
+                        <h3 class="mb-4 h5">En uygun eti KasaptanAl.com önersin</h3>
+
+                        <a class="btn btn-primary " href="/et-yemekleri">Et Yemekleri &raquo;</a>
+
+
+
+                    </div>
+
+
+
+                </div>
+
 
             </div>
 
 
 
-    </div>
 
-
-    </div>
-
-
-
-
-    </div>
+        </div>
     </section>
 
 
-        <div class="container mb-3 ">
-            <%- include('./_partial/category-products-slider', {limit: 4, category: 'bu-hafta', reverse: true, img: 'img/category/premium.jpg'}); %>
-        </div>
- 
 
 
 
-        
+
+    <div class="container mb-3">
+        <%- include('./_partial/category-products-slider', {category: 'populer-etler', limit: 4, reverse: true, img: 'img/category/premium.jpg'}); %>
+    </div>
 
 
-        <section class="container">
-            <div class="row">
-              
-    
-       
-    
-    
-        <div class="col-md-6 mb-3">
-            <div class="d-flex flex-column h-100 justify-content-center bg-size-cover bg-position-center rounded-lg"
-            style="background-image: url(<%=__config.staticDomain %>/resource/img/banner-bg.jpg);">
-            <div class="py-4 my-2 my-md-0 py-md-5 px-4 ml-md-3 text-center text-sm-left">
-                <h4 class="h6 font-size-lg font-weight-light mb-2">Şehrin En İyi Kasapları</h4>
-                <h3 class="mb-4 h5">Deneyimli kasaplarımızı keşfedin</h3>
 
-                <a class="btn btn-primary " href="/kasaplar">İş Ortaklarımız &raquo;</a></div>
-        </div>
+    <section class="container">
+        <div class="row">
 
 
-    
-    
-        </div>
-       
-    
-        <div class="col-md-6 mb-3">
-            <div class="d-flex flex-column h-100 justify-content-center bg-size-cover bg-position-center rounded-lg"
-                style="background-image: url(<%=__config.staticDomain %>/resource/img/banner-bg.jpg);">
-                <div class="py-4 my-2 my-md-0 py-md-5 px-4 ml-md-3 text-center text-sm-left">
-                    <h4 class="h6 font-size-lg font-weight-light mb-2">Doğal, Taze ve Lezzetli</h4>
-                    <h3 class="mb-4 h5">Alışverişe buradan başlayın</h3>
-    
-                    <a class="btn btn-primary " href="/kasap-urunleri">Tüm Ürünler &raquo;</a></div>
+
+
+
+            <div class="col-md-6 mb-3">
+                <div class="d-flex flex-column h-100 justify-content-center bg-size-cover bg-position-center rounded-lg"
+                    style="background-image: url(<%=__config.staticDomain %>/resource/img/banner-bg.jpg);">
+                    <div class="py-4 my-2 my-md-0 py-md-5 px-4 ml-md-3 text-center text-sm-left">
+                        <h4 class="h6 font-size-lg font-weight-light mb-2">Şehrin En İyi Kasapları</h4>
+                        <h3 class="mb-4 h5">Deneyimli kasaplarımızı keşfedin</h3>
+
+                        <a class="btn btn-primary " href="/kasaplar">İş Ortaklarımız &raquo;</a>
+                    </div>
+                </div>
+
+
+
+
             </div>
-    
-    
-        </div>
-    
-    
-    
-    
-        </div>
-        </section>
-    
 
 
- 
+            <div class="col-md-6 mb-3">
+                <div class="d-flex flex-column h-100 justify-content-center bg-size-cover bg-position-center rounded-lg"
+                    style="background-image: url(<%=__config.staticDomain %>/resource/img/banner-bg.jpg);">
+                    <div class="py-4 my-2 my-md-0 py-md-5 px-4 ml-md-3 text-center text-sm-left">
+                        <h4 class="h6 font-size-lg font-weight-light mb-2">Doğal, Taze ve Lezzetli</h4>
+                        <h3 class="mb-4 h5">Alışverişe buradan başlayın</h3>
+
+                        <a class="btn btn-primary " href="/kasap-urunleri">Tüm Ürünler &raquo;</a>
+                    </div>
+                </div>
+
+
+            </div>
+
+
+
+
+        </div>
+    </section>
+
+
+
+
 
 
     <div class="container  mb-3">
@@ -190,50 +190,50 @@
             <a class="d-block py-3 pl-3" href="<%=`/blog` %>">
                 <h3 class="h6 mb-0">Blog</h3>
             </a>
-            <a class="d-none d-md-block btn btn-sm" href="<%=`/blog` %>">Tümü &raquo;</a>    
+            <a class="d-none d-md-block btn btn-sm" href="<%=`/blog` %>">Tümü &raquo;</a>
         </div>
-        
-            <div data-simplebar>
-                <div class="d-flex pb-2">
-                    <% var items =  controller.blogItems %>
-                    <% items.forEach((item, i) => {%>
-                      
-                        
-                    <div>
-                                     <div class="mr-2 item-slider product-card item-card">
-                                <a class="d-block"  href="<%= `/blog/${item.slug}` %>">
-                                    <img width="360" height="240" title="<%=item.title%>" 
-                                        src="<%=`${__config.staticDomain}/content-resimleri/${item.slug}-thumbnail.jpg` %>"
-                                        alt="<%=item.title%>"></a>
 
-                                        
-                                            <h3 class="py-2 mb-0 text-center product-title font-size-sm"><a
-                                                    href="<%= `/blog/${item.slug}` %>"><%= item.title %></a>
-                                            </h3>
-                                       
-
-                            </div>
-
-                   
-                        </div>
+        <div data-simplebar>
+            <div class="d-flex pb-2">
+                <% var items =  controller.blogItems %>
+                <% items.forEach((item, i) => {%>
 
 
-              
-                   
-                    <%})%>
-                  
+                <div>
+                    <div class="mr-2 item-slider product-card item-card">
+                        <a class="d-block" href="<%= `/blog/${item.slug}` %>">
+                            <img width="360" height="240" title="<%=item.title%>"
+                                src="<%=`${__config.staticDomain}/content-resimleri/${item.slug}-thumbnail.jpg` %>"
+                                alt="<%=item.title%>"></a>
+
+
+                        <h3 class="py-2 mb-0 text-center product-title font-size-sm"><a
+                                href="<%= `/blog/${item.slug}` %>"><%= item.title %></a>
+                        </h3>
+
+
+                    </div>
+
+
                 </div>
+
+
+
+
+                <%})%>
+
             </div>
-      
-            <div class="d-xs-block border-bottom d-md-none text-center mb-3">
-                <a class="btn rounded-0 btn-sm btn-secondary" href="/blog">Tümü &raquo;
-                </a>
-            </div>
+        </div>
+
+        <div class="d-xs-block border-bottom d-md-none text-center mb-3">
+            <a class="btn rounded-0 btn-sm btn-secondary" href="/blog">Tümü &raquo;
+            </a>
+        </div>
 
 
 
 
-</div>
+    </div>
 
 
 
@@ -269,15 +269,18 @@
                     Online, Hızlı ve Güvenli <strong>et siparişi</strong> sağlıyoruz.
                 </p>
                 <p>
-                    Tüm kasaplarımız en az 10 yıllık deneyimli, köklü ve şehrin en iyi kasapları. 
-                    
-                   <strong>Doğal beslenmiş kuzu ve danaları</strong> çoğunluğu kendi çiftliklerinden veya güvenilir tedarikçilerden almaktalar.
+                    Tüm kasaplarımız en az 10 yıllık deneyimli, köklü ve şehrin en iyi kasapları.
+
+                    <strong>Doğal beslenmiş kuzu ve danaları</strong> çoğunluğu kendi çiftliklerinden veya güvenilir
+                    tedarikçilerden almaktalar.
                 </p>
                 <h3>
                     En iyi eti biz sağlıyoruz
                 </h3>
                 <p>
-                    Kırmızı et işini büyük hacimlerde yapmak yerine yerel, <strong>yılların verdiği deneyimle etin en iyisinden anlayan</strong> , müşteri taleplerini titizlikle yerine getiren kasap iş ortaklarımızla çalışıyoruz.
+                    Kırmızı et işini büyük hacimlerde yapmak yerine yerel, <strong>yılların verdiği deneyimle etin en
+                        iyisinden anlayan</strong> , müşteri taleplerini titizlikle yerine getiren kasap iş
+                    ortaklarımızla çalışıyoruz.
                 </p>
                 <h3>
                     Kırmızı Et
