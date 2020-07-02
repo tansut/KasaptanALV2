@@ -122,21 +122,21 @@
         <p>
           -------------------
         </p>
-        <p>
+        <span>
         <%=order.butcherName%><br> Ödemeler Toplamı: <%- include('./_partial/currency.ejs', {value: controller.butcherFee.inputTotal}) %>
-        </p>
-        <span class="d-block"><%= __helper.formatDate(order.creationDate)%>, <%=order.areaLevel3Text%></span>
+        </span>
+        <!-- <span class="d-block"><%= __helper.formatDate(order.creationDate)%>, <%=order.areaLevel3Text%></span> -->
         <span class="d-block">Sipariş no: <%=order.ordernum%>/<%=order.name%></span>
         <!-- <span class="d-block">Cironuza katkımız: <%- include('./_partial/currency.ejs', {value: controller.butcherFee.product}) %> + KDV -->
         <span class="d-block">kasaptanAl.com hizmeti: <%- include('./_partial/currency.ejs', {value: controller.butcherFee.kalitteFee}) %> + KDV
         </span>
-        <% if (controller.butcherFee.butcherToCustomer > 0) { %>
+        <!-- <% if (controller.butcherFee.butcherToCustomer > 0) { %>
         <span class="d-block">Müşterinize verdiğiniz sadakat puanı: <%- include('./_partial/currency.ejs', {value: controller.butcherFee.butcherToCustomer}) %> + KDV
         </span>      
-        <% } %>
+        <% } %> -->
         <span>
           <span class="d-block">
-            Bu satışla vergi ve diğer avantajlarınız oldu. Detaylar için tıklayın:
+            Bu satışla vergi avantajlarınız oldu. Detaylar için:
           </span>
           <a href="<%=controller.url%>/gelir-hesapla?rate=<%=controller.butcherFee.inputRate*100%>&total=<%=controller.butcherFee.inputTotal%>&go=1">
             <%=controller.url%>/gelir-hesapla?rate=<%=controller.butcherFee.inputRate*100%>&total=<%=controller.butcherFee.inputTotal%>&go=1
@@ -178,7 +178,7 @@
           </ul>
           <ul class="list-unstyled ">
             <li><span class="text-muted">Teslimat planı:&nbsp;</span><%= order.shipmentHowToText %></li>
-            <li><span class="text-muted">Teslimat kodu:&nbsp;</span><%= order.securityCode %></li>
+            <li><span class="text-muted">Teslimat kodu:&nbsp;</span>*<%= order.securityCode %>*</li>
             <% if (order.shipmentHowTo != 'callme') {%>
             <li><span class="text-muted">Gün:&nbsp;</span><strong>*<%= __helper.formatDate(order.shipmentdate) %>*</strong></li>
             <li><span class="text-muted">Saat Aralığı:&nbsp;</span><strong>*<%= order.shipmenthourText%>*</strong> </li>

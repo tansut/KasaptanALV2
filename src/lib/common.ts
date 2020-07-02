@@ -133,7 +133,7 @@ export class ProductTypeFactory {
     static registerAll() {
         ProductTypeFactory.register('adak', AdakProductManager);
         ProductTypeFactory.register('kurban', KurbanProductManager);
-        ProductTypeFactory.register('generic', AdakProductManager);
+        ProductTypeFactory.register('generic', GenericProductManager);
     }
 
 

@@ -29,6 +29,7 @@ const butcher_1 = require("./butcher");
 const order_1 = require("../../models/order");
 const dispatcher_1 = require("./dispatcher");
 const common_1 = require("../../lib/common");
+const commissionHelper_1 = require("../../lib/commissionHelper");
 const orderid = require('order-id')('dkfjsdklfjsdlkg450435034.,');
 let Order = Order_1 = class Order extends basemodel_1.default {
     constructor() {
@@ -41,6 +42,7 @@ let Order = Order_1 = class Order extends basemodel_1.default {
         this.kalitteOnlyPuanAccounts = [];
         this.kalitteByButcherPuanAccounts = [];
         this.butcherDeptAccounts = [];
+        this.butcherComissiomAccounts = [];
         this.puanSummary = [];
     }
     get shopcard() {
@@ -48,6 +50,42 @@ let Order = Order_1 = class Order extends basemodel_1.default {
     }
     set shopcard(value) {
         this.setDataValue('shopcardjson', Buffer.from(JSON.stringify(value), "utf-8"));
+    }
+    getButcherRate() {
+        if (this.orderSource == order_1.OrderSource.kasaptanal) {
+            if (this.orderType == order_1.OrderType.kurban) {
+                return 0.05;
+            }
+            else
+                return this.butcher.commissionRate;
+        }
+        else
+            return this.butcher.payCommissionRate;
+    }
+    getButcherFee() {
+        return this.orderSource == order_1.OrderSource.kasaptanal ? this.butcher.commissionFee : this.butcher.payCommissionFee;
+    }
+    getPuanTotal(shouldBePaid) {
+        let result = 0.00;
+        if (this.orderSource == order_1.OrderSource.kasaptanal) {
+            let butcherPuanEarned = this.butcherPuanAccounts.find(p => p.code == 'total');
+            let kalitteOnlyPuanEarned = this.kalitteOnlyPuanAccounts.find(p => p.code == 'total');
+            let kalitteByButcherEarned = this.kalitteByButcherPuanAccounts.find(p => p.code == 'total');
+            let butcherPuan = helper_1.default.asCurrency(butcherPuanEarned.alacak - butcherPuanEarned.borc);
+            let kalitteByButcherPuan = helper_1.default.asCurrency(kalitteByButcherEarned.alacak - kalitteByButcherEarned.borc);
+            let totalPuanByButcher = helper_1.default.asCurrency(butcherPuan + kalitteByButcherPuan);
+            let totalPuanByButcherIncVat = helper_1.default.asCurrency(totalPuanByButcher * 1.18);
+            result = helper_1.default.asCurrency(totalPuanByButcherIncVat);
+        }
+        return result;
+    }
+    getButcherComission(shouldBePaid) {
+        let rate = this.getButcherRate();
+        let fee = this.getButcherFee();
+        let calc = new commissionHelper_1.ComissionHelper(rate, fee);
+        let totalFee = calc.calculateButcherComission(shouldBePaid);
+        let merchantPrice = helper_1.default.asCurrency(totalFee.kalitteFee + totalFee.kalitteVat);
+        return merchantPrice;
     }
     static fromShopcard(c, bi) {
         return __awaiter(this, void 0, void 0, function* () {
@@ -73,6 +111,7 @@ let Order = Order_1 = class Order extends basemodel_1.default {
             o.name = c.address.name;
             o.saveAddress = c.address.saveaddress;
             o.noInteraction = c.shipment[bi].nointeraction;
+            o.orderType = c.getOrderType();
             if (c.shipment[bi].dispatcher) {
                 o.dispatcherid = c.shipment[bi].dispatcher.id;
                 o.dispatcherFee = c.shipment[bi].dispatcher.fee;
@@ -130,6 +169,13 @@ __decorate([
     }),
     __metadata("design:type", String)
 ], Order.prototype, "orderSource", void 0);
+__decorate([
+    sequelize_typescript_1.Column({
+        allowNull: false,
+        defaultValue: order_1.OrderType.generic
+    }),
+    __metadata("design:type", String)
+], Order.prototype, "orderType", void 0);
 __decorate([
     sequelize_typescript_1.Column({
         allowNull: true

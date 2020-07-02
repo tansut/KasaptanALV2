@@ -84,7 +84,7 @@ export default class Route extends ViewRouter {
             this.mayEarnPuanTotal = Helper.asCurrency(this.mayEarnPuanTotal)
         }
 
-        let calc = new ComissionHelper(this.order.butcher.commissionRate, this.order.butcher.commissionFee);
+        let calc = new ComissionHelper(this.order.getButcherRate(), this.order.getButcherFee());
         this.butcherFee = calc.calculateButcherComission(this.paid);
 
         let kalitteByButcherPuanAccounts = this.order.kalitteByButcherPuanAccounts.find(p => p.code == 'total')
@@ -146,20 +146,20 @@ export default class Route extends ViewRouter {
         if (this.req.body.makeManuelPaymentDebt == "true") {
             if (this.paid > 0) {
                 let toKalitte = Helper.asCurrency(this.butcherFee.kalitteFee + this.butcherFee.kalitteVat)
-                await this.api.completeManualPaymentDept(this.order, this.butcherFee.butcherToCustomer, toKalitte)
+                await this.api.completeManualPaymentDept(this.order)
             } else userMessage = "Ödemesi yok siparişin";
         }
 
 
 
 
-        if (this.req.body.loadPuans == "true") {
-            if (this.shouldBePaid > 0) {
-                userMessage = "Ödemesi henüz yapılmamış siparişin";
+        // if (this.req.body.loadPuans == "true") {
+        //     if (this.shouldBePaid > 0) {
+        //         userMessage = "Ödemesi henüz yapılmamış siparişin";
 
-            } else await this.api.completeLoadPuan(this.order, this.paid)
+        //     } else await this.api.completeLoadPuan(this.order, this.paid)
 
-        }
+        // }
 
 
         if (this.req.body.approveOrderSubMerchant == "true") {

@@ -63,7 +63,7 @@ class Route extends router_1.ViewRouter {
                 this.possiblePuanList.forEach(pg => this.mayEarnPuanTotal += pg.earned);
                 this.mayEarnPuanTotal = helper_1.default.asCurrency(this.mayEarnPuanTotal);
             }
-            let calc = new commissionHelper_1.ComissionHelper(this.order.butcher.commissionRate, this.order.butcher.commissionFee);
+            let calc = new commissionHelper_1.ComissionHelper(this.order.getButcherRate(), this.order.getButcherFee());
             this.butcherFee = calc.calculateButcherComission(this.paid);
             let kalitteByButcherPuanAccounts = this.order.kalitteByButcherPuanAccounts.find(p => p.code == 'total');
             let butcherToCustomer = helper_1.default.asCurrency((kalitteByButcherPuanAccounts.alacak - kalitteByButcherPuanAccounts.borc) + (this.puanBalanceButcher.alacak - this.puanBalanceButcher.borc));
@@ -112,18 +112,16 @@ class Route extends router_1.ViewRouter {
             if (this.req.body.makeManuelPaymentDebt == "true") {
                 if (this.paid > 0) {
                     let toKalitte = helper_1.default.asCurrency(this.butcherFee.kalitteFee + this.butcherFee.kalitteVat);
-                    yield this.api.completeManualPaymentDept(this.order, this.butcherFee.butcherToCustomer, toKalitte);
+                    yield this.api.completeManualPaymentDept(this.order);
                 }
                 else
                     userMessage = "Ödemesi yok siparişin";
             }
-            if (this.req.body.loadPuans == "true") {
-                if (this.shouldBePaid > 0) {
-                    userMessage = "Ödemesi henüz yapılmamış siparişin";
-                }
-                else
-                    yield this.api.completeLoadPuan(this.order, this.paid);
-            }
+            // if (this.req.body.loadPuans == "true") {
+            //     if (this.shouldBePaid > 0) {
+            //         userMessage = "Ödemesi henüz yapılmamış siparişin";
+            //     } else await this.api.completeLoadPuan(this.order, this.paid)
+            // }
             if (this.req.body.approveOrderSubMerchant == "true") {
                 yield this.paymentProvider.approveItem({
                     paymentTransactionId: this.order.paymentTransactionId

@@ -240,12 +240,19 @@ class ShopCard {
     addProduct(product, quantity, purchaseoption, note, productTypeData = {}) {
         quantity = Number(quantity.toFixed(3));
         let price = ShopCard.calculatePrice(product, quantity, purchaseoption);
-        let found = null; // this.items.find(p => p.note == note && p.product.id == product.id && p.purchaseoption.id == purchaseoption.id && p.product.butcher.id == product.butcher.id);
+        //let found = null; // this.items.find(p => p.note == note && p.product.id == product.id && p.purchaseoption.id == purchaseoption.id && p.product.butcher.id == product.butcher.id);
         // if (found) {
         //     found.quantity = quantity + found.quantity;
         //     found.price = price + found.price;
         // }
-        found || this.items.push(new ShopcardItem(product, quantity, price, purchaseoption, note, productTypeData));
+        this.items.push(new ShopcardItem(product, quantity, price, purchaseoption, note, productTypeData));
+        let removed = [];
+        if (product.productType == 'kurban') {
+            this.items = this.items.filter(p => p.product.productType == 'kurban');
+        }
+        else {
+            this.items = this.items.filter(p => p.product.productType != 'kurban');
+        }
         this.arrangeButchers();
         this.calculateShippingCosts();
     }
@@ -287,6 +294,13 @@ class ShopCard {
             _.remove(this.butcherDiscounts[bi], p => p.code == code);
         }
         this.butcherDiscounts[bi].length == 0 && delete this.butcherDiscounts[bi];
+    }
+    getOrderType() {
+        if (this.items.length && this.items[0].product.productType == 'kurban') {
+            return 'kurban';
+        }
+        else
+            return 'generic';
     }
     getButcherDiscount(bi, code) {
         if (!this.butcherDiscounts[bi])

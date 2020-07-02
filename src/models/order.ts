@@ -10,6 +10,10 @@ export enum OrderItemStatus {
     butcherCannotProvide = 'iptal: tedarik edilemedi'
 }
 
+export enum OrderType {
+    generic = 'generic',
+    kurban = 'kurban'
+}
 
 export enum OrderPaymentStatus {
     waitingOnlinePayment = 'Online Ödeme Bekliyor',

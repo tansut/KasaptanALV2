@@ -6,7 +6,7 @@ import Category from './category';
 import ButcherProduct from './butcherproduct';
 import Resource from './resource';
 import { Op, QueryTypes } from 'sequelize';
-import { AdakProductManager } from '../../lib/common';
+import { AdakProductManager, KurbanProductManager } from '../../lib/common';
 
 export enum ProductType {
     generic = 'generic',
@@ -43,6 +43,11 @@ class Product extends BaseModel<Product> {
     get asAdak(): AdakProductManager {
         let obj = this.producttypedata || {};
         return Object.assign(new AdakProductManager(), obj)        
+    } 
+
+    get asKurban(): AdakProductManager {
+        let obj = this.producttypedata || {};
+        return Object.assign(new KurbanProductManager(), obj)        
     } 
 
     get producttypedata(): any {

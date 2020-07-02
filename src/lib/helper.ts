@@ -167,6 +167,9 @@ export default class Helper {
             .join(' ');
     }
 
+    
+
+
     static normalizePhoto(url: string, thumbnail?: string) {
         return Jimp2.read(path.resolve(url))
             .then(image => {

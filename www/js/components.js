@@ -545,8 +545,11 @@ window.initComponents = function initComponents() {
                         productTypeData = {
                             vekalet: $('#kurban-vekalet').val(),
                             video: $('#kurban-video').val(),
-                            teslimat: $('#kurban-hisse').val(),
-                            
+                            teslimat: $('#kurban-teslimat').val(),
+                            kiminadina: $('#kurban-kiminadina').val(),
+                            bagis: document.getElementById("kurban-bagis-mi").checked,
+                            bagisTarget: $('#kurban-bagis-target').val(),
+                            bagisNote: $("#kurban-bagis-note").val()
                         }
                     }
 

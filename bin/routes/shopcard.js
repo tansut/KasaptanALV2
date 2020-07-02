@@ -86,7 +86,21 @@ class Route extends router_1.ViewRouter {
             // }
             yield this.setDispatcher();
             yield this.shopcard.saveToRequest(this.req);
-            this.renderPage("pages/checkout.ship.ejs");
+            if (this.shopcard.getOrderType() == 'kurban') {
+                let man = common_1.ProductTypeFactory.create('kurban', this.shopcard.items[0].productTypeData);
+                let ship = this.shopcard.shipment[Object.keys(this.shopcard.shipment)[0]];
+                this.fillDefaultAddress();
+                if (['0', '1', '2'].indexOf(man.teslimat) >= 0) {
+                    ship.howTo = "take";
+                    this.renderPage("pages/checkout.adres-take.ejs");
+                }
+                else {
+                    ship.howTo = "ship";
+                    this.renderPage("pages/checkout.adres.ejs");
+                }
+            }
+            else
+                this.renderPage("pages/checkout.ship.ejs");
         });
     }
     adresViewRoute() {
@@ -189,8 +203,18 @@ class Route extends router_1.ViewRouter {
             this.shopcard = yield shopcard_1.ShopCard.createFromRequest(this.req);
             yield this.setDispatcher();
             yield this.shopcard.saveToRequest(this.req);
-            this.renderPage("pages/checkout.ship.ejs");
+            if (this.shopcard.getOrderType() == 'kurban') {
+                this.viewRoute();
+            }
+            else
+                this.renderPage("pages/checkout.ship.ejs");
         });
+    }
+    fillDefaultAddress() {
+        this.shopcard.address.name = this.req.user.name;
+        this.shopcard.address.email = this.req.user.email;
+        this.shopcard.address.phone = this.req.user.mphone;
+        this.shopcard.address.adres = this.shopcard.address.adres || this.req.user.lastAddress;
     }
     saveshipRoute() {
         return __awaiter(this, void 0, void 0, function* () {
@@ -219,12 +243,7 @@ class Route extends router_1.ViewRouter {
                 }
             }
             this.shopcard.calculateShippingCosts();
-            if (needAddress && !this.shopcard.address.name) {
-                this.shopcard.address.name = this.req.user.name;
-                this.shopcard.address.email = this.req.user.email;
-                this.shopcard.address.phone = this.req.user.mphone;
-            }
-            this.shopcard.address.adres = this.shopcard.address.adres || this.req.user.lastAddress;
+            this.fillDefaultAddress();
             yield this.shopcard.saveToRequest(this.req);
             //this.renderPage("pages/checkout.adres.ejs")
             needAddress ? this.renderPage("pages/checkout.adres.ejs") : this.renderPage("pages/checkout.adres-take.ejs");

@@ -83,6 +83,16 @@ exports.KnownAccounts = {
         type: "active",
         name: "Uygulanan Satış İndirimleri",
         code: "207"
+    },
+    "gelirler": {
+        type: "passive",
+        name: "Gelirler",
+        code: "650"
+    },
+    "kasaplardan-kesilen-komisyonlar": {
+        type: "active",
+        name: "Kasaplardan Kesilen komisyonlar",
+        code: "215"
     }
 };
 class Account {

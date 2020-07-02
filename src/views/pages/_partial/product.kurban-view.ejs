@@ -1,11 +1,43 @@
 <ul class="list font-size-sm">
+    <% if (man.kiminadina) { %>
     <li>
-       <%= man.constructor.vekaletData[man.vekalet] %>
+        <%=man.kiminadina %> adına kesilecek kurbanım
+
+    </li>
+    <% } %>
+
+    <li>
+        <%= man.constructor.vekaletData[man.vekalet] %>
     </li>
     <li>
         <%=man.constructor.videoData[man.video] %>
     </li>
+    <% if (man.bagis) { %>
+    <li>
+        <p class="mb-1">
+            Benim adıma lütfen bağış yapın:
+        </p>
+        <p class="mb-1">
+            <%=man.constructor.bagisTarget[man.bagisTarget] %>
+        </p>
+        <% if (man.bagisNote) { %>
+        <p class="mb-1">
+        <%=man.bagisNote %>
+
+        </p>
+        <%}%>
+
+        <p class="mb-1">
+        <span class="font-weight-bold">Not:</span>     Bağış makbuzunu veya kurbanınızı aileye teslim ederken çektiğimiz videoyu size gönderiyoruz.
+
+        </p>
+
+
+    </li>
+
+    <% } else { %>
     <li>
         <%=man.constructor.teslimatData[man.teslimat] %>
     </li>
+    <% } %>
 </ul>

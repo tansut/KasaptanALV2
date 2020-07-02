@@ -4,12 +4,14 @@ import Helper from '../../lib/helper';
 import { ShopCard, ShopcardItem, firstOrderDiscount } from '../../models/shopcard';
 import Product from './product';
 import Butcher from './butcher';
-import { OrderItemStatus, OrderSource } from '../../models/order';
+import { OrderItemStatus, OrderSource, OrderType } from '../../models/order';
 import Dispatcher from './dispatcher';
 import { GeoLocation } from '../../models/geo';
 import AccountModel from './accountmodel';
 import { PuanResult } from '../../models/puan';
 import { ProductTypeManager, ProductTypeFactory } from '../../lib/common';
+import { ComissionHelper } from '../../lib/commissionHelper';
+import { method } from 'lodash';
 const orderid = require('order-id')('dkfjsdklfjsdlkg450435034.,')
 
 @Table({
@@ -35,6 +37,7 @@ class Order extends BaseModel<Order> {
     kalitteByButcherPuanAccounts: AccountModel[] = [];
     
     butcherDeptAccounts: AccountModel[] = [];
+    butcherComissiomAccounts: AccountModel[] = [];
 
     puanSummary: PuanResult [] = [];
 
@@ -64,6 +67,12 @@ class Order extends BaseModel<Order> {
         defaultValue: OrderSource.kasaptanal
     })
     orderSource: string;    
+
+    @Column({
+        allowNull: false,
+        defaultValue: OrderType.generic
+    })
+    orderType: string;      
 
     @Column({
         allowNull: true        
@@ -333,6 +342,47 @@ class Order extends BaseModel<Order> {
         this.setDataValue('shopcardjson', Buffer.from(JSON.stringify(value), "utf-8"));
     }
 
+
+    getButcherRate() {
+        if (this.orderSource == OrderSource.kasaptanal) {
+            if (this.orderType == OrderType.kurban) {
+                return 0.05
+            } else return this.butcher.commissionRate            
+                 
+        } else return this.butcher.payCommissionRate;   
+    }
+
+    getButcherFee() {
+        return this.orderSource == OrderSource.kasaptanal ? this.butcher.commissionFee : this.butcher.payCommissionFee;
+    }
+
+    getPuanTotal(shouldBePaid: number) {
+        let result = 0.00;
+        if (this.orderSource == OrderSource.kasaptanal) {
+            let butcherPuanEarned = this.butcherPuanAccounts.find(p => p.code == 'total');
+            let kalitteOnlyPuanEarned = this.kalitteOnlyPuanAccounts.find(p => p.code == 'total');
+            let kalitteByButcherEarned = this.kalitteByButcherPuanAccounts.find(p => p.code == 'total');
+            let butcherPuan = Helper.asCurrency(butcherPuanEarned.alacak - butcherPuanEarned.borc);
+            let kalitteByButcherPuan = Helper.asCurrency(kalitteByButcherEarned.alacak - kalitteByButcherEarned.borc);
+            let totalPuanByButcher = Helper.asCurrency(butcherPuan + kalitteByButcherPuan);
+            let totalPuanByButcherIncVat = Helper.asCurrency(totalPuanByButcher * 1.18);
+            result = Helper.asCurrency(totalPuanByButcherIncVat);
+        }  
+
+        return result;
+    }
+
+  
+
+    getButcherComission(shouldBePaid: number) {
+        let rate = this.getButcherRate(); 
+        let fee = this.getButcherFee();
+        let calc = new ComissionHelper(rate, fee);
+        let totalFee = calc.calculateButcherComission(shouldBePaid);
+        let merchantPrice = Helper.asCurrency(totalFee.kalitteFee + totalFee.kalitteVat);
+        return merchantPrice;     
+    }
+
     static async fromShopcard(c: ShopCard, bi: number): Promise<Order> {
         let o = new Order();
         o.ordernum = orderid.generate();
@@ -356,6 +406,7 @@ class Order extends BaseModel<Order> {
         o.name = c.address.name;
         o.saveAddress = c.address.saveaddress;
         o.noInteraction = c.shipment[bi].nointeraction;
+        o.orderType = c.getOrderType();
         if (c.shipment[bi].dispatcher) {
             o.dispatcherid = c.shipment[bi].dispatcher.id;
             o.dispatcherFee = c.shipment[bi].dispatcher.fee;

@@ -107,6 +107,7 @@ export default class Route extends PaymentRouter {
             throw new Error("Geçersiz ödeme işlemi, siparişin borcu yoktur");
         let debt = {};     
         debt[this.order.butcherid] = 0.00;       
+        
         if (this.order.orderSource == OrderSource.kasaptanal) {
             this.api.fillPuanAccounts(this.order, this.shouldBePaid);
             let butcherDebptAccounts = await AccountModel.summary([Account.generateCode("kasaplardan-alacaklar", [this.order.butcherid])])

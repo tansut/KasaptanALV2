@@ -15,8 +15,6 @@ const config_1 = require("../../config");
 const path = require("path");
 const helper_1 = require("../helper");
 const payment_1 = require("../../db/models/payment");
-const commissionHelper_1 = require("../commissionHelper");
-const order_1 = require("../../models/order");
 const paymentConfig = require(path.join(config_1.default.projectDir, `payment.json`));
 class CreditcardPaymentProvider {
     constructor(config) {
@@ -55,28 +53,9 @@ class CreditcardPaymentProvider {
         });
     }
     getMerchantMoney(o, shouldBePaid) {
-        let max = 1200.00;
-        let rate = o.orderSource == order_1.OrderSource.kasaptanal ? o.butcher.commissionRate : o.butcher.payCommissionRate;
-        let fee = o.orderSource == order_1.OrderSource.kasaptanal ? o.butcher.commissionFee : o.butcher.payCommissionFee;
-        if (o.orderSource == order_1.OrderSource.kasaptanal) {
-            if (shouldBePaid >= max) {
-                rate = 0.05;
-            }
-        }
-        let calc = new commissionHelper_1.ComissionHelper(rate, fee);
-        let totalFee = calc.calculateButcherComission(shouldBePaid);
-        let merchantPrice = helper_1.default.asCurrency(totalFee.inputTotal - totalFee.kalitteFee - totalFee.kalitteVat);
-        if (o.orderSource == order_1.OrderSource.kasaptanal) {
-            let butcherPuanEarned = o.butcherPuanAccounts.find(p => p.code == 'total');
-            let kalitteOnlyPuanEarned = o.kalitteOnlyPuanAccounts.find(p => p.code == 'total');
-            let kalitteByButcherEarned = o.kalitteByButcherPuanAccounts.find(p => p.code == 'total');
-            let butcherPuan = helper_1.default.asCurrency(butcherPuanEarned.alacak - butcherPuanEarned.borc);
-            let kalitteByButcherPuan = helper_1.default.asCurrency(kalitteByButcherEarned.alacak - kalitteByButcherEarned.borc);
-            let totalPuanByButcher = helper_1.default.asCurrency(butcherPuan + kalitteByButcherPuan);
-            let totalPuanByButcherIncVat = helper_1.default.asCurrency(totalPuanByButcher * 1.18);
-            merchantPrice = helper_1.default.asCurrency(merchantPrice - totalPuanByButcherIncVat);
-        }
-        return merchantPrice;
+        let comission = o.getButcherComission(shouldBePaid);
+        let puan = o.getPuanTotal(shouldBePaid);
+        return helper_1.default.asCurrency(shouldBePaid - comission - puan);
     }
     requestFromOrder(ol, debts = {}) {
         let basketItems = [];
@@ -94,7 +73,7 @@ class CreditcardPaymentProvider {
                 }
                 else
                     debtApplied = butcherDebt;
-                merchantPrice = helper_1.default.asCurrency(this.getMerchantMoney(o, shouldBePaid) - debtApplied);
+                merchantPrice = helper_1.default.asCurrency(merchantPrice - debtApplied);
             }
             basketItems.push({
                 category1: o.butcherName,

@@ -38,6 +38,10 @@ let Product = Product_1 = class Product extends basemodel_1.default {
         let obj = this.producttypedata || {};
         return Object.assign(new common_1.AdakProductManager(), obj);
     }
+    get asKurban() {
+        let obj = this.producttypedata || {};
+        return Object.assign(new common_1.KurbanProductManager(), obj);
+    }
     get producttypedata() {
         return this.producttypedatajson ? JSON.parse(this.getDataValue('producttypedatajson')) : null;
     }

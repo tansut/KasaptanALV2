@@ -3,7 +3,7 @@ import * as express from "express";
 import * as maps from "@google/maps"
 import ButcherModel from '../db/models/butcher';
 import moment = require('moment');
-import { Auth, ProductTypeManager, ProductTypeFactory } from '../lib/common';
+import { Auth, ProductTypeManager, ProductTypeFactory, KurbanProductManager } from '../lib/common';
 import AreaModel from '../db/models/area';
 import Helper from '../lib/helper';
 import Area from '../db/models/area';
@@ -89,10 +89,22 @@ export default class Route extends ViewRouter {
         //     this.shopcard.address.phone = this.req.user.mphone;
         // }
         await this.setDispatcher();
-        await this.shopcard.saveToRequest(this.req)
-        this.renderPage("pages/checkout.ship.ejs");
+        await this.shopcard.saveToRequest(this.req);
+        if (this.shopcard.getOrderType() == 'kurban') {
+            let man = ProductTypeFactory.create('kurban', this.shopcard.items[0].productTypeData) as KurbanProductManager;           
+            let ship = this.shopcard.shipment[Object.keys(this.shopcard.shipment)[0]];
+            this.fillDefaultAddress();
+            if (['0', '1', '2'].indexOf(man.teslimat) >=0) {                
+                ship.howTo = "take" ;
+                this.renderPage("pages/checkout.adres-take.ejs")
+            } else {
+                ship.howTo = "ship";
+                this.renderPage("pages/checkout.adres.ejs");
+            }              
+        }
+        else this.renderPage("pages/checkout.ship.ejs");
     }
-
+ 
 
     async adresViewRoute() {
         this.shopcard = await ShopCard.createFromRequest(this.req);
@@ -194,7 +206,17 @@ export default class Route extends ViewRouter {
         this.shopcard = await ShopCard.createFromRequest(this.req);
         await this.setDispatcher();
         await this.shopcard.saveToRequest(this.req);
-        this.renderPage("pages/checkout.ship.ejs");
+        if (this.shopcard.getOrderType() == 'kurban') {
+            this.viewRoute()
+        } else this.renderPage("pages/checkout.ship.ejs");
+    }
+
+    fillDefaultAddress() {
+        this.shopcard.address.name = this.req.user.name;
+        this.shopcard.address.email = this.req.user.email;
+        this.shopcard.address.phone = this.req.user.mphone;
+    
+    this.shopcard.address.adres = this.shopcard.address.adres || this.req.user.lastAddress;
     }
 
     async saveshipRoute() {
@@ -223,12 +245,8 @@ export default class Route extends ViewRouter {
             }
         }
         this.shopcard.calculateShippingCosts();
-        if (needAddress && !this.shopcard.address.name) {
-            this.shopcard.address.name = this.req.user.name;
-            this.shopcard.address.email = this.req.user.email;
-            this.shopcard.address.phone = this.req.user.mphone;
-        }
-        this.shopcard.address.adres = this.shopcard.address.adres || this.req.user.lastAddress;
+
+        this.fillDefaultAddress();
         await this.shopcard.saveToRequest(this.req);
         //this.renderPage("pages/checkout.adres.ejs")
         needAddress ? this.renderPage("pages/checkout.adres.ejs") : this.renderPage("pages/checkout.adres-take.ejs");

@@ -1,14 +1,19 @@
 <div class="rounded-lg bg-secondary border p-3">
     <div class="form-group">
-        <h5 class="h5 text-warning">İbadetinizin hayırlara vesile olmasını diliyoruz, siparişiniz için teşekkür ederiz.</h5>
+        <h5 class="h5 text-warning">
+            <i class="czi-thumb-up mr-1"></i>
+            Siparişiniz için teşekkür ederiz</h5>
+            <p class="font-size-sm">
+                Kurban ibadetinizin hayırlara vesile olmasını diliyoruz.
+            </p>
     
         <div class="form-group">
-            <label for="kurban-kiminadina">Kurban kimin adına kesilecek ?</label><br>
+            <label class="font-weight-bolder" for="kurban-kiminadina">Kurban kimin adına kesilecek ?</label><br>
             <input placeholder="kendi adınıza ise boş bırakabilirsiniz" type="text" class="form-control" name="kurban-kiminadina" id="kurban-kiminadina" value="<%=man.kiminadina%>">
         </div>
 
         <div class="form-group">
-            <label for="kurban-vekalet">Vekâletinizi nasıl alalım?</label>
+            <label class="font-weight-bolder" for="kurban-vekalet">Vekâletinizi nasıl alalım?</label>
             <select id="kurban-vekalet" name="kurban-vekalet" class="form-control bsselect" >
                 <% for (var k in man.constructor.vekaletData) { %>
                     <option <%= man.vekalet == k ? 'selected':'' %> value="<%=k%>"><%=man.constructor.vekaletData[k]%></option>
@@ -19,7 +24,7 @@
         </div>
     
         <div class="form-group">
-            <label for="kurban-video">Kesim videosu ister misiniz?</label>
+            <label class="font-weight-bolder" for="kurban-video">Kesim videosu ister misiniz?</label>
             <select id="kurban-video" name="kurban-video" class="form-control bsselect" >
                 <% for (var k in man.constructor.videoData) { %>
                     <option <%= man.video == k ? 'selected':'' %> value="<%=k%>"><%=man.constructor.videoData[k]%></option>
@@ -28,12 +33,12 @@
         </div>
 
         <div class="mt-3 mb-3 custom-control custom-checkbox">
-            <input onchange="setBagis()" class="custom-control-input" name="kurban-bagis" type="checkbox" <%= man.bagis ? 'checked':'' %> id="kurban-bagis">
-            <label class="custom-control-label" for="kurban-bagis"><strong>Kurbanımı benim adıma bağışlayın</strong> istiyorum.</label>
+            <input onchange="setBagis()" class="custom-control-input" name="kurban-bagis-mi" type="checkbox" <%= man.bagis ? 'checked':'' %> id="kurban-bagis-mi">
+            <label class="custom-control-label text-accent" for="kurban-bagis-mi"><strong>Kurbanımı benim adıma bağışlayın</strong> istiyorum.</label>
           </div>   
           <div id="kurban-bagis-detay" style="display: <%=man.bagis ? 'block':'none'%>;">
             <div class="form-group">
-                <label for="kurban-bagis-target">Bağışınız konusunda nasıl ilerleyelim?</label>
+                <label class="font-weight-bolder" for="kurban-bagis-target">Bağışınız konusunda nasıl ilerleyelim?</label>
                 <select id="kurban-bagis-target" name="kurban-bagis-target" class="form-control bsselect" >
                     <% for (var k in man.constructor.bagisTarget) { %>
                         <option <%= man.bagisTarget == k ? 'selected':'' %> value="<%=k%>"><%=man.constructor.bagisTarget[k]%></option>
@@ -42,8 +47,9 @@
             </div>
 
             <div class="form-group">
-                <label for="kurban-bagis-note">Bağış konusunda notunuz varsa alalım</label><br>
-                <input placeholder="boş bırakın veya kime bağışlamamızı istiyorsanız belirtin." type="text" class="form-control" name="kurban-bagis-note" id="kurban-bagis-note" value="<%=man.bagisNote%>">
+                <label class="font-weight-bolder" for="kurban-bagis-note">Bağış konusunda notunuz varsa alalım</label><br>
+                <input placeholder="" type="text" class="form-control" name="kurban-bagis-note" id="kurban-bagis-note" value="<%=man.bagisNote%>">
+                <span class="font-size-xs text-muted">* Boş bırakın veya kime, hangi kuruma bağışlamamızı istiyorsanız belirtin.</span>
             </div>
             <div>
                 <span class="d-block">
@@ -68,7 +74,7 @@
 
     
         <div id="kurban-teslimat-container" style="display: <%=man.bagis ? 'none':'block'%>;" class="form-group">
-            <label for="kurban-teslimat">Nasıl teslim almak istersiniz?</label>
+            <label class="font-weight-bolder" for="kurban-teslimat">Nasıl teslim almak istersiniz?</label>
             <select id="kurban-teslimat" class="form-control bsselect" >
                 <% for (var k in man.constructor.teslimatData) { %>
                     <option <%= man.teslimat == k ? 'selected':'' %> value="<%=k%>"><%=man.constructor.teslimatData[k]%></option>
@@ -82,7 +88,7 @@
 
 <script>
     function setBagis() {
-        debugger
+        
         if (event.currentTarget.checked) {            
             $('#kurban-bagis-detay').show()
             $('#kurban-teslimat-container').hide()

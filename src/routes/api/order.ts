@@ -58,6 +58,19 @@ export default class Route extends ApiRouter {
 
     }
 
+    async fillButcherComissionAccounts(o: Order) {
+
+        let list = [
+            Account.generateCode("kasaplardan-kesilen-komisyonlar", [100, o.butcherid, o.ordernum]),
+            Account.generateCode("kasaplardan-kesilen-komisyonlar", [200, o.butcherid, o.ordernum])            
+        ]
+        
+        let accounts = await AccountModel.list(list);
+        o.butcherComissiomAccounts = accounts;
+        return accounts;
+
+    }    
+
     async getKalittePuanAccounts(o: Order) {
         let list = [
             Account.generateCode("musteri-kalitte-kazanilan-puan", [o.userId, 1, o.ordernum]),
@@ -287,7 +300,7 @@ export default class Route extends ApiRouter {
         order.items.forEach((item, i) => {
             let bi = item.butcher.id;
 
-            let prodMan = ProductTypeFactory.create(item.productType,{});
+            let prodMan = ProductTypeFactory.create(item.productType, {});
             prodMan.loadFromOrderItem(item);
 
 
@@ -437,12 +450,6 @@ export default class Route extends ApiRouter {
             transaction: t
         }));
         paymentInfo.itemTransactions.forEach(it => {
-            // let oi = o.items.find(p => p.orderitemnum == it.itemId);
-            // if (oi) {
-            //     oi.paymentTransactionId = it.paymentTransactionId
-            //     oi.paidPrice = it.paidPrice;
-            //     promises.push(oi.save({ transaction: t }))
-            // }
             if (it.itemId == o.ordernum) {
                 o.paymentTransactionId = it.paymentTransactionId
                 o.paidTotal = it.paidPrice;
@@ -452,22 +459,22 @@ export default class Route extends ApiRouter {
         return o.isNewRecord ? null : Promise.all(promises);
     }
 
-    async completeManualPaymentDept(o: Order, customerPuan: number, butcherDebt: number) {
+    async completeManualPaymentDept(o: Order) {
+       
         let res = db.getContext().transaction((t: Transaction) => {
-            return this.createManualPaymentDept(o, customerPuan, butcherDebt)
+            return this.createManualPaymentDept(o, t)
         })
         await res;
     }
 
-    async createManualPaymentDept(o: Order, customerPuan: number, butcherDebt: number, t?: Transaction) {
-        // let puan = this.getPossiblePuanGain(o, total);
-        // let calc = new ComissionHelper(this.order.butcher.commissionRate, this.order.butcher.commissionFee);
-        // this.butcherFee = calc.calculateButcherComission(this.paid);   
+    async createManualPaymentDept(o: Order, t?: Transaction) {
+        await this.fillButcherComissionAccounts(o);
 
+        let butcherDebtAcc = o.butcherComissiomAccounts.find(p => p.code == 'total');
+        let butcherDebt = Helper.asCurrency(butcherDebtAcc.borc - butcherDebtAcc.alacak)
         let result: AccountingOperation = new AccountingOperation(`${o.ordernum} nolu ${o.butcherName} siparişi kasaptan alacak`);
-        result.accounts.push(new Account("kasaplardan-alacaklar", [o.butcherid, 1, o.ordernum], `${o.ordernum} nolu sipariş komisyonu`).inc(butcherDebt))
-        result.accounts.push(new Account("kasaplardan-alacaklar", [o.butcherid, 2, o.ordernum], `${o.ordernum} nolu sipariş müşteriye iletilen`).inc(customerPuan))
-        result.accounts.push(new Account("kasap-borc-tahakkuk", [1, o.butcherid, o.ordernum], `${o.ordernum} nolu sipariş ödemesi`).inc(Helper.asCurrency(butcherDebt + customerPuan)))
+        result.accounts.push(new Account("kasaplardan-alacaklar", [o.butcherid, 1, o.ordernum], `${o.ordernum} nolu siparişten doğan borç komisyonu`).inc(butcherDebt))
+        result.accounts.push(new Account("kasap-borc-tahakkuk", [1, o.butcherid, o.ordernum], `${o.ordernum} nolu manuel ödemesi`).inc(Helper.asCurrency(butcherDebt)))
         return this.saveAccountingOperations([result], t)
     }
 
@@ -488,7 +495,7 @@ export default class Route extends ApiRouter {
 
     getPossiblePuanGain(o: Order, total: number, includeAvailable: boolean = false): PuanResult[] {
 
-        let max = 1200.00;
+        
         let calculator = new PuanCalculator();
         let result: PuanResult[] = [];
 
@@ -502,7 +509,7 @@ export default class Route extends ApiRouter {
         }
 
         if (o.butcher.enableCreditCard) {
-            if (o.isFirstButcherOrder && total < max) {
+            if (o.isFirstButcherOrder && o.orderType != 'kurban') {
                 let firstOrderPuan = calculator.calculateCustomerPuan(firstOrder, total);
                 if (firstOrderPuan > 0.00 || includeAvailable) {
                     result.push({
@@ -588,7 +595,22 @@ export default class Route extends ApiRouter {
 
         return result
     }
+    
 
+    getComissionAccounts(o: Order, total: number): AccountingOperation {
+        let result: AccountingOperation = new AccountingOperation(`${o.ordernum} nolu ${o.butcherName} kasap komisyon hesabı`);        
+
+        let butcherFee = o.getButcherComission(total);
+        let puanTotal = o.getPuanTotal(total);
+
+        result.accounts.push(new Account("kasaplardan-kesilen-komisyonlar", [100, o.butcherid, o.ordernum], `${o.ordernum} nolu satış kasaptanal.com komisyonu`).inc(butcherFee))
+        if (puanTotal > 0.00) {
+            result.accounts.push(new Account("kasaplardan-kesilen-komisyonlar", [200, o.butcherid, o.ordernum], `${o.ordernum} nolu müşteriye iletilen puan`).inc(puanTotal))
+        }
+        result.accounts.push(new Account("gelirler", [100, o.butcherid], `${o.ordernum} nolu ${o.butcherName} satış geliri`).inc(butcherFee + puanTotal))
+
+        return result;
+    }
 
     getPuanAccounts(o: Order, total: number): AccountingOperation {
 
@@ -647,14 +669,7 @@ export default class Route extends ApiRouter {
 
     }
 
-    async loadPuan(o: Order, total: number, t?: Transaction): Promise<any> {
-        let ops: AccountingOperation[] = [];
-        let promises: Promise<any>[] = [];
-        let puanAccounts = this.getPuanAccounts(o, total);
-        ops.push(puanAccounts);
-        promises = promises.concat(this.saveAccountingOperations(ops, t));
-        return Promise.all(promises)
-    }
+
 
 
     async completeManuelPayment(o: Order, total: number) {
@@ -670,40 +685,31 @@ export default class Route extends ApiRouter {
         })
     }
 
+    // async loadPuan(o: Order, total: number, t?: Transaction): Promise<any> {
+    //     let ops: AccountingOperation[] = [];
+    //     let promises: Promise<any>[] = [];
+    //     let puanAccounts = this.getPuanAccounts(o, total);
+    //     ops.push(puanAccounts);
+    //     promises = promises.concat(this.saveAccountingOperations(ops, t));
+    //     return Promise.all(promises)
+    // }
+    
 
-    async completeLoadPuan(o: Order, total: number) {
-        let res = db.getContext().transaction((t: Transaction) => {
-            return this.loadPuan(o, total, t)
-        })
-        await new Promise((resolve, reject) => {
-            res.then((result) => {
-                resolve(result)
-            }).catch((err) => {
-                reject(err);
-            })
-        })
-    }
+    // async completeLoadPuan(o: Order, total: number) {
+    //     let res = db.getContext().transaction((t: Transaction) => {
+    //         return this.loadPuan(o, total, t)
+    //     })
+    //     await new Promise((resolve, reject) => {
+    //         res.then((result) => {
+    //             resolve(result)
+    //         }).catch((err) => {
+    //             reject(err);
+    //         })
+    //     })
+    // }
 
 
-    async makeManuelPayment(o: Order, total: number, t?: Transaction): Promise<any> {
-
-        let ops: AccountingOperation[] = [];
-        let promises: Promise<any>[] = []
-
-        let paymentId = "manuel";
-
-        let op = new AccountingOperation(`${o.ordernum} ödemesi - ${paymentId}`);
-        op.accounts.push(new Account("odeme-bekleyen-satislar", [o.userId, o.ordernum, 600]).dec(total))
-        op.accounts.push(new Account("satis-alacaklari", [o.userId, o.ordernum]).dec(total))
-        ops.push(op);
-        o.paidTotal = total;
-        promises.push(o.save({
-            transaction: t
-        }))
-
-        promises = promises.concat(this.saveAccountingOperations(ops, t));
-        return Promise.all(promises)
-    }
+   
 
 
     async updateButcherDebtAfterPayment(o: Order, paymentRequest: PaymentRequest, paymentInfo: PaymentResult, t?: Transaction) {
@@ -724,6 +730,36 @@ export default class Route extends ApiRouter {
         return promises;
     }
 
+    async makeManuelPayment(o: Order, total: number, t?: Transaction): Promise<any> {
+
+        let ops: AccountingOperation[] = [];
+        let promises: Promise<any>[] = []
+
+        let paymentId = "manuel";
+
+        //let payRequest = await this.getPaymentRequest();
+
+        let op = new AccountingOperation(`${o.ordernum} ödemesi - ${paymentId}`);
+        op.accounts.push(new Account("odeme-bekleyen-satislar", [o.userId, o.ordernum, 600]).dec(total))
+        op.accounts.push(new Account("satis-alacaklari", [o.userId, o.ordernum]).dec(total));
+
+        ops.push(op);
+
+        let puanAccounts = this.getPuanAccounts(o, total);
+        this.fillPuanAccounts(o, total);
+        let comissionAccounts = this.getComissionAccounts(o, total);
+        ops.push(puanAccounts);
+        ops.push(comissionAccounts);
+
+        o.paidTotal = total;
+        promises.push(o.save({
+            transaction: t
+        }))
+
+        promises = promises.concat(this.saveAccountingOperations(ops, t));
+        return Promise.all(promises)
+    }
+
 
     async makeCreditcardPayment(ol: Order[], paymentRequest: PaymentRequest, paymentInfo: PaymentResult, t?: Transaction): Promise<any> {
 
@@ -742,8 +778,10 @@ export default class Route extends ApiRouter {
                 op.accounts.push(new Account("odeme-bekleyen-satislar", [o.userId, o.ordernum, 500]).dec(paymentInfo.paidPrice))
                 op.accounts.push(new Account("satis-alacaklari", [o.userId, o.ordernum]).dec(paymentInfo.paidPrice))
                 ops.push(op);
-                let puanAccounts = this.getPuanAccounts(o, paymentInfo.paidPrice)
+                let puanAccounts = this.getPuanAccounts(o, paymentInfo.paidPrice);
+                let comissionAccounts = this.getComissionAccounts(o, paymentInfo.paidPrice);
                 ops.push(puanAccounts);
+                ops.push(comissionAccounts);
                 promises = promises.concat(this.updateOrderByCreditcardPayment(o, paymentInfo, t));
                 promises = promises.concat(this.updateButcherDebtAfterPayment(o, paymentRequest, paymentInfo, t));
             }
@@ -851,7 +889,7 @@ export default class Route extends ApiRouter {
             order.butcherid = parseInt(bi);
             order.butcher = await Butcher.findByPk(order.butcherid)
             order.butcherName = butchers[bi].name;
-            order.securityCode = `${butchers[bi].name[0]}-${Helper.getRandomInt(999) + 1000}`;         
+            order.securityCode = `${butchers[bi].name[0]}-${Helper.getRandomInt(999) + 1000}`;
             order.userId = this.req.user ? this.req.user.id : 0;
 
             if (!order.userId) {
@@ -910,11 +948,12 @@ export default class Route extends ApiRouter {
             let api = new OrderApi(this.constructorParams);
             let dbOrder = await api.getOrder(order.ordernum);
             let view = this.getView(dbOrder);
-            await email.send(dbOrder.email, "siparişinizi aldık", "order.started.ejs", view);
-            await Sms.send(dbOrder.phone, `KasaptanAl.com siparisinizi aldik, destek tel/whatsapp: 08503054216. Teslimat kodu: ${order.securityCode}`, false, new SiteLogRoute(this.constructorParams))
-
-            let notifyMobilePhones = (order.butcher.notifyMobilePhones || "").split(',');
             if (config.nodeenv == 'production') {
+                await email.send(dbOrder.email, "siparişinizi aldık", "order.started.ejs", view);
+                await Sms.send(dbOrder.phone, `KasaptanAl.com siparisinizi aldik, destek tel/whatsapp: 08503054216. Teslimat kodu: ${order.securityCode}`, false, new SiteLogRoute(this.constructorParams))
+
+                let notifyMobilePhones = (order.butcher.notifyMobilePhones || "").split(',');
+
                 for (var p = 0; p < notifyMobilePhones.length; p++) {
                     if (notifyMobilePhones[p].trim()) {
                         let payUrl = `${this.url}/pay/${order.ordernum}`;

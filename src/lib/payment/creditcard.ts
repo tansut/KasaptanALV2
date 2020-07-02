@@ -191,32 +191,9 @@ export class CreditcardPaymentProvider {
     }
 
     getMerchantMoney(o: Order, shouldBePaid: number) {
-
-        let max = 1200.00;
-
-        let rate = o.orderSource == OrderSource.kasaptanal ? o.butcher.commissionRate : o.butcher.payCommissionRate;
-        let fee = o.orderSource == OrderSource.kasaptanal ? o.butcher.commissionFee : o.butcher.payCommissionFee
-
-        if (o.orderSource == OrderSource.kasaptanal) {
-            if (shouldBePaid >= max) {
-                rate= 0.05;
-            }
-        }
-
-        let calc = new ComissionHelper(rate, fee);
-        let totalFee = calc.calculateButcherComission(shouldBePaid);
-        let merchantPrice = Helper.asCurrency(totalFee.inputTotal - totalFee.kalitteFee - totalFee.kalitteVat);
-        if (o.orderSource == OrderSource.kasaptanal) {
-            let butcherPuanEarned = o.butcherPuanAccounts.find(p => p.code == 'total');
-            let kalitteOnlyPuanEarned = o.kalitteOnlyPuanAccounts.find(p => p.code == 'total');
-            let kalitteByButcherEarned = o.kalitteByButcherPuanAccounts.find(p => p.code == 'total');
-            let butcherPuan = Helper.asCurrency(butcherPuanEarned.alacak - butcherPuanEarned.borc);
-            let kalitteByButcherPuan = Helper.asCurrency(kalitteByButcherEarned.alacak - kalitteByButcherEarned.borc);
-            let totalPuanByButcher = Helper.asCurrency(butcherPuan + kalitteByButcherPuan);
-            let totalPuanByButcherIncVat = Helper.asCurrency(totalPuanByButcher * 1.18);
-            merchantPrice = Helper.asCurrency(merchantPrice - totalPuanByButcherIncVat);
-        }
-        return merchantPrice;
+        let comission = o.getButcherComission(shouldBePaid);
+        let puan = o.getPuanTotal(shouldBePaid);
+        return Helper.asCurrency(shouldBePaid - comission - puan)
     }
 
 
@@ -238,8 +215,7 @@ export class CreditcardPaymentProvider {
                 if (merchantPrice <= butcherDebt) {
                     debtApplied = merchantPrice - 1.00;
                 } else debtApplied = butcherDebt;
-                merchantPrice = Helper.asCurrency(this.getMerchantMoney(o, shouldBePaid) - debtApplied);
-
+                merchantPrice = Helper.asCurrency(merchantPrice - debtApplied);
             }
             basketItems.push({
                 category1: o.butcherName,
