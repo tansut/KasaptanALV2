@@ -86,14 +86,6 @@ class Route extends router_1.ViewRouter {
             if (!butcher) {
                 return this.next();
             }
-            if (!this.req.params.category) {
-                this.category = this.req.__categories[0];
-            }
-            else {
-                this.category = this.req.__categories.find(p => p.slug == this.req.params.category);
-            }
-            if (!this.category)
-                return this.next();
             yield this.loadReviews(butcher);
             if (!butcher.location && butcher.gpPlace && butcher.gpPlace['geometry'] && butcher.gpPlace['geometry']['location']) {
                 let latlong = butcher.gpPlace['geometry']['location'];
@@ -125,7 +117,7 @@ class Route extends router_1.ViewRouter {
             for (let i = 0; i < this.dispatchers.length; i++) {
                 this.dispatchers[i].address = yield this.dispatchers[i].toarea.getPreferredAddress();
             }
-            this.categories = this.req.__categories;
+            this.categories = [];
             butcher.products = butcher.products.filter(p => {
                 return p.enabled && (p.kgPrice > 0 || (p.unit1price > 0 && p.unit1enabled) || (p.unit2price > 0 && p.unit2enabled) || (p.unit3price > 0 && p.unit1enabled));
             });
@@ -139,6 +131,19 @@ class Route extends router_1.ViewRouter {
                 p.product.categories = productCategories.filter(pc => pc.productid == p.productid);
                 return p.product;
             });
+            this.req.__categories.forEach(c => {
+                let products = productManager_1.default.filterProductsByCategory(this.products, { slug: c.slug }, {}, { chunk: 0 });
+                if (products.length) {
+                    this.categories.push(c);
+                }
+            });
+            if (!this.req.params.category && this.categories.length) {
+                this.category = this.categories[0];
+            }
+            else if (this.req.params.category)
+                this.category = this.req.__categories.find(p => p.slug == this.req.params.category);
+            else
+                this.category = this.req.__categories[0];
             this.products = productManager_1.default.filterProductsByCategory(this.products, { slug: this.category.slug }, { productType: 'generic' }, { chunk: 0 });
             this.subCategories = productManager_1.default.generateSubcategories(this.category, this.products);
             let pageTitle = butcher.pageTitle || `${butcher.name}`;

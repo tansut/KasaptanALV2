@@ -38,11 +38,11 @@ let Butcher = Butcher_1 = class Butcher extends basemodel_1.default {
     set gpPlace(value) {
         this.setDataValue('gpplacejson', Buffer.from(JSON.stringify(value), "utf-8"));
     }
-    getPuanData() {
+    getPuanData(orderType) {
         return this.enablePuan ? {
             name: 'Kasap Kart Puanı',
             minSales: this.minSalesPuan,
-            rate: this.customerPuanRate,
+            rate: orderType == 'kurban' ? this.kurbanPuanRate : this.customerPuanRate,
             minPuanForUsage: this.minPuanUsage
         } : null;
     }
@@ -385,6 +385,22 @@ __decorate([
     sequelize_typescript_1.Column({
         allowNull: false,
         type: sequelize_typescript_1.DataType.DECIMAL(10, 4),
+        defaultValue: 0.04
+    }),
+    __metadata("design:type", Number)
+], Butcher.prototype, "kurbanCommissionRate", void 0);
+__decorate([
+    sequelize_typescript_1.Column({
+        allowNull: false,
+        type: sequelize_typescript_1.DataType.DECIMAL(13, 2),
+        defaultValue: 0.00
+    }),
+    __metadata("design:type", Number)
+], Butcher.prototype, "kurbanCommissionFee", void 0);
+__decorate([
+    sequelize_typescript_1.Column({
+        allowNull: false,
+        type: sequelize_typescript_1.DataType.DECIMAL(10, 4),
         defaultValue: 0.1
     }),
     __metadata("design:type", Number)
@@ -413,6 +429,14 @@ __decorate([
     }),
     __metadata("design:type", Number)
 ], Butcher.prototype, "customerPuanRate", void 0);
+__decorate([
+    sequelize_typescript_1.Column({
+        allowNull: false,
+        type: sequelize_typescript_1.DataType.DECIMAL(5, 2),
+        defaultValue: 0.02
+    }),
+    __metadata("design:type", Number)
+], Butcher.prototype, "kurbanPuanRate", void 0);
 __decorate([
     sequelize_typescript_1.Column({
         allowNull: false,

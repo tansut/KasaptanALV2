@@ -337,7 +337,7 @@ class Route extends router_1.ApiRouter {
                     badges: butcher.getBadgeList(),
                     name: butcher.name,
                     id: butcher.id,
-                    puanData: butcher.getPuanData(),
+                    puanData: butcher.getPuanData(product.productType),
                     earnedPuan: 0.00,
                     productNote: '',
                     kgPrice: kgPrice

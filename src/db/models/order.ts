@@ -346,14 +346,21 @@ class Order extends BaseModel<Order> {
     getButcherRate() {
         if (this.orderSource == OrderSource.kasaptanal) {
             if (this.orderType == OrderType.kurban) {
-                return 0.05
+                return this.butcher.kurbanCommissionRate;    
             } else return this.butcher.commissionRate            
                  
         } else return this.butcher.payCommissionRate;   
     }
 
     getButcherFee() {
-        return this.orderSource == OrderSource.kasaptanal ? this.butcher.commissionFee : this.butcher.payCommissionFee;
+        if (this.orderSource == OrderSource.kasaptanal) {
+            if (this.orderType == OrderType.kurban) {
+                return this.butcher.kurbanCommissionFee;    
+            } else return this.butcher.commissionFee         
+                 
+        } else return this.butcher.payCommissionFee;   
+
+        
     }
 
     getPuanTotal(shouldBePaid: number) {

@@ -19,7 +19,7 @@ import { Sms } from '../../lib/sms';
 import { AccountingOperation, Account } from '../../models/account';
 import Helper from '../../lib/helper';
 import { Creditcard, CreditcardPaymentFactory, PaymentTotal, PaymentRequest, PaymentResult } from '../../lib/payment/creditcard';
-import { OrderPaymentStatus, OrderItemStatus, OrderSource } from '../../models/order';
+import { OrderPaymentStatus, OrderItemStatus, OrderSource, OrderType } from '../../models/order';
 import config from '../../config';
 import { PuanCalculator } from '../../lib/commissionHelper';
 import { PuanResult, Puan } from '../../models/puan';
@@ -524,7 +524,7 @@ export default class Route extends ApiRouter {
             }
 
             if (o.butcher.enablePuan) {
-                let butcherPuan = o.butcher.getPuanData()
+                let butcherPuan = o.butcher.getPuanData(o.orderType);
                 let earnedPuanb = calculator.calculateCustomerPuan(butcherPuan, total);
                 if (earnedPuanb > 0.00 || includeAvailable) {
                     if (earnedPuanb == 0) {
@@ -539,7 +539,8 @@ export default class Route extends ApiRouter {
                             }
                         )
                     } else {
-                        let toKalitte = Helper.asCurrency(earnedPuanb * 0.5);
+                        let toKalitteRatio = o.orderType == OrderType.kurban ? 1: 0.5;
+                        let toKalitte = Helper.asCurrency(earnedPuanb * toKalitteRatio);
                         let toButcher = Helper.asCurrency(earnedPuanb - toKalitte);
                         if (toButcher > 0.00) {
                             result.push(

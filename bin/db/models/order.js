@@ -54,7 +54,7 @@ let Order = Order_1 = class Order extends basemodel_1.default {
     getButcherRate() {
         if (this.orderSource == order_1.OrderSource.kasaptanal) {
             if (this.orderType == order_1.OrderType.kurban) {
-                return 0.05;
+                return this.butcher.kurbanCommissionRate;
             }
             else
                 return this.butcher.commissionRate;
@@ -63,7 +63,15 @@ let Order = Order_1 = class Order extends basemodel_1.default {
             return this.butcher.payCommissionRate;
     }
     getButcherFee() {
-        return this.orderSource == order_1.OrderSource.kasaptanal ? this.butcher.commissionFee : this.butcher.payCommissionFee;
+        if (this.orderSource == order_1.OrderSource.kasaptanal) {
+            if (this.orderType == order_1.OrderType.kurban) {
+                return this.butcher.kurbanCommissionFee;
+            }
+            else
+                return this.butcher.commissionFee;
+        }
+        else
+            return this.butcher.payCommissionFee;
     }
     getPuanTotal(shouldBePaid) {
         let result = 0.00;

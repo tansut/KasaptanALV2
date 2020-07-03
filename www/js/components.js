@@ -542,12 +542,13 @@ window.initComponents = function initComponents() {
                             hisse: $('#adak-hisse').val(),
                         }
                     } else if (this.product.productType == 'kurban') {
+                        var bagis = document.getElementById("kurban-bagis-mi").checked;
                         productTypeData = {
                             vekalet: $('#kurban-vekalet').val(),
                             video: $('#kurban-video').val(),
-                            teslimat: $('#kurban-teslimat').val(),
+                            teslimat: bagis ? '0': $('#kurban-teslimat').val(),
                             kiminadina: $('#kurban-kiminadina').val(),
-                            bagis: document.getElementById("kurban-bagis-mi").checked,
+                            bagis: bagis,
                             bagisTarget: $('#kurban-bagis-target').val(),
                             bagisNote: $("#kurban-bagis-note").val()
                         }

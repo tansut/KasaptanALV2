@@ -207,11 +207,11 @@ class Butcher extends BaseModel<Butcher> {
     })
     badges: string;   
 
-    getPuanData(): Puan {
+    getPuanData(orderType: string): Puan {
         return this.enablePuan ? {
             name: 'Kasap Kart Puanı',
             minSales: this.minSalesPuan,
-            rate: this.customerPuanRate,
+            rate: orderType == 'kurban' ? this.kurbanPuanRate: this.customerPuanRate,
             minPuanForUsage: this.minPuanUsage
         }: null        
     }
@@ -266,6 +266,20 @@ class Butcher extends BaseModel<Butcher> {
     })
     payCommissionFee: number;      
 
+    @Column({
+        allowNull: false,
+        type: DataType.DECIMAL(10, 4),
+        defaultValue: 0.04
+    })
+    kurbanCommissionRate: number;    
+
+    @Column({
+        allowNull: false,
+        type: DataType.DECIMAL(13, 2),
+        defaultValue: 0.00
+    })
+    kurbanCommissionFee: number;      
+
 
     @Column({
         allowNull: false,
@@ -293,7 +307,14 @@ class Butcher extends BaseModel<Butcher> {
         type: DataType.DECIMAL(5, 2),
         defaultValue: 0.01
     })
-    customerPuanRate: number;      
+    customerPuanRate: number;    
+    
+    @Column({
+        allowNull: false,
+        type: DataType.DECIMAL(5, 2),
+        defaultValue: 0.02
+    })
+    kurbanPuanRate: number;          
 
     @Column({
         allowNull: false,

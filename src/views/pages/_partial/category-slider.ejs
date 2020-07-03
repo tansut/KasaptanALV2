@@ -5,6 +5,9 @@
 <% idprefix = typeof(idprefix) == 'undefined' ? '': idprefix %>
 <% urlParams = typeof(urlParams) == 'undefined' ? '': urlParams %>
 <% subUrl = typeof(subUrl) == 'undefined' ? '': subUrl %>
+<% categories = typeof(categories) == 'undefined' ? __categories: categories %>
+
+
 
 <% if (header) { %>
 <div class="bg-secondary d-flex flex-nowrap justify-content-between align-items-center">
@@ -20,7 +23,7 @@
 <div class="slider" data-simplebar>
     <div class="d-flex <%=titles ? 'pb-2': 'pb-0'%>">
         <% viewCats.forEach(cat => { %>
-        <% var reyonlar = (__categories.filter(p=>p.type == cat && p.status == 'active')) %>
+        <% var reyonlar = (categories.filter(p=>p.type == cat && p.status == 'active')) %>
         <% for(var c=0; c< reyonlar.length; c++) {%>
         <div class="<%=titles ? 'mr-2': 'mr-0'%>">
             <div id="<%=idprefix || 'cats' %><%=reyonlar[c].slug%>"
@@ -54,7 +57,7 @@
 <div class="row">
 
 
-    <% var reyonlar = (__categories.filter(p=>p.status == 'active')) %>
+    <% var reyonlar = (categories.filter(p=>p.status == 'active')) %>
     <% reyonlar = reyonlar.slice(0,6) %>
     <% for(var c=0; c < reyonlar.length; c++) {%>
 
@@ -99,7 +102,7 @@
             <div class="pt-6 d-flex">
                 <% var allAdded = false; %>
                 <% viewCats.forEach(cat => { %>
-                <% var reyonlar = (__categories.filter(p=>p.type == cat && p.status == 'active')) %>
+                <% var reyonlar = (categories.filter(p=>p.type == cat && p.status == 'active')) %>
 
                 <% for(var c=0; c< reyonlar.length; c++) {%>
 

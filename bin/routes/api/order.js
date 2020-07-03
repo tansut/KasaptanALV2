@@ -504,7 +504,7 @@ class Route extends router_1.ApiRouter {
                 }
             }
             if (o.butcher.enablePuan) {
-                let butcherPuan = o.butcher.getPuanData();
+                let butcherPuan = o.butcher.getPuanData(o.orderType);
                 let earnedPuanb = calculator.calculateCustomerPuan(butcherPuan, total);
                 if (earnedPuanb > 0.00 || includeAvailable) {
                     if (earnedPuanb == 0) {
@@ -518,7 +518,8 @@ class Route extends router_1.ApiRouter {
                         });
                     }
                     else {
-                        let toKalitte = helper_1.default.asCurrency(earnedPuanb * 0.5);
+                        let toKalitteRatio = o.orderType == order_3.OrderType.kurban ? 1 : 0.5;
+                        let toKalitte = helper_1.default.asCurrency(earnedPuanb * toKalitteRatio);
                         let toButcher = helper_1.default.asCurrency(earnedPuanb - toKalitte);
                         if (toButcher > 0.00) {
                             result.push({

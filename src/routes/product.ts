@@ -206,7 +206,7 @@ export default class Route extends ViewRouter {
                         userRatingAsPerc: butcher.userRatingAsPerc,
                         shipRatingAsPerc: butcher.shipRatingAsPerc,
                         name: butcher.name,
-                        puanData: butcher.getPuanData(),
+                        puanData: butcher.getPuanData(this.product.productType),
                         earnedPuan: 0.00,
                         kgPrice: bp ? bp.kgPrice : 0,
                         productNote: bp ? bp.mddesc || "" : "",

@@ -121,13 +121,7 @@ export default class Route extends ViewRouter {
             return this.next();
         } 
 
-        if (!this.req.params.category) {
-            this.category = this.req.__categories[0]
-        } else 
-        {
-            this.category = this.req.__categories.find(p=>p.slug == this.req.params.category);
-        }
-        if (!this.category) return this.next();
+
 
         await this.loadReviews(butcher)
 
@@ -167,7 +161,7 @@ export default class Route extends ViewRouter {
             this.dispatchers[i].address = await this.dispatchers[i].toarea.getPreferredAddress()
         }
 
-        this.categories = this.req.__categories;
+        this.categories = [];
 
         butcher.products = butcher.products.filter(p => {
             return p.enabled && (p.kgPrice > 0 || (p.unit1price > 0 && p.unit1enabled) || (p.unit2price > 0 && p.unit2enabled) || (p.unit3price > 0 && p.unit1enabled))
@@ -188,9 +182,24 @@ export default class Route extends ViewRouter {
             return p.product
         })
 
+        this.req.__categories.forEach(c=> {
+            let products = <Product []>ProductManager.filterProductsByCategory(this.products, {slug: c.slug}, { }, { chunk: 0 });
+            if (products.length) {
+                this.categories.push(c)
+            }            
+        });
+
+        if (!this.req.params.category && this.categories.length) {
+            this.category = this.categories[0];
+        } else if (this.req.params.category)
+            this.category = this.req.__categories.find(p=>p.slug == this.req.params.category);
+        else this.category = this.req.__categories[0]
+
+
         this.products = <Product []>ProductManager.filterProductsByCategory(this.products, {slug: this.category.slug}, { productType: 'generic' }, { chunk: 0 })
         this.subCategories = ProductManager.generateSubcategories(this.category, this.products);
  
+
 
         let pageTitle = butcher.pageTitle || `${butcher.name}` ;
         let pageDescription = butcher.pageDescription || `${butcher.name}, ${butcher.address} ${butcher.areaLevel1.name}/${butcher.areaLevel2.name} adresinde hizmet vermekte olup ${(butcher.phone || '').trim().slice(0, -5) + " ..."} numaralı telefon ile ulaşabilirsiniz.`
