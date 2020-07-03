@@ -193,7 +193,9 @@ export default class Route extends ViewRouter {
             this.category = this.categories[0];
         } else if (this.req.params.category)
             this.category = this.req.__categories.find(p=>p.slug == this.req.params.category);
-        else this.category = this.req.__categories[0]
+        if (!this.category) {
+            this.category = this.req.__categories[0];
+        }
 
 
         this.products = <Product []>ProductManager.filterProductsByCategory(this.products, {slug: this.category.slug}, { productType: 'generic' }, { chunk: 0 })
