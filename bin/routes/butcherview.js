@@ -142,8 +142,9 @@ class Route extends router_1.ViewRouter {
             }
             else if (this.req.params.category)
                 this.category = this.req.__categories.find(p => p.slug == this.req.params.category);
-            else
+            if (!this.category) {
                 this.category = this.req.__categories[0];
+            }
             this.products = productManager_1.default.filterProductsByCategory(this.products, { slug: this.category.slug }, { productType: 'generic' }, { chunk: 0 });
             this.subCategories = productManager_1.default.generateSubcategories(this.category, this.products);
             let pageTitle = butcher.pageTitle || `${butcher.name}`;
