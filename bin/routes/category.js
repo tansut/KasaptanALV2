@@ -115,7 +115,7 @@ class Route extends router_1.ViewRouter {
             else
                 yield this.fillFoodsAndTarifs();
             this.sendView('pages/foods.ejs', {
-                pageTitle: 'Et Yemekleri'
+                pageTitle: 'Et Yemekleri ve Tarifleri'
             });
         });
     }

@@ -112,7 +112,7 @@ export default class Route extends ViewRouter {
 
 
         this.sendView('pages/foods.ejs', {
-            pageTitle: 'Et Yemekleri'
+            pageTitle: 'Et Yemekleri ve Tarifleri'
         })
     }
 

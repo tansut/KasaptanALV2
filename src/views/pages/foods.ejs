@@ -4,9 +4,9 @@
 <head>
   <% include ./_partial/head %>
   <% if (Object.keys(__req.query).length != 0 ) {%>
-    <meta name="robots" content="noindex,follow">
-    <link href="https://www.kasaptanal.com<%=__req.path%>" rel="canonical">
-    <%}%>
+  <meta name="robots" content="noindex,follow">
+  <link href="https://www.kasaptanal.com<%=__req.path%>" rel="canonical">
+  <%}%>
 
 </head>
 
@@ -16,13 +16,13 @@
   <%-include('./_partial/food-select-alternatives.ejs', {}) %>
 
 
-  <div class="page-title bg-primary py-2" >
+  <div class="page-title bg-primary py-2">
     <div class="container d-lg-flex justify-content-between py-2 py-lg-3">
       <div class="order-lg-2 mb-3 mb-lg-0 pt-lg-2">
         <nav aria-label="breadcrumb" class="d-none d-lg-block">
           <ol class="breadcrumb breadcrumb-light flex-lg-nowrap justify-content-center justify-content-lg-star">
             <li class="breadcrumb-item"><a class="text-nowrap" href="/"><i class="czi-home"></i></a></li>
-         
+
           </ol>
         </nav>
       </div>
@@ -37,7 +37,7 @@
 
 
 
-          </h2>
+        </h2>
       </div>
     </div>
   </div>
@@ -46,39 +46,125 @@
 
 
 
-    <div class=" container px-0 mb-3 ">
-      <div class="">
+  <div class=" container px-0 mb-3 ">
 
 
-       
-          <% var foodCats = __categories.filter(p=>p.type == 'resource' && p.status == 'active'); %>
 
-          <% foodCats.forEach((cat, i) => { %>
-          <% var foods = controller.getFoods(cat) %>
-          <% if (foods.length) { %>
-          <div class="px-3 pt-3 dborder-bottom">
-            <%- include('./_partial/foods-slider.ejs', {title: cat.name, desc: undefined, text: '', iconUrl: `${__req.helper.imgUrl('category-photos', cat.slug)}`,
+
+    <% var foodCats = __categories.filter(p=>p.type == 'resource' && p.status == 'active'); %>
+
+    <% foodCats.forEach((cat, i) => { %>
+    <% var foods = controller.getFoods(cat) %>
+    <% if (foods.length) { %>
+    <div class="px-3 pt-3">
+      <%- include('./_partial/foods-slider.ejs', {title: cat.name, desc: undefined, text: '', iconUrl: `${__req.helper.imgUrl('category-photos', cat.slug)}`,
             allUrl: '/et-yemekleri/' + cat.slug, foods: foods}); %>
 
-          </div>
-          <%} %>
-          <%})%>
-       
-
-
-
-
-
-
-
-      </div>
     </div>
- 
+    <%} %>
+    <%})%>
+
+
+
+
+
+
+
+
+
+  </div>
+
+
+  <div class="container mb-3">
+    <div class="collapse-container page-footer-text">
+      <div class="collapse" id="collapseSummary">
+        <h2>Doğal kasap ürünlerimizle sağlıklı et yemekleri</h2>
+        <p>
+          Kırmızı veya beyaz olsun, sağlık bir diyetin vazgeçilmez unsurlarından birisi de et. Başta <strong>kaliteli protein</strong>
+          olmak üzere doğru miktarda et tüketerek alabileceğiniz pek çok vitamin bulunmakta. <a class="no-collapse"
+            href="/blog/kirmizi-et-protein-kaynagi">Protein Kaynağı</a> dokümanımızdan etin besin değerleri konusunda
+          bilgi alabilirsiniz. Ayrıca <a class="no-collapse" target="_blank"
+            href="https://tr.wikipedia.org/wiki/Et">Wikipedia</a> içeriği de kırmızı et besin değerleri hakkında faydalı
+          bilgiler içermekte.
+        </p>
+        <p>
+          Sağlık penceresinden baktığımızda iki önemli kriterle karşılaşmaktayız.
+        <ol>
+          <li>
+            <strong>Etin kaynağı</strong>; Yediğiniz etin kaynağı olan küçükbaş, büyükbaş veya kümes hayvanının nasıl beslendiği ve kesim
+            sırasındaki sağlık durumu.
+          </li>
+          <li>
+            <strong>Etin nasıl pişirildiği</strong>; Etin ısıya maruz bırakılarak nasıl pişirildiği ve tüketildiği.
+          </li>
+        </ol>
+        </p>
+        <h3>
+          Kaynağı Belli, Kaliteli Et Sağlıyoruz
+        </h3>
+        <p>
+          Hedefimiz kaynağı belli, doğal beslenmiş hayvanlardan elde edilen, kaliteli et sağlamak. İyi et sağlıyoruz
+          çünkü <a class="no-collapsa" href="/kasaplar"><strong>şehrin en iyi kasaplarıyla</strong></a> çalışıyoruz, tüm süreçleri
+          olabildiğince insan hatasına izin vermeyecek
+          şekilde optimize ediyoruz.
+        </p>
+        <h3>
+          Et Yemekleri
+        </h3>
+        <p>
+          Eti doğru pişirerek içerisindeki vitamin ve diğer besinlerin olabildiğince korunması için <strong>et yemek önerileri</strong>
+          sunuyoruz, <a class="no-collapse" href="/blog">Blog</a> sayfamızda bilgilendirici dokümanlar bulunduruyoruz.
+        </p>
+        <p>
+          Et Yemekleri konusunda
+          <a target="_blank" class="no-collapse"
+            href="https://tr.wikipedia.org/wiki/Kategori:K%C4%B1ymal%C4%B1_yemekler">Kıymalı Yemekler</a>,
+          <a target="_blank" class="no-collapse" href="https://tr.wikipedia.org/wiki/Kategori:Kebaplar">Adana Kebap</a>,
+          <a target="_blank" class="no-collapse" href="https://tr.wikipedia.org/wiki/Kategori:Dana_eti_yemekleri">Dana
+            Eti Yemekleri</a>,
+          <a target="_blank" class="no-collapse" href="https://tr.wikipedia.org/wiki/Kategori:Kuzu_yemekleri">Kuzu Eti
+            Yemekleri</a>,
+          <a target="_blank" class="no-collapse"
+            href="https://tr.wikipedia.org/wiki/Kategori:K%C3%BCmes_hayvan%C4%B1_yemekler">Kümes/Tavuk Eti Yemekleri</a>
+          bağlantılarından Şinitzel, Arnavut Ciğeri, Parmigiana, Biftek, ve Mangal Et Yemekleri gibi konu başlıklarında
+          bilgi alabilirsiniz.
+
+
+        </p>
+        <h2>
+          Hangi Et Yemeği Hangi Etten Yapılır
+        </h2>
+        <p>
+          İyi ve sağlıklı et yemeği pişirmek teorik bilgiye ek olarak deneme yanılma ile deneyim kazanılabilecek
+          konulardan. Ancak işinizi kolaylaştırdık.
+          Eti Bizden butonu, seçtiğiniz yemeğe göre sitemizin <strong>en uygun eti ve miktarı</strong> size önerebileceğini ifade ediyor.
+        </p>
+
+        <p>
+          Örneğin <a class="no-collapse" href="/et-yemekleri/fajita">Fajita</a> için KasaptanAl.com üzerinden online
+          kırmızı et satın almak istiyorsunuz. Eti Bizden butonu hangi etlerle Fajita Yemeği yapabileceğinizi kişi sayısını da dikkate alarak mikarıyla birlikte size sunuyor.
+        </p>
+        <p>
+          Benzer et yemekleri örneklerini çoğaltabiliriz. <a class="no-collapse" href="/et-yemekleri/karniyarik">Karnıyarık</a>, <a class="no-collapse" href="/et-yemekleri/hamburger">Hamburger Köfte</a>, <a class="no-collapse" href="/et-yemekleri/adana-kebap">Adana Kebap</a> sadece bazı örneklerden.
+        </p>
+        <h2>
+          Eğlenceli ve pratik, <strong>online kasap alışverişi</strong> ve <strong>et siparişi</strong>
+        </h2>
+        <p>
+          Bütün bu işlevlerle hedefimiz <strong>en iyi eti</strong> satın alırken sizlere eğlenceli ve keyifli bir alışveriş sunmak.
+        </p>
+      </div>
+      <a class="collapsed text-dark" data-toggle="collapse" href="#collapseSummary" aria-expanded="false"
+        aria-controls="collapseSummary"></a>
+    </div>
+  </div>
+
+
 
 
   <% include ./_partial/footer %>
   <% include ./_partial/scripts %>
 
-</body>
+  </body>
 
 </html>

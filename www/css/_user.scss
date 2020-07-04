@@ -125,7 +125,7 @@ a:hover {
     content: '+ Devamını Göster';
 }
 
-.collapse-container a:not(.collapsed):after {
+.collapse-container a:not(.collapsed):not(.no-collapse):after {
     content: '- Devamını Gizle';
 }
 
