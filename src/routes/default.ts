@@ -105,7 +105,8 @@ export default class Route extends ViewRouter {
         if (area.level == 3) {
             await this.req.helper.setPreferredAddress({
                 level3Id: area.id
-            }, true)
+            }, true);
+            await area.ensureLocation()
         }
         if (this.req.query.r)
             this.res.redirect(this.req.query.r as string);

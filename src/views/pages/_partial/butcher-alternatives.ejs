@@ -18,7 +18,7 @@
             <% if (dispatchers.length > 0) { %>
             <div  class="tab-pane fade show active" id="serving" role="tabpanel">
               <div v-if="product">
-                <div  v-for="(alt, index) in product.alternateButchers" class="bg-secondary border-bottom p-3">
+                <div v-for="(alt, index) in product.alternateButchers" class="bg-secondary border-bottom p-3">
                   <a class="media align-items-center" :data-butcher="alt.butcher.slug" href="#newbutcher" @click="selectNewButcher(alt.butcher)">
                    
                       <!-- <img

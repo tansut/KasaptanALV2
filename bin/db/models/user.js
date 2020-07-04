@@ -57,14 +57,6 @@ let User = User_1 = class User extends basemodel_1.default {
     set shopcard(value) {
         this.setDataValue('shopcardjson', Buffer.from(JSON.stringify(value), "utf-8"));
     }
-    // @Column
-    // preferredAddressjson: Buffer
-    // get preferredAddress(): PreferredAddress {
-    //     return this.preferredAddressjson ? JSON.parse((<Buffer>this.getDataValue('preferredAddressjson')).toString()) : null
-    // }
-    // set preferredAddress(value: PreferredAddress) {
-    //     this.setDataValue('preferredAddressjson', Buffer.from(JSON.stringify(value), "utf-8"));
-    // }    
     generateAccessToken() {
         var tokenData = {
             userId: this["id"],
@@ -114,6 +106,29 @@ __decorate([
     sequelize_typescript_1.Column,
     __metadata("design:type", String)
 ], User.prototype, "lastAddress", void 0);
+__decorate([
+    sequelize_typescript_1.Column,
+    __metadata("design:type", String)
+], User.prototype, "lastBina", void 0);
+__decorate([
+    sequelize_typescript_1.Column,
+    __metadata("design:type", String)
+], User.prototype, "lastKat", void 0);
+__decorate([
+    sequelize_typescript_1.Column,
+    __metadata("design:type", String)
+], User.prototype, "lastDaire", void 0);
+__decorate([
+    sequelize_typescript_1.Column({
+        allowNull: true,
+        type: sequelize_typescript_1.DataType.GEOMETRY('POINT')
+    }),
+    __metadata("design:type", Object)
+], User.prototype, "lastLocation", void 0);
+__decorate([
+    sequelize_typescript_1.Column,
+    __metadata("design:type", String)
+], User.prototype, "lastLocationType", void 0);
 __decorate([
     sequelize_typescript_1.Column,
     __metadata("design:type", Number)

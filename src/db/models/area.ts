@@ -2,6 +2,10 @@ import { Table, Column, DataType, Model, HasMany, CreatedAt, UpdatedAt, DeletedA
 import BaseModel from "./basemodel"
 import Helper from '../../lib/helper';
 import { PreferredAddress } from './user';
+import { GeoLocation } from '../../models/geo';
+import { Google } from '../../lib/google';
+import { add } from 'lodash';
+import email from '../../lib/email';
 
 interface AreaDict {
     [key: number]: Area;
@@ -27,6 +31,7 @@ export interface AreaLevels {
     
         { type: 'FULLTEXT', name: 'area_fts', fields: ['name', 'slug', 'keywords'] }]
 })
+
 class Area extends BaseModel<Area> {
     static async NormalizeNames() {
         let areas = await Area.findAll();
@@ -38,12 +43,70 @@ class Area extends BaseModel<Area> {
         return areas;
     }
 
+    @Column({
+        allowNull: true,
+        type: DataType.GEOMETRY('POINT')
+    })
+    location: GeoLocation;
+
+    @Column
+    locationType: string;
+
+    @Column({
+        allowNull: true,
+        type: DataType.GEOMETRY('POINT')
+    })
+    northeast: GeoLocation;
+
+
+    @Column({
+        allowNull: true,
+        type: DataType.GEOMETRY('POINT')
+    })
+    southwest: GeoLocation;  
+
+    @Column
+    placeid: string;
+
+    @Column({
+        allowNull: true,
+        type: DataType.TEXT
+    })
+    locationData: string;    
+
+
     static async getBySlug(slug: string) {
         return Area.findOne({
             where: {
                 slug: slug
             }
         })
+    }
+
+    async ensureLocation() {
+        if (!this.locationData) {
+            try {
+                let addres = await this.getPreferredAddress();
+                let data = await Google.getLocationResult(addres.display);
+                this.locationData = JSON.stringify(data);
+                let geo = Google.convertLocationResult(data);
+                if (geo.length > 0) {
+                    this.location = geo[0].location;
+                    this.placeid = geo[0].placeid;
+                    this.locationType = geo[0].locationType;
+                    this.northeast = geo[0].viewport.northeast;
+                    this.southwest = geo[0].viewport.southwest;
+                    await this.save();
+                }
+
+            } catch(err) {
+                email.send('tansut@gmail.com', 'hata/ensurelocation', "error.ejs", {
+                    text: err.message,
+                    stack: err.stack
+                })               
+            }
+
+        }
     }
 
     @Column({

@@ -113,8 +113,17 @@ let Order = Order_1 = class Order extends basemodel_1.default {
             o.areaLevel3Text = c.address.level3Text;
             o.email = c.address.email;
             o.address = c.address.adres;
-            o.shipLocation = c.address.location;
-            o.shipLocationAccuracy = c.address.accuracy;
+            o.bina = c.address.bina;
+            o.kat = c.address.kat;
+            o.daire = c.address.daire;
+            if (c.address.geolocation) {
+                o.shipLocation = c.address.geolocation;
+                o.locationType = c.address.geolocationType;
+            }
+            else if (c.address.location) {
+                o.shipLocation = c.address.location;
+                o.shipLocationAccuracy = c.address.accuracy;
+            }
             o.phone = c.address.phone;
             o.name = c.address.name;
             o.saveAddress = c.address.saveaddress;
@@ -278,6 +287,24 @@ __decorate([
         allowNull: true
     }),
     __metadata("design:type", String)
+], Order.prototype, "bina", void 0);
+__decorate([
+    sequelize_typescript_1.Column({
+        allowNull: true
+    }),
+    __metadata("design:type", String)
+], Order.prototype, "kat", void 0);
+__decorate([
+    sequelize_typescript_1.Column({
+        allowNull: true
+    }),
+    __metadata("design:type", String)
+], Order.prototype, "daire", void 0);
+__decorate([
+    sequelize_typescript_1.Column({
+        allowNull: true
+    }),
+    __metadata("design:type", String)
 ], Order.prototype, "areaLevel1Text", void 0);
 __decorate([
     sequelize_typescript_1.Column({
@@ -291,6 +318,12 @@ __decorate([
     }),
     __metadata("design:type", String)
 ], Order.prototype, "areaLevel3Text", void 0);
+__decorate([
+    sequelize_typescript_1.Column({
+        allowNull: true
+    }),
+    __metadata("design:type", String)
+], Order.prototype, "locationType", void 0);
 __decorate([
     sequelize_typescript_1.Column({
         allowNull: true,

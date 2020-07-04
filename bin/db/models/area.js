@@ -22,6 +22,8 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const sequelize_typescript_1 = require("sequelize-typescript");
 const basemodel_1 = require("./basemodel");
 const helper_1 = require("../../lib/helper");
+const google_1 = require("../../lib/google");
+const email_1 = require("../../lib/email");
 let Area = Area_1 = class Area extends basemodel_1.default {
     static NormalizeNames() {
         return __awaiter(this, void 0, void 0, function* () {
@@ -41,6 +43,32 @@ let Area = Area_1 = class Area extends basemodel_1.default {
                     slug: slug
                 }
             });
+        });
+    }
+    ensureLocation() {
+        return __awaiter(this, void 0, void 0, function* () {
+            if (!this.locationData) {
+                try {
+                    let addres = yield this.getPreferredAddress();
+                    let data = yield google_1.Google.getLocationResult(addres.display);
+                    this.locationData = JSON.stringify(data);
+                    let geo = google_1.Google.convertLocationResult(data);
+                    if (geo.length > 0) {
+                        this.location = geo[0].location;
+                        this.placeid = geo[0].placeid;
+                        this.locationType = geo[0].locationType;
+                        this.northeast = geo[0].viewport.northeast;
+                        this.southwest = geo[0].viewport.southwest;
+                        yield this.save();
+                    }
+                }
+                catch (err) {
+                    email_1.default.send('tansut@gmail.com', 'hata/ensurelocation', "error.ejs", {
+                        text: err.message,
+                        stack: err.stack
+                    });
+                }
+            }
         });
     }
     getPreferredAddress() {
@@ -96,6 +124,42 @@ let Area = Area_1 = class Area extends basemodel_1.default {
         });
     }
 };
+__decorate([
+    sequelize_typescript_1.Column({
+        allowNull: true,
+        type: sequelize_typescript_1.DataType.GEOMETRY('POINT')
+    }),
+    __metadata("design:type", Object)
+], Area.prototype, "location", void 0);
+__decorate([
+    sequelize_typescript_1.Column,
+    __metadata("design:type", String)
+], Area.prototype, "locationType", void 0);
+__decorate([
+    sequelize_typescript_1.Column({
+        allowNull: true,
+        type: sequelize_typescript_1.DataType.GEOMETRY('POINT')
+    }),
+    __metadata("design:type", Object)
+], Area.prototype, "northeast", void 0);
+__decorate([
+    sequelize_typescript_1.Column({
+        allowNull: true,
+        type: sequelize_typescript_1.DataType.GEOMETRY('POINT')
+    }),
+    __metadata("design:type", Object)
+], Area.prototype, "southwest", void 0);
+__decorate([
+    sequelize_typescript_1.Column,
+    __metadata("design:type", String)
+], Area.prototype, "placeid", void 0);
+__decorate([
+    sequelize_typescript_1.Column({
+        allowNull: true,
+        type: sequelize_typescript_1.DataType.TEXT
+    }),
+    __metadata("design:type", String)
+], Area.prototype, "locationData", void 0);
 __decorate([
     sequelize_typescript_1.Column({
         allowNull: false,

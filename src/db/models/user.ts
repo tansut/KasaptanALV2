@@ -1,4 +1,4 @@
-import { Table, Column, Model, HasMany, CreatedAt, UpdatedAt, DeletedAt } from 'sequelize-typescript';
+import { Table, Column, Model, HasMany, CreatedAt, UpdatedAt, DeletedAt, DataType } from 'sequelize-typescript';
 import * as moment from 'moment';
 import * as authorization from '../../lib/authorizationToken';
 import BaseModel from "./basemodel"
@@ -6,6 +6,7 @@ import { AppUser } from '../../models/user';
 import * as bcrypt from 'bcryptjs';
 import Helper from '../../lib/helper';
 import validator from 'validator';
+import { GeoLocation, LocationType } from '../../models/geo';
 
 
 export enum UserRole {
@@ -75,6 +76,26 @@ export default class User extends BaseModel<User> {
 
     @Column
     lastAddress: string    
+
+    @Column
+    lastBina: string    
+
+    @Column
+    lastKat: string;
+
+    @Column
+    lastDaire: string    
+
+    @Column({
+        allowNull: true,
+        type: DataType.GEOMETRY('POINT')
+    })
+    lastLocation: GeoLocation;
+
+    @Column
+    lastLocationType: LocationType    
+    
+
 
     @Column
     butcherid: number;
@@ -164,16 +185,6 @@ export default class User extends BaseModel<User> {
         this.setDataValue('shopcardjson', Buffer.from(JSON.stringify(value), "utf-8"));
     }
 
-    // @Column
-    // preferredAddressjson: Buffer
-
-    // get preferredAddress(): PreferredAddress {
-    //     return this.preferredAddressjson ? JSON.parse((<Buffer>this.getDataValue('preferredAddressjson')).toString()) : null
-    // }
-
-    // set preferredAddress(value: PreferredAddress) {
-    //     this.setDataValue('preferredAddressjson', Buffer.from(JSON.stringify(value), "utf-8"));
-    // }    
 
 
     generateAccessToken(): authorization.IAccessTokenData {

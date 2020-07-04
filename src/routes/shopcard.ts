@@ -184,6 +184,9 @@ export default class Route extends ViewRouter {
         this.shopcard.address.email = this.req.body.email;
         this.shopcard.address.phone = this.req.body.phone;
         this.shopcard.address.adres = this.req.body.address;
+        this.shopcard.address.kat = this.req.body.kat;
+        this.shopcard.address.daire = this.req.body.daire;
+        this.shopcard.address.bina = this.req.body.bina;
         if (this.req.body.lat && this.req.body.long && (parseFloat(this.req.body.lat) > 0) && (parseFloat(this.req.body.long) > 0)) {
             this.shopcard.address.location = {
                 type: 'Point',
@@ -191,10 +194,13 @@ export default class Route extends ViewRouter {
             }
             this.shopcard.address.accuracy = parseFloat(this.req.body.accuracy)
         } else this.shopcard.address.location = null;
-        // this.shopcard.address.level1Id = parseInt(this.req.body.ordercity);
-        // this.shopcard.address.level3Id = parseInt(this.req.body.orderdistrict);
-        // this.shopcard.address.level1Text = this.req.body.ordercitytext;
-        // this.shopcard.address.level3Text = this.req.body.orderdistricttext;
+        if (this.req.body.geolat && this.req.body.geolong && (parseFloat(this.req.body.geolat) > 0) && (parseFloat(this.req.body.geolong) > 0)) {
+            this.shopcard.address.geolocation = {
+                type: 'Point',
+                coordinates: [parseFloat(this.req.body.geolat), parseFloat(this.req.body.geolong)]
+            }
+            this.shopcard.address.geolocationType = this.req.body.geolocationtype;
+        } else this.shopcard.address.geolocation = null;
         await this.setDispatcher();
         await this.shopcard.saveToRequest(this.req);
         await this.getOrderSummary()
@@ -215,8 +221,12 @@ export default class Route extends ViewRouter {
         this.shopcard.address.name = this.req.user.name;
         this.shopcard.address.email = this.req.user.email;
         this.shopcard.address.phone = this.req.user.mphone;
-    
-    this.shopcard.address.adres = this.shopcard.address.adres || this.req.user.lastAddress;
+        this.shopcard.address.adres = this.shopcard.address.adres || this.req.user.lastAddress;
+        this.shopcard.address.bina = this.shopcard.address.bina || this.req.user.lastBina;
+        this.shopcard.address.kat = this.shopcard.address.kat || this.req.user.lastKat;
+        this.shopcard.address.daire = this.shopcard.address.daire || this.req.user.lastDaire;
+        this.shopcard.address.geolocationType = this.shopcard.address.geolocationType || this.req.user.lastLocationType;
+        this.shopcard.address.geolocation = this.shopcard.address.geolocation || this.req.user.lastLocation;
     }
 
     async saveshipRoute() {

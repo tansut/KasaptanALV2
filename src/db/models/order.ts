@@ -6,7 +6,7 @@ import Product from './product';
 import Butcher from './butcher';
 import { OrderItemStatus, OrderSource, OrderType } from '../../models/order';
 import Dispatcher from './dispatcher';
-import { GeoLocation } from '../../models/geo';
+import { GeoLocation, LocationSource, LocationType } from '../../models/geo';
 import AccountModel from './accountmodel';
 import { PuanResult } from '../../models/puan';
 import { ProductTypeManager, ProductTypeFactory } from '../../lib/common';
@@ -156,6 +156,21 @@ class Order extends BaseModel<Order> {
     @Column({
         allowNull: true
     })
+    bina: string;
+
+    @Column({
+        allowNull: true
+    })
+    kat: string;
+
+    @Column({
+        allowNull: true
+    })
+    daire: string;
+
+    @Column({
+        allowNull: true
+    })
     areaLevel1Text: string;
 
     @Column({
@@ -167,6 +182,12 @@ class Order extends BaseModel<Order> {
         allowNull: true
     })
     areaLevel3Text: string;
+
+
+    @Column({
+        allowNull: true
+    })
+    locationType: LocationType;   
 
     @Column({
         allowNull: true,
@@ -407,8 +428,17 @@ class Order extends BaseModel<Order> {
         o.areaLevel3Text = c.address.level3Text;
         o.email = c.address.email;
         o.address = c.address.adres;
-        o.shipLocation = c.address.location;
-        o.shipLocationAccuracy = c.address.accuracy;
+        o.bina = c.address.bina;
+        o.kat = c.address.kat;
+        o.daire = c.address.daire;
+        if (c.address.geolocation) {
+            o.shipLocation = c.address.geolocation;
+            o.locationType = c.address.geolocationType
+        } else if (c.address.location) {
+            o.shipLocation = c.address.location;
+            o.shipLocationAccuracy = c.address.accuracy;
+        }
+        
         o.phone = c.address.phone;
         o.name = c.address.name;
         o.saveAddress = c.address.saveaddress;

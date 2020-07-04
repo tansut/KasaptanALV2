@@ -361,6 +361,11 @@ class Route extends router_1.ApiRouter {
             });
             if (card.address.saveaddress) {
                 this.req.user.lastAddress = card.address.adres;
+                this.req.user.lastKat = card.address.kat;
+                this.req.user.lastBina = card.address.bina;
+                this.req.user.lastDaire = card.address.daire;
+                this.req.user.lastLocation = card.address.geolocation;
+                this.req.user.lastLocationType = card.address.geolocationType;
                 promises.push(this.req.user.save());
             }
             return Promise.all(promises);

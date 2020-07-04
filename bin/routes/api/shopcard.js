@@ -25,6 +25,7 @@ const product_1 = require("../../db/models/product");
 const product_2 = require("./product");
 const butcher_1 = require("../../db/models/butcher");
 const dispatcher_1 = require("../../db/models/dispatcher");
+const google_1 = require("../../lib/google");
 class Route extends router_1.ApiRouter {
     getDispatcher(to) {
         return __awaiter(this, void 0, void 0, function* () {
@@ -88,7 +89,27 @@ class Route extends router_1.ApiRouter {
             this.res.send(shopcard);
         });
     }
+    geocode() {
+        return __awaiter(this, void 0, void 0, function* () {
+            if (!this.req.body.address)
+                return this.next();
+            let semt = this.req.prefAddr.display;
+            let coded = yield google_1.Google.getLocation(this.req.body.address + ' ' + semt);
+            this.res.send(coded);
+        });
+    }
+    revgeocode() {
+        return __awaiter(this, void 0, void 0, function* () {
+            if (!this.req.body.lat || !this.req.body.lng)
+                return this.next();
+            let semt = this.req.prefAddr.display;
+            let address = yield google_1.Google.reverse(parseFloat(this.req.body.lat), parseFloat(this.req.body.lng));
+            this.res.send(address);
+        });
+    }
     static SetRoutes(router) {
+        router.post("/shopcard/geocode", Route.BindRequest(this.prototype.geocode));
+        router.post("/shopcard/reversegeocode", Route.BindRequest(this.prototype.revgeocode));
         router.post("/shopcard/add", Route.BindRequest(this.prototype.addRoute));
         router.post("/shopcard/update", Route.BindRequest(this.prototype.updateRoute));
         router.post("/shopcard/remove", Route.BindRequest(this.prototype.removeRoute));

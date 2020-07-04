@@ -63,7 +63,7 @@
   <div class="pt-2 pt-sm-0 pl-sm-3 mx-auto mx-sm-0 text-center text-sm-left" style="max-width: 9rem;">
     <a id="editshopcardbtn" data-tag="true" data-category="shopcard/edit" data-action="<%=shopcard.butchers[bi].slug%>"
         data-label="<%=item.product.slug%>" class="btn btn-link px-0 text-muted"
-        href="/<%=item.product.slug%>?shopcarditem=<%=pi%>" type="button"><i class="czi-edit mr-2"></i><span
+        href="/<%=item.product.slug%>?shopcarditem=<%=pi%>"><i class="czi-edit mr-2"></i><span
           class="font-size-sm">Değiştir</span></a>
         <% if (enableRemove) { %>
         <button id="rmshopcardbtn" data-tag="true" data-category="shopcard/remove"

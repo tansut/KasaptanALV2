@@ -99,6 +99,7 @@ class Route extends router_1.ViewRouter {
                 yield this.req.helper.setPreferredAddress({
                     level3Id: area.id
                 }, true);
+                yield area.ensureLocation();
             }
             if (this.req.query.r)
                 this.res.redirect(this.req.query.r);

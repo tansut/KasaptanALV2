@@ -9,6 +9,7 @@ import ProductApi from './product'
 import Butcher from '../../db/models/butcher';
 import Area from '../../db/models/area';
 import Dispatcher from '../../db/models/dispatcher';
+import { Google } from '../../lib/google';
 
 
 export default class Route extends ApiRouter {
@@ -76,7 +77,28 @@ export default class Route extends ApiRouter {
         this.res.send(shopcard);
     }
 
+    async geocode() {
+        if(!this.req.body.address)
+            return this.next();
+        let semt = this.req.prefAddr.display;
+        let coded = await Google.getLocation(this.req.body.address + ' ' + semt)
+        this.res.send(coded)
+    }
+
+    async revgeocode() {
+        if(!this.req.body.lat || !this.req.body.lng)
+            return this.next();
+        let semt = this.req.prefAddr.display;
+        let address = await Google.reverse(parseFloat(this.req.body.lat), parseFloat(this.req.body.lng))
+        this.res.send(address);
+    }
+
+    
+
+
     static SetRoutes(router: express.Router) {
+        router.post("/shopcard/geocode", Route.BindRequest(this.prototype.geocode));        
+        router.post("/shopcard/reversegeocode", Route.BindRequest(this.prototype.revgeocode));        
         router.post("/shopcard/add", Route.BindRequest(this.prototype.addRoute));
         router.post("/shopcard/update", Route.BindRequest(this.prototype.updateRoute));
         router.post("/shopcard/remove", Route.BindRequest(this.prototype.removeRoute));

@@ -22,6 +22,7 @@ const index_1 = require("./routes/butcher/index");
 const index_2 = require("./routes/operator/index");
 const api_1 = require("./routes/api");
 const butcherapirouter_1 = require("./routes/api/butcherapirouter");
+const userapirouter_1 = require("./routes/api/userapirouter");
 const context_1 = require("./db/context");
 const index_3 = require("./routes/index");
 const user_1 = require("./routes/user");
@@ -100,6 +101,7 @@ class KasaptanAlApp {
             this.apiRouter = express.Router();
             this.adminPagesRouter = express.Router();
             this.butcherApiRouter = express.Router();
+            this.userApiRouter = express.Router();
             this.userRouter = express.Router();
             this.viewsRouter = express.Router();
             this.butcherPagesRouter = express.Router();
@@ -131,6 +133,12 @@ class KasaptanAlApp {
                 else
                     res.redirect('/login?r=' + req.originalUrl);
             }, this.butcherApiRouter);
+            this.app.use('/api/v1/user', (req, res, next) => {
+                if (req.user)
+                    next();
+                else
+                    res.redirect('/login?r=' + req.originalUrl);
+            }, this.userApiRouter);
             this.app.use('/pages/admin', (req, res, next) => {
                 if (req.user && (req.user.hasRole('admin') || req.user.hasRole('seo')))
                     next();
@@ -158,6 +166,7 @@ class KasaptanAlApp {
             this.app.use("/", this.viewsRouter);
             api_1.default.use(this.apiRouter);
             butcherapirouter_1.default.use(this.butcherApiRouter);
+            userapirouter_1.default.use(this.userApiRouter);
             admin_1.default.use(this.adminPagesRouter);
             index_1.default.use(this.butcherPagesRouter);
             index_2.default.use(this.operatorPagesRouter);

@@ -26,171 +26,292 @@
     </div>
   </div>
 
-    <!-- Page Content-->
-    <div class="container mb-4 ">
-        <form class="needs-validation" method="post" novalidate action="/alisveris-sepetim/saveadres">
-        <div class="row">
-          <section class="col-lg-8">
-            <!-- Steps-->
-            
-            <%- include('./_partial/checkout-steps.ejs', {   step: 2        }); %>
-            <!-- Shipping address-->
-            <h2 class="h6 pt-1 pb-3 mb-3 border-bottom">Nereye Gönderelim?</h2>
-            <div class="row">
-              <div class="col-sm-12">
-                <div class="form-group">
-                  <label for="checkout-fn">Ad Soyad</label>
-                  <input value="<%= shopcard.address.name %>" required name="name" class="form-control" type="text" id="name">
-                </div>
-              </div>
-            </div>
-            <div class="row">
-              <div class="col-sm-6">
-                <div class="form-group">
-                  <label for="checkout-email">E-posta Adresi</label>
-                  <input required value="<%= shopcard.address.email %>" name="email" class="form-control" type="email" id="email">
-                </div>
-              </div>
-              <div class="col-sm-6">
-                <div class="form-group">
-                  <label for="checkout-phone">Telefon</label>
-                  <input value="<%= shopcard.address.phone %>" required name="phone" class="form-control" type="tel" id="phone">
-                </div>
-              </div>
-            </div>
- 
-            <div class="row">
-              <div class="col-sm-4">
-                <div class="form-group">
-                  <label for="checkout-city">Şehir</label>
-                  <input class="form-control" value="<%= shopcard.address.level1Text %>" readonly type="text" >
-      
-                </div>
-              </div>
-             
-             
-              <div class="col-sm-4">
-                <div class="form-group">
-                  <label for="checkout-city">İlçe</label>
-                  <input class="form-control" value="<%= shopcard.address.level2Text %>" readonly type="text" >
-      
-                </div>
-              </div>
+  <!-- Page Content-->
+  <div class="container mb-4 ">
+    <form class="needs-validation" id="adresform" onsubmit="return checkSubmit()" method="post" novalidate
+      action="/alisveris-sepetim/saveadres">
+      <div class="row">
+        <section class="col-lg-8">
+          <!-- Steps-->
 
-              <div class="col-sm-4">
-                <div class="form-group">
-                  <label for="checkout-city">Semt</label>
-                  <input class="form-control" value="<%= shopcard.address.level3Text %>" readonly type="text" >
-      
-                </div>
-              </div>              
-            </div>
-            <div class="row">
-              <div class="col-sm-12">
-                <div class="form-group">
-                  <label for="checkout-address-1">Address</label>
-                  <textarea required class="form-control" name="address"
-                  id="address"><%= shopcard.address.adres %></textarea>
-                </div>
+          <%- include('./_partial/checkout-steps.ejs', {   step: 2        }); %>
+          <!-- Shipping address-->
+          <h2 class="h6 pt-1 pb-3 mb-3 border-bottom">Nereye Gönderelim?</h2>
+          <div class="row">
+            <div class="col-sm-12">
+              <div class="form-group">
+                <label for="checkout-fn">Ad Soyad</label>
+                <input value="<%= shopcard.address.name %>" required name="name" class="form-control" type="text"
+                  id="name">
               </div>
-            </div>
-            <div class="mb-3 font-size-sm alert alert-secondary text-center">
-              <p>
-                Siparişiniz şu an bulunduğunuz konuma mı gelsin? <strong>Sorunsuz teslimat için </strong> tam konumunuzu almak isteriz. 
-              </p>
-              <input type="hidden" name="lat" value="0" id="lat">
-              <input type="hidden" name="long" value="0" id="long">
-              <input type="hidden" name="accuracy" value="0" id="accuracy">
-              <div class="text-center">
-                <button id="getlatlong" type="button" onclick="javascript:setGeoLocation()" class="btn btn-primary btn-sm"><i class="czi-location mr-1"></i>Konumumu Paylaş</button>
-              </div>
-              
-            </div>
-            
-            <div class="custom-control custom-checkbox">
-              <input class="custom-control-input" type="checkbox" checked id="savemyaddress" name="savemyaddress">
-              <label class="custom-control-label" for="same-address">Adresimi kaydet, her seferinde adres girmeyim.</label>
-            </div>
-            <!-- Navigation (desktop)-->
-            <div class="d-none d-lg-flex pt-4 mt-3">
-              <div class="w-50 pr-3"><a class="btn btn-secondary btn-block" href="/alisveris-sepetim/ship"><i class="czi-arrow-left mt-sm-0 mr-1"></i><span class="d-none d-sm-inline">Geri</span><span class="d-inline d-sm-none">Geri</span></a></div>
-              <div class="w-50 pl-2"><button type="submit" id="setadres" name="setadres" class="btn btn-info btn-block"><span class="d-none d-sm-inline">Sonraki Adım</span><span class="d-inline d-sm-none">Sonraki</span><i class="czi-arrow-right mt-sm-0 ml-1"></i></button></div>
-            </div>
-          </section>
-          <!-- Sidebar-->
-          <!-- <aside class="col-lg-4 pt-4 pt-lg-0">
-
-              <form method="POST" onsubmit="return App.Auth.checkAuthentication(window.location.href)" novalidate
-                class="needs-validation" action="/alisveris-sepetim/savecard">
-                <div class="cz-sidebar-static rounded-lg box-shadow-lg ml-lg-auto">
-                fgdfg,g fdg,gdf,g,
-
-                gfdf
-                gdfdg
-                fdggfd
-                gdfdgdfg
-                fdgg
-                </div>
-              </form>
-          </aside> -->
-        </div>
-        <!-- Navigation (mobile)-->
-        <div class="row d-lg-none">
-          <div class="col-lg-8">
-            <div class="d-flex mt-3">
-              <div class="w-50 pr-3"><a class="btn btn-secondary btn-block" href="/alisveris-sepetim/ship"><i class="czi-arrow-left mt-sm-0 mr-1"></i><span class="d-none d-sm-inline">Geri</span><span class="d-inline d-sm-none">Geri</span></a></div>
-              <div class="w-50 pl-2"><button type="submit" id="save-adres" name="save-adres" class="btn btn-info btn-block"><span class="d-none d-sm-inline">Sonraki Adım</span><span class="d-inline d-sm-none">Sonraki Adım</span><i class="czi-arrow-right mt-sm-0 ml-1"></i></button></div>
             </div>
           </div>
-        </div></form>
+          <div class="row">
+            <div class="col-sm-6">
+              <div class="form-group">
+                <label for="checkout-email">E-posta Adresi</label>
+                <input required value="<%= shopcard.address.email %>" name="email" class="form-control" type="email"
+                  id="email">
+              </div>
+            </div>
+            <div class="col-sm-6">
+              <div class="form-group">
+                <label for="checkout-phone">Telefon</label>
+                <input value="<%= shopcard.address.phone %>" required name="phone" class="form-control" type="tel"
+                  id="phone">
+              </div>
+            </div>
+          </div>
+
+          <div class="row">
+            <div class="col-sm-4">
+              <div class="form-group">
+                <label for="checkout-city">Şehir</label>
+                <input class="form-control" value="<%= shopcard.address.level1Text %>" readonly type="text">
+
+              </div>
+            </div>
+
+
+            <div class="col-sm-4">
+              <div class="form-group">
+                <label for="checkout-city">İlçe</label>
+                <input class="form-control" value="<%= shopcard.address.level2Text %>" readonly type="text">
+
+              </div>
+            </div>
+
+            <div class="col-sm-4">
+              <div class="form-group">
+                <label for="checkout-city">Semt</label>
+                <input class="form-control" value="<%= shopcard.address.level3Text %>" readonly type="text">
+
+              </div>
+            </div>
+          </div>
+          <div>
+
+          </div>
+          <div class="row mb-3">
+            <div class="col-sm-12">
+              <div class="form-group">
+                <div class="d-flex justify-content-between">
+                  <label for="address">Adres</label>
+                  <a id="getlatlong" onclick="javascript:setGeoLocation()" class="font-size-sm text-info"><i
+                      class="czi-location mr-1"></i>Mevcut Konumumu Kullan</a>
+                </div>
+
+                <textarea onchange="clearLoc()" required class="form-control" name="address"
+                  id="address"><%= shopcard.address.adres %></textarea>
+              </div>
+            </div>
+            <div class="col-sm-4">
+              <label for="bina">Bina No</label>
+              <input class="form-control" name="bina" id="bina" value="<%= shopcard.address.bina %>">
+            </div>
+            <div class="col-sm-4">
+              <label for="bina">Kat</label>
+              <input class="form-control" name="kat" id="kat" value="<%= shopcard.address.kat %>">
+            </div>
+            <div class="col-sm-4">
+              <label for="daire">Daire No</label>
+              <input class="form-control" name="daire" id="daire" value="<%= shopcard.address.daire %>">
+            </div>
+
+          </div>
+
+          <input type="hidden" name="lat" value="0" id="lat">
+          <input type="hidden" name="long" value="0" id="long">
+          <input type="hidden" name="accuracy" value="0" id="accuracy">
+
+          <input type="hidden" name="geolat" value="<%= shopcard.address.geolocation ? shopcard.address.geolocation.coordinates[0]: '0'%>" id="geolat">
+          <input type="hidden" name="geolong" value="<%= shopcard.address.geolocation ? shopcard.address.geolocation.coordinates[1]: '0'%>" id="geolong">
+          <input type="hidden" name="geolocationtype" id="geolocationtype">
+
+
+
+
+          <div class="custom-control custom-checkbox">
+            <input class="custom-control-input" type="checkbox" checked id="savemyaddress" name="savemyaddress">
+            <label class="custom-control-label" for="same-address">Adresimi kaydet, her seferinde adres
+              girmeyim.</label>
+          </div>
+          <div id="locdone" class="alert alert-secondary text-center mt-3" style="display: none;">
+            <span class="text-success font-size-sm">Teşekkürler, bölge seçimini tamamladınız. Şimdi tüm bilgileri kontrol edip işleme devam edebilirsiniz.</span>
+          </div>
+          <!-- Navigation (desktop)-->
+          <div class="d-none d-lg-flex pt-4 mt-3">
+            <div class="w-50 pr-3"><a class="btn btn-secondary btn-block" href="/alisveris-sepetim/ship"><i
+                  class="czi-arrow-left mt-sm-0 mr-1"></i><span class="d-none d-sm-inline">Geri</span><span
+                  class="d-inline d-sm-none">Geri</span></a></div>
+            <div class="w-50 pl-2"><button type="button" onclick="return goNext()" id="setadres" name="setadres"
+                class="btn btn-info btn-block"><span class="d-none d-sm-inline">Sonraki Adım</span><span
+                  class="d-inline d-sm-none">Sonraki</span><i class="czi-arrow-right mt-sm-0 ml-1"></i></button></div>
+          </div>
+        </section>
+
       </div>
+      <!-- Navigation (mobile)-->
+      <div class="row d-lg-none">
+        <div class="col-lg-8">
+          <div class="d-flex mt-3">
+            <div class="w-50 pr-3"><a class="btn btn-secondary btn-block" href="/alisveris-sepetim/ship"><i
+                  class="czi-arrow-left mt-sm-0 mr-1"></i><span class="d-none d-sm-inline">Geri</span><span
+                  class="d-inline d-sm-none">Geri</span></a></div>
+            <div class="w-50 pl-2"><button type="button" onclick="return goNext()" id="save-adres" name="save-adres"
+                class="btn btn-info btn-block"><span class="d-none d-sm-inline">Sonraki Adım</span><span
+                  class="d-inline d-sm-none">Sonraki Adım</span><i class="czi-arrow-right mt-sm-0 ml-1"></i></button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </form>
+  </div>
 
   <% include ./_partial/footer %>
   <% include ./_partial/scripts %>
 
+  <div class="modal fade" id="select-address-modal">
+    <div class="modal-dialog  modal-dialog-scrollable" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h4 class="modal-title">Bölge Seçin</h4>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">×</span>
+          </button>
+        </div>
+        <div class="modal-body p-2">
+          <div id="addresslist">
+            <div v-for="(addr, index) in list" class="border pb-2 mb-2">
+              <div id="approve-loc" class="text-center">
+                <a class="d-block mb-2" target="_blank"
+                  :href="'https://www.google.com/maps/search/?api=1&query=' + addr.location.coordinates[0] + ',' + addr.location.coordinates[1]">
+                  <img class=" rounded"
+                    :src="'https://maps.googleapis.com/maps/api/staticmap?center=' + addr.location.coordinates[0] +'+'+addr.location.coordinates[1] + '&zoom=16&scale=1&size=600x300&maptype=roadmap&key=AIzaSyBFqn2GNAhwbJnpga-3S3xQGBc0EcdAgH8&format=png&visual_refresh=true&markers=size:mid%7Ccolor:0xff0000%7Clabel:M%7C' + addr.location.coordinates[0] + '+' + addr.location.coordinates[1]">
+
+                </a>
+
+
+                <button @click="setloc(addr)" type="button" class="btn btn-accent btn-sm">Bu bölgeyi seç</button>
+              </div>
+
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </div>
+  </div>
+
   <script>
 
-  function setGeoLocation() {
-    $('#getlatlong').attr('disabled', "true");
-    $('#getlatlong').text("Hesaplıyorum...");
-    window.App.GetGeoLocation().then(function(position) {
-      $('#lat').val(position.coords.latitude);
-      $('#long').val(position.coords.longitude);
-      $('#accuracy').val(position.coords.accuracy);
-      alert('Tam konumunuzu aldık, teşekkürler.');
-      $('#getlatlong').text("Başarıyla Aldık");
-    }).catch(function(err) {
-      alert('Konumunuzu maalesef alamadık, adresinizi yazmanız yeterli.');
-      $('#getlatlong').text("Tekrar Deneyin");
-
-    }).finally(function() {    
-      $('#getlatlong').removeAttr("disabled");
+    var addresslist = new Vue({
+      el: '#addresslist',
+      data: { list: [], selected: null },
+      methods: {
+        setloc(geo) {
+          $('#geolat').val(geo.location.coordinates[0]);
+          $('#geolong').val(geo.location.coordinates[1]);
+          $('#geolocationtype').val(geo.locationType);
+          this.selected = geo
+          $('#select-address-modal').modal('hide');
+          $("#locdone").show();
+        }
+      }
     })
-  }
-  
-  App.Ready.then(function () {
-    var orderadr = window.kb.userlocation();
-    var city = $('#ordercity').data('city');
-    var district = $('#orderdistrict').data('district');    
-    orderadr.init({
-           defaultCity: city,
-           defaultDistrict: district,
-            openDistricts: false,
-            cityDomSelector: "#ordercity",
-            districtDomSelector: "#orderdistrict"
-          }, function () {
-            $(window).on('kb.userloction.districtselected', function (e, sender) {
-    
-                if (sender == orderadr) {
-   
-                  $("#ordercitytext").val(orderadr.selectedCity.name);
-                  $("#orderdistricttext").val(orderadr.selectedDistrict.name);
-                }
-            });
-          });    
 
-  })
-  
+    function clearLoc() {
+      $('#geolat').val("0");
+      $('#geolong').val("0");
+      $('#geolocationtype').val('');
+      $("#locdone").hide();
+    }
+
+
+    function goNext(approve) {
+      if (!$('#address').val().trim())
+        return alert('Lütfen adres giriniz.');
+      if ($('#geolat').val() && $('#geolong').val() && $('#geolat').val() != "0" && $('#geolong').val() != "0") {
+        $('#adresform').submit();
+      } else {
+        App.Backend.post('shopcard/geocode', {
+          address: $('#address').val()
+        }).then(function (result) {
+          if (result.length) {
+
+            addresslist.list = result;
+            $('#select-address-modal').modal();
+          } else alert('Maalesef böyle bir adres bulamadık, lütfen tekrar deneyin')
+
+        }).catch(function (err) {
+          alert(err.message);
+        })
+      }
+    }
+
+    function ensureUserLocation() {
+
+    }
+
+    function checkSubmit() {
+      return true;
+    }
+
+    function setGeoLocation() {
+      $('#getlatlong').attr('disabled', "true");
+      $('#getlatlong').text("Hesaplıyorum...");
+      window.App.GetGeoLocation().then(function (position) {
+
+        App.Backend.post('shopcard/reversegeocode', {
+          lat: position.coords.latitude,
+          lng: position.coords.longitude
+        }).then(function (result) {
+          if (result.length) {
+            let address = result[0];
+            $('#address').val(address.formatted_address)
+          }
+          console.log(result);
+          $('#lat').val(position.coords.latitude);
+          $('#long').val(position.coords.longitude);
+          $('#accuracy').val(position.coords.accuracy);
+          $('#getlatlong').text("Başarıyla Aldık");
+        }).catch(function (err) {
+          alert('Konumunuzu maalesef alamadık, adresinizi yazmanız yeterli.');
+          alert(err.message)
+          $('#getlatlong').text("Tekrar Deneyin");
+        })
+      }).catch(function (err) {
+        alert('Konumunuzu maalesef alamadık, adresinizi yazmanız yeterli.');
+        $('#getlatlong').text("Tekrar Deneyin");
+
+      }).finally(function () {
+        $('#getlatlong').removeAttr("disabled");
+      })
+    }
+
+    App.Ready.then(function () {
+      var orderadr = window.kb.userlocation();
+      var city = $('#ordercity').data('city');
+      var district = $('#orderdistrict').data('district');
+      orderadr.init({
+        defaultCity: city,
+        defaultDistrict: district,
+        openDistricts: false,
+        cityDomSelector: "#ordercity",
+        districtDomSelector: "#orderdistrict"
+      }, function () {
+        $(window).on('kb.userloction.districtselected', function (e, sender) {
+
+          if (sender == orderadr) {
+
+            $("#ordercitytext").val(orderadr.selectedCity.name);
+            $("#orderdistricttext").val(orderadr.selectedDistrict.name);
+          }
+        });
+      });
+
+    })
+
 
   </script>
 

@@ -51,10 +51,15 @@ class ShopCard {
             level3Id: 0,
             saveaddress: true,
             adres: '',
+            bina: '',
+            kat: '',
+            daire: '',
             level1Text: '',
             level2Text: '',
             level3Text: '',
-            location: null
+            location: null,
+            geolocation: null,
+            geolocationType: "UNKNOWN"
         };
         this.butchers = {};
         this.shipment = {};
