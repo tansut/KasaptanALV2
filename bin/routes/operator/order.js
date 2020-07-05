@@ -22,11 +22,13 @@ const account_1 = require("../../models/account");
 const commissionHelper_1 = require("../../lib/commissionHelper");
 const review_1 = require("../../db/models/review");
 const order_2 = require("../../models/order");
+const geo_1 = require("../../models/geo");
 var MarkdownIt = require('markdown-it');
 class Route extends router_1.ViewRouter {
     constructor() {
         super(...arguments);
         this.markdown = new MarkdownIt();
+        this.LocationTypeDesc = geo_1.LocationTypeDesc;
         this.shouldBePaid = 0.00;
         this.paid = 0.00;
         this.productTotal = 0.00;

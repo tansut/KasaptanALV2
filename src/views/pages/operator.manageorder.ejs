@@ -199,7 +199,10 @@
                   href="https://www.google.com/maps/place/<%=order.shipLocation.coordinates[0]%>+<%=order.shipLocation.coordinates[1]%>/">
                   https://www.google.com/maps/place/<%=order.shipLocation.coordinates[0]%>+<%=order.shipLocation.coordinates[1]%>
                 </a> </div>
-          
+                <span>
+                  Noktasal adres güvenilirliği: *<%=controller.LocationTypeDesc[order.locationType]%>*
+
+                </span>
 
             <%}%>
         </p>

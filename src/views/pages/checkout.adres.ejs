@@ -137,7 +137,7 @@
               girmeyim.</label>
           </div>
           <div id="locdone" class="alert alert-secondary text-center mt-3" style="display: none;">
-            <span class="text-success font-size-sm">Teşekkürler, bölge seçimini tamamladınız. Şimdi tüm bilgileri kontrol edip işleme devam edebilirsiniz.</span>
+            <span class="text-success font-size-sm">Teşekkürler, adres bilgilerinizi tekrar kontrol edip işleme devam edebilirsiniz.</span>
           </div>
           <!-- Navigation (desktop)-->
           <div class="d-none d-lg-flex pt-4 mt-3">
@@ -145,8 +145,8 @@
                   class="czi-arrow-left mt-sm-0 mr-1"></i><span class="d-none d-sm-inline">Geri</span><span
                   class="d-inline d-sm-none">Geri</span></a></div>
             <div class="w-50 pl-2"><button type="button" onclick="return goNext()" id="setadres" name="setadres"
-                class="btn btn-info btn-block"><span class="d-none d-sm-inline">Sonraki Adım</span><span
-                  class="d-inline d-sm-none">Sonraki</span><i class="czi-arrow-right mt-sm-0 ml-1"></i></button></div>
+                class="btn btn-info btn-block"><span class="d-none d-sm-inline gonext">Sonraki Adım</span><span
+                  class="d-inline d-sm-none gonext">Sonraki</span><i class="czi-arrow-right mt-sm-0 ml-1"></i></button></div>
           </div>
         </section>
 
@@ -159,8 +159,8 @@
                   class="czi-arrow-left mt-sm-0 mr-1"></i><span class="d-none d-sm-inline">Geri</span><span
                   class="d-inline d-sm-none">Geri</span></a></div>
             <div class="w-50 pl-2"><button type="button" onclick="return goNext()" id="save-adres" name="save-adres"
-                class="btn btn-info btn-block"><span class="d-none d-sm-inline">Sonraki Adım</span><span
-                  class="d-inline d-sm-none">Sonraki Adım</span><i class="czi-arrow-right mt-sm-0 ml-1"></i></button>
+                class="btn btn-info btn-block"><span class="d-none d-sm-inline gonext">Sonraki Adım</span><span
+                  class="d-inline d-sm-none gonext">Sonraki Adım</span><i class="czi-arrow-right mt-sm-0 ml-1"></i></button>
             </div>
           </div>
         </div>
@@ -234,17 +234,21 @@
       if ($('#geolat').val() && $('#geolong').val() && $('#geolat').val() != "0" && $('#geolong').val() != "0") {
         $('#adresform').submit();
       } else {
+        debugger
+        $('.gonext').attr('disabled', "true");
+        $('.gonext').text("Sorguluyorum...");
         App.Backend.post('shopcard/geocode', {
           address: $('#address').val()
         }).then(function (result) {
           if (result.length) {
-
             addresslist.list = result;
             $('#select-address-modal').modal();
-          } else alert('Maalesef böyle bir adres bulamadık, lütfen tekrar deneyin')
-
+          } else alert('Maalesef böyle bir adres bulamadık, lütfen tekrar deneyin');
         }).catch(function (err) {
           alert(err.message);
+        }).finally(function() {
+          $('.gonext').removeAttr("disabled");      
+          $('.gonext').text("Sonraki Adım");    
         })
       }
     }

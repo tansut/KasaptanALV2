@@ -31,6 +31,7 @@ import { ComissionResult, ComissionHelper } from '../../lib/commissionHelper';
 import { PuanResult } from '../../models/puan';
 import Review from '../../db/models/review';
 import { OrderItemStatus } from '../../models/order';
+import { LocationType, LocationTypeDesc } from '../../models/geo';
 var MarkdownIt = require('markdown-it')
 
 export default class Route extends ViewRouter {
@@ -39,6 +40,7 @@ export default class Route extends ViewRouter {
     _paymentProvider: CreditcardPaymentProvider
     markdown = new MarkdownIt();
     butcherFee: ComissionResult;
+    LocationTypeDesc = LocationTypeDesc;
 
     balance: AccountModel;
     shouldBePaid = 0.00;
