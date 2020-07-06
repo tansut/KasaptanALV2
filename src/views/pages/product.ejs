@@ -270,21 +270,18 @@
                           <a href="#tarifVideos">
 
 
-                            <h5 class="h6 mb-2 text-dark ">Bu yemekler için hazırlıyoruz</h5>
+                            <h5 class="h6 mb-2 text-dark ">Bu yemekler için ideal</h5>
 
 
 
                           </a>
-                          <!-- <a class="align-self-center mb-2  text-dark font-size-xs" href="#tarifVideos"> <i
-                                    class="czi-arrow-right font-size-xs align-middle"></i></a>     -->
+                   
                         </div>
-                        <!-- <label class=""><span
-                                    class="badge badge-primary font-size-xs mr-2">Bu yemekler için uygun:</span><span class=""></span></label> -->
+
                         <div class="mb-2">
                           <% tarifsAndFoods.forEach(t=> { %>
 
-                          <div
-                            class="d-flex mb-2 pb-1 align-items-center flex-nowrap justify-content-between border-bottom">
+                          <div class="d-flex mb-2 pb-1 align-items-center flex-nowrap justify-content-between border-bottom">
                             <a class="text-primary" href="javascript:openSlider(<%=t.id%>)"><i
                                 class="text-primary <%= t.contentType == 'video-youtube' ? 'czi-youtube': 'czi-camera' %> mr-1"></i><%=t.title%></a>
 

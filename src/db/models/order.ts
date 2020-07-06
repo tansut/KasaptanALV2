@@ -161,6 +161,11 @@ class Order extends BaseModel<Order> {
     @Column({
         allowNull: true
     })
+    adresTarif: string;    
+
+    @Column({
+        allowNull: true
+    })
     kat: string;
 
     @Column({
@@ -431,6 +436,7 @@ class Order extends BaseModel<Order> {
         o.bina = c.address.bina;
         o.kat = c.address.kat;
         o.daire = c.address.daire;
+        o.adresTarif = c.address.addresstarif;
         if (c.address.geolocation) {
             o.shipLocation = c.address.geolocation;
             o.locationType = c.address.geolocationType

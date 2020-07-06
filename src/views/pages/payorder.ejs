@@ -130,9 +130,10 @@
       <%}%>
 
       <% if (controller.shouldBePaid > 0) { %>
+<div class="d-print-none">
+  <%- include(`./_partial/paymentprovider/${controller.paymentProvider.providerKey}.payform.ejs`) %>
 
-        <%- include(`./_partial/paymentprovider/${controller.paymentProvider.providerKey}.payform.ejs`) %>
-
+</div>
 
       <% } %>
 

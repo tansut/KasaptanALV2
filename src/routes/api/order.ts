@@ -379,6 +379,7 @@ export default class Route extends ApiRouter {
                 this.req.user.lastDaire = card.address.daire;
                 this.req.user.lastLocation = card.address.geolocation;
                 this.req.user.lastLocationType = card.address.geolocationType;
+                this.req.user.lastTarif = card.address.addresstarif;
                 promises.push(this.req.user.save())
             }
             return Promise.all(promises);

@@ -105,7 +105,7 @@
                   id="address"><%= shopcard.address.adres %></textarea>
               </div>
             </div>
-            <div class="col-sm-4">
+            <div id="localaddrstart" class="col-sm-4">
               <label for="bina">Bina No</label>
               <input class="form-control" name="bina" id="bina" value="<%= shopcard.address.bina %>">
             </div>
@@ -117,6 +117,15 @@
               <label for="daire">Daire No</label>
               <input class="form-control" name="daire" id="daire" value="<%= shopcard.address.daire %>">
             </div>
+            <div class="col-sm-12">
+              <div class="form-group">
+
+                <label for="addresstarif">Adres Tarifi</label>
+
+                <textarea class="form-control" name="addresstarif"
+                  id="addresstarif"><%= shopcard.address.addresstarif %></textarea>
+              </div>
+            </div>
 
           </div>
 
@@ -124,8 +133,10 @@
           <input type="hidden" name="long" value="0" id="long">
           <input type="hidden" name="accuracy" value="0" id="accuracy">
 
-          <input type="hidden" name="geolat" value="<%= shopcard.address.geolocation ? shopcard.address.geolocation.coordinates[0]: '0'%>" id="geolat">
-          <input type="hidden" name="geolong" value="<%= shopcard.address.geolocation ? shopcard.address.geolocation.coordinates[1]: '0'%>" id="geolong">
+          <input type="hidden" name="geolat"
+            value="<%= shopcard.address.geolocation ? shopcard.address.geolocation.coordinates[0]: '0'%>" id="geolat">
+          <input type="hidden" name="geolong"
+            value="<%= shopcard.address.geolocation ? shopcard.address.geolocation.coordinates[1]: '0'%>" id="geolong">
           <input type="hidden" name="geolocationtype" id="geolocationtype">
 
 
@@ -137,7 +148,10 @@
               girmeyim.</label>
           </div>
           <div id="locdone" class="alert alert-secondary text-center mt-3" style="display: none;">
-            <span class="text-success font-size-sm">Teşekkürler, adres bilgilerinizi tekrar kontrol edip işleme devam edebilirsiniz.</span>
+            <p class="text-success font-size-sm">Noktasal adresiz hazır. <strong>Bina No, Kat ve Daire No</strong>
+              bilgilerini
+              kontrol edip işleme devam edebilirsiniz.</p>
+            <button onclick="showMap()" type="button" class="btn btn-sm btn-secondary">Teslimat Konumu</button>
           </div>
           <!-- Navigation (desktop)-->
           <div class="d-none d-lg-flex pt-4 mt-3">
@@ -146,7 +160,8 @@
                   class="d-inline d-sm-none">Geri</span></a></div>
             <div class="w-50 pl-2"><button type="button" onclick="return goNext()" id="setadres" name="setadres"
                 class="btn btn-info btn-block"><span class="d-none d-sm-inline gonext">Sonraki Adım</span><span
-                  class="d-inline d-sm-none gonext">Sonraki</span><i class="czi-arrow-right mt-sm-0 ml-1"></i></button></div>
+                  class="d-inline d-sm-none gonext">Sonraki</span><i class="czi-arrow-right mt-sm-0 ml-1"></i></button>
+            </div>
           </div>
         </section>
 
@@ -160,11 +175,13 @@
                   class="d-inline d-sm-none">Geri</span></a></div>
             <div class="w-50 pl-2"><button type="button" onclick="return goNext()" id="save-adres" name="save-adres"
                 class="btn btn-info btn-block"><span class="d-none d-sm-inline gonext">Sonraki Adım</span><span
-                  class="d-inline d-sm-none gonext">Sonraki Adım</span><i class="czi-arrow-right mt-sm-0 ml-1"></i></button>
+                  class="d-inline d-sm-none gonext">Sonraki Adım</span><i
+                  class="czi-arrow-right mt-sm-0 ml-1"></i></button>
             </div>
           </div>
         </div>
       </div>
+
     </form>
   </div>
 
@@ -175,50 +192,116 @@
     <div class="modal-dialog  modal-dialog-scrollable" role="document">
       <div class="modal-content">
         <div class="modal-header">
-          <h4 class="modal-title">Bölge Seçin</h4>
+          <h4 class="modal-title">Bölge Belirleme</h4>
           <button type="button" class="close" data-dismiss="modal" aria-label="Close">
             <span aria-hidden="true">×</span>
           </button>
         </div>
-        <div class="modal-body p-2">
+        <div class="modal-body p-0">
+          <div class="p-2 text-muted font-size-sm bg-secondary">
+            Belirttiğiniz adresi birden çok bölgede bulduk. Lütfen doğru bölgeyi seçin.
+          </div>
           <div id="addresslist">
-            <div v-for="(addr, index) in list" class="border pb-2 mb-2">
-              <div id="approve-loc" class="text-center">
+            <div if="list && list.length > 0" v-for="(addr, index) in list" class="border mb-2">
+              <div id="approve-loc" class="text-center bg-secondary">
                 <a class="d-block mb-2" target="_blank"
                   :href="'https://www.google.com/maps/search/?api=1&query=' + addr.location.coordinates[0] + ',' + addr.location.coordinates[1]">
                   <img class=" rounded"
-                    :src="'https://maps.googleapis.com/maps/api/staticmap?center=' + addr.location.coordinates[0] +'+'+addr.location.coordinates[1] + '&zoom=16&scale=1&size=600x300&maptype=roadmap&key=AIzaSyBFqn2GNAhwbJnpga-3S3xQGBc0EcdAgH8&format=png&visual_refresh=true&markers=size:mid%7Ccolor:0xff0000%7Clabel:M%7C' + addr.location.coordinates[0] + '+' + addr.location.coordinates[1]">
+                    :src="'https://maps.googleapis.com/maps/api/staticmap?center=' + addr.location.coordinates[0] +'+'+addr.location.coordinates[1] + '&zoom=18&scale=1&size=600x300&maptype=roadmap&key=AIzaSyBFqn2GNAhwbJnpga-3S3xQGBc0EcdAgH8&format=png&visual_refresh=true&markers=size:mid%7Ccolor:0xff0000%7Clabel:M%7C' + addr.location.coordinates[0] + '+' + addr.location.coordinates[1]">
 
                 </a>
 
 
-                <button @click="setloc(addr)" type="button" class="btn btn-accent btn-sm">Bu bölgeyi seç</button>
+                <button @click="setloc(addr)" type="button" class="btn btn-accent btn-sm">Bu Bölgedeyim</button>
               </div>
 
             </div>
+
           </div>
 
         </div>
       </div>
     </div>
+
   </div>
 
+  <div class="modal fade" id="set-address-modal">
+    <div class="modal-dialog " role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h4 class="modal-title">Adres Belirleme</h4>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">×</span>
+          </button>
+        </div>
+        <div class="modal-body p-0">
+          <div class="h-100 d-flex flex-column">
+            <div id="mapdesc" class="p-2 text-muted font-size-sm bg-secondary text-center font-weight-bold">
+              <p class="mb-1">
+                Haritayı sürükleyerek tam teslimat konumunu belirleyin.
+              </p>
+              <div>
+                <button type="button" onclick="map.select()" class="btn btn-sm btn-primary">Aşağıdaki Konuma
+                  Gönderin</button>
+
+              </div>
+
+            </div>
+
+            <div class="justify-content-center bg-blue flex-grow-1">
+
+              <div class="w-100" id="map"></div>
+
+            </div>
+
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+  </div>
+
+  <style>
+    .gm-style-iw + div {display: none;}
+.gm-style-iw {text-align:center;}
+  </style>
+
   <script>
+
+    var tryCount = 0;
+
+    $('#set-address-modal').on('show.bs.modal', function () {
+      h = window.innerHeight * 0.80;
+      $(this).find('.modal-body').css({
+        height: h.toString() + 'px'
+      });
+      setTimeout(function () {
+        $('#map').css({
+          height: (h - $('#mapdesc').height()).toString() + 'px'
+        })
+      }, 1000)
+    });
 
     var addresslist = new Vue({
       el: '#addresslist',
       data: { list: [], selected: null },
       methods: {
         setloc(geo) {
-          $('#geolat').val(geo.location.coordinates[0]);
-          $('#geolong').val(geo.location.coordinates[1]);
-          $('#geolocationtype').val(geo.locationType);
-          this.selected = geo
+          this.selected = geo;
           $('#select-address-modal').modal('hide');
-          $("#locdone").show();
+          map.init(geo.location.coordinates[0], geo.location.coordinates[1])
         }
       }
     })
+
+    function showMap() {
+      map.init(parseFloat($('#geolat').val()), parseFloat($('#geolong').val()))
+    }
+
+    function pageHasLoc() {
+      return $('#geolat').val() && $('#geolong').val() && ($('#geolat').val() != "0") && ($('#geolong').val() != "0")
+    }
 
     function clearLoc() {
       $('#geolat').val("0");
@@ -231,26 +314,37 @@
     function goNext(approve) {
       if (!$('#address').val().trim())
         return alert('Lütfen adres giriniz.');
-      if ($('#geolat').val() && $('#geolong').val() && $('#geolat').val() != "0" && $('#geolong').val() != "0") {
+      if ((tryCount > 1) || (pageHasLoc())) {
         $('#adresform').submit();
       } else {
-        debugger
         $('.gonext').attr('disabled', "true");
         $('.gonext').text("Sorguluyorum...");
         App.Backend.post('shopcard/geocode', {
           address: $('#address').val()
         }).then(function (result) {
-          if (result.length) {
+          if (result.length > 1) {
             addresslist.list = result;
             $('#select-address-modal').modal();
-          } else alert('Maalesef böyle bir adres bulamadık, lütfen tekrar deneyin');
+          } else if (result.length == 1) {
+            // addresslist.list = result;
+            // $('#select-address-modal').modal();
+            map.init(result[0].location.coordinates[0], result[0].location.coordinates[1])
+          } else {
+            tryCount++;
+            alert('Maalesef böyle bir adres bulamadık, lütfen tekrar deneyin.');
+          }
         }).catch(function (err) {
           alert(err.message);
-        }).finally(function() {
-          $('.gonext').removeAttr("disabled");      
-          $('.gonext').text("Sonraki Adım");    
+        }).finally(function () {
+          $('.gonext').removeAttr("disabled");
+          $('.gonext').text("Sonraki Adım");
         })
       }
+    }
+
+    function done() {
+      $("#locdone").show();
+      App.scrollToAnchor('#localaddrstart')
     }
 
     function ensureUserLocation() {
@@ -265,29 +359,33 @@
       $('#getlatlong').attr('disabled', "true");
       $('#getlatlong').text("Hesaplıyorum...");
       window.App.GetGeoLocation().then(function (position) {
-
-        App.Backend.post('shopcard/reversegeocode', {
-          lat: position.coords.latitude,
-          lng: position.coords.longitude
-        }).then(function (result) {
-          if (result.length) {
-            let address = result[0];
-            $('#address').val(address.formatted_address)
-          }
-          console.log(result);
-          $('#lat').val(position.coords.latitude);
-          $('#long').val(position.coords.longitude);
-          $('#accuracy').val(position.coords.accuracy);
-          $('#getlatlong').text("Başarıyla Aldık");
-        }).catch(function (err) {
-          alert('Konumunuzu maalesef alamadık, adresinizi yazmanız yeterli.');
-          alert(err.message)
+        if (position.coords.accuracy > 1000) {
+          App.Backend.post('shopcard/reversegeocode', {
+            lat: position.coords.latitude,
+            lng: position.coords.longitude
+          }).then(function (result) {
+            if (result.length) {
+              let address = result[0];
+              $('#address').val(address.formatted_address);
+              clearLoc();
+              $('#lat').val(position.coords.latitude);
+              $('#long').val(position.coords.longitude);
+              $('#accuracy').val(position.coords.accuracy);
+              $('#getlatlong').text("Başarıyla Aldık");
+            } else
+              alert('Konumunuzdan adrese maalesef ullaşamadık, teslimat adresini yazmanız yeterli.');
+          }).catch(function (err) {
+            alert('Konumunuzu maalesef alamadık, teslimat adresini yazmanız yeterli.');
+            $('#getlatlong').text("Tekrar Deneyin");
+          })
+        } else {
+          alert('Konumunuzu yeterli hassasiyette alamadık, teslimat adresini yazmanız yeterli.');
           $('#getlatlong').text("Tekrar Deneyin");
-        })
-      }).catch(function (err) {
-        alert('Konumunuzu maalesef alamadık, adresinizi yazmanız yeterli.');
-        $('#getlatlong').text("Tekrar Deneyin");
+        }
 
+      }).catch(function (err) {
+        alert('Konumunuzu alamadık, teslimat adresini yazmanız yeterli.');
+        $('#getlatlong').text("Tekrar Deneyin");
       }).finally(function () {
         $('#getlatlong').removeAttr("disabled");
       })
@@ -305,19 +403,87 @@
         districtDomSelector: "#orderdistrict"
       }, function () {
         $(window).on('kb.userloction.districtselected', function (e, sender) {
-
           if (sender == orderadr) {
-
             $("#ordercitytext").val(orderadr.selectedCity.name);
             $("#orderdistricttext").val(orderadr.selectedDistrict.name);
           }
         });
       });
-
+      if (pageHasLoc()) $("#locdone").show();
     })
+
+    let map = {
+      _map: null,
+      _marker: null,
+      _infoWindow: null,
+      _clat: 0,
+      _clng: 0,
+
+      select: function () {
+        $('#set-address-modal').modal('hide');
+        $('#geolat').val(this._clat);
+        $('#geolong').val(this._clng);
+        done();
+      },
+
+      init: function (lat, lng) {
+        this._clat = lat;
+        this._clng = lng;
+        var self = this;
+
+
+        if (!this._map) {
+          this._map = new google.maps.Map(document.getElementById("map"), {
+            zoom: 18
+          });
+
+          this._map.addListener("center_changed", function (lat, lng) {
+            var loc = self._map.getCenter();
+            self._clat = loc.lat();
+            self._clng = loc.lng();
+            self._marker && self._marker.setPosition(loc);
+          });
+
+          this._marker = new google.maps.Marker({
+            position: {
+              lat: lat,
+              lng: lng
+            },
+            map: this._map,
+            title: "Lokasyonum"
+          });          
+
+          this._infowindow = new google.maps.InfoWindow({
+            content: "Teslimat Konumu"
+          });
+
+        }
+        this._map.setCenter(new google.maps.LatLng(this._clat, this._clng))
+        this._marker.setPosition(new google.maps.LatLng(this._clat, this._clng))    
+        //this._infowindow.open(this._map, this._marker);
+
+        // setTimeout(function() {
+        //   self._infowindow.close()
+        // }, 5000);
+
+        $('#set-address-modal').modal({
+          backdrop: 'static',
+          keyboard: false
+        });
+      }
+    }
 
 
   </script>
+
+
+  <script async defer
+    src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBFqn2GNAhwbJnpga-3S3xQGBc0EcdAgH8&language=tr&region=TR"
+    type="text/javascript"></script>
+
+
+
+
 
 </body>
 

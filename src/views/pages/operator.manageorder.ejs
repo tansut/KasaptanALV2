@@ -128,12 +128,12 @@
         <!-- <span class="d-block"><%= __helper.formatDate(order.creationDate)%>, <%=order.areaLevel3Text%></span> -->
         <span class="d-block">Sipariş no: <%=order.ordernum%>/<%=order.name%></span>
         <!-- <span class="d-block">Cironuza katkımız: <%- include('./_partial/currency.ejs', {value: controller.butcherFee.product}) %> + KDV -->
-        <span class="d-block">kasaptanAl.com hizmeti: <%- include('./_partial/currency.ejs', {value: controller.butcherFee.kalitteFee}) %> + KDV
+        <span onclick="$('#puandiv').show()" class="d-block">kasaptanAl.com hizmeti: <%- include('./_partial/currency.ejs', {value: controller.butcherFee.kalitteFee}) %> + KDV
         </span>
-        <!-- <% if (controller.butcherFee.butcherToCustomer > 0) { %>
-        <span class="d-block">Müşterinize verdiğiniz sadakat puanı: <%- include('./_partial/currency.ejs', {value: controller.butcherFee.butcherToCustomer}) %> + KDV
-        </span>      
-        <% } %> -->
+         <% if (controller.butcherFee.butcherToCustomer > 0) { %>
+        <div style="display: none;" id="puandiv" >Müşterinize verdiğiniz sadakat puanı: <%- include('./_partial/currency.ejs', {value: controller.butcherFee.butcherToCustomer}) %> + KDV
+        </div>      
+        <% } %> 
         <span>
           <span class="d-block">
             Bu satışla vergi avantajlarınız oldu. Detaylar için:
@@ -169,6 +169,11 @@
             Bina: <%=order.bina%>,Kat: <%=order.kat%>,Daire: <%=order.daire%>
 
               <%= order.areaLevel3Text%>/<%= order.areaLevel1Text%></li>
+              <% if (order.adresTarif) { %>
+                <li>
+                  Adres tarifi: <%= order.adresTarif%>
+                </li>
+                <%}%>
               <%}%>
               <% if(order.note) { %>
                 <li><span class="text-muted">Not:&nbsp;</span><%= order.note%>
@@ -195,12 +200,12 @@
   
               <div class="mt-3 font-size-sm text-muted">Kasabınıza uzaklık: <%=(order.dispatcherDistance)%>km</div>
               <!-- <div class="font-size-sm text-muted">Hata payı: <%=(order.shipLocationAccuracy)%>m</div> -->
-              <div class="font-size-sm text-muted">Tam Lokasyon: <a target="_blank" class="font-size-sm"
+              <div class="font-size-sm text-muted">Teslimat Lokasyonu: <a target="_blank" class="font-size-sm"
                   href="https://www.google.com/maps/place/<%=order.shipLocation.coordinates[0]%>+<%=order.shipLocation.coordinates[1]%>/">
                   https://www.google.com/maps/place/<%=order.shipLocation.coordinates[0]%>+<%=order.shipLocation.coordinates[1]%>
                 </a> </div>
                 <span>
-                  Noktasal adres güvenilirliği: *<%=controller.LocationTypeDesc[order.locationType]%>*
+                  <!-- Noktasal adres güvenilirliği: *<%=controller.LocationTypeDesc[order.locationType]%>* -->
 
                 </span>
 

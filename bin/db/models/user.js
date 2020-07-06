@@ -117,6 +117,10 @@ __decorate([
 __decorate([
     sequelize_typescript_1.Column,
     __metadata("design:type", String)
+], User.prototype, "lastTarif", void 0);
+__decorate([
+    sequelize_typescript_1.Column,
+    __metadata("design:type", String)
 ], User.prototype, "lastDaire", void 0);
 __decorate([
     sequelize_typescript_1.Column({

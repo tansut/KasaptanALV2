@@ -84,6 +84,9 @@ export default class User extends BaseModel<User> {
     lastKat: string;
 
     @Column
+    lastTarif: string;    
+
+    @Column
     lastDaire: string    
 
     @Column({

@@ -116,6 +116,7 @@ let Order = Order_1 = class Order extends basemodel_1.default {
             o.bina = c.address.bina;
             o.kat = c.address.kat;
             o.daire = c.address.daire;
+            o.adresTarif = c.address.addresstarif;
             if (c.address.geolocation) {
                 o.shipLocation = c.address.geolocation;
                 o.locationType = c.address.geolocationType;
@@ -288,6 +289,12 @@ __decorate([
     }),
     __metadata("design:type", String)
 ], Order.prototype, "bina", void 0);
+__decorate([
+    sequelize_typescript_1.Column({
+        allowNull: true
+    }),
+    __metadata("design:type", String)
+], Order.prototype, "adresTarif", void 0);
 __decorate([
     sequelize_typescript_1.Column({
         allowNull: true

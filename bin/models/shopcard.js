@@ -51,6 +51,7 @@ class ShopCard {
             level3Id: 0,
             saveaddress: true,
             adres: '',
+            addresstarif: '',
             bina: '',
             kat: '',
             daire: '',

@@ -20,6 +20,7 @@ export interface ShopcardAdres {
     bina: string;
     kat: string;
     daire: string;
+    addresstarif: string;
     level1Text: string;
     level2Text: string;
     level3Text: string;
@@ -90,7 +91,7 @@ export class ShopCard {
         level3Id: 0,
         saveaddress: true,
         adres: '',
-         
+        addresstarif:'',
         bina:'',
         kat:'',
         daire:'',

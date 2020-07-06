@@ -187,6 +187,7 @@ export default class Route extends ViewRouter {
         this.shopcard.address.kat = this.req.body.kat;
         this.shopcard.address.daire = this.req.body.daire;
         this.shopcard.address.bina = this.req.body.bina;
+        this.shopcard.address.addresstarif = this.req.body.addresstarif;        
         if (this.req.body.lat && this.req.body.long && (parseFloat(this.req.body.lat) > 0) && (parseFloat(this.req.body.long) > 0)) {
             this.shopcard.address.location = {
                 type: 'Point',
@@ -223,6 +224,7 @@ export default class Route extends ViewRouter {
         this.shopcard.address.phone = this.req.user.mphone;
         this.shopcard.address.adres = this.shopcard.address.adres || this.req.user.lastAddress;
         this.shopcard.address.bina = this.shopcard.address.bina || this.req.user.lastBina;
+        this.shopcard.address.addresstarif = this.shopcard.address.addresstarif || this.req.user.lastTarif;
         this.shopcard.address.kat = this.shopcard.address.kat || this.req.user.lastKat;
         this.shopcard.address.daire = this.shopcard.address.daire || this.req.user.lastDaire;
         this.shopcard.address.geolocationType = this.shopcard.address.geolocationType || this.req.user.lastLocationType;

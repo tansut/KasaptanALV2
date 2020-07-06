@@ -49,7 +49,9 @@
               
               <li><span class="text-muted">İsim:&nbsp;</span><%= shopcard.address.name %></li>
               <li><span class="text-muted">Adres:&nbsp;</span><%= shopcard.address.adres%>
+                Bina: <%=shopcard.address.bina%>,Kat: <%=shopcard.address.kat%>,Daire: <%=shopcard.address.daire%>
                 <%= shopcard.address.level3Text%>/<%= shopcard.address.level1Text%></li>
+              <li>Adres tarifi: <%= shopcard.address.addresstarif%></li>
               <li><span class="text-muted">Telefon:&nbsp;</span><%= shopcard.address.phone%></li>
             </ul>
           </div>
