@@ -396,6 +396,7 @@ window.initComponents = function initComponents() {
                 var au = f.purchaseOptions.find(function(po) {
                     return po.unit == self.selectedUnit.unit;
                 })
+                au = au || f.purchaseOptions[0]
                 return au;
             },
 
@@ -408,11 +409,16 @@ window.initComponents = function initComponents() {
                 var urlParams = new URLSearchParams(window.location.search);
                 if (this.product && urlParams.has('selectedUnit')) {
                     this.selectedUnit = this.product.purchaseOptions.find(function (po) { return po.unit == urlParams.get('selectedUnit') })
+                    this.selectedUnit = this.selectedUnit || this.product.purchaseOptions[0];
                 }
 
 
                 if (this.product && urlParams.has('quantity')) {
-                    this.quantity = parseFloat(urlParams.get('quantity'))
+                    this.quantity = parseFloat(urlParams.get('quantity'));
+                    if (this.selectedUnit) {
+                        this.quantity = this.quantity < this.selectedUnit.min ? this.selectedUnit.default: this.quantity;
+                        this.quantity = this.quantity > this.selectedUnit.max ? this.selectedUnit.default: this.quantity;
+                    }
                 }
 
                 if (this.product && urlParams.has('note')) {

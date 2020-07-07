@@ -4,7 +4,7 @@ import * as express from "express";
 import SiteLog from '../../db/models/sitelog';
 import email from '../../lib/email';
 import { ShopCard } from '../../models/shopcard';
-import Product from '../../db/models/product';
+import Product, { ProductType } from '../../db/models/product';
 import ProductApi from './product'
 import Butcher from '../../db/models/butcher';
 import Area from '../../db/models/area';
@@ -12,11 +12,12 @@ import Dispatcher from '../../db/models/dispatcher';
 import ButcherProduct from '../../db/models/butcherproduct';
 import { Op, Sequelize } from "sequelize";
 import { PreferredAddress } from '../../db/models/user';
+import { LogisticFactory } from '../../lib/logistic/core';
+import { Order } from '../../db/models/order';
+import { off } from 'process';
 
 export default class Route extends ApiRouter {
-
     async _where(where: any, address: PreferredAddress) {
-
         where['enabled'] = true;
         where[Op.or] = where[Op.or] || [];
         if (address && address.level1Id) {
@@ -37,14 +38,13 @@ export default class Route extends ApiRouter {
         return where
     }
 
-    async bestDispatcher(butcherId, address: PreferredAddress) {
+    async bestDispatcher(butcherId, address: PreferredAddress, basedOn: Order) {
         let where = {
             type: 'butcher',
             butcherid: butcherId,
             [Op.or]: []
         };
         where = await this._where(where, address);
-
         let res = await Dispatcher.findOne({
             where: where,
             include: [
@@ -54,8 +54,30 @@ export default class Route extends ApiRouter {
                 },
             ],            
             order: [["toarealevel", "DESC"]],
-
         })
+        if (res && res.logisticProviderUsage != "none") {
+            let butcher = await Butcher.findByPk(butcherId);
+            let usage = res.logisticProviderUsage == "default" ? butcher.logisticProviderUsage: res.logisticProviderUsage;
+            if (usage != "none" && butcher.logisticProviderUsage != "disabled" && butcher.logisticProvider) {
+                let provider = LogisticFactory.getInstance(butcher.logisticProvider);
+                res.name = provider.providerKey;
+                res.min = 0.00;
+                res.totalForFree = 0.00;
+                res.type = "motokurye";
+                if (basedOn) {
+                    try {
+                        let request = provider.offerFromOrder(basedOn);
+                        let offer = await provider.requestOffer(request);
+                        res.feeOffer = offer.deliveryFee;
+                    } catch(err) {
+                        email.send('tansut@gmail.com', 'hata: get offer from dispatcher', "error.ejs", {
+                            text: err + '/' + err.message,
+                            stack: err.stack
+                        })
+                    }
+                }                
+            }
+        }
         return res;
     }
 
@@ -151,20 +173,20 @@ export default class Route extends ApiRouter {
     }
 
 
-    async  getButchersSelingAndDispatches(address: PreferredAddress, pid) {
+
+    async getButchersSelingAndDispatches(address: PreferredAddress, product: Product, useLevel1: boolean) {
         let where = {
             type: 'butcher'
         }
         where = await this._where(where, address);
-        where['$butcher.products.productid$'] = pid;
-        where['$butcher.products.enabled$'] = true;
 
+        where['$butcher.products.productid$'] = product.id;
+        where['$butcher.products.enabled$'] = true;
         let w = [{
             '$butcher.products.kgPrice$': {
                 [Op.gt]: 0.0
             }
         },
-
         {
             [Op.and]: [
                 {
@@ -176,10 +198,7 @@ export default class Route extends ApiRouter {
                     '$butcher.products.unit1enabled$': true
                 }
             ]
-
-
         },
-
         {
             [Op.and]: [
                 {
@@ -206,7 +225,14 @@ export default class Route extends ApiRouter {
         }
         ]
         where[Op.or].push(w);
-
+        if (!useLevel1) {
+            where[Op.and] = where[Op.and] || []
+            where[Op.and].push({
+                toarealevel: {
+                    [Op.ne]: 1
+                }
+            })
+        }
 
         let res = await Dispatcher.findAll({
             where: where,
@@ -221,19 +247,16 @@ export default class Route extends ApiRouter {
                 },
             ],
             order: [["toarealevel", "DESC"]]
-            //limit: 10
-        })
+        });
         let ugly = {}, result = [];
         res.forEach(r => {
             if (!ugly[r.butcherid]) {
                 ugly[r.butcherid] = r;
-                result.push(r)
+                result.push(r);
             }
         })
         return result;
     }
-
-
 
     static SetRoutes(router: express.Router) {
     }

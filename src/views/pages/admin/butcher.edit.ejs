@@ -119,6 +119,26 @@
                                         value="<%= butcher.lng %>">                                        
                                 </div>
 
+
+                                <div class="form-group">
+                                    <label>Lat & Long [<a href="https://www.google.com/maps/search/?api=1&query=<%=butcher.lat%>,<%=butcher.lng%>">Git</a>]</label>
+                                    <input type="text" class="form-control" name="butcherlat" id="butcherlat"
+                                        value="<%= butcher.lat %>">
+                                    <input type="text" class="form-control" name="butcherlng" id="butcherlng"
+                                        value="<%= butcher.lng %>">                                        
+                                </div>
+                                <div class="form-group">
+                                    <label for="logisticProviderUsage">Dış Lojistik Kullanımı</label>
+                                    <select id="logisticProviderUsage" name="logisticProviderUsage">
+                                        <option <%= butcher.logisticProviderUsage == 'none'? 'selected':'' %> value="none">Kullanma</option>                                    
+                                        <option <%= butcher.logisticProviderUsage == 'auto'? 'selected':'' %> value="auto">Otomatik</option>                                    
+                                        <option <%= butcher.logisticProviderUsage == 'select'? 'selected':'' %> value="select">Kullanıcı Seçimi</option>
+                                        <option <%= butcher.logisticProviderUsage == 'force'? 'selected':'' %> value="force">Sadece Kurye</option>
+                                    </select>                                    
+                                </div>
+                       
+
+
                             </div>
 
                             <div class="col">
@@ -350,8 +370,9 @@
                             <input type="text" class="form-control" name="fee" id="fee" placeholder="teslima ücreti">
                             <input type="text" class="form-control" name="free" id="free" placeholder="üstü ücretsiz">
 
-                            <button type="submit" name="add" value="semtekle" class="btn btn-primary">SemtEkle</button>
-                            <button type="submit" name="add" value="ilceekle" class="btn btn-primary">İlçeEkle</button>
+                            <button type="submit" name="add" value="semtekle" class="btn btn-primary">Semt Ekle</button>
+                            <button type="submit" name="add" value="ilceekle" class="btn btn-primary">İlçe Ekle</button>
+                            <button type="submit" name="add" value="sehirekle" class="btn btn-primary">Şehir Ekle</button>                            
         
                                 <div>
                                     <table class="table">
@@ -398,6 +419,17 @@
                                                         <option <%= d.selection == 'sadece liste'? 'selected':'' %> value="sadece liste">sadece liste</option>
                                                     </select>
                                                 </td>
+                                                <td>
+                                                    <select name="dlogistic<%=d.id%>">
+                                                        <option <%= d.logisticProviderUsage == 'none'? 'selected':'' %> value="none">Kullanma</option>
+                                                        <option <%= d.logisticProviderUsage == 'auto'? 'selected':'' %> value="auto">Otomatik</option>                                    
+                                                        <option <%= d.logisticProviderUsage == 'disabled'? 'selected':'' %> value="disabled">Kapalı</option>                                    
+
+                                                        <option <%= d.logisticProviderUsage == 'default'? 'selected':'' %> value="default">Kasap Tanımına Bak</option>
+                                                        <option <%= d.logisticProviderUsage == 'select'? 'selected':'' %> value="select">Kullanıcı Seçimi</option>
+                                                        <option <%= d.logisticProviderUsage == 'force'? 'selected':'' %> value="force">Sadece Kurye</option>
+                                                    </select>
+                                                </td>                                                
 
                                                 <td>
 

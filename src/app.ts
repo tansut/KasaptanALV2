@@ -37,6 +37,7 @@ const SessionStore = require('express-session-sequelize')(session.Store);
 const fileUpload = require('express-fileupload');
 
 import * as bluebird from "bluebird";
+import BanabikuryeProvider from './lib/logistic/banabikurye';
 
 bluebird.config({
     warnings: false
@@ -108,6 +109,7 @@ class KasaptanAlApp {
 
         iyzico.register();
         paratika.register();
+        BanabikuryeProvider.register();
         
         this.app.use((req, res, next) => {
             let proto = req.header("x-forwarded-proto") || null;

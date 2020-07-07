@@ -45,6 +45,9 @@ let Order = Order_1 = class Order extends basemodel_1.default {
         this.butcherComissiomAccounts = [];
         this.puanSummary = [];
     }
+    get displayAddress() {
+        return `${this.address} Bina: ${this.bina}, Kat: ${this.kat}, Daire: ${this.daire}. + ${this.areaLevel3Text}, ${this.areaLevel2Text}/${this.areaLevel1Text}`;
+    }
     get shopcard() {
         return JSON.parse(this.getDataValue('shopcardjson').toString());
     }
@@ -133,6 +136,7 @@ let Order = Order_1 = class Order extends basemodel_1.default {
             if (c.shipment[bi].dispatcher) {
                 o.dispatcherid = c.shipment[bi].dispatcher.id;
                 o.dispatcherFee = c.shipment[bi].dispatcher.fee;
+                o.dispatcherFeeOffer = c.shipment[bi].dispatcher.feeOffer;
                 o.dispatcherName = c.shipment[bi].dispatcher.name;
                 o.dispatcherType = c.shipment[bi].dispatcher.type;
                 o.dispatchertotalForFree = c.shipment[bi].dispatcher.totalForFree;
@@ -445,6 +449,13 @@ __decorate([
     }),
     __metadata("design:type", Number)
 ], Order.prototype, "dispatcherFee", void 0);
+__decorate([
+    sequelize_typescript_1.Column({
+        allowNull: true,
+        type: sequelize_typescript_1.DataType.DECIMAL(13, 2)
+    }),
+    __metadata("design:type", Number)
+], Order.prototype, "dispatcherFeeOffer", void 0);
 __decorate([
     sequelize_typescript_1.Column({
         allowNull: true,

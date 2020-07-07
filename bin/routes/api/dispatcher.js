@@ -10,10 +10,12 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 const router_1 = require("../../lib/router");
+const email_1 = require("../../lib/email");
 const butcher_1 = require("../../db/models/butcher");
 const dispatcher_1 = require("../../db/models/dispatcher");
 const butcherproduct_1 = require("../../db/models/butcherproduct");
 const sequelize_1 = require("sequelize");
+const core_1 = require("../../lib/logistic/core");
 class Route extends router_1.ApiRouter {
     _where(where, address) {
         return __awaiter(this, void 0, void 0, function* () {
@@ -37,7 +39,7 @@ class Route extends router_1.ApiRouter {
             return where;
         });
     }
-    bestDispatcher(butcherId, address) {
+    bestDispatcher(butcherId, address, basedOn) {
         return __awaiter(this, void 0, void 0, function* () {
             let where = {
                 type: 'butcher',
@@ -55,6 +57,30 @@ class Route extends router_1.ApiRouter {
                 ],
                 order: [["toarealevel", "DESC"]],
             });
+            if (res && res.logisticProviderUsage != "none") {
+                let butcher = yield butcher_1.default.findByPk(butcherId);
+                let usage = res.logisticProviderUsage == "default" ? butcher.logisticProviderUsage : res.logisticProviderUsage;
+                if (usage != "none" && butcher.logisticProviderUsage != "disabled" && butcher.logisticProvider) {
+                    let provider = core_1.LogisticFactory.getInstance(butcher.logisticProvider);
+                    res.name = provider.providerKey;
+                    res.min = 0.00;
+                    res.totalForFree = 0.00;
+                    res.type = "motokurye";
+                    if (basedOn) {
+                        try {
+                            let request = provider.offerFromOrder(basedOn);
+                            let offer = yield provider.requestOffer(request);
+                            res.feeOffer = offer.deliveryFee;
+                        }
+                        catch (err) {
+                            email_1.default.send('tansut@gmail.com', 'hata: get offer from dispatcher', "error.ejs", {
+                                text: err + '/' + err.message,
+                                stack: err.stack
+                            });
+                        }
+                    }
+                }
+            }
             return res;
         });
     }
@@ -143,13 +169,13 @@ class Route extends router_1.ApiRouter {
             return res;
         });
     }
-    getButchersSelingAndDispatches(address, pid) {
+    getButchersSelingAndDispatches(address, product, useLevel1) {
         return __awaiter(this, void 0, void 0, function* () {
             let where = {
                 type: 'butcher'
             };
             where = yield this._where(where, address);
-            where['$butcher.products.productid$'] = pid;
+            where['$butcher.products.productid$'] = product.id;
             where['$butcher.products.enabled$'] = true;
             let w = [{
                     '$butcher.products.kgPrice$': {
@@ -194,6 +220,14 @@ class Route extends router_1.ApiRouter {
                 }
             ];
             where[sequelize_1.Op.or].push(w);
+            if (!useLevel1) {
+                where[sequelize_1.Op.and] = where[sequelize_1.Op.and] || [];
+                where[sequelize_1.Op.and].push({
+                    toarealevel: {
+                        [sequelize_1.Op.ne]: 1
+                    }
+                });
+            }
             let res = yield dispatcher_1.default.findAll({
                 where: where,
                 include: [
@@ -207,7 +241,6 @@ class Route extends router_1.ApiRouter {
                     },
                 ],
                 order: [["toarealevel", "DESC"]]
-                //limit: 10
             });
             let ugly = {}, result = [];
             res.forEach(r => {

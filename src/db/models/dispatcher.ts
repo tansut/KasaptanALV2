@@ -12,6 +12,8 @@ export enum DispatcherSelection {
     listOnly = 'sadece liste'
 }
 
+export type LogisticProviderUsage = "none" | "default" | "select" | "force" | "auto" | "disabled"
+
 @Table({
     tableName: "Dispatchers",
     indexes: [{
@@ -28,6 +30,7 @@ export enum DispatcherSelection {
         fields: ['type', 'typeid']
     }]
 })
+
 
 class Dispatcher extends BaseModel<Dispatcher> {
 
@@ -85,6 +88,13 @@ class Dispatcher extends BaseModel<Dispatcher> {
         defaultValue: 'butcher'
     })
     type: string;
+
+
+    @Column({
+        allowNull: false,
+        defaultValue: "default"
+    })
+    logisticProviderUsage: LogisticProviderUsage;
 
     @Column({
         allowNull: false,
@@ -146,6 +156,8 @@ class Dispatcher extends BaseModel<Dispatcher> {
 
         return desc;
     }
+
+    feeOffer: number;    
 
     get priceInfo() {
 

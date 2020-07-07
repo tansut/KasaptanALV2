@@ -255,6 +255,17 @@ __decorate([
     __metadata("design:type", Object)
 ], Butcher.prototype, "location", void 0);
 __decorate([
+    sequelize_typescript_1.Column({
+        allowNull: false,
+        defaultValue: "none"
+    }),
+    __metadata("design:type", String)
+], Butcher.prototype, "logisticProviderUsage", void 0);
+__decorate([
+    sequelize_typescript_1.Column,
+    __metadata("design:type", String)
+], Butcher.prototype, "logisticProvider", void 0);
+__decorate([
     sequelize_typescript_1.Column,
     __metadata("design:type", String)
 ], Butcher.prototype, "phone", void 0);

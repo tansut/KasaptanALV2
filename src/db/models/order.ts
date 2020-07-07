@@ -12,6 +12,7 @@ import { PuanResult } from '../../models/puan';
 import { ProductTypeManager, ProductTypeFactory } from '../../lib/common';
 import { ComissionHelper } from '../../lib/commissionHelper';
 import { method } from 'lodash';
+import { ShipmentType, HowToShipType } from '../../models/shipment';
 const orderid = require('order-id')('dkfjsdklfjsdlkg450435034.,')
 
 @Table({
@@ -152,6 +153,10 @@ class Order extends BaseModel<Order> {
         allowNull: true
     })
     address: string;
+
+    get displayAddress() {
+        return `${this.address} Bina: ${this.bina}, Kat: ${this.kat}, Daire: ${this.daire}. + ${this.areaLevel3Text}, ${this.areaLevel2Text}/${this.areaLevel1Text}`
+    }
 
     @Column({
         allowNull: true
@@ -295,12 +300,18 @@ class Order extends BaseModel<Order> {
         allowNull: true,
         type: DataType.DECIMAL(13, 2)
     })
+    dispatcherFeeOffer: number;      
+
+    @Column({
+        allowNull: true,
+        type: DataType.DECIMAL(13, 2)
+    })
     dispatchertotalForFree: number;   
     
     @Column({
         allowNull: true
     })
-    shipmentType: string;
+    shipmentType: ShipmentType;
 
     @Column({
         allowNull: true
@@ -310,7 +321,7 @@ class Order extends BaseModel<Order> {
     @Column({
         allowNull: true
     })
-    shipmentHowTo: string;
+    shipmentHowTo: HowToShipType;
 
     @Column({
         allowNull: true
@@ -356,7 +367,6 @@ class Order extends BaseModel<Order> {
         allowNull: true
     })
     shipmentInformMe: boolean;    
-
 
 
 
@@ -450,9 +460,11 @@ class Order extends BaseModel<Order> {
         o.saveAddress = c.address.saveaddress;
         o.noInteraction = c.shipment[bi].nointeraction;
         o.orderType = c.getOrderType();
+        
         if (c.shipment[bi].dispatcher) {
             o.dispatcherid = c.shipment[bi].dispatcher.id;
             o.dispatcherFee = c.shipment[bi].dispatcher.fee;
+            o.dispatcherFeeOffer = c.shipment[bi].dispatcher.feeOffer;
             o.dispatcherName = c.shipment[bi].dispatcher.name;
             o.dispatcherType = c.shipment[bi].dispatcher.type;
             o.dispatchertotalForFree = c.shipment[bi].dispatcher.totalForFree;    
@@ -460,9 +472,8 @@ class Order extends BaseModel<Order> {
             if (o.shipLocation && o.dispatcherLocation) {
                 o.dispatcherDistance = Helper.distance(o.shipLocation, o.dispatcherLocation)
             }        
-        }     
-                
-        
+        }
+
         o.shipmentHowTo = c.shipment[bi].howTo;
         o.shipmentHowToText = c.shipment[bi].howToDesc;
         o.paymentType = c.payment[bi].type;

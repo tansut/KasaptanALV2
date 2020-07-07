@@ -34,27 +34,29 @@
               
                         
                      
-                         <span v-for="(badge, index) in alt.butcher.badges" class="badge badge-secondary border font-size-xs mr-1">
+                         <!-- <span v-for="(badge, index) in alt.butcher.badges" class="badge badge-secondary border font-size-xs mr-1">
                           <i v-if="badge.icon" :class="badge.icon || '' + 'mr-1'"></i>
                           {{badge.name}}
               
-                        </span> 
+                        </span>  -->
                      
                     </div>
-                        <money-view v-if="!alt.butcher.kgPrice && selectedUnitForAlternate(alt.butcher)" :unit="selectedUnit.unitTitle" 
+                        <money-view v-if="!alt.butcher.kgPrice && selectedUnitForAlternate(alt.butcher)" :unit="selectedUnitForAlternate(alt.butcher).unit" 
                         
                         class="font-size-sm text-accent" :money="selectedUnitForAlternate(alt.butcher).unitPrice"></money-view>
                         <money-view v-else unit="Kg" 
                         
                         class="font-size-sm text-accent" :money="alt.butcher.kgPrice"></money-view>
-                        <span class="d-block text-muted font-size-xs">
+                        <!-- <span v-if="alt.dispatcher.userNote" class="d-block text-muted font-size-xs">
                            {{alt.dispatcher.userNote}} 
-                        </span>
-                        <span class="d-block mt-2 font-size-sm text-info" v-if="alt.butcher.productNote">
-                          "
-                          {{alt.butcher.productNote}}
-                          "
-                        </span>
+                        </span> -->
+
+                        <div class="font-size-sm text-dark mb-3" v-if="alt.butcher.productNote">                         
+                          <div v-html="alt.butcher.productNote" class="font-italic">                            
+                       
+                          </div>                          
+                        </div>
+
 
                         <div class="row">
                           <div class="mt-2 col" v-if="alt.butcher.userRatingAsPerc > 0">

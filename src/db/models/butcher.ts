@@ -9,6 +9,7 @@ import { Puan } from '../../models/puan';
 import AccountModel from './accountmodel';
 import { Account } from '../../models/account';
 import Helper from '../../lib/helper';
+import { LogisticProviderUsage } from './dispatcher';
 
 
 
@@ -122,6 +123,14 @@ class Butcher extends BaseModel<Butcher> {
     })
     location: object;
 
+    @Column({
+        allowNull: false,
+        defaultValue: "none"
+    })
+    logisticProviderUsage: LogisticProviderUsage;    
+
+    @Column
+    logisticProvider: string;
 
     @Column
     phone: string;

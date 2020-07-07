@@ -48,6 +48,8 @@
       
       
       <!-- <button name="loadPuans" value="true" class="btn btn-primary btn-sm">Puan Yükle</button> -->
+       <button name="kurye-maliyet" value="true" class="btn btn-primary btn-sm">Kurye Maliyet Hesapla</button> 
+       <button name="kurye-cagir" value="true" class="btn btn-primary btn-sm">Kurye Çağır</button> 
       
       <p><%-controller.markdown.render(order.statusDesc || '')%></p>
 
@@ -200,10 +202,14 @@
   
               <div class="mt-3 font-size-sm text-muted">Kasabınıza uzaklık: <%=(order.dispatcherDistance)%>km</div>
               <!-- <div class="font-size-sm text-muted">Hata payı: <%=(order.shipLocationAccuracy)%>m</div> -->
-              <div class="font-size-sm text-muted">Teslimat Lokasyonu: <a target="_blank" class="font-size-sm"
-                  href="https://www.google.com/maps/place/<%=order.shipLocation.coordinates[0]%>+<%=order.shipLocation.coordinates[1]%>/">
-                  https://www.google.com/maps/place/<%=order.shipLocation.coordinates[0]%>+<%=order.shipLocation.coordinates[1]%>
-                </a> </div>
+              *-- MÜŞTERİ ADRESİNE GİDİN --*
+              <div class="font-size-sm text-muted"><a target="_blank" class="font-size-sm"
+                  href="https://www.google.com/maps/dir/?api=1&origin=<%=order.butcher.location.coordinates[0]%>%20<%=order.butcher.location.coordinates[1]%>&destination=<%=order.shipLocation.coordinates[0]%>%20<%=order.shipLocation.coordinates[1]%>">
+                  https://www.google.com/maps/dir/?api=1&origin=<%=order.butcher.location.coordinates[0]%>%20<%=order.butcher.location.coordinates[1]%>&destination=<%=order.shipLocation.coordinates[0]%>%20<%=order.shipLocation.coordinates[1]%>
+                  
+                </a> 
+              </div>
+              *-------------------*
                 <span>
                   <!-- Noktasal adres güvenilirliği: *<%=controller.LocationTypeDesc[order.locationType]%>* -->
 

@@ -41,15 +41,19 @@ export default class Route extends ViewRouter {
 
     async getOrderSummary() {
         await this.loadButchers();
+        let orders = []
         if (this.shopcard.items.length > 0) {
-            let orders = await this.orderapi.getFromShopcard(this.shopcard);
-            for(var i = 0; i < orders.length; i++) {
-                let list = this.orderapi.getPossiblePuanGain(orders[i], this.shopcard.getButcherTotal(orders[i].butcherid), true);
-                this.possiblePuanList = this.possiblePuanList.concat(list);
-            }
-            this.possiblePuanList.forEach(pg => this.mayEarnPuanTotal += pg.earned)
-            this.mayEarnPuanTotal = Helper.asCurrency(this.mayEarnPuanTotal)    
+            orders = await this.orderapi.getFromShopcard(this.shopcard);
+          
+                for(var i = 0; i < orders.length; i++) {
+                    let list = this.orderapi.getPossiblePuanGain(orders[i], this.shopcard.getButcherTotal(orders[i].butcherid), true);
+                    this.possiblePuanList = this.possiblePuanList.concat(list);
+                }
+                this.possiblePuanList.forEach(pg => this.mayEarnPuanTotal += pg.earned)
+                this.mayEarnPuanTotal = Helper.asCurrency(this.mayEarnPuanTotal)  
+            
         }
+        return orders;
     }
 
 
@@ -83,11 +87,6 @@ export default class Route extends ViewRouter {
         this.shopcard = await ShopCard.createFromRequest(this.req);
         this.shopcard.note = this.req.body["order-comments"] || "";
 
-        // if (!this.shopcard.address.name) {
-        //     this.shopcard.address.name = this.req.user.name;
-        //     this.shopcard.address.email = this.req.user.email;
-        //     this.shopcard.address.phone = this.req.user.mphone;
-        // }
         await this.setDispatcher();
         await this.shopcard.saveToRequest(this.req);
         if (this.shopcard.getOrderType() == 'kurban') {
@@ -127,25 +126,27 @@ export default class Route extends ViewRouter {
         return result;
     }
 
-    async setDispatcher() {
-        let api = new Dispatcher(this.constructorParams);
+    async setDispatcher(orders: Order[] = []) {
+        let api = new Dispatcher(this.constructorParams);        
         for (let o in this.shopcard.shipment) {
             if (true) {
+                let order = orders.find(oo=>oo.butcherid == parseInt(o))
                 let dispatch = await api.bestDispatcher(parseInt(o), {
                     level1Id: this.shopcard.address.level1Id,
                     level2Id: this.shopcard.address.level2Id,
                     level3Id: this.shopcard.address.level3Id
-                });
+                }, order);
                 if (dispatch && !dispatch.takeOnly) {
                     this.shopcard.shipment[o].dispatcher = {
                         id: dispatch.id,
+                        feeOffer: dispatch.feeOffer,
                         name: dispatch.name,
                         fee: dispatch.fee,
                         totalForFree: dispatch.totalForFree,
                         type: dispatch.type,
                         min: dispatch.min,
                         takeOnly: dispatch.takeOnly,
-                        location: dispatch.butcher ? <any>dispatch.butcher.location : null
+                        location: null // dispatch.butcher ? <any>dispatch.butcher.location : null
 
                     }
                     if (dispatch.min > this.shopcard.butchers[o].subTotal) {
@@ -299,7 +300,8 @@ export default class Route extends ViewRouter {
 
         }
         this.shopcard.arrangeButchers();
-        this.setDispatcher();
+        let orders = await this.orderapi.getFromShopcard(this.shopcard);        
+        await this.setDispatcher(orders);
         this.shopcard.calculateShippingCosts();
         await this.shopcard.saveToRequest(this.req);
         await this.getOrderSummary();
@@ -310,10 +312,11 @@ export default class Route extends ViewRouter {
     async reviewViewRoute(userMessage?: any) {
         this.shopcard = await ShopCard.createFromRequest(this.req);
         this.shopcard.arrangeButchers();
-        this.setDispatcher();
+        let orders = await this.orderapi.getFromShopcard(this.shopcard);
+        await this.setDispatcher(orders);
         this.shopcard.calculateShippingCosts();
         await this.shopcard.saveToRequest(this.req);
-        await this.getOrderSummary();
+        orders = await this.getOrderSummary();
         this.renderPage("pages/checkout.review.ejs", userMessage);
     }
 
@@ -322,15 +325,6 @@ export default class Route extends ViewRouter {
         this.shopcard = await ShopCard.createFromRequest(this.req);
         let creditCard: Creditcard = null;
         try {
-            // if (this.shopcard.getPaymentTotal('onlinepayment') > 0) {
-            //     creditCard = {
-            //         cardHolderName: this.req.body.name,
-            //         cardNumber: this.req.body.number,
-            //         cvc: this.req.body.cvc,
-            //         expireMonth: this.req.body.expiry.split('/')[0],
-            //         expireYear: this.req.body.expiry.split('/')[1]
-            //     }
-            // }
             let api = new OrderApi(this.constructorParams);
             let orders = await api.create(this.shopcard);
             await ShopCard.empty(this.req);

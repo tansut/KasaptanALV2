@@ -122,6 +122,13 @@ __decorate([
 __decorate([
     sequelize_typescript_1.Column({
         allowNull: false,
+        defaultValue: "default"
+    }),
+    __metadata("design:type", String)
+], Dispatcher.prototype, "logisticProviderUsage", void 0);
+__decorate([
+    sequelize_typescript_1.Column({
+        allowNull: false,
     }),
     __metadata("design:type", String)
 ], Dispatcher.prototype, "name", void 0);

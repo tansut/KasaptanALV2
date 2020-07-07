@@ -207,6 +207,25 @@ export default class Route  extends ViewRouter {
             await d.save();
         }  
 
+
+        if (this.req.body.add == "sehirekle") {
+            let l1 = this.darea1.find(p=>p.id == parseInt(this.req.body.dareal1))
+            let paddr = await l1.getPreferredAddress();
+            let d = new Dispatcher();
+            d.toarealevel = 1;
+            d.toareaid = parseInt(this.req.body.dareal1);
+            d.totalForFree = parseInt(this.req.body.free);
+            d.fee = parseInt(this.req.body.fee);
+            d.min = parseInt(this.req.body.minsales);
+            d.type = 'butcher';
+            d.name = this.butcher.name;
+            d.butcherid = this.butcher.id;
+            d.note = paddr.display;
+            d.typeid = 0;
+            await d.save();
+        } 
+        
+
  
 
         if (this.req.body.add == "semtekle") {
@@ -240,15 +259,15 @@ export default class Route  extends ViewRouter {
             let free = parseInt(this.req.body['free' + id.toString()])
             let min = parseInt(this.req.body['min' + id.toString()]);
             let sel = this.req.body['dsel' + id.toString()];
+            let dlogistic = this.req.body['dlogistic' + id.toString()];
             d.enabled = this.req.body['enabled' + id.toString()] == "on" ? true : false;
             d.takeOnly = this.req.body['takeonly' + id.toString()] == "on" ? true : false;
             d.selection = sel;
-
+            d.logisticProviderUsage = dlogistic;
             d.fee = fee;
             d.totalForFree = free;
             d.min = min;
             await d.save()
-
         }
 
         this.activetab = "dispatch";
@@ -295,6 +314,7 @@ export default class Route  extends ViewRouter {
                     coordinates: [parseFloat(this.req.body.butcherlat), parseFloat(this.req.body.butcherlng)]
             }
             }
+            this.butcher.logisticProviderUsage = this.req.body.logisticProviderUsage;
             await this.butcher.save();
 
             //return this.res.redirect(`/pages/admin/butcher/${this.butcher.slug}`)

@@ -32,6 +32,8 @@ import { PuanResult } from '../../models/puan';
 import Review from '../../db/models/review';
 import { OrderItemStatus } from '../../models/order';
 import { LocationType, LocationTypeDesc } from '../../models/geo';
+import { LogisticFactory } from '../../lib/logistic/core';
+import { off } from 'process';
 var MarkdownIt = require('markdown-it')
 
 export default class Route extends ViewRouter {
@@ -162,6 +164,29 @@ export default class Route extends ViewRouter {
         //     } else await this.api.completeLoadPuan(this.order, this.paid)
 
         // }
+
+        if (this.req.body["kurye-maliyet"] == "true" && this.order.butcher.logisticProvider) {
+            let provider = LogisticFactory.getInstance(this.order.butcher.logisticProvider);
+            let request = provider.offerFromOrder(this.order);
+            try {
+                let offer = await provider.requestOffer(request);
+                userMessage = `Taşıma: ${offer.deliveryFee}, İndirim: ${offer.discount}`;
+            } catch(err) {
+                userMessage = err.message
+            }
+        }        
+
+        if (this.req.body["kurye-cagir"] == "true" && this.order.butcher.logisticProvider) {
+            let provider = LogisticFactory.getInstance(this.order.butcher.logisticProvider);
+            let request = provider.orderFromOrder(this.order);
+            try {
+                let offer = await provider.createOrder(request);
+                userMessage = `Kurye çağrıldı:`;
+            } catch(err) {
+                userMessage = err.message
+            }
+
+        }             
 
 
         if (this.req.body.approveOrderSubMerchant == "true") {

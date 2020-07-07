@@ -92,16 +92,18 @@ class Route extends router_1.ViewRouter {
         let res = (fullServing.length > 0 ? fullServing[0] : null);
         return res;
     }
-    bestButchersForProduct(pid, adr, userBest) {
+    bestButchersForProduct(product, adr, userBest) {
         return __awaiter(this, void 0, void 0, function* () {
             let api = new dispatcher_1.default(this.constructorParams);
-            let serving = yield api.getButchersSelingAndDispatches(adr, pid);
+            let serving = yield api.getButchersSelingAndDispatches(adr, product, (product.productType == product_1.ProductType.adak || product.productType == product_1.ProductType.kurban));
             let takeOnly = serving.filter(p => p.takeOnly == true);
             let servingL3 = serving.filter(p => p.toarealevel == 3 && !p.takeOnly);
             let servingL2 = serving.filter(p => p.toarealevel == 2 && !p.takeOnly && (servingL3.find(m => m.butcher.id == p.butcher.id) == null));
+            let servingL1 = serving.filter(p => p.toarealevel == 1 && !p.takeOnly && (servingL2.find(m => m.butcher.id == p.butcher.id) == null) && (servingL3.find(m => m.butcher.id == p.butcher.id) == null));
             takeOnly = helper_1.default.shuffle(takeOnly);
             servingL3 = helper_1.default.shuffle(servingL3);
             servingL2 = helper_1.default.shuffle(servingL2);
+            servingL1 = helper_1.default.shuffle(servingL1);
             let mybest = (yield this.tryBestFromShopcard(serving)) ||
                 (yield this.tryBestFromOrders(servingL3)) ||
                 (yield this.tryBestFromOrders(servingL2)) || this.tryBestAsRandom(serving);
@@ -110,6 +112,7 @@ class Route extends router_1.ViewRouter {
             }
             return {
                 best: mybest,
+                servingL1: servingL1,
                 servingL2: servingL2,
                 servingL3: servingL3,
                 takeOnly: takeOnly
@@ -151,14 +154,15 @@ class Route extends router_1.ViewRouter {
             if (!this.req.prefAddr) {
                 selectedButchers = {
                     best: null,
+                    servingL1: [],
                     servingL2: [],
                     servingL3: [],
                     takeOnly: []
                 };
             }
             else
-                selectedButchers = yield this.bestButchersForProduct(product.id, this.req.prefAddr, butcher);
-            let serving = selectedButchers.servingL3.concat(selectedButchers.servingL2).concat(selectedButchers.takeOnly);
+                selectedButchers = yield this.bestButchersForProduct(product, this.req.prefAddr, butcher);
+            let serving = selectedButchers.servingL3.concat(selectedButchers.servingL2).concat(selectedButchers.servingL1).concat(selectedButchers.takeOnly);
             if (selectedButchers.best && this.req.query.butcher && (selectedButchers.best.butcher.slug != this.req.query.butcher)) {
                 serving = [];
                 selectedButchers.best = null;
@@ -181,7 +185,7 @@ class Route extends router_1.ViewRouter {
                             puanData: butcher.getPuanData(this.product.productType),
                             earnedPuan: 0.00,
                             kgPrice: bp ? bp.kgPrice : 0,
-                            productNote: bp ? bp.mddesc || "" : "",
+                            productNote: bp ? (bp.mddesc ? this.markdown.render(bp.mddesc) : "") : "",
                             thumbnail: this.req.helper.imgUrl("butcher-google-photos", butcher.slug)
                         },
                         dispatcher: dispatcher ? {
@@ -197,6 +201,7 @@ class Route extends router_1.ViewRouter {
                         purchaseOptions: api.getPurchaseOptions(product, bp).map(po => {
                             return {
                                 unit: po.unit,
+                                unitTitle: po.unitTitle,
                                 unitPrice: po.unitPrice
                             };
                         })

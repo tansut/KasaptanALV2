@@ -23,6 +23,7 @@ const commissionHelper_1 = require("../../lib/commissionHelper");
 const review_1 = require("../../db/models/review");
 const order_2 = require("../../models/order");
 const geo_1 = require("../../models/geo");
+const core_1 = require("../../lib/logistic/core");
 var MarkdownIt = require('markdown-it');
 class Route extends router_1.ViewRouter {
     constructor() {
@@ -124,6 +125,28 @@ class Route extends router_1.ViewRouter {
             //         userMessage = "Ödemesi henüz yapılmamış siparişin";
             //     } else await this.api.completeLoadPuan(this.order, this.paid)
             // }
+            if (this.req.body["kurye-maliyet"] == "true" && this.order.butcher.logisticProvider) {
+                let provider = core_1.LogisticFactory.getInstance(this.order.butcher.logisticProvider);
+                let request = provider.offerFromOrder(this.order);
+                try {
+                    let offer = yield provider.requestOffer(request);
+                    userMessage = `Taşıma: ${offer.deliveryFee}, İndirim: ${offer.discount}`;
+                }
+                catch (err) {
+                    userMessage = err.message;
+                }
+            }
+            if (this.req.body["kurye-cagir"] == "true" && this.order.butcher.logisticProvider) {
+                let provider = core_1.LogisticFactory.getInstance(this.order.butcher.logisticProvider);
+                let request = provider.orderFromOrder(this.order);
+                try {
+                    let offer = yield provider.createOrder(request);
+                    userMessage = `Kurye çağrıldı:`;
+                }
+                catch (err) {
+                    userMessage = err.message;
+                }
+            }
             if (this.req.body.approveOrderSubMerchant == "true") {
                 yield this.paymentProvider.approveItem({
                     paymentTransactionId: this.order.paymentTransactionId

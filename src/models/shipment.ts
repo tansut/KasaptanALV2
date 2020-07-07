@@ -46,6 +46,7 @@ export interface DispatcherView {
     type: string,
     name: string,
     fee: number,
+    feeOffer: number,
     totalForFree: number
     min: number;
     takeOnly: boolean;

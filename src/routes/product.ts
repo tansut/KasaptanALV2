@@ -1,7 +1,7 @@
 import { ApiRouter, ViewRouter } from '../lib/router';
 import * as express from "express";
 import * as maps from "@google/maps"
-import ProductModel from '../db/models/product';
+import ProductModel, { ProductType } from '../db/models/product';
 import { Auth, ProductTypeManager, ProductTypeFactory } from '../lib/common';
 import Helper from '../lib/helper';
 import Resource from '../db/models/resource';
@@ -35,6 +35,7 @@ import { PuanCalculator } from '../lib/commissionHelper';
 
 interface ButcherSelection {
     best: Dispatcher,
+    servingL1: Dispatcher[]
     servingL2: Dispatcher[]
     servingL3: Dispatcher[]
     takeOnly: Butcher[]
@@ -95,25 +96,27 @@ export default class Route extends ViewRouter {
     }
 
 
-    async bestButchersForProduct(pid, adr: PreferredAddress, userBest: Butcher): Promise<ButcherSelection> {
+    async bestButchersForProduct(product: Product, adr: PreferredAddress, userBest: Butcher): Promise<ButcherSelection> {
         let api = new DispatcherApi(this.constructorParams);
 
-        let serving = await api.getButchersSelingAndDispatches(adr, pid);
+        let serving = await api.getButchersSelingAndDispatches(adr, product,
+             (product.productType == ProductType.adak || product.productType == ProductType.kurban)                    
+            );
 
         let takeOnly = serving.filter(p => p.takeOnly == true);
         let servingL3 = serving.filter(p => p.toarealevel == 3 && !p.takeOnly);
         let servingL2 = serving.filter(p => p.toarealevel == 2 && !p.takeOnly && (servingL3.find(m => m.butcher.id == p.butcher.id) == null));
+        let servingL1 = serving.filter(p => p.toarealevel == 1 && !p.takeOnly && (servingL2.find(m => m.butcher.id == p.butcher.id) == null) && (servingL3.find(m => m.butcher.id == p.butcher.id) == null));
 
 
         takeOnly = Helper.shuffle(takeOnly)
         servingL3 = Helper.shuffle(servingL3)
         servingL2 = Helper.shuffle(servingL2)
+        servingL1 = Helper.shuffle(servingL1)
 
         let mybest: Dispatcher = await this.tryBestFromShopcard(serving) ||
             await this.tryBestFromOrders(servingL3) ||
             await this.tryBestFromOrders(servingL2) || this.tryBestAsRandom(serving);
-
-
 
         if (mybest) {
             mybest = (userBest ? (serving.find(s => s.butcherid == userBest.id)) : null) || mybest;
@@ -121,12 +124,11 @@ export default class Route extends ViewRouter {
 
         return {
             best: mybest,
+            servingL1: servingL1,
             servingL2: servingL2,
             servingL3: servingL3,
             takeOnly: takeOnly
         }
-
-
     }
 
     @Auth.Anonymous()
@@ -174,14 +176,15 @@ export default class Route extends ViewRouter {
         if (!this.req.prefAddr) {
             selectedButchers = {
                 best: null,
+                servingL1: [],
                 servingL2: [],
                 servingL3: [],
                 takeOnly: []
             }
         } else
-            selectedButchers = await this.bestButchersForProduct(product.id, this.req.prefAddr, butcher);
+            selectedButchers = await this.bestButchersForProduct(product, this.req.prefAddr, butcher);
 
-        let serving = selectedButchers.servingL3.concat(selectedButchers.servingL2).concat(<any>selectedButchers.takeOnly);
+        let serving = selectedButchers.servingL3.concat(selectedButchers.servingL2).concat(selectedButchers.servingL1).concat(<any>selectedButchers.takeOnly);
 
 
         if (selectedButchers.best && this.req.query.butcher && (selectedButchers.best.butcher.slug != this.req.query.butcher)) {
@@ -209,7 +212,7 @@ export default class Route extends ViewRouter {
                         puanData: butcher.getPuanData(this.product.productType),
                         earnedPuan: 0.00,
                         kgPrice: bp ? bp.kgPrice : 0,
-                        productNote: bp ? bp.mddesc || "" : "",
+                        productNote: bp ? (bp.mddesc ? this.markdown.render(bp.mddesc) :"" ): "",
                         thumbnail: this.req.helper.imgUrl("butcher-google-photos", butcher.slug)
                     },
                     dispatcher: dispatcher ? {
@@ -225,6 +228,7 @@ export default class Route extends ViewRouter {
                     purchaseOptions: api.getPurchaseOptions(product, bp).map(po => {
                         return {
                             unit: po.unit,
+                            unitTitle: po.unitTitle,
                             unitPrice: po.unitPrice
                         }
                     })
