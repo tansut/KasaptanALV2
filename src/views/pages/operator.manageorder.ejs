@@ -239,18 +239,23 @@
              <% }) %>
 
 
-            
              <br>
-             <%if (controller.teslimatTotal > 0) { %>
-              Ürün Bedeli: <%- include('./_partial/currency.ejs', {value: controller.productTotal}) %>  <br>
-              Teslimat Bedeli: <%- include('./_partial/currency.ejs', {value: controller.teslimatTotal}) %> <br>
-              <%}%>
+
+             <div>
+               DAĞITIMI YAPACAK: *<%=controller.order.dispatcherName%>*
+             </div>
 
               YAPILAN ÖDEME: *<%- include('./_partial/currency.ejs', {value: controller.paid }) %>*<br>
-              FATURA BEDELİ: *<%- include('./_partial/currency.ejs', {value: controller.productTotal + controller.teslimatTotal}) %>*<br>
+              FATURA KALEMLERİ<br>
+              *---------*<br>
+            
+              ÜRÜNLER (%8 KDV DAHİL): *<%- include('./_partial/currency.ejs', {value: controller.productTotal}) %>*<br>
+              TAHSİL EDİLEN TESLİMAT BEDELİ (%18 KDV DAHİL): *<%- include('./_partial/currency.ejs', {value: controller.teslimatButcher + controller.teslimatKasaptan}) %>*<br>
+              *---------*<br>
+              FATURA TOPLAMI (KDV DAHİL): *<%- include('./_partial/currency.ejs', {value: controller.productTotal + controller.teslimatButcher + controller.teslimatKasaptan}) %>*<br>
+              
               **yukarıdaki bedelle fatura kesip poşetin içine koymayı unutmayın**
-              <!-- YAPILAN ÖDEME:  <%- include('./_partial/currency.ejs', {value: controller.shouldBePaid}) %> -->
-
+   
         </div>
       </div>
         

@@ -45,6 +45,7 @@ export default class Route extends ViewRouter {
     async getOrderSummary() {
         await this.loadButchers();
         let orders = []
+        this.mayEarnPuanTotal = 0.00;
         if (this.shopcard.items.length > 0) {
             orders = await this.orderapi.getFromShopcard(this.shopcard);
             for (var i = 0; i < orders.length; i++) {
@@ -150,7 +151,8 @@ export default class Route extends ViewRouter {
             let contribute = Helper.asCurrency(commission.kalitteFee * 0.4);
             let calculated = Helper.asCurrency(Math.max(0.00, dispatcherFee - contribute));
             let calculatedVat = Helper.asCurrency(calculated * 0.18)
-            return Helper.asCurrency(Math.round(calculated + calculatedVat));
+            let totalShip = Helper.asCurrency(Math.round(calculated + calculatedVat));
+            return totalShip > 0.00 ? Math.max(5.00, totalShip): 0.00;
         } else return 0.00;
     }
 
@@ -260,11 +262,16 @@ export default class Route extends ViewRouter {
         this.shopcard.address.addresstarif = this.shopcard.address.addresstarif || this.req.user.lastTarif;
         this.shopcard.address.kat = this.shopcard.address.kat || this.req.user.lastKat;
         this.shopcard.address.daire = this.shopcard.address.daire || this.req.user.lastDaire;
-        if (this.req.prefAddr && this.req.user.lastLevel3Id && this.req.prefAddr.level3Id != this.req.user.lastLevel3Id) {
-            return;
-        }
         this.shopcard.address.geolocationType = this.shopcard.address.geolocationType || this.req.user.lastLocationType;
-        this.shopcard.address.geolocation = this.shopcard.address.geolocation || this.req.user.lastLocation;
+        this.shopcard.address.geolocation = this.shopcard.address.geolocation || this.req.user.lastLocation;    
+
+        // if (this.req.prefAddr && this.req.user.lastLevel3Id && this.req.prefAddr.level3Id != this.req.user.lastLevel3Id) {
+        //     this.shopcard.address.geolocationType = "UNKNOWN"
+        //     this.shopcard.address.geolocation = null;
+    
+        // } else {
+
+        // }
     }
 
     async saveshipRoute() {

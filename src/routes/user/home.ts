@@ -42,6 +42,7 @@ export default class Route extends ViewRouter {
         this.earnedPuanKalitte = this.puanBalanceKalitte ? Helper.asCurrency(this.puanBalanceKalitte.alacak -   this.puanBalanceKalitte.borc):0.00
         this.earnedPuanButcher = this.puanBalanceButcher ? Helper.asCurrency(this.puanBalanceButcher.alacak -   this.puanBalanceButcher.borc):0.00
         this.earnedPuanTotal = Helper.asCurrency(this.earnedPuanKalitte + this.earnedPuanButcher)
+        this.mayEarnPuanTotal = 0.00;
         if (this.shouldBePaid > 0) {
             this.possiblePuanList = this.api.getPossiblePuanGain(this.order, this.productTotal);
             this.possiblePuanList.forEach(pg=>this.mayEarnPuanTotal+=pg.earned)

@@ -168,6 +168,21 @@ __decorate([
 __decorate([
     sequelize_typescript_1.Column({
         allowNull: false,
+        defaultValue: "manual",
+    }),
+    __metadata("design:type", String)
+], Butcher.prototype, "dispatchArea", void 0);
+__decorate([
+    sequelize_typescript_1.Column({
+        allowNull: false,
+        defaultValue: 50,
+        type: sequelize_typescript_1.DataType.INTEGER
+    }),
+    __metadata("design:type", Number)
+], Butcher.prototype, "radiusAsKm", void 0);
+__decorate([
+    sequelize_typescript_1.Column({
+        allowNull: false,
         defaultValue: 0,
         type: sequelize_typescript_1.DataType.DECIMAL(5, 2)
     }),

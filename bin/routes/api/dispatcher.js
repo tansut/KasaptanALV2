@@ -12,10 +12,12 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const router_1 = require("../../lib/router");
 const email_1 = require("../../lib/email");
 const butcher_1 = require("../../db/models/butcher");
+const area_1 = require("../../db/models/area");
 const dispatcher_1 = require("../../db/models/dispatcher");
 const butcherproduct_1 = require("../../db/models/butcherproduct");
 const sequelize_1 = require("sequelize");
 const core_1 = require("../../lib/logistic/core");
+const helper_1 = require("../../lib/helper");
 class Route extends router_1.ApiRouter {
     _where(where, address) {
         return __awaiter(this, void 0, void 0, function* () {
@@ -224,14 +226,14 @@ class Route extends router_1.ApiRouter {
                 }
             ];
             where[sequelize_1.Op.or].push(w);
-            if (!useLevel1) {
-                where[sequelize_1.Op.and] = where[sequelize_1.Op.and] || [];
-                where[sequelize_1.Op.and].push({
-                    toarealevel: {
-                        [sequelize_1.Op.ne]: 1
-                    }
-                });
-            }
+            // if (!useLevel1) {
+            //     where[Op.and] = where[Op.and] || []
+            //     where[Op.and].push({
+            //         toarealevel: {
+            //             [Op.ne]: 1
+            //         }
+            //     })
+            // }
             let res = yield dispatcher_1.default.findAll({
                 where: where,
                 include: [
@@ -247,12 +249,30 @@ class Route extends router_1.ApiRouter {
                 order: [["toarealevel", "DESC"]]
             });
             let ugly = {}, result = [];
-            res.forEach(r => {
-                if (!ugly[r.butcherid]) {
+            for (let i = 0; i < res.length; i++) {
+                let r = res[i];
+                let butcherAvail = true;
+                let useL1 = useLevel1 || r.butcher.dispatchArea == "citywide" || r.butcher.dispatchArea == "radius";
+                if (useL1) {
+                    if (r.toarealevel == 1) {
+                        if (r.butcher.dispatchArea == "radius") {
+                            let l3 = yield area_1.default.findByPk(address.level3Id);
+                            let distance = helper_1.default.distance(r.butcher.location, l3.location);
+                            if (r.butcher.radiusAsKm >= distance) {
+                            }
+                            else
+                                butcherAvail = false;
+                        }
+                    }
+                }
+                else if (r.toarealevel == 1) {
+                    butcherAvail = false;
+                }
+                if (butcherAvail && !ugly[r.butcherid]) {
                     ugly[r.butcherid] = r;
                     result.push(r);
                 }
-            });
+            }
             return result;
         });
     }

@@ -51,6 +51,7 @@ class Route extends router_1.ViewRouter {
         return __awaiter(this, void 0, void 0, function* () {
             yield this.loadButchers();
             let orders = [];
+            this.mayEarnPuanTotal = 0.00;
             if (this.shopcard.items.length > 0) {
                 orders = yield this.orderapi.getFromShopcard(this.shopcard);
                 for (var i = 0; i < orders.length; i++) {
@@ -142,7 +143,8 @@ class Route extends router_1.ViewRouter {
             let contribute = helper_1.default.asCurrency(commission.kalitteFee * 0.4);
             let calculated = helper_1.default.asCurrency(Math.max(0.00, dispatcherFee - contribute));
             let calculatedVat = helper_1.default.asCurrency(calculated * 0.18);
-            return helper_1.default.asCurrency(Math.round(calculated + calculatedVat));
+            let totalShip = helper_1.default.asCurrency(Math.round(calculated + calculatedVat));
+            return totalShip > 0.00 ? Math.max(5.00, totalShip) : 0.00;
         }
         else
             return 0.00;
@@ -261,11 +263,13 @@ class Route extends router_1.ViewRouter {
         this.shopcard.address.addresstarif = this.shopcard.address.addresstarif || this.req.user.lastTarif;
         this.shopcard.address.kat = this.shopcard.address.kat || this.req.user.lastKat;
         this.shopcard.address.daire = this.shopcard.address.daire || this.req.user.lastDaire;
-        if (this.req.prefAddr && this.req.user.lastLevel3Id && this.req.prefAddr.level3Id != this.req.user.lastLevel3Id) {
-            return;
-        }
         this.shopcard.address.geolocationType = this.shopcard.address.geolocationType || this.req.user.lastLocationType;
         this.shopcard.address.geolocation = this.shopcard.address.geolocation || this.req.user.lastLocation;
+        // if (this.req.prefAddr && this.req.user.lastLevel3Id && this.req.prefAddr.level3Id != this.req.user.lastLevel3Id) {
+        //     this.shopcard.address.geolocationType = "UNKNOWN"
+        //     this.shopcard.address.geolocation = null;
+        // } else {
+        // }
     }
     saveshipRoute() {
         return __awaiter(this, void 0, void 0, function* () {

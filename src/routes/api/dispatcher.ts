@@ -15,6 +15,7 @@ import { PreferredAddress } from '../../db/models/user';
 import { LogisticFactory } from '../../lib/logistic/core';
 import { Order } from '../../db/models/order';
 import { off } from 'process';
+import Helper from '../../lib/helper';
 
 export default class Route extends ApiRouter {
     async _where(where: any, address: PreferredAddress) {
@@ -229,14 +230,14 @@ export default class Route extends ApiRouter {
         }
         ]
         where[Op.or].push(w);
-        if (!useLevel1) {
-            where[Op.and] = where[Op.and] || []
-            where[Op.and].push({
-                toarealevel: {
-                    [Op.ne]: 1
-                }
-            })
-        }
+        // if (!useLevel1) {
+        //     where[Op.and] = where[Op.and] || []
+        //     where[Op.and].push({
+        //         toarealevel: {
+        //             [Op.ne]: 1
+        //         }
+        //     })
+        // }
 
         let res = await Dispatcher.findAll({
             where: where,
@@ -253,12 +254,28 @@ export default class Route extends ApiRouter {
             order: [["toarealevel", "DESC"]]
         });
         let ugly = {}, result = [];
-        res.forEach(r => {
-            if (!ugly[r.butcherid]) {
+        for(let i = 0; i < res.length; i++) {
+           let r = res[i]
+            let butcherAvail = true;
+            let useL1 = useLevel1 || r.butcher.dispatchArea == "citywide" || r.butcher.dispatchArea == "radius";
+            if (useL1) {
+                if(r.toarealevel == 1) {
+                    if (r.butcher.dispatchArea == "radius") {
+                        let l3 = await Area.findByPk(address.level3Id)
+                        let distance = Helper.distance(r.butcher.location, l3.location);
+                        if (r.butcher.radiusAsKm >= distance) {
+
+                        } else butcherAvail = false
+                    }
+                }
+            } else if (r.toarealevel == 1) {
+                butcherAvail = false;
+            }
+            if (butcherAvail && !ugly[r.butcherid]) {
                 ugly[r.butcherid] = r;
                 result.push(r);
             }
-        })
+        }
         return result;
     }
 

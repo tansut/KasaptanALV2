@@ -76,6 +76,7 @@ class Route extends paymentrouter_1.PaymentRouter {
             this.earnedPuanKalitte = this.puanBalanceKalitte ? helper_1.default.asCurrency(this.puanBalanceKalitte.alacak - this.puanBalanceKalitte.borc) : 0.00;
             this.earnedPuanButcher = this.puanBalanceButcher ? helper_1.default.asCurrency(this.puanBalanceButcher.alacak - this.puanBalanceButcher.borc) : 0.00;
             this.earnedPuanTotal = helper_1.default.asCurrency(this.earnedPuanKalitte + this.earnedPuanButcher);
+            this.mayEarnPuanTotal = 0.00;
             if (this.shouldBePaid > 0 && this.order.orderSource == order_2.OrderSource.kasaptanal) {
                 this.possiblePuanList = this.api.getPossiblePuanGain(this.order, this.productTotal);
                 this.possiblePuanList.forEach(pg => this.mayEarnPuanTotal += pg.earned);

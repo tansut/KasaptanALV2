@@ -10,8 +10,9 @@ import AccountModel from './accountmodel';
 import { Account } from '../../models/account';
 import Helper from '../../lib/helper';
 import { LogisticProviderUsage } from './dispatcher';
+import { GeoLocation } from '../../models/geo';
 
-
+export type DispatchArea = "manual" | "citywide" | "radius";
 
 @Table({
     tableName: "Butchers",
@@ -23,6 +24,8 @@ class Butcher extends BaseModel<Butcher> {
     @AllowNull(false)
     @Column
     name: string;
+
+
 
     @AllowNull(false)
     @Column
@@ -41,6 +44,19 @@ class Butcher extends BaseModel<Butcher> {
         let succ = this.shipTotalCount - this.shipFailureCount;
         return this.shipTotalCount > 0 ? Math.round((succ / this.shipTotalCount) * 100): 0;
     }
+
+    @Column({
+        allowNull: false,
+        defaultValue: "manual",
+    })    
+    dispatchArea: DispatchArea;    
+
+    @Column({
+        allowNull: false,
+        defaultValue: 50,
+        type: DataType.INTEGER
+    })    
+    radiusAsKm: number;  
 
     @Column({
         allowNull: false,
@@ -121,7 +137,7 @@ class Butcher extends BaseModel<Butcher> {
         allowNull: true,
         type: DataType.GEOMETRY('POINT')
     })
-    location: object;
+    location: GeoLocation;
 
     @Column({
         allowNull: false,

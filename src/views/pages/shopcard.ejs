@@ -77,7 +77,7 @@
                     <% if (pg.earned <= 0.00) { %>
                     <div class="text-dark font-size-sm">  
                         <% 
-                        var butcherTotal = shopcard.getButcherTotal(parseInt(pg.id));
+                        var butcherTotal = shopcard.getButcherTotalWithoutShipping(parseInt(pg.id));
                         var puanButcher = shopcard.butchers[pg.id];
                         var more = __helper.asCurrency(pg.based.minSales - butcherTotal)
                         %>                   
@@ -166,10 +166,10 @@
                             <div class="text-center font-weight-medium">
                                 <div>
                                     <h6 class="h6">
-                                        Sipariş Toplamı
+                                        Ürün Toplamı
                                     </h6>
                                 </div>
-                                <%- include('./_partial/currency.ejs', {value: shopcard.total}) %>
+                                <%- include('./_partial/currency.ejs', {value: shopcard.subTotal}) %>
                                 <% if (shopcard.discountTotal != 0) { %>
                                 <br>
                                 <span class="text-muted">

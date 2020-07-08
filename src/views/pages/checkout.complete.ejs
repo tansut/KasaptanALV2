@@ -28,43 +28,67 @@
   </div>
 
   <div class="container pb-5 mb-sm-4">
-      <div class="pt-5">
-        <div class="card py-3 mt-sm-3">
-          <div class="card-body text-center">
-            <h2 class="h4 pb-3">Teşekkürler!</h2>
-            <p class="font-size-sm mb-2">Siparişiniz başarıyla aldık. En kısa zamanda ödeme, teslimat ve diğer konularda sizi bilgilendireceğiz.</p>
-            <p class="font-size-sm mb-2">Sipariş numaranızı not edebilir veya profilim sayfasından siparişinizi takip edebilirsiniz:
-              
-              <% orders.forEach(order=> { %>
-                <div class="mt-5">
-                  <span data-orderid="<%= order.ordernum %>" class='font-weight-medium'><%= order.ordernum %></span></p>
-                  <p class="font-size-sm">Birazdan e-posta adresinize de gerekli bilgileri ulaştırıyor olacağız. Çok teşekkürler!</p>
-                  
-                  <a class="btn btn-primary mt-3 mr-2" rel="nofollow" href="/user/orders/<%=order.ordernum%>"><i class="czi-bag"></i>&nbsp;Sipariş Takip Et</a>
 
-                  <% if (order.paymentType == 'onlinepayment') { %>
-                    <a class="btn mt-3 btn-success" href="/pay/<%=order.ordernum%>">Önline Ödeme</a>
+    <div class="card py-3 mt-sm-3">
+      <div class="card-body text-center">
+        <h2 class="h4 pb-3">Teşekkürler!</h2>
+        <p class="font-size-sm mb-2">Siparişiniz başarıyla aldık. En kısa zamanda ödeme, teslimat ve diğer konularda
+          sizi bilgilendireceğiz.</p>
+        <p class="font-size-sm mb-2">Sipariş numaranızı not edebilir veya profilim sayfasından siparişinizi takip
+          edebilirsiniz:</p>
 
-                
+        <% orders.forEach(order=> { %>
+        <div class="mt-5">
+          <span data-orderid="<%= order.ordernum %>" class='font-weight-medium'><%= order.ordernum %></span></p>
+          <p class="font-size-sm">Birazdan e-posta adresinize de gerekli bilgileri ulaştırıyor olacağız. Çok
+            teşekkürler!</p>
 
-                  <% } %>
-                </div>
-              <% }) %>
+            <% if (order.paymentType == 'onlinepayment') { %>
+              <a class="btn mt-3 btn-success mr-2" href="/pay/<%=order.ordernum%>">Önline Ödeme Yap &raquo;</a>
+    
+              <% } %>
 
-          </div>
+          <a class="btn btn-primary mt-3" rel="nofollow" href="/user/orders/<%=order.ordernum%>"><i
+              class="czi-bag"></i>&nbsp;Sipariş Takip Et</a>
+
+
         </div>
+
+        <% }) %>
+        <% if (orders.length == 1 && orders[0].paymentType == 'onlinepayment') { %>
+        <div class="mt-3">
+          <span class="redirecting font-weight-bold font-size-sm" style="display: none;">Online ödeme sayfasına yönlendiriyorum ...</span>
+        </div>
+        <% } %>
       </div>
     </div>
+
+  </div>
+
+
 
 
   <% include ./_partial/footer %>
   <% include ./_partial/scripts %>
 
   <script>
-    <% orders.forEach(order=> { %>
+    <% orders.forEach(order => { %>
       window.App.gTag('checkout', 'checkout-completed', "<%= order.ordernum %>", <%= order.total %>);
     <% }) %>
-    
+
+    <% if (orders.length == 1 && orders[0].paymentType == 'onlinepayment') { %>
+      $(document).ready(function() {
+        setTimeout(function() {
+        $('.redirecting').show();
+          
+        }, 5000);
+        setTimeout(function()  {
+          window.location.href = "/pay/<%=orders[0].ordernum%>"
+      }, 10000);
+      })
+
+    <% } %>
+
   </script>
 
 </body>
