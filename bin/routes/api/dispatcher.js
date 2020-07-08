@@ -57,7 +57,7 @@ class Route extends router_1.ApiRouter {
                 ],
                 order: [["toarealevel", "DESC"]],
             });
-            if (res && res.logisticProviderUsage != "none") {
+            if (res && res.logisticProviderUsage != "none" && basedOn && basedOn.orderType != "kurban") {
                 let butcher = yield butcher_1.default.findByPk(butcherId);
                 let usage = res.logisticProviderUsage == "default" ? butcher.logisticProviderUsage : res.logisticProviderUsage;
                 if (usage != "none" && butcher.logisticProviderUsage != "disabled" && butcher.logisticProvider) {
@@ -65,12 +65,16 @@ class Route extends router_1.ApiRouter {
                     res.name = provider.providerKey;
                     res.min = 0.00;
                     res.totalForFree = 0.00;
-                    res.type = "motokurye";
-                    if (basedOn) {
+                    res.type = "kasaptanal/motokurye";
+                    res.name = dispatcher_1.DispatcherTypeDesc[res.type];
+                    res.fee = 0.00;
+                    res.feeOffer = 0.00;
+                    if (basedOn && basedOn.shipLocation) {
                         try {
                             let request = provider.offerFromOrder(basedOn);
                             let offer = yield provider.requestOffer(request);
-                            res.feeOffer = offer.deliveryFee;
+                            res.feeOffer = offer.totalFee;
+                            res.fee = offer.totalFee;
                         }
                         catch (err) {
                             email_1.default.send('tansut@gmail.com', 'hata: get offer from dispatcher', "error.ejs", {

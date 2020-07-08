@@ -8,7 +8,7 @@ import Product, { ProductType } from '../../db/models/product';
 import ProductApi from './product'
 import Butcher from '../../db/models/butcher';
 import Area from '../../db/models/area';
-import Dispatcher from '../../db/models/dispatcher';
+import Dispatcher, { DispatcherTypeDesc } from '../../db/models/dispatcher';
 import ButcherProduct from '../../db/models/butcherproduct';
 import { Op, Sequelize } from "sequelize";
 import { PreferredAddress } from '../../db/models/user';
@@ -55,7 +55,7 @@ export default class Route extends ApiRouter {
             ],            
             order: [["toarealevel", "DESC"]],
         })
-        if (res && res.logisticProviderUsage != "none") {
+        if (res && res.logisticProviderUsage != "none" && basedOn && basedOn.orderType != "kurban") {
             let butcher = await Butcher.findByPk(butcherId);
             let usage = res.logisticProviderUsage == "default" ? butcher.logisticProviderUsage: res.logisticProviderUsage;
             if (usage != "none" && butcher.logisticProviderUsage != "disabled" && butcher.logisticProvider) {
@@ -63,17 +63,21 @@ export default class Route extends ApiRouter {
                 res.name = provider.providerKey;
                 res.min = 0.00;
                 res.totalForFree = 0.00;
-                res.type = "motokurye";
-                if (basedOn) {
+                res.type = "kasaptanal/motokurye";
+                res.name = DispatcherTypeDesc[res.type]
+                res.fee = 0.00;
+                res.feeOffer = 0.00;
+                if (basedOn && basedOn.shipLocation) {
                     try {
                         let request = provider.offerFromOrder(basedOn);
                         let offer = await provider.requestOffer(request);
-                        res.feeOffer = offer.deliveryFee;
+                        res.feeOffer = offer.totalFee;
+                        res.fee = offer.totalFee;
                     } catch(err) {
                         email.send('tansut@gmail.com', 'hata: get offer from dispatcher', "error.ejs", {
                             text: err + '/' + err.message,
                             stack: err.stack
-                        })
+                        })                        
                     }
                 }                
             }

@@ -59,8 +59,14 @@ let Order = Order_1 = class Order extends basemodel_1.default {
             if (this.orderType == order_1.OrderType.kurban) {
                 return this.butcher.kurbanCommissionRate;
             }
-            else
-                return this.butcher.commissionRate;
+            else {
+                if (this.dispatcherType == "butcher") {
+                    return this.butcher.commissionRate;
+                }
+                else {
+                    return this.butcher.noshipCommissionRate;
+                }
+            }
         }
         else
             return this.butcher.payCommissionRate;
@@ -70,8 +76,14 @@ let Order = Order_1 = class Order extends basemodel_1.default {
             if (this.orderType == order_1.OrderType.kurban) {
                 return this.butcher.kurbanCommissionFee;
             }
-            else
-                return this.butcher.commissionFee;
+            else {
+                if (this.dispatcherType == "butcher") {
+                    return this.butcher.commissionFee;
+                }
+                else {
+                    return this.butcher.noshipCommissionFee;
+                }
+            }
         }
         else
             return this.butcher.payCommissionFee;
@@ -108,7 +120,7 @@ let Order = Order_1 = class Order extends basemodel_1.default {
             o.isFirstButcherOrder = firstDiscount != null;
             o.discountTotal = c.getButcherDiscountTotal(bi);
             o.subTotal = c.butchers[bi].subTotal;
-            o.shippingTotal = c.getShippingCost(bi);
+            o.shippingTotal = c.getShippingCostOfCustomer(bi);
             o.total = c.getButcherTotal(bi);
             o.areaLevel1Id = c.address.level1Id;
             o.areaLevel3Id = c.address.level3Id;
@@ -140,9 +152,8 @@ let Order = Order_1 = class Order extends basemodel_1.default {
                 o.dispatcherName = c.shipment[bi].dispatcher.name;
                 o.dispatcherType = c.shipment[bi].dispatcher.type;
                 o.dispatchertotalForFree = c.shipment[bi].dispatcher.totalForFree;
-                o.dispatcherLocation = c.shipment[bi].dispatcher.location;
-                if (o.shipLocation && o.dispatcherLocation) {
-                    o.dispatcherDistance = helper_1.default.distance(o.shipLocation, o.dispatcherLocation);
+                if (o.shipLocation && c.shipment[bi].dispatcher.location) {
+                    o.dispatcherDistance = helper_1.default.distance(o.shipLocation, c.shipment[bi].dispatcher.location);
                 }
             }
             o.shipmentHowTo = c.shipment[bi].howTo;
@@ -346,13 +357,6 @@ __decorate([
     sequelize_typescript_1.Column,
     __metadata("design:type", Number)
 ], Order.prototype, "shipLocationAccuracy", void 0);
-__decorate([
-    sequelize_typescript_1.Column({
-        allowNull: true,
-        type: sequelize_typescript_1.DataType.GEOMETRY('POINT')
-    }),
-    __metadata("design:type", Object)
-], Order.prototype, "dispatcherLocation", void 0);
 __decorate([
     sequelize_typescript_1.Column({
         allowNull: true
@@ -596,7 +600,7 @@ let OrderItem = OrderItem_1 = class OrderItem extends basemodel_1.default {
         c.pounitPrice = i.purchaseoption.unitPrice;
         c.pounitkgRatio = i.purchaseoption.kgRatio;
         c.discountTotal = sc.getButcherDiscountTotal(c.butcherid);
-        c.shippingTotal = sc.getShippingCost(c.butcherid);
+        c.shippingTotal = sc.getShippingCostOfCustomer(c.butcherid);
         c.butcherTotal = sc.getButcherTotal(c.butcherid);
         c.butcherSubTotal = sc.butchers[c.butcherid].subTotal;
         c.note = i.note;

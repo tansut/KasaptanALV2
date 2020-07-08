@@ -33,7 +33,8 @@ class Route extends router_1.ViewRouter {
         this.shouldBePaid = 0.00;
         this.paid = 0.00;
         this.productTotal = 0.00;
-        this.teslimatTotal = 0.00;
+        this.teslimatKasaptan = 0.00;
+        this.teslimatButcher = 0.00;
         this.earnedPuanButcher = 0.00;
         this.earnedPuanKalitte = 0.00;
         this.earnedPuanTotal = 0.00;
@@ -52,7 +53,8 @@ class Route extends router_1.ViewRouter {
                 yield this.getOrder();
             }
             this.productTotal = this.api.calculateProduct(this.order);
-            this.teslimatTotal = this.api.calculateTeslimat(this.order);
+            this.teslimatButcher = this.api.calculateTeslimatOfButcher(this.order);
+            this.teslimatKasaptan = this.api.calculateTeslimatOfKasaptanAl(this.order);
             this.balance = this.order.workedAccounts.find(p => p.code == 'total');
             this.shouldBePaid = helper_1.default.asCurrency(this.balance.alacak - this.balance.borc);
             this.paid = this.api.calculatePaid(this.order);
@@ -62,16 +64,16 @@ class Route extends router_1.ViewRouter {
             this.earnedPuanButcher = this.puanBalanceButcher ? helper_1.default.asCurrency(this.puanBalanceButcher.alacak - this.puanBalanceButcher.borc) : 0.00;
             this.earnedPuanTotal = helper_1.default.asCurrency(this.earnedPuanKalitte + this.earnedPuanButcher);
             if (this.shouldBePaid > 0) {
-                this.possiblePuanList = this.api.getPossiblePuanGain(this.order, this.shouldBePaid);
+                this.possiblePuanList = this.api.getPossiblePuanGain(this.order, this.productTotal);
                 this.possiblePuanList.forEach(pg => this.mayEarnPuanTotal += pg.earned);
                 this.mayEarnPuanTotal = helper_1.default.asCurrency(this.mayEarnPuanTotal);
             }
             let calc = new commissionHelper_1.ComissionHelper(this.order.getButcherRate(), this.order.getButcherFee());
-            this.butcherFee = calc.calculateButcherComission(this.paid);
+            this.butcherFee = calc.calculateButcherComission(this.productTotal + this.teslimatButcher);
             let kalitteByButcherPuanAccounts = this.order.kalitteByButcherPuanAccounts.find(p => p.code == 'total');
             let butcherToCustomer = helper_1.default.asCurrency((kalitteByButcherPuanAccounts.alacak - kalitteByButcherPuanAccounts.borc) + (this.puanBalanceButcher.alacak - this.puanBalanceButcher.borc));
             if (butcherToCustomer <= 0) {
-                this.possiblePuanList = this.api.getPossiblePuanGain(this.order, this.paid);
+                this.possiblePuanList = this.api.getPossiblePuanGain(this.order, this.productTotal);
                 this.possiblePuanList.forEach(pg => butcherToCustomer += pg.earned);
             }
             this.butcherFee.butcherToCustomer = helper_1.default.asCurrency(butcherToCustomer);
@@ -130,7 +132,7 @@ class Route extends router_1.ViewRouter {
                 let request = provider.offerFromOrder(this.order);
                 try {
                     let offer = yield provider.requestOffer(request);
-                    userMessage = `Taşıma: ${offer.deliveryFee}, İndirim: ${offer.discount}`;
+                    userMessage = `Taşıma: ${offer.totalFee}, İndirim: ${offer.discount}`;
                 }
                 catch (err) {
                     userMessage = err.message;

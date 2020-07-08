@@ -64,8 +64,7 @@
                     </td>
                     <td class="align-middle">
                       <span class="text-dark font-weight-medium">Güvenli online ödeme</span><br><span
-                        class="text-muted">
-                        
+                        class="text-muted">                        
                           
                           <span class="font-weight-medium text-dark"></span>
                            Kredi kartımla online ödeyeceğim.  
@@ -113,11 +112,13 @@
                           [<a href="#" data-toggle="tooltip" title="Siparişinizi teması en aza indirerek size teslim ediyoruz">?</a>] 
                         </div>   
                         <% }%>       
+                        <% if (controller.allowNonOnline(bi) ) { %>
                         <a class="text-muted font-size-sm" onclick="$('.non-cc').show(); $(this).hide()">Diğer Ödeme Şekilleri &raquo;</a>             
+                        <% } %>
                     </td>
                   </tr>
                   <%}%>
-                  <% if (shopcard.getOrderType() != 'kurban') { %>
+                  <% if (controller.allowNonOnline(bi) ) { %>
             <tr class="non-cc" style="display: none;">
               <td>
                 <div class="custom-control custom-radio mb-4">

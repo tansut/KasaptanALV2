@@ -136,8 +136,13 @@ class ShopCard {
     getButcherTotal(bi) {
         let totalPrice = this.butchers[bi].subTotal;
         let discounts = this.getButcherDiscountTotal(bi);
-        let shippings = this.getShippingCost(bi);
+        let shippings = this.getShippingCostOfCustomer(bi);
         return totalPrice + discounts + shippings;
+    }
+    getButcherTotalWithoutShipping(bi) {
+        let totalPrice = this.butchers[bi].subTotal;
+        let discounts = this.getButcherDiscountTotal(bi);
+        return totalPrice + discounts;
     }
     // butcherDi(bi) {
     //     let shipment = this.shipment[bi];
@@ -181,12 +186,12 @@ class ShopCard {
     static calculatePrice(product, quantity, purchaseoption) {
         return helper_1.default.asCurrency(purchaseoption.unitPrice * quantity);
     }
-    getShippingCost(bi) {
+    getShippingCostOfButcher(bi) {
         let shipment = this.shipment[bi];
         let butcher = this.butchers[bi];
         if (shipment.howTo == "take")
             return 0.00;
-        if (shipment.dispatcher) {
+        if (shipment.dispatcher && shipment.dispatcher.type == "butcher") {
             if (shipment.dispatcher.totalForFree <= 0) {
                 return shipment.dispatcher.fee;
             }
@@ -196,12 +201,31 @@ class ShopCard {
         else
             return 0.00;
     }
+    getShippingCostOfCustomer(bi) {
+        let shipment = this.shipment[bi];
+        let butcher = this.butchers[bi];
+        if (shipment.howTo == "take")
+            return 0.00;
+        if (shipment.dispatcher) {
+            if (shipment.dispatcher.type == "butcher")
+                return this.getShippingCostOfButcher(bi);
+            else {
+                if (shipment.dispatcher.calculateCostForCustomer) {
+                    let result = shipment.dispatcher.calculateCostForCustomer(shipment);
+                    return result;
+                }
+                else
+                    return helper_1.default.asCurrency(shipment.dispatcher.fee / 2);
+            }
+        }
+        return 0.00;
+    }
     calculateShippingCosts() {
         this.shippingCosts = {};
         for (let k in this.butchers) {
             let butcher = this.butchers[k];
             let shipment = this.shipment[k];
-            let cost = this.getShippingCost(k);
+            let cost = this.getShippingCostOfCustomer(k);
             if (cost > 0) {
                 this.shippingCosts[k] = new ShippingCost();
                 this.shippingCosts[k].name = butcher.name;

@@ -43,6 +43,7 @@ export default class Route extends PaymentRouter {
     earnedPuanKalitte = 0.00;
     earnedPuanTotal = 0.00;
     mayEarnPuanTotal = 0.00;
+    productTotal = 0.00;
 
     possiblePuanList: PuanResult[] = [];
 
@@ -79,7 +80,7 @@ export default class Route extends PaymentRouter {
             await this.api.saveAccountingOperations([initial]);
             await this.getOrder();
         }
-
+        this.productTotal = this.api.calculateProduct(this.order);
         this.balance = this.order.workedAccounts.find(p => p.code == 'total')
         this.shouldBePaid = Helper.asCurrency(this.balance.alacak - this.balance.borc);
         this.puanBalanceKalitte = this.order.kalittePuanAccounts.find(p => p.code == 'total');
@@ -88,7 +89,7 @@ export default class Route extends PaymentRouter {
         this.earnedPuanButcher = this.puanBalanceButcher ? Helper.asCurrency(this.puanBalanceButcher.alacak - this.puanBalanceButcher.borc) : 0.00
         this.earnedPuanTotal = Helper.asCurrency(this.earnedPuanKalitte + this.earnedPuanButcher)
         if (this.shouldBePaid > 0 && this.order.orderSource == OrderSource.kasaptanal) {
-            this.possiblePuanList = this.api.getPossiblePuanGain(this.order, this.shouldBePaid);
+            this.possiblePuanList = this.api.getPossiblePuanGain(this.order, this.productTotal);
             this.possiblePuanList.forEach(pg => this.mayEarnPuanTotal += pg.earned)
             this.mayEarnPuanTotal = Helper.asCurrency(this.mayEarnPuanTotal)
         }
@@ -109,7 +110,7 @@ export default class Route extends PaymentRouter {
         debt[this.order.butcherid] = 0.00;       
         
         if (this.order.orderSource == OrderSource.kasaptanal) {
-            this.api.fillPuanAccounts(this.order, this.shouldBePaid);
+            this.api.fillPuanAccounts(this.order, this.productTotal);
             let butcherDebptAccounts = await AccountModel.summary([Account.generateCode("kasaplardan-alacaklar", [this.order.butcherid])])
             let butcherDebt = Helper.asCurrency(butcherDebptAccounts.borc - butcherDebptAccounts.alacak);
             debt[this.order.butcherid] = butcherDebt;            

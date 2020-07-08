@@ -178,20 +178,20 @@ export default class ParatikaPayment extends CreditcardPaymentProvider {
 
                         return;
 
-                        this.post(pr, (err, result) => {
-                            if (err) reject(err);
-                            else {
-                                resolve({
-                                    status: 'success',
-                                    conversationId: request.conversationId,
-                                    threeDSHtmlContent: result,
-                                    itemTransactions: [],
-                                    paidPrice: request.paidPrice,
-                                    paymentId: request.conversationId,
-                                    price: request.price
-                                })
-                            }
-                        }, `${this.config.uri}/post/sale3d/${sessionResult.sessionToken}`)
+                        // this.post(pr, (err, result) => {
+                        //     if (err) reject(err);
+                        //     else {
+                        //         resolve({
+                        //             status: 'success',
+                        //             conversationId: request.conversationId,
+                        //             threeDSHtmlContent: result,
+                        //             itemTransactions: [],
+                        //             paidPrice: request.paidPrice,
+                        //             paymentId: request.conversationId,
+                        //             price: request.price
+                        //         })
+                        //     }
+                        // }, `${this.config.uri}/post/sale3d/${sessionResult.sessionToken}`)
                     }
                 }).catch(err => reject(err))
             });

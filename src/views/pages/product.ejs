@@ -585,7 +585,7 @@
                                 class="font-size-sm"></span>
 
                             </label>
-                            <textarea v-model="note"
+                            <textarea v-model="note" maxlength="250"
                               :placeholder="(selectedUnit && selectedUnit.notePlaceholder) || (product && product.notePlaceholder) || 'İletmek istediğiniz notunuz varsa burayı kullanabilirsiniz.'"
                               class="form-control font-size-sm" rows="3" name="note" id="note">
 

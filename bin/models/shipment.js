@@ -39,7 +39,7 @@ class Shipment {
         this.days = [];
         this.securityCode = '';
         this.hours = [];
-        this.informMe = true;
+        this.informMe = false;
         this.daysText = [];
         this.hoursText = [];
         this.dispatcher = null;

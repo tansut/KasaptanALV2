@@ -115,6 +115,8 @@ export let KnownAccounts: {[key: string]: AccountInfo} = {
         code: "207"
     },
 
+    
+
     "gelirler": {
         type: "passive",
         name: "Gelirler",

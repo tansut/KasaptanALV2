@@ -196,7 +196,7 @@
           <% }) %>
           <div class="d-flex justify-content-between mb-2 border-bottom">
             <div class="">
-              <div class="font-size-sm">Ürünler:</div>
+              <div class="font-size-sm">Ürünler Bedeli</div>
 
             </div>
             <div class="text-nowrap font-size-sm">
@@ -205,14 +205,20 @@
 
           </div>
 
-          <% if (shopcard.getShippingCost(bi) > 0) { %>
+          <% if (shopcard.getShippingCostOfCustomer(bi) > 0) { %>
           <div class="d-flex justify-content-between mb-2 border-bottom">
             <div>
-              <div class="font-size-sm">Teslimat:</div>
+              <% if (shopcard.shipment[bi].dispatcher.type == "butcher") { %>
+              <div class="font-size-sm"><%=butcher.name%> Teslimat Bedeli</div>
+              <%} else {%>
+                <div class="font-size-sm">
+                  <%=controller.DispatcherTypeDesc[shopcard.shipment[bi].dispatcher.type]%>
+                </div>            
+              <%} %>
 
             </div>
             <div class="text-nowrap font-size-sm">
-              <%- include('./_partial/currency.ejs', {value: shopcard.getShippingCost(bi)}) %>
+              <%- include('./_partial/currency.ejs', {value: shopcard.getShippingCostOfCustomer(bi)}) %>
             </div>
 
           </div>

@@ -5,7 +5,7 @@ import { ShopCard, ShopcardItem, firstOrderDiscount } from '../../models/shopcar
 import Product from './product';
 import Butcher from './butcher';
 import { OrderItemStatus, OrderSource, OrderType } from '../../models/order';
-import Dispatcher from './dispatcher';
+import Dispatcher, { DispatcherType } from './dispatcher';
 import { GeoLocation, LocationSource, LocationType } from '../../models/geo';
 import AccountModel from './accountmodel';
 import { PuanResult } from '../../models/puan';
@@ -95,10 +95,6 @@ class Order extends BaseModel<Order> {
         type: DataType.TEXT
     })
     note: string;
-
-
-    
-    
 
     @ForeignKey(() => Butcher)
     butcherid: number;
@@ -208,11 +204,11 @@ class Order extends BaseModel<Order> {
     @Column
     shipLocationAccuracy: number
 
-    @Column({
-        allowNull: true,
-        type: DataType.GEOMETRY('POINT')
-    })
-    dispatcherLocation: GeoLocation;    
+    // @Column({
+    //     allowNull: true,
+    //     type: DataType.GEOMETRY('POINT')
+    // })
+    // dispatcherLocation: GeoLocation;    
 
     @Column({
         allowNull: true
@@ -283,7 +279,7 @@ class Order extends BaseModel<Order> {
     @Column({
         allowNull: true
     })
-    dispatcherType: string;  
+    dispatcherType: DispatcherType;  
 
     @Column({
         allowNull: true
@@ -383,8 +379,13 @@ class Order extends BaseModel<Order> {
         if (this.orderSource == OrderSource.kasaptanal) {
             if (this.orderType == OrderType.kurban) {
                 return this.butcher.kurbanCommissionRate;    
-            } else return this.butcher.commissionRate            
-                 
+            } else {
+                if (this.dispatcherType == "butcher") {
+                    return this.butcher.commissionRate                               
+                } else {
+                    return this.butcher.noshipCommissionRate;
+                }                
+            } 
         } else return this.butcher.payCommissionRate;   
     }
 
@@ -392,7 +393,13 @@ class Order extends BaseModel<Order> {
         if (this.orderSource == OrderSource.kasaptanal) {
             if (this.orderType == OrderType.kurban) {
                 return this.butcher.kurbanCommissionFee;    
-            } else return this.butcher.commissionFee         
+            } else {
+                if (this.dispatcherType == "butcher") {
+                    return this.butcher.commissionFee                               
+                } else {
+                    return this.butcher.noshipCommissionFee;
+                }
+            } 
                  
         } else return this.butcher.payCommissionFee;   
 
@@ -435,7 +442,7 @@ class Order extends BaseModel<Order> {
         o.isFirstButcherOrder = firstDiscount != null;
         o.discountTotal = c.getButcherDiscountTotal(bi);
         o.subTotal = c.butchers[bi].subTotal;        
-        o.shippingTotal = c.getShippingCost(bi);
+        o.shippingTotal = c.getShippingCostOfCustomer(bi);
         o.total = c.getButcherTotal(bi);        
         o.areaLevel1Id = c.address.level1Id;
         o.areaLevel3Id = c.address.level3Id;
@@ -467,10 +474,9 @@ class Order extends BaseModel<Order> {
             o.dispatcherFeeOffer = c.shipment[bi].dispatcher.feeOffer;
             o.dispatcherName = c.shipment[bi].dispatcher.name;
             o.dispatcherType = c.shipment[bi].dispatcher.type;
-            o.dispatchertotalForFree = c.shipment[bi].dispatcher.totalForFree;    
-            o.dispatcherLocation = c.shipment[bi].dispatcher.location;            
-            if (o.shipLocation && o.dispatcherLocation) {
-                o.dispatcherDistance = Helper.distance(o.shipLocation, o.dispatcherLocation)
+            o.dispatchertotalForFree = c.shipment[bi].dispatcher.totalForFree;         
+            if (o.shipLocation && c.shipment[bi].dispatcher.location) {
+                o.dispatcherDistance = Helper.distance(o.shipLocation, c.shipment[bi].dispatcher.location)
             }        
         }
 
@@ -849,7 +855,7 @@ class OrderItem extends BaseModel<Order> {
         c.pounitkgRatio = i.purchaseoption.kgRatio;
         
         c.discountTotal = sc.getButcherDiscountTotal(c.butcherid);
-        c.shippingTotal = sc.getShippingCost(c.butcherid);
+        c.shippingTotal = sc.getShippingCostOfCustomer(c.butcherid);
         c.butcherTotal = sc.getButcherTotal(c.butcherid);
         c.butcherSubTotal = sc.butchers[c.butcherid].subTotal;
         c.note = i.note;

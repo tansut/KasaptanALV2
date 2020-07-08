@@ -15,11 +15,13 @@ const config_1 = require("../../config");
 const path = require("path");
 const helper_1 = require("../helper");
 const payment_1 = require("../../db/models/payment");
+const order_1 = require("../../routes/api/order");
 const paymentConfig = require(path.join(config_1.default.projectDir, `payment.json`));
 class CreditcardPaymentProvider {
     constructor(config) {
         this.marketPlace = true;
         this.marketPlace = config.marketPlace == "true";
+        this.api = new order_1.default();
     }
     validateCard(card) {
     }
@@ -52,21 +54,24 @@ class CreditcardPaymentProvider {
         return __awaiter(this, void 0, void 0, function* () {
         });
     }
-    getMerchantMoney(o, shouldBePaid) {
-        let comission = o.getButcherComission(shouldBePaid);
-        let puan = o.getPuanTotal(shouldBePaid);
-        return helper_1.default.asCurrency(shouldBePaid - comission - puan);
+    getMerchantMoney(o, shouldBePaid, productPrice, shipOfButcher, shipOfKasaptanAl) {
+        let comission = o.getButcherComission(productPrice + shipOfButcher);
+        let puan = o.getPuanTotal(productPrice);
+        return helper_1.default.asCurrency(shouldBePaid - comission - puan - shipOfKasaptanAl);
     }
     requestFromOrder(ol, debts = {}) {
         let basketItems = [];
         let price = 0.00, paidPrice = 0.00;
         ol.forEach((o, j) => {
             let total = o.workedAccounts.find(p => p.code == 'total');
+            let productPrice = this.api.calculateProduct(o);
+            let shipOfButcher = this.api.calculateTeslimatOfButcher(o);
+            let shipOfKasaptanAl = this.api.calculateTeslimatOfKasaptanAl(o);
             let shouldBePaid = helper_1.default.asCurrency(total.alacak - total.borc);
             let merchantPrice = 0.00;
             let butcherDebt = 0.00, debtApplied = 0.00;
             if (this.marketPlace) {
-                merchantPrice = this.getMerchantMoney(o, shouldBePaid);
+                merchantPrice = this.getMerchantMoney(o, shouldBePaid, productPrice, shipOfButcher, shipOfKasaptanAl);
                 butcherDebt = debts[o.butcherid];
                 if (merchantPrice <= butcherDebt) {
                     debtApplied = merchantPrice - 1.00;

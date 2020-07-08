@@ -11,6 +11,7 @@ import { ComissionHelper } from '../commissionHelper';
 import AccountModel from '../../db/models/accountmodel';
 import { Account } from '../../models/account';
 import { OrderSource } from '../../models/order';
+import OrderApi from "../../routes/api/order"
 
 const paymentConfig = require(path.join(config.projectDir, `payment.json`));
 
@@ -106,6 +107,9 @@ export interface PaymentResult {
     threeDSHtmlContent?: string;
     paymentId: string;
     conversationId: string;
+    // productPrice: number;
+    // butcherShipPrice: number;
+    // kasaptanAlShipPrice: number;
     paidPrice: number;
     price: number;
     itemTransactions: ItemTransaction[];
@@ -152,9 +156,12 @@ export class CreditcardPaymentProvider {
     userid: number;
     ip: string;
     marketPlace: boolean = true;
+    api: OrderApi;
+
 
     constructor(config: any) {
         this.marketPlace = config.marketPlace == "true";
+        this.api = new OrderApi();
     }
 
     validateCard(card: Creditcard) {
@@ -190,10 +197,10 @@ export class CreditcardPaymentProvider {
 
     }
 
-    getMerchantMoney(o: Order, shouldBePaid: number) {
-        let comission = o.getButcherComission(shouldBePaid);
-        let puan = o.getPuanTotal(shouldBePaid);
-        return Helper.asCurrency(shouldBePaid - comission - puan)
+    getMerchantMoney(o: Order, shouldBePaid: number, productPrice, shipOfButcher, shipOfKasaptanAl) {
+        let comission = o.getButcherComission(productPrice + shipOfButcher);        
+        let puan = o.getPuanTotal(productPrice);
+        return Helper.asCurrency(shouldBePaid - comission - puan - shipOfKasaptanAl)
     }
 
 
@@ -202,15 +209,15 @@ export class CreditcardPaymentProvider {
         let price = 0.00, paidPrice = 0.00;
         ol.forEach((o, j) => {
             let total = o.workedAccounts.find(p => p.code == 'total');
-
+            let productPrice = this.api.calculateProduct(o);
+            let shipOfButcher = this.api.calculateTeslimatOfButcher(o);
+            let shipOfKasaptanAl = this.api.calculateTeslimatOfKasaptanAl(o);
             let shouldBePaid = Helper.asCurrency(total.alacak - total.borc);
-
-            let merchantPrice = 0.00;
-
+            let merchantPrice = 0.00;            
             let butcherDebt = 0.00, debtApplied = 0.00;
 
             if (this.marketPlace) {
-                merchantPrice = this.getMerchantMoney(o, shouldBePaid);
+                merchantPrice = this.getMerchantMoney(o, shouldBePaid, productPrice, shipOfButcher, shipOfKasaptanAl);
                 butcherDebt = debts[o.butcherid];
                 if (merchantPrice <= butcherDebt) {
                     debtApplied = merchantPrice - 1.00;

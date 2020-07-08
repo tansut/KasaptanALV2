@@ -32,9 +32,11 @@ const order_1 = require("./api/order");
 let ellipsis = require('text-ellipsis');
 var MarkdownIt = require('markdown-it');
 const commissionHelper_1 = require("../lib/commissionHelper");
+const dispatcher_2 = require("../db/models/dispatcher");
 class Route extends router_1.ViewRouter {
     constructor(reqp) {
         super(reqp);
+        this.DispatcherTypeDesc = dispatcher_2.DispatcherTypeDesc;
         this.shipmentHours = shipment_1.ShipmentHours;
         this.shipmentDays = shipment_1.ShipmentDays;
         this.moment = moment;
@@ -52,7 +54,9 @@ class Route extends router_1.ViewRouter {
             if (this.shopcard.items.length > 0) {
                 orders = yield this.orderapi.getFromShopcard(this.shopcard);
                 for (var i = 0; i < orders.length; i++) {
-                    let list = this.orderapi.getPossiblePuanGain(orders[i], this.shopcard.getButcherTotal(orders[i].butcherid), true);
+                    if (this.req.user)
+                        yield this.orderapi.fillFirstOrderDetails(orders[i]);
+                    let list = this.orderapi.getPossiblePuanGain(orders[i], this.shopcard.getButcherTotalWithoutShipping(orders[i].butcherid), true);
                     this.possiblePuanList = this.possiblePuanList.concat(list);
                 }
                 this.possiblePuanList.forEach(pg => this.mayEarnPuanTotal += pg.earned);
@@ -118,9 +122,36 @@ class Route extends router_1.ViewRouter {
         let result = common_1.ProductTypeFactory.create(item.product.productType, params);
         return result;
     }
-    setDispatcher(orders = []) {
+    allowNonOnline(bi) {
+        let allow = true;
+        if (this.shopcard.getOrderType() == 'kurban') {
+            allow = false;
+        }
+        if (allow) {
+            if (this.shopcard.shipment[bi].dispatcher && this.shopcard.shipment[bi].dispatcher.type != "butcher") {
+                allow = false;
+            }
+        }
+        return allow;
+    }
+    calculateCostForCustomer(shipment, o) {
+        if (o.dispatcherFee > 0.00) {
+            let dispatcherFee = helper_1.default.asCurrency(o.dispatcherFee / 1.18);
+            let calc = new commissionHelper_1.ComissionHelper(o.getButcherRate(), o.getButcherFee());
+            let commission = calc.calculateButcherComission(o.subTotal);
+            let contribute = helper_1.default.asCurrency(commission.kalitteFee * 0.4);
+            let calculated = helper_1.default.asCurrency(Math.max(0.00, dispatcherFee - contribute));
+            let calculatedVat = helper_1.default.asCurrency(calculated * 0.18);
+            return helper_1.default.asCurrency(Math.round(calculated + calculatedVat));
+        }
+        else
+            return 0.00;
+    }
+    setDispatcher() {
         return __awaiter(this, void 0, void 0, function* () {
             let api = new dispatcher_1.default(this.constructorParams);
+            let orders = yield this.orderapi.getFromShopcard(this.shopcard);
+            var self = this;
             for (let o in this.shopcard.shipment) {
                 if (true) {
                     let order = orders.find(oo => oo.butcherid == parseInt(o));
@@ -139,7 +170,10 @@ class Route extends router_1.ViewRouter {
                             type: dispatch.type,
                             min: dispatch.min,
                             takeOnly: dispatch.takeOnly,
-                            location: null // dispatch.butcher ? <any>dispatch.butcher.location : null
+                            location: dispatch.butcher ? dispatch.butcher.location : null,
+                            calculateCostForCustomer: function (shipment) {
+                                return self.calculateCostForCustomer(shipment, order);
+                            }
                         };
                         if (dispatch.min > this.shopcard.butchers[o].subTotal) {
                             this.shopcard.shipment[o].howTo = 'ship';
@@ -227,6 +261,9 @@ class Route extends router_1.ViewRouter {
         this.shopcard.address.addresstarif = this.shopcard.address.addresstarif || this.req.user.lastTarif;
         this.shopcard.address.kat = this.shopcard.address.kat || this.req.user.lastKat;
         this.shopcard.address.daire = this.shopcard.address.daire || this.req.user.lastDaire;
+        if (this.req.prefAddr && this.req.user.lastLevel3Id && this.req.prefAddr.level3Id != this.req.user.lastLevel3Id) {
+            return;
+        }
         this.shopcard.address.geolocationType = this.shopcard.address.geolocationType || this.req.user.lastLocationType;
         this.shopcard.address.geolocation = this.shopcard.address.geolocation || this.req.user.lastLocation;
     }
@@ -291,8 +328,7 @@ class Route extends router_1.ViewRouter {
                 this.shopcard.shipment[k].nointeraction = this.req.body[`nointeraction${k}`] == "on";
             }
             this.shopcard.arrangeButchers();
-            let orders = yield this.orderapi.getFromShopcard(this.shopcard);
-            yield this.setDispatcher(orders);
+            yield this.setDispatcher();
             this.shopcard.calculateShippingCosts();
             yield this.shopcard.saveToRequest(this.req);
             yield this.getOrderSummary();
@@ -303,18 +339,18 @@ class Route extends router_1.ViewRouter {
         return __awaiter(this, void 0, void 0, function* () {
             this.shopcard = yield shopcard_1.ShopCard.createFromRequest(this.req);
             this.shopcard.arrangeButchers();
-            let orders = yield this.orderapi.getFromShopcard(this.shopcard);
-            yield this.setDispatcher(orders);
+            yield this.setDispatcher();
             this.shopcard.calculateShippingCosts();
             yield this.shopcard.saveToRequest(this.req);
-            orders = yield this.getOrderSummary();
+            yield this.getOrderSummary();
             this.renderPage("pages/checkout.review.ejs", userMessage);
         });
     }
     savereviewRoute() {
         return __awaiter(this, void 0, void 0, function* () {
             this.shopcard = yield shopcard_1.ShopCard.createFromRequest(this.req);
-            let creditCard = null;
+            yield this.setDispatcher();
+            this.shopcard.calculateShippingCosts();
             try {
                 let api = new order_1.default(this.constructorParams);
                 let orders = yield api.create(this.shopcard);

@@ -77,6 +77,7 @@ export default class BanabikuryeProvider extends LogisticProvider {
         let req = {
             total_weight_kg: oreq.weight,
             matter: oreq.matter,
+            is_contact_person_notification_enabled: oreq.notifyCustomerSms,
             points: []
         }
         
@@ -90,6 +91,7 @@ export default class BanabikuryeProvider extends LogisticProvider {
         let req = {
             total_weight_kg: oreq.weight,
             matter: oreq.matter,
+            is_contact_person_notification_enabled: oreq.notifyCustomerSms,
             points: []
         }
         oreq.points.forEach(p=> {
@@ -105,7 +107,8 @@ export default class BanabikuryeProvider extends LogisticProvider {
                 deliveryFee: parseFloat(order['delivery_fee_amount']),
                 discount: parseFloat(order['discount_amount']),
                 points: order['points'].map(p=>this.fromBnbPoint(p)),
-                weightFee: parseFloat(order['weight_fee_amount'])            
+                weightFee: parseFloat(order['weight_fee_amount']),                
+                totalFee: parseFloat(order['payment_amount']),   
             }    
             return res;            
         } else {
@@ -126,7 +129,8 @@ export default class BanabikuryeProvider extends LogisticProvider {
                 payment: parseFloat(order['payment_amount']), 
                 discount: parseFloat(order['discount_amount']),
                 points: order['points'].map(p=>this.fromBnbPoint(p)),
-                weightFee: parseFloat(order['weight_fee_amount'])            
+                weightFee: parseFloat(order['weight_fee_amount']),
+                totalFee: parseFloat(order['payment_amount'])    
             }    
             return res;            
         } else {

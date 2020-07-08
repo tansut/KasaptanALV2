@@ -118,16 +118,31 @@ export default class Route extends ApiRouter {
         return Helper.asCurrency(total);
     }
 
-
-
-
-
-
-    calculateTeslimat(o: Order) {
-        let code = Account.generateCode("odeme-bekleyen-satislar", [o.userId, o.ordernum, 200]);
+    calculateTeslimatOfButcher(o: Order) {
+        let codeButcher = Account.generateCode("odeme-bekleyen-satislar", [o.userId, o.ordernum, 200]);
         let total = 0.00;
         o.workedAccounts.forEach(a => {
-            if (a.code == code) total += a.alacak;
+            if (a.code == codeButcher) total += a.alacak;
+        })
+        return Helper.asCurrency(total);
+    }
+
+    calculateTeslimatOfKasaptanAl(o: Order) {
+        let codeKasaptanAl = Account.generateCode("odeme-bekleyen-satislar", [o.userId, o.ordernum, 201]);        
+        let total = 0.00;
+        o.workedAccounts.forEach(a => {
+            if (a.code == codeKasaptanAl) total += a.alacak;
+        })
+        return Helper.asCurrency(total);
+    }
+
+
+    calculateTeslimatTotal(o: Order) {
+        let codeButcher = Account.generateCode("odeme-bekleyen-satislar", [o.userId, o.ordernum, 200]);
+        let codeKasaptanAl = Account.generateCode("odeme-bekleyen-satislar", [o.userId, o.ordernum, 201]);
+        let total = 0.00;
+        o.workedAccounts.forEach(a => {
+            if (a.code == codeButcher || a.code == codeKasaptanAl) total += a.alacak;
         })
         return Helper.asCurrency(total);
     }
@@ -331,7 +346,6 @@ export default class Route extends ApiRouter {
                     type: item.dispatcherType,
                     name: item.dispatcherName,
                     fee: item.dispatcherFee,
-                    location: order.dispatcherLocation,
                     totalForFree: item.dispatchertotalForFree
                 })
             }
@@ -498,6 +512,12 @@ export default class Route extends ApiRouter {
         })
     }
 
+    async fillFirstOrderDetails(o: Order) {
+        o.isFirstButcherOrder = await Order.findOne({ where: { userid: o.userId, butcherid: o.butcherid, status: OrderItemStatus.success, ordernum: { [Op.ne]: o.ordernum } } }) == null;
+        o.isFirstOrder = await Order.findOne({ where: { userid: o.userId } }) == null;
+
+    }
+
 
     getPossiblePuanGain(o: Order, total: number, includeAvailable: boolean = false): PuanResult[] {
 
@@ -604,7 +624,7 @@ export default class Route extends ApiRouter {
     }
     
 
-    getComissionAccounts(o: Order, total: number): AccountingOperation {
+    getComissionAccounts(o: Order, total: number, kasaptanAlShip: number): AccountingOperation {
         let result: AccountingOperation = new AccountingOperation(`${o.ordernum} nolu ${o.butcherName} kasap komisyon hesabı`);        
 
         let butcherFee = o.getButcherComission(total);
@@ -614,10 +634,23 @@ export default class Route extends ApiRouter {
         if (puanTotal > 0.00) {
             result.accounts.push(new Account("kasaplardan-kesilen-komisyonlar", [200, o.butcherid, o.ordernum], `${o.ordernum} nolu müşteriye iletilen puan`).inc(puanTotal))
         }
-        result.accounts.push(new Account("gelirler", [100, o.butcherid], `${o.ordernum} nolu ${o.butcherName} satış geliri`).inc(butcherFee + puanTotal))
+        if (kasaptanAlShip > 0.00) {
+            result.accounts.push(new Account("banka", [300, o.ordernum], `${o.ordernum} nolu satış kasaptanal.com müşteriden alınan teslimat bedeli`).inc(kasaptanAlShip))
+
+        }
+        result.accounts.push(new Account("gelirler", [100, o.butcherid], `${o.ordernum} nolu ${o.butcherName} satış geliri`).inc(butcherFee + puanTotal + kasaptanAlShip))
 
         return result;
     }
+
+    // getKasaptanAlShipAccounts(o: Order, total: number): AccountingOperation {
+    //     let result: AccountingOperation = new AccountingOperation(`${o.ordernum} nolu tahsil edilen teslimat bedeli`);        
+
+    //     result.accounts.push(new Account("banka", [300, o.ordernum], `${o.ordernum} nolu satış kasaptanal.com müşteriden alınan teslimat bedeli`).inc(butcherFee))
+    //     result.accounts.push(new Account("gelirler", [100, o.ordernum], `${o.ordernum} nolu ${o.butcherName} satış geliri`).inc(butcherFee + puanTotal))
+
+    //     return result;
+    // }    
 
     getPuanAccounts(o: Order, total: number): AccountingOperation {
 
@@ -738,13 +771,10 @@ export default class Route extends ApiRouter {
     }
 
     async makeManuelPayment(o: Order, total: number, t?: Transaction): Promise<any> {
-
         let ops: AccountingOperation[] = [];
         let promises: Promise<any>[] = []
 
         let paymentId = "manuel";
-
-        //let payRequest = await this.getPaymentRequest();
 
         let op = new AccountingOperation(`${o.ordernum} ödemesi - ${paymentId}`);
         op.accounts.push(new Account("odeme-bekleyen-satislar", [o.userId, o.ordernum, 600]).dec(total))
@@ -752,9 +782,15 @@ export default class Route extends ApiRouter {
 
         ops.push(op);
 
-        let puanAccounts = this.getPuanAccounts(o, total);
-        this.fillPuanAccounts(o, total);
-        let comissionAccounts = this.getComissionAccounts(o, total);
+        let butcherShip = this.calculateTeslimatOfButcher(o)
+        let kasaptanAlShip = this.calculateTeslimatOfKasaptanAl(o);
+        let productPrice = this.calculateProduct(o);
+
+        let puanAccounts = this.getPuanAccounts(o, productPrice);
+        this.fillPuanAccounts(o, productPrice);
+        let comissionAccounts = this.getComissionAccounts(o, butcherShip + productPrice, kasaptanAlShip);
+  
+
         ops.push(puanAccounts);
         ops.push(comissionAccounts);
 
@@ -785,8 +821,13 @@ export default class Route extends ApiRouter {
                 op.accounts.push(new Account("odeme-bekleyen-satislar", [o.userId, o.ordernum, 500]).dec(paymentInfo.paidPrice))
                 op.accounts.push(new Account("satis-alacaklari", [o.userId, o.ordernum]).dec(paymentInfo.paidPrice))
                 ops.push(op);
-                let puanAccounts = this.getPuanAccounts(o, paymentInfo.paidPrice);
-                let comissionAccounts = this.getComissionAccounts(o, paymentInfo.paidPrice);
+                
+                let butcherShip = this.calculateTeslimatOfButcher(o)
+                let kasaptanAlShip = this.calculateTeslimatOfKasaptanAl(o);
+                let productPrice = this.calculateProduct(o);
+
+                let puanAccounts = this.getPuanAccounts(o, productPrice);
+                let comissionAccounts = this.getComissionAccounts(o, butcherShip + productPrice, kasaptanAlShip);
                 ops.push(puanAccounts);
                 ops.push(comissionAccounts);
                 promises = promises.concat(this.updateOrderByCreditcardPayment(o, paymentInfo, t));
@@ -816,12 +857,14 @@ export default class Route extends ApiRouter {
     generateInitialAccounting(o: Order): AccountingOperation {
         let op = new AccountingOperation(`${o.ordernum} numaralı sipariş`);
         if (o.orderSource == OrderSource.butcher) {
-            op.accounts.push(new Account("odeme-bekleyen-satislar", [o.userId, o.ordernum, 200], "Sipariş Bedeli").inc(o.subTotal));
+            op.accounts.push(new Account("odeme-bekleyen-satislar", [o.userId, o.ordernum, 500], "Sipariş Bedeli").inc(o.subTotal));
             op.accounts.push(new Account("satis-alacaklari", [o.userId, o.ordernum]).inc(o.total))
         } else {
             op.accounts.push(new Account("odeme-bekleyen-satislar", [o.userId, o.ordernum, 100], "Ürün Bedeli").inc(o.subTotal));
             if (o.shippingTotal > 0.00) {
-                op.accounts.push(new Account("odeme-bekleyen-satislar", [o.userId, o.ordernum, 200], "Teslimat Bedeli").inc(o.shippingTotal));
+                if (o.dispatcherType == "butcher") {
+                    op.accounts.push(new Account("odeme-bekleyen-satislar", [o.userId, o.ordernum, 200], "Kasap Teslimat Bedeli").inc(o.shippingTotal));
+                } else op.accounts.push(new Account("odeme-bekleyen-satislar", [o.userId, o.ordernum, 201], "KasaptanAl.com Teslimat Bedeli").inc(o.shippingTotal));
             }
             if (Math.abs(o.discountTotal) > 0.00) {
                 op.accounts.push(new Account("satis-indirimleri", [o.userId, o.ordernum, 100], "Uygulanan İndirimler").inc(Math.abs(o.discountTotal)));

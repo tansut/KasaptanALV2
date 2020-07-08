@@ -9,7 +9,7 @@ var __metadata = (this && this.__metadata) || function (k, v) {
     if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.DispatcherSelection = void 0;
+exports.DispatcherTypeDesc = exports.DispatcherSelection = void 0;
 const sequelize_typescript_1 = require("sequelize-typescript");
 const basemodel_1 = require("./basemodel");
 const helper_1 = require("../../lib/helper");
@@ -21,6 +21,11 @@ var DispatcherSelection;
     DispatcherSelection["full"] = "tam";
     DispatcherSelection["listOnly"] = "sadece liste";
 })(DispatcherSelection = exports.DispatcherSelection || (exports.DispatcherSelection = {}));
+exports.DispatcherTypeDesc = {
+    "butcher": "Kasap",
+    "kasaptanal/motokurye": "Soğuk Zincir Kurye Sistemi",
+    "kasaptanal/car": "Soğuk Zincir Araç Kurye Sistemi",
+};
 let Dispatcher = class Dispatcher extends basemodel_1.default {
     get userNote() {
         let desc = "";

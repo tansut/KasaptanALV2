@@ -289,6 +289,20 @@ class Butcher extends BaseModel<Butcher> {
     })
     kurbanCommissionFee: number;      
 
+    @Column({
+        allowNull: false,
+        type: DataType.DECIMAL(10, 4),
+        defaultValue: 0.15
+    })
+    noshipCommissionRate: number;    
+
+    @Column({
+        allowNull: false,
+        type: DataType.DECIMAL(13, 2),
+        defaultValue: 0.00
+    })
+    noshipCommissionFee: number;      
+
 
     @Column({
         allowNull: false,

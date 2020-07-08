@@ -412,6 +412,22 @@ __decorate([
     sequelize_typescript_1.Column({
         allowNull: false,
         type: sequelize_typescript_1.DataType.DECIMAL(10, 4),
+        defaultValue: 0.15
+    }),
+    __metadata("design:type", Number)
+], Butcher.prototype, "noshipCommissionRate", void 0);
+__decorate([
+    sequelize_typescript_1.Column({
+        allowNull: false,
+        type: sequelize_typescript_1.DataType.DECIMAL(13, 2),
+        defaultValue: 0.00
+    }),
+    __metadata("design:type", Number)
+], Butcher.prototype, "noshipCommissionFee", void 0);
+__decorate([
+    sequelize_typescript_1.Column({
+        allowNull: false,
+        type: sequelize_typescript_1.DataType.DECIMAL(10, 4),
         defaultValue: 0.1
     }),
     __metadata("design:type", Number)

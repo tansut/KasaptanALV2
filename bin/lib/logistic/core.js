@@ -63,10 +63,12 @@ class LogisticProvider {
     }
     offerFromOrder(o) {
         let req = this.fromOrder(o);
+        req.notifyCustomerSms = true;
         return req;
     }
     orderFromOrder(o) {
         let req = this.fromOrder(o);
+        req.notifyCustomerSms = true;
         return req;
     }
     requestOffer(req) {

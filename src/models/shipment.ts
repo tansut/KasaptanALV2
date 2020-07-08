@@ -1,6 +1,6 @@
 import Helper from "../lib/helper";
 import moment = require("moment");
-import Dispatcher from "../db/models/dispatcher";
+import Dispatcher, { DispatcherType } from "../db/models/dispatcher";
 import { GeoLocation } from "./geo";
 
 export let ShipmentHours = {
@@ -43,7 +43,7 @@ export type HowToShipType = 'unset' | 'take' | 'ship';
 
 export interface DispatcherView {
     id: number,
-    type: string,
+    type: DispatcherType,
     name: string,
     fee: number,
     feeOffer: number,
@@ -51,6 +51,7 @@ export interface DispatcherView {
     min: number;
     takeOnly: boolean;
     location: GeoLocation;
+    calculateCostForCustomer?: any;
 }
 
 export class Shipment {
@@ -68,7 +69,7 @@ export class Shipment {
     days: string[] = [];
     securityCode: string='';
     hours: number [] = []
-    informMe: boolean = true;
+    informMe: boolean = false;
     daysText: string[] = [];
     hoursText: string [] = []    
     dispatcher: DispatcherView = null;

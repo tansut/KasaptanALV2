@@ -37,6 +37,7 @@ class Route extends paymentrouter_1.PaymentRouter {
         this.earnedPuanKalitte = 0.00;
         this.earnedPuanTotal = 0.00;
         this.mayEarnPuanTotal = 0.00;
+        this.productTotal = 0.00;
         this.possiblePuanList = [];
     }
     renderPage(userMessage, view) {
@@ -67,6 +68,7 @@ class Route extends paymentrouter_1.PaymentRouter {
                 yield this.api.saveAccountingOperations([initial]);
                 yield this.getOrder();
             }
+            this.productTotal = this.api.calculateProduct(this.order);
             this.balance = this.order.workedAccounts.find(p => p.code == 'total');
             this.shouldBePaid = helper_1.default.asCurrency(this.balance.alacak - this.balance.borc);
             this.puanBalanceKalitte = this.order.kalittePuanAccounts.find(p => p.code == 'total');
@@ -75,7 +77,7 @@ class Route extends paymentrouter_1.PaymentRouter {
             this.earnedPuanButcher = this.puanBalanceButcher ? helper_1.default.asCurrency(this.puanBalanceButcher.alacak - this.puanBalanceButcher.borc) : 0.00;
             this.earnedPuanTotal = helper_1.default.asCurrency(this.earnedPuanKalitte + this.earnedPuanButcher);
             if (this.shouldBePaid > 0 && this.order.orderSource == order_2.OrderSource.kasaptanal) {
-                this.possiblePuanList = this.api.getPossiblePuanGain(this.order, this.shouldBePaid);
+                this.possiblePuanList = this.api.getPossiblePuanGain(this.order, this.productTotal);
                 this.possiblePuanList.forEach(pg => this.mayEarnPuanTotal += pg.earned);
                 this.mayEarnPuanTotal = helper_1.default.asCurrency(this.mayEarnPuanTotal);
             }
@@ -99,7 +101,7 @@ class Route extends paymentrouter_1.PaymentRouter {
             let debt = {};
             debt[this.order.butcherid] = 0.00;
             if (this.order.orderSource == order_2.OrderSource.kasaptanal) {
-                this.api.fillPuanAccounts(this.order, this.shouldBePaid);
+                this.api.fillPuanAccounts(this.order, this.productTotal);
                 let butcherDebptAccounts = yield accountmodel_1.default.summary([account_1.Account.generateCode("kasaplardan-alacaklar", [this.order.butcherid])]);
                 let butcherDebt = helper_1.default.asCurrency(butcherDebptAccounts.borc - butcherDebptAccounts.alacak);
                 debt[this.order.butcherid] = butcherDebt;

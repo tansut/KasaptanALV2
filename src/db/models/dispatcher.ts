@@ -12,6 +12,15 @@ export enum DispatcherSelection {
     listOnly = 'sadece liste'
 }
 
+
+export type DispatcherType = "butcher" | "kasaptanal/motokurye" | "kasaptanal/car"
+
+export let DispatcherTypeDesc = {
+    "butcher": "Kasap",
+    "kasaptanal/motokurye": "Soğuk Zincir Kurye Sistemi",
+    "kasaptanal/car": "Soğuk Zincir Araç Kurye Sistemi",
+}
+
 export type LogisticProviderUsage = "none" | "default" | "select" | "force" | "auto" | "disabled"
 
 @Table({
@@ -87,7 +96,7 @@ class Dispatcher extends BaseModel<Dispatcher> {
         allowNull: false,
         defaultValue: 'butcher'
     })
-    type: string;
+    type: DispatcherType;
 
 
     @Column({

@@ -50,14 +50,15 @@ export interface BasicResponse {
 }
 
 export interface OfferRequest extends BasicRequest {
-
+    notifyCustomerSms: boolean;
 }
 
 export interface OrderRequest extends BasicRequest {
-
+    notifyCustomerSms: boolean;    
 }
 
 export interface OfferResponse extends BasicResponse {
+    totalFee: number;    
     deliveryFee: number;
     weightFee: number;
     discount: number;
@@ -68,6 +69,7 @@ export interface OrderResponse extends BasicResponse {
     orderId: string;
     status: string;
     statusDesc: string;
+    totalFee: number;
     deliveryFee: number;
     weightFee: number;
     payment: number;
@@ -124,12 +126,14 @@ export class LogisticProvider {
     }
 
     offerFromOrder(o: Order): OfferRequest {
-        let req = this.fromOrder(o);
+        let req: OfferRequest = <any>this.fromOrder(o);
+        req.notifyCustomerSms = true;
         return req;
     }
 
     orderFromOrder(o: Order): OrderRequest {
-        let req = this.fromOrder(o);
+        let req : OrderRequest = <any>this.fromOrder(o);
+        req.notifyCustomerSms = true;        
         return req;
     }    
 

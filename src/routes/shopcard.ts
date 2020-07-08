@@ -22,11 +22,14 @@ import OrderApi from './api/order';
 let ellipsis = require('text-ellipsis');
 var MarkdownIt = require('markdown-it')
 import { Creditcard, CreditcardPaymentFactory } from '../lib/payment/creditcard'
-import { PuanCalculator } from '../lib/commissionHelper';
+import { PuanCalculator, ComissionHelper } from '../lib/commissionHelper';
 import { PuanResult } from '../models/puan';
+import { DispatcherTypeDesc } from '../db/models/dispatcher';
+import { all } from 'sequelize/types/lib/operators';
 
 export default class Route extends ViewRouter {
     shopcard: ShopCard;
+    DispatcherTypeDesc = DispatcherTypeDesc
     shipmentHours = ShipmentHours;
     shipmentDays = ShipmentDays;
     moment = moment
@@ -44,14 +47,14 @@ export default class Route extends ViewRouter {
         let orders = []
         if (this.shopcard.items.length > 0) {
             orders = await this.orderapi.getFromShopcard(this.shopcard);
-          
-                for(var i = 0; i < orders.length; i++) {
-                    let list = this.orderapi.getPossiblePuanGain(orders[i], this.shopcard.getButcherTotal(orders[i].butcherid), true);
-                    this.possiblePuanList = this.possiblePuanList.concat(list);
-                }
-                this.possiblePuanList.forEach(pg => this.mayEarnPuanTotal += pg.earned)
-                this.mayEarnPuanTotal = Helper.asCurrency(this.mayEarnPuanTotal)  
-            
+            for (var i = 0; i < orders.length; i++) {
+                if (this.req.user)
+                    await this.orderapi.fillFirstOrderDetails(orders[i]);
+                let list = this.orderapi.getPossiblePuanGain(orders[i], this.shopcard.getButcherTotalWithoutShipping(orders[i].butcherid), true);
+                this.possiblePuanList = this.possiblePuanList.concat(list);
+            }
+            this.possiblePuanList.forEach(pg => this.mayEarnPuanTotal += pg.earned)
+            this.mayEarnPuanTotal = Helper.asCurrency(this.mayEarnPuanTotal)
         }
         return orders;
     }
@@ -90,20 +93,20 @@ export default class Route extends ViewRouter {
         await this.setDispatcher();
         await this.shopcard.saveToRequest(this.req);
         if (this.shopcard.getOrderType() == 'kurban') {
-            let man = ProductTypeFactory.create('kurban', this.shopcard.items[0].productTypeData) as KurbanProductManager;           
+            let man = ProductTypeFactory.create('kurban', this.shopcard.items[0].productTypeData) as KurbanProductManager;
             let ship = this.shopcard.shipment[Object.keys(this.shopcard.shipment)[0]];
             this.fillDefaultAddress();
-            if (['0', '1', '2'].indexOf(man.teslimat) >=0) {                
-                ship.howTo = "take" ;
+            if (['0', '1', '2'].indexOf(man.teslimat) >= 0) {
+                ship.howTo = "take";
                 this.renderPage("pages/checkout.adres-take.ejs")
             } else {
                 ship.howTo = "ship";
                 this.renderPage("pages/checkout.adres.ejs");
-            }              
+            }
         }
         else this.renderPage("pages/checkout.ship.ejs");
     }
- 
+
 
     async adresViewRoute() {
         this.shopcard = await ShopCard.createFromRequest(this.req);
@@ -116,21 +119,48 @@ export default class Route extends ViewRouter {
         this.renderPage("pages/checkout.adres.ejs");
     }
 
-    getProductTypeManager(i: number): ProductTypeManager {             
+    getProductTypeManager(i: number): ProductTypeManager {
         let item = this.shopcard.items[i];
         let params = {
-           
+
         }
-        params = {...params, ...item.productTypeData }
+        params = { ...params, ...item.productTypeData }
         let result = ProductTypeFactory.create(item.product.productType, params)
         return result;
     }
 
-    async setDispatcher(orders: Order[] = []) {
-        let api = new Dispatcher(this.constructorParams);        
+    allowNonOnline(bi) {
+        let allow = true;
+        if (this.shopcard.getOrderType() == 'kurban') {
+            allow = false; 
+        }
+        if (allow) {
+            if (this.shopcard.shipment[bi].dispatcher && this.shopcard.shipment[bi].dispatcher.type != "butcher") {
+                allow = false;
+            }
+        }
+        return allow;
+    }
+
+    calculateCostForCustomer(shipment: Shipment, o: Order) {
+        if (o.dispatcherFee > 0.00) {
+            let dispatcherFee = Helper.asCurrency(o.dispatcherFee / 1.18);
+            let calc = new ComissionHelper(o.getButcherRate(), o.getButcherFee());
+            let commission = calc.calculateButcherComission(o.subTotal);    
+            let contribute = Helper.asCurrency(commission.kalitteFee * 0.4);
+            let calculated = Helper.asCurrency(Math.max(0.00, dispatcherFee - contribute));
+            let calculatedVat = Helper.asCurrency(calculated * 0.18)
+            return Helper.asCurrency(Math.round(calculated + calculatedVat));
+        } else return 0.00;
+    }
+
+    async setDispatcher() {
+        let api = new Dispatcher(this.constructorParams);
+        let orders = await this.orderapi.getFromShopcard(this.shopcard);
+        var self = this;
         for (let o in this.shopcard.shipment) {
             if (true) {
-                let order = orders.find(oo=>oo.butcherid == parseInt(o))
+                let order = orders.find(oo => oo.butcherid == parseInt(o))
                 let dispatch = await api.bestDispatcher(parseInt(o), {
                     level1Id: this.shopcard.address.level1Id,
                     level2Id: this.shopcard.address.level2Id,
@@ -146,8 +176,10 @@ export default class Route extends ViewRouter {
                         type: dispatch.type,
                         min: dispatch.min,
                         takeOnly: dispatch.takeOnly,
-                        location: null // dispatch.butcher ? <any>dispatch.butcher.location : null
-
+                        location: dispatch.butcher ? <any>dispatch.butcher.location : null,
+                        calculateCostForCustomer: function(shipment) {
+                            return self.calculateCostForCustomer(shipment, order)
+                        }
                     }
                     if (dispatch.min > this.shopcard.butchers[o].subTotal) {
                         this.shopcard.shipment[o].howTo = 'ship';
@@ -188,7 +220,7 @@ export default class Route extends ViewRouter {
         this.shopcard.address.kat = this.req.body.kat;
         this.shopcard.address.daire = this.req.body.daire;
         this.shopcard.address.bina = this.req.body.bina;
-        this.shopcard.address.addresstarif = this.req.body.addresstarif;        
+        this.shopcard.address.addresstarif = this.req.body.addresstarif;
         if (this.req.body.lat && this.req.body.long && (parseFloat(this.req.body.lat) > 0) && (parseFloat(this.req.body.long) > 0)) {
             this.shopcard.address.location = {
                 type: 'Point',
@@ -228,6 +260,9 @@ export default class Route extends ViewRouter {
         this.shopcard.address.addresstarif = this.shopcard.address.addresstarif || this.req.user.lastTarif;
         this.shopcard.address.kat = this.shopcard.address.kat || this.req.user.lastKat;
         this.shopcard.address.daire = this.shopcard.address.daire || this.req.user.lastDaire;
+        if (this.req.prefAddr && this.req.user.lastLevel3Id && this.req.prefAddr.level3Id != this.req.user.lastLevel3Id) {
+            return;
+        }
         this.shopcard.address.geolocationType = this.shopcard.address.geolocationType || this.req.user.lastLocationType;
         this.shopcard.address.geolocation = this.shopcard.address.geolocation || this.req.user.lastLocation;
     }
@@ -258,7 +293,6 @@ export default class Route extends ViewRouter {
             }
         }
         this.shopcard.calculateShippingCosts();
-
         this.fillDefaultAddress();
         await this.shopcard.saveToRequest(this.req);
         //this.renderPage("pages/checkout.adres.ejs")
@@ -297,11 +331,9 @@ export default class Route extends ViewRouter {
             this.shopcard.payment[k].type = this.req.body[`paymentmethod${k}`];
             this.shopcard.payment[k].desc = PaymentTypeDesc[this.shopcard.payment[k].type];
             this.shopcard.shipment[k].nointeraction = this.req.body[`nointeraction${k}`] == "on";
-
         }
         this.shopcard.arrangeButchers();
-        let orders = await this.orderapi.getFromShopcard(this.shopcard);        
-        await this.setDispatcher(orders);
+        await this.setDispatcher();
         this.shopcard.calculateShippingCosts();
         await this.shopcard.saveToRequest(this.req);
         await this.getOrderSummary();
@@ -311,19 +343,19 @@ export default class Route extends ViewRouter {
 
     async reviewViewRoute(userMessage?: any) {
         this.shopcard = await ShopCard.createFromRequest(this.req);
-        this.shopcard.arrangeButchers();
-        let orders = await this.orderapi.getFromShopcard(this.shopcard);
-        await this.setDispatcher(orders);
+        this.shopcard.arrangeButchers();        
+        await this.setDispatcher();
         this.shopcard.calculateShippingCosts();
         await this.shopcard.saveToRequest(this.req);
-        orders = await this.getOrderSummary();
+        await this.getOrderSummary();
         this.renderPage("pages/checkout.review.ejs", userMessage);
     }
 
 
     async savereviewRoute() {
         this.shopcard = await ShopCard.createFromRequest(this.req);
-        let creditCard: Creditcard = null;
+        await this.setDispatcher();
+        this.shopcard.calculateShippingCosts();
         try {
             let api = new OrderApi(this.constructorParams);
             let orders = await api.create(this.shopcard);
@@ -332,10 +364,10 @@ export default class Route extends ViewRouter {
             //     this.res.redirect(`/user/orders/${orders[0].ordernum}?new=1`)
             // }
             // else 
-            
+
             this.res.render("pages/checkout.complete.ejs", this.viewData({
                 orders: orders,
-                
+
             }));
         } catch (err) {
             await this.reviewViewRoute({ _usrmsg: { text: err.message || err.errorMessage } })
