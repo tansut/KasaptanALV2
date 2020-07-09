@@ -134,18 +134,32 @@ export default class Route extends ApiRouter {
             type: 'butcher'
         }
         where = await this._where(where, address);
-        if (!useLevel1) {
-            where[Op.and] = where[Op.and] || []
-            where[Op.and].push({
-                toarealevel: {
-                    [Op.ne]: 1
-                }
-            })
-        }        
+
+        // if (!useLevel1) {
+        //     where[Op.and] = where[Op.and] || []
+        //     where[Op.and].push({
+        //         toarealevel: {
+        //             [Op.ne]: 1
+        //         }
+        //     })
+        // }        
 
         let res = await Dispatcher.findOne({
-            where: where           
+            where: where,
+            include: [
+                {
+                    model: Butcher,
+                    as: 'butcher'
+                }
+            ],   
         });        
+
+        if (res.toarealevel == 1) {
+            if (!useLevel1) {
+                let forceL1 = res.butcher.dispatchArea == "citywide" || res.butcher.dispatchArea == "radius";
+                res = forceL1 ? res: null;
+            }
+        }
 
         return res != null;
     }

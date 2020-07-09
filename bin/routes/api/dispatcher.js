@@ -135,17 +135,29 @@ class Route extends router_1.ApiRouter {
                 type: 'butcher'
             };
             where = yield this._where(where, address);
-            if (!useLevel1) {
-                where[sequelize_1.Op.and] = where[sequelize_1.Op.and] || [];
-                where[sequelize_1.Op.and].push({
-                    toarealevel: {
-                        [sequelize_1.Op.ne]: 1
-                    }
-                });
-            }
+            // if (!useLevel1) {
+            //     where[Op.and] = where[Op.and] || []
+            //     where[Op.and].push({
+            //         toarealevel: {
+            //             [Op.ne]: 1
+            //         }
+            //     })
+            // }        
             let res = yield dispatcher_1.default.findOne({
-                where: where
+                where: where,
+                include: [
+                    {
+                        model: butcher_1.default,
+                        as: 'butcher'
+                    }
+                ],
             });
+            if (res.toarealevel == 1) {
+                if (!useLevel1) {
+                    let forceL1 = res.butcher.dispatchArea == "citywide" || res.butcher.dispatchArea == "radius";
+                    res = forceL1 ? res : null;
+                }
+            }
             return res != null;
         });
     }
