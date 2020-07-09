@@ -34,7 +34,7 @@
   var showShopBtn = true;
   
   %>
-  <form method="POST" onsubmit="return App.Auth.checkAuthentication('/alisveris-sepetim/ship')" novalidate
+  <form method="POST" onsubmit="return App.Auth.checkAuthentication('/alisveris-sepetim/ship', '<b>Muazzam ürünler, tebrikler!</b> <br/><b>Şimdi en fazla 2 dakikada</b> alışverişinizi tamamlayın.')" novalidate
     class="needs-validation" action="/alisveris-sepetim/savecard">
     <div class="container mb-3 ">
 
@@ -124,7 +124,6 @@
               class="btn btn-info btn-sm  " type="submit" value="true" name="checkout" id="checkout">Sonraki Adım <i
                 class="czi-arrow-right ml-1"></i></button>
             <%} else { %>
-            <!-- <a href="/kasap-urunleri" class="btn btn-sm btn-primary ">Alışverişe Başla</a> -->
     
             <%}%>
           </div>
@@ -230,6 +229,8 @@
     <% shopcard.items.forEach(item => { %>
         window.App.gTag('checkout', 'view/shopcard/item', "<%=item.product.slug%>", 1);
     <%}) %>
+
+    
   </script>
 
 </body>

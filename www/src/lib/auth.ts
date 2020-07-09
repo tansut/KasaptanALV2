@@ -6,9 +6,9 @@ export class Auth {
     static phone: string;
     static sms: string;
 
-    static checkAuthentication(returnUrl?: string) {
+    static checkAuthentication(returnUrl?: string, message?: string) {
         if (!App.User.isAuthenticated) {
-            App.showSignupDlg(returnUrl);
+            App.showSignupDlg(returnUrl, false, message);
             return false;
         } return true;
     }

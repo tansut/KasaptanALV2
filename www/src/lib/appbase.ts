@@ -39,7 +39,9 @@ export default class AppBase {
         this.jq('a[href="#' + tab + '"]').tab('show');
     };
 
-    static showSignupDlg(returnUrl: string = null, showAd: boolean = false) {
+    static showSignupDlg(returnUrl: string = null, showAd: boolean = false, message?: string) {
+        message ? $('#signupDlgMessageDiv').show(): $('#signupDlgMessageDiv').hide();
+        message ? $('#signupDlgMessage').html(message): $('#signupDlgMessage').html("")        
         this.activaTab("signup-tab");
         this.RunConfig['returnUrl'] = returnUrl;
         $("#si-resetpwd").attr("href", "/reset-password");

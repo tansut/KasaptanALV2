@@ -152,7 +152,7 @@ class Route extends router_1.ApiRouter {
                     }
                 ],
             });
-            if (res.toarealevel == 1) {
+            if (res && res.toarealevel == 1) {
                 if (!useLevel1) {
                     let forceL1 = res.butcher.dispatchArea == "citywide" || res.butcher.dispatchArea == "radius";
                     res = forceL1 ? res : null;
