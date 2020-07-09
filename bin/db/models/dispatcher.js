@@ -186,6 +186,10 @@ __decorate([
     }),
     __metadata("design:type", Boolean)
 ], Dispatcher.prototype, "takeOnly", void 0);
+__decorate([
+    sequelize_typescript_1.Column,
+    __metadata("design:type", String)
+], Dispatcher.prototype, "areaTag", void 0);
 Dispatcher = __decorate([
     sequelize_typescript_1.Table({
         tableName: "Dispatchers",

@@ -251,22 +251,20 @@ class Route extends router_1.ApiRouter {
             let ugly = {}, result = [];
             for (let i = 0; i < res.length; i++) {
                 let r = res[i];
-                let butcherAvail = true;
-                let useL1 = useLevel1 || r.butcher.dispatchArea == "citywide" || r.butcher.dispatchArea == "radius";
-                if (useL1) {
-                    if (r.toarealevel == 1) {
-                        if (r.butcher.dispatchArea == "radius") {
-                            let l3 = yield area_1.default.findByPk(address.level3Id);
-                            let distance = helper_1.default.distance(r.butcher.location, l3.location);
-                            if (r.butcher.radiusAsKm >= distance) {
-                            }
-                            else
-                                butcherAvail = false;
-                        }
+                let butcherAvail = r.toarealevel > 1 || useLevel1;
+                if (!useLevel1 && r.toarealevel == 1) {
+                    let forceL1 = r.butcher.dispatchArea == "citywide" || r.butcher.dispatchArea == "radius";
+                    if (r.butcher.dispatchArea == "radius") {
+                        let l3 = yield area_1.default.findByPk(address.level3Id);
+                        let distance = helper_1.default.distance(r.butcher.location, l3.location);
+                        butcherAvail = r.butcher.radiusAsKm >= distance;
                     }
-                }
-                else if (r.toarealevel == 1) {
-                    butcherAvail = false;
+                    else
+                        butcherAvail = forceL1;
+                    if (butcherAvail && r.areaTag) {
+                        let area = yield area_1.default.findByPk(address.level3Id);
+                        butcherAvail = r.areaTag == area.dispatchTag;
+                    }
                 }
                 if (butcherAvail && !ugly[r.butcherid]) {
                     ugly[r.butcherid] = r;

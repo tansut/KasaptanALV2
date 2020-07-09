@@ -154,6 +154,10 @@ __decorate([
     __metadata("design:type", String)
 ], Area.prototype, "placeid", void 0);
 __decorate([
+    sequelize_typescript_1.Column,
+    __metadata("design:type", String)
+], Area.prototype, "dispatchTag", void 0);
+__decorate([
     sequelize_typescript_1.Column({
         allowNull: true,
         type: sequelize_typescript_1.DataType.TEXT

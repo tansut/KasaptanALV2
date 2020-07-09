@@ -415,6 +415,10 @@
 
                                                 </td>
                                                 <td>
+                                                    <input type="text" name="areaTag<%=d.id%>" value="<%=d.areaTag%>">
+
+                                                </td>
+                                                <td>
                                                     <select name="dsel<%=d.id%>">
                                                         <option <%= d.selection == 'tam'? 'selected':'' %> value="tam">Tam</option>
                                                         <option <%= d.selection == 'sadece liste'? 'selected':'' %> value="sadece liste">sadece liste</option>

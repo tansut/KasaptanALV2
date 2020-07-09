@@ -116,7 +116,9 @@ export default class Route extends ViewRouter {
 
         let mybest: Dispatcher = await this.tryBestFromShopcard(serving) ||
             await this.tryBestFromOrders(servingL3) ||
-            await this.tryBestFromOrders(servingL2) || this.tryBestAsRandom(serving);
+            await this.tryBestFromOrders(servingL2) || 
+            await this.tryBestFromOrders(servingL1) || 
+            this.tryBestAsRandom(serving);
 
         if (mybest) {
             mybest = (userBest ? (serving.find(s => s.butcherid == userBest.id)) : null) || mybest;

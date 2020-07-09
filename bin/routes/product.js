@@ -106,7 +106,9 @@ class Route extends router_1.ViewRouter {
             servingL1 = helper_1.default.shuffle(servingL1);
             let mybest = (yield this.tryBestFromShopcard(serving)) ||
                 (yield this.tryBestFromOrders(servingL3)) ||
-                (yield this.tryBestFromOrders(servingL2)) || this.tryBestAsRandom(serving);
+                (yield this.tryBestFromOrders(servingL2)) ||
+                (yield this.tryBestFromOrders(servingL1)) ||
+                this.tryBestAsRandom(serving);
             if (mybest) {
                 mybest = (userBest ? (serving.find(s => s.butcherid == userBest.id)) : null) || mybest;
             }

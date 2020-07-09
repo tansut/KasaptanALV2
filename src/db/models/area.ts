@@ -68,6 +68,9 @@ class Area extends BaseModel<Area> {
     @Column
     placeid: string;
 
+    @Column
+    dispatchTag: string;
+
     @Column({
         allowNull: true,
         type: DataType.TEXT

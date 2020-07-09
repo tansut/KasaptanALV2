@@ -152,6 +152,9 @@ class Dispatcher extends BaseModel<Dispatcher> {
     })
     takeOnly: boolean;
 
+    @Column
+    areaTag: string;
+
     get userNote() {
         let desc = "";
 
