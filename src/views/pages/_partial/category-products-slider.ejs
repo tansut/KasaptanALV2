@@ -9,8 +9,46 @@
     <a class="d-none d-md-block btn btn-sm" href="<%=`/${cat.slug}` %>">Tümü &raquo;</a>    
 </div>
 
-<%- include('./products-view', {viewId: "", viewMode:'tab', products: products}); %>
-<div class="d-xs-block border-bottom d-md-none text-center mb-3">
-    <a class="btn rounded-0 btn-sm btn-secondary" href="/<%=cat.slug%>">Tümü &raquo;
-    </a>
-</div>
+<% if (cat.slug == 'kurban') { %>
+    <div class="text-dark px-4 pt-1 pb-3 text-center"
+    style="background-image: url(<%=__config.staticDomain %>/resource/img/islam-bg.jpeg);background-repeat: repeat">
+    <div class="container ">
+      <p class="lead">
+        <ul class="list-unstyled lead">
+          <li>
+          <strong>Kaliteli et</strong>,
+          </li>
+          <li>
+          <strong>İslâmi usullere uygunluk</strong>,
+          </li>
+          <li>
+            <strong>Adresinize teslimat</strong>,
+            
+
+          </li>
+
+          <li>
+            veya <strong>Online Bağış</strong> imkânı sunuyoruz.
+          </li>
+        </ul>
+        
+      </p>
+      <p>
+        <a class="btn btn-shadow btn-warning" href="/kurban" role="button">Kurbanlıklar &raquo;</a></p>
+    </div>
+    <%- include('./products-view', {viewId: "", viewMode:'tab', products: products}); %>
+
+  </div>
+
+
+
+    
+    
+    <%} else { %>
+        <%- include('./products-view', {viewId: "", viewMode:'tab', products: products}); %>
+        <div class="d-xs-block border-bottom d-md-none text-center mb-3">
+            <a class="btn rounded-0 btn-sm btn-secondary" href="/<%=cat.slug%>">Tümü &raquo;
+            </a>
+        </div>
+    <% } %>
+

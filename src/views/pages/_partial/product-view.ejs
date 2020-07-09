@@ -3,7 +3,7 @@
 <% var badge = typeof(badge) != 'undefined' ? badge: product.tag2 %>
 <% var showPurchase = typeof(showPurchase) != 'undefined' ? showPurchase: false %>
 
-<div class="card product-card">
+<div class="card rounded-0 product-card h-100 ">
     <% if (badge && typeof(hideBadge) == 'undefined') { %>
     <span class="badge badge-danger badge-shadow d-print-none"><%=badge%></span>
 
