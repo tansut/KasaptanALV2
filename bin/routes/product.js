@@ -49,6 +49,7 @@ class Route extends router_1.ViewRouter {
         this.reviews = [];
         this.shopCardIndex = -1;
         this.shopCardItem = null;
+        this.dispatchingAvailable = true;
         this.productTypeManager = null;
     }
     get ProductTypeManager() {
@@ -92,10 +93,13 @@ class Route extends router_1.ViewRouter {
         let res = (fullServing.length > 0 ? fullServing[0] : null);
         return res;
     }
+    useL1(product) {
+        return (product.productType == product_1.ProductType.adak || product.productType == product_1.ProductType.kurban);
+    }
     bestButchersForProduct(product, adr, userBest) {
         return __awaiter(this, void 0, void 0, function* () {
             let api = new dispatcher_1.default(this.constructorParams);
-            let serving = yield api.getButchersSelingAndDispatches(adr, product, (product.productType == product_1.ProductType.adak || product.productType == product_1.ProductType.kurban));
+            let serving = yield api.getButchersSelingAndDispatches(adr, product, this.useL1(product));
             let takeOnly = serving.filter(p => p.takeOnly == true);
             let servingL3 = serving.filter(p => p.toarealevel == 3 && !p.takeOnly);
             let servingL2 = serving.filter(p => p.toarealevel == 2 && !p.takeOnly && (servingL3.find(m => m.butcher.id == p.butcher.id) == null));
@@ -270,6 +274,7 @@ class Route extends router_1.ViewRouter {
                 });
             }
             this.productLd = product.reviewCount > 0 ? yield api.getProductLd(product) : null;
+            this.dispatchingAvailable = this.req.prefAddr && (view.butcher != null || (yield new dispatcher_1.default(this.constructorParams).dispatchingAvailable(this.req.prefAddr, this.useL1(this.product))));
             this.res.render('pages/product', this.viewData({
                 butcherProducts: this.butcherProducts.map(p => p.product), butchers: selectedButchers,
                 pageTitle: product.name + ' Siparişi ve Fiyatları',

@@ -343,7 +343,7 @@
                         <div class="mb-3 d-block font-size-sm text-info text-center">
                           <% if (__req.query.butcher) {  %>
                         
-                            <% if (__req.prefAddr.level3Status != 'active') { %>
+                            <% if (!controller.dispatchingAvailable) { %>
                               <h5 class="h6 text-info">Henüz Semtinizde Değiliz</h5>
                               <span class="font-weight-medium">
     
@@ -361,7 +361,7 @@
 
 
                           <% } else { %>
-                            <% if (__req.prefAddr.level3Status != 'active') { %>
+                            <% if (!controller.dispatchingAvailable) { %>
                               <h5 class="h6 text-info">Henüz Semtinizde Değiliz</h5>
                               <span class="font-weight-medium">
     
@@ -382,7 +382,7 @@
 
 
                         </div>
-                        <% if (__req.prefAddr.level3Status != 'active') { %>
+                        <% if (!controller.dispatchingAvailable) { %>
                         <div class="d-flex justify-content-center">
 
                           <% if (__req.query.frame != '1') { %>

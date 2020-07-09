@@ -198,20 +198,16 @@
           </button>
         </div>
         <div class="modal-body p-0">
-          <div class="p-2 text-muted font-size-sm bg-secondary">
-            Belirttiğiniz adresi birden çok bölgede bulduk. Lütfen doğru bölgeyi seçin.
+          <div class="p-2 text-muted font-size-sm bg-secondary text-center font-weight-bold">
+            Adresizi birden çok bölge içerisinde bulduk. Lütfen önce doğru bölgeyi seçin, sonrasında açacağımız harita üzerinden tam adresinizi alacağız. 
           </div>
           <div id="addresslist">
             <div if="list && list.length > 0" v-for="(addr, index) in list" class="border mb-2">
               <div id="approve-loc" class="text-center bg-secondary">
-                <a class="d-block mb-2" target="_blank"
-                  :href="'https://www.google.com/maps/search/?api=1&query=' + addr.location.coordinates[0] + ',' + addr.location.coordinates[1]">
+                <a class="d-block mb-2" @click="setloc(addr)">
                   <img class=" rounded"
                     :src="'https://maps.googleapis.com/maps/api/staticmap?center=' + addr.location.coordinates[0] +'+'+addr.location.coordinates[1] + '&zoom=18&scale=1&size=600x300&maptype=roadmap&key=AIzaSyBFqn2GNAhwbJnpga-3S3xQGBc0EcdAgH8&format=png&visual_refresh=true&markers=size:mid%7Ccolor:0xff0000%7Clabel:M%7C' + addr.location.coordinates[0] + '+' + addr.location.coordinates[1]">
-
                 </a>
-
-
                 <button @click="setloc(addr)" type="button" class="btn btn-accent btn-sm">Bu Bölgedeyim</button>
               </div>
 

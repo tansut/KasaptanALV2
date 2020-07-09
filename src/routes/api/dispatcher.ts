@@ -86,54 +86,6 @@ export default class Route extends ApiRouter {
         return res;
     }
 
-    // async bestDispatcher(butcherId, toAreaId, tolevel) {
-    //     let res = await Dispatcher.findOne({
-    //         where: {
-    //             toareaid: toAreaId,
-    //             type: 'butcher'      ,
-    //             butcherid: butcherId 
-    //         }
-    //     })
-    //     return res;
-    // }
-
-    // async getDispatchers(toid, include=[]) {
-    //     let res = await Dispatcher.findAll({
-    //         where: {
-    //             toareaid: toid,
-    //             type: 'butcher'              
-    //         },
-    //         include:include
-    //     })
-    //     return res;
-    // }
-
-    // async getButchersSeling(address: PreferredAddress) {
-    //     let where = {
-    //         type: 'butcher'
-    //     }
-    //     where['$butcher.approved$'] = true;
-    //     where = await this._where(where, address);
-    //     let res = await Dispatcher.findAll({
-    //         where: where,
-    //         include: [
-    //             {
-    //                 model: Butcher,
-    //                 as: 'butcher'
-    //             },
-    //         ],
-    //         order: [["toarealevel", "DESC"]]
-    //         //limit: 10
-    //     })
-    //     let ugly = {}, result = [];
-    //     res.forEach(r => {
-    //         if (!ugly[r.butcherid]) {
-    //             ugly[r.butcherid] = r;
-    //             result.push(r)
-    //         }
-    //     })
-    //     return result;
-    // }
 
     async getButchersDispatchesForAll(areaids: number[]) {
         let where = {
@@ -177,7 +129,26 @@ export default class Route extends ApiRouter {
         return res;
     }
 
+    async dispatchingAvailable(address: PreferredAddress, useLevel1: boolean) {
+        let where = {
+            type: 'butcher'
+        }
+        where = await this._where(where, address);
+        if (!useLevel1) {
+            where[Op.and] = where[Op.and] || []
+            where[Op.and].push({
+                toarealevel: {
+                    [Op.ne]: 1
+                }
+            })
+        }        
 
+        let res = await Dispatcher.findOne({
+            where: where           
+        });        
+
+        return res != null;
+    }
 
     async getButchersSelingAndDispatches(address: PreferredAddress, product: Product, useLevel1: boolean) {
         let where = {

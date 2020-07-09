@@ -52,7 +52,7 @@ export default class Route extends ViewRouter {
     reviews: Review[] = [];
     shopCardIndex: number = -1;
     shopCardItem: ShopcardItem = null;
-
+    dispatchingAvailable: boolean = true;
 
     productTypeManager: ProductTypeManager = null;
 
@@ -67,6 +67,8 @@ export default class Route extends ViewRouter {
         let result = this.productTypeManager || (this.productTypeManager = ProductTypeFactory.create(this.product.productType, params))
         return result;
     }
+
+
 
 
     async tryBestFromShopcard(serving: Dispatcher[], others: Dispatcher[] = []) {
@@ -95,13 +97,16 @@ export default class Route extends ViewRouter {
         return res;
     }
 
+    useL1(product: Product) {
+        return (product.productType == ProductType.adak || product.productType == ProductType.kurban)    
+    }
 
     async bestButchersForProduct(product: Product, adr: PreferredAddress, userBest: Butcher): Promise<ButcherSelection> {
         let api = new DispatcherApi(this.constructorParams);
 
         let serving = await api.getButchersSelingAndDispatches(adr, product,
-             (product.productType == ProductType.adak || product.productType == ProductType.kurban)                    
-            );
+            this.useL1(product)
+        );
 
         let takeOnly = serving.filter(p => p.takeOnly == true);
         let servingL3 = serving.filter(p => p.toarealevel == 3 && !p.takeOnly);
@@ -302,6 +307,9 @@ export default class Route extends ViewRouter {
         }
 
         this.productLd = product.reviewCount > 0 ? await api.getProductLd(product) : null;
+
+        this.dispatchingAvailable = this.req.prefAddr && (view.butcher != null || await new DispatcherApi(this.constructorParams).dispatchingAvailable(this.req.prefAddr, this.useL1(this.product)));
+
         this.res.render('pages/product', this.viewData({
             butcherProducts: this.butcherProducts.map(p => p.product), butchers: selectedButchers,
             pageTitle: product.name + ' Siparişi ve Fiyatları',

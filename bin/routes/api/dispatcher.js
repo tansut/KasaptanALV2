@@ -90,52 +90,6 @@ class Route extends router_1.ApiRouter {
             return res;
         });
     }
-    // async bestDispatcher(butcherId, toAreaId, tolevel) {
-    //     let res = await Dispatcher.findOne({
-    //         where: {
-    //             toareaid: toAreaId,
-    //             type: 'butcher'      ,
-    //             butcherid: butcherId 
-    //         }
-    //     })
-    //     return res;
-    // }
-    // async getDispatchers(toid, include=[]) {
-    //     let res = await Dispatcher.findAll({
-    //         where: {
-    //             toareaid: toid,
-    //             type: 'butcher'              
-    //         },
-    //         include:include
-    //     })
-    //     return res;
-    // }
-    // async getButchersSeling(address: PreferredAddress) {
-    //     let where = {
-    //         type: 'butcher'
-    //     }
-    //     where['$butcher.approved$'] = true;
-    //     where = await this._where(where, address);
-    //     let res = await Dispatcher.findAll({
-    //         where: where,
-    //         include: [
-    //             {
-    //                 model: Butcher,
-    //                 as: 'butcher'
-    //             },
-    //         ],
-    //         order: [["toarealevel", "DESC"]]
-    //         //limit: 10
-    //     })
-    //     let ugly = {}, result = [];
-    //     res.forEach(r => {
-    //         if (!ugly[r.butcherid]) {
-    //             ugly[r.butcherid] = r;
-    //             result.push(r)
-    //         }
-    //     })
-    //     return result;
-    // }
     getButchersDispatchesForAll(areaids) {
         return __awaiter(this, void 0, void 0, function* () {
             let where = {
@@ -173,6 +127,26 @@ class Route extends router_1.ApiRouter {
                 order: [["toarealevel", "DESC"]]
             });
             return res;
+        });
+    }
+    dispatchingAvailable(address, useLevel1) {
+        return __awaiter(this, void 0, void 0, function* () {
+            let where = {
+                type: 'butcher'
+            };
+            where = yield this._where(where, address);
+            if (!useLevel1) {
+                where[sequelize_1.Op.and] = where[sequelize_1.Op.and] || [];
+                where[sequelize_1.Op.and].push({
+                    toarealevel: {
+                        [sequelize_1.Op.ne]: 1
+                    }
+                });
+            }
+            let res = yield dispatcher_1.default.findOne({
+                where: where
+            });
+            return res != null;
         });
     }
     getButchersSelingAndDispatches(address, product, useLevel1) {
