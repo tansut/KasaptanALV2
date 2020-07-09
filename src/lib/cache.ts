@@ -112,7 +112,7 @@ export class CacheManager {
                 raw: true,
                 attributes: ["title", "category", "description", "slug", "categorySlug"],
                 order: [["DisplayOrder", "DESC"], ["UpdatedOn", "DESC"]],
-                limit: 7
+                limit: 10
             });
             this.dataCache.set("recent-blogs", result);
         }
