@@ -26,17 +26,13 @@ const user_1 = require("../../db/models/user");
 const product_1 = require("../../db/models/product");
 const resource_1 = require("../../db/models/resource");
 const _ = require("lodash");
+const area_1 = require("../../db/models/area");
 class SearchResult {
 }
 exports.SearchResult = SearchResult;
 class Route extends router_1.ApiRouter {
-    searchRoute() {
+    getProducrs(search) {
         return __awaiter(this, void 0, void 0, function* () {
-            if (!this.req.query.q || this.req.query.q.length < 2)
-                return this.res.send([]);
-            let text = this.req.query.q;
-            let words = text.match(/\S+/g).filter(w => w.length > 2).map(w => `+${w}*`);
-            let search = words.join();
             let psql = this.req.query.c ?
                 "select p.name as name, p.slug as url, '' as type, match(p.name, p.shortdesc, p.slug, p.keywords) against (:search IN BOOLEAN MODE) as RELEVANCE " +
                     "from Products p, ProductCategories pc, Categories c where pc.productid = p.id and c.id = pc.categoryid and c.slug = :category and match(p.name, p.shortdesc, p.slug, p.keywords)  against (:search IN BOOLEAN MODE) ORDER BY RELEVANCE DESC LIMIT 10"
@@ -59,7 +55,12 @@ class Route extends router_1.ApiRouter {
                     thumb: this.req.helper.imgUrl('product-photos', px.url)
                 };
             });
-            let cats = this.req.query.t == 'product' ? [] : yield user_1.default.sequelize.query("select name, slug as url, 'Kategoriler' as type, match(name, shortdesc, slug, keywords) against (:search IN BOOLEAN MODE) as RELEVANCE " +
+            return prods;
+        });
+    }
+    getCategories(search) {
+        return __awaiter(this, void 0, void 0, function* () {
+            let cats = yield user_1.default.sequelize.query("select name, slug as url, 'Kategoriler' as type, match(name, shortdesc, slug, keywords) against (:search IN BOOLEAN MODE) as RELEVANCE " +
                 "from Categories where match(name, shortdesc, slug, keywords)  against (:search IN BOOLEAN MODE) ORDER BY Categories.type, RELEVANCE DESC LIMIT 10", {
                 replacements: { search: search },
                 type: sq.QueryTypes.SELECT,
@@ -76,7 +77,12 @@ class Route extends router_1.ApiRouter {
                     thumb: this.req.helper.imgUrl('category-photos', px.url)
                 };
             });
-            let areas = this.req.query.t == 'product' ? [] : yield user_1.default.sequelize.query("select name, slug as url, 'Bölgeler' as type, match(name, slug, keywords) against (:search IN BOOLEAN MODE) as RELEVANCE " +
+            return cats;
+        });
+    }
+    getAreaButchers(search) {
+        return __awaiter(this, void 0, void 0, function* () {
+            let areas = yield user_1.default.sequelize.query("select name, slug as url, 'Bölgeler' as type, match(name, slug, keywords) against (:search IN BOOLEAN MODE) as RELEVANCE " +
                 "from Areas where status='active' and match(name, slug, keywords)  against (:search IN BOOLEAN MODE) ORDER BY RELEVANCE DESC LIMIT 10", {
                 replacements: { search: search },
                 type: sq.QueryTypes.SELECT,
@@ -93,7 +99,47 @@ class Route extends router_1.ApiRouter {
                     thumb: null // this.req.helper.imgUrl('category-photos', px.url)
                 };
             });
-            let butchers = this.req.query.t == 'product' ? [] : yield user_1.default.sequelize.query("select name, slug as url, 'Kasaplar' as type, match(name, slug, keywords) against (:search IN BOOLEAN MODE) as RELEVANCE " +
+            return areas;
+        });
+    }
+    getAreas(search) {
+        return __awaiter(this, void 0, void 0, function* () {
+            let areas = yield user_1.default.sequelize.query("select id, name, slug as url, 'Semt' as type, match(name, slug, keywords) against (:search IN BOOLEAN MODE) as RELEVANCE " +
+                "from Areas where level=3 and match(name, slug, keywords)  against (:search IN BOOLEAN MODE) ORDER BY RELEVANCE DESC LIMIT 10", {
+                replacements: { search: search },
+                type: sq.QueryTypes.SELECT,
+                mapToModel: false,
+                raw: true
+            }).map((p, i) => {
+                let px = p;
+                return {
+                    id: px.id,
+                    name: px.name,
+                    url: px.url,
+                    type: px.type,
+                    score: px.RELEVANCE
+                };
+            });
+            for (let i = 0; i < areas.length; i++) {
+                let area = areas[i];
+                let addr = yield area_1.default.findByPk(area.id);
+                let pref = yield addr.getPreferredAddress();
+                area['display'] = pref.display;
+                area['l1'] = {
+                    name: pref.level1Text,
+                    slug: pref.level1Slug
+                },
+                    area['l2'] = {
+                        name: pref.level2Text,
+                        slug: pref.level2Slug
+                    };
+            }
+            return areas;
+        });
+    }
+    getButchers(search) {
+        return __awaiter(this, void 0, void 0, function* () {
+            let butchers = yield user_1.default.sequelize.query("select name, slug as url, 'Kasaplar' as type, match(name, slug, keywords) against (:search IN BOOLEAN MODE) as RELEVANCE " +
                 "from Butchers where approved=true and match(name, slug, keywords)  against (:search IN BOOLEAN MODE) ORDER BY RELEVANCE DESC LIMIT 10", {
                 replacements: { search: search },
                 type: sq.QueryTypes.SELECT,
@@ -110,6 +156,11 @@ class Route extends router_1.ApiRouter {
                     thumb: this.req.helper.imgUrl('butcher-google-photos', px.url)
                 };
             });
+            return butchers;
+        });
+    }
+    getFoods(search) {
+        return __awaiter(this, void 0, void 0, function* () {
             let foodResources = yield resource_1.default.sequelize.query("select id, title, ref1, slug, contentType, thumbnailUrl, folder,  match(title, description, slug, keywords) against (:search IN BOOLEAN MODE) as RELEVANCE " +
                 "from Resources where (tag1 like '%tarif%' or tag1 like '%yemek%') and match(title, description, slug, keywords)  against (:search IN BOOLEAN MODE) ORDER BY  RELEVANCE DESC LIMIT 10", {
                 replacements: { search: search },
@@ -133,7 +184,23 @@ class Route extends router_1.ApiRouter {
                     thumb: px.contentType == 'video-youtube' ? (px.thumbnailUrl ? px.getThumbnailFileUrl() : null) : px.getThumbnailFileUrl()
                 };
             });
-            let combined = cats.concat(prods.concat(foods.concat(butchers.concat(areas))));
+            return foods;
+        });
+    }
+    searchRoute() {
+        return __awaiter(this, void 0, void 0, function* () {
+            if (!this.req.query.q || this.req.query.q.length < 2)
+                return this.res.send([]);
+            let text = this.req.query.q;
+            let words = text.match(/\S+/g).filter(w => w.length > 2).map(w => `+${w}*`);
+            let search = words.join();
+            let products = (!this.req.query.t || this.req.query.t == 'product') ? yield this.getProducrs(search) : [];
+            let categories = (!this.req.query.t || this.req.query.t == 'category') ? yield this.getCategories(search) : [];
+            let foods = (!this.req.query.t || this.req.query.t == 'food') ? yield this.getFoods(search) : [];
+            let butchers = (!this.req.query.t || this.req.query.t == 'butcher') ? yield this.getButchers(search) : [];
+            let areaBtchers = (!this.req.query.t || this.req.query.t == 'area-butcher') ? yield this.getAreaButchers(search) : [];
+            let areas = (this.req.query.t == 'area') ? yield this.getAreas(search) : [];
+            let combined = categories.concat(products.concat(foods.concat(butchers.concat(areaBtchers.concat(areas)))));
             let sorted = _.sortBy(combined, 'RELEVANCE');
             this.res.send(sorted);
         });

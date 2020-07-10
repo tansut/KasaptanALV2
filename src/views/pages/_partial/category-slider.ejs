@@ -21,7 +21,7 @@
 
 <%if (mode=='list') { %>
 
-<div class="slider" data-simplebar>
+<div class="slider" data-simplebar data-simplebar-auto-hide="false">
     <div class="d-flex <%=titles ? 'pb-2': 'pb-0'%>">
         <% viewCats.forEach(cat => { %>
         <% var reyonlar = (categories.filter(p=>p.type == cat && p.status == 'active')) %>

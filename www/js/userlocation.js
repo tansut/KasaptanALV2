@@ -70,6 +70,68 @@
                 });
             },
 
+            initAutoComplete() {
+                $('.searchBox-semt').autoComplete({
+                    resolver: 'custom',
+                    minLength: 3,
+                    noneSelectedText: 'seçim yapın',
+                    formatResult: function (item) {
+                            return {
+                              value: item.id,
+                              text:  item.text,
+                              html: [                     
+                                  item.text, 
+                                ] 
+                            };
+                          },
+                          
+                    resolverSettings: {
+                      url: '/api/v1/fts',
+                      requestThrottling: 2000
+                    },
+                    events: {
+                
+                      search: function (qry, callback,el) {
+              
+                              $('.notsearching').addClass('d-none');
+                              $('.searching').removeClass('d-none');
+                              $.ajax(
+                                '/api/v1/fts',
+                                {
+                                  data: { t: $(el).data('search'), c: $(el).data('category'), 'q': qry}
+                                }
+                              ).done(function (res) {
+                                $('.searching').addClass('d-none');
+                              $('.notsearching').removeClass('d-none');
+                                callback(res);
+                                
+                              });
+                            },
+                            
+                      searchPost: function (res, el) {
+                        window.__searchResultSemt = res;
+                        window.dataLayer = window.dataLayer || [];
+                                    window.dataLayer.push({
+                                    'event': 'custom',
+                                    'category': 'search',
+                                    'action':'search/autocomplete',
+                                    'label': el.val()
+                                    });
+                
+                        return res.map(function (p) {
+                          return {
+                            id: p.id,
+                            text: p.display || ""
+                          }
+                        })
+                      }
+                
+                    }
+                  });
+                
+
+              
+            },
 
             init: function (options, done) {
                 this.options = options || {};
@@ -144,7 +206,7 @@
                 }
 
 
-
+                this.initAutoComplete();
                 done && done();
             }
         }
@@ -174,8 +236,26 @@
                     done && done(self, ul)
                 })
 
-                $('#areaModal').on('shown.bs.modal', function () {
+                $('.searchBox-semt').on('autocomplete.select', function (evt, item) {
+                    let go = window.__searchResultSemt.find(function (result) {
+                      return result.id == item.id
+                    });
 
+                    ul.selectedDistrict = ul.selectedDistrict || {}
+                    ul.selectedDistrict.slug = go.url;
+              
+                    $(window).trigger('kb.selectArea.selected', [self, ul]);
+                    done && done(self, ul)
+              
+                    
+                  });                
+
+                $(window).on('kb.selectArea.searched', function(sender, ul) {
+                    done && done(sender, ul)
+                });
+
+                $('#areaModal').on('shown.bs.modal', function () {
+                    $('.searchBox-semt').focus()
                 })
             });
         } else $('#areaModal').modal("show")
