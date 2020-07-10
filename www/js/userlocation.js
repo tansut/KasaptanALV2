@@ -1,5 +1,58 @@
 (function (window) {
     window.kb = window.kb || {}
+
+    window.kb.locateSemt = function () {
+        $('#semt-from-device').text("Hesaplıyorum...");
+        var self = this;
+        window.App.GetGeoLocation().then(function (position) {
+            if (position.coords.accuracy < 1000) {
+                App.Backend.post('user/findsemt', {
+                    lat: position.coords.latitude,
+                    lng: position.coords.longitude
+                }).then(function (result) {
+                    if (result.length) {
+                        let res = result[0];
+                        $('#semt-from-device').text("Konumumu Kullan");
+                        if (confirm(res.display + ' olarak semtinizi algıladık. Doğruysa lütfen onaylayın, yanlışsa listeden seçin veya arayın.')) {
+                            debugger
+                            window.App.gTag('location', 'location/set', res.display)
+                            var ul = {};
+                            ul.selectedDistrict = ul.selectedDistrict || {}
+                            ul.selectedDistrict.slug = res.url;
+                            $(window).trigger('kb.selectArea.selected', [self, ul]);
+                            self.done && self.done(self, ul)
+                        } else {
+                            $('.searchBox-semt').focus()
+                        }
+
+                    } else {
+                        $('#semt-from-device').text("Tekrar Deneyin");
+                        $('.searchBox-semt').focus()
+                        alert('Konumunuzdan adrese maalesef ulaşamadık, semtinizi arayın veya listeden seçin.');
+                    }
+                }).catch(function (err) {
+                    alert('Konumunuzu maalesef alamadık, teslimat adresini yazmanız yeterli.');
+                    $('#getlatlong').text("Tekrar Deneyin");
+                    $('.searchBox-semt').focus()
+
+                })
+            } else {
+                alert('Konumunuzu yeterli hassasiyette alamadık, semtinizi arayın veya listeden seçin');
+                $('#semt-from-device').text("Tekrar Deneyin");
+                $('.searchBox-semt').focus()
+            }
+
+        }).catch(function (err) {
+            alert('Konumunuzu maalelesef alamadık, semtinizi arayın veya listeden seçin');
+            $('#semt-from-device').text("Tekrar Deneyin");
+            $('.searchBox-semt').focus()
+
+        }).finally(function () {
+            $('#semt-from-device').removeAttr("disabled");
+        })
+    }
+
+
     window.kb.userlocation = function () {
         var self =
         {
@@ -7,19 +60,17 @@
                 var options = this.options;
                 $.ajax({
                     url: "/api/v1/area/children/" + city.id + "?level=2", success: function (list) {
-                        $(options.ilceDomSelector).find('option').remove()   
-                        $(options.districtDomSelector).find('option').remove()   
+                        $(options.ilceDomSelector).find('option').remove()
+                        $(options.districtDomSelector).find('option').remove()
                         $(options.districtDomSelector).selectpicker("refresh");
 
                         for (var i = 0; i < list.length; i++) {
                             $(options.ilceDomSelector).append('<option value="' + list[i].id + '">' + list[i].name + '</option>');
                         }
 
-
-
                         var defaultIlce = list.find(function (element) {
                             if (options && options.defaultIlce)
-                                return element.id == options.defaultIlce 
+                                return element.id == options.defaultIlce
                             else return false;
                         });
                         defaultIlce = defaultIlce || list[0];
@@ -50,7 +101,7 @@
 
                         var defaultDistrict = list.find(function (element) {
                             if (options && options.defaultDistrict)
-                                return element.id == options.defaultDistrict 
+                                return element.id == options.defaultDistrict
                             else return false;
                         });
                         defaultDistrict = defaultDistrict || list[0];
@@ -61,7 +112,7 @@
                         setTimeout(function () {
                             //self.districtsloaded || (self.options && self.options.openDistricts) ? $(options.districtDomSelector).selectpicker('toggle') : null;
                             //$(options.districtDomSelector).selectpicker('toggle');
-                            
+
                             $(options.districtDomSelector).selectpicker('val', defaultDistrict.id.toString());
                             self.selectedDistrict = defaultDistrict;
                         });
@@ -76,61 +127,61 @@
                     minLength: 3,
                     noneSelectedText: 'seçim yapın',
                     formatResult: function (item) {
-                            return {
-                              value: item.id,
-                              text:  item.text,
-                              html: [                     
-                                  item.text, 
-                                ] 
-                            };
-                          },
-                          
+                        return {
+                            value: item.id,
+                            text: item.text,
+                            html: [
+                                item.text,
+                            ]
+                        };
+                    },
+
                     resolverSettings: {
-                      url: '/api/v1/fts',
-                      requestThrottling: 2000
+                        url: '/api/v1/fts',
+                        requestThrottling: 2000
                     },
                     events: {
-                
-                      search: function (qry, callback,el) {
-              
-                              $('.notsearching').addClass('d-none');
-                              $('.searching').removeClass('d-none');
-                              $.ajax(
+
+                        search: function (qry, callback, el) {
+
+                            $('.notsearching').addClass('d-none');
+                            $('.searching').removeClass('d-none');
+                            $.ajax(
                                 '/api/v1/fts',
                                 {
-                                  data: { t: $(el).data('search'), c: $(el).data('category'), 'q': qry}
+                                    data: { t: $(el).data('search'), c: $(el).data('category'), 'q': qry }
                                 }
-                              ).done(function (res) {
+                            ).done(function (res) {
                                 $('.searching').addClass('d-none');
-                              $('.notsearching').removeClass('d-none');
+                                $('.notsearching').removeClass('d-none');
                                 callback(res);
-                                
-                              });
-                            },
-                            
-                      searchPost: function (res, el) {
-                        window.__searchResultSemt = res;
-                        window.dataLayer = window.dataLayer || [];
-                                    window.dataLayer.push({
-                                    'event': 'custom',
-                                    'category': 'search',
-                                    'action':'search/autocomplete',
-                                    'label': el.val()
-                                    });
-                
-                        return res.map(function (p) {
-                          return {
-                            id: p.id,
-                            text: p.display || ""
-                          }
-                        })
-                      }
-                
-                    }
-                  });
-                
 
-              
+                            });
+                        },
+
+                        searchPost: function (res, el) {
+                            window.__searchResultSemt = res;
+                            window.dataLayer = window.dataLayer || [];
+                            window.dataLayer.push({
+                                'event': 'custom',
+                                'category': 'search',
+                                'action': 'search/autocomplete',
+                                'label': el.val()
+                            });
+
+                            return res.map(function (p) {
+                                return {
+                                    id: p.id,
+                                    text: p.display || ""
+                                }
+                            })
+                        }
+
+                    }
+                });
+
+
+
             },
 
             init: function (options, done) {
@@ -172,7 +223,7 @@
                         //self.loadDistricts(city);
                     }
 
-                });                
+                });
 
                 if (!self.citiesloaded) {
                     $.ajax({
@@ -181,10 +232,10 @@
                             cityList.push({
                                 id: 0,
                                 name: 'Şehrinizi seçin',
-                                slug:''
-                            })  
+                                slug: ''
+                            })
                             cityList = cityList.concat(list)
-                          
+
                             self.citiesloaded = cityList;
                             for (var i = 0; i < cityList.length; i++) {
                                 $(options.cityDomSelector).append('<option value="' + cityList[i].id + '">' + cityList[i].name + '</option>');
@@ -192,7 +243,7 @@
 
                             var defaultCity = cityList.find(function (element) {
                                 if (options && options.defaultCity)
-                                    return element.id == options.defaultCity 
+                                    return element.id == options.defaultCity
                                 else return false;
                             });
                             defaultCity = defaultCity || cityList[0];
@@ -217,13 +268,12 @@
     window.kb.selectArea = function (done, options) {
         var self = this;
         options = options || {}
-        options.defaultCity = window.__useraddr ? window.__useraddr.level1Id: undefined;
-        options.defaultIlce = window.__useraddr ? window.__useraddr.level2Id: undefined;
-        options.defaultDistrict = window.__useraddr ? window.__useraddr.level3Id: undefined;
-        
-        
-        //{"level3Id":12510,"level1Id":40,"level2Id":2638,"level1Text":"Istanbul","level2Text":"Arnavutköy","level3Text":"Baklalı","level1Slug":"istanbul","level2Slug":"istanbul-arnavutkoy","level3Slug":"istanbul-arnavutkoy-baklali","display":"Baklalı, Arnavutköy/Istanbul"}
-  
+        options.defaultCity = window.__useraddr ? window.__useraddr.level1Id : undefined;
+        options.defaultIlce = window.__useraddr ? window.__useraddr.level2Id : undefined;
+        options.defaultDistrict = window.__useraddr ? window.__useraddr.level3Id : undefined;
+
+
+        this.done = done;
         if (!self.areainited) {
             var ul = window.kb.userlocation();
             self.areainited = true;
@@ -238,19 +288,20 @@
 
                 $('.searchBox-semt').on('autocomplete.select', function (evt, item) {
                     let go = window.__searchResultSemt.find(function (result) {
-                      return result.id == item.id
+                        return result.id == item.id
                     });
 
+                    window.App.gTag('location', 'location/set', go.display)
                     ul.selectedDistrict = ul.selectedDistrict || {}
                     ul.selectedDistrict.slug = go.url;
-              
+
                     $(window).trigger('kb.selectArea.selected', [self, ul]);
                     done && done(self, ul)
-              
-                    
-                  });                
 
-                $(window).on('kb.selectArea.searched', function(sender, ul) {
+
+                });
+
+                $(window).on('kb.selectArea.searched', function (sender, ul) {
                     done && done(sender, ul)
                 });
 

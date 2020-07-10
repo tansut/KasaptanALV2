@@ -10,34 +10,16 @@
 </div>
 
 <% if (cat.slug == 'kurban') { %>
-    <div class="text-dark px-4 pt-1 pb-3 text-center"
+    <div class="text-dark px-4 pt-1 py-3 text-center"
     style="background-image: url(<%=__config.staticDomain %>/resource/img/islam-bg.jpeg);background-repeat: repeat">
-    <div class="container">
-      <p class="lead">
-        <ul class="list-unstyled lead">
-          <li>
-          <strong>Kaliteli et</strong>,
-          </li>
-          <li>
-          <strong>İslâmi usullere uygunluk</strong>,
-          </li>
-          <li>
-            <strong>Adresinize teslimat</strong>,
-            
 
-          </li>
-
-          <li>
-            veya <strong>Online Bağış</strong> imkânı sunuyoruz.
-          </li>
-        </ul>
-        
-      </p>
-      <p>
-        <a class="btn btn-shadow btn-warning" href="/kurban" role="button">Kurbanlıklar &raquo;</a></p>
-    </div>
     <%- include('./products-view', {viewId: "", viewMode:'tab', products: products}); %>
 
+    <div class="pt-3">
+
+   
+        <a class="btn btn-shadow btn-warning" href="/kurban" role="button">Kurbanlıklar &raquo;</a>
+    </div>
   </div>
 
 

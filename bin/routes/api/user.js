@@ -31,9 +31,11 @@ const helper_1 = require("../../lib/helper");
 const sms_1 = require("../../lib/sms");
 const email_1 = require("../../lib/email");
 const sitelog_1 = require("./sitelog");
+const area_1 = require("../../db/models/area");
 var validator = require("validator");
 var generator = require('generate-password');
 let passport = require("passport");
+const sq = require("sequelize");
 class UserRoute extends router_1.ApiRouter {
     // createSample() {
     //     // userroute.authenticate("tansut@gmail.com", "deneme1").then((user) => {
@@ -69,6 +71,33 @@ class UserRoute extends router_1.ApiRouter {
             user.mphoneverified = true;
             yield user.save();
             this.res.sendStatus(200);
+        });
+    }
+    findSemtRoute() {
+        return __awaiter(this, void 0, void 0, function* () {
+            let result = yield area_1.default.sequelize.query(`
+        
+        select id, name, slug, GLength(LineStringFromWKB(LineString(
+            location, 
+            GeomFromText('POINT(:lat :lng)')))) AS distance from Areas  where level=3 and location is not null ORDER BY distance ASC LIMIT 1
+        `, {
+                replacements: {
+                    lat: parseFloat(this.req.body.lat),
+                    lng: parseFloat(this.req.body.lng)
+                },
+                type: sq.QueryTypes.SELECT,
+                mapToModel: false,
+                raw: true
+            });
+            if (result.length) {
+                let area = yield area_1.default.findByPk(result[0]['id']);
+                let addr = yield area.getPreferredAddress();
+                result = [{
+                        display: addr.display,
+                        url: addr.level3Slug
+                    }];
+            }
+            this.res.send(result);
         });
     }
     completesignupRoute() {
@@ -426,6 +455,7 @@ class UserRoute extends router_1.ApiRouter {
         router.post("/user/signup", UserRoute.BindRequest(this.prototype.signupRoute));
         router.post("/user/signupverify", UserRoute.BindRequest(this.prototype.verifysignupRoute));
         router.post("/user/signupcomplete", UserRoute.BindRequest(this.prototype.completesignupRoute));
+        router.post("/user/findsemt", UserRoute.BindRequest(this.prototype.findSemtRoute));
         // router.post("/user/resetpassword", UserRoute.BindRequest('resetPasswordRequestRoute'));
         // router.post("/user/changepassword/:userid", UserRoute.BindRequest('changePasswordRoute'));
         // router.post("/user/useRefreshToken", UserRoute.BindRequest('useRefreshTokenRoute'));
@@ -440,6 +470,12 @@ __decorate([
     __metadata("design:paramtypes", []),
     __metadata("design:returntype", Promise)
 ], UserRoute.prototype, "verifysignupRoute", null);
+__decorate([
+    common_1.Auth.Anonymous(),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", []),
+    __metadata("design:returntype", Promise)
+], UserRoute.prototype, "findSemtRoute", null);
 __decorate([
     common_1.Auth.Anonymous(),
     __metadata("design:type", Function),

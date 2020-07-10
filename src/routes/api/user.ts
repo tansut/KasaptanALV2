@@ -16,9 +16,12 @@ import Helper from '../../lib/helper';
 import { Sms } from '../../lib/sms';
 import email from '../../lib/email';
 import SiteLogRoute from './sitelog';
+import Area from '../../db/models/area';
 var validator = require("validator");
 var generator = require('generate-password');
 let passport = require("passport")
+import * as sq from 'sequelize';
+import { add } from 'lodash';
 
  
 interface GeneratedTokenData {
@@ -70,6 +73,38 @@ export default class UserRoute extends ApiRouter {
         user.mphoneverified = true;
         await user.save();
         this.res.sendStatus(200)
+    }
+
+    
+
+
+    @Auth.Anonymous()
+    async findSemtRoute() {
+        let result = await Area.sequelize.query(`
+        
+        select id, name, slug, GLength(LineStringFromWKB(LineString(
+            location, 
+            GeomFromText('POINT(:lat :lng)')))) AS distance from Areas  where level=3 and location is not null ORDER BY distance ASC LIMIT 1
+        `,            {
+                replacements: { 
+                     lat: parseFloat(this.req.body.lat as string), 
+                     lng: parseFloat(this.req.body.lng as string) 
+                    },
+                type: sq.QueryTypes.SELECT,
+                mapToModel: false,
+                raw: true
+            }
+            )
+        if (result.length) {
+            let area = await Area.findByPk(result[0]['id']);
+            let addr = await area.getPreferredAddress();
+            result =[ {
+                display: addr.display,
+                url: addr.level3Slug
+            }]
+
+        }
+        this.res.send(result)
     }
 
     @Auth.Anonymous()
@@ -451,6 +486,7 @@ export default class UserRoute extends ApiRouter {
         router.post("/user/signup", UserRoute.BindRequest(this.prototype.signupRoute));
         router.post("/user/signupverify", UserRoute.BindRequest(this.prototype.verifysignupRoute));
         router.post("/user/signupcomplete", UserRoute.BindRequest(this.prototype.completesignupRoute));
+        router.post("/user/findsemt", UserRoute.BindRequest(this.prototype.findSemtRoute));
 
 
         // router.post("/user/resetpassword", UserRoute.BindRequest('resetPasswordRequestRoute'));

@@ -1,14 +1,23 @@
-<div class="input-group-overlay mb-2">
-    <div class="input-group-prepend-overlay">
-        <span class="input-group-text">
-            <i class="notsearching czi-search"></i>
-            <span class="searching d-none spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
-        </span>
-    </div>
-    <input title="seçim" data-none-selected-text = "seçim yapın", data-search="area" id="page-searchbox" class="form-control searchBox-semt prepended-form-control"
-        data-noresults-text="Maalesef bulamadık." autocomplete="off" type="text"
-        placeholder="semtinizi arayın">
+<div class="text-center bg-secondary border p-3 mb-2">
+    <button id="semt-from-device" type="button" onclick="kb.locateSemt()" class="btn btn-info btn-sm">
+        <i class="czi-location mr-1"></i>
+        Mevcut Konumumu Kullan</button>
 </div>
+
+<div class="bg-secondary border p-3 mb-2">
+    <div class="input-group-overlay">
+        <div class="input-group-prepend-overlay">
+            <span class="input-group-text">
+                <i class="notsearching czi-search"></i>
+                <span class="searching d-none spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
+            </span>
+        </div>
+        <input title="seçim" data-none-selected-text="seçim yapın" , data-search="area" id="page-searchbox"
+            class="form-control searchBox-semt prepended-form-control" data-noresults-text="Maalesef bulamadık."
+            autocomplete="off" type="text" placeholder="semtinizi arayın">
+    </div>
+</div>
+
 <div class="bg-secondary border p-1 pb-0">
     <div class="mb-2 text-center">
         <span class="text-muted font-size-sm">veya listeden seçin</span>
@@ -35,6 +44,7 @@
     </div>
     <div class="text-center">
         <button id="exploreAreaButton" type="button" class="btn btn-sm btn-secondary rounded-0">Seç</button>
-    
+
     </div>
 </div>
+
