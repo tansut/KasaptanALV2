@@ -46,20 +46,20 @@
             <% if (order.paymentType == 'onlinepayment') { %>
               <a class="btn mt-3 btn-success mr-2" href="/pay/<%=order.ordernum%>">Önline Ödeme Yap &raquo;</a>
     
-              <% } %>
+              <% } else { %>
 
           <a class="btn btn-primary mt-3" rel="nofollow" href="/user/orders/<%=order.ordernum%>"><i
               class="czi-bag"></i>&nbsp;Sipariş Takip Et</a>
 
-
+<%}%>
         </div>
 
         <% }) %>
-        <% if (orders.length == 1 && orders[0].paymentType == 'onlinepayment') { %>
+        <!-- <% if (orders.length == 1 && orders[0].paymentType == 'onlinepayment') { %>
         <div class="mt-3">
           <span class="redirecting font-weight-bold font-size-sm" style="display: none;">Online ödeme sayfasına yönlendiriyorum ...</span>
         </div>
-        <% } %>
+        <% } %> -->
       </div>
     </div>
 
@@ -76,18 +76,18 @@
       window.App.gTag('checkout', 'checkout-completed', "<%= order.ordernum %>", <%= order.total %>);
     <% }) %>
 
-    <% if (orders.length == 1 && orders[0].paymentType == 'onlinepayment') { %>
-      $(document).ready(function() {
-        setTimeout(function() {
-        $('.redirecting').show();
+    // <% if (orders.length == 1 && orders[0].paymentType == 'onlinepayment') { %>
+    //   $(document).ready(function() {
+    //     setTimeout(function() {
+    //     $('.redirecting').show();
           
-        }, 5000);
-        setTimeout(function()  {
-          window.location.href = "/pay/<%=orders[0].ordernum%>"
-      }, 10000);
-      })
+    //     }, 5000);
+    //     setTimeout(function()  {
+    //       window.location.href = "/pay/<%=orders[0].ordernum%>"
+    //   }, 10000);
+    //   })
 
-    <% } %>
+    // <% } %>
 
   </script>
 

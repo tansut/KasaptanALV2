@@ -1,61 +1,13 @@
 (function (window) {
     window.kb = window.kb || {}
 
-    window.kb.locateSemt = function () {
-        $('#semt-from-device').text("Hesaplıyorum...");
-        var self = this;
-        window.App.GetGeoLocation().then(function (position) {
-            if (position.coords.accuracy < 1000) {
-                App.Backend.post('user/findsemt', {
-                    lat: position.coords.latitude,
-                    lng: position.coords.longitude
-                }).then(function (result) {
-                    if (result.length) {
-                        let res = result[0];
-                        $('#semt-from-device').text("Konumumu Kullan");
-                        if (confirm(res.display + ' olarak semtinizi algıladık. Doğruysa lütfen onaylayın, yanlışsa listeden seçin veya arayın.')) {
-                            debugger
-                            window.App.gTag('location', 'location/set', res.display)
-                            var ul = {};
-                            ul.selectedDistrict = ul.selectedDistrict || {}
-                            ul.selectedDistrict.slug = res.url;
-                            $(window).trigger('kb.selectArea.selected', [self, ul]);
-                            self.done && self.done(self, ul)
-                        } else {
-                            $('.searchBox-semt').focus()
-                        }
 
-                    } else {
-                        $('#semt-from-device').text("Tekrar Deneyin");
-                        $('.searchBox-semt').focus()
-                        alert('Konumunuzdan adrese maalesef ulaşamadık, semtinizi arayın veya listeden seçin.');
-                    }
-                }).catch(function (err) {
-                    alert('Konumunuzu maalesef alamadık, teslimat adresini yazmanız yeterli.');
-                    $('#getlatlong').text("Tekrar Deneyin");
-                    $('.searchBox-semt').focus()
-
-                })
-            } else {
-                alert('Konumunuzu yeterli hassasiyette alamadık, semtinizi arayın veya listeden seçin');
-                $('#semt-from-device').text("Tekrar Deneyin");
-                $('.searchBox-semt').focus()
-            }
-
-        }).catch(function (err) {
-            alert('Konumunuzu maalelesef alamadık, semtinizi arayın veya listeden seçin');
-            $('#semt-from-device').text("Tekrar Deneyin");
-            $('.searchBox-semt').focus()
-
-        }).finally(function () {
-            $('#semt-from-device').removeAttr("disabled");
-        })
-    }
 
 
     window.kb.userlocation = function () {
         var self =
         {
+
             loadIlces: function (city) {
                 var options = this.options;
                 $.ajax({
@@ -121,7 +73,7 @@
                 });
             },
 
-            initAutoComplete() {
+            initAutoComplete: function () {
                 $('.searchBox-semt').autoComplete({
                     resolver: 'custom',
                     minLength: 3,
@@ -179,6 +131,68 @@
 
                     }
                 });
+
+
+
+            },
+
+            initApp: function () {
+                this.gpsQueryApp =
+                    new Vue({
+                        el: '#userlocationapp',
+                        data: { list: [], selected: null },
+                        methods: {
+                            locateSemt: function () {
+                                $('#semt-from-device').text("Hesaplıyorum...");
+                                var self = this;
+                                window.App.GetGeoLocation().then(function (position) {
+                                    if (position.coords.accuracy < 1000) {
+                                        App.Backend.post('user/findsemt', {
+                                            lat: position.coords.latitude,
+                                            lng: position.coords.longitude
+                                        }).then(function (result) {
+                                            self.list = result;
+                                            if (result.length) {
+
+                                            } else {
+                                                $('#semt-from-device').text("Tekrar Deneyin");
+                                                $('.searchBox-semt').focus()
+                                                alert('Konumunuzdan adrese maalesef ulaşamadık, semtinizi arayın veya listeden seçin.');
+                                            }
+                                        }).catch(function (err) {
+                                            debugger
+                                            alert('Konumunuzu maalesef alamadık, teslimat adresini yazmanız yeterli.');
+                                            $('#semt-from-device').text("Tekrar Deneyin");
+                                            $('.searchBox-semt').focus()
+
+                                        })
+                                    } else {
+                                        alert('Konumunuzu yeterli hassasiyette alamadık, semtinizi arayın veya listeden seçin');
+                                        $('#semt-from-device').text("Tekrar Deneyin");
+                                        $('.searchBox-semt').focus()
+                                    }
+
+                                }).catch(function (err) {
+                                    alert('Konumunuzu maalelesef alamadık, semtinizi arayın veya listeden seçin');
+                                    $('#semt-from-device').text("Tekrar Deneyin");
+                                    $('.searchBox-semt').focus()
+
+                                }).finally(function () {
+                                    $('#semt-from-device').removeAttr("disabled");
+                                })
+                            },
+
+                            go(adr) {
+                                window.App.gTag('location', 'location/set', adr.display)
+                                var ul = {};
+                                ul.selectedDistrict = ul.selectedDistrict || {}
+                                ul.selectedDistrict.slug = adr.url;
+                                $(window).trigger('kb.selectArea.selected', [self, ul]);
+                                window.kb.done && window.kb.done(window.kb, ul)
+                            }
+                        }
+                    })
+
 
 
 
@@ -258,6 +272,7 @@
 
 
                 this.initAutoComplete();
+                this.initApp();
                 done && done();
             }
         }
@@ -306,11 +321,17 @@
                 });
 
                 $('#areaModal').on('shown.bs.modal', function () {
+                    ul.gpsQueryApp.list = [];
                     $('.searchBox-semt').focus()
+                })
+                $('#areaModal').on('hide.bs.modal', function () {
+                    ul.gpsQueryApp.list = [];
                 })
             });
         } else $('#areaModal').modal("show")
     }
+
+
 
 })(window);
 
