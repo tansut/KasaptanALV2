@@ -1,0 +1,1 @@
+{"version":3,"sources":["../src/models/badge.ts"],"names":[],"mappings":"","file":"badge.js","sourcesContent":["\n\n\nexport interface Badge {\n    icon?:string;\n    name: string;\n    tip: string\n}"],"sourceRoot":"../../src/"}

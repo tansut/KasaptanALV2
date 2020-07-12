@@ -87,3 +87,5 @@ __decorate([
     __metadata("design:returntype", Promise)
 ], Route.prototype, "viewRoute", null);
 exports.default = Route;
+
+//# sourceMappingURL=anonymous.js.map

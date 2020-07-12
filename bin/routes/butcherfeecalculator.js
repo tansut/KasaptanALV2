@@ -65,3 +65,5 @@ __decorate([
     __metadata("design:returntype", Promise)
 ], Route.prototype, "calculateRoute", null);
 exports.default = Route;
+
+//# sourceMappingURL=butcherfeecalculator.js.map

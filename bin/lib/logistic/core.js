@@ -13,6 +13,7 @@ exports.LogisticFactory = exports.LogisticProvider = exports.VehicleType = void 
 var fs = require('fs');
 const config_1 = require("../../config");
 const path = require("path");
+const helper_1 = require("../helper");
 const paymentConfig = require(path.join(config_1.default.projectDir, `logistic.json`));
 var VehicleType;
 (function (VehicleType) {
@@ -20,7 +21,18 @@ var VehicleType;
     VehicleType[VehicleType["Car"] = 1] = "Car";
 })(VehicleType = exports.VehicleType || (exports.VehicleType = {}));
 class LogisticProvider {
-    constructor(config) {
+    constructor(config, options = {}) {
+    }
+    distance(ft) {
+        return __awaiter(this, void 0, void 0, function* () {
+            return helper_1.default.distance(ft.start, ft.finish);
+        });
+    }
+    priceSlice(distance, slice = 50.00, options = {}) {
+        return __awaiter(this, void 0, void 0, function* () {
+            let arr = [];
+            return arr;
+        });
     }
     fromOrder(o) {
         let start = null, finish = null, shour = 0, fHour = 0;
@@ -60,6 +72,27 @@ class LogisticProvider {
                 }
             ]
         };
+    }
+    calculateFeeForCustomer(input) {
+        return __awaiter(this, void 0, void 0, function* () {
+            let fee = 0.00;
+            if (input.maxDistance && input.distance > input.maxDistance)
+                return null;
+            if (input.minOrder && input.orderTotal < input.minOrder)
+                return null;
+            if (input.priceStartsAt && input.distance < input.priceStartsAt)
+                fee = 0.00;
+            let regular = input.distance ? helper_1.default.asCurrency(input.pricePerKM * input.distance) : input.offerPrice;
+            let contrib = input.contribitionRatio ? helper_1.default.asCurrency(input.orderTotal * input.contribitionRatio) : 0.00;
+            let free = input.freeShipPerKM ? (input.freeShipPerKM * input.distance) : 0.00;
+            if (input.orderTotal >= free)
+                fee = 0;
+            let calc = Math.max(0, regular - contrib);
+            fee = helper_1.default.asCurrency(Math.round(calc / 2.5) * 2.5);
+            return {
+                totalFee: fee
+            };
+        });
     }
     offerFromOrder(o) {
         let req = this.fromOrder(o);
@@ -109,11 +142,13 @@ class LogisticFactory {
     static register(key, cls) {
         LogisticFactory.items[key] = cls;
     }
-    static getInstance(key) {
+    static getInstance(key, options = {}) {
         key = key || paymentConfig.default || config_1.default.paymentProvider;
         const cls = LogisticFactory.items[key];
-        return new cls(paymentConfig.providers[key][config_1.default.nodeenv]);
+        return new cls(paymentConfig.providers[key][config_1.default.nodeenv], options);
     }
 }
 exports.LogisticFactory = LogisticFactory;
 LogisticFactory.items = {};
+
+//# sourceMappingURL=core.js.map

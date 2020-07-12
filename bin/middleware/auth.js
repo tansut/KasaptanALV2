@@ -82,3 +82,5 @@ class AuthMiddleware extends base_1.default {
     }
 }
 exports.default = (app) => exports.auth = new AuthMiddleware(app);
+
+//# sourceMappingURL=auth.js.map

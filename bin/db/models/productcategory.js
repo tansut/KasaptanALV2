@@ -57,3 +57,5 @@ ProductCategory = __decorate([
     })
 ], ProductCategory);
 exports.default = ProductCategory;
+
+//# sourceMappingURL=productcategory.js.map

@@ -117,3 +117,5 @@ __decorate([
     __metadata("design:returntype", Promise)
 ], Route.prototype, "redirectedReyon", null);
 exports.default = Route;
+
+//# sourceMappingURL=product.list.js.map

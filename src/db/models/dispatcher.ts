@@ -13,15 +13,16 @@ export enum DispatcherSelection {
 }
 
 
-export type DispatcherType = "butcher" | "kasaptanal/motokurye" | "kasaptanal/car"
+export type DispatcherType = "butcher" | "butcher/auto" | "kasaptanal/motokurye" | "kasaptanal/car"
 
 export let DispatcherTypeDesc = {
     "butcher": "Kasap",
+    "butcher/auto": "Kasap",
     "kasaptanal/motokurye": "Soğuk Zincir Kurye Sistemi",
     "kasaptanal/car": "Soğuk Zincir Araç Kurye Sistemi",
 }
 
-export type LogisticProviderUsage = "none" | "default" | "select" | "force" | "auto" | "disabled"
+export type ExternalLogisticProviderUsage = "none" | "default" | "select" | "force" | "auto" | "disabled"
 
 @Table({
     tableName: "Dispatchers",
@@ -103,7 +104,7 @@ class Dispatcher extends BaseModel<Dispatcher> {
         allowNull: false,
         defaultValue: "default"
     })
-    logisticProviderUsage: LogisticProviderUsage;
+    logisticProviderUsage: ExternalLogisticProviderUsage;
 
     @Column({
         allowNull: false,

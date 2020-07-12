@@ -12,3 +12,5 @@ class AppUser {
     }
 }
 exports.AppUser = AppUser;
+
+//# sourceMappingURL=user.js.map

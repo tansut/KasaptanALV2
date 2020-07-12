@@ -80,3 +80,5 @@ Config.SMSKEY = "SMSKEY";
 Config.SMSSECRET = "SMSSECRET";
 Config.PAYMENTPROVIDER = "PAYMENTPROVIDER";
 exports.default = new Config();
+
+//# sourceMappingURL=config.js.map

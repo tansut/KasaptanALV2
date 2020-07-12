@@ -58,3 +58,5 @@ class ButcherStats extends basetask_1.BaseTask {
     }
 }
 exports.default = ButcherStats;
+
+//# sourceMappingURL=reviewstask.js.map

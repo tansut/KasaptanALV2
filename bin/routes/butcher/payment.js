@@ -22,3 +22,5 @@ class Route extends home_1.ButcherRouter {
     }
 }
 exports.default = Route;
+
+//# sourceMappingURL=payment.js.map

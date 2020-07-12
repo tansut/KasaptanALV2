@@ -43,3 +43,5 @@ let init = (params) => {
     });
 };
 exports.default = { init: init, getContext: () => dbInstance };
+
+//# sourceMappingURL=context.js.map

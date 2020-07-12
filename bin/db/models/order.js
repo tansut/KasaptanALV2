@@ -967,3 +967,5 @@ OrderItem = OrderItem_1 = __decorate([
     })
 ], OrderItem);
 exports.OrderItem = OrderItem;
+
+//# sourceMappingURL=order.js.map

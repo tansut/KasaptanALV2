@@ -31,3 +31,5 @@ __decorate([
     __metadata("design:returntype", void 0)
 ], Route.prototype, "searchRoute", null);
 exports.default = Route;
+
+//# sourceMappingURL=generic.js.map

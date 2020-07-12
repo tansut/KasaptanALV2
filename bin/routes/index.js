@@ -28,3 +28,5 @@ class RouteLoader {
     }
 }
 exports.default = RouteLoader;
+
+//# sourceMappingURL=index.js.map

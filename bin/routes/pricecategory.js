@@ -67,3 +67,5 @@ __decorate([
     __metadata("design:returntype", Promise)
 ], Route.prototype, "viewProductCategoryRoute", null);
 exports.default = Route;
+
+//# sourceMappingURL=pricecategory.js.map

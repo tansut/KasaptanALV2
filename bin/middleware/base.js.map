@@ -1,0 +1,1 @@
+{"version":3,"sources":["../src/middleware/base.ts"],"names":[],"mappings":";;AAEA,MAAqB,UAAU;IAE3B,YAAsB,GAAoB;QAApB,QAAG,GAAH,GAAG,CAAiB;IAE1C,CAAC;CACJ;AALD,6BAKC","file":"base.js","sourcesContent":["import * as express from \"express\";\n\nexport default class Middleware {\n\n    constructor(protected app: express.IRouter) {\n\n    }\n}"],"sourceRoot":"../../src/"}

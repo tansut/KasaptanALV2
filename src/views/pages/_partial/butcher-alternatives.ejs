@@ -41,7 +41,7 @@
                         </span>  -->
                      
                     </div>
-                        <money-view v-if="!alt.butcher.kgPrice && selectedUnitForAlternate(alt.butcher)" :unit="selectedUnitForAlternate(alt.butcher).unit" 
+                        <money-view v-if="!alt.butcher.kgPrice && selectedUnitForAlternate(alt.butcher)" :unit="selectedUnitForAlternate(alt.butcher).unitTitle" 
                         
                         class="font-size-sm text-accent" :money="selectedUnitForAlternate(alt.butcher).unitPrice"></money-view>
                         <money-view v-else unit="Kg" 

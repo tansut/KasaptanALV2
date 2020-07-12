@@ -76,3 +76,5 @@ class PuanCalculator {
     }
 }
 exports.PuanCalculator = PuanCalculator;
+
+//# sourceMappingURL=commissionHelper.js.map

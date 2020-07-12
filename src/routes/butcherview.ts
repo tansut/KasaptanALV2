@@ -28,6 +28,8 @@ import {Op} from "sequelize";
 import Review from '../db/models/review';
 import * as sq from 'sequelize';
 import SubCategory from '../db/models/subcategory';
+import { LogisticProvider, PriceSlice, FromTo } from '../lib/logistic/core';
+import  DispatcherApi from './api/dispatcher';
 
 
 
@@ -42,6 +44,10 @@ export default class Route extends ViewRouter {
     categories: Category[];
     _ = _;
     subCategories: SubCategory[] = [];
+
+    logisticsProvider: LogisticProvider;
+    logisticsPriceSlice: PriceSlice [] = [];
+    distance: number;
 
     filterProductsByCategory(filter, chunk: number = 0) {
         let products = <Product []>ProductManager.filterProductsByCategory(this.products, filter, { productType: 'generic' }, { chunk: chunk })
@@ -68,6 +74,10 @@ export default class Route extends ViewRouter {
         }
         );
         this.reviews = res;
+    }
+
+    getPriceSlice() {
+        return this.logisticsPriceSlice;
     }
 
 
@@ -206,6 +216,21 @@ export default class Route extends ViewRouter {
         let pageTitle = butcher.pageTitle || `${butcher.name}` ;
         let pageDescription = butcher.pageDescription || `${butcher.name}, ${butcher.address} ${butcher.areaLevel1.name}/${butcher.areaLevel2.name} adresinde hizmet vermekte olup ${(butcher.phone || '').trim().slice(0, -5) + " ..."} numaralı telefon ile ulaşabilirsiniz.`
         let pageThumbnail = this.req.helper.imgUrl('butcher-google-photos', butcher.slug)
+        
+        if (this.req.prefAddr) {
+            let dpapi = new DispatcherApi(this.constructorParams);
+            this.logisticsProvider = await dpapi.bestDispatcher2(this.butcher, this.req.prefAddr, null);
+            if (this.logisticsProvider) {
+                let l3 = await Area.findByPk(this.req.prefAddr.level3Id);
+                let fromTo: FromTo = {
+                    start: this.butcher.location,
+                    finish: l3.location
+                }
+                this.logisticsPriceSlice = await this.logisticsProvider.priceSlice(fromTo);
+                this.distance = await this.logisticsProvider.distance(fromTo)
+            }
+        }
+        
         this.res.render('pages/butcher', this.viewData({ pageThumbnail: pageThumbnail, pageTitle: pageTitle, pageDescription: pageDescription, butcher: butcher, images: images }));
     }
 

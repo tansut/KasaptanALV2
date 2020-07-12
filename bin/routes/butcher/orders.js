@@ -79,3 +79,5 @@ class Route extends home_1.ButcherRouter {
     }
 }
 exports.default = Route;
+
+//# sourceMappingURL=orders.js.map

@@ -38,6 +38,7 @@ const fileUpload = require('express-fileupload');
 
 import * as bluebird from "bluebird";
 import BanabikuryeProvider from './lib/logistic/banabikurye';
+import { ButcherManualLogistics, ButcherAutoLogistics } from './lib/logistic/butcher';
 
 bluebird.config({
     warnings: false
@@ -110,6 +111,8 @@ class KasaptanAlApp {
         iyzico.register();
         paratika.register();
         BanabikuryeProvider.register();
+        ButcherManualLogistics.register();
+        ButcherAutoLogistics.register();
         
         this.app.use((req, res, next) => {
             let proto = req.header("x-forwarded-proto") || null;

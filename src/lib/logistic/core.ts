@@ -12,20 +12,41 @@ import AccountModel from '../../db/models/accountmodel';
 import { Account } from '../../models/account';
 import { OrderSource } from '../../models/order';
 import { ShipmentTypeDesc } from '../../models/shipment';
+import { GeoLocation } from '../../models/geo';
 
 const paymentConfig = require(path.join(config.projectDir, `logistic.json`));
+
+export interface CustomerPriceConfig {
+    offerPrice?: number;
+    distance: number;
+    orderTotal: number;
+    pricePerKM?: number;
+    priceStartsAt?: number;
+    freeShipPerKM?: number;
+    contribitionRatio?: number;
+    maxDistance?: number;
+    minOrder?: number;
+}
 
 export enum VehicleType {
     Motor,
     Car
 }
 
+export interface PriceSlice {
+    start?: number;
+    end?: number;
+    cost: number;
+}
+
+
+
 export interface Point {
     id?: string;
     address?: string;
-    contactName: string;
-    contactPhone: string;
-    orderId: string;
+    contactName?: string;
+    contactPhone?: string;
+    orderId?: string;
     lat: number;
     lng: number;
     note?: string;
@@ -59,10 +80,10 @@ export interface OrderRequest extends BasicRequest {
 
 export interface OfferResponse extends BasicResponse {
     totalFee: number;    
-    deliveryFee: number;
-    weightFee: number;
-    discount: number;
-    points: Point[];
+    deliveryFee?: number;
+    weightFee?: number;
+    discount?: number;
+    points?: Point[];
 }
 
 export interface OrderResponse extends BasicResponse {
@@ -80,10 +101,26 @@ export interface OrderResponse extends BasicResponse {
 }
 
 
+export interface FromTo {
+    start: GeoLocation;
+    finish: GeoLocation;
+}
+
+
 export class LogisticProvider {
     logger: SiteLogRoute;
     userid: number;
     ip: string;
+
+    async distance(ft: FromTo) {
+        return Helper.distance(ft.start, ft.finish);
+    }
+
+    async priceSlice(distance: FromTo, slice: number = 50.00, options = {}): Promise<PriceSlice[]> {
+        let arr: PriceSlice[] = []
+
+        return arr;
+    }
 
     fromOrder(o: Order): BasicRequest {
         let start = null, finish = null, shour= 0, fHour = 0 ;
@@ -125,6 +162,27 @@ export class LogisticProvider {
         }
     }
 
+
+    async calculateFeeForCustomer(input: CustomerPriceConfig): Promise<OfferResponse> {
+        let fee = 0.00;
+        if (input.maxDistance && input.distance > input.maxDistance)
+            return null;
+        if (input.minOrder && input.orderTotal < input.minOrder)
+            return null;
+        if (input.priceStartsAt && input.distance < input.priceStartsAt)
+            fee = 0.00;
+        let regular = input.distance ? Helper.asCurrency(input.pricePerKM * input.distance): input.offerPrice;
+        let contrib = input.contribitionRatio ? Helper.asCurrency(input.orderTotal * input.contribitionRatio): 0.00;
+        let free = input.freeShipPerKM ? (input.freeShipPerKM * input.distance): 0.00;
+        if (input.orderTotal >= free) fee = 0;
+        let calc = Math.max(0, regular - contrib);
+        fee = Helper.asCurrency(Math.round(calc/2.5)*2.5)
+        return {
+            totalFee: fee
+        }
+    }
+
+
     offerFromOrder(o: Order): OfferRequest {
         let req: OfferRequest = <any>this.fromOrder(o);
         req.notifyCustomerSms = true;
@@ -145,7 +203,7 @@ export class LogisticProvider {
         return null;
     }    
 
-    constructor(config: any) {
+    constructor(config: any, options = {}) {
        
     }
 
@@ -183,10 +241,10 @@ export class LogisticFactory {
         LogisticFactory.items[key] = cls;
     }
 
-    static getInstance(key?: string): LogisticProvider {
+    static getInstance(key?: string, options = {}): LogisticProvider {
         key = key || paymentConfig.default || config.paymentProvider
         const cls = LogisticFactory.items[key]
-        return new cls(paymentConfig.providers[key][config.nodeenv])
+        return new cls(paymentConfig.providers[key][config.nodeenv], options)
     }
 
 } 

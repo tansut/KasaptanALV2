@@ -35,6 +35,7 @@ const dispatcher_1 = require("../db/models/dispatcher");
 const config_1 = require("../config");
 const review_1 = require("../db/models/review");
 const sq = require("sequelize");
+const dispatcher_2 = require("./api/dispatcher");
 class Route extends router_1.ViewRouter {
     constructor() {
         super(...arguments);
@@ -42,6 +43,7 @@ class Route extends router_1.ViewRouter {
         this.reviews = [];
         this._ = _;
         this.subCategories = [];
+        this.logisticsPriceSlice = [];
     }
     filterProductsByCategory(filter, chunk = 0) {
         let products = productManager_1.default.filterProductsByCategory(this.products, filter, { productType: 'generic' }, { chunk: chunk });
@@ -65,6 +67,9 @@ class Route extends router_1.ViewRouter {
             });
             this.reviews = res;
         });
+    }
+    getPriceSlice() {
+        return this.logisticsPriceSlice;
     }
     butcherRoute() {
         return __awaiter(this, void 0, void 0, function* () {
@@ -150,6 +155,19 @@ class Route extends router_1.ViewRouter {
             let pageTitle = butcher.pageTitle || `${butcher.name}`;
             let pageDescription = butcher.pageDescription || `${butcher.name}, ${butcher.address} ${butcher.areaLevel1.name}/${butcher.areaLevel2.name} adresinde hizmet vermekte olup ${(butcher.phone || '').trim().slice(0, -5) + " ..."} numaralı telefon ile ulaşabilirsiniz.`;
             let pageThumbnail = this.req.helper.imgUrl('butcher-google-photos', butcher.slug);
+            if (this.req.prefAddr) {
+                let dpapi = new dispatcher_2.default(this.constructorParams);
+                this.logisticsProvider = yield dpapi.bestDispatcher2(this.butcher, this.req.prefAddr, null);
+                if (this.logisticsProvider) {
+                    let l3 = yield area_1.default.findByPk(this.req.prefAddr.level3Id);
+                    let fromTo = {
+                        start: this.butcher.location,
+                        finish: l3.location
+                    };
+                    this.logisticsPriceSlice = yield this.logisticsProvider.priceSlice(fromTo);
+                    this.distance = yield this.logisticsProvider.distance(fromTo);
+                }
+            }
             this.res.render('pages/butcher', this.viewData({ pageThumbnail: pageThumbnail, pageTitle: pageTitle, pageDescription: pageDescription, butcher: butcher, images: images }));
         });
     }
@@ -198,3 +216,5 @@ __decorate([
     __metadata("design:returntype", Promise)
 ], Route.prototype, "butcherPhotoRoute", null);
 exports.default = Route;
+
+//# sourceMappingURL=butcherview.js.map

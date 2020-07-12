@@ -13,3 +13,5 @@ class Payment {
     }
 }
 exports.Payment = Payment;
+
+//# sourceMappingURL=payment.js.map

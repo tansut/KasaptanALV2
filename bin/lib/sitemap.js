@@ -242,3 +242,5 @@ class SiteMapManager {
 }
 exports.default = SiteMapManager;
 SiteMapManager.baseUrl = 'https://www.kasaptanal.com';
+
+//# sourceMappingURL=sitemap.js.map

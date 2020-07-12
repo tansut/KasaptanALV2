@@ -1,0 +1,1 @@
+{"version":3,"sources":["../src/models/common.ts"],"names":[],"mappings":"","file":"common.js","sourcesContent":["export interface PriceView {\n    unit: string;\n    unitTitle: string;\n    price: number;\n}\n"],"sourceRoot":"../../src/"}

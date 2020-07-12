@@ -23,6 +23,7 @@ var DispatcherSelection;
 })(DispatcherSelection = exports.DispatcherSelection || (exports.DispatcherSelection = {}));
 exports.DispatcherTypeDesc = {
     "butcher": "Kasap",
+    "butcher/auto": "Kasap",
     "kasaptanal/motokurye": "Soğuk Zincir Kurye Sistemi",
     "kasaptanal/car": "Soğuk Zincir Araç Kurye Sistemi",
 };
@@ -209,3 +210,5 @@ Dispatcher = __decorate([
     })
 ], Dispatcher);
 exports.default = Dispatcher;
+
+//# sourceMappingURL=dispatcher.js.map

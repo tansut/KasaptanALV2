@@ -12,10 +12,11 @@ import Dispatcher, { DispatcherTypeDesc } from '../../db/models/dispatcher';
 import ButcherProduct from '../../db/models/butcherproduct';
 import { Op, Sequelize } from "sequelize";
 import { PreferredAddress } from '../../db/models/user';
-import { LogisticFactory } from '../../lib/logistic/core';
+import { LogisticFactory, LogisticProvider } from '../../lib/logistic/core';
 import { Order } from '../../db/models/order';
 import { off } from 'process';
 import Helper from '../../lib/helper';
+import { ButcherManualLogistics, ButcherAutoLogistics } from '../../lib/logistic/butcher';
 
 export default class Route extends ApiRouter {
     async _where(where: any, address: PreferredAddress) {
@@ -38,6 +39,55 @@ export default class Route extends ApiRouter {
         }
         return where
     }
+
+
+    async getDispatcher(butcher: Butcher, address: PreferredAddress): Promise< LogisticProvider> {
+        if (butcher.defaultDispatcher == "butcher") {
+            return LogisticFactory.getInstance("butcher")
+        } else if (butcher.defaultDispatcher == "butcher/auto")
+            return LogisticFactory.getInstance("butcher/auto")
+        else {
+            return LogisticFactory.getInstance(butcher.defaultDispatcher)
+        }
+    }
+
+    async bestDispatcher2(butcher: string | Butcher, address: PreferredAddress, basedOn: Order) {
+        butcher = typeof(butcher) == 'string' ? await Butcher.findByPk(butcher):butcher;
+        let where = {
+            type: 'butcher',
+            butcherid: butcher.id,
+            [Op.or]: []
+        };
+        where = await this._where(where, address);
+        let res = await Dispatcher.findOne({
+            where: where,
+            include: [
+                {
+                    model: Butcher,
+                    as: 'butcher'
+                },
+            ],            
+            order: [["toarealevel", "DESC"]],
+        })
+
+        let provider: LogisticProvider = null;
+
+        if (res) {
+            let usage = res.logisticProviderUsage == "default" ? butcher.logisticProviderUsage: res.logisticProviderUsage;
+            if (usage != "none" && butcher.logisticProviderUsage != "disabled" && butcher.logisticProvider) {
+                provider = LogisticFactory.getInstance(butcher.logisticProvider, {
+                    dispatcher: res
+                })
+            } else {
+                provider = LogisticFactory.getInstance(butcher.defaultDispatcher, {
+                    dispatcher: res
+                })
+            }
+        } 
+
+        return provider;
+    }
+
 
     async bestDispatcher(butcherId, address: PreferredAddress, basedOn: Order) {
         let where = {

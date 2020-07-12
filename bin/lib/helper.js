@@ -179,3 +179,5 @@ Helper.ResourcePaths = {
     "product-photos": "urun-resimleri",
     "category-photos": "kategori-resimleri"
 };
+
+//# sourceMappingURL=helper.js.map

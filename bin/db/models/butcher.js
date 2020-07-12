@@ -277,6 +277,13 @@ __decorate([
     __metadata("design:type", String)
 ], Butcher.prototype, "logisticProviderUsage", void 0);
 __decorate([
+    sequelize_typescript_1.Column({
+        allowNull: false,
+        defaultValue: "butcher"
+    }),
+    __metadata("design:type", String)
+], Butcher.prototype, "defaultDispatcher", void 0);
+__decorate([
     sequelize_typescript_1.Column,
     __metadata("design:type", String)
 ], Butcher.prototype, "logisticProvider", void 0);
@@ -514,3 +521,5 @@ Butcher = Butcher_1 = __decorate([
     })
 ], Butcher);
 exports.default = Butcher;
+
+//# sourceMappingURL=butcher.js.map

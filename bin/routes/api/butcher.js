@@ -384,3 +384,5 @@ __decorate([
     __metadata("design:returntype", void 0)
 ], Route.prototype, "dbSyncAllFromCachedGoogle", null);
 exports.default = Route;
+
+//# sourceMappingURL=butcher.js.map

@@ -227,3 +227,5 @@ ButcherProduct = __decorate([
     })
 ], ButcherProduct);
 exports.default = ButcherProduct;
+
+//# sourceMappingURL=butcherproduct.js.map

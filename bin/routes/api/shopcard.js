@@ -134,3 +134,5 @@ __decorate([
     __metadata("design:returntype", Promise)
 ], Route.prototype, "removeRoute", null);
 exports.default = Route;
+
+//# sourceMappingURL=shopcard.js.map

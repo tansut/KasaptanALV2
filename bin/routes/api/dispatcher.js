@@ -41,6 +41,54 @@ class Route extends router_1.ApiRouter {
             return where;
         });
     }
+    getDispatcher(butcher, address) {
+        return __awaiter(this, void 0, void 0, function* () {
+            if (butcher.defaultDispatcher == "butcher") {
+                return core_1.LogisticFactory.getInstance("butcher");
+            }
+            else if (butcher.defaultDispatcher == "butcher/auto")
+                return core_1.LogisticFactory.getInstance("butcher/auto");
+            else {
+                return core_1.LogisticFactory.getInstance(butcher.defaultDispatcher);
+            }
+        });
+    }
+    bestDispatcher2(butcher, address, basedOn) {
+        return __awaiter(this, void 0, void 0, function* () {
+            butcher = typeof (butcher) == 'string' ? yield butcher_1.default.findByPk(butcher) : butcher;
+            let where = {
+                type: 'butcher',
+                butcherid: butcher.id,
+                [sequelize_1.Op.or]: []
+            };
+            where = yield this._where(where, address);
+            let res = yield dispatcher_1.default.findOne({
+                where: where,
+                include: [
+                    {
+                        model: butcher_1.default,
+                        as: 'butcher'
+                    },
+                ],
+                order: [["toarealevel", "DESC"]],
+            });
+            let provider = null;
+            if (res) {
+                let usage = res.logisticProviderUsage == "default" ? butcher.logisticProviderUsage : res.logisticProviderUsage;
+                if (usage != "none" && butcher.logisticProviderUsage != "disabled" && butcher.logisticProvider) {
+                    provider = core_1.LogisticFactory.getInstance(butcher.logisticProvider, {
+                        dispatcher: res
+                    });
+                }
+                else {
+                    provider = core_1.LogisticFactory.getInstance(butcher.defaultDispatcher, {
+                        dispatcher: res
+                    });
+                }
+            }
+            return provider;
+        });
+    }
     bestDispatcher(butcherId, address, basedOn) {
         return __awaiter(this, void 0, void 0, function* () {
             let where = {
@@ -264,3 +312,5 @@ class Route extends router_1.ApiRouter {
     }
 }
 exports.default = Route;
+
+//# sourceMappingURL=dispatcher.js.map

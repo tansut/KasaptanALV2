@@ -271,3 +271,5 @@ Resource = __decorate([
     })
 ], Resource);
 exports.default = Resource;
+
+//# sourceMappingURL=resource.js.map

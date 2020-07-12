@@ -11,10 +11,75 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 Object.defineProperty(exports, "__esModule", { value: true });
 const core_1 = require("./core");
 const axios_1 = require("axios");
+const helper_1 = require("../helper");
 class BanabikuryeProvider extends core_1.LogisticProvider {
     constructor(config) {
         super(config);
         this.config = config;
+    }
+    offerFromTo(fromTo) {
+        return __awaiter(this, void 0, void 0, function* () {
+            let req = {
+                weight: 0,
+                matter: 'Gıda',
+                notifyCustomerSms: false,
+                vehicleType: core_1.VehicleType.Motor,
+                points: [{
+                        address: 'Foo',
+                        contactPhone: '05326374151',
+                        lat: fromTo.start.coordinates[0],
+                        lng: fromTo.start.coordinates[1],
+                        orderId: ''
+                    }, {
+                        address: 'Foo',
+                        contactPhone: '05326374151',
+                        lat: fromTo.finish.coordinates[0],
+                        lng: fromTo.finish.coordinates[1],
+                        orderId: ''
+                    }]
+            };
+            return yield this.requestOffer(req);
+        });
+    }
+    priceSlice(ft, slice = 100.00, options = {}) {
+        return __awaiter(this, void 0, void 0, function* () {
+            let prices = [], result = [];
+            let offer = yield this.offerFromTo(ft);
+            let distance = helper_1.default.distance(ft.start, ft.finish);
+            for (let i = 0; i < 10; i++)
+                prices.push(helper_1.default.asCurrency(i * slice));
+            let config = {
+                distance: 0,
+                offerPrice: offer.totalFee,
+                orderTotal: 0,
+                contribitionRatio: 0.04,
+                freeShipPerKM: 25,
+                pricePerKM: 1.5,
+                priceStartsAt: 5,
+                maxDistance: 20,
+                minOrder: 100,
+            };
+            for (let i = 0; i < 10; i++)
+                prices.push(helper_1.default.asCurrency(i * slice));
+            for (let i = 0; i < prices.length; i++) {
+                config.orderTotal = prices[i];
+                let cost = (yield this.calculateFeeForCustomer(config));
+                if (cost) {
+                    let item = {
+                        start: prices[i],
+                        end: prices[i] + slice,
+                        cost: cost.totalFee
+                    };
+                    result.push(item);
+                    if (cost.totalFee <= 0.00) {
+                        item.end = 0.00;
+                        break;
+                    }
+                    ;
+                }
+            }
+            return result;
+        });
     }
     get(method) {
         return __awaiter(this, void 0, void 0, function* () {
@@ -153,3 +218,5 @@ class BanabikuryeProvider extends core_1.LogisticProvider {
 }
 exports.default = BanabikuryeProvider;
 BanabikuryeProvider.key = "banabikurye";
+
+//# sourceMappingURL=banabikurye.js.map

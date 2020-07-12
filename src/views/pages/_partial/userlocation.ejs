@@ -15,11 +15,6 @@
                 autocomplete="off" type="text" placeholder="semtinizi arayın">
         </div>
         <div class="mt-3 d-flex justify-content-between text-muted  font-size-sm">
-            <div class="">
-                <a class="text-info" onclick="$('#select-areafrom-list').toggle()">Listeden seç &raquo;</a>
-                
-            
-            </div>
             <div id="userlocationapp" class="">
                 <a v-if="!list || list.length == 0" id="semt-from-device" class="text-info" @click="locateSemt()">
                     <i class="czi-location"></i>
@@ -32,6 +27,11 @@
                           </div>                
                     </div>
             </div>
+
+            <div>
+                <a class="text-info" onclick="$('#select-areafrom-list').toggle()">Listeden seç &raquo;</a>
+            </div>
+     
         </div>
        
     </div>

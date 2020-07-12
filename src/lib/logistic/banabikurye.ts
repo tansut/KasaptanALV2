@@ -1,5 +1,7 @@
-import { LogisticProvider, OfferRequest, OfferResponse, Point, LogisticFactory, OrderRequest, OrderResponse } from "./core";
+import { LogisticProvider, VehicleType, FromTo, OfferRequest, OfferResponse, Point, LogisticFactory, OrderRequest, OrderResponse, PriceSlice, CustomerPriceConfig } from "./core";
 import axios, { AxiosResponse } from "axios";
+import Helper from "../helper";
+import { off } from "process";
 
 export interface BanabikuryeConfig {
     apiKey: string,
@@ -17,6 +19,81 @@ interface BanabikuryeResponse {
 export default class BanabikuryeProvider extends LogisticProvider {
     static key = "banabikurye";
     config: BanabikuryeConfig;
+
+    async offerFromTo(fromTo: FromTo): Promise<OfferResponse> {
+        let req: OfferRequest = {
+            weight: 0,
+            matter:'Gıda',
+            notifyCustomerSms: false,
+            vehicleType: VehicleType.Motor,
+            points: [{
+                address: 'Foo',
+                contactPhone: '05326374151',
+                lat: fromTo.start.coordinates[0],
+                lng: fromTo.start.coordinates[1],
+                orderId:''
+            }, {
+                address:'Foo',
+                contactPhone: '05326374151',
+                lat: fromTo.finish.coordinates[0],
+                lng: fromTo.finish.coordinates[1],
+                orderId:''
+            }]
+        }
+        return await this.requestOffer(req)
+    }
+
+    async priceSlice(ft: FromTo, slice: number = 100.00, options = {}): Promise<PriceSlice[]> {
+        let prices = [], result: PriceSlice []=[];
+        let offer = await this.offerFromTo(ft);
+        
+        let distance = Helper.distance(ft.start, ft.finish);
+
+
+        for(let i = 0; i < 10; i++)
+            prices.push(Helper.asCurrency(i*slice))        
+
+            let config: CustomerPriceConfig = {
+                distance: 0,
+                offerPrice: offer.totalFee,
+                orderTotal: 0,
+                contribitionRatio: 0.04,
+                freeShipPerKM: 25,
+                pricePerKM: 1.5,
+                priceStartsAt: 5,
+                maxDistance: 20,
+                minOrder: 100,
+            }
+    
+    
+            for(let i = 0; i < 10; i++)
+                prices.push(Helper.asCurrency(i*slice));
+                
+            for(let i = 0; i < prices.length; i++) {
+                    config.orderTotal = prices[i];
+                    let cost = (await this.calculateFeeForCustomer(config));
+                    if (cost) {
+                        let item = {
+                            start: prices[i],
+                            end: prices[i] + slice,
+                            cost: cost.totalFee
+                        }
+                        result.push(item)
+                        if (cost.totalFee <= 0.00) {
+                            item.end = 0.00;
+                            break
+                        };
+                    }
+            }
+    
+            return result;
+
+
+    }
+    
+
+
+
 
     async get<T>(method: string) {
         const config = {

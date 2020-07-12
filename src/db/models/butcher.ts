@@ -9,7 +9,7 @@ import { Puan } from '../../models/puan';
 import AccountModel from './accountmodel';
 import { Account } from '../../models/account';
 import Helper from '../../lib/helper';
-import { LogisticProviderUsage } from './dispatcher';
+import { ExternalLogisticProviderUsage, DispatcherType } from './dispatcher';
 import { GeoLocation } from '../../models/geo';
 
 export type DispatchArea = "manual" | "citywide" | "radius";
@@ -24,8 +24,6 @@ class Butcher extends BaseModel<Butcher> {
     @AllowNull(false)
     @Column
     name: string;
-
-
 
     @AllowNull(false)
     @Column
@@ -143,7 +141,13 @@ class Butcher extends BaseModel<Butcher> {
         allowNull: false,
         defaultValue: "none"
     })
-    logisticProviderUsage: LogisticProviderUsage;    
+    logisticProviderUsage: ExternalLogisticProviderUsage;    
+
+    @Column({
+        allowNull: false,
+        defaultValue: "butcher"
+    })
+    defaultDispatcher: DispatcherType;    
 
     @Column
     logisticProvider: string;
