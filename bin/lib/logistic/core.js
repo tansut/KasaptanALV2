@@ -21,11 +21,41 @@ var VehicleType;
     VehicleType[VehicleType["Car"] = 1] = "Car";
 })(VehicleType = exports.VehicleType || (exports.VehicleType = {}));
 class LogisticProvider {
-    constructor(config, options = {}) {
+    constructor(config, options) {
+        this.options = options;
     }
     distance(ft) {
         return __awaiter(this, void 0, void 0, function* () {
             return helper_1.default.distance(ft.start, ft.finish);
+        });
+    }
+    offerRequestFromTo(fromTo) {
+        let req = {
+            orderTotal: 0.00,
+            weight: 0,
+            matter: 'Gıda',
+            notifyCustomerSms: false,
+            vehicleType: VehicleType.Motor,
+            points: [{
+                    address: 'Foo',
+                    contactPhone: '05326374151',
+                    lat: fromTo.start.coordinates[0],
+                    lng: fromTo.start.coordinates[1],
+                    orderId: ''
+                }, {
+                    address: 'Foo',
+                    contactPhone: '05326374151',
+                    lat: fromTo.finish.coordinates[0],
+                    lng: fromTo.finish.coordinates[1],
+                    orderId: ''
+                }]
+        };
+        return req;
+    }
+    offerFromTo(fromTo) {
+        return __awaiter(this, void 0, void 0, function* () {
+            let req = this.offerRequestFromTo(fromTo);
+            return yield this.requestOffer(req);
         });
     }
     priceSlice(distance, slice = 50.00, options = {}) {
@@ -46,6 +76,7 @@ class LogisticProvider {
             matter: 'Gıda',
             vehicleType: VehicleType.Motor,
             weight: 0,
+            orderTotal: o.subTotal,
             points: [
                 {
                     address: o.butcher.address,
@@ -73,31 +104,46 @@ class LogisticProvider {
             ]
         };
     }
-    calculateFeeForCustomer(input) {
-        return __awaiter(this, void 0, void 0, function* () {
-            let fee = 0.00;
-            if (input.maxDistance && input.distance > input.maxDistance)
-                return null;
-            if (input.minOrder && input.orderTotal < input.minOrder)
-                return null;
-            if (input.priceStartsAt && input.distance < input.priceStartsAt)
-                fee = 0.00;
-            let regular = input.distance ? helper_1.default.asCurrency(input.pricePerKM * input.distance) : input.offerPrice;
-            let contrib = input.contribitionRatio ? helper_1.default.asCurrency(input.orderTotal * input.contribitionRatio) : 0.00;
-            let free = input.freeShipPerKM ? (input.freeShipPerKM * input.distance) : 0.00;
-            if (input.orderTotal >= free)
-                fee = 0;
-            let calc = Math.max(0, regular - contrib);
-            fee = helper_1.default.asCurrency(Math.round(calc / 2.5) * 2.5);
-            return {
-                totalFee: fee
-            };
-        });
+    getCustomerFeeConfig() {
+        return null;
+    }
+    calculateFeeForCustomer(params) {
+        let input = this.getCustomerFeeConfig();
+        if (!input)
+            return null;
+        let fee = 0.00;
+        if (input.maxDistance && params.distance > input.maxDistance)
+            return null;
+        if (input.minOrder && params.orderTotal < input.minOrder)
+            return null;
+        if (input.priceStartsAt && params.distance < input.priceStartsAt)
+            fee = 0.00;
+        let regular = params.distance ? helper_1.default.asCurrency(input.pricePerKM * params.distance) : input.offerPrice;
+        let contrib = input.contribitionRatio ? helper_1.default.asCurrency(params.orderTotal * input.contribitionRatio) : 0.00;
+        let free = input.freeShipPerKM ? (input.freeShipPerKM * params.distance) : 0.00;
+        if (params.orderTotal >= free)
+            fee = 0;
+        let calc = Math.max(0, regular - contrib);
+        fee = helper_1.default.asCurrency(Math.round(calc / 2.5) * 2.5);
+        return {
+            totalFee: regular,
+            customerFee: fee
+        };
     }
     offerFromOrder(o) {
         let req = this.fromOrder(o);
         req.notifyCustomerSms = true;
         return req;
+    }
+    offerFromDispatcher(to) {
+        return __awaiter(this, void 0, void 0, function* () {
+            let fromTo = {
+                start: this.options.dispatcher.butcher.location,
+                finish: to
+            };
+            let offer = yield this.offerFromTo(fromTo);
+            return offer;
+        });
     }
     orderFromOrder(o) {
         let req = this.fromOrder(o);
@@ -142,7 +188,7 @@ class LogisticFactory {
     static register(key, cls) {
         LogisticFactory.items[key] = cls;
     }
-    static getInstance(key, options = {}) {
+    static getInstance(key, options) {
         key = key || paymentConfig.default || config_1.default.paymentProvider;
         const cls = LogisticFactory.items[key];
         return new cls(paymentConfig.providers[key][config_1.default.nodeenv], options);

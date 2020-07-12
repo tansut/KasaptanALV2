@@ -41,21 +41,18 @@ class Route extends router_1.ApiRouter {
             return where;
         });
     }
-    getDispatcher(butcher, address) {
-        return __awaiter(this, void 0, void 0, function* () {
-            if (butcher.defaultDispatcher == "butcher") {
-                return core_1.LogisticFactory.getInstance("butcher");
-            }
-            else if (butcher.defaultDispatcher == "butcher/auto")
-                return core_1.LogisticFactory.getInstance("butcher/auto");
-            else {
-                return core_1.LogisticFactory.getInstance(butcher.defaultDispatcher);
-            }
-        });
-    }
+    // async getDispatcher(butcher: Butcher, address: PreferredAddress): Promise< LogisticProvider> {
+    //     if (butcher.defaultDispatcher == "butcher") {
+    //         return LogisticFactory.getInstance("butcher")
+    //     } else if (butcher.defaultDispatcher == "butcher/auto")
+    //         return LogisticFactory.getInstance("butcher/auto")
+    //     else {
+    //         return LogisticFactory.getInstance(butcher.defaultDispatcher)
+    //     }
+    // }
     bestDispatcher2(butcher, address, basedOn) {
         return __awaiter(this, void 0, void 0, function* () {
-            butcher = typeof (butcher) == 'string' ? yield butcher_1.default.findByPk(butcher) : butcher;
+            butcher = typeof (butcher) == 'number' ? yield butcher_1.default.findByPk(butcher) : butcher;
             let where = {
                 type: 'butcher',
                 butcherid: butcher.id,
@@ -77,12 +74,12 @@ class Route extends router_1.ApiRouter {
                 let usage = res.logisticProviderUsage == "default" ? butcher.logisticProviderUsage : res.logisticProviderUsage;
                 if (usage != "none" && butcher.logisticProviderUsage != "disabled" && butcher.logisticProvider) {
                     provider = core_1.LogisticFactory.getInstance(butcher.logisticProvider, {
-                        dispatcher: res
+                        dispatcher: res,
                     });
                 }
                 else {
                     provider = core_1.LogisticFactory.getInstance(butcher.defaultDispatcher, {
-                        dispatcher: res
+                        dispatcher: res,
                     });
                 }
             }
@@ -111,7 +108,9 @@ class Route extends router_1.ApiRouter {
                 let butcher = yield butcher_1.default.findByPk(butcherId);
                 let usage = res.logisticProviderUsage == "default" ? butcher.logisticProviderUsage : res.logisticProviderUsage;
                 if (usage != "none" && butcher.logisticProviderUsage != "disabled" && butcher.logisticProvider) {
-                    let provider = core_1.LogisticFactory.getInstance(butcher.logisticProvider);
+                    let provider = core_1.LogisticFactory.getInstance(butcher.logisticProvider, {
+                        dispatcher: res
+                    });
                     res.name = provider.providerKey;
                     res.min = 0.00;
                     res.totalForFree = 0.00;

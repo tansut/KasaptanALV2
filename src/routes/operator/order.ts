@@ -170,7 +170,9 @@ export default class Route extends ViewRouter {
         // }
 
         if (this.req.body["kurye-maliyet"] == "true" && this.order.butcher.logisticProvider) {
-            let provider = LogisticFactory.getInstance(this.order.butcher.logisticProvider);
+            let provider = LogisticFactory.getInstance(this.order.butcher.logisticProvider, {
+                dispatcher: null
+            });
             let request = provider.offerFromOrder(this.order);
             try {
                 let offer = await provider.requestOffer(request);
@@ -181,7 +183,9 @@ export default class Route extends ViewRouter {
         }        
 
         if (this.req.body["kurye-cagir"] == "true" && this.order.butcher.logisticProvider) {
-            let provider = LogisticFactory.getInstance(this.order.butcher.logisticProvider);
+            let provider = LogisticFactory.getInstance(this.order.butcher.logisticProvider, { 
+                dispatcher: null
+            });
             let request = provider.orderFromOrder(this.order);
             try {
                 let offer = await provider.createOrder(request);

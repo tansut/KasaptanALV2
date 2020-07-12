@@ -1,4 +1,4 @@
-import { LogisticProvider, VehicleType, FromTo, OfferRequest, OfferResponse, Point, LogisticFactory, OrderRequest, OrderResponse, PriceSlice, CustomerPriceConfig } from "./core";
+import { LogisticProvider, VehicleType, FromTo, OfferRequest, OfferResponse, Point, LogisticFactory, OrderRequest, OrderResponse, PriceSlice, CustomerPriceConfig, LogisticProviderOptions, CustomerPriceParams } from "./core";
 import axios, { AxiosResponse } from "axios";
 import Helper from "../helper";
 import { off } from "process";
@@ -20,58 +20,41 @@ export default class BanabikuryeProvider extends LogisticProvider {
     static key = "banabikurye";
     config: BanabikuryeConfig;
 
-    async offerFromTo(fromTo: FromTo): Promise<OfferResponse> {
-        let req: OfferRequest = {
-            weight: 0,
-            matter:'Gıda',
-            notifyCustomerSms: false,
-            vehicleType: VehicleType.Motor,
-            points: [{
-                address: 'Foo',
-                contactPhone: '05326374151',
-                lat: fromTo.start.coordinates[0],
-                lng: fromTo.start.coordinates[1],
-                orderId:''
-            }, {
-                address:'Foo',
-                contactPhone: '05326374151',
-                lat: fromTo.finish.coordinates[0],
-                lng: fromTo.finish.coordinates[1],
-                orderId:''
-            }]
+
+
+    getCustomerFeeConfig(): CustomerPriceConfig {
+        let config: CustomerPriceConfig = {
+            contribitionRatio: 0.04,
+            freeShipPerKM: 25,
+            pricePerKM: 1.5,
+            priceStartsAt: 5,
+            maxDistance: 20,
+            minOrder: 100,
         }
-        return await this.requestOffer(req)
+        return config;
     }
+
+    calculateFeeForCustomer(params: CustomerPriceParams): OfferResponse {
+        if (!params.regularPrice)
+            params.regularPrice = this.lastOffer.totalFee;
+        return super.calculateFeeForCustomer(params)
+    }   
 
     async priceSlice(ft: FromTo, slice: number = 100.00, options = {}): Promise<PriceSlice[]> {
         let prices = [], result: PriceSlice []=[];
         let offer = await this.offerFromTo(ft);
-        
         let distance = Helper.distance(ft.start, ft.finish);
-
-
         for(let i = 0; i < 10; i++)
             prices.push(Helper.asCurrency(i*slice))        
 
-            let config: CustomerPriceConfig = {
-                distance: 0,
-                offerPrice: offer.totalFee,
-                orderTotal: 0,
-                contribitionRatio: 0.04,
-                freeShipPerKM: 25,
-                pricePerKM: 1.5,
-                priceStartsAt: 5,
-                maxDistance: 20,
-                minOrder: 100,
-            }
-    
-    
             for(let i = 0; i < 10; i++)
                 prices.push(Helper.asCurrency(i*slice));
                 
             for(let i = 0; i < prices.length; i++) {
-                    config.orderTotal = prices[i];
-                    let cost = (await this.calculateFeeForCustomer(config));
+                    let cost = (this.calculateFeeForCustomer({
+                        orderTotal: prices[i],
+                        regularPrice: offer.totalFee
+                    }));
                     if (cost) {
                         let item = {
                             start: prices[i],
@@ -186,6 +169,7 @@ export default class BanabikuryeProvider extends LogisticProvider {
                 points: order['points'].map(p=>this.fromBnbPoint(p)),
                 weightFee: parseFloat(order['weight_fee_amount']),                
                 totalFee: parseFloat(order['payment_amount']),   
+                customerFee: parseFloat(order['payment_amount'])
             }    
             return res;            
         } else {
@@ -231,8 +215,8 @@ export default class BanabikuryeProvider extends LogisticProvider {
         LogisticFactory.register(BanabikuryeProvider.key, BanabikuryeProvider)
     }
 
-    constructor(config: BanabikuryeConfig) {
-        super(config);      
+    constructor(config: BanabikuryeConfig, options: LogisticProviderOptions) {
+        super(config, options);      
         this.config = config;  
     }
 }

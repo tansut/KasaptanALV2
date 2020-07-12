@@ -200,18 +200,18 @@ export class ShopCard {
         return Helper.asCurrency(purchaseoption.unitPrice * quantity);
     }
 
-    getShippingCostOfButcher(bi) {
-        let shipment = this.shipment[bi];
-        let butcher = this.butchers[bi];
-        if (shipment.howTo == "take")
-            return 0.00;
-        if (shipment.dispatcher && shipment.dispatcher.type == "butcher") {
-            if (shipment.dispatcher.totalForFree <= 0) {
-                return shipment.dispatcher.fee;
-            }
-            else return (Math.max(0.00, (shipment.dispatcher.totalForFree - butcher.subTotal > 0) ? shipment.dispatcher.fee : 0))
-        } else return 0.00;
-    }
+    // getShippingCostOfButcher(bi) {
+    //     let shipment = this.shipment[bi];
+    //     let butcher = this.butchers[bi];
+    //     if (shipment.howTo == "take")
+    //         return 0.00;
+    //     if (shipment.dispatcher && shipment.dispatcher.type == "butcher") {
+    //         if (shipment.dispatcher.totalForFree <= 0) {
+    //             return shipment.dispatcher.fee;
+    //         }
+    //         else return (Math.max(0.00, (shipment.dispatcher.totalForFree - butcher.subTotal > 0) ? shipment.dispatcher.fee : 0))
+    //     } else return 0.00;
+    // }
 
 
     getShippingCostOfCustomer(bi) {
@@ -220,15 +220,19 @@ export class ShopCard {
         if (shipment.howTo == "take")
             return 0.00;
         if (shipment.dispatcher) {
-            if (shipment.dispatcher.type == "butcher")
-                return this.getShippingCostOfButcher(bi)
-            else {
-                if (shipment.dispatcher.calculateCostForCustomer) {
-                    let result = shipment.dispatcher.calculateCostForCustomer(shipment)
-                    return result;
-                } else return Helper.asCurrency(shipment.dispatcher.fee / 2);
+            return shipment.dispatcher.fee;
+            // shipment.dispatcher.provider.calculateFeeForCustomer({
+            //     orderTotal: butcher.subTotal
+            // })
+            // if (shipment.dispatcher.type == "butcher")
+            //     return this.getShippingCostOfButcher(bi)
+            // else {
+            //     if (shipment.dispatcher.calculateCostForCustomer) {
+            //         let result = shipment.dispatcher.calculateCostForCustomer(shipment)
+            //         return result;
+            //     } else return Helper.asCurrency(shipment.dispatcher.fee / 2);
 
-            }  
+            // }  
         } 
         return 0.00;
     }    
@@ -362,7 +366,14 @@ export class ShopCard {
 
     }
 
+    clearBeforeSave() {
+        // for (let o in this.shipment) {
+        //     this.shipment[o].dispatcher = undefined
+        // }
+    }
+
     async saveToRequest(req: AppRequest) {
+        this.clearBeforeSave();
         if (req.user) {
             req.user.shopcard = this
             await req.user.save();

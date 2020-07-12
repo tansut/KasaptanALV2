@@ -15,33 +15,52 @@ const helper_1 = require("../helper");
 class ButcherManualLogistics extends core_1.LogisticProvider {
     constructor(config, options) {
         super(config, options);
-        this.dispatcher = options.dispatcher;
     }
     static register() {
         core_1.LogisticFactory.register(ButcherManualLogistics.key, ButcherManualLogistics);
     }
+    requestOffer(req) {
+        return __awaiter(this, void 0, void 0, function* () {
+            let fee = 0.00;
+            if (this.options.dispatcher.totalForFree <= 0) {
+                fee = this.options.dispatcher.fee;
+            }
+            else
+                fee = (Math.max(0.00, (this.options.dispatcher.totalForFree - req.orderTotal > 0) ? this.options.dispatcher.fee : 0));
+            return {
+                totalFee: this.options.dispatcher.fee,
+                customerFee: fee
+            };
+        });
+    }
+    offerFromTo(fromTo) {
+        return __awaiter(this, void 0, void 0, function* () {
+            let req = this.offerRequestFromTo(fromTo);
+            return this.requestOffer(req);
+        });
+    }
     priceSlice(distance, slice = 50.00) {
         return __awaiter(this, void 0, void 0, function* () {
             let arr = [];
-            if (this.dispatcher) {
-                if (this.dispatcher.fee > 0.0) {
+            if (this.options.dispatcher) {
+                if (this.options.dispatcher.fee > 0.0) {
                     arr.push({
-                        start: this.dispatcher.min,
-                        end: this.dispatcher.totalForFree,
-                        cost: this.dispatcher.fee
+                        start: this.options.dispatcher.min,
+                        end: this.options.dispatcher.totalForFree,
+                        cost: this.options.dispatcher.fee
                     });
                 }
-                if (this.dispatcher.totalForFree > 0.00) {
+                if (this.options.dispatcher.totalForFree > 0.00) {
                     arr.push({
-                        start: this.dispatcher.totalForFree,
+                        start: this.options.dispatcher.totalForFree,
                         cost: 0.00
                     });
                 }
                 if (arr.length == 0) {
                     arr.push({
-                        start: this.dispatcher.min,
-                        end: this.dispatcher.totalForFree,
-                        cost: this.dispatcher.fee
+                        start: this.options.dispatcher.min,
+                        end: this.options.dispatcher.totalForFree,
+                        cost: this.options.dispatcher.fee
                     });
                 }
             }
@@ -59,25 +78,28 @@ class ButcherAutoLogistics extends core_1.LogisticProvider {
     static register() {
         core_1.LogisticFactory.register(ButcherAutoLogistics.key, ButcherAutoLogistics);
     }
+    getCustomerFeeConfig() {
+        let config = {
+            contribitionRatio: 0.04,
+            freeShipPerKM: 25,
+            pricePerKM: 1.5,
+            priceStartsAt: 5,
+            maxDistance: 20,
+            minOrder: 100,
+        };
+        return config;
+    }
     priceSlice(ft, slice = 100.00) {
         return __awaiter(this, void 0, void 0, function* () {
             let distance = helper_1.default.distance(ft.start, ft.finish);
-            let config = {
-                distance: distance,
-                orderTotal: 0,
-                contribitionRatio: 0.04,
-                freeShipPerKM: 25,
-                pricePerKM: 1.5,
-                priceStartsAt: 5,
-                maxDistance: 20,
-                minOrder: 100,
-            };
             let prices = [], result = [];
             for (let i = 0; i < 10; i++)
                 prices.push(helper_1.default.asCurrency(i * slice));
             for (let i = 0; i < prices.length; i++) {
-                config.orderTotal = prices[i];
-                let cost = (yield this.calculateFeeForCustomer(config));
+                let cost = this.calculateFeeForCustomer({
+                    distance: distance,
+                    orderTotal: prices[i]
+                });
                 if (cost) {
                     let item = {
                         start: prices[i],

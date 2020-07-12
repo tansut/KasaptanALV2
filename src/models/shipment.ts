@@ -2,6 +2,7 @@ import Helper from "../lib/helper";
 import moment = require("moment");
 import Dispatcher, { DispatcherType } from "../db/models/dispatcher";
 import { GeoLocation } from "./geo";
+import { LogisticProvider } from "../lib/logistic/core";
 
 export let ShipmentHours = {
     //0: 'Herhangi bir saat olabilir',
@@ -51,7 +52,6 @@ export interface DispatcherView {
     min: number;
     takeOnly: boolean;
     location: GeoLocation;
-    calculateCostForCustomer?: any;
 }
 
 export class Shipment {

@@ -129,7 +129,9 @@ class Route extends router_1.ViewRouter {
             //     } else await this.api.completeLoadPuan(this.order, this.paid)
             // }
             if (this.req.body["kurye-maliyet"] == "true" && this.order.butcher.logisticProvider) {
-                let provider = core_1.LogisticFactory.getInstance(this.order.butcher.logisticProvider);
+                let provider = core_1.LogisticFactory.getInstance(this.order.butcher.logisticProvider, {
+                    dispatcher: null
+                });
                 let request = provider.offerFromOrder(this.order);
                 try {
                     let offer = yield provider.requestOffer(request);
@@ -140,7 +142,9 @@ class Route extends router_1.ViewRouter {
                 }
             }
             if (this.req.body["kurye-cagir"] == "true" && this.order.butcher.logisticProvider) {
-                let provider = core_1.LogisticFactory.getInstance(this.order.butcher.logisticProvider);
+                let provider = core_1.LogisticFactory.getInstance(this.order.butcher.logisticProvider, {
+                    dispatcher: null
+                });
                 let request = provider.orderFromOrder(this.order);
                 try {
                     let offer = yield provider.createOrder(request);

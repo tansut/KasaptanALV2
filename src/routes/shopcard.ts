@@ -26,6 +26,8 @@ import { PuanCalculator, ComissionHelper } from '../lib/commissionHelper';
 import { PuanResult } from '../models/puan';
 import { DispatcherTypeDesc } from '../db/models/dispatcher';
 import { all } from 'sequelize/types/lib/operators';
+import { OfferResponse, OfferRequest } from '../lib/logistic/core';
+import { off } from 'process';
 
 export default class Route extends ViewRouter {
     shopcard: ShopCard;
@@ -143,20 +145,20 @@ export default class Route extends ViewRouter {
         return allow;
     }
 
-    calculateCostForCustomer(shipment: Shipment, o: Order) {
-        if (o.dispatcherFee > 0.00) {
-            let dispatcherFee = Helper.asCurrency(o.dispatcherFee / 1.18);
-            let calc = new ComissionHelper(o.getButcherRate(), o.getButcherFee());
-            let commission = calc.calculateButcherComission(o.subTotal);    
-            let contribute = Helper.asCurrency(commission.kalitteFee * 0.4);
-            let calculated = Helper.asCurrency(Math.max(0.00, dispatcherFee - contribute));
-            let calculatedVat = Helper.asCurrency(calculated * 0.18)
-            let totalShip = Helper.asCurrency(Math.round(calculated + calculatedVat));
-            return totalShip > 0.00 ? Math.max(5.00, totalShip): 0.00;
-        } else return 0.00;
-    }
+    // calculateCostForCustomer(shipment: Shipment, o: Order) {
+    //     if (o.dispatcherFee > 0.00) {
+    //         let dispatcherFee = Helper.asCurrency(o.dispatcherFee / 1.18);
+    //         let calc = new ComissionHelper(o.getButcherRate(), o.getButcherFee());
+    //         let commission = calc.calculateButcherComission(o.subTotal);    
+    //         let contribute = Helper.asCurrency(commission.kalitteFee * 0.4);
+    //         let calculated = Helper.asCurrency(Math.max(0.00, dispatcherFee - contribute));
+    //         let calculatedVat = Helper.asCurrency(calculated * 0.18)
+    //         let totalShip = Helper.asCurrency(Math.round(calculated + calculatedVat));
+    //         return totalShip > 0.00 ? Math.max(5.00, totalShip): 0.00;
+    //     } else return 0.00;
+    // }
 
-    async setDispatcher() {
+    async setDispatcher_old() {
         let api = new Dispatcher(this.constructorParams);
         let orders = await this.orderapi.getFromShopcard(this.shopcard);
         var self = this;
@@ -179,14 +181,74 @@ export default class Route extends ViewRouter {
                         min: dispatch.min,
                         takeOnly: dispatch.takeOnly,
                         location: dispatch.butcher ? <any>dispatch.butcher.location : null,
-                        calculateCostForCustomer: function(shipment) {
-                            return self.calculateCostForCustomer(shipment, order)
-                        }
+                        // calculateCostForCustomer: function(shipment) {
+                        //     return self.calculateCostForCustomer(shipment, order)
+                        // }
                     }
                     if (dispatch.min > this.shopcard.butchers[o].subTotal) {
                         this.shopcard.shipment[o].howTo = 'ship';
                     }
                     else if (dispatch.takeOnly) {
+                        this.shopcard.shipment[o].howTo = 'take';
+                    }
+                    else if (this.shopcard.shipment[o].howTo == 'unset') {
+                        this.shopcard.shipment[o].howTo = 'ship'
+                    }
+                } else {
+                    this.shopcard.shipment[o].dispatcher = null;
+                    this.shopcard.shipment[o].howTo = 'take'
+                }
+            }
+        }
+    }
+
+    async setDispatcher() {
+        let api = new Dispatcher(this.constructorParams);
+        let orders = await this.orderapi.getFromShopcard(this.shopcard);
+        var self = this;
+        for (let o in this.shopcard.shipment) {
+            if (true) {
+                let order = orders.find(oo => oo.butcherid == parseInt(o))
+                 let area = await Area.findByPk(this.shopcard.address.level3Id);
+
+                let provider = await api.bestDispatcher2(parseInt(o), {
+                    level1Id: this.shopcard.address.level1Id,
+                    level2Id: this.shopcard.address.level2Id,
+                    level3Id: this.shopcard.address.level3Id
+                }, order);
+                if (provider) {
+                    let dispatcher = this.shopcard.shipment[o].dispatcher = {
+                        id: provider.options.dispatcher.id,
+                        feeOffer: provider.options.dispatcher.feeOffer,
+                        name: provider.options.dispatcher.name,
+                        fee: provider.options.dispatcher.fee,
+                        totalForFree: provider.options.dispatcher.totalForFree,
+                        type: provider.options.dispatcher.type,
+                        min: provider.options.dispatcher.min,
+                        takeOnly: provider.options.dispatcher.takeOnly,
+                        location: provider.options.dispatcher.butcher ? <any>provider.options.dispatcher.butcher.location : null,
+                    }
+                    let offer: OfferResponse, req: OfferRequest;
+                    if (order && order.shipLocation) {
+                        req = provider.offerFromOrder(order);
+                       
+                    } else {
+                         req = provider.offerRequestFromTo({
+                            start: provider.options.dispatcher.butcher.location,
+                            finish: area.location
+                        });
+                        req.orderTotal = this.shopcard.butchers[o].subTotal;
+                    }
+                    offer = await provider.requestOffer(req) 
+                    provider.lastOffer = offer;
+
+                    dispatcher.feeOffer = provider.lastOffer.totalFee;
+                    dispatcher.fee = provider.lastOffer.customerFee;
+
+                    if (provider.options.dispatcher.min > this.shopcard.butchers[o].subTotal) {
+                        this.shopcard.shipment[o].howTo = 'ship';
+                    }
+                    else if (provider.options.dispatcher.takeOnly) {
                         this.shopcard.shipment[o].howTo = 'take';
                     }
                     else if (this.shopcard.shipment[o].howTo == 'unset') {
