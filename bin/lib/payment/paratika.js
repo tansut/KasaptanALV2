@@ -359,5 +359,3 @@ class ParatikaPayment extends creditcard_1.CreditcardPaymentProvider {
 }
 exports.default = ParatikaPayment;
 ParatikaPayment.key = "paratika";
-
-//# sourceMappingURL=paratika.js.map

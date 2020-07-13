@@ -27,5 +27,3 @@ class ProductLd {
     }
 }
 exports.ProductLd = ProductLd;
-
-//# sourceMappingURL=ProductLd.js.map

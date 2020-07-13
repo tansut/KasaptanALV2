@@ -24,6 +24,8 @@ const review_1 = require("../../db/models/review");
 const order_2 = require("../../models/order");
 const geo_1 = require("../../models/geo");
 const core_1 = require("../../lib/logistic/core");
+const dispatcher_1 = require("../../db/models/dispatcher");
+const butcher_1 = require("../../db/models/butcher");
 var MarkdownIt = require('markdown-it');
 class Route extends router_1.ViewRouter {
     constructor() {
@@ -130,7 +132,12 @@ class Route extends router_1.ViewRouter {
             // }
             if (this.req.body["kurye-maliyet"] == "true" && this.order.butcher.logisticProvider) {
                 let provider = core_1.LogisticFactory.getInstance(this.order.butcher.logisticProvider, {
-                    dispatcher: null
+                    dispatcher: yield dispatcher_1.default.findByPk(this.order.dispatcherid, {
+                        include: [{
+                                model: butcher_1.default,
+                                as: 'butcher',
+                            }]
+                    })
                 });
                 let request = provider.offerFromOrder(this.order);
                 try {
@@ -143,7 +150,12 @@ class Route extends router_1.ViewRouter {
             }
             if (this.req.body["kurye-cagir"] == "true" && this.order.butcher.logisticProvider) {
                 let provider = core_1.LogisticFactory.getInstance(this.order.butcher.logisticProvider, {
-                    dispatcher: null
+                    dispatcher: yield dispatcher_1.default.findByPk(this.order.dispatcherid, {
+                        include: [{
+                                model: butcher_1.default,
+                                as: 'butcher',
+                            }]
+                    })
                 });
                 let request = provider.orderFromOrder(this.order);
                 try {
@@ -292,5 +304,3 @@ class Route extends router_1.ViewRouter {
     }
 }
 exports.default = Route;
-
-//# sourceMappingURL=order.js.map

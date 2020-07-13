@@ -105,7 +105,7 @@ class Route extends router_1.ApiRouter {
     getAreas(search) {
         return __awaiter(this, void 0, void 0, function* () {
             let areas = yield user_1.default.sequelize.query("select id, name, slug as url, 'Semt' as type, match(name, slug, keywords) against (:search IN BOOLEAN MODE) as RELEVANCE " +
-                "from Areas where level=3 and match(name, slug, keywords)  against (:search IN BOOLEAN MODE) ORDER BY RELEVANCE DESC LIMIT 10", {
+                "from Areas where level=3 and match(name, slug, keywords)  against (:search IN BOOLEAN MODE) ORDER BY RELEVANCE DESC LIMIT 25", {
                 replacements: { search: search },
                 type: sq.QueryTypes.SELECT,
                 mapToModel: false,
@@ -216,5 +216,3 @@ __decorate([
     __metadata("design:returntype", Promise)
 ], Route.prototype, "searchRoute", null);
 exports.default = Route;
-
-//# sourceMappingURL=fts.js.map

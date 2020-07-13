@@ -57,5 +57,3 @@ SubCategory = __decorate([
     })
 ], SubCategory);
 exports.default = SubCategory;
-
-//# sourceMappingURL=subcategory.js.map

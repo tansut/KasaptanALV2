@@ -290,7 +290,7 @@
               <div class="card">
                 <div class="card-header" role="tab">
                   <h3 class="accordion-heading"><a href="#dispatchArea" data-toggle="collapse"><i
-                        class="font-size-lg mr-2 mt-n1 align-middle"></i><%='Hizmet Bölgeleri'%><span
+                        class="font-size-lg mr-2 mt-n1 align-middle"></i><%='Teslimat Bilgisi'%><span
                         class="accordion-indicator"><i data-feather="chevron-up"></i></span></a></h3>
                 </div>
                 <div class="collapse " id="dispatchArea" data-parent="#payment-method" role="tabpanel">
@@ -300,42 +300,24 @@
                         Kasabın semtinize hizmeti yoktur.
                       </span>
                     <% } else if (controller.logisticsProvider) { %>
-                       <% let list = controller.getPriceSlice() %>
-                       <p>
-                         <%=__req.prefAddr.display%>
-                       </p>
-                      <table class="w-100 mb-3">
-                        <th>
-                          Alt Limit
-                        </th>
-                        <th>
-                          Üst Limit
-                        </th>
-                        <th>
-                          Ücret
-                        </th>
+                      <div class="text-center font-weight-bolder">
+                        <%=controller.logisticsProvider.name%>
+                      </div>
                       
-                       <% list.forEach(l => { %>
-                       <tr>
-<td>
-  <%- include('./_partial/currency.ejs', {value: l.start, zero: '-'}) %> 
 
-</td>
-<td>
-  <%- include('./_partial/currency.ejs', {value: l.end, zero: '-'}) %> 
-
-</td>
-<td>
-  <%- include('./_partial/currency.ejs', {value: l.cost, zero: 'ücretsiz'}) %> 
-
-</td>
-                       </tr>
-                       
-                       <% }) %>
-                      </table>
-                      <p>
-                        Ortalama: <%= controller.distance.toFixed(2) %> km
-                      </p>
+                      <div class="mb-3">
+                        <%- include('./_partial/ship-price-slice.ejs', {                                
+                          slices: controller.getPriceSlice()
+                            }) %>
+                      </div>
+    
+                          <p>
+                            <%=__req.prefAddr.display%>
+                          </p>
+         
+                         <p>
+                           <!-- Ortalama: <%= controller.distance.toFixed(2) %> km -->
+                         </p>                          
                     <% } else { %>
                       <div class="text-center ">
                         <p>

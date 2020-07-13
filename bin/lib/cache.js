@@ -309,5 +309,3 @@ exports.CacheManager = CacheManager;
 CacheManager.dataCache = new Cache();
 CacheManager.init = () => {
 };
-
-//# sourceMappingURL=cache.js.map

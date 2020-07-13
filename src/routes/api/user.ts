@@ -84,7 +84,7 @@ export default class UserRoute extends ApiRouter {
         
         select id, name, slug, GLength(LineStringFromWKB(LineString(
             location, 
-            GeomFromText('POINT(:lat :lng)')))) AS distance from Areas  where level=3 and location is not null ORDER BY distance ASC LIMIT 3
+            GeomFromText('POINT(:lat :lng)')))) AS distance from Areas  where level=3 and location is not null ORDER BY distance ASC LIMIT 4
         `,            {
                 replacements: { 
                      lat: parseFloat(this.req.body.lat as string), 

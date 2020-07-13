@@ -93,5 +93,3 @@ SiteLog = __decorate([
     })
 ], SiteLog);
 exports.default = SiteLog;
-
-//# sourceMappingURL=sitelog.js.map

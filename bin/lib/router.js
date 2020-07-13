@@ -182,5 +182,3 @@ var CrudOperation;
     CrudOperation[CrudOperation["update"] = 2] = "update";
     CrudOperation[CrudOperation["delete"] = 3] = "delete";
 })(CrudOperation = exports.CrudOperation || (exports.CrudOperation = {}));
-
-//# sourceMappingURL=router.js.map

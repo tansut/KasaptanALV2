@@ -18,6 +18,15 @@ import { off } from 'process';
 import Helper from '../../lib/helper';
 import { ButcherManualLogistics, ButcherAutoLogistics } from '../../lib/logistic/butcher';
 
+
+export interface DispatcherQuery {
+    adr: PreferredAddress,
+    product?: Product,
+    useLevel1?: boolean;
+    butcher?: number | Butcher,
+    orderType?: string
+}
+
 export default class Route extends ApiRouter {
     async _where(where: any, address: PreferredAddress) {
         where['enabled'] = true;
@@ -51,95 +60,166 @@ export default class Route extends ApiRouter {
     //     }
     // }
 
-    async bestDispatcher2(butcher: number | Butcher, address: PreferredAddress, basedOn: Order) {
-        butcher = typeof(butcher) == 'number' ? await Butcher.findByPk(butcher):butcher;
+    // let where = {
+    //     type: 'butcher'
+    // }
+    // where = await this._where(where, address);
+
+    // where['$butcher.products.productid$'] = product.id;
+    // where['$butcher.products.enabled$'] = true;
+    // let w = [{
+    //     '$butcher.products.kgPrice$': {
+    //         [Op.gt]: 0.0
+    //     }
+    // },
+    // {
+    //     [Op.and]: [
+    //         {
+    //             '$butcher.products.unit1price$': {
+    //                 [Op.gt]: 0.0
+    //             }
+    //         },
+    //         {
+    //             '$butcher.products.unit1enabled$': true
+    //         }
+    //     ]
+    // },
+    // {
+    //     [Op.and]: [
+    //         {
+    //             '$butcher.products.unit2price$': {
+    //                 [Op.gt]: 0.0
+    //             }
+    //         },
+    //         {
+    //             '$butcher.products.unit2enabled$': true
+    //         }
+    //     ]
+    // },
+    // {
+    //     [Op.and]: [
+    //         {
+    //             '$butcher.products.unit3price$': {
+    //                 [Op.gt]: 0.0
+    //             }
+    //         },
+    //         {
+    //             '$butcher.products.unit3enabled$': true
+    //         }
+    //     ]
+    // }
+    // ]
+    // where[Op.or].push(w);
+    // // if (!useLevel1) {
+    // //     where[Op.and] = where[Op.and] || []
+    // //     where[Op.and].push({
+    // //         toarealevel: {
+    // //             [Op.ne]: 1
+    // //         }
+    // //     })
+    // // }
+
+    // let res = await Dispatcher.findAll({
+    //     where: where,
+    //     include: [
+    //         {
+    //             model: Butcher,
+    //             as: 'butcher',
+    //             include: [{
+    //                 model: ButcherProduct
+    //             }
+    //             ]
+    //         },
+    //     ],
+    //     order: [["toarealevel", "DESC"]]
+    // });
+
+    async getDispatchers(q: DispatcherQuery) { // butcher: number | Butcher, address: PreferredAddress, basedOn: Order) {
         let where = {
-            type: 'butcher',
-            butcherid: butcher.id,
-            [Op.or]: []
-        };
-        where = await this._where(where, address);
-        let res = await Dispatcher.findOne({
-            where: where,
-            include: [
-                {
-                    model: Butcher,
-                    as: 'butcher'
-                },
-            ],            
-            order: [["toarealevel", "DESC"]],
-        })
-
-        let provider: LogisticProvider = null;
-
-        if (res) {
-            let usage = res.logisticProviderUsage == "default" ? butcher.logisticProviderUsage: res.logisticProviderUsage;
-            if (usage != "none" && butcher.logisticProviderUsage != "disabled" && butcher.logisticProvider) {
-                provider = LogisticFactory.getInstance(butcher.logisticProvider, {
-                    dispatcher: res,
-                })
-            } else {
-                provider = LogisticFactory.getInstance(butcher.defaultDispatcher, {
-                    dispatcher: res,
-                })
-            }
-
-
-
-        } 
-
-        return provider;
-    }
-
-
-    async bestDispatcher(butcherId, address: PreferredAddress, basedOn: Order) {
-        let where = {
-            type: 'butcher',
-            butcherid: butcherId,
-            [Op.or]: []
-        };
-        where = await this._where(where, address);
-        let res = await Dispatcher.findOne({
-            where: where,
-            include: [
-                {
-                    model: Butcher,
-                    as: 'butcher'
-                },
-            ],            
-            order: [["toarealevel", "DESC"]],
-        })
-        if (res && res.logisticProviderUsage != "none" && basedOn && basedOn.orderType != "kurban") {
-            let butcher = await Butcher.findByPk(butcherId);
-            let usage = res.logisticProviderUsage == "default" ? butcher.logisticProviderUsage: res.logisticProviderUsage;
-            if (usage != "none" && butcher.logisticProviderUsage != "disabled" && butcher.logisticProvider) {
-                let provider = LogisticFactory.getInstance(butcher.logisticProvider, {
-                    dispatcher: res
-                });
-                res.name = provider.providerKey;
-                res.min = 0.00;
-                res.totalForFree = 0.00;
-                res.type = "kasaptanal/motokurye";
-                res.name = DispatcherTypeDesc[res.type]
-                res.fee = 0.00;
-                res.feeOffer = 0.00;
-                if (basedOn && basedOn.shipLocation) {
-                    try {
-                        let request = provider.offerFromOrder(basedOn);
-                        let offer = await provider.requestOffer(request);
-                        res.feeOffer = offer.totalFee;
-                        res.fee = offer.totalFee;
-                    } catch(err) {
-                        email.send('tansut@gmail.com', 'hata: get offer from dispatcher', "error.ejs", {
-                            text: err + '/' + err.message,
-                            stack: err.stack
-                        })                        
+            type: 'butcher'
+        }
+        let include = [
+            {
+                model: Butcher,
+                as: 'butcher',
+            }           
+        ]
+        where = await this._where(where, q.adr);
+        if (q.product) {
+            include[0]['include'] = [{
+                model: ButcherProduct
+            }]            
+            where['$butcher.products.productid$'] = q.product.id;
+            where['$butcher.products.enabled$'] = true;
+            let w = [{
+                '$butcher.products.kgPrice$': {
+                    [Op.gt]: 0.0
+                }
+            },
+            {
+                [Op.and]: [
+                    {
+                        '$butcher.products.unit1price$': {
+                            [Op.gt]: 0.0
+                        }
+                    },
+                    {
+                        '$butcher.products.unit1enabled$': true
                     }
-                }                
+                ]
+            },
+            {
+                [Op.and]: [
+                    {
+                        '$butcher.products.unit2price$': {
+                            [Op.gt]: 0.0
+                        }
+                    },
+                    {
+                        '$butcher.products.unit2enabled$': true
+                    }
+                ]
+            },
+            {
+                [Op.and]: [
+                    {
+                        '$butcher.products.unit3price$': {
+                            [Op.gt]: 0.0
+                        }
+                    },
+                    {
+                        '$butcher.products.unit3enabled$': true
+                    }
+                ]
+            }
+            ]
+            where[Op.or].push(w);
+        }
+
+        if (q.butcher) {
+            let butcher = typeof (q.butcher) == 'number' ? await Butcher.findByPk(q.butcher) : q.butcher;
+            where['butcherid'] = butcher.id                        
+        }
+       
+        let res = await Dispatcher.findAll({
+            where: where,
+            include: include,
+            order: [["toarealevel", "DESC"]],
+        })
+
+        let ugly = {}, result: Dispatcher [] = [];
+        let l3 = await Area.findByPk(q.adr.level3Id);
+        for (let i = 0; i < res.length; i++) {            
+            let provider = res[i].setProvider(q.useLevel1, l3, q.orderType)
+            if (provider && !ugly[res[i].butcherid]) {
+                ugly[res[i].butcherid] = res[i];
+                result.push(res[i]);
             }
         }
-        return res;
+        return result;        
     }
+
+
 
 
     async getButchersDispatchesForAll(areaids: number[]) {
@@ -169,7 +249,7 @@ export default class Route extends ApiRouter {
         }
 
         where = await this._where(where, address);
-        where["toarealevel"] = address.level3Id ? 3: (address.level2Id ? 2: 1)
+        where["toarealevel"] = address.level3Id ? 3 : (address.level2Id ? 2 : 1)
         let res = await Dispatcher.findAll({
             where: where,
             include: [
@@ -206,18 +286,20 @@ export default class Route extends ApiRouter {
                     model: Butcher,
                     as: 'butcher'
                 }
-            ],   
-        });        
+            ],
+        });
 
         if (res && res.toarealevel == 1) {
             if (!useLevel1) {
                 let forceL1 = res.butcher.dispatchArea == "citywide" || res.butcher.dispatchArea == "radius";
-                res = forceL1 ? res: null;
+                res = forceL1 ? res : null;
             }
         }
 
         return res != null;
     }
+
+
 
     async getButchersSelingAndDispatches(address: PreferredAddress, product: Product, useLevel1: boolean) {
         let where = {
@@ -294,25 +376,13 @@ export default class Route extends ApiRouter {
             order: [["toarealevel", "DESC"]]
         });
         let ugly = {}, result = [];
-        for(let i = 0; i < res.length; i++) {
-           let r = res[i]
-            let butcherAvail = r.toarealevel > 1  || useLevel1;
-            if (!useLevel1 && r.toarealevel == 1) {
-                let forceL1 = r.butcher.dispatchArea == "citywide" || r.butcher.dispatchArea == "radius";
-                if (r.butcher.dispatchArea == "radius") {
-                    let l3 = await Area.findByPk(address.level3Id)
-                    let distance = Helper.distance(r.butcher.location, l3.location);
-                    butcherAvail = r.butcher.radiusAsKm >= distance
-                } else butcherAvail = forceL1;
-                if (butcherAvail && r.areaTag) {
-                    let area = await Area.findByPk(address.level3Id);
-                    butcherAvail = r.areaTag == area.dispatchTag;
-                }                
-            }        
 
-            if (butcherAvail && !ugly[r.butcherid]) {
-                ugly[r.butcherid] = r;
-                result.push(r);
+        for (let i = 0; i < res.length; i++) {
+            let l3 = await Area.findByPk(address.level3Id);
+            //let provider = this.getProvider(res[i], useLevel1, l3)
+            if (!ugly[res[i].butcherid]) {
+                ugly[res[i].butcherid] = res[i];
+                result.push(res[i]);
             }
         }
         return result;

@@ -80,5 +80,3 @@ class Shipment {
     }
 }
 exports.Shipment = Shipment;
-
-//# sourceMappingURL=shipment.js.map

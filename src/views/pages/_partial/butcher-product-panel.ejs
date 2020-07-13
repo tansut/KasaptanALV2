@@ -16,14 +16,14 @@ data-sub-html="&lt;h6 class=&quot;font-size-sm text-light&quot;&gt;<%= butcherVi
  class=""
 src="<%= `${butcherVideo.thumbnailFileUrl}` %>" alt="<%= `${view.butcher.name}`  %>" /><span
 class="gallery-item-caption"><%= butcherVideo.title %></span></a>
-<a class="media align-items-center" href="/<%=view.butcher.slug%>">
+<a class="media align-items-center flex-grow-1" href="/<%=view.butcher.slug%>">
 <%} else { %>
-  <a target="_blank" class="pl-2 media align-items-center" target="_blank" href="/<%=view.butcher.slug%>">
+  <a target="_blank" class="pl-2 media align-items-center flex-grow-1" target="_blank" href="/<%=view.butcher.slug%>">
     
     <img class="rounded-circle header-img"
     src="<%= `${__req.helper.imgUrl('butcher-google-photos', view.butcher.slug)}` %>" alt="<%=view.butcher.name%>">
  <% } %>
-      <div class="media-body  p-2">
+      <div class="media-body   p-2">
         <h5 class="h6 mb-1 mr-2"><%= view.butcher.name %></h6>
 
           <!-- <% if (view.butcher.badges.length > 0 ) { %>
@@ -56,12 +56,47 @@ class="gallery-item-caption"><%= butcherVideo.title %></span></a>
 
           <money-view class="font-size-sm text-accent" :unit="product.kgPrice ? 'Kg': selectedUnit.unitTitle"  :money="product.kgPrice || selectedUnit.unitPrice"></money-view>
 
-          <span class="d-block text-muted font-size-xs">
+          <!-- <span class="d-block text-muted font-size-xs">
              <%= view.dispatcher ? view.dispatcher.userNote:""%> 
-          </span>
-       
+          </span> -->
+          <%  if (view.dispatcher && view.dispatcher.priceSlice && false) { %>
+          <div class="dispatch-info text-muted text-dark font-size-sm">
 
-   
+          
+               <% let list = view.dispatcher.priceSlice %>
+              <table class="w-100 mb-3 table-responsive">
+                <th>
+                  Alt Limit
+                </th>
+                <th>
+                  Üst Limit
+                </th>
+                <th>
+                  Ücret
+                </th>
+              
+               <% list.forEach(l => { %>
+               <tr>
+<td>
+<%- include('../_partial/currency.ejs', {value: l.start, zero: '-'}) %> 
+
+</td>
+<td>
+<%- include('../_partial/currency.ejs', {value: l.end, zero: '-'}) %> 
+
+</td>
+<td>
+<%- include('../_partial/currency.ejs', {value: l.cost, zero: 'ücretsiz'}) %> 
+
+</td>
+               </tr>
+               
+               <% }) %>
+              </table>
+
+          </div>
+
+          <% }  %>
       </div></a>
       
                      

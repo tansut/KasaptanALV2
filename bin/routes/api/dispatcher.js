@@ -10,14 +10,11 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 const router_1 = require("../../lib/router");
-const email_1 = require("../../lib/email");
 const butcher_1 = require("../../db/models/butcher");
 const area_1 = require("../../db/models/area");
 const dispatcher_1 = require("../../db/models/dispatcher");
 const butcherproduct_1 = require("../../db/models/butcherproduct");
 const sequelize_1 = require("sequelize");
-const core_1 = require("../../lib/logistic/core");
-const helper_1 = require("../../lib/helper");
 class Route extends router_1.ApiRouter {
     _where(where, address) {
         return __awaiter(this, void 0, void 0, function* () {
@@ -50,91 +47,158 @@ class Route extends router_1.ApiRouter {
     //         return LogisticFactory.getInstance(butcher.defaultDispatcher)
     //     }
     // }
-    bestDispatcher2(butcher, address, basedOn) {
+    // let where = {
+    //     type: 'butcher'
+    // }
+    // where = await this._where(where, address);
+    // where['$butcher.products.productid$'] = product.id;
+    // where['$butcher.products.enabled$'] = true;
+    // let w = [{
+    //     '$butcher.products.kgPrice$': {
+    //         [Op.gt]: 0.0
+    //     }
+    // },
+    // {
+    //     [Op.and]: [
+    //         {
+    //             '$butcher.products.unit1price$': {
+    //                 [Op.gt]: 0.0
+    //             }
+    //         },
+    //         {
+    //             '$butcher.products.unit1enabled$': true
+    //         }
+    //     ]
+    // },
+    // {
+    //     [Op.and]: [
+    //         {
+    //             '$butcher.products.unit2price$': {
+    //                 [Op.gt]: 0.0
+    //             }
+    //         },
+    //         {
+    //             '$butcher.products.unit2enabled$': true
+    //         }
+    //     ]
+    // },
+    // {
+    //     [Op.and]: [
+    //         {
+    //             '$butcher.products.unit3price$': {
+    //                 [Op.gt]: 0.0
+    //             }
+    //         },
+    //         {
+    //             '$butcher.products.unit3enabled$': true
+    //         }
+    //     ]
+    // }
+    // ]
+    // where[Op.or].push(w);
+    // // if (!useLevel1) {
+    // //     where[Op.and] = where[Op.and] || []
+    // //     where[Op.and].push({
+    // //         toarealevel: {
+    // //             [Op.ne]: 1
+    // //         }
+    // //     })
+    // // }
+    // let res = await Dispatcher.findAll({
+    //     where: where,
+    //     include: [
+    //         {
+    //             model: Butcher,
+    //             as: 'butcher',
+    //             include: [{
+    //                 model: ButcherProduct
+    //             }
+    //             ]
+    //         },
+    //     ],
+    //     order: [["toarealevel", "DESC"]]
+    // });
+    getDispatchers(q) {
         return __awaiter(this, void 0, void 0, function* () {
-            butcher = typeof (butcher) == 'number' ? yield butcher_1.default.findByPk(butcher) : butcher;
             let where = {
-                type: 'butcher',
-                butcherid: butcher.id,
-                [sequelize_1.Op.or]: []
+                type: 'butcher'
             };
-            where = yield this._where(where, address);
-            let res = yield dispatcher_1.default.findOne({
-                where: where,
-                include: [
-                    {
-                        model: butcher_1.default,
-                        as: 'butcher'
-                    },
-                ],
-                order: [["toarealevel", "DESC"]],
-            });
-            let provider = null;
-            if (res) {
-                let usage = res.logisticProviderUsage == "default" ? butcher.logisticProviderUsage : res.logisticProviderUsage;
-                if (usage != "none" && butcher.logisticProviderUsage != "disabled" && butcher.logisticProvider) {
-                    provider = core_1.LogisticFactory.getInstance(butcher.logisticProvider, {
-                        dispatcher: res,
-                    });
+            let include = [
+                {
+                    model: butcher_1.default,
+                    as: 'butcher',
                 }
-                else {
-                    provider = core_1.LogisticFactory.getInstance(butcher.defaultDispatcher, {
-                        dispatcher: res,
-                    });
-                }
-            }
-            return provider;
-        });
-    }
-    bestDispatcher(butcherId, address, basedOn) {
-        return __awaiter(this, void 0, void 0, function* () {
-            let where = {
-                type: 'butcher',
-                butcherid: butcherId,
-                [sequelize_1.Op.or]: []
-            };
-            where = yield this._where(where, address);
-            let res = yield dispatcher_1.default.findOne({
-                where: where,
-                include: [
-                    {
-                        model: butcher_1.default,
-                        as: 'butcher'
+            ];
+            where = yield this._where(where, q.adr);
+            if (q.product) {
+                include[0]['include'] = [{
+                        model: butcherproduct_1.default
+                    }];
+                where['$butcher.products.productid$'] = q.product.id;
+                where['$butcher.products.enabled$'] = true;
+                let w = [{
+                        '$butcher.products.kgPrice$': {
+                            [sequelize_1.Op.gt]: 0.0
+                        }
                     },
-                ],
-                order: [["toarealevel", "DESC"]],
-            });
-            if (res && res.logisticProviderUsage != "none" && basedOn && basedOn.orderType != "kurban") {
-                let butcher = yield butcher_1.default.findByPk(butcherId);
-                let usage = res.logisticProviderUsage == "default" ? butcher.logisticProviderUsage : res.logisticProviderUsage;
-                if (usage != "none" && butcher.logisticProviderUsage != "disabled" && butcher.logisticProvider) {
-                    let provider = core_1.LogisticFactory.getInstance(butcher.logisticProvider, {
-                        dispatcher: res
-                    });
-                    res.name = provider.providerKey;
-                    res.min = 0.00;
-                    res.totalForFree = 0.00;
-                    res.type = "kasaptanal/motokurye";
-                    res.name = dispatcher_1.DispatcherTypeDesc[res.type];
-                    res.fee = 0.00;
-                    res.feeOffer = 0.00;
-                    if (basedOn && basedOn.shipLocation) {
-                        try {
-                            let request = provider.offerFromOrder(basedOn);
-                            let offer = yield provider.requestOffer(request);
-                            res.feeOffer = offer.totalFee;
-                            res.fee = offer.totalFee;
-                        }
-                        catch (err) {
-                            email_1.default.send('tansut@gmail.com', 'hata: get offer from dispatcher', "error.ejs", {
-                                text: err + '/' + err.message,
-                                stack: err.stack
-                            });
-                        }
+                    {
+                        [sequelize_1.Op.and]: [
+                            {
+                                '$butcher.products.unit1price$': {
+                                    [sequelize_1.Op.gt]: 0.0
+                                }
+                            },
+                            {
+                                '$butcher.products.unit1enabled$': true
+                            }
+                        ]
+                    },
+                    {
+                        [sequelize_1.Op.and]: [
+                            {
+                                '$butcher.products.unit2price$': {
+                                    [sequelize_1.Op.gt]: 0.0
+                                }
+                            },
+                            {
+                                '$butcher.products.unit2enabled$': true
+                            }
+                        ]
+                    },
+                    {
+                        [sequelize_1.Op.and]: [
+                            {
+                                '$butcher.products.unit3price$': {
+                                    [sequelize_1.Op.gt]: 0.0
+                                }
+                            },
+                            {
+                                '$butcher.products.unit3enabled$': true
+                            }
+                        ]
                     }
+                ];
+                where[sequelize_1.Op.or].push(w);
+            }
+            if (q.butcher) {
+                let butcher = typeof (q.butcher) == 'number' ? yield butcher_1.default.findByPk(q.butcher) : q.butcher;
+                where['butcherid'] = butcher.id;
+            }
+            let res = yield dispatcher_1.default.findAll({
+                where: where,
+                include: include,
+                order: [["toarealevel", "DESC"]],
+            });
+            let ugly = {}, result = [];
+            let l3 = yield area_1.default.findByPk(q.adr.level3Id);
+            for (let i = 0; i < res.length; i++) {
+                let provider = res[i].setProvider(q.useLevel1, l3, q.orderType);
+                if (provider && !ugly[res[i].butcherid]) {
+                    ugly[res[i].butcherid] = res[i];
+                    result.push(res[i]);
                 }
             }
-            return res;
+            return result;
         });
     }
     getButchersDispatchesForAll(areaids) {
@@ -283,25 +347,11 @@ class Route extends router_1.ApiRouter {
             });
             let ugly = {}, result = [];
             for (let i = 0; i < res.length; i++) {
-                let r = res[i];
-                let butcherAvail = r.toarealevel > 1 || useLevel1;
-                if (!useLevel1 && r.toarealevel == 1) {
-                    let forceL1 = r.butcher.dispatchArea == "citywide" || r.butcher.dispatchArea == "radius";
-                    if (r.butcher.dispatchArea == "radius") {
-                        let l3 = yield area_1.default.findByPk(address.level3Id);
-                        let distance = helper_1.default.distance(r.butcher.location, l3.location);
-                        butcherAvail = r.butcher.radiusAsKm >= distance;
-                    }
-                    else
-                        butcherAvail = forceL1;
-                    if (butcherAvail && r.areaTag) {
-                        let area = yield area_1.default.findByPk(address.level3Id);
-                        butcherAvail = r.areaTag == area.dispatchTag;
-                    }
-                }
-                if (butcherAvail && !ugly[r.butcherid]) {
-                    ugly[r.butcherid] = r;
-                    result.push(r);
+                let l3 = yield area_1.default.findByPk(address.level3Id);
+                //let provider = this.getProvider(res[i], useLevel1, l3)
+                if (!ugly[res[i].butcherid]) {
+                    ugly[res[i].butcherid] = res[i];
+                    result.push(res[i]);
                 }
             }
             return result;
@@ -311,5 +361,3 @@ class Route extends router_1.ApiRouter {
     }
 }
 exports.default = Route;
-
-//# sourceMappingURL=dispatcher.js.map

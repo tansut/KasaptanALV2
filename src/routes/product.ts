@@ -16,7 +16,7 @@ import moment = require('moment');
 import Category from '../db/models/category';
 import Butcher from '../db/models/butcher';
 import ProductApi from './api/product';
-import DispatcherApi from './api/dispatcher';
+import DispatcherApi, { DispatcherQuery } from './api/dispatcher';
 import Area from '../db/models/area';
 import ButcherProduct from '../db/models/butcherproduct';
 import Dispatcher, { DispatcherSelection } from '../db/models/dispatcher';
@@ -32,13 +32,14 @@ import ProductCategory from '../db/models/productcategory';
 import Review from '../db/models/review';
 import Product from '../db/models/product';
 import { PuanCalculator } from '../lib/commissionHelper';
+import { FromTo } from '../lib/logistic/core';
 
 interface ButcherSelection {
     best: Dispatcher,
     servingL1: Dispatcher[]
     servingL2: Dispatcher[]
     servingL3: Dispatcher[]
-    takeOnly: Butcher[]
+    takeOnly: Dispatcher[]
 }
 
 export default class Route extends ViewRouter {
@@ -104,9 +105,14 @@ export default class Route extends ViewRouter {
     async bestButchersForProduct(product: Product, adr: PreferredAddress, userBest: Butcher): Promise<ButcherSelection> {
         let api = new DispatcherApi(this.constructorParams);
 
-        let serving = await api.getButchersSelingAndDispatches(adr, product,
-            this.useL1(product)
-        );
+        let q: DispatcherQuery = {
+            adr: adr,
+            product: product,
+            useLevel1: this.useL1(product),
+            orderType: product.productType
+        }
+
+        let serving = await api.getDispatchers(q);
 
         let takeOnly = serving.filter(p => p.takeOnly == true);
         let servingL3 = serving.filter(p => p.toarealevel == 3 && !p.takeOnly);
@@ -201,12 +207,24 @@ export default class Route extends ViewRouter {
         
         let view = await api.getProductView(product, selectedButchers.best ? selectedButchers.best.butcher : null, null, true)
 
+        let fromTo: FromTo;
 
-        serving.forEach(s => {
+        if (this.req.prefAddr) {
+            let l3 = await Area.findByPk(this.req.prefAddr.level3Id)
+            fromTo = {
+                start: null,
+                finish: l3.location
+            }
+        }
+
+        for(let i=0; i <serving.length;i++) {
+            let s = serving[i];
             let butcher = s instanceof Dispatcher ? s.butcher : s;
             let dispatcher = s instanceof Dispatcher ? s : null;
+
             if (view.butcher && (butcher.id != view.butcher.id)) {
                 let bp = butcher.products.find(bp => bp.productid == product.id);
+                fromTo.start = butcher.location;
                 view.alternateButchers.push({
                     butcher: {
                         id: butcher.id,
@@ -228,6 +246,7 @@ export default class Route extends ViewRouter {
                         min: dispatcher.min,
                         totalForFree: dispatcher.totalForFree,
                         type: dispatcher.type,
+                        priceSlice: await dispatcher.provider.priceSlice(fromTo),
                         priceInfo: dispatcher.priceInfo,
                         userNote: dispatcher.userNote,
                         takeOnly: dispatcher.takeOnly
@@ -241,6 +260,7 @@ export default class Route extends ViewRouter {
                     })
                 })
             } else if (view.butcher && view.butcher.id == s.butcher.id) {
+                fromTo.start = s.butcher.location;
                 view.dispatcher = dispatcher ? {
                     id: dispatcher.id,
                     fee: dispatcher.fee,
@@ -248,11 +268,14 @@ export default class Route extends ViewRouter {
                     totalForFree: dispatcher.totalForFree,
                     type: dispatcher.type,
                     priceInfo: dispatcher.priceInfo,
+                    priceSlice: await dispatcher.provider.priceSlice(fromTo),                    
                     userNote: dispatcher.userNote,
                     takeOnly: dispatcher.takeOnly
                 } : null
-            }
-        })
+            }            
+        }
+
+
 
 
 

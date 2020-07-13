@@ -216,6 +216,9 @@ class Route extends router_1.ApiRouter {
                                 model: product_1.default,
                                 all: true
                             }]
+                    }, {
+                        model: dispatcher_1.default,
+                        all: true
                     }]
             });
             order.workedAccounts = yield this.getWorkingAccounts(order);
@@ -340,15 +343,15 @@ class Route extends router_1.ApiRouter {
                     daysText: [[item.shipmentdate ? item.shipmentdate.toDateString() : '']],
                     hoursText: [item.shipmenthourText],
                 });
-            if (item.dispatcherid) {
-                shipment[bi].dispatcher = Object.assign(new dispatcher_1.default(), {
-                    id: item.dispatcherid,
-                    type: item.dispatcherType,
-                    name: item.dispatcherName,
-                    fee: item.dispatcherFee,
-                    totalForFree: item.dispatchertotalForFree
-                });
-            }
+            // if (item.dispatcherid) {
+            //     shipment[bi].dispatcher = Object.assign(new Dispatcher(), {
+            //         id: item.dispatcherid,
+            //         type: item.dispatcherType,
+            //         name: item.dispatcherName,
+            //         fee: item.dispatcherFee,
+            //         totalForFree: item.dispatchertotalForFree
+            //     })
+            // }
             if (!payment[bi])
                 payment[bi] = Object.assign(new payment_1.Payment(), {
                     type: item.paymentType,
@@ -932,5 +935,3 @@ class Route extends router_1.ApiRouter {
     }
 }
 exports.default = Route;
-
-//# sourceMappingURL=order.js.map

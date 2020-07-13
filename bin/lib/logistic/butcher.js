@@ -11,10 +11,12 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.ButcherAutoLogistics = exports.ButcherManualLogistics = void 0;
 const core_1 = require("./core");
+const dispatcher_1 = require("../../db/models/dispatcher");
 const helper_1 = require("../helper");
 class ButcherManualLogistics extends core_1.LogisticProvider {
     constructor(config, options) {
         super(config, options);
+        this.name = dispatcher_1.DispatcherTypeDesc["butcher"];
     }
     static register() {
         core_1.LogisticFactory.register(ButcherManualLogistics.key, ButcherManualLogistics);
@@ -29,7 +31,8 @@ class ButcherManualLogistics extends core_1.LogisticProvider {
                 fee = (Math.max(0.00, (this.options.dispatcher.totalForFree - req.orderTotal > 0) ? this.options.dispatcher.fee : 0));
             return {
                 totalFee: this.options.dispatcher.fee,
-                customerFee: fee
+                customerFee: fee,
+                orderTotal: 0.00
             };
         });
     }
@@ -73,6 +76,7 @@ ButcherManualLogistics.key = "butcher";
 class ButcherAutoLogistics extends core_1.LogisticProvider {
     constructor(config, options) {
         super(config, options);
+        this.name = dispatcher_1.DispatcherTypeDesc["butcher/auto"];
         this.dispatcher = options.dispatcher;
     }
     static register() {
@@ -120,5 +124,3 @@ class ButcherAutoLogistics extends core_1.LogisticProvider {
 }
 exports.ButcherAutoLogistics = ButcherAutoLogistics;
 ButcherAutoLogistics.key = "butcher/auto";
-
-//# sourceMappingURL=butcher.js.map

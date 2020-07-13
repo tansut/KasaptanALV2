@@ -79,7 +79,7 @@ class UserRoute extends router_1.ApiRouter {
         
         select id, name, slug, GLength(LineStringFromWKB(LineString(
             location, 
-            GeomFromText('POINT(:lat :lng)')))) AS distance from Areas  where level=3 and location is not null ORDER BY distance ASC LIMIT 3
+            GeomFromText('POINT(:lat :lng)')))) AS distance from Areas  where level=3 and location is not null ORDER BY distance ASC LIMIT 4
         `, {
                 replacements: {
                     lat: parseFloat(this.req.body.lat),
@@ -496,5 +496,3 @@ __decorate([
     __metadata("design:returntype", Promise)
 ], UserRoute.prototype, "authenticateRoute", null);
 exports.default = UserRoute;
-
-//# sourceMappingURL=user.js.map

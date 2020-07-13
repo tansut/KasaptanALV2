@@ -6,5 +6,3 @@ app_1.default().bootstrap().then(() => console.log('success')).catch((err) => {
     console.log(err);
     process.exit(2);
 });
-
-//# sourceMappingURL=kasaptanal.js.map

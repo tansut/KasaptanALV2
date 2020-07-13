@@ -72,5 +72,3 @@ exports.default = (app) => errormw = new ErrorMiddleware(app);
 // -d to = 905326274151 \
 // -d from = "NEXMO" \
 // -d text = "Hello from Nexmo"
-
-//# sourceMappingURL=error.js.map

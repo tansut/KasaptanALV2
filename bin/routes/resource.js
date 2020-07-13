@@ -204,5 +204,3 @@ __decorate([
     __metadata("design:returntype", Promise)
 ], Route.prototype, "viewTarifFoodRoute", null);
 exports.default = Route;
-
-//# sourceMappingURL=resource.js.map

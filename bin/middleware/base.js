@@ -6,5 +6,3 @@ class Middleware {
     }
 }
 exports.default = Middleware;
-
-//# sourceMappingURL=base.js.map

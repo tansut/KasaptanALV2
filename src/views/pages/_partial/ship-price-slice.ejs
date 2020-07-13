@@ -1,0 +1,36 @@
+<% let totalprice = typeof(total) == 'undefined' ? -1 : total %>
+<div class="dispatch-info text-muted text-dark font-size-sm">
+
+    <div class="d-flex justify-content-between w-100 border-bottom mb-1">
+        <div>
+            Sepet 
+        </div>
+
+        <div>   
+            ~ Ücret
+        </div>
+        
+    </div>
+    <% slices.forEach(l => { %>
+        <% let mention = (totalprice >= l.start && totalprice < l.end)  %>
+    <div class="d-flex justify-content-between w-100 <%=mention ? 'font-weight-bolder':''%>">
+
+      
+            <div>
+                <%- include('../_partial/currency.ejs', {value: l.start, zero: 'min yok'}) %> -
+                <%- include('../_partial/currency.ejs', {value: l.end, zero: ' ve üzeri'}) %>
+
+
+            </div>
+
+            <div>
+                <%- include('../_partial/currency.ejs', {value: l.cost, zero: 'ücretsiz'}) %>
+
+            </div>
+
+    
+          
+    </div>
+    <% }) %>      
+  
+</div>

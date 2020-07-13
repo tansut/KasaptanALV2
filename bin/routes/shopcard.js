@@ -44,6 +44,7 @@ class Route extends router_1.ViewRouter {
         this.Butchers = null;
         this.mayEarnPuanTotal = 0.00;
         this.possiblePuanList = [];
+        this.destinationMatrix = {};
         this.puanCalculator = new commissionHelper_1.PuanCalculator();
         this.orderapi = new order_1.default(this.constructorParams);
     }
@@ -75,6 +76,7 @@ class Route extends router_1.ViewRouter {
     viewRoute() {
         return __awaiter(this, void 0, void 0, function* () {
             this.shopcard = yield shopcard_1.ShopCard.createFromRequest(this.req);
+            yield this.setDispatcher();
             yield this.getOrderSummary();
             this.renderPage(`pages/shopcard.ejs`);
         });
@@ -108,6 +110,7 @@ class Route extends router_1.ViewRouter {
     adresViewRoute() {
         return __awaiter(this, void 0, void 0, function* () {
             this.shopcard = yield shopcard_1.ShopCard.createFromRequest(this.req);
+            yield this.setDispatcher();
             if (!this.shopcard.address.name) {
                 this.shopcard.address.name = this.req.user.name;
                 this.shopcard.address.email = this.req.user.email;
@@ -147,64 +150,74 @@ class Route extends router_1.ViewRouter {
     //         return totalShip > 0.00 ? Math.max(5.00, totalShip): 0.00;
     //     } else return 0.00;
     // }
-    setDispatcher_old() {
-        return __awaiter(this, void 0, void 0, function* () {
-            let api = new dispatcher_1.default(this.constructorParams);
-            let orders = yield this.orderapi.getFromShopcard(this.shopcard);
-            var self = this;
-            for (let o in this.shopcard.shipment) {
-                if (true) {
-                    let order = orders.find(oo => oo.butcherid == parseInt(o));
-                    let dispatch = yield api.bestDispatcher(parseInt(o), {
-                        level1Id: this.shopcard.address.level1Id,
-                        level2Id: this.shopcard.address.level2Id,
-                        level3Id: this.shopcard.address.level3Id
-                    }, order);
-                    if (dispatch && !dispatch.takeOnly) {
-                        this.shopcard.shipment[o].dispatcher = {
-                            id: dispatch.id,
-                            feeOffer: dispatch.feeOffer,
-                            name: dispatch.name,
-                            fee: dispatch.fee,
-                            totalForFree: dispatch.totalForFree,
-                            type: dispatch.type,
-                            min: dispatch.min,
-                            takeOnly: dispatch.takeOnly,
-                            location: dispatch.butcher ? dispatch.butcher.location : null,
-                        };
-                        if (dispatch.min > this.shopcard.butchers[o].subTotal) {
-                            this.shopcard.shipment[o].howTo = 'ship';
-                        }
-                        else if (dispatch.takeOnly) {
-                            this.shopcard.shipment[o].howTo = 'take';
-                        }
-                        else if (this.shopcard.shipment[o].howTo == 'unset') {
-                            this.shopcard.shipment[o].howTo = 'ship';
-                        }
-                    }
-                    else {
-                        this.shopcard.shipment[o].dispatcher = null;
-                        this.shopcard.shipment[o].howTo = 'take';
-                    }
-                }
-            }
-        });
-    }
+    // async setDispatcher_old() {
+    //     let api = new Dispatcher(this.constructorParams);
+    //     let orders = await this.orderapi.getFromShopcard(this.shopcard);
+    //     var self = this;
+    //     for (let o in this.shopcard.shipment) {
+    //         if (true) {
+    //             let order = orders.find(oo => oo.butcherid == parseInt(o))
+    //             let dispatch = await api.bestDispatcher(parseInt(o), {
+    //                 level1Id: this.shopcard.address.level1Id,
+    //                 level2Id: this.shopcard.address.level2Id,
+    //                 level3Id: this.shopcard.address.level3Id
+    //             }, order);
+    //             if (dispatch && !dispatch.takeOnly) {
+    //                 this.shopcard.shipment[o].dispatcher = {
+    //                     id: dispatch.id,
+    //                     feeOffer: dispatch.feeOffer,
+    //                     name: dispatch.name,
+    //                     fee: dispatch.fee,
+    //                     totalForFree: dispatch.totalForFree,
+    //                     type: dispatch.type,
+    //                     min: dispatch.min,
+    //                     takeOnly: dispatch.takeOnly,
+    //                     location: dispatch.butcher ? <any>dispatch.butcher.location : null,
+    //                     // calculateCostForCustomer: function(shipment) {
+    //                     //     return self.calculateCostForCustomer(shipment, order)
+    //                     // }
+    //                 }
+    //                 if (dispatch.min > this.shopcard.butchers[o].subTotal) {
+    //                     this.shopcard.shipment[o].howTo = 'ship';
+    //                 }
+    //                 else if (dispatch.takeOnly) {
+    //                     this.shopcard.shipment[o].howTo = 'take';
+    //                 }
+    //                 else if (this.shopcard.shipment[o].howTo == 'unset') {
+    //                     this.shopcard.shipment[o].howTo = 'ship'
+    //                 }
+    //             } else {
+    //                 this.shopcard.shipment[o].dispatcher = null;
+    //                 this.shopcard.shipment[o].howTo = 'take'
+    //             }
+    //         }
+    //     }
+    // }
     setDispatcher() {
         return __awaiter(this, void 0, void 0, function* () {
             let api = new dispatcher_1.default(this.constructorParams);
             let orders = yield this.orderapi.getFromShopcard(this.shopcard);
             var self = this;
             for (let o in this.shopcard.shipment) {
-                if (true) {
-                    let order = orders.find(oo => oo.butcherid == parseInt(o));
-                    let area = yield area_1.default.findByPk(this.shopcard.address.level3Id);
-                    let provider = yield api.bestDispatcher2(parseInt(o), {
-                        level1Id: this.shopcard.address.level1Id,
-                        level2Id: this.shopcard.address.level2Id,
-                        level3Id: this.shopcard.address.level3Id
-                    }, order);
-                    if (provider) {
+                let order = orders.find(oo => oo.butcherid == parseInt(o));
+                if (this.shopcard.shipment[o].howTo == 'unset') {
+                    this.shopcard.shipment[o].howTo = 'ship';
+                }
+                let area = yield area_1.default.findByPk(this.shopcard.address.level3Id);
+                if (this.shopcard.shipment[o].howTo == 'ship') {
+                    let q = {
+                        adr: {
+                            level1Id: this.shopcard.address.level1Id,
+                            level2Id: this.shopcard.address.level2Id,
+                            level3Id: this.shopcard.address.level3Id
+                        },
+                        useLevel1: order.orderType == 'kurban',
+                        butcher: parseInt(o),
+                        orderType: order.orderType
+                    };
+                    let serving = yield api.getDispatchers(q);
+                    let provider = serving.length ? serving[0].provider : null;
+                    if (provider && !provider.options.dispatcher.takeOnly) {
                         let dispatcher = this.shopcard.shipment[o].dispatcher = {
                             id: provider.options.dispatcher.id,
                             feeOffer: provider.options.dispatcher.feeOffer,
@@ -219,32 +232,41 @@ class Route extends router_1.ViewRouter {
                         let offer, req;
                         if (order && order.shipLocation) {
                             req = provider.offerFromOrder(order);
+                            offer = yield provider.requestOffer(req);
+                            provider.lastOffer = offer;
+                            dispatcher.feeOffer = provider.lastOffer.totalFee;
+                            dispatcher.fee = provider.lastOffer.customerFee;
                         }
                         else {
-                            req = provider.offerRequestFromTo({
+                            // req = provider.offerRequestFromTo({
+                            //     start: provider.options.dispatcher.butcher.location,
+                            //     finish: area.location
+                            // });
+                            // req.orderTotal = this.shopcard.butchers[o].subTotal;
+                        }
+                        this.destinationMatrix[o] = {
+                            start: provider.options.dispatcher.butcher.location,
+                            finish: area.location,
+                            provider: provider,
+                            slices: yield provider.priceSlice({
                                 start: provider.options.dispatcher.butcher.location,
                                 finish: area.location
-                            });
-                            req.orderTotal = this.shopcard.butchers[o].subTotal;
-                        }
-                        offer = yield provider.requestOffer(req);
-                        provider.lastOffer = offer;
-                        dispatcher.feeOffer = provider.lastOffer.totalFee;
-                        dispatcher.fee = provider.lastOffer.customerFee;
+                            })
+                        };
                         if (provider.options.dispatcher.min > this.shopcard.butchers[o].subTotal) {
                             this.shopcard.shipment[o].howTo = 'ship';
                         }
                         else if (provider.options.dispatcher.takeOnly) {
                             this.shopcard.shipment[o].howTo = 'take';
                         }
-                        else if (this.shopcard.shipment[o].howTo == 'unset') {
-                            this.shopcard.shipment[o].howTo = 'ship';
-                        }
                     }
                     else {
                         this.shopcard.shipment[o].dispatcher = null;
                         this.shopcard.shipment[o].howTo = 'take';
                     }
+                }
+                else {
+                    this.shopcard.shipment[o].dispatcher = null;
                 }
             }
         });
@@ -372,6 +394,7 @@ class Route extends router_1.ViewRouter {
     paymentViewRoute() {
         return __awaiter(this, void 0, void 0, function* () {
             this.shopcard = yield shopcard_1.ShopCard.createFromRequest(this.req);
+            yield this.setDispatcher();
             yield this.getOrderSummary();
             this.renderPage("pages/checkout.payment.ejs");
         });
@@ -447,5 +470,3 @@ __decorate([
     __metadata("design:returntype", Promise)
 ], Route.prototype, "viewRoute", null);
 exports.default = Route;
-
-//# sourceMappingURL=shopcard.js.map

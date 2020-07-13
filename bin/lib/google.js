@@ -61,5 +61,3 @@ class Google {
     }
 }
 exports.Google = Google;
-
-//# sourceMappingURL=google.js.map

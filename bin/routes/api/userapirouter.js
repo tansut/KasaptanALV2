@@ -14,5 +14,3 @@ class RouteLoader {
     }
 }
 exports.default = RouteLoader;
-
-//# sourceMappingURL=userapirouter.js.map

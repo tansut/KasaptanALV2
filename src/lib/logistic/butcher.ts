@@ -1,9 +1,10 @@
 import { LogisticProvider, LogisticFactory, PriceSlice, FromTo, CustomerPriceConfig, OfferResponse, CustomerPriceParams, OfferRequest } from "./core";
-import Dispatcher from "../../db/models/dispatcher";
+import Dispatcher, { DispatcherTypeDesc } from "../../db/models/dispatcher";
 import Helper from "../helper";
 
 export class ButcherManualLogistics extends LogisticProvider {
     static key = "butcher";
+    name = DispatcherTypeDesc["butcher"];
 
     static register() {
         LogisticFactory.register(ButcherManualLogistics.key, ButcherManualLogistics)
@@ -19,7 +20,8 @@ export class ButcherManualLogistics extends LogisticProvider {
         else fee = (Math.max(0.00, (this.options.dispatcher.totalForFree - req.orderTotal > 0) ? this.options.dispatcher.fee : 0))
         return {
             totalFee: this.options.dispatcher.fee,
-            customerFee: fee
+            customerFee: fee,
+            orderTotal: 0.00
         }
     }
 
@@ -70,6 +72,7 @@ export class ButcherManualLogistics extends LogisticProvider {
 
 export class ButcherAutoLogistics extends LogisticProvider {
     static key = "butcher/auto";
+    name = DispatcherTypeDesc["butcher/auto"];
     private dispatcher: Dispatcher;
 
     static register() {

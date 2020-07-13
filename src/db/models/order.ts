@@ -273,8 +273,9 @@ class Order extends BaseModel<Order> {
     })    
     userRating: number;    
 
-    @ForeignKey(() => Dispatcher)
+    @Column
     dispatcherid: number;
+
 
     @Column({
         allowNull: true
@@ -470,7 +471,7 @@ class Order extends BaseModel<Order> {
         
         if (c.shipment[bi].dispatcher) {
             o.dispatcherid = c.shipment[bi].dispatcher.id;
-            o.dispatcherFee = c.shipment[bi].dispatcher.fee;
+            o.dispatcherFee = c.shipment[bi].dispatcher.feeOffer;
             o.dispatcherFeeOffer = c.shipment[bi].dispatcher.feeOffer;
             o.dispatcherName = c.shipment[bi].dispatcher.name;
             o.dispatcherType = c.shipment[bi].dispatcher.type;
@@ -748,8 +749,6 @@ class OrderItem extends BaseModel<Order> {
     })
     shipmentInformMe: boolean;    
 
-    @ForeignKey(() => Dispatcher)
-    dispatcherid: number;
 
     @Column({
         allowNull: true
@@ -838,13 +837,13 @@ class OrderItem extends BaseModel<Order> {
         c.shipmenthourText = sc.shipment[c.butcherid].hoursText[0];
         c.shipmentInformMe = sc.shipment[c.butcherid].informMe;
 
-        if (sc.shipment[c.butcherid].dispatcher) {
-            c.dispatcherid = sc.shipment[c.butcherid].dispatcher.id;
-            c.dispatcherFee = sc.shipment[c.butcherid].dispatcher.fee;
-            c.dispatcherName = sc.shipment[c.butcherid].dispatcher.name;
-            c.dispatcherType = sc.shipment[c.butcherid].dispatcher.type;
-            c.dispatchertotalForFree = sc.shipment[c.butcherid].dispatcher.totalForFree;            
-        }
+        // if (sc.shipment[c.butcherid].dispatcher) {
+        //     c.dispatcherid = sc.shipment[c.butcherid].dispatcher.id;
+        //     c.dispatcherFee = sc.shipment[c.butcherid].dispatcher.fee;
+        //     c.dispatcherName = sc.shipment[c.butcherid].dispatcher.name;
+        //     c.dispatcherType = sc.shipment[c.butcherid].dispatcher.type;
+        //     c.dispatchertotalForFree = sc.shipment[c.butcherid].dispatcher.totalForFree;            
+        // }
 
         c.quantity = i.quantity;
         c.pounit = i.purchaseoption.unit;

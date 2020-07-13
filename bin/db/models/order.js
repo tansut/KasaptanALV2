@@ -27,7 +27,6 @@ const shopcard_1 = require("../../models/shopcard");
 const product_1 = require("./product");
 const butcher_1 = require("./butcher");
 const order_1 = require("../../models/order");
-const dispatcher_1 = require("./dispatcher");
 const common_1 = require("../../lib/common");
 const commissionHelper_1 = require("../../lib/commissionHelper");
 const orderid = require('order-id')('dkfjsdklfjsdlkg450435034.,');
@@ -147,7 +146,7 @@ let Order = Order_1 = class Order extends basemodel_1.default {
             o.orderType = c.getOrderType();
             if (c.shipment[bi].dispatcher) {
                 o.dispatcherid = c.shipment[bi].dispatcher.id;
-                o.dispatcherFee = c.shipment[bi].dispatcher.fee;
+                o.dispatcherFee = c.shipment[bi].dispatcher.feeOffer;
                 o.dispatcherFeeOffer = c.shipment[bi].dispatcher.feeOffer;
                 o.dispatcherName = c.shipment[bi].dispatcher.name;
                 o.dispatcherType = c.shipment[bi].dispatcher.type;
@@ -431,7 +430,7 @@ __decorate([
     __metadata("design:type", Number)
 ], Order.prototype, "userRating", void 0);
 __decorate([
-    sequelize_typescript_1.ForeignKey(() => dispatcher_1.default),
+    sequelize_typescript_1.Column,
     __metadata("design:type", Number)
 ], Order.prototype, "dispatcherid", void 0);
 __decorate([
@@ -585,13 +584,13 @@ let OrderItem = OrderItem_1 = class OrderItem extends basemodel_1.default {
         c.shipmenthour = sc.shipment[c.butcherid].hours[0];
         c.shipmenthourText = sc.shipment[c.butcherid].hoursText[0];
         c.shipmentInformMe = sc.shipment[c.butcherid].informMe;
-        if (sc.shipment[c.butcherid].dispatcher) {
-            c.dispatcherid = sc.shipment[c.butcherid].dispatcher.id;
-            c.dispatcherFee = sc.shipment[c.butcherid].dispatcher.fee;
-            c.dispatcherName = sc.shipment[c.butcherid].dispatcher.name;
-            c.dispatcherType = sc.shipment[c.butcherid].dispatcher.type;
-            c.dispatchertotalForFree = sc.shipment[c.butcherid].dispatcher.totalForFree;
-        }
+        // if (sc.shipment[c.butcherid].dispatcher) {
+        //     c.dispatcherid = sc.shipment[c.butcherid].dispatcher.id;
+        //     c.dispatcherFee = sc.shipment[c.butcherid].dispatcher.fee;
+        //     c.dispatcherName = sc.shipment[c.butcherid].dispatcher.name;
+        //     c.dispatcherType = sc.shipment[c.butcherid].dispatcher.type;
+        //     c.dispatchertotalForFree = sc.shipment[c.butcherid].dispatcher.totalForFree;            
+        // }
         c.quantity = i.quantity;
         c.pounit = i.purchaseoption.unit;
         c.pounitTitle = i.purchaseoption.unitTitle;
@@ -894,10 +893,6 @@ __decorate([
     __metadata("design:type", Boolean)
 ], OrderItem.prototype, "shipmentInformMe", void 0);
 __decorate([
-    sequelize_typescript_1.ForeignKey(() => dispatcher_1.default),
-    __metadata("design:type", Number)
-], OrderItem.prototype, "dispatcherid", void 0);
-__decorate([
     sequelize_typescript_1.Column({
         allowNull: true
     }),
@@ -967,5 +962,3 @@ OrderItem = OrderItem_1 = __decorate([
     })
 ], OrderItem);
 exports.OrderItem = OrderItem;
-
-//# sourceMappingURL=order.js.map

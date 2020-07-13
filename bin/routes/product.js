@@ -99,7 +99,13 @@ class Route extends router_1.ViewRouter {
     bestButchersForProduct(product, adr, userBest) {
         return __awaiter(this, void 0, void 0, function* () {
             let api = new dispatcher_1.default(this.constructorParams);
-            let serving = yield api.getButchersSelingAndDispatches(adr, product, this.useL1(product));
+            let q = {
+                adr: adr,
+                product: product,
+                useLevel1: this.useL1(product),
+                orderType: product.productType
+            };
+            let serving = yield api.getDispatchers(q);
             let takeOnly = serving.filter(p => p.takeOnly == true);
             let servingL3 = serving.filter(p => p.toarealevel == 3 && !p.takeOnly);
             let servingL2 = serving.filter(p => p.toarealevel == 2 && !p.takeOnly && (servingL3.find(m => m.butcher.id == p.butcher.id) == null));
@@ -174,11 +180,21 @@ class Route extends router_1.ViewRouter {
                 selectedButchers.best = null;
             }
             let view = yield api.getProductView(product, selectedButchers.best ? selectedButchers.best.butcher : null, null, true);
-            serving.forEach(s => {
+            let fromTo;
+            if (this.req.prefAddr) {
+                let l3 = yield area_1.default.findByPk(this.req.prefAddr.level3Id);
+                fromTo = {
+                    start: null,
+                    finish: l3.location
+                };
+            }
+            for (let i = 0; i < serving.length; i++) {
+                let s = serving[i];
                 let butcher = s instanceof dispatcher_2.default ? s.butcher : s;
                 let dispatcher = s instanceof dispatcher_2.default ? s : null;
                 if (view.butcher && (butcher.id != view.butcher.id)) {
                     let bp = butcher.products.find(bp => bp.productid == product.id);
+                    fromTo.start = butcher.location;
                     view.alternateButchers.push({
                         butcher: {
                             id: butcher.id,
@@ -200,6 +216,7 @@ class Route extends router_1.ViewRouter {
                             min: dispatcher.min,
                             totalForFree: dispatcher.totalForFree,
                             type: dispatcher.type,
+                            priceSlice: yield dispatcher.provider.priceSlice(fromTo),
                             priceInfo: dispatcher.priceInfo,
                             userNote: dispatcher.userNote,
                             takeOnly: dispatcher.takeOnly
@@ -214,6 +231,7 @@ class Route extends router_1.ViewRouter {
                     });
                 }
                 else if (view.butcher && view.butcher.id == s.butcher.id) {
+                    fromTo.start = s.butcher.location;
                     view.dispatcher = dispatcher ? {
                         id: dispatcher.id,
                         fee: dispatcher.fee,
@@ -221,11 +239,12 @@ class Route extends router_1.ViewRouter {
                         totalForFree: dispatcher.totalForFree,
                         type: dispatcher.type,
                         priceInfo: dispatcher.priceInfo,
+                        priceSlice: yield dispatcher.provider.priceSlice(fromTo),
                         userNote: dispatcher.userNote,
                         takeOnly: dispatcher.takeOnly
                     } : null;
                 }
-            });
+            }
             if (view.butcher) {
                 let calculator = new commissionHelper_1.PuanCalculator();
                 view.butcher.earnedPuan = this.req.user ? yield calculator.getEarnedButcherPuan(this.req.user.id, view.butcher.id) : 0.00;
@@ -327,5 +346,3 @@ __decorate([
     __metadata("design:returntype", Promise)
 ], Route.prototype, "productPhotoRoute", null);
 exports.default = Route;
-
-//# sourceMappingURL=product.js.map

@@ -16,6 +16,8 @@ const helper_1 = require("../../lib/helper");
 const area_1 = require("./area");
 const butcher_1 = require("./butcher");
 const order_1 = require("./order");
+const core_1 = require("../../lib/logistic/core");
+const product_1 = require("./product");
 var DispatcherSelection;
 (function (DispatcherSelection) {
     DispatcherSelection["full"] = "tam";
@@ -28,6 +30,40 @@ exports.DispatcherTypeDesc = {
     "kasaptanal/car": "Soğuk Zincir Araç Kurye Sistemi",
 };
 let Dispatcher = class Dispatcher extends basemodel_1.default {
+    setProvider(useLevel1, l3, productType) {
+        let dispath = this;
+        let butcherAvail = dispath.toarealevel > 1 || useLevel1;
+        if (!useLevel1 && dispath.toarealevel == 1) {
+            let forceL1 = dispath.butcher.dispatchArea == "citywide" || dispath.butcher.dispatchArea == "radius";
+            if (dispath.butcher.dispatchArea == "radius") {
+                let distance = helper_1.default.distance(dispath.butcher.location, l3.location);
+                butcherAvail = dispath.butcher.radiusAsKm >= distance;
+            }
+            else
+                butcherAvail = forceL1;
+            if (butcherAvail && dispath.areaTag) {
+                butcherAvail = dispath.areaTag == l3.dispatchTag;
+            }
+        }
+        if (butcherAvail) {
+            let usage = dispath.logisticProviderUsage == "default" ? dispath.butcher.logisticProviderUsage : dispath.logisticProviderUsage;
+            let providerKey = "butcher";
+            if (productType == product_1.ProductType.adak || productType == product_1.ProductType.kurban) {
+            }
+            else {
+                if (usage != "none" && dispath.butcher.logisticProviderUsage != "disabled" && dispath.butcher.logisticProvider) {
+                    providerKey = dispath.butcher.logisticProvider;
+                }
+                else {
+                    providerKey = dispath.butcher.defaultDispatcher;
+                }
+            }
+            this.provider = core_1.LogisticFactory.getInstance(providerKey, {
+                dispatcher: dispath,
+            });
+        }
+        return this.provider;
+    }
     get userNote() {
         let desc = "";
         if (this.takeOnly) {
@@ -210,5 +246,3 @@ Dispatcher = __decorate([
     })
 ], Dispatcher);
 exports.default = Dispatcher;
-
-//# sourceMappingURL=dispatcher.js.map

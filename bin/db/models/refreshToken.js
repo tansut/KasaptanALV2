@@ -31,5 +31,3 @@ RefreshToken = __decorate([
     })
 ], RefreshToken);
 exports.default = RefreshToken;
-
-//# sourceMappingURL=refreshToken.js.map

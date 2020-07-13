@@ -10,7 +10,7 @@ import Payment from '../../db/models/payment';
 import { ComissionHelper } from '../commissionHelper';
 import AccountModel from '../../db/models/accountmodel';
 import { Account } from '../../models/account';
-import { OrderSource } from '../../models/order';
+import { OrderSource, OrderType } from '../../models/order';
 import { ShipmentTypeDesc } from '../../models/shipment';
 import { GeoLocation } from '../../models/geo';
 import Dispatcher from '../../db/models/dispatcher';
@@ -91,6 +91,7 @@ export interface OfferResponse extends BasicResponse {
     weightFee?: number;
     discount?: number;
     points?: Point[];
+    orderTotal: number;
     customerFee: number;
 }
 
@@ -106,6 +107,9 @@ export interface OrderResponse extends BasicResponse {
     createDate: Date;
     finishDate: Date;
     points: Point[];
+    orderTotal: number;
+    customerFee: number;
+
 }
 
 
@@ -125,9 +129,35 @@ export class LogisticProvider {
     ip: string;
     options: LogisticProviderOptions;
     lastOffer: OfferResponse;
+    description: string;
 
     async distance(ft: FromTo) {
         return Helper.distance(ft.start, ft.finish);
+    }
+
+
+    roundCustomerFee(x) {
+        return Helper.asCurrency(Math.ceil(x/5)*5)
+    }
+
+    optimizedSlice(result: PriceSlice []) {
+        let tobeRemoved = [], cleaned: PriceSlice [] = []
+        for(var i = result.length-1; i >=0; i--) {
+            let prev = i - 1;
+            if (prev > 0) {
+                if (result[i].cost == result[prev].cost) {
+                    tobeRemoved.push(prev)
+                }
+            }
+        }
+        result.forEach((item,i)=> {
+            if (tobeRemoved.findIndex(c=>c==i) < 0) 
+            cleaned.push(item);
+            if (cleaned.length > 1) {
+                cleaned[cleaned.length-1].start = cleaned[cleaned.length-2].end
+            }
+        })
+        return cleaned;
     }
 
 
@@ -155,10 +185,6 @@ export class LogisticProvider {
         return req
     }
 
-    async offerFromTo(fromTo: FromTo): Promise<OfferResponse> {
-        let req = this.offerRequestFromTo(fromTo);
-        return await this.requestOffer(req)
-    }
 
 
     async priceSlice(distance: FromTo, slice: number = 50.00, options = {}): Promise<PriceSlice[]> {
@@ -230,7 +256,8 @@ export class LogisticProvider {
         fee = Helper.asCurrency(Math.round(calc / 2.5) * 2.5)
         return {
             totalFee: regular,
-            customerFee: fee
+            customerFee: fee,
+            orderTotal: 0.00
         }
     }
 
@@ -242,14 +269,7 @@ export class LogisticProvider {
         return req;
     }
 
-    async offerFromDispatcher(to: GeoLocation) {
-       let fromTo: FromTo = {
-           start: this.options.dispatcher.butcher.location,
-           finish: to
-       }
-       let offer = await this.offerFromTo(fromTo);
-       return offer;
-    }
+
 
     orderFromOrder(o: Order): OrderRequest {
         let req: OrderRequest = <any>this.fromOrder(o);

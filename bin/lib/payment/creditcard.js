@@ -275,5 +275,3 @@ class CreditcardPaymentFactory {
 }
 exports.CreditcardPaymentFactory = CreditcardPaymentFactory;
 CreditcardPaymentFactory.items = {};
-
-//# sourceMappingURL=creditcard.js.map

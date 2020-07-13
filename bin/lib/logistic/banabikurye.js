@@ -12,10 +12,20 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const core_1 = require("./core");
 const axios_1 = require("axios");
 const helper_1 = require("../helper");
+const commissionHelper_1 = require("../commissionHelper");
+const dispatcher_1 = require("../../db/models/dispatcher");
 class BanabikuryeProvider extends core_1.LogisticProvider {
     constructor(config, options) {
         super(config, options);
+        this.name = dispatcher_1.DispatcherTypeDesc["kasaptanal/motokurye"];
         this.config = config;
+        if (options.dispatcher) {
+            options.dispatcher.name = this.providerKey;
+            options.dispatcher.min = 0.00;
+            options.dispatcher.totalForFree = 0.00;
+            options.dispatcher.type = "kasaptanal/motokurye";
+            options.dispatcher.name = dispatcher_1.DispatcherTypeDesc[options.dispatcher.type];
+        }
     }
     getCustomerFeeConfig() {
         let config = {
@@ -33,35 +43,60 @@ class BanabikuryeProvider extends core_1.LogisticProvider {
             params.regularPrice = this.lastOffer.totalFee;
         return super.calculateFeeForCustomer(params);
     }
+    // calculateCostForCustomer(shipment: Shipment, o: Order) {
+    //     if (o.dispatcherFee > 0.00) {
+    //         let dispatcherFee = Helper.asCurrency(o.dispatcherFee / 1.18);
+    //         let calc = new ComissionHelper(o.getButcherRate(), o.getButcherFee());
+    //         let commission = calc.calculateButcherComission(o.subTotal);    
+    //         let contribute = Helper.asCurrency(commission.kalitteFee * 0.4);
+    //         let calculated = Helper.asCurrency(Math.max(0.00, dispatcherFee - contribute));
+    //         let calculatedVat = Helper.asCurrency(calculated * 0.18)
+    //         let totalShip = Helper.asCurrency(Math.round(calculated + calculatedVat));
+    //         return totalShip > 0.00 ? Math.max(5.00, totalShip): 0.00;
+    //     } else return 0.00;
+    // }
+    calculateCustomerFee(offer) {
+        let regularFee = offer.totalFee;
+        let customerFee = offer.totalFee;
+        if (regularFee > 0.00 && offer.orderTotal > 0.00) {
+            let dispatcherFee = helper_1.default.asCurrency(regularFee / 1.18);
+            let calcRegular = new commissionHelper_1.ComissionHelper(this.options.dispatcher.butcher.commissionRate, this.options.dispatcher.butcher.commissionFee);
+            let calc = new commissionHelper_1.ComissionHelper(this.options.dispatcher.butcher.noshipCommissionRate, this.options.dispatcher.butcher.noshipCommissionFee);
+            let commissionRegular = calcRegular.calculateButcherComission(offer.orderTotal);
+            let commission = calc.calculateButcherComission(offer.orderTotal);
+            let diff = commission.kalitteFee - commissionRegular.kalitteFee;
+            let contribute = helper_1.default.asCurrency(diff);
+            let calculated = helper_1.default.asCurrency(Math.max(0.00, dispatcherFee - contribute));
+            let calculatedVat = helper_1.default.asCurrency(calculated * 0.18);
+            let totalShip = helper_1.default.asCurrency(Math.round(calculated + calculatedVat));
+            customerFee = totalShip > 0.00 ? Math.max(5.00, totalShip) : 0.00;
+        }
+        offer.customerFee = this.roundCustomerFee(customerFee);
+        return offer;
+    }
     priceSlice(ft, slice = 100.00, options = {}) {
         return __awaiter(this, void 0, void 0, function* () {
             let prices = [], result = [];
-            let offer = yield this.offerFromTo(ft);
-            let distance = helper_1.default.distance(ft.start, ft.finish);
-            for (let i = 0; i < 10; i++)
-                prices.push(helper_1.default.asCurrency(i * slice));
-            for (let i = 0; i < 10; i++)
+            let offerRequest = this.offerRequestFromTo(ft);
+            let offer = yield this.requestOffer(offerRequest);
+            for (let i = 1; i < 10; i++)
                 prices.push(helper_1.default.asCurrency(i * slice));
             for (let i = 0; i < prices.length; i++) {
-                let cost = (this.calculateFeeForCustomer({
-                    orderTotal: prices[i],
-                    regularPrice: offer.totalFee
-                }));
-                if (cost) {
-                    let item = {
-                        start: prices[i],
-                        end: prices[i] + slice,
-                        cost: cost.totalFee
-                    };
-                    result.push(item);
-                    if (cost.totalFee <= 0.00) {
-                        item.end = 0.00;
-                        break;
-                    }
-                    ;
+                offer.orderTotal = helper_1.default.asCurrency((2 * prices[i] + slice) / 2);
+                this.calculateCustomerFee(offer);
+                let item = {
+                    start: prices[i],
+                    end: prices[i] + slice,
+                    cost: offer.customerFee
+                };
+                result.push(item);
+                if (offer.customerFee <= 0.00) {
+                    item.end = 0.00;
+                    break;
                 }
+                ;
             }
-            return result;
+            return this.optimizedSlice(result);
         });
     }
     get(method) {
@@ -152,7 +187,8 @@ class BanabikuryeProvider extends core_1.LogisticProvider {
                 points: order['points'].map(p => this.fromBnbPoint(p)),
                 weightFee: parseFloat(order['weight_fee_amount']),
                 totalFee: parseFloat(order['payment_amount']),
-                customerFee: parseFloat(order['payment_amount'])
+                customerFee: parseFloat(order['payment_amount']),
+                orderTotal: 0.00,
             };
             return res;
         }
@@ -165,6 +201,8 @@ class BanabikuryeProvider extends core_1.LogisticProvider {
             let order = ores['order'];
             let res = {
                 orderId: order['order_id'],
+                orderTotal: 0.00,
+                customerFee: parseFloat(order['payment_amount']),
                 createDate: order['created_datetime'],
                 finishDate: order['finish_datetime'],
                 status: order['status'],
@@ -186,14 +224,20 @@ class BanabikuryeProvider extends core_1.LogisticProvider {
         return __awaiter(this, void 0, void 0, function* () {
             let request = this.toOfferRequest(req);
             let result = yield this.post("calculate-order", request);
-            return this.fromOfferResponse(result.data);
+            let resp = this.fromOfferResponse(result.data);
+            resp.orderTotal = req.orderTotal;
+            this.calculateCustomerFee(resp);
+            return resp;
         });
     }
     createOrder(req) {
         return __awaiter(this, void 0, void 0, function* () {
             let request = this.toOrderRequest(req);
             let result = yield this.post("create-order", request);
-            return this.fromOrderResponse(result.data);
+            let resp = this.fromOrderResponse(result.data);
+            resp.orderTotal = req.orderTotal;
+            this.calculateCustomerFee(resp);
+            return resp;
         });
     }
     static register() {
@@ -202,5 +246,3 @@ class BanabikuryeProvider extends core_1.LogisticProvider {
 }
 exports.default = BanabikuryeProvider;
 BanabikuryeProvider.key = "banabikurye";
-
-//# sourceMappingURL=banabikurye.js.map

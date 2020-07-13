@@ -165,5 +165,3 @@ class ProductManager {
     }
 }
 exports.default = ProductManager;
-
-//# sourceMappingURL=productManager.js.map

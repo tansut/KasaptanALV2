@@ -30,6 +30,7 @@ import * as sq from 'sequelize';
 import SubCategory from '../db/models/subcategory';
 import { LogisticProvider, PriceSlice, FromTo } from '../lib/logistic/core';
 import  DispatcherApi from './api/dispatcher';
+import { Provider } from 'nconf';
 
 
 
@@ -219,7 +220,12 @@ export default class Route extends ViewRouter {
         
         if (this.req.prefAddr) {
             let dpapi = new DispatcherApi(this.constructorParams);
-            this.logisticsProvider = await dpapi.bestDispatcher2(this.butcher, this.req.prefAddr, null);
+            let dispatchers = await dpapi.getDispatchers({
+                butcher: this.butcher,
+                adr: this.req.prefAddr,
+                useLevel1: false,                
+            })
+            this.logisticsProvider = dispatchers.length ? dispatchers[0].provider: null;
             if (this.logisticsProvider) {
                 let l3 = await Area.findByPk(this.req.prefAddr.level3Id);
                 let fromTo: FromTo = {

@@ -6,6 +6,8 @@ import Butcher from './butcher';
 import ButcherProduct from './butcherproduct';
 import { OrderItem, Order } from './order';
 import { PreferredAddress } from './user';
+import { LogisticFactory, LogisticProvider } from '../../lib/logistic/core';
+import { ProductType } from './product';
 
 export enum DispatcherSelection {    
     full = 'tam',
@@ -155,6 +157,47 @@ class Dispatcher extends BaseModel<Dispatcher> {
 
     @Column
     areaTag: string;
+
+    provider: LogisticProvider;
+
+    setProvider(useLevel1: boolean, l3: Area, productType: ProductType | string) {
+        let dispath = this;
+        let butcherAvail = dispath.toarealevel > 1 || useLevel1;
+        if (!useLevel1 && dispath.toarealevel == 1) {
+            let forceL1 = dispath.butcher.dispatchArea == "citywide" || dispath.butcher.dispatchArea == "radius";
+            if (dispath.butcher.dispatchArea == "radius") {
+                let distance = Helper.distance(dispath.butcher.location, l3.location);
+                butcherAvail = dispath.butcher.radiusAsKm >= distance
+            } else butcherAvail = forceL1;
+            if (butcherAvail && dispath.areaTag) {
+                butcherAvail = dispath.areaTag == l3.dispatchTag;
+            }
+        }
+
+
+        if (butcherAvail) {
+            let usage = dispath.logisticProviderUsage == "default" ? dispath.butcher.logisticProviderUsage : dispath.logisticProviderUsage;
+            let providerKey = "butcher";
+
+            
+
+             if (productType == ProductType.adak || productType == ProductType.kurban) {
+
+             } else {
+                if (usage != "none" && dispath.butcher.logisticProviderUsage != "disabled" && dispath.butcher.logisticProvider) {
+                    providerKey = dispath.butcher.logisticProvider
+                } else {
+                    providerKey = dispath.butcher.defaultDispatcher;
+                }
+            }
+            
+
+            this.provider = LogisticFactory.getInstance(providerKey, {
+                dispatcher: dispath,
+            })
+        } 
+        return this.provider;
+    }
 
     get userNote() {
         let desc = "";

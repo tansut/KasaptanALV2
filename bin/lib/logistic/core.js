@@ -29,6 +29,28 @@ class LogisticProvider {
             return helper_1.default.distance(ft.start, ft.finish);
         });
     }
+    roundCustomerFee(x) {
+        return helper_1.default.asCurrency(Math.ceil(x / 5) * 5);
+    }
+    optimizedSlice(result) {
+        let tobeRemoved = [], cleaned = [];
+        for (var i = result.length - 1; i >= 0; i--) {
+            let prev = i - 1;
+            if (prev > 0) {
+                if (result[i].cost == result[prev].cost) {
+                    tobeRemoved.push(prev);
+                }
+            }
+        }
+        result.forEach((item, i) => {
+            if (tobeRemoved.findIndex(c => c == i) < 0)
+                cleaned.push(item);
+            if (cleaned.length > 1) {
+                cleaned[cleaned.length - 1].start = cleaned[cleaned.length - 2].end;
+            }
+        });
+        return cleaned;
+    }
     offerRequestFromTo(fromTo) {
         let req = {
             orderTotal: 0.00,
@@ -51,12 +73,6 @@ class LogisticProvider {
                 }]
         };
         return req;
-    }
-    offerFromTo(fromTo) {
-        return __awaiter(this, void 0, void 0, function* () {
-            let req = this.offerRequestFromTo(fromTo);
-            return yield this.requestOffer(req);
-        });
     }
     priceSlice(distance, slice = 50.00, options = {}) {
         return __awaiter(this, void 0, void 0, function* () {
@@ -127,23 +143,14 @@ class LogisticProvider {
         fee = helper_1.default.asCurrency(Math.round(calc / 2.5) * 2.5);
         return {
             totalFee: regular,
-            customerFee: fee
+            customerFee: fee,
+            orderTotal: 0.00
         };
     }
     offerFromOrder(o) {
         let req = this.fromOrder(o);
         req.notifyCustomerSms = true;
         return req;
-    }
-    offerFromDispatcher(to) {
-        return __awaiter(this, void 0, void 0, function* () {
-            let fromTo = {
-                start: this.options.dispatcher.butcher.location,
-                finish: to
-            };
-            let offer = yield this.offerFromTo(fromTo);
-            return offer;
-        });
     }
     orderFromOrder(o) {
         let req = this.fromOrder(o);
@@ -196,5 +203,3 @@ class LogisticFactory {
 }
 exports.LogisticFactory = LogisticFactory;
 LogisticFactory.items = {};
-
-//# sourceMappingURL=core.js.map

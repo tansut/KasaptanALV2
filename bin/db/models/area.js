@@ -239,5 +239,3 @@ Area = Area_1 = __decorate([
     })
 ], Area);
 exports.default = Area;
-
-//# sourceMappingURL=area.js.map

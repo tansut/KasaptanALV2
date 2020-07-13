@@ -8,5 +8,3 @@ exports.LocationTypeDesc = {
     "GEOMETRIC_CENTER": 'Ortalama',
     "APPROXIMATE": 'Yaklaşık'
 };
-
-//# sourceMappingURL=geo.js.map

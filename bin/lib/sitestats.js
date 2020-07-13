@@ -48,5 +48,3 @@ class SiteStats {
     }
 }
 exports.SiteStats = SiteStats;
-
-//# sourceMappingURL=sitestats.js.map

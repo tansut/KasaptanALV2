@@ -145,5 +145,3 @@ __decorate([
     __metadata("design:returntype", Promise)
 ], Route.prototype, "setUserAddr", null);
 exports.default = Route;
-
-//# sourceMappingURL=default.js.map

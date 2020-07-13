@@ -1,5 +1,6 @@
 import { Badge } from "./badge";
 import { Puan } from "./puan";
+import { PriceSlice } from "../lib/logistic/core";
 
 export interface PurchaseOption {
     id: number;
@@ -57,6 +58,7 @@ export interface ProductDispatcherView {
     priceInfo: string;
     userNote: string;
     takeOnly: boolean;
+    priceSlice: PriceSlice [];
 }
 
 

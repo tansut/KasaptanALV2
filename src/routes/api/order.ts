@@ -213,6 +213,9 @@ export default class Route extends ApiRouter {
                     model: Product,
                     all: true
                 }]
+            },{
+                model: Dispatcher,
+                all: true
             }]
         })
         order.workedAccounts = await this.getWorkingAccounts(order);
@@ -340,15 +343,15 @@ export default class Route extends ApiRouter {
                     daysText: [[item.shipmentdate ? item.shipmentdate.toDateString() : '']],
                     hoursText: [item.shipmenthourText],
                 });
-            if (item.dispatcherid) {
-                shipment[bi].dispatcher = Object.assign(new Dispatcher(), {
-                    id: item.dispatcherid,
-                    type: item.dispatcherType,
-                    name: item.dispatcherName,
-                    fee: item.dispatcherFee,
-                    totalForFree: item.dispatchertotalForFree
-                })
-            }
+            // if (item.dispatcherid) {
+            //     shipment[bi].dispatcher = Object.assign(new Dispatcher(), {
+            //         id: item.dispatcherid,
+            //         type: item.dispatcherType,
+            //         name: item.dispatcherName,
+            //         fee: item.dispatcherFee,
+            //         totalForFree: item.dispatchertotalForFree
+            //     })
+            // }
 
             if (!payment[bi])
                 payment[bi] = Object.assign(new Payment(), {

@@ -157,7 +157,12 @@ class Route extends router_1.ViewRouter {
             let pageThumbnail = this.req.helper.imgUrl('butcher-google-photos', butcher.slug);
             if (this.req.prefAddr) {
                 let dpapi = new dispatcher_2.default(this.constructorParams);
-                this.logisticsProvider = yield dpapi.bestDispatcher2(this.butcher, this.req.prefAddr, null);
+                let dispatchers = yield dpapi.getDispatchers({
+                    butcher: this.butcher,
+                    adr: this.req.prefAddr,
+                    useLevel1: false,
+                });
+                this.logisticsProvider = dispatchers.length ? dispatchers[0].provider : null;
                 if (this.logisticsProvider) {
                     let l3 = yield area_1.default.findByPk(this.req.prefAddr.level3Id);
                     let fromTo = {
@@ -216,5 +221,3 @@ __decorate([
     __metadata("design:returntype", Promise)
 ], Route.prototype, "butcherPhotoRoute", null);
 exports.default = Route;
-
-//# sourceMappingURL=butcherview.js.map
