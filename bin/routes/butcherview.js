@@ -31,11 +31,10 @@ const area_1 = require("../db/models/area");
 const productcategory_1 = require("../db/models/productcategory");
 var MarkdownIt = require('markdown-it');
 const _ = require("lodash");
-const dispatcher_1 = require("../db/models/dispatcher");
 const config_1 = require("../config");
 const review_1 = require("../db/models/review");
 const sq = require("sequelize");
-const dispatcher_2 = require("./api/dispatcher");
+const dispatcher_1 = require("./api/dispatcher");
 class Route extends router_1.ViewRouter {
     constructor() {
         super(...arguments);
@@ -67,9 +66,6 @@ class Route extends router_1.ViewRouter {
             });
             this.reviews = res;
         });
-    }
-    getPriceSlice() {
-        return this.logisticsPriceSlice;
     }
     butcherRoute() {
         return __awaiter(this, void 0, void 0, function* () {
@@ -107,21 +103,21 @@ class Route extends router_1.ViewRouter {
                 },
                 order: [["displayOrder", "DESC"], ["updatedOn", "DESC"]]
             });
-            this.dispatchers = yield dispatcher_1.default.findAll({
-                where: {
-                    butcherId: this.butcher.id,
-                    enabled: true
-                },
-                order: [["toarealevel", "DESC"], ["fee", "ASC"]],
-                include: [
-                    {
-                        all: true
-                    }
-                ]
-            });
-            for (let i = 0; i < this.dispatchers.length; i++) {
-                this.dispatchers[i].address = yield this.dispatchers[i].toarea.getPreferredAddress();
-            }
+            // this.dispatchers = await Dispatcher.findAll({
+            //     where: {
+            //         butcherId: this.butcher.id,
+            //         enabled: true
+            //     },
+            //     order: [["toarealevel", "DESC"], ["fee", "ASC"]],
+            //     include: [
+            //         {
+            //             all: true
+            //         }
+            //     ]
+            // })
+            // for (let i = 0; i < this.dispatchers.length; i++) {
+            //     this.dispatchers[i].address = await this.dispatchers[i].toarea.getPreferredAddress()
+            // }
             this.categories = [];
             butcher.products = butcher.products.filter(p => {
                 return p.enabled && (p.kgPrice > 0 || (p.unit1price > 0 && p.unit1enabled) || (p.unit2price > 0 && p.unit2enabled) || (p.unit3price > 0 && p.unit1enabled));
@@ -156,7 +152,7 @@ class Route extends router_1.ViewRouter {
             let pageDescription = butcher.pageDescription || `${butcher.name}, ${butcher.address} ${butcher.areaLevel1.name}/${butcher.areaLevel2.name} adresinde hizmet vermekte olup ${(butcher.phone || '').trim().slice(0, -5) + " ..."} numaralı telefon ile ulaşabilirsiniz.`;
             let pageThumbnail = this.req.helper.imgUrl('butcher-google-photos', butcher.slug);
             if (this.req.prefAddr) {
-                let dpapi = new dispatcher_2.default(this.constructorParams);
+                let dpapi = new dispatcher_1.default(this.constructorParams);
                 let dispatchers = yield dpapi.getDispatchers({
                     butcher: this.butcher,
                     adr: this.req.prefAddr,
@@ -167,7 +163,9 @@ class Route extends router_1.ViewRouter {
                     let l3 = yield area_1.default.findByPk(this.req.prefAddr.level3Id);
                     let fromTo = {
                         start: this.butcher.location,
-                        finish: l3.location
+                        finish: l3.location,
+                        fId: this.req.prefAddr.level3Id.toString(),
+                        sId: this.butcher.id.toString()
                     };
                     this.logisticsPriceSlice = yield this.logisticsProvider.priceSlice(fromTo);
                     this.distance = yield this.logisticsProvider.distance(fromTo);

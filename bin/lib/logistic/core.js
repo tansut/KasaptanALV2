@@ -61,12 +61,14 @@ class LogisticProvider {
             points: [{
                     address: 'Foo',
                     contactPhone: '05326374151',
+                    id: fromTo.sId,
                     lat: fromTo.start.coordinates[0],
                     lng: fromTo.start.coordinates[1],
                     orderId: ''
                 }, {
                     address: 'Foo',
                     contactPhone: '05326374151',
+                    id: fromTo.fId,
                     lat: fromTo.finish.coordinates[0],
                     lng: fromTo.finish.coordinates[1],
                     orderId: ''
@@ -74,10 +76,13 @@ class LogisticProvider {
         };
         return req;
     }
-    priceSlice(distance, slice = 50.00, options = {}) {
+    calculateCustomerFee(offer) {
+        offer.customerFee = offer.totalFee;
+    }
+    priceSlice(ft, slice = 100.00, options = {}) {
         return __awaiter(this, void 0, void 0, function* () {
-            let arr = [];
-            return arr;
+            let prices = [], result = [];
+            return result;
         });
     }
     fromOrder(o) {
@@ -104,6 +109,7 @@ class LogisticProvider {
                     note: "Lütfen kasaba uğrayıp müşteri paketini alın: " + o.butcher.address,
                 },
                 {
+                    id: o.areaLevel3Id ? o.areaLevel3Id.toString() : '',
                     address: o.displayAddress,
                     contactName: o.name,
                     contactPhone: o.phone,
@@ -118,33 +124,6 @@ class LogisticProvider {
                     finish: finish ? finish : undefined,
                 }
             ]
-        };
-    }
-    getCustomerFeeConfig() {
-        return null;
-    }
-    calculateFeeForCustomer(params) {
-        let input = this.getCustomerFeeConfig();
-        if (!input)
-            return null;
-        let fee = 0.00;
-        if (input.maxDistance && params.distance > input.maxDistance)
-            return null;
-        if (input.minOrder && params.orderTotal < input.minOrder)
-            return null;
-        if (input.priceStartsAt && params.distance < input.priceStartsAt)
-            fee = 0.00;
-        let regular = params.distance ? helper_1.default.asCurrency(input.pricePerKM * params.distance) : input.offerPrice;
-        let contrib = input.contribitionRatio ? helper_1.default.asCurrency(params.orderTotal * input.contribitionRatio) : 0.00;
-        let free = input.freeShipPerKM ? (input.freeShipPerKM * params.distance) : 0.00;
-        if (params.orderTotal >= free)
-            fee = 0;
-        let calc = Math.max(0, regular - contrib);
-        fee = helper_1.default.asCurrency(Math.round(calc / 2.5) * 2.5);
-        return {
-            totalFee: regular,
-            customerFee: fee,
-            orderTotal: 0.00
         };
     }
     offerFromOrder(o) {

@@ -121,7 +121,8 @@ class Route extends router_1.ApiRouter {
     getDispatchers(q) {
         return __awaiter(this, void 0, void 0, function* () {
             let where = {
-                type: 'butcher'
+                type: 'butcher',
+                enabled: true
             };
             let include = [
                 {

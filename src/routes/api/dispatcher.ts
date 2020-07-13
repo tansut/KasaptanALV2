@@ -136,7 +136,8 @@ export default class Route extends ApiRouter {
 
     async getDispatchers(q: DispatcherQuery) { // butcher: number | Butcher, address: PreferredAddress, basedOn: Order) {
         let where = {
-            type: 'butcher'
+            type: 'butcher',
+            enabled: true
         }
         let include = [
             {

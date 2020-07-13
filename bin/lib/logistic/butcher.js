@@ -67,7 +67,7 @@ class ButcherManualLogistics extends core_1.LogisticProvider {
                     });
                 }
             }
-            return arr;
+            return this.optimizedSlice(arr);
         });
     }
 }
@@ -78,6 +78,11 @@ class ButcherAutoLogistics extends core_1.LogisticProvider {
         super(config, options);
         this.name = dispatcher_1.DispatcherTypeDesc["butcher/auto"];
         this.dispatcher = options.dispatcher;
+        options.dispatcher.name = this.providerKey;
+        options.dispatcher.min = this.getCustomerFeeConfig().minOrder;
+        //options.dispatcher.totalForFree = this.getCustomerFeeConfig().;
+        options.dispatcher.type = "butcher/auto";
+        options.dispatcher.name = dispatcher_1.DispatcherTypeDesc[options.dispatcher.type];
     }
     static register() {
         core_1.LogisticFactory.register(ButcherAutoLogistics.key, ButcherAutoLogistics);
@@ -85,40 +90,95 @@ class ButcherAutoLogistics extends core_1.LogisticProvider {
     getCustomerFeeConfig() {
         let config = {
             contribitionRatio: 0.04,
-            freeShipPerKM: 25,
+            freeShipPerKM: 30.00,
             pricePerKM: 1.5,
-            priceStartsAt: 5,
-            maxDistance: 20,
-            minOrder: 100,
+            priceStartsAt: 5.00,
+            maxDistance: 50,
+            minOrder: 100.00,
+            freeShipOrderTotal: 400.00
         };
         return config;
     }
-    priceSlice(ft, slice = 100.00) {
+    requestOffer(req) {
         return __awaiter(this, void 0, void 0, function* () {
-            let distance = helper_1.default.distance(ft.start, ft.finish);
+            let distance = yield this.distance({
+                start: {
+                    type: 'Point',
+                    coordinates: [req.points[0].lat, req.points[0].lng],
+                },
+                sId: req.points[0].id,
+                finish: {
+                    type: 'Point',
+                    coordinates: [req.points[1].lat, req.points[1].lng],
+                },
+                fId: req.points[1].id,
+            });
+            req.distance = distance;
+            let config = this.getCustomerFeeConfig();
+            let res = {
+                orderTotal: req.orderTotal,
+                totalFee: helper_1.default.asCurrency(config.pricePerKM * distance),
+                points: req.points,
+                customerFee: helper_1.default.asCurrency(config.pricePerKM * distance),
+                distance: distance
+            };
+            return this.calculateCustomerFee(res);
+        });
+    }
+    createOrder(req) {
+        return __awaiter(this, void 0, void 0, function* () {
+            return null;
+        });
+    }
+    calculateCustomerFee(offer) {
+        let input = this.getCustomerFeeConfig();
+        let fee = offer.totalFee;
+        if (fee >= 0 && input.maxDistance && offer.distance > input.maxDistance)
+            fee = -1;
+        if (fee >= 0 && input.minOrder && offer.orderTotal < input.minOrder)
+            fee = -1;
+        if (fee >= 0 && input.priceStartsAt && offer.distance < input.priceStartsAt)
+            fee = 0.00;
+        if (fee <= 0 && input.freeShipOrderTotal && input.freeShipOrderTotal <= offer.orderTotal)
+            fee = 0.00;
+        if (fee > 0.00) {
+            let regular = offer.totalFee;
+            let contrib = input.contribitionRatio ? helper_1.default.asCurrency(offer.orderTotal * input.contribitionRatio) : 0.00;
+            let free = input.freeShipPerKM ? (input.freeShipPerKM * offer.distance) : 0.00;
+            if (offer.orderTotal >= free)
+                fee = 0;
+            let calc = Math.max(0, regular - contrib);
+            fee = this.roundCustomerFee(calc);
+        }
+        if (fee >= 0.00) {
+            offer.customerFee = fee;
+        }
+        return fee < 0.00 ? null : offer;
+    }
+    priceSlice(ft, slice = 100.00, options = {}) {
+        return __awaiter(this, void 0, void 0, function* () {
             let prices = [], result = [];
+            let offerRequest = this.offerRequestFromTo(ft);
             for (let i = 0; i < 10; i++)
                 prices.push(helper_1.default.asCurrency(i * slice));
             for (let i = 0; i < prices.length; i++) {
-                let cost = this.calculateFeeForCustomer({
-                    distance: distance,
-                    orderTotal: prices[i]
-                });
-                if (cost) {
+                offerRequest.orderTotal = helper_1.default.asCurrency((2 * prices[i] + slice) / 2);
+                let offer = yield this.requestOffer(offerRequest);
+                if (offer) {
                     let item = {
                         start: prices[i],
                         end: prices[i] + slice,
-                        cost: cost.totalFee
+                        cost: offer.customerFee
                     };
                     result.push(item);
-                    if (cost.totalFee <= 0.00) {
+                    if (offer.customerFee <= 0.00) {
                         item.end = 0.00;
                         break;
                     }
                     ;
                 }
             }
-            return result;
+            return this.optimizedSlice(result);
         });
     }
 }

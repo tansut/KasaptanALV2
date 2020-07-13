@@ -1,4 +1,4 @@
-import { LogisticProvider, VehicleType, FromTo, OfferRequest, OfferResponse, Point, LogisticFactory, OrderRequest, OrderResponse, PriceSlice, CustomerPriceConfig, LogisticProviderOptions, CustomerPriceParams } from "./core";
+import { LogisticProvider, VehicleType, FromTo, OfferRequest, OfferResponse, Point, LogisticFactory, OrderRequest, OrderResponse, PriceSlice, CustomerPriceConfig, LogisticProviderOptions } from "./core";
 import axios, { AxiosResponse } from "axios";
 import Helper from "../helper";
 import { off } from "process";
@@ -23,23 +23,23 @@ export default class BanabikuryeProvider extends LogisticProvider {
     config: BanabikuryeConfig;
     name = DispatcherTypeDesc["kasaptanal/motokurye"];
 
-    getCustomerFeeConfig(): CustomerPriceConfig {
-        let config: CustomerPriceConfig = {
-            contribitionRatio: 0.04,
-            freeShipPerKM: 25,
-            pricePerKM: 1.5,
-            priceStartsAt: 5,
-            maxDistance: 20,
-            minOrder: 100,
-        }
-        return config;
-    }
+    // getCustomerFeeConfig(): CustomerPriceConfig {
+    //     let config: CustomerPriceConfig = {
+    //         contribitionRatio: 0.04,
+    //         freeShipPerKM: 25,
+    //         pricePerKM: 1.5,
+    //         priceStartsAt: 5,
+    //         maxDistance: 20,
+    //         minOrder: 100,
+    //     }
+    //     return config;
+    // }
 
-    calculateFeeForCustomer(params: CustomerPriceParams): OfferResponse {
-        if (!params.regularPrice)
-            params.regularPrice = this.lastOffer.totalFee;
-        return super.calculateFeeForCustomer(params)
-    }
+    // calculateFeeForCustomer(params: CustomerPriceParams): OfferResponse {
+    //     if (!params.regularPrice)
+    //         params.regularPrice = this.lastOffer.totalFee;
+    //     return super.calculateFeeForCustomer(params)
+    // }
 
     // calculateCostForCustomer(shipment: Shipment, o: Order) {
     //     if (o.dispatcherFee > 0.00) {
@@ -55,52 +55,27 @@ export default class BanabikuryeProvider extends LogisticProvider {
     // }
 
 
-    calculateCustomerFee(offer: OfferResponse | OrderResponse) {
+    calculateCustomerFee(offer: OfferResponse | OrderResponse): OfferResponse | OrderResponse {
         let regularFee = offer.totalFee;
         let customerFee = offer.totalFee;
         if (regularFee > 0.00 && offer.orderTotal > 0.00) {
             let dispatcherFee = Helper.asCurrency(regularFee / 1.18);
             let calcRegular = new ComissionHelper(this.options.dispatcher.butcher.commissionRate, this.options.dispatcher.butcher.commissionFee);
             let calc = new ComissionHelper(this.options.dispatcher.butcher.noshipCommissionRate, this.options.dispatcher.butcher.noshipCommissionFee);
-            let commissionRegular = calcRegular.calculateButcherComission(offer.orderTotal);    
-            let commission = calc.calculateButcherComission(offer.orderTotal);   
+            let commissionRegular = calcRegular.calculateButcherComission(offer.orderTotal);
+            let commission = calc.calculateButcherComission(offer.orderTotal);
             let diff = commission.kalitteFee - commissionRegular.kalitteFee;
             let contribute = Helper.asCurrency(diff);
             let calculated = Helper.asCurrency(Math.max(0.00, dispatcherFee - contribute));
             let calculatedVat = Helper.asCurrency(calculated * 0.18)
             let totalShip = Helper.asCurrency(Math.round(calculated + calculatedVat));
-            customerFee = totalShip > 0.00 ? Math.max(5.00, totalShip): 0.00;
-        } 
+            customerFee = totalShip > 0.00 ? Math.max(5.00, totalShip) : 0.00;
+        }
         offer.customerFee = this.roundCustomerFee(customerFee);
         return offer;
     }
 
 
-    async priceSlice(ft: FromTo, slice: number = 100.00, options = {}): Promise<PriceSlice[]> {
-        let prices = [], result: PriceSlice[] = [];
-        let offerRequest = this.offerRequestFromTo(ft);
-        let offer = await this.requestOffer(offerRequest);
-
-        for (let i = 1; i < 10; i++)
-            prices.push(Helper.asCurrency(i * slice))
-
-        for (let i = 0; i < prices.length; i++) {
-            offer.orderTotal =  Helper.asCurrency((2*prices[i] + slice)/2);
-            this.calculateCustomerFee(offer);
-            let item = {
-                start: prices[i],
-                end: prices[i] + slice,
-                cost: offer.customerFee
-            }
-            result.push(item)
-            if (offer.customerFee <= 0.00) {
-                item.end = 0.00;
-                break
-            };
-        }
-
-        return this.optimizedSlice(result);
-    }
 
     async get<T>(method: string) {
         const config = {
@@ -142,7 +117,7 @@ export default class BanabikuryeProvider extends LogisticProvider {
 
     fromBnbPoint(p: any): Point {
         return {
-            id: p.point_id,
+            //id: p.point_id,
             contactName: p.contact_person.name,
             contactPhone: p.contact_person.phone,
             lat: p.latitude,
@@ -226,13 +201,39 @@ export default class BanabikuryeProvider extends LogisticProvider {
         }
     }
 
+    async priceSlice(ft: FromTo, slice: number = 100.00, options = {}): Promise<PriceSlice[]> {
+        let prices = [], result: PriceSlice[] = [];
+        let offerRequest = this.offerRequestFromTo(ft);
+        let offer = await this.requestOffer(offerRequest);
+
+        for (let i = 1; i < 10; i++)
+            prices.push(Helper.asCurrency(i * slice))
+
+        for (let i = 0; i < prices.length; i++) {
+            offer.orderTotal = Helper.asCurrency((2 * prices[i] + slice) / 2);
+            this.calculateCustomerFee(offer);
+            let item = {
+                start: prices[i],
+                end: prices[i] + slice,
+                cost: offer.customerFee
+            }
+            result.push(item)
+            if (offer.customerFee <= 0.00) {
+                item.end = 0.00;
+                break
+            };
+        }
+
+        return this.optimizedSlice(result);
+    }
+
     async requestOffer(req: OfferRequest): Promise<OfferResponse> {
         let request = this.toOfferRequest(req);
         let result = await this.post<BanabikuryeResponse>("calculate-order", request);
         let resp = this.fromOfferResponse(result.data);
         resp.orderTotal = req.orderTotal;
-        this.calculateCustomerFee(resp)
-        return resp;
+        return this.calculateCustomerFee(resp)
+        
     }
 
     async createOrder(req: OrderRequest): Promise<OrderResponse> {
@@ -240,8 +241,7 @@ export default class BanabikuryeProvider extends LogisticProvider {
         let result = await this.post<BanabikuryeResponse>("create-order", request);
         let resp = this.fromOrderResponse(result.data);
         resp.orderTotal = req.orderTotal;
-        this.calculateCustomerFee(resp)
-        return resp;
+        return <any>this.calculateCustomerFee(resp)
     }
 
     static register() {
@@ -256,7 +256,7 @@ export default class BanabikuryeProvider extends LogisticProvider {
             options.dispatcher.min = 0.00;
             options.dispatcher.totalForFree = 0.00;
             options.dispatcher.type = "kasaptanal/motokurye";
-            options.dispatcher.name = DispatcherTypeDesc[options.dispatcher.type];            
+            options.dispatcher.name = DispatcherTypeDesc[options.dispatcher.type];
         }
 
     }

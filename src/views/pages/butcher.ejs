@@ -295,7 +295,7 @@
                 </div>
                 <div class="collapse " id="dispatchArea" data-parent="#payment-method" role="tabpanel">
                   <div class="card-body ">
-                    <% if (!controller.logisticsProvider && __req.prefAddr) { %>
+                    <% if ((!controller.logisticsProvider || controller.logisticsPriceSlice.length == 0) && __req.prefAddr) { %>
                       <span>
                         Kasabın semtinize hizmeti yoktur.
                       </span>
@@ -307,7 +307,7 @@
 
                       <div class="mb-3">
                         <%- include('./_partial/ship-price-slice.ejs', {                                
-                          slices: controller.getPriceSlice()
+                          slices: controller.logisticsPriceSlice
                             }) %>
                       </div>
     

@@ -208,7 +208,7 @@
           <% if (shopcard.getShippingCostOfCustomer(bi) > 0) { %>
           <div class="d-flex justify-content-between mb-2 border-bottom">
             <div>
-              <% if (shopcard.shipment[bi].dispatcher.type == "butcher") { %>
+              <% if (shopcard.shipment[bi].dispatcher.type == "butcher" || shopcard.shipment[bi].dispatcher.type == "butcher/auto") { %>
               <div class="font-size-sm"><%=butcher.name%> Teslimat Bedeli</div>
               <%} else {%>
                 <div class="font-size-sm">

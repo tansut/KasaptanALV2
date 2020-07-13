@@ -27,22 +27,22 @@ class BanabikuryeProvider extends core_1.LogisticProvider {
             options.dispatcher.name = dispatcher_1.DispatcherTypeDesc[options.dispatcher.type];
         }
     }
-    getCustomerFeeConfig() {
-        let config = {
-            contribitionRatio: 0.04,
-            freeShipPerKM: 25,
-            pricePerKM: 1.5,
-            priceStartsAt: 5,
-            maxDistance: 20,
-            minOrder: 100,
-        };
-        return config;
-    }
-    calculateFeeForCustomer(params) {
-        if (!params.regularPrice)
-            params.regularPrice = this.lastOffer.totalFee;
-        return super.calculateFeeForCustomer(params);
-    }
+    // getCustomerFeeConfig(): CustomerPriceConfig {
+    //     let config: CustomerPriceConfig = {
+    //         contribitionRatio: 0.04,
+    //         freeShipPerKM: 25,
+    //         pricePerKM: 1.5,
+    //         priceStartsAt: 5,
+    //         maxDistance: 20,
+    //         minOrder: 100,
+    //     }
+    //     return config;
+    // }
+    // calculateFeeForCustomer(params: CustomerPriceParams): OfferResponse {
+    //     if (!params.regularPrice)
+    //         params.regularPrice = this.lastOffer.totalFee;
+    //     return super.calculateFeeForCustomer(params)
+    // }
     // calculateCostForCustomer(shipment: Shipment, o: Order) {
     //     if (o.dispatcherFee > 0.00) {
     //         let dispatcherFee = Helper.asCurrency(o.dispatcherFee / 1.18);
@@ -73,31 +73,6 @@ class BanabikuryeProvider extends core_1.LogisticProvider {
         }
         offer.customerFee = this.roundCustomerFee(customerFee);
         return offer;
-    }
-    priceSlice(ft, slice = 100.00, options = {}) {
-        return __awaiter(this, void 0, void 0, function* () {
-            let prices = [], result = [];
-            let offerRequest = this.offerRequestFromTo(ft);
-            let offer = yield this.requestOffer(offerRequest);
-            for (let i = 1; i < 10; i++)
-                prices.push(helper_1.default.asCurrency(i * slice));
-            for (let i = 0; i < prices.length; i++) {
-                offer.orderTotal = helper_1.default.asCurrency((2 * prices[i] + slice) / 2);
-                this.calculateCustomerFee(offer);
-                let item = {
-                    start: prices[i],
-                    end: prices[i] + slice,
-                    cost: offer.customerFee
-                };
-                result.push(item);
-                if (offer.customerFee <= 0.00) {
-                    item.end = 0.00;
-                    break;
-                }
-                ;
-            }
-            return this.optimizedSlice(result);
-        });
     }
     get(method) {
         return __awaiter(this, void 0, void 0, function* () {
@@ -140,7 +115,7 @@ class BanabikuryeProvider extends core_1.LogisticProvider {
     }
     fromBnbPoint(p) {
         return {
-            id: p.point_id,
+            //id: p.point_id,
             contactName: p.contact_person.name,
             contactPhone: p.contact_person.phone,
             lat: p.latitude,
@@ -220,14 +195,38 @@ class BanabikuryeProvider extends core_1.LogisticProvider {
             throw new Error('Taşıma teklifi alınamadı');
         }
     }
+    priceSlice(ft, slice = 100.00, options = {}) {
+        return __awaiter(this, void 0, void 0, function* () {
+            let prices = [], result = [];
+            let offerRequest = this.offerRequestFromTo(ft);
+            let offer = yield this.requestOffer(offerRequest);
+            for (let i = 1; i < 10; i++)
+                prices.push(helper_1.default.asCurrency(i * slice));
+            for (let i = 0; i < prices.length; i++) {
+                offer.orderTotal = helper_1.default.asCurrency((2 * prices[i] + slice) / 2);
+                this.calculateCustomerFee(offer);
+                let item = {
+                    start: prices[i],
+                    end: prices[i] + slice,
+                    cost: offer.customerFee
+                };
+                result.push(item);
+                if (offer.customerFee <= 0.00) {
+                    item.end = 0.00;
+                    break;
+                }
+                ;
+            }
+            return this.optimizedSlice(result);
+        });
+    }
     requestOffer(req) {
         return __awaiter(this, void 0, void 0, function* () {
             let request = this.toOfferRequest(req);
             let result = yield this.post("calculate-order", request);
             let resp = this.fromOfferResponse(result.data);
             resp.orderTotal = req.orderTotal;
-            this.calculateCustomerFee(resp);
-            return resp;
+            return this.calculateCustomerFee(resp);
         });
     }
     createOrder(req) {
@@ -236,8 +235,7 @@ class BanabikuryeProvider extends core_1.LogisticProvider {
             let result = yield this.post("create-order", request);
             let resp = this.fromOrderResponse(result.data);
             resp.orderTotal = req.orderTotal;
-            this.calculateCustomerFee(resp);
-            return resp;
+            return this.calculateCustomerFee(resp);
         });
     }
     static register() {

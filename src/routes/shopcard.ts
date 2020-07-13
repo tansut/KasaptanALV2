@@ -142,7 +142,7 @@ export default class Route extends ViewRouter {
             allow = false;
         }
         if (allow) {
-            if (this.shopcard.shipment[bi].dispatcher && this.shopcard.shipment[bi].dispatcher.type != "butcher") {
+            if (this.shopcard.shipment[bi].dispatcher && !this.shopcard.shipment[bi].dispatcher.type.startsWith("butcher")) {
                 allow = false;
             }
         }
@@ -249,10 +249,14 @@ export default class Route extends ViewRouter {
                     if (order && order.shipLocation) {
                         req = provider.offerFromOrder(order);
                         offer = await provider.requestOffer(req)
-                        provider.lastOffer = offer;
-    
-                        dispatcher.feeOffer = provider.lastOffer.totalFee;
-                        dispatcher.fee = provider.lastOffer.customerFee;
+                        if (offer) {
+                            provider.lastOffer = offer;
+                            dispatcher.feeOffer = provider.lastOffer.totalFee;
+                            dispatcher.fee = provider.lastOffer.customerFee;
+                        } else {
+                            // dispatcher = this.shopcard.shipment[o].dispatcher = null;
+                            // this.shopcard.shipment[o].howTo = 'take';
+                        }
                     } else {
                         // req = provider.offerRequestFromTo({
                         //     start: provider.options.dispatcher.butcher.location,
@@ -260,6 +264,8 @@ export default class Route extends ViewRouter {
                         // });
                         // req.orderTotal = this.shopcard.butchers[o].subTotal;
                     }
+                    
+
 
                     this.destinationMatrix[o] = {
                         start: provider.options.dispatcher.butcher.location,
@@ -271,6 +277,7 @@ export default class Route extends ViewRouter {
                           })
                     } 
 
+                    
                     if (provider.options.dispatcher.min > this.shopcard.butchers[o].subTotal) {
                         this.shopcard.shipment[o].howTo = 'ship';
                     }
@@ -364,12 +371,11 @@ export default class Route extends ViewRouter {
 
     async saveshipRoute() {
         this.shopcard = await ShopCard.createFromRequest(this.req);
-        await this.setDispatcher();
         let needAddress = false;
         for (let k in this.shopcard.butchers) {
             let butcher = this.shopcard.butchers[k];
             this.shopcard.shipment[k].type = this.req.body[`shipping-method${k}`];
-            this.shopcard.shipment[k].dispatcher && (this.shopcard.shipment[k].howTo = this.req.body[`howto${k}`]);
+            this.shopcard.shipment[k].howTo = this.req.body[`howto${k}`];
             needAddress = !needAddress ? (this.shopcard.shipment[k].howTo == 'ship') : true;
             // this.shopcard.shipment[k].desc = ShipmentTypeDesc[this.shopcard.shipment[k].type];
             // this.shopcard.shipment[k].howToDesc = ShipmentHowToDesc[this.shopcard.shipment[k].howTo];
@@ -387,8 +393,9 @@ export default class Route extends ViewRouter {
                 this.shopcard.shipment[k].hoursText = [this.shipmentHours[parseInt(this.req.body[`samedaytime${k}`])]];
             }
         }
+        this.fillDefaultAddress();        
+        await this.setDispatcher();        
         this.shopcard.calculateShippingCosts();
-        this.fillDefaultAddress();
         await this.shopcard.saveToRequest(this.req);
         //this.renderPage("pages/checkout.adres.ejs")
         needAddress ? this.renderPage("pages/checkout.adres.ejs") : this.renderPage("pages/checkout.adres-take.ejs");

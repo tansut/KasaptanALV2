@@ -15,6 +15,7 @@ import { ShipmentTypeDesc } from '../../models/shipment';
 import { GeoLocation } from '../../models/geo';
 import Dispatcher from '../../db/models/dispatcher';
 import { off } from 'process';
+import Area from '../../db/models/area';
 
 const paymentConfig = require(path.join(config.projectDir, `logistic.json`));
 
@@ -29,6 +30,7 @@ export interface CustomerPriceConfig {
     pricePerKM?: number;
     priceStartsAt?: number;
     freeShipPerKM?: number;
+    freeShipOrderTotal?: number;
     contribitionRatio?: number;
     maxDistance?: number;
     minOrder?: number;
@@ -66,7 +68,7 @@ export interface Point {
     arrivalActual?: Date
 }
 
-export interface BasicRequest {
+export interface BasicRequest {   
     matter: string;
     orderTotal: number;
     vehicleType: VehicleType;
@@ -79,10 +81,12 @@ export interface BasicResponse {
 
 export interface OfferRequest extends BasicRequest {
     notifyCustomerSms: boolean;
+    distance?:number;
 }
 
 export interface OrderRequest extends BasicRequest {
     notifyCustomerSms: boolean;
+    distance?:number;
 }
 
 export interface OfferResponse extends BasicResponse {
@@ -93,6 +97,7 @@ export interface OfferResponse extends BasicResponse {
     points?: Point[];
     orderTotal: number;
     customerFee: number;
+    distance?: number;
 }
 
 export interface OrderResponse extends BasicResponse {
@@ -109,11 +114,14 @@ export interface OrderResponse extends BasicResponse {
     points: Point[];
     orderTotal: number;
     customerFee: number;
+    distance?: number;
 
 }
 
 
 export interface FromTo {
+    sId?: string;
+    fId?: string;
     start: GeoLocation;
     finish: GeoLocation;
 }
@@ -171,12 +179,14 @@ export class LogisticProvider {
             points: [{
                 address: 'Foo',
                 contactPhone: '05326374151',
+                id: fromTo.sId,
                 lat: fromTo.start.coordinates[0],
                 lng: fromTo.start.coordinates[1],
                 orderId: ''
-            }, {
+            }, {                
                 address: 'Foo',
                 contactPhone: '05326374151',
+                id: fromTo.fId,
                 lat: fromTo.finish.coordinates[0],
                 lng: fromTo.finish.coordinates[1],
                 orderId: ''
@@ -185,12 +195,15 @@ export class LogisticProvider {
         return req
     }
 
+    calculateCustomerFee(offer: OfferResponse | OrderResponse) {
+        offer.customerFee = offer.totalFee;
+    }
 
 
-    async priceSlice(distance: FromTo, slice: number = 50.00, options = {}): Promise<PriceSlice[]> {
-        let arr: PriceSlice[] = []
-
-        return arr;
+    async priceSlice(ft: FromTo, slice: number = 100.00, options = {}): Promise<PriceSlice[]> {
+        let prices = [], result: PriceSlice[] = [];
+        
+        return result;
     }
 
     fromOrder(o: Order): BasicRequest {
@@ -217,6 +230,7 @@ export class LogisticProvider {
                     note: "Lütfen kasaba uğrayıp müşteri paketini alın: " + o.butcher.address,
                 },
                 {
+                    id: o.areaLevel3Id ? o.areaLevel3Id.toString(): '',
                     address: o.displayAddress,
                     contactName: o.name,
                     contactPhone: o.phone,
@@ -233,33 +247,7 @@ export class LogisticProvider {
             ]
         }
     }
-
-    getCustomerFeeConfig(): CustomerPriceConfig {
-        return null;
-    }
-
-    calculateFeeForCustomer(params: CustomerPriceParams): OfferResponse {
-        let input: CustomerPriceConfig = this.getCustomerFeeConfig();
-        if (!input) return null;
-        let fee = 0.00;
-        if (input.maxDistance && params.distance > input.maxDistance)
-            return null;
-        if (input.minOrder && params.orderTotal < input.minOrder)
-            return null;
-        if (input.priceStartsAt && params.distance < input.priceStartsAt)
-            fee = 0.00;
-        let regular = params.distance ? Helper.asCurrency(input.pricePerKM * params.distance) : input.offerPrice;
-        let contrib = input.contribitionRatio ? Helper.asCurrency(params.orderTotal * input.contribitionRatio) : 0.00;
-        let free = input.freeShipPerKM ? (input.freeShipPerKM * params.distance) : 0.00;
-        if (params.orderTotal >= free) fee = 0;
-        let calc = Math.max(0, regular - contrib);
-        fee = Helper.asCurrency(Math.round(calc / 2.5) * 2.5)
-        return {
-            totalFee: regular,
-            customerFee: fee,
-            orderTotal: 0.00
-        }
-    }
+    
 
 
 
@@ -268,7 +256,6 @@ export class LogisticProvider {
         req.notifyCustomerSms = true;
         return req;
     }
-
 
 
     orderFromOrder(o: Order): OrderRequest {

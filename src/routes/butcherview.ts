@@ -77,9 +77,6 @@ export default class Route extends ViewRouter {
         this.reviews = res;
     }
 
-    getPriceSlice() {
-        return this.logisticsPriceSlice;
-    }
 
 
 
@@ -155,22 +152,22 @@ export default class Route extends ViewRouter {
             order: [["displayOrder", "DESC"], ["updatedOn", "DESC"]]
         })
 
-        this.dispatchers = await Dispatcher.findAll({
-            where: {
-                butcherId: this.butcher.id,
-                enabled: true
-            },
-            order: [["toarealevel", "DESC"], ["fee", "ASC"]],
-            include: [
-                {
-                    all: true
-                }
-            ]
-        })
+        // this.dispatchers = await Dispatcher.findAll({
+        //     where: {
+        //         butcherId: this.butcher.id,
+        //         enabled: true
+        //     },
+        //     order: [["toarealevel", "DESC"], ["fee", "ASC"]],
+        //     include: [
+        //         {
+        //             all: true
+        //         }
+        //     ]
+        // })
 
-        for (let i = 0; i < this.dispatchers.length; i++) {
-            this.dispatchers[i].address = await this.dispatchers[i].toarea.getPreferredAddress()
-        }
+        // for (let i = 0; i < this.dispatchers.length; i++) {
+        //     this.dispatchers[i].address = await this.dispatchers[i].toarea.getPreferredAddress()
+        // }
 
         this.categories = [];
 
@@ -228,9 +225,11 @@ export default class Route extends ViewRouter {
             this.logisticsProvider = dispatchers.length ? dispatchers[0].provider: null;
             if (this.logisticsProvider) {
                 let l3 = await Area.findByPk(this.req.prefAddr.level3Id);
-                let fromTo: FromTo = {
+                let fromTo: FromTo = {                    
                     start: this.butcher.location,
-                    finish: l3.location
+                    finish: l3.location,
+                    fId: this.req.prefAddr.level3Id.toString(),
+                    sId: this.butcher.id.toString()
                 }
                 this.logisticsPriceSlice = await this.logisticsProvider.priceSlice(fromTo);
                 this.distance = await this.logisticsProvider.distance(fromTo)
