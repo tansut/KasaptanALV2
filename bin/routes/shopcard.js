@@ -455,12 +455,23 @@ class Route extends router_1.ViewRouter {
             }
         });
     }
+    redirectToShopcard() {
+        return __awaiter(this, void 0, void 0, function* () {
+            this.res.redirect('/alisveris-sepetim');
+        });
+    }
     static SetRoutes(router) {
         router.get("/alisveris-sepetim", Route.BindRequest(Route.prototype.viewRoute));
         router.get("/alisveris-sepetim/adres", Route.BindRequest(Route.prototype.adresViewRoute));
         router.post("/alisveris-sepetim/savecard", Route.BindRequest(Route.prototype.savecardRoute));
         router.post("/alisveris-sepetim/saveadres", Route.BindRequest(Route.prototype.saveadresRoute));
         router.post("/alisveris-sepetim/saveadrestake", Route.BindRequest(Route.prototype.saveadresTakeRoute));
+        router.get("/alisveris-sepetim/savecard", Route.BindRequest(Route.prototype.redirectToShopcard));
+        router.get("/alisveris-sepetim/saveadres", Route.BindRequest(Route.prototype.redirectToShopcard));
+        router.get("/alisveris-sepetim/saveadrestake", Route.BindRequest(Route.prototype.redirectToShopcard));
+        router.get("/alisveris-sepetim/saveship", Route.BindRequest(Route.prototype.redirectToShopcard));
+        router.get("/alisveris-sepetim/savepayment", Route.BindRequest(Route.prototype.redirectToShopcard));
+        router.get("/alisveris-sepetim/savereview", Route.BindRequest(Route.prototype.redirectToShopcard));
         router.get("/alisveris-sepetim/ship", Route.BindRequest(Route.prototype.shipViewRoute));
         router.post("/alisveris-sepetim/saveship", Route.BindRequest(Route.prototype.saveshipRoute));
         router.get("/alisveris-sepetim/payment", Route.BindRequest(Route.prototype.paymentViewRoute));

@@ -115,13 +115,13 @@
           <div class="text-center">
             <% if (shopcard.items.length) { %>
             <% if (showShopBtn) { %>
-            <a class="btn btn btn-primary" href="/kasap-urunleri">Alışverişe Devam</a>
+            <a class="btn btn-sm btn-primary" href="/kasap-urunleri">Alışverişe Devam</a>
             <% } %>
     
     
             <button data-tag="true" data-category="checkout" data-action="view/start"
               data-label="<%=__req.user ? __req.user.mphone: ''  %>" data-value="<%=shopcard.items.length%>"
-              class="btn btn-info  " type="submit" value="true" name="checkout" id="checkout">Sonraki Adım <i
+              class="btn btn-info btn-sm " type="submit" value="true" name="checkout" id="checkout">Sonraki Adım <i
                 class="czi-arrow-right ml-1"></i></button>
             <%} else { %>
     
@@ -236,10 +236,10 @@
               </div>
       
               <% if (shopcard.items.length > 0) { %>
-              <!-- <button data-tag="true" data-category="checkout" data-action="view/start"
+             <button data-tag="true" data-category="checkout" data-action="view/start"
                   data-label="<%=__req.user ? __req.user.mphone: ''  %>" data-value="<%=shopcard.items.length%>"
                   class="btn btn-info btn-block mt-4  " type="submit" value="true" name="checkout" id="checkout">Sonraki
-                  Adım <i class="czi-arrow-right ml-1"></i></button> -->
+                  Adım <i class="czi-arrow-right ml-1"></i></button> 
       
       <%}%>
               

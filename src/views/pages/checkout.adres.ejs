@@ -155,12 +155,9 @@
           </div>
           <!-- Navigation (desktop)-->
           <div class="d-none d-lg-flex pt-4 mt-3">
-            <div class="w-50 pr-3"><a class="btn btn-secondary btn-block" href="/alisveris-sepetim/ship"><i
-                  class="czi-arrow-left mt-sm-0 mr-1"></i><span class="d-none d-sm-inline">Geri</span><span
-                  class="d-inline d-sm-none">Geri</span></a></div>
-            <div class="w-50 pl-2"><button type="button" onclick="return goNext()" id="setadres" name="setadres"
-                class="btn btn-info btn-block"><span class="d-none d-sm-inline gonext">Sonraki Adım</span><span
-                  class="d-inline d-sm-none gonext">Sonraki</span><i class="czi-arrow-right mt-sm-0 ml-1"></i></button>
+            <div class="w-50 pr-3"><a class="btn btn-secondary btn-block" href="/alisveris-sepetim/ship">&laquo; Geri</a></div>
+            <div class="w-50 pl-2"><button type="button" onclick="goNext()" id="setadres" name="setadres"
+                class="btn btn-info btn-block gonext">Sonraki &raquo;</button>
             </div>
           </div>
         </section>
@@ -170,13 +167,9 @@
       <div class="row d-lg-none">
         <div class="col-lg-8">
           <div class="d-flex mt-3">
-            <div class="w-50 pr-3"><a class="btn btn-secondary btn-block" href="/alisveris-sepetim/ship"><i
-                  class="czi-arrow-left mt-sm-0 mr-1"></i><span class="d-none d-sm-inline">Geri</span><span
-                  class="d-inline d-sm-none">Geri</span></a></div>
-            <div class="w-50 pl-2"><button type="button" onclick="return goNext()" id="save-adres" name="save-adres"
-                class="btn btn-info btn-block"><span class="d-none d-sm-inline gonext">Sonraki Adım</span><span
-                  class="d-inline d-sm-none gonext">Sonraki Adım</span><i
-                  class="czi-arrow-right mt-sm-0 ml-1"></i></button>
+            <div class="w-50 pr-3"><a class="btn btn-secondary btn-block" href="/alisveris-sepetim/ship">&laquo; Geri</a></div>
+            <div class="w-50 pl-2"><button type="button" onclick="goNext()" id="save-adres" name="save-adres"
+                class="btn btn-info btn-block gonext">Sonraki &raquo;</button>
             </div>
           </div>
         </div>
@@ -305,15 +298,18 @@
 
 
     function goNext(approve) {
-      if (!$('#address').val().trim())
+      if (!$('#address').val())
         return alert('Lütfen adres giriniz.');
       if ((tryCount > 1) || (pageHasLoc())) {
         $('#adresform').submit();
       } else {
-        $('.gonext').attr('disabled', "true");
+        //$('.gonext').attr('disabled', "true");
         $('.gonext').text("Sorguluyorum...");
         App.Backend.post('shopcard/geocode', {
-          address: $('#address').val()
+          address: $('#address').val(),
+          bina: $('#bina').val(),
+          kat: $('#kat').val(),
+          daire: $('#daire').val()
         }).then(function (result) {
           if (result.length > 1) {
             addresslist.list = result;
@@ -329,7 +325,7 @@
         }).catch(function (err) {
           alert(err.message);
         }).finally(function () {
-          $('.gonext').removeAttr("disabled");
+          //$('.gonext').removeAttr("disabled");
           $('.gonext').text("Sonraki Adım");
         })
       }

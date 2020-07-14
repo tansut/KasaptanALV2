@@ -477,12 +477,24 @@ export default class Route extends ViewRouter {
         }
     }
 
+    async redirectToShopcard() {
+        this.res.redirect('/alisveris-sepetim');
+    }
+
     static SetRoutes(router: express.Router) {
         router.get("/alisveris-sepetim", Route.BindRequest(Route.prototype.viewRoute));
         router.get("/alisveris-sepetim/adres", Route.BindRequest(Route.prototype.adresViewRoute));
+        
         router.post("/alisveris-sepetim/savecard", Route.BindRequest(Route.prototype.savecardRoute));
         router.post("/alisveris-sepetim/saveadres", Route.BindRequest(Route.prototype.saveadresRoute));
         router.post("/alisveris-sepetim/saveadrestake", Route.BindRequest(Route.prototype.saveadresTakeRoute));
+
+        router.get("/alisveris-sepetim/savecard", Route.BindRequest(Route.prototype.redirectToShopcard));
+        router.get("/alisveris-sepetim/saveadres", Route.BindRequest(Route.prototype.redirectToShopcard));
+        router.get("/alisveris-sepetim/saveadrestake", Route.BindRequest(Route.prototype.redirectToShopcard));        
+        router.get("/alisveris-sepetim/saveship", Route.BindRequest(Route.prototype.redirectToShopcard));
+        router.get("/alisveris-sepetim/savepayment", Route.BindRequest(Route.prototype.redirectToShopcard));
+        router.get("/alisveris-sepetim/savereview", Route.BindRequest(Route.prototype.redirectToShopcard));
 
 
         router.get("/alisveris-sepetim/ship", Route.BindRequest(Route.prototype.shipViewRoute));
