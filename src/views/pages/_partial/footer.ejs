@@ -288,6 +288,39 @@
     </div>
 </div>
 
+
+<% if (!req.user) { %>
+
+<div class="modal fade" id="reset-password-modal" tabindex="-1" role="dialog">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title">Şifre Yenile</h4>
+                <button class="close" type="button" data-dismiss="modal" aria-label="Close"><span
+                        aria-hidden="true">&times;</span></button>
+            </div>
+            <div class="modal-body pt-3">
+         
+                    <div class="form-group">
+                        <label for="si-reset-email">Lütfen cep telefonunuzu giriniz</label>
+                        <input class="form-control" autocomplete="username" minlength="10" maxlength="30" type="text" id="si-reset-email"
+                            placeholder="cep telefonunuz" required>
+                        <div class="invalid-feedback">Geçersiz telefon
+            
+                        </div>
+                    </div>
+
+                    <button id= "reset-password-btn" onclick="sendResetLink()" class="btn btn-primary btn-block" type="button">Yenileme Bağlantısı Gönder</button>
+               
+
+
+            </div>
+        </div>
+    </div>
+</div>
+
+<% } %>
+
 <% include ../_partial/meat-guide-dialog %>
 
 <%}%>

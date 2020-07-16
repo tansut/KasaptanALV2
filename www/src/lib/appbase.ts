@@ -44,10 +44,10 @@ export default class AppBase {
         message ? $('#signupDlgMessage').html(message): $('#signupDlgMessage').html("")        
         this.activaTab("signup-tab");
         this.RunConfig['returnUrl'] = returnUrl;
-        $("#si-resetpwd").attr("href", "/reset-password");
-        if (returnUrl) {
-            $("#si-resetpwd").attr("href", "/reset-password?r=" + encodeURIComponent(returnUrl));
-        }        
+        // $("#si-resetpwd").attr("href", "/reset-password");
+        // if (returnUrl) {
+        //     $("#si-resetpwd").attr("href", "/reset-password?r=" + encodeURIComponent(returnUrl));
+        // }        
         showAd ? this.jq('#signupad').show(): this.jq('#signupad').hide();
         this.jq('#signin-modal').modal('show');
         $('#signin-modal').one('shown.bs.modal', function () {

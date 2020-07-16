@@ -52,6 +52,12 @@ export class App extends AppBase {
         $('html,body').animate({scrollTop: aTag.offset().top}, 'slow', "swing", handler);
     }
 
+    static async sendResetLink(phone: string) {
+        return await Backend.post('user/sendResetLink', {
+            phone: phone
+        })
+    }
+
     static jump(h){
         var url = location.href;               //Save down the URL without hash.
         location.href = ""+h;                 //Go to the target element.
@@ -89,7 +95,7 @@ export class App extends AppBase {
             let msg = err.response.data.msg || err.response.data;
             let type = err.response.data.type || 'danger';
             if (msg == 'Unauthorized')
-              msg = "<p>Kullanıcı adı/şifre doğru gözükmüyor.</p><p>Yeni şifre almak için <a href='/reset-password'>tıklayın</a>.</p>"
+              msg = "<p>Kullanıcı adı/şifre doğru gözükmüyor.</p><p>Şifrenizi mi unuttunuz? <br/> <a class='btn btn-sm btn-primary' onclick='resetPassword()'>Şifremi Unuttum</a></p>"
             App.alert(msg, type);
         }
         else App.alert(err.message || err, 'danger')

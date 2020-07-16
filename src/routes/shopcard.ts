@@ -29,6 +29,7 @@ import { all } from 'sequelize/types/lib/operators';
 import { OfferResponse, OfferRequest, FromTo } from '../lib/logistic/core';
 import { off } from 'process';
 import { GeoLocation } from '../models/geo';
+import email from '../lib/email';
 
 export default class Route extends ViewRouter {
     shopcard: ShopCard;
@@ -473,6 +474,10 @@ export default class Route extends ViewRouter {
 
             }));
         } catch (err) {
+            email.send('tansut@gmail.com', 'hata/CreateOrder: kasaptanAl.com', "error.ejs", {
+                text: err + '/' + err.message,
+                stack: err.stack
+            })
             await this.reviewViewRoute({ _usrmsg: { text: err.message || err.errorMessage } })
         }
     }

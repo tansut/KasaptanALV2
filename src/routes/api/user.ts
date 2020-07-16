@@ -52,6 +52,40 @@ export default class UserRoute extends ApiRouter {
     //     })
     // }
 
+    @Auth.Anonymous()
+    async sendResetLink() {
+        let phone: string = this.req.body.phone;
+        let user = await this.retrieveByEMailOrPhone(phone);
+        if (!user) throw Error('Geçersiz telefon no');
+        user.resetToken = crypto.randomBytes(32).toString('hex');;
+        let utc = Helper.UtcNow();
+        let res = moment(utc).add('minutes', 30).toDate()
+        user.resetTokenValid = res;
+        await user.save();
+        await Sms.send('90' + user.mphone, `KasaptanAl.com sifrenizi yenilemek icin ${this.url}/rpwd?k=${user.resetToken}`, true, null)
+        this.res.sendStatus(200);
+    }
+
+    @Auth.Anonymous()
+    async resetPasswordWithToken(resetKey: string, newPassword: string) {
+        let user = await UserModel.findOne({
+            where: {
+                resetToken: resetKey
+            }
+        })
+        if (!user) throw new Error('Geçersiz işlem numarası');
+        if (user.resetTokenValid) {
+            var diff =(user.resetTokenValid.getTime() - Helper.UtcNow().getTime()) / 1000;
+            let min = Math.round(diff /= 60);
+            if (min < 0) throw new Error('İşlem süresi dolmuş, lütfen yeniden şifre yenileme talebi iletin')
+        } else  throw new Error('Geçersiz işlem');
+        user.resetTokenValid = null;
+        user.resetToken = null;
+        user.setPassword(newPassword);
+        await user.save();
+        return user;
+    }
+
 
     cleanSMS(sms: string) {
         sms = sms || "";
@@ -488,8 +522,9 @@ export default class UserRoute extends ApiRouter {
         router.post("/user/signupverify", UserRoute.BindRequest(this.prototype.verifysignupRoute));
         router.post("/user/signupcomplete", UserRoute.BindRequest(this.prototype.completesignupRoute));
         router.post("/user/findsemt", UserRoute.BindRequest(this.prototype.findSemtRoute));
+        router.post("/user/sendResetLink", UserRoute.BindRequest(this.prototype.sendResetLink));
 
-
+        
         // router.post("/user/resetpassword", UserRoute.BindRequest('resetPasswordRequestRoute'));
         // router.post("/user/changepassword/:userid", UserRoute.BindRequest('changePasswordRoute'));
         // router.post("/user/useRefreshToken", UserRoute.BindRequest('useRefreshTokenRoute'));

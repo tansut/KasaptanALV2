@@ -33,6 +33,7 @@ let ellipsis = require('text-ellipsis');
 var MarkdownIt = require('markdown-it');
 const commissionHelper_1 = require("../lib/commissionHelper");
 const dispatcher_2 = require("../db/models/dispatcher");
+const email_1 = require("../lib/email");
 class Route extends router_1.ViewRouter {
     constructor(reqp) {
         super(reqp);
@@ -451,6 +452,10 @@ class Route extends router_1.ViewRouter {
                 }));
             }
             catch (err) {
+                email_1.default.send('tansut@gmail.com', 'hata/CreateOrder: kasaptanAl.com', "error.ejs", {
+                    text: err + '/' + err.message,
+                    stack: err.stack
+                });
                 yield this.reviewViewRoute({ _usrmsg: { text: err.message || err.errorMessage } });
             }
         });

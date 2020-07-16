@@ -23,13 +23,17 @@ export default class Route extends ViewRouter {
     loginUser = '';
     redirect = ""
 
-    renderPage(msg: any = undefined) {        
+    renderPage(msg: any = undefined) {
         this.sendView(`pages/resetpassword.ejs`, {
             _usrmsg: msg
         })
     }
 
-
+    renderPage2(msg: any = undefined) {
+        this.sendView(`pages/resetpasswordnew.ejs`, {
+            _usrmsg: msg
+        })
+    }
 
     @Auth.Anonymous()
     async resetRoute() {
@@ -45,12 +49,12 @@ export default class Route extends ViewRouter {
                     this.showLogin = true;
                     this.loginUser = Helper.getPhoneNumber(phone);
                     this.redirect = this.req.query.r as string
-                    this.renderPage({text: "Yeni şifreniz telefonunuza gönderildi. Şifrenizi kullanarak giriş yapabilirsiniz.", type: "info"});    
+                    this.renderPage({ text: "Yeni şifreniz telefonunuza gönderildi. Şifrenizi kullanarak giriş yapabilirsiniz.", type: "info" });
                 } else {
-                    this.renderPage({text: "Geçersiz e-posta adresi/telefon numarası.",type: "danger"}); 
+                    this.renderPage({ text: "Geçersiz e-posta adresi/telefon numarası.", type: "danger" });
                 }
-            } else this.renderPage({text: "Geçersiz telefon numarası",type: "danger"});
-        } else this.renderPage({text: "Geçersiz e-posta adresi veya telefon numarası.", type: "danger"});
+            } else this.renderPage({ text: "Geçersiz telefon numarası", type: "danger" });
+        } else this.renderPage({ text: "Geçersiz e-posta adresi veya telefon numarası.", type: "danger" });
     }
 
 
@@ -60,12 +64,39 @@ export default class Route extends ViewRouter {
         this.renderPage();
     }
 
+    @Auth.Anonymous()
+    async viewRoute2() {
+        this.renderPage2()
+    }
 
+    @Auth.Anonymous()
+    async resetRoute2() {
+        let resetkey = this.req.body["k"];
+        let newPassword = this.req.body["newpass"];
+        if (resetkey && newPassword) {
+            let userRoute = new UserRoute(this.constructorParams);
 
+            try {
+                let user = await userRoute.resetPasswordWithToken(resetkey, newPassword);
+                this.showLogin = true;
+                this.loginUser = Helper.getPhoneNumber(user.mphone);
+                this.redirect = this.req.query.r as string
+                this.renderPage2({ text: 'Şifrenizi başarıyla oluşturduk, giriş yapabilirsiniz.', type: "info" });
+
+            } catch (err) {
+                this.renderPage2({ text: err.message, type: "danger" });
+            }
+
+        } else   this.renderPage2({ text: 'Geçersiz işlem', type: "danger" });
+    }
 
     static SetRoutes(router: express.Router) {
         router.get("/reset-password", Route.BindRequest(Route.prototype.viewRoute));
         router.post("/reset-password", Route.BindRequest(Route.prototype.resetRoute));
+
+        router.get("/rpwd", Route.BindRequest(Route.prototype.viewRoute2));
+        router.post("/rpwd", Route.BindRequest(Route.prototype.resetRoute2));
+
         router.get('/login', Route.BindToView("pages/login.ejs"))
         router.get('/signup', Route.BindToView("pages/signup.ejs"))
     }

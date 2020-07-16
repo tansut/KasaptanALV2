@@ -36,6 +36,11 @@ class Route extends router_1.ViewRouter {
             _usrmsg: msg
         });
     }
+    renderPage2(msg = undefined) {
+        this.sendView(`pages/resetpasswordnew.ejs`, {
+            _usrmsg: msg
+        });
+    }
     resetRoute() {
         return __awaiter(this, void 0, void 0, function* () {
             let email = (this.req.body["recover-email"] || "").toLowerCase();
@@ -67,9 +72,37 @@ class Route extends router_1.ViewRouter {
             this.renderPage();
         });
     }
+    viewRoute2() {
+        return __awaiter(this, void 0, void 0, function* () {
+            this.renderPage2();
+        });
+    }
+    resetRoute2() {
+        return __awaiter(this, void 0, void 0, function* () {
+            let resetkey = this.req.body["k"];
+            let newPassword = this.req.body["newpass"];
+            if (resetkey && newPassword) {
+                let userRoute = new user_1.default(this.constructorParams);
+                try {
+                    let user = yield userRoute.resetPasswordWithToken(resetkey, newPassword);
+                    this.showLogin = true;
+                    this.loginUser = helper_1.default.getPhoneNumber(user.mphone);
+                    this.redirect = this.req.query.r;
+                    this.renderPage2({ text: 'Şifrenizi başarıyla oluşturduk, giriş yapabilirsiniz.', type: "info" });
+                }
+                catch (err) {
+                    this.renderPage2({ text: err.message, type: "danger" });
+                }
+            }
+            else
+                this.renderPage2({ text: 'Geçersiz işlem', type: "danger" });
+        });
+    }
     static SetRoutes(router) {
         router.get("/reset-password", Route.BindRequest(Route.prototype.viewRoute));
         router.post("/reset-password", Route.BindRequest(Route.prototype.resetRoute));
+        router.get("/rpwd", Route.BindRequest(Route.prototype.viewRoute2));
+        router.post("/rpwd", Route.BindRequest(Route.prototype.resetRoute2));
         router.get('/login', Route.BindToView("pages/login.ejs"));
         router.get('/signup', Route.BindToView("pages/signup.ejs"));
     }
@@ -86,4 +119,16 @@ __decorate([
     __metadata("design:paramtypes", []),
     __metadata("design:returntype", Promise)
 ], Route.prototype, "viewRoute", null);
+__decorate([
+    common_1.Auth.Anonymous(),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", []),
+    __metadata("design:returntype", Promise)
+], Route.prototype, "viewRoute2", null);
+__decorate([
+    common_1.Auth.Anonymous(),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", []),
+    __metadata("design:returntype", Promise)
+], Route.prototype, "resetRoute2", null);
 exports.default = Route;
