@@ -96,22 +96,26 @@ export default class Route extends ViewRouter {
     async savecardRoute() {
         this.shopcard = await ShopCard.createFromRequest(this.req);
         this.shopcard.note = this.req.body["order-comments"] || "";
-
-        await this.setDispatcher();
-        await this.shopcard.saveToRequest(this.req);
+        await this.setDispatcher();        
         if (this.shopcard.getOrderType() == 'kurban') {
             let man = ProductTypeFactory.create('kurban', this.shopcard.items[0].productTypeData) as KurbanProductManager;
             let ship = this.shopcard.shipment[Object.keys(this.shopcard.shipment)[0]];
             this.fillDefaultAddress();
             if (['0', '1', '2'].indexOf(man.teslimat) >= 0) {
                 ship.howTo = "take";
+                 await this.shopcard.saveToRequest(this.req);
                 this.renderPage("pages/checkout.adres-take.ejs")
             } else {
                 ship.howTo = "ship";
+                await this.shopcard.saveToRequest(this.req);
                 this.renderPage("pages/checkout.adres.ejs");
             }
         }
-        else this.renderPage("pages/checkout.ship.ejs");
+        else
+        {
+            await this.shopcard.saveToRequest(this.req);
+            this.renderPage("pages/checkout.ship.ejs");
+        } 
     }
 
 

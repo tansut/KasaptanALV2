@@ -90,22 +90,25 @@ class Route extends router_1.ViewRouter {
             this.shopcard = yield shopcard_1.ShopCard.createFromRequest(this.req);
             this.shopcard.note = this.req.body["order-comments"] || "";
             yield this.setDispatcher();
-            yield this.shopcard.saveToRequest(this.req);
             if (this.shopcard.getOrderType() == 'kurban') {
                 let man = common_1.ProductTypeFactory.create('kurban', this.shopcard.items[0].productTypeData);
                 let ship = this.shopcard.shipment[Object.keys(this.shopcard.shipment)[0]];
                 this.fillDefaultAddress();
                 if (['0', '1', '2'].indexOf(man.teslimat) >= 0) {
                     ship.howTo = "take";
+                    yield this.shopcard.saveToRequest(this.req);
                     this.renderPage("pages/checkout.adres-take.ejs");
                 }
                 else {
                     ship.howTo = "ship";
+                    yield this.shopcard.saveToRequest(this.req);
                     this.renderPage("pages/checkout.adres.ejs");
                 }
             }
-            else
+            else {
+                yield this.shopcard.saveToRequest(this.req);
                 this.renderPage("pages/checkout.ship.ejs");
+            }
         });
     }
     adresViewRoute() {
