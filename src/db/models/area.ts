@@ -31,7 +31,6 @@ export interface AreaLevels {
     
         { type: 'FULLTEXT', name: 'area_fts', fields: ['name', 'slug', 'keywords'] }]
 })
-
 class Area extends BaseModel<Area> {
     static async NormalizeNames() {
         let areas = await Area.findAll();

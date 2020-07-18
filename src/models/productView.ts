@@ -58,6 +58,7 @@ export interface ProductDispatcherView {
     priceInfo: string;
     userNote: string;
     takeOnly: boolean;
+    distance: number;
     priceSlice: PriceSlice [];
 }
 

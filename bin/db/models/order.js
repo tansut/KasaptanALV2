@@ -151,9 +151,10 @@ let Order = Order_1 = class Order extends basemodel_1.default {
                 o.dispatcherName = c.shipment[bi].dispatcher.name;
                 o.dispatcherType = c.shipment[bi].dispatcher.type;
                 o.dispatchertotalForFree = c.shipment[bi].dispatcher.totalForFree;
-                if (o.shipLocation && c.shipment[bi].dispatcher.location) {
-                    o.dispatcherDistance = helper_1.default.distance(o.shipLocation, c.shipment[bi].dispatcher.location);
-                }
+                o.dispatcherDistance = c.shipment[bi].dispatcher.km;
+                // if (o.shipLocation && c.shipment[bi].dispatcher.location) {
+                //     o.dispatcherDistance = Helper.distance(o.shipLocation, c.shipment[bi].dispatcher.location)
+                // }        
             }
             o.shipmentHowTo = c.shipment[bi].howTo;
             o.shipmentHowToText = c.shipment[bi].howToDesc;
@@ -358,7 +359,8 @@ __decorate([
 ], Order.prototype, "shipLocationAccuracy", void 0);
 __decorate([
     sequelize_typescript_1.Column({
-        allowNull: true
+        allowNull: true,
+        type: sequelize_typescript_1.DataType.DECIMAL(5, 1)
     }),
     __metadata("design:type", Number)
 ], Order.prototype, "dispatcherDistance", void 0);

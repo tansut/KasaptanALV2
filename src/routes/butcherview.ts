@@ -31,6 +31,7 @@ import SubCategory from '../db/models/subcategory';
 import { LogisticProvider, PriceSlice, FromTo } from '../lib/logistic/core';
 import  DispatcherApi from './api/dispatcher';
 import { Provider } from 'nconf';
+import AreaApi from './api/area'
 
 
 
@@ -224,7 +225,9 @@ export default class Route extends ViewRouter {
             })
             this.logisticsProvider = dispatchers.length ? dispatchers[0].provider: null;
             if (this.logisticsProvider) {
+                
                 let l3 = await Area.findByPk(this.req.prefAddr.level3Id);
+                let areaInfo = await new AreaApi(this.constructorParams).ensureDistance(butcher, l3);                
                 let fromTo: FromTo = {                    
                     start: this.butcher.location,
                     finish: l3.location,
@@ -232,7 +235,7 @@ export default class Route extends ViewRouter {
                     sId: this.butcher.id.toString()
                 }
                 this.logisticsPriceSlice = await this.logisticsProvider.priceSlice(fromTo);
-                this.distance = await this.logisticsProvider.distance(fromTo)
+                this.distance = areaInfo ? (areaInfo.kmActive || areaInfo.kmGoogle || areaInfo.kmDirect * 1.5) : await this.logisticsProvider.distance(fromTo)
             }
         }
         

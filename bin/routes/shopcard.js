@@ -231,7 +231,7 @@ class Route extends router_1.ViewRouter {
                             type: provider.options.dispatcher.type,
                             min: provider.options.dispatcher.min,
                             takeOnly: provider.options.dispatcher.takeOnly,
-                            location: provider.options.dispatcher.butcher ? provider.options.dispatcher.butcher.location : null,
+                            km: 0,
                         };
                         let offer, req;
                         if (order && order.shipLocation) {
@@ -241,6 +241,7 @@ class Route extends router_1.ViewRouter {
                                 provider.lastOffer = offer;
                                 dispatcher.feeOffer = provider.lastOffer.totalFee;
                                 dispatcher.fee = provider.lastOffer.customerFee;
+                                dispatcher.km = provider.lastOffer.distance;
                             }
                             else {
                                 // dispatcher = this.shopcard.shipment[o].dispatcher = null;
@@ -260,7 +261,9 @@ class Route extends router_1.ViewRouter {
                             provider: provider,
                             slices: yield provider.priceSlice({
                                 start: provider.options.dispatcher.butcher.location,
-                                finish: area.location
+                                sId: provider.options.dispatcher.butcher.id.toString(),
+                                finish: area.location,
+                                fId: area.id.toString()
                             })
                         };
                         if (provider.options.dispatcher.min > this.shopcard.butchers[o].subTotal) {

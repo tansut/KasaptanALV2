@@ -248,7 +248,8 @@ export default class Route extends ViewRouter {
                         type: provider.options.dispatcher.type,
                         min: provider.options.dispatcher.min,
                         takeOnly: provider.options.dispatcher.takeOnly,
-                        location: provider.options.dispatcher.butcher ? <any>provider.options.dispatcher.butcher.location : null,
+                        km: 0,
+                        //location: provider.options.dispatcher.butcher ? <any>provider.options.dispatcher.butcher.location : null,
                     }
                     let offer: OfferResponse, req: OfferRequest;
                     if (order && order.shipLocation) {
@@ -258,6 +259,7 @@ export default class Route extends ViewRouter {
                             provider.lastOffer = offer;
                             dispatcher.feeOffer = provider.lastOffer.totalFee;
                             dispatcher.fee = provider.lastOffer.customerFee;
+                            dispatcher.km = provider.lastOffer.distance;
                         } else {
                             // dispatcher = this.shopcard.shipment[o].dispatcher = null;
                             // this.shopcard.shipment[o].howTo = 'take';
@@ -278,7 +280,9 @@ export default class Route extends ViewRouter {
                         provider: provider,
                         slices: await provider.priceSlice({
                             start: provider.options.dispatcher.butcher.location,
-                            finish: area.location
+                            sId: provider.options.dispatcher.butcher.id.toString(),
+                            finish: area.location,
+                            fId: area.id.toString()
                           })
                     } 
 

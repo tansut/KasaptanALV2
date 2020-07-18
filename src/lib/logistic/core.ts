@@ -16,6 +16,7 @@ import { GeoLocation } from '../../models/geo';
 import Dispatcher from '../../db/models/dispatcher';
 import { off } from 'process';
 import Area from '../../db/models/area';
+import ButcherArea from '../../db/models/butcherarea';
 
 const paymentConfig = require(path.join(config.projectDir, `logistic.json`));
 
@@ -26,14 +27,13 @@ export interface CustomerPriceParams {
 }
 
 export interface CustomerPriceConfig {
-    offerPrice?: number;
-    pricePerKM?: number;
-    priceStartsAt?: number;
-    freeShipPerKM?: number;
-    freeShipOrderTotal?: number;
-    contribitionRatio?: number;
-    maxDistance?: number;
+    kmPrice?: number;
+    kmMin?: number;
+    freeShip?: number;
+    contrib?: number;
+    kmMax?: number;
     minOrder?: number;
+    kmMultiplier?: number;
 }
 
 export enum VehicleType {
@@ -140,7 +140,26 @@ export class LogisticProvider {
     description: string;
 
     async distance(ft: FromTo) {
-        return Helper.distance(ft.start, ft.finish);
+        let saved: ButcherArea = null;
+        if (ft.sId && ft.fId) {
+        saved = await ButcherArea.findOne({
+            where: {
+                butcherid: parseInt(ft.sId),
+                areaid: parseInt(ft.fId),
+                
+            },
+
+            include:[{
+                model: Area,
+            }]
+        })
+        }
+        let km = 0;
+        if (saved) {
+            let distanceDif = Helper.distance(ft.finish, saved.area.location);
+            km = (saved.kmActive || saved.kmGoogle || saved.kmDirect * 1.5) + distanceDif;
+        }
+        return km || Helper.distance(ft.start, ft.finish);
     }
 
 
@@ -226,6 +245,7 @@ export class LogisticProvider {
                     contactPhone: o.butcher.phone,
                     lat: o.butcher.lat,
                     lng: o.butcher.lng,
+                    id: o.butcher.id.toString(),
                     orderId: o.ordernum,
                     note: "Lütfen kasaba uğrayıp müşteri paketini alın: " + o.butcher.address,
                 },

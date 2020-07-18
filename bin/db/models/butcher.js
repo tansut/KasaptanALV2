@@ -38,6 +38,12 @@ let Butcher = Butcher_1 = class Butcher extends basemodel_1.default {
     set gpPlace(value) {
         this.setDataValue('gpplacejson', Buffer.from(JSON.stringify(value), "utf-8"));
     }
+    get logisticSetings() {
+        return this.logisticjson ? JSON.parse(this.getDataValue('logisticjson')) : null;
+    }
+    set logisticSetings(value) {
+        this.setDataValue('logisticjson', JSON.stringify(value));
+    }
     getPuanData(orderType) {
         return this.enablePuan ? {
             name: 'Kasap Kart Puanı',
@@ -269,6 +275,12 @@ __decorate([
     }),
     __metadata("design:type", Object)
 ], Butcher.prototype, "location", void 0);
+__decorate([
+    sequelize_typescript_1.Column({
+        type: sequelize_typescript_1.DataType.TEXT
+    }),
+    __metadata("design:type", String)
+], Butcher.prototype, "logisticjson", void 0);
 __decorate([
     sequelize_typescript_1.Column({
         allowNull: false,

@@ -17,6 +17,19 @@ export class ButcherManualLogistics extends LogisticProvider {
 
 
     async requestOffer(req: OfferRequest): Promise<OfferResponse> {
+        req.distance  = await this.distance({
+            start: {
+                type: 'Point',
+                coordinates: [req.points[0].lat, req.points[0].lng]
+            },
+            sId: req.points[0].id,
+
+            finish: {
+                type: 'Point',
+                coordinates: [req.points[1].lat, req.points[1].lng],
+            },
+            fId: req.points[1].id,
+        });
         let fee = 0.00;
         if (this.options.dispatcher.totalForFree <= 0) {
             fee = this.options.dispatcher.fee
@@ -82,25 +95,26 @@ export class ButcherAutoLogistics extends LogisticProvider {
     }
 
     getCustomerFeeConfig(): CustomerPriceConfig {
+
+        let butcherConfig = this.options.dispatcher.butcher.logisticSetings || {};
+
         let config: CustomerPriceConfig = {
-            contribitionRatio: 0.04,
-            freeShipPerKM: 30.00,
-            pricePerKM: 1.5,
-            priceStartsAt: 5.00,
-            maxDistance: 50,
-            minOrder: 100.00,
-            freeShipOrderTotal: 400.00
+            contrib: 0.05,
+            kmPrice: 1.30,
+            kmMin: 5,
+            kmMax: 25,
+            kmMultiplier: 0.4,
+            minOrder: 100.00
         }
 
-        return config;
+        return butcherConfig["butcher/auto"] || config;
     }
 
     async requestOffer(req: OfferRequest): Promise<OfferResponse> {
-        let distance = await this.distance({
+        req.distance  = await this.distance({
             start: {
                 type: 'Point',
-                coordinates: [req.points[0].lat, req.points[0].lng],
-
+                coordinates: [req.points[0].lat, req.points[0].lng]
             },
             sId: req.points[0].id,
 
@@ -110,16 +124,14 @@ export class ButcherAutoLogistics extends LogisticProvider {
             },
             fId: req.points[1].id,
         });
-        req.distance = distance;
-
         let config = this.getCustomerFeeConfig();
 
         let res: OfferResponse = {
             orderTotal: req.orderTotal,
-            totalFee: Helper.asCurrency(config.pricePerKM * distance),
+            totalFee: Helper.asCurrency(config.kmPrice * req.distance),
             points: req.points,
-            customerFee: Helper.asCurrency(config.pricePerKM * distance),
-            distance: distance
+            customerFee: Helper.asCurrency(config.kmPrice * req.distance),
+            distance: req.distance
         }
         return this.calculateCustomerFee(res)
     }
@@ -131,21 +143,30 @@ export class ButcherAutoLogistics extends LogisticProvider {
 
     calculateCustomerFee(offer: OfferResponse | OrderResponse) {
         let input: CustomerPriceConfig = this.getCustomerFeeConfig();
-        let fee = offer.totalFee;
-        if (fee >=0 && input.maxDistance && offer.distance > input.maxDistance)
+        input.kmMax = input.kmMax || this.dispatcher ? this.dispatcher.butcher.radiusAsKm : 25;
+
+        let distance = offer.distance < input.kmMin ? input.kmMin: offer.distance;
+        let orderTotal = offer.orderTotal < input.minOrder ? input.minOrder: offer.orderTotal;
+
+
+        let maxMinKmDif = input.kmMax - input.kmMin;
+        let distanceDif = distance - input.kmMin;
+        let kmRatio = distanceDif / maxMinKmDif;
+        let kmPrice = Helper.asCurrency(input.kmPrice * (1.00 + kmRatio * input.kmMultiplier));
+        let regCost = Helper.asCurrency((distance - input.kmMin) * kmPrice);
+        let fee = regCost;
+
+        if (fee >=0 && input.kmMax && distance > input.kmMax)
            fee = -1;
         if (fee >=0 && input.minOrder && offer.orderTotal < input.minOrder)
-            fee = -1;
-        if (fee >=0 && input.priceStartsAt && offer.distance < input.priceStartsAt)
-            fee = 0.00;        
-        if (fee <=0 && input.freeShipOrderTotal && input.freeShipOrderTotal <= offer.orderTotal)
-            fee = 0.00
+            fee = -1;    
+        if (fee <=0 && input.freeShip && input.freeShip <= offer.orderTotal)
+            fee = 0.00;
+
         if (fee > 0.00) {
-            let regular = offer.totalFee;
-            let contrib = input.contribitionRatio ? Helper.asCurrency(offer.orderTotal * input.contribitionRatio) : 0.00;
-            let free = input.freeShipPerKM ? (input.freeShipPerKM * offer.distance) : 0.00;
-            if (offer.orderTotal >= free) fee = 0;
-            let calc = Math.max(0, regular - contrib);
+            let contribDif = offer.orderTotal - input.minOrder;
+            let contrib = input.contrib ? Helper.asCurrency(contribDif * input.contrib) : 0.00;
+            let calc = Math.max(0.00, regCost - contrib);
             fee = this.roundCustomerFee(calc);
         }
         if (fee >=0.00) {

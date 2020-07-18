@@ -7,7 +7,6 @@ import Helper from '../lib/helper';
 import Resource from '../db/models/resource';
 import ResourceRoute from './resource';
 import * as sq from 'sequelize';
-
 import * as path from "path"
 import * as Jimp2 from 'jimp'
 const Jimp = <Jimp2>require('jimp');
@@ -33,6 +32,7 @@ import Review from '../db/models/review';
 import Product from '../db/models/product';
 import { PuanCalculator } from '../lib/commissionHelper';
 import { FromTo } from '../lib/logistic/core';
+import AreaApi from './api/area'
 
 interface ButcherSelection {
     best: Dispatcher,
@@ -113,6 +113,7 @@ export default class Route extends ViewRouter {
         }
 
         let serving = await api.getDispatchers(q);
+        await new AreaApi(this.constructorParams).ensureDistances(serving.map(s=>s.butcher), await Area.findByPk(adr.level3Id));
 
         let takeOnly = serving.filter(p => p.takeOnly == true);
         let servingL3 = serving.filter(p => p.toarealevel == 3 && !p.takeOnly);
@@ -213,7 +214,8 @@ export default class Route extends ViewRouter {
             let l3 = await Area.findByPk(this.req.prefAddr.level3Id)
             fromTo = {
                 start: null,
-                finish: l3.location
+                finish: l3.location,
+                fId: l3.id.toString()
             }
         }
 
@@ -225,6 +227,7 @@ export default class Route extends ViewRouter {
             if (view.butcher && (butcher.id != view.butcher.id)) {
                 let bp = butcher.products.find(bp => bp.productid == product.id);
                 fromTo.start = butcher.location;
+                fromTo.sId = butcher.id.toString();
                 view.alternateButchers.push({
                     butcher: {
                         id: butcher.id,
@@ -246,6 +249,7 @@ export default class Route extends ViewRouter {
                         min: dispatcher.min,
                         totalForFree: dispatcher.totalForFree,
                         type: dispatcher.type,
+                        distance: await dispatcher.provider.distance(fromTo),
                         priceSlice: await dispatcher.provider.priceSlice(fromTo),
                         priceInfo: dispatcher.priceInfo,
                         userNote: dispatcher.userNote,
@@ -261,6 +265,7 @@ export default class Route extends ViewRouter {
                 })
             } else if (view.butcher && view.butcher.id == s.butcher.id) {
                 fromTo.start = s.butcher.location;
+                fromTo.sId = s.butcher.id.toString();
                 view.dispatcher = dispatcher ? {
                     id: dispatcher.id,
                     fee: dispatcher.fee,
@@ -268,6 +273,7 @@ export default class Route extends ViewRouter {
                     totalForFree: dispatcher.totalForFree,
                     type: dispatcher.type,
                     priceInfo: dispatcher.priceInfo,
+                    distance: await dispatcher.provider.distance(fromTo),
                     priceSlice: await dispatcher.provider.priceSlice(fromTo),                    
                     userNote: dispatcher.userNote,
                     takeOnly: dispatcher.takeOnly

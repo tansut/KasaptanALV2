@@ -223,18 +223,44 @@ class BanabikuryeProvider extends core_1.LogisticProvider {
     requestOffer(req) {
         return __awaiter(this, void 0, void 0, function* () {
             let request = this.toOfferRequest(req);
+            req.distance = yield this.distance({
+                start: {
+                    type: 'Point',
+                    coordinates: [req.points[0].lat, req.points[0].lng]
+                },
+                sId: req.points[0].id,
+                finish: {
+                    type: 'Point',
+                    coordinates: [req.points[1].lat, req.points[1].lng],
+                },
+                fId: req.points[1].id,
+            });
             let result = yield this.post("calculate-order", request);
             let resp = this.fromOfferResponse(result.data);
             resp.orderTotal = req.orderTotal;
+            resp.distance = req.distance;
             return this.calculateCustomerFee(resp);
         });
     }
     createOrder(req) {
         return __awaiter(this, void 0, void 0, function* () {
+            req.distance = yield this.distance({
+                start: {
+                    type: 'Point',
+                    coordinates: [req.points[0].lat, req.points[0].lng]
+                },
+                sId: req.points[0].id,
+                finish: {
+                    type: 'Point',
+                    coordinates: [req.points[1].lat, req.points[1].lng],
+                },
+                fId: req.points[1].id,
+            });
             let request = this.toOrderRequest(req);
             let result = yield this.post("create-order", request);
             let resp = this.fromOrderResponse(result.data);
             resp.orderTotal = req.orderTotal;
+            resp.distance = req.distance;
             return this.calculateCustomerFee(resp);
         });
     }

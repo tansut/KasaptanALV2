@@ -35,6 +35,7 @@ const config_1 = require("../config");
 const review_1 = require("../db/models/review");
 const sq = require("sequelize");
 const dispatcher_1 = require("./api/dispatcher");
+const area_2 = require("./api/area");
 class Route extends router_1.ViewRouter {
     constructor() {
         super(...arguments);
@@ -161,6 +162,7 @@ class Route extends router_1.ViewRouter {
                 this.logisticsProvider = dispatchers.length ? dispatchers[0].provider : null;
                 if (this.logisticsProvider) {
                     let l3 = yield area_1.default.findByPk(this.req.prefAddr.level3Id);
+                    let areaInfo = yield new area_2.default(this.constructorParams).ensureDistance(butcher, l3);
                     let fromTo = {
                         start: this.butcher.location,
                         finish: l3.location,
@@ -168,7 +170,7 @@ class Route extends router_1.ViewRouter {
                         sId: this.butcher.id.toString()
                     };
                     this.logisticsPriceSlice = yield this.logisticsProvider.priceSlice(fromTo);
-                    this.distance = yield this.logisticsProvider.distance(fromTo);
+                    this.distance = areaInfo ? (areaInfo.kmActive || areaInfo.kmGoogle || areaInfo.kmDirect * 1.5) : yield this.logisticsProvider.distance(fromTo);
                 }
             }
             this.res.render('pages/butcher', this.viewData({ pageThumbnail: pageThumbnail, pageTitle: pageTitle, pageDescription: pageDescription, butcher: butcher, images: images }));

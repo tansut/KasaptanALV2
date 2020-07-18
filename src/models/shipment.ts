@@ -51,7 +51,8 @@ export interface DispatcherView {
     totalForFree: number
     min: number;
     takeOnly: boolean;
-    location: GeoLocation;
+    //location: GeoLocation;
+    km: number;
 }
 
 export class Shipment {

@@ -55,10 +55,11 @@ class="gallery-item-caption"><%= butcherVideo.title %></span></a>
 
 
           <money-view class="font-size-sm text-accent" :unit="product.kgPrice ? 'Kg': selectedUnit.unitTitle"  :money="product.kgPrice || selectedUnit.unitPrice"></money-view>
-
-          <!-- <span class="d-block text-muted font-size-xs">
-             <%= view.dispatcher ? view.dispatcher.userNote:""%> 
-          </span> -->
+          <%  if (view.dispatcher && view.dispatcher.distance) { %>
+           <span class="d-block text-secondary font-size-xs">
+             <%= view.dispatcher.distance.toFixed(0) %> km
+          </span>
+          <% } %>
           <%  if (view.dispatcher && view.dispatcher.priceSlice && false) { %>
           <div class="dispatch-info text-muted text-dark font-size-sm">
 

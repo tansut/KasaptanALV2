@@ -138,6 +138,20 @@ class Butcher extends BaseModel<Butcher> {
     location: GeoLocation;
 
     @Column({
+        type: DataType.TEXT
+    })
+    logisticjson: string
+
+    get logisticSetings(): any {
+        return this.logisticjson ? JSON.parse(this.getDataValue('logisticjson')) : null
+    }
+
+    set logisticSetings(value: any) {
+        this.setDataValue('logisticjson', JSON.stringify(value));
+    }
+
+
+    @Column({
         allowNull: false,
         defaultValue: "none"
     })

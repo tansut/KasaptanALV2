@@ -211,7 +211,8 @@ class Order extends BaseModel<Order> {
     // dispatcherLocation: GeoLocation;    
 
     @Column({
-        allowNull: true
+        allowNull: true,
+        type: DataType.DECIMAL(5, 1)
     })
     dispatcherDistance: number;    
 
@@ -475,10 +476,11 @@ class Order extends BaseModel<Order> {
             o.dispatcherFeeOffer = c.shipment[bi].dispatcher.feeOffer;
             o.dispatcherName = c.shipment[bi].dispatcher.name;
             o.dispatcherType = c.shipment[bi].dispatcher.type;
-            o.dispatchertotalForFree = c.shipment[bi].dispatcher.totalForFree;         
-            if (o.shipLocation && c.shipment[bi].dispatcher.location) {
-                o.dispatcherDistance = Helper.distance(o.shipLocation, c.shipment[bi].dispatcher.location)
-            }        
+            o.dispatchertotalForFree = c.shipment[bi].dispatcher.totalForFree;     
+            o.dispatcherDistance =  c.shipment[bi].dispatcher.km;    
+            // if (o.shipLocation && c.shipment[bi].dispatcher.location) {
+            //     o.dispatcherDistance = Helper.distance(o.shipLocation, c.shipment[bi].dispatcher.location)
+            // }        
         }
 
         o.shipmentHowTo = c.shipment[bi].howTo;

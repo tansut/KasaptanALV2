@@ -36,7 +36,8 @@ class Helper {
             if (unit == "N") {
                 dist = dist * 0.8684;
             }
-            return dist;
+            var rounded = Math.round(dist * 10) / 10;
+            return rounded;
         }
     }
     static asCurrency(n) {

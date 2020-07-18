@@ -39,6 +39,7 @@ const config_1 = require("../config");
 const sequelize_1 = require("sequelize");
 const productcategory_1 = require("../db/models/productcategory");
 const commissionHelper_1 = require("../lib/commissionHelper");
+const area_2 = require("./api/area");
 class Route extends router_1.ViewRouter {
     constructor() {
         super(...arguments);
@@ -106,6 +107,7 @@ class Route extends router_1.ViewRouter {
                 orderType: product.productType
             };
             let serving = yield api.getDispatchers(q);
+            yield new area_2.default(this.constructorParams).ensureDistances(serving.map(s => s.butcher), yield area_1.default.findByPk(adr.level3Id));
             let takeOnly = serving.filter(p => p.takeOnly == true);
             let servingL3 = serving.filter(p => p.toarealevel == 3 && !p.takeOnly);
             let servingL2 = serving.filter(p => p.toarealevel == 2 && !p.takeOnly && (servingL3.find(m => m.butcher.id == p.butcher.id) == null));
@@ -185,7 +187,8 @@ class Route extends router_1.ViewRouter {
                 let l3 = yield area_1.default.findByPk(this.req.prefAddr.level3Id);
                 fromTo = {
                     start: null,
-                    finish: l3.location
+                    finish: l3.location,
+                    fId: l3.id.toString()
                 };
             }
             for (let i = 0; i < serving.length; i++) {
@@ -195,6 +198,7 @@ class Route extends router_1.ViewRouter {
                 if (view.butcher && (butcher.id != view.butcher.id)) {
                     let bp = butcher.products.find(bp => bp.productid == product.id);
                     fromTo.start = butcher.location;
+                    fromTo.sId = butcher.id.toString();
                     view.alternateButchers.push({
                         butcher: {
                             id: butcher.id,
@@ -216,6 +220,7 @@ class Route extends router_1.ViewRouter {
                             min: dispatcher.min,
                             totalForFree: dispatcher.totalForFree,
                             type: dispatcher.type,
+                            distance: yield dispatcher.provider.distance(fromTo),
                             priceSlice: yield dispatcher.provider.priceSlice(fromTo),
                             priceInfo: dispatcher.priceInfo,
                             userNote: dispatcher.userNote,
@@ -232,6 +237,7 @@ class Route extends router_1.ViewRouter {
                 }
                 else if (view.butcher && view.butcher.id == s.butcher.id) {
                     fromTo.start = s.butcher.location;
+                    fromTo.sId = s.butcher.id.toString();
                     view.dispatcher = dispatcher ? {
                         id: dispatcher.id,
                         fee: dispatcher.fee,
@@ -239,6 +245,7 @@ class Route extends router_1.ViewRouter {
                         totalForFree: dispatcher.totalForFree,
                         type: dispatcher.type,
                         priceInfo: dispatcher.priceInfo,
+                        distance: yield dispatcher.provider.distance(fromTo),
                         priceSlice: yield dispatcher.provider.priceSlice(fromTo),
                         userNote: dispatcher.userNote,
                         takeOnly: dispatcher.takeOnly

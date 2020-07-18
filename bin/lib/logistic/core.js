@@ -14,6 +14,8 @@ var fs = require('fs');
 const config_1 = require("../../config");
 const path = require("path");
 const helper_1 = require("../helper");
+const area_1 = require("../../db/models/area");
+const butcherarea_1 = require("../../db/models/butcherarea");
 const paymentConfig = require(path.join(config_1.default.projectDir, `logistic.json`));
 var VehicleType;
 (function (VehicleType) {
@@ -26,7 +28,24 @@ class LogisticProvider {
     }
     distance(ft) {
         return __awaiter(this, void 0, void 0, function* () {
-            return helper_1.default.distance(ft.start, ft.finish);
+            let saved = null;
+            if (ft.sId && ft.fId) {
+                saved = yield butcherarea_1.default.findOne({
+                    where: {
+                        butcherid: parseInt(ft.sId),
+                        areaid: parseInt(ft.fId),
+                    },
+                    include: [{
+                            model: area_1.default,
+                        }]
+                });
+            }
+            let km = 0;
+            if (saved) {
+                let distanceDif = helper_1.default.distance(ft.finish, saved.area.location);
+                km = (saved.kmActive || saved.kmGoogle || saved.kmDirect * 1.5) + distanceDif;
+            }
+            return km || helper_1.default.distance(ft.start, ft.finish);
         });
     }
     roundCustomerFee(x) {
@@ -105,6 +124,7 @@ class LogisticProvider {
                     contactPhone: o.butcher.phone,
                     lat: o.butcher.lat,
                     lng: o.butcher.lng,
+                    id: o.butcher.id.toString(),
                     orderId: o.ordernum,
                     note: "Lütfen kasaba uğrayıp müşteri paketini alın: " + o.butcher.address,
                 },

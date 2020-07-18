@@ -15,10 +15,75 @@ import * as Jimp2 from 'jimp'
 const Jimp = <Jimp2>require('jimp');
 import * as path from "path"
 import { parse } from 'querystring';
+import ButcherArea from '../../db/models/butcherarea';
+import { Google } from '../../lib/google';
+import email from '../../lib/email';
 
 export default class Route extends ApiRouter {
 
+    async ensureDistances(butchers: Butcher [], area: Area) {    
+        let list = await ButcherArea.findAll({
+            where: {
+                areaid: area.id,
+                butcherid:butchers.map(p=>p.id)
+            } 
+        });
+        if (list.length == butchers.length) return list;
+        for(let i = 0; i < butchers.length;i++) {
+            let found = list.find(o=>o.butcherid == butchers[i].id);
+            if (!found) {     
+                try {
+                    list.push(await this.create(butchers[i], area));
+                } catch(err){
+                    email.send('tansut@gmail.com', 'hata/ensureDistances', "error.ejs", {
+                        text: err.message,
+                        stack: err.stack
+                    });                     
+                }                           
+            }
+        }   
+        return list;     
+    }
 
+    async create(butcher: Butcher, area: Area) {
+        let itemToAdd = new ButcherArea();
+        itemToAdd.butcherid = butcher.id;
+        itemToAdd.areaid = area.id;
+        itemToAdd.kmDirect = Helper.distance(butcher.location, area.location);
+        let googleResult = await Google.distanceMatrix(butcher.location, area.location);
+        itemToAdd.googleData = JSON.stringify(googleResult || {});
+        let result = await Google.distanceInKM(googleResult);
+        itemToAdd.kmGoogle = result.val / 1000;
+        itemToAdd.kmActive = itemToAdd.kmGoogle || (itemToAdd.kmDirect * 1.5);
+        itemToAdd.name = butcher.name + '/' + area.slug;
+        return await itemToAdd.save()
+    }
+
+    async ensureDistance(butcher: Butcher, area: Area) {
+        let existing = await ButcherArea.findOne({
+            where: {
+                areaid: area.id,
+                butcherid: butcher.id
+            } 
+        })
+        if (!existing) {
+            try {
+                existing = await this.create(butcher, area)
+            } catch(err) {
+                email.send('tansut@gmail.com', 'hata/ensureDistance', "error.ejs", {
+                    text: err.message,
+                    stack: err.stack
+                });   
+                return null;  
+                // return {
+                //     val: Helper.distance(butcher.location, area.location) * 1.5,
+                //     max: Helper.distance(butcher.location, area.location) * 2,
+                //     min: Helper.distance(butcher.location, area.location),
+                // }               
+            }
+        }  
+        return existing;
+    }
 
 
     @Auth.Anonymous()
