@@ -15,6 +15,8 @@ const area_1 = require("../../db/models/area");
 const dispatcher_1 = require("../../db/models/dispatcher");
 const butcherproduct_1 = require("../../db/models/butcherproduct");
 const sequelize_1 = require("sequelize");
+const area_2 = require("./area");
+const _ = require("lodash");
 class Route extends router_1.ApiRouter {
     _where(where, address) {
         return __awaiter(this, void 0, void 0, function* () {
@@ -192,13 +194,17 @@ class Route extends router_1.ApiRouter {
             });
             let ugly = {}, result = [];
             let l3 = yield area_1.default.findByPk(q.adr.level3Id);
+            let areaApi = new area_2.default(this.constructorParams);
+            let butcherAreaData = yield areaApi.ensureDistances(res.map(s => s.butcher), l3);
             for (let i = 0; i < res.length; i++) {
+                res[i].butcherArea = butcherAreaData.find(ad => ad.butcherid == res[i].butcherid);
                 let provider = res[i].setProvider(q.useLevel1, l3, q.orderType);
                 if (provider && !ugly[res[i].butcherid]) {
                     ugly[res[i].butcherid] = res[i];
                     result.push(res[i]);
                 }
             }
+            result = _.sortBy(result, ["butcherArea.kmActive"]);
             return result;
         });
     }
@@ -273,91 +279,89 @@ class Route extends router_1.ApiRouter {
             return res != null;
         });
     }
-    getButchersSelingAndDispatches(address, product, useLevel1) {
-        return __awaiter(this, void 0, void 0, function* () {
-            let where = {
-                type: 'butcher'
-            };
-            where = yield this._where(where, address);
-            where['$butcher.products.productid$'] = product.id;
-            where['$butcher.products.enabled$'] = true;
-            let w = [{
-                    '$butcher.products.kgPrice$': {
-                        [sequelize_1.Op.gt]: 0.0
-                    }
-                },
-                {
-                    [sequelize_1.Op.and]: [
-                        {
-                            '$butcher.products.unit1price$': {
-                                [sequelize_1.Op.gt]: 0.0
-                            }
-                        },
-                        {
-                            '$butcher.products.unit1enabled$': true
-                        }
-                    ]
-                },
-                {
-                    [sequelize_1.Op.and]: [
-                        {
-                            '$butcher.products.unit2price$': {
-                                [sequelize_1.Op.gt]: 0.0
-                            }
-                        },
-                        {
-                            '$butcher.products.unit2enabled$': true
-                        }
-                    ]
-                },
-                {
-                    [sequelize_1.Op.and]: [
-                        {
-                            '$butcher.products.unit3price$': {
-                                [sequelize_1.Op.gt]: 0.0
-                            }
-                        },
-                        {
-                            '$butcher.products.unit3enabled$': true
-                        }
-                    ]
-                }
-            ];
-            where[sequelize_1.Op.or].push(w);
-            // if (!useLevel1) {
-            //     where[Op.and] = where[Op.and] || []
-            //     where[Op.and].push({
-            //         toarealevel: {
-            //             [Op.ne]: 1
-            //         }
-            //     })
-            // }
-            let res = yield dispatcher_1.default.findAll({
-                where: where,
-                include: [
-                    {
-                        model: butcher_1.default,
-                        as: 'butcher',
-                        include: [{
-                                model: butcherproduct_1.default
-                            }
-                        ]
-                    },
-                ],
-                order: [["toarealevel", "DESC"]]
-            });
-            let ugly = {}, result = [];
-            for (let i = 0; i < res.length; i++) {
-                let l3 = yield area_1.default.findByPk(address.level3Id);
-                //let provider = this.getProvider(res[i], useLevel1, l3)
-                if (!ugly[res[i].butcherid]) {
-                    ugly[res[i].butcherid] = res[i];
-                    result.push(res[i]);
-                }
-            }
-            return result;
-        });
-    }
+    // async getButchersSelingAndDispatches(address: PreferredAddress, product: Product, useLevel1: boolean) {
+    //     let where = {
+    //         type: 'butcher'
+    //     }
+    //     where = await this._where(where, address);
+    //     where['$butcher.products.productid$'] = product.id;
+    //     where['$butcher.products.enabled$'] = true;
+    //     let w = [{
+    //         '$butcher.products.kgPrice$': {
+    //             [Op.gt]: 0.0
+    //         }
+    //     },
+    //     {
+    //         [Op.and]: [
+    //             {
+    //                 '$butcher.products.unit1price$': {
+    //                     [Op.gt]: 0.0
+    //                 }
+    //             },
+    //             {
+    //                 '$butcher.products.unit1enabled$': true
+    //             }
+    //         ]
+    //     },
+    //     {
+    //         [Op.and]: [
+    //             {
+    //                 '$butcher.products.unit2price$': {
+    //                     [Op.gt]: 0.0
+    //                 }
+    //             },
+    //             {
+    //                 '$butcher.products.unit2enabled$': true
+    //             }
+    //         ]
+    //     },
+    //     {
+    //         [Op.and]: [
+    //             {
+    //                 '$butcher.products.unit3price$': {
+    //                     [Op.gt]: 0.0
+    //                 }
+    //             },
+    //             {
+    //                 '$butcher.products.unit3enabled$': true
+    //             }
+    //         ]
+    //     }
+    //     ]
+    //     where[Op.or].push(w);
+    //     // if (!useLevel1) {
+    //     //     where[Op.and] = where[Op.and] || []
+    //     //     where[Op.and].push({
+    //     //         toarealevel: {
+    //     //             [Op.ne]: 1
+    //     //         }
+    //     //     })
+    //     // }
+    //     let res = await Dispatcher.findAll({
+    //         where: where,
+    //         include: [
+    //             {
+    //                 model: Butcher,
+    //                 as: 'butcher',
+    //                 include: [{
+    //                     model: ButcherProduct
+    //                 }
+    //                 ]
+    //             },
+    //         ],
+    //         order: [["toarealevel", "DESC"]]
+    //     });
+    //     let ugly = {}, result = [];
+    //     for (let i = 0; i < res.length; i++) {
+    //         let l3 = await Area.findByPk(address.level3Id);
+    //         //let provider = this.getProvider(res[i], useLevel1, l3)
+    //         if (!ugly[res[i].butcherid]) {
+    //             ugly[res[i].butcherid] = res[i];
+    //             result.push(res[i]);
+    //         }
+    //     }
+    //     return result;
+    // }
     static SetRoutes(router) {
     }
 }

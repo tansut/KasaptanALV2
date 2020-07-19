@@ -29,7 +29,7 @@ export let ShipmentDays = {
 export type ShipmentType = "callme" | "sameday" | "tomorrow" | "weekend" | "plan";
 
 export let ShipmentTypeDesc = {
-    "callme": "Telefon ile sizi arayacağız ve teslimat zamanını belirleyeceğiz",
+    "callme": "Hemen gönderebilirsiniz",
     "sameday": "Sipariş ile aynı gün içerisinde.",
     "plan": "Planlanan saat aralığında."
 }

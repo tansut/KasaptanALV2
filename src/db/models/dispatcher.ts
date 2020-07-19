@@ -8,6 +8,7 @@ import { OrderItem, Order } from './order';
 import { PreferredAddress } from './user';
 import { LogisticFactory, LogisticProvider } from '../../lib/logistic/core';
 import { ProductType } from './product';
+import ButcherArea from './butcherarea';
 
 export enum DispatcherSelection {    
     full = 'tam',
@@ -214,6 +215,8 @@ class Dispatcher extends BaseModel<Dispatcher> {
     }
 
     feeOffer: number;    
+
+    butcherArea: ButcherArea;
 
     get priceInfo() {
 

@@ -26,7 +26,6 @@ const context_1 = require("../../db/context");
 const sms_1 = require("../../lib/sms");
 const account_1 = require("../../models/account");
 const helper_1 = require("../../lib/helper");
-const creditcard_1 = require("../../lib/payment/creditcard");
 const order_3 = require("../../models/order");
 const config_1 = require("../../config");
 const commissionHelper_1 = require("../../lib/commissionHelper");
@@ -844,9 +843,9 @@ class Route extends router_1.ApiRouter {
             let l3 = yield area_1.default.findByPk(card.address.level3Id);
             let l2 = l3 ? yield area_1.default.findByPk(l3.parentid) : null;
             let orders = [];
-            let payment = creditcard_1.CreditcardPaymentFactory.getInstance();
-            let log = new sitelog_1.default(this.constructorParams);
-            payment.logger = log;
+            // let payment = CreditcardPaymentFactory.getInstance();
+            // let log = new SiteLogRoute(this.constructorParams);
+            // payment.logger = log;
             for (var bi in butchers) {
                 let order = yield order_1.Order.fromShopcard(card, bi);
                 order.ordergroupnum = groupid;

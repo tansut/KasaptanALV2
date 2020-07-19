@@ -932,9 +932,9 @@ export default class Route extends ApiRouter {
         let l2 = l3 ? await Area.findByPk(l3.parentid) : null;
         let orders = []
 
-        let payment = CreditcardPaymentFactory.getInstance();
-        let log = new SiteLogRoute(this.constructorParams);
-        payment.logger = log;
+        // let payment = CreditcardPaymentFactory.getInstance();
+        // let log = new SiteLogRoute(this.constructorParams);
+        // payment.logger = log;
 
         for (var bi in butchers) {
             let order = await Order.fromShopcard(card, <any>bi);
@@ -1006,7 +1006,7 @@ export default class Route extends ApiRouter {
                 await Sms.send(dbOrder.phone, `KasaptanAl.com siparisinizi aldik, destek tel/whatsapp: 08503054216. Teslimat kodu: ${order.securityCode}`, false, new SiteLogRoute(this.constructorParams))
 
                 let notifyMobilePhones = (order.butcher.notifyMobilePhones || "").split(',');
-
+                
                 for (var p = 0; p < notifyMobilePhones.length; p++) {
                     if (notifyMobilePhones[p].trim()) {
                         let payUrl = `${this.url}/pay/${order.ordernum}`;

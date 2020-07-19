@@ -38,7 +38,8 @@ export class ButcherManualLogistics extends LogisticProvider {
         return {
             totalFee: this.options.dispatcher.fee,
             customerFee: fee,
-            orderTotal: 0.00
+            orderTotal: 0.00,
+            distance: req.distance
         }
     }
 
@@ -102,7 +103,6 @@ export class ButcherAutoLogistics extends LogisticProvider {
             contrib: 0.05,
             kmPrice: 1.30,
             kmMin: 5,
-            kmMax: 25,
             kmMultiplier: 0.4,
             minOrder: 100.00
         }
@@ -143,7 +143,7 @@ export class ButcherAutoLogistics extends LogisticProvider {
 
     calculateCustomerFee(offer: OfferResponse | OrderResponse) {
         let input: CustomerPriceConfig = this.getCustomerFeeConfig();
-        input.kmMax = input.kmMax || this.dispatcher ? this.dispatcher.butcher.radiusAsKm : 25;
+        input.kmMax = input.kmMax || (this.dispatcher ? this.dispatcher.butcher.radiusAsKm : 50);
 
         let distance = offer.distance < input.kmMin ? input.kmMin: offer.distance;
         let orderTotal = offer.orderTotal < input.minOrder ? input.minOrder: offer.orderTotal;

@@ -22,7 +22,7 @@
 
   <%- include('./_partial/product-weight-calc.ejs', {    product: product}) %>
 
-  <% otherButcherAlternatives = butchers.servingL3.length + butchers.servingL2.length + butchers.servingL1.length + butchers.takeOnly.length - 1 %>
+  <% otherButcherAlternatives = butchers.serving.length  + butchers.takeOnly.length - 1 %>
 
 
   <%if (__req.query.frame != '1') { %>

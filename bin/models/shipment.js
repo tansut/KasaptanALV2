@@ -23,7 +23,7 @@ exports.ShipmentDays = {
     0: 'Pazar'
 };
 exports.ShipmentTypeDesc = {
-    "callme": "Telefon ile sizi arayacağız ve teslimat zamanını belirleyeceğiz",
+    "callme": "Hemen gönderebilirsiniz",
     "sameday": "Sipariş ile aynı gün içerisinde.",
     "plan": "Planlanan saat aralığında."
 };

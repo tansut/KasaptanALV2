@@ -44,7 +44,8 @@ class ButcherManualLogistics extends core_1.LogisticProvider {
             return {
                 totalFee: this.options.dispatcher.fee,
                 customerFee: fee,
-                orderTotal: 0.00
+                orderTotal: 0.00,
+                distance: req.distance
             };
         });
     }
@@ -105,7 +106,6 @@ class ButcherAutoLogistics extends core_1.LogisticProvider {
             contrib: 0.05,
             kmPrice: 1.30,
             kmMin: 5,
-            kmMax: 25,
             kmMultiplier: 0.4,
             minOrder: 100.00
         };
@@ -143,7 +143,7 @@ class ButcherAutoLogistics extends core_1.LogisticProvider {
     }
     calculateCustomerFee(offer) {
         let input = this.getCustomerFeeConfig();
-        input.kmMax = input.kmMax || this.dispatcher ? this.dispatcher.butcher.radiusAsKm : 25;
+        input.kmMax = input.kmMax || (this.dispatcher ? this.dispatcher.butcher.radiusAsKm : 50);
         let distance = offer.distance < input.kmMin ? input.kmMin : offer.distance;
         let orderTotal = offer.orderTotal < input.minOrder ? input.minOrder : offer.orderTotal;
         let maxMinKmDif = input.kmMax - input.kmMin;

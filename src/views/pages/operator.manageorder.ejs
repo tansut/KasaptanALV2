@@ -152,6 +152,7 @@
       <% } %>
       <div class="col-sm-6">
         <h5>*----YENİ SİPARİŞ----*</h5>
+        <h5>*KASAPTANAL.COM*</h5>
         <p>
            Siparişin *son durumuna* ve **ürün resimlerine** aşağıdaki bağlantıdan ulaşın: <br>
          
@@ -165,6 +166,7 @@
         <p>
 
           <ul class="list-unstyled font-size-sm">
+            <% if (!controller.order.dispatcherType.startsWith('kasaptan')) { %>
             <li><span class="text-muted">*İsim:*&nbsp;</span><%= order.name %></li>
             <% if(order.address) { %>
             <li><span class="text-muted">*Adres:*&nbsp;</span><%= order.address%>
@@ -177,6 +179,7 @@
                 </li>
                 <%}%>
               <%}%>
+            <% } %>
               <% if(order.note) { %>
                 <li><span class="text-muted">Not:&nbsp;</span><%= order.note%>
                   </li>
@@ -188,10 +191,13 @@
           <ul class="list-unstyled ">
             <li><span class="text-muted">Teslimat planı:&nbsp;</span><%= order.shipmentHowToText %></li>
             <li><span class="text-muted">Teslimat kodu:&nbsp;</span>*<%= order.securityCode %>*</li>
-            <% if (order.shipmentHowTo != 'callme') {%>
+            <% if (order.shipmentType != 'callme') {%>
             <li><span class="text-muted">Gün:&nbsp;</span><strong>*<%= __helper.formatDate(order.shipmentdate) %>*</strong></li>
             <li><span class="text-muted">Saat Aralığı:&nbsp;</span><strong>*<%= order.shipmenthourText%>*</strong> </li>
-            <%}%>
+            <%} else { %>
+              <li><span class="text-muted">Teslimat planı:&nbsp;</span>*<%= order.shipmentTypeText%>*</li>
+
+            <% } %>
                         <li><span class="text-muted">Paketim çıkmadan bana haber ver:&nbsp;</span><%= __helper.boolStr(order.shipmentInformMe)%>
             </li>
             <li><span class="text-muted">**Planlanan** Ödeme:&nbsp;</span><%= order.paymentTypeText%> </li>
@@ -200,7 +206,7 @@
 
 
   
-              <div class="mt-3 font-size-sm text-muted">Kasabınıza uzaklık: <%=(order.dispatcherDistance)%>km</div>
+              <div class="mt-3 font-size-sm text-muted">Mesafe: <%=(order.dispatcherDistance) %>km</div>
               <!-- <div class="font-size-sm text-muted">Hata payı: <%=(order.shipLocationAccuracy)%>m</div> -->
               *-- MÜŞTERİ ADRESİNE GİDİN --*
               <div class="font-size-sm text-muted"><a target="_blank" class="font-size-sm"
@@ -240,11 +246,19 @@
 
 
              <br>
-
+             -----------
              <div>
                DAĞITIMI YAPACAK: *<%=controller.order.dispatcherName%>*
              </div>
+             <% if (controller.order.dispatcherType.startsWith('kasaptan')) { %>
+             <div>
+              KURYE MALİYETİ ORT: <%=controller.order.dispatcherFeeOffer%>
+             </div>
+             <% } %>
+             <div>
+              -----------
 
+             </div>
               YAPILAN ÖDEME: *<%- include('./_partial/currency.ejs', {value: controller.paid }) %>*<br>
               FATURA KALEMLERİ<br>
               *---------*<br>

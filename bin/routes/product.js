@@ -39,7 +39,6 @@ const config_1 = require("../config");
 const sequelize_1 = require("sequelize");
 const productcategory_1 = require("../db/models/productcategory");
 const commissionHelper_1 = require("../lib/commissionHelper");
-const area_2 = require("./api/area");
 class Route extends router_1.ViewRouter {
     constructor() {
         super(...arguments);
@@ -78,10 +77,11 @@ class Route extends router_1.ViewRouter {
     }
     tryBestFromOrders(serving) {
         return __awaiter(this, void 0, void 0, function* () {
+            return null;
             let fullServing = serving.filter(s => s.selection == dispatcher_2.DispatcherSelection.full);
             if (fullServing.length == 0)
                 fullServing = serving;
-            fullServing.forEach(s => s.lastorderitemid = s.lastorderitemid || 0);
+            fullServing.forEach(s => s.lastorderitemid = (s.lastorderitemid || 0));
             let orderedByDate = _.orderBy(fullServing, 'lastorderitemid', 'asc');
             let orderedByKasapCard = _.orderBy(orderedByDate, 'butcher.enablePuan', 'desc');
             return orderedByKasapCard.length ? orderedByKasapCard[0] : null;
@@ -89,6 +89,7 @@ class Route extends router_1.ViewRouter {
     }
     tryBestAsRandom(serving) {
         let fullServing = serving.filter(s => s.selection == dispatcher_2.DispatcherSelection.full);
+        fullServing = helper_1.default.shuffle(fullServing);
         if (fullServing.length == 0)
             fullServing = serving;
         let res = (fullServing.length > 0 ? fullServing[0] : null);
@@ -107,28 +108,31 @@ class Route extends router_1.ViewRouter {
                 orderType: product.productType
             };
             let serving = yield api.getDispatchers(q);
-            yield new area_2.default(this.constructorParams).ensureDistances(serving.map(s => s.butcher), yield area_1.default.findByPk(adr.level3Id));
             let takeOnly = serving.filter(p => p.takeOnly == true);
-            let servingL3 = serving.filter(p => p.toarealevel == 3 && !p.takeOnly);
-            let servingL2 = serving.filter(p => p.toarealevel == 2 && !p.takeOnly && (servingL3.find(m => m.butcher.id == p.butcher.id) == null));
-            let servingL1 = serving.filter(p => p.toarealevel == 1 && !p.takeOnly && (servingL2.find(m => m.butcher.id == p.butcher.id) == null) && (servingL3.find(m => m.butcher.id == p.butcher.id) == null));
-            takeOnly = helper_1.default.shuffle(takeOnly);
-            servingL3 = helper_1.default.shuffle(servingL3);
-            servingL2 = helper_1.default.shuffle(servingL2);
-            servingL1 = helper_1.default.shuffle(servingL1);
+            serving = serving.filter(p => !p.takeOnly);
+            // let servingL2 = serving.filter(p => p.toarealevel == 2 && !p.takeOnly && (servingL3.find(m => m.butcher.id == p.butcher.id) == null));
+            // let servingL1 = serving.filter(p => p.toarealevel == 1 && !p.takeOnly && (servingL2.find(m => m.butcher.id == p.butcher.id) == null) && (servingL3.find(m => m.butcher.id == p.butcher.id) == null));
+            //takeOnly = Helper.shuffle(takeOnly)
+            // servingL3 = Helper.shuffle(servingL3)
+            // servingL2 = Helper.shuffle(servingL2)
+            //serving = Helper.shuffle(serving)
+            let nearButchers = serving.filter(p => p.butcherArea.kmActive < 10.0);
+            if (nearButchers.length < 2)
+                nearButchers = serving;
             let mybest = (yield this.tryBestFromShopcard(serving)) ||
-                (yield this.tryBestFromOrders(servingL3)) ||
-                (yield this.tryBestFromOrders(servingL2)) ||
-                (yield this.tryBestFromOrders(servingL1)) ||
-                this.tryBestAsRandom(serving);
+                (
+                // await this.tryBestFromOrders(servingL3) ||
+                // await this.tryBestFromOrders(servingL2) || 
+                yield this.tryBestFromOrders(serving)) ||
+                this.tryBestAsRandom(nearButchers);
             if (mybest) {
                 mybest = (userBest ? (serving.find(s => s.butcherid == userBest.id)) : null) || mybest;
             }
             return {
                 best: mybest,
-                servingL1: servingL1,
-                servingL2: servingL2,
-                servingL3: servingL3,
+                serving: serving,
+                // servingL2: servingL2,
+                // servingL3: servingL3,
                 takeOnly: takeOnly
             };
         });
@@ -168,15 +172,13 @@ class Route extends router_1.ViewRouter {
             if (!this.req.prefAddr) {
                 selectedButchers = {
                     best: null,
-                    servingL1: [],
-                    servingL2: [],
-                    servingL3: [],
+                    serving: [],
                     takeOnly: []
                 };
             }
             else
                 selectedButchers = yield this.bestButchersForProduct(product, this.req.prefAddr, butcher);
-            let serving = selectedButchers.servingL3.concat(selectedButchers.servingL2).concat(selectedButchers.servingL1).concat(selectedButchers.takeOnly);
+            let serving = selectedButchers.serving.concat(selectedButchers.takeOnly);
             if (selectedButchers.best && this.req.query.butcher && (selectedButchers.best.butcher.slug != this.req.query.butcher)) {
                 serving = [];
                 selectedButchers.best = null;
@@ -220,7 +222,7 @@ class Route extends router_1.ViewRouter {
                             min: dispatcher.min,
                             totalForFree: dispatcher.totalForFree,
                             type: dispatcher.type,
-                            distance: yield dispatcher.provider.distance(fromTo),
+                            distance: dispatcher.butcherArea.kmActive,
                             priceSlice: yield dispatcher.provider.priceSlice(fromTo),
                             priceInfo: dispatcher.priceInfo,
                             userNote: dispatcher.userNote,
@@ -245,7 +247,7 @@ class Route extends router_1.ViewRouter {
                         totalForFree: dispatcher.totalForFree,
                         type: dispatcher.type,
                         priceInfo: dispatcher.priceInfo,
-                        distance: yield dispatcher.provider.distance(fromTo),
+                        distance: dispatcher.butcherArea.kmActive,
                         priceSlice: yield dispatcher.provider.priceSlice(fromTo),
                         userNote: dispatcher.userNote,
                         takeOnly: dispatcher.takeOnly

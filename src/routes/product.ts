@@ -32,13 +32,12 @@ import Review from '../db/models/review';
 import Product from '../db/models/product';
 import { PuanCalculator } from '../lib/commissionHelper';
 import { FromTo } from '../lib/logistic/core';
-import AreaApi from './api/area'
 
 interface ButcherSelection {
     best: Dispatcher,
-    servingL1: Dispatcher[]
-    servingL2: Dispatcher[]
-    servingL3: Dispatcher[]
+    serving: Dispatcher[]
+    // servingL2: Dispatcher[]
+    // servingL3: Dispatcher[]
     takeOnly: Dispatcher[]
 }
 
@@ -83,9 +82,10 @@ export default class Route extends ViewRouter {
     }
 
     async tryBestFromOrders(serving: Dispatcher[]) {
+        return null;
         let fullServing = serving.filter(s => s.selection == DispatcherSelection.full);
         if (fullServing.length == 0) fullServing = serving;
-        fullServing.forEach(s => s.lastorderitemid = s.lastorderitemid || 0);
+        fullServing.forEach(s => s.lastorderitemid = (s.lastorderitemid || 0));
         let orderedByDate = _.orderBy(fullServing, 'lastorderitemid', 'asc');
         let orderedByKasapCard = _.orderBy(orderedByDate, 'butcher.enablePuan', 'desc');
         return orderedByKasapCard.length ? orderedByKasapCard[0] : null;
@@ -93,6 +93,7 @@ export default class Route extends ViewRouter {
 
     tryBestAsRandom(serving: Dispatcher[]) {
         let fullServing = serving.filter(s => s.selection == DispatcherSelection.full);
+        fullServing = Helper.shuffle(fullServing)
         if (fullServing.length == 0) fullServing = serving;
         let res = (fullServing.length > 0 ? fullServing[0] : null);
         return res;
@@ -113,34 +114,34 @@ export default class Route extends ViewRouter {
         }
 
         let serving = await api.getDispatchers(q);
-        await new AreaApi(this.constructorParams).ensureDistances(serving.map(s=>s.butcher), await Area.findByPk(adr.level3Id));
-
         let takeOnly = serving.filter(p => p.takeOnly == true);
-        let servingL3 = serving.filter(p => p.toarealevel == 3 && !p.takeOnly);
-        let servingL2 = serving.filter(p => p.toarealevel == 2 && !p.takeOnly && (servingL3.find(m => m.butcher.id == p.butcher.id) == null));
-        let servingL1 = serving.filter(p => p.toarealevel == 1 && !p.takeOnly && (servingL2.find(m => m.butcher.id == p.butcher.id) == null) && (servingL3.find(m => m.butcher.id == p.butcher.id) == null));
+        serving = serving.filter(p => !p.takeOnly);
+        // let servingL2 = serving.filter(p => p.toarealevel == 2 && !p.takeOnly && (servingL3.find(m => m.butcher.id == p.butcher.id) == null));
+        // let servingL1 = serving.filter(p => p.toarealevel == 1 && !p.takeOnly && (servingL2.find(m => m.butcher.id == p.butcher.id) == null) && (servingL3.find(m => m.butcher.id == p.butcher.id) == null));
 
 
-        takeOnly = Helper.shuffle(takeOnly)
-        servingL3 = Helper.shuffle(servingL3)
-        servingL2 = Helper.shuffle(servingL2)
-        servingL1 = Helper.shuffle(servingL1)
+        //takeOnly = Helper.shuffle(takeOnly)
+        // servingL3 = Helper.shuffle(servingL3)
+        // servingL2 = Helper.shuffle(servingL2)
+        //serving = Helper.shuffle(serving)
+
+        let nearButchers = serving.filter(p=>p.butcherArea.kmActive < 10.0);
+        if (nearButchers.length < 2) nearButchers = serving;
 
         let mybest: Dispatcher = await this.tryBestFromShopcard(serving) ||
-            await this.tryBestFromOrders(servingL3) ||
-            await this.tryBestFromOrders(servingL2) || 
-            await this.tryBestFromOrders(servingL1) || 
-            this.tryBestAsRandom(serving);
-
+            // await this.tryBestFromOrders(servingL3) ||
+            // await this.tryBestFromOrders(servingL2) || 
+            await this.tryBestFromOrders(serving) || 
+            this.tryBestAsRandom(nearButchers);
         if (mybest) {
             mybest = (userBest ? (serving.find(s => s.butcherid == userBest.id)) : null) || mybest;
         }
 
         return {
             best: mybest,
-            servingL1: servingL1,
-            servingL2: servingL2,
-            servingL3: servingL3,
+            serving: serving,
+            // servingL2: servingL2,
+            // servingL3: servingL3,
             takeOnly: takeOnly
         }
     }
@@ -190,15 +191,13 @@ export default class Route extends ViewRouter {
         if (!this.req.prefAddr) {
             selectedButchers = {
                 best: null,
-                servingL1: [],
-                servingL2: [],
-                servingL3: [],
+                serving: [],
                 takeOnly: []
             }
         } else
             selectedButchers = await this.bestButchersForProduct(product, this.req.prefAddr, butcher);
 
-        let serving = selectedButchers.servingL3.concat(selectedButchers.servingL2).concat(selectedButchers.servingL1).concat(<any>selectedButchers.takeOnly);
+        let serving = selectedButchers.serving.concat(<any>selectedButchers.takeOnly);
 
 
         if (selectedButchers.best && this.req.query.butcher && (selectedButchers.best.butcher.slug != this.req.query.butcher)) {
@@ -249,7 +248,7 @@ export default class Route extends ViewRouter {
                         min: dispatcher.min,
                         totalForFree: dispatcher.totalForFree,
                         type: dispatcher.type,
-                        distance: await dispatcher.provider.distance(fromTo),
+                        distance: dispatcher.butcherArea.kmActive,
                         priceSlice: await dispatcher.provider.priceSlice(fromTo),
                         priceInfo: dispatcher.priceInfo,
                         userNote: dispatcher.userNote,
@@ -273,7 +272,7 @@ export default class Route extends ViewRouter {
                     totalForFree: dispatcher.totalForFree,
                     type: dispatcher.type,
                     priceInfo: dispatcher.priceInfo,
-                    distance: await dispatcher.provider.distance(fromTo),
+                    distance: dispatcher.butcherArea.kmActive,
                     priceSlice: await dispatcher.provider.priceSlice(fromTo),                    
                     userNote: dispatcher.userNote,
                     takeOnly: dispatcher.takeOnly

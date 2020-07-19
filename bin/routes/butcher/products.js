@@ -125,15 +125,16 @@ class Route extends home_1.ButcherRouter {
             let selling = this.butcher.products.filter(p => {
                 return true;
             });
-            selling = _.sortBy(selling, ["displayOrder"]).reverse();
+            selling = _.sortBy(selling, i => i.product.name);
             let allproducts = yield this.getProducts();
+            allproducts = _.sortBy(allproducts, p => p.name);
             let others = allproducts.filter(p => {
                 let bp = this.butcher.products.find(bp => {
                     return bp.productid == p.id;
                 });
                 return !bp;
             });
-            others = _.sortBy(others, ["displayOrder"]).reverse();
+            others = _.sortBy(others, i => i.name);
             this.sellingProducts = selling.map(p => this.getButcherProductInfo(p));
             this.otherProducts = others.map(p => this.getButcherProductInfo(null, p));
         });
