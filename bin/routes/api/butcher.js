@@ -100,6 +100,9 @@ class Route extends router_1.ApiRouter {
     }
     getBestArea(place, model) {
         let areas = this.getGoogleAreas(place);
+        if ("İstanbul - Avrupa" == areas["level1"].short_name) {
+            areas["level1"].short_name = "istanbul";
+        }
         let area1p = area_1.default.findOne({
             where: {
                 level: 1,

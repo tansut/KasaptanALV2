@@ -409,6 +409,12 @@ __decorate([
         allowNull: true
     }),
     __metadata("design:type", String)
+], Butcher.prototype, "parentButcher", void 0);
+__decorate([
+    sequelize_typescript_1.Column({
+        allowNull: true
+    }),
+    __metadata("design:type", String)
 ], Butcher.prototype, "notifyMobilePhones", void 0);
 __decorate([
     sequelize_typescript_1.Column({

@@ -115,6 +115,8 @@ export default class Route extends ViewRouter {
 
         let serving = await api.getDispatchers(q);
         let takeOnly = serving.filter(p => p.takeOnly == true);
+
+
         serving = serving.filter(p => !p.takeOnly);
         // let servingL2 = serving.filter(p => p.toarealevel == 2 && !p.takeOnly && (servingL3.find(m => m.butcher.id == p.butcher.id) == null));
         // let servingL1 = serving.filter(p => p.toarealevel == 1 && !p.takeOnly && (servingL2.find(m => m.butcher.id == p.butcher.id) == null) && (servingL3.find(m => m.butcher.id == p.butcher.id) == null));
@@ -123,16 +125,40 @@ export default class Route extends ViewRouter {
         //takeOnly = Helper.shuffle(takeOnly)
         // servingL3 = Helper.shuffle(servingL3)
         // servingL2 = Helper.shuffle(servingL2)
-        //serving = Helper.shuffle(serving)
+        //serving = Helper.shuffle(serving);
 
-        let nearButchers = serving.filter(p=>p.butcherArea.kmActive < 10.0);
-        if (nearButchers.length < 2) nearButchers = serving;
+        let sameGroup: string[] = [] 
+
+        _.remove(serving, (item) => {
+            if (item.butcher.parentButcher) {
+                if (sameGroup.find(g=>g == item.butcher.parentButcher)) {
+                    return true;
+                } else {
+                    sameGroup.push(item.butcher.parentButcher);
+                    return false;
+                }
+            } else return false;
+        })
+
+
+        let defaultButchers = serving;
+        let nearButchers = serving.filter(p=>p.butcherArea.kmActive <= 10.0);
+        let alternateButchers = serving.filter(p=>(p.butcherArea.kmActive > 10.0 && p.butcherArea.kmActive <= 20.0));
+        let farButchers = serving.filter(p=>p.butcherArea.kmActive > 20.0);
+
+        if (nearButchers.length < 2) {
+            defaultButchers = nearButchers.concat(alternateButchers);
+        } else {
+            defaultButchers = nearButchers;
+        }
+
+        defaultButchers = defaultButchers.length == 0 ? serving: defaultButchers;
 
         let mybest: Dispatcher = await this.tryBestFromShopcard(serving) ||
             // await this.tryBestFromOrders(servingL3) ||
             // await this.tryBestFromOrders(servingL2) || 
             await this.tryBestFromOrders(serving) || 
-            this.tryBestAsRandom(nearButchers);
+            this.tryBestAsRandom(defaultButchers);
         if (mybest) {
             mybest = (userBest ? (serving.find(s => s.butcherid == userBest.id)) : null) || mybest;
         }

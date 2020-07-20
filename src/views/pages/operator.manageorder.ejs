@@ -246,7 +246,7 @@
              <div>
                DAĞITIMI YAPACAK: *<%=controller.order.dispatcherName%>*
              </div>
-             <% if (controller.order.dispatcherType.startsWith('kasaptan')) { %>
+             <% if ((controller.order.dispatcherType || "").startsWith('kasaptan')) { %>
              <div>
               KURYE MALİYETİ ORT: <%=controller.order.dispatcherFeeOffer%>
              </div>

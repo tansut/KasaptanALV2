@@ -115,16 +115,38 @@ class Route extends router_1.ViewRouter {
             //takeOnly = Helper.shuffle(takeOnly)
             // servingL3 = Helper.shuffle(servingL3)
             // servingL2 = Helper.shuffle(servingL2)
-            //serving = Helper.shuffle(serving)
-            let nearButchers = serving.filter(p => p.butcherArea.kmActive < 10.0);
-            if (nearButchers.length < 2)
-                nearButchers = serving;
+            //serving = Helper.shuffle(serving);
+            let sameGroup = [];
+            _.remove(serving, (item) => {
+                if (item.butcher.parentButcher) {
+                    if (sameGroup.find(g => g == item.butcher.parentButcher)) {
+                        return true;
+                    }
+                    else {
+                        sameGroup.push(item.butcher.parentButcher);
+                        return false;
+                    }
+                }
+                else
+                    return false;
+            });
+            let defaultButchers = serving;
+            let nearButchers = serving.filter(p => p.butcherArea.kmActive <= 10.0);
+            let alternateButchers = serving.filter(p => (p.butcherArea.kmActive > 10.0 && p.butcherArea.kmActive <= 20.0));
+            let farButchers = serving.filter(p => p.butcherArea.kmActive > 20.0);
+            if (nearButchers.length < 2) {
+                defaultButchers = nearButchers.concat(alternateButchers);
+            }
+            else {
+                defaultButchers = nearButchers;
+            }
+            defaultButchers = defaultButchers.length == 0 ? serving : defaultButchers;
             let mybest = (yield this.tryBestFromShopcard(serving)) ||
                 (
                 // await this.tryBestFromOrders(servingL3) ||
                 // await this.tryBestFromOrders(servingL2) || 
                 yield this.tryBestFromOrders(serving)) ||
-                this.tryBestAsRandom(nearButchers);
+                this.tryBestAsRandom(defaultButchers);
             if (mybest) {
                 mybest = (userBest ? (serving.find(s => s.butcherid == userBest.id)) : null) || mybest;
             }

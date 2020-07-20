@@ -112,6 +112,10 @@ export default class Route extends ApiRouter {
 
         let areas = this.getGoogleAreas(place);
 
+        if ("İstanbul - Avrupa" == areas["level1"].short_name) {
+            areas["level1"].short_name = "istanbul"
+        }
+
         let area1p = Area.findOne({
             where: {
                 level: 1,

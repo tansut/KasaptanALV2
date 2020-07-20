@@ -293,6 +293,11 @@ class Butcher extends BaseModel<Butcher> {
     @Column({
         allowNull: true
     })
+    parentButcher: string;   
+
+    @Column({
+        allowNull: true
+    })
     notifyMobilePhones: string;   
 
     @Column({
