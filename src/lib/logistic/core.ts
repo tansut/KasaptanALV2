@@ -131,6 +131,11 @@ export interface LogisticProviderOptions {
 }
 
 
+export interface DistanceParams {
+    areaOnly?: boolean;
+
+}
+
 export class LogisticProvider {
     logger: SiteLogRoute;
     userid: number;
@@ -139,14 +144,16 @@ export class LogisticProvider {
     lastOffer: OfferResponse;
     description: string;
 
-    async distance(ft: FromTo) {
+    async distance(ft: FromTo, params: DistanceParams = null) {
+        params = params || {
+            areaOnly: true
+        }
         let saved: ButcherArea = null;
         if (ft.sId && ft.fId) {
         saved = await ButcherArea.findOne({
             where: {
                 butcherid: parseInt(ft.sId),
-                areaid: parseInt(ft.fId),
-                
+                areaid: parseInt(ft.fId),                
             },
 
             include:[{
@@ -156,10 +163,10 @@ export class LogisticProvider {
         }
         let km = 0;
         if (saved) {
-            let distanceDif = Helper.distance(ft.finish, saved.area.location);
+            let distanceDif = params.areaOnly ? 0.0: Helper.distance(ft.finish, saved.area.location);
             km = (saved.kmActive || saved.kmGoogle || saved.kmDirect * 1.5) + distanceDif;
-        }
-        return km || Helper.distance(ft.start, ft.finish);
+        } 
+        return km || Helper.distance(ft.start, ft.finish) * 1.5;
     }
 
 

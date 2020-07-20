@@ -26,8 +26,11 @@ class LogisticProvider {
     constructor(config, options) {
         this.options = options;
     }
-    distance(ft) {
+    distance(ft, params = null) {
         return __awaiter(this, void 0, void 0, function* () {
+            params = params || {
+                areaOnly: true
+            };
             let saved = null;
             if (ft.sId && ft.fId) {
                 saved = yield butcherarea_1.default.findOne({
@@ -42,10 +45,10 @@ class LogisticProvider {
             }
             let km = 0;
             if (saved) {
-                let distanceDif = helper_1.default.distance(ft.finish, saved.area.location);
+                let distanceDif = params.areaOnly ? 0.0 : helper_1.default.distance(ft.finish, saved.area.location);
                 km = (saved.kmActive || saved.kmGoogle || saved.kmDirect * 1.5) + distanceDif;
             }
-            return km || helper_1.default.distance(ft.start, ft.finish);
+            return km || helper_1.default.distance(ft.start, ft.finish) * 1.5;
         });
     }
     roundCustomerFee(x) {
