@@ -214,9 +214,9 @@ export default class Route extends ApiRouter {
         let areaApi = new AreaApi(this.constructorParams);
         let butcherAreaData = await areaApi.ensureDistances(res.map(s=>s.butcher), l3);
         for (let i = 0; i < res.length; i++) {            
-            res[i].butcherArea = butcherAreaData.find(ad=>ad.butcherid == res[i].butcherid)
             let provider = res[i].setProvider(q.useLevel1, l3, q.orderType);
             if (provider && !ugly[res[i].butcherid]) {
+                res[i].butcherArea = butcherAreaData.find(ad=>ad.butcherid == res[i].butcherid)
                 ugly[res[i].butcherid] = res[i];
                 result.push(res[i]);
             }

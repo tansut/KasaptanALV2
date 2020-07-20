@@ -26,7 +26,7 @@ var DispatcherSelection;
 exports.DispatcherTypeDesc = {
     "butcher": "Kasap",
     "butcher/auto": "Kasap",
-    "kasaptanal/motokurye": "Soğuk Zincir Kurye Sistemi",
+    "kasaptanal/motokurye": "Hızlı Kurye Sistemi",
     "kasaptanal/car": "Soğuk Zincir Araç Kurye Sistemi",
 };
 let Dispatcher = class Dispatcher extends basemodel_1.default {
@@ -65,6 +65,7 @@ let Dispatcher = class Dispatcher extends basemodel_1.default {
         return this.provider;
     }
     get userNote() {
+        this.provider;
         let desc = "";
         if (this.takeOnly) {
             desc = "*Semtinize sadece gel-al hizmeti verebiliyoruz*";
@@ -78,6 +79,13 @@ let Dispatcher = class Dispatcher extends basemodel_1.default {
         return desc;
     }
     get priceInfo() {
+        if (this.type == "kasaptanal/motokurye") {
+            return `60-90 dk, ${this.name}`;
+        }
+        else {
+            return "";
+            //return `${this.butcherArea.kmActive} km, 1-2 saat.`
+        }
         let desc = "";
         if (this.takeOnly) {
             desc = "Gel-al sadece";

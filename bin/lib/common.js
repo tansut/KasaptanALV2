@@ -97,9 +97,9 @@ KurbanProductManager.videoData = {
     'no': 'Kesim videosu istemiyorum',
 };
 KurbanProductManager.teslimatData = {
-    '0': 'Haberleşelim, bayramın 1. günü gelip alırım',
-    '1': 'Haberleşelim, bayramın 2. günü gelip alırım',
-    '2': 'Haberleşelim, bayramın 3. günü gelip alırım',
+    '0': 'Haberleşelim, bayramın 2. günü gelip alırım',
+    '1': 'Haberleşelim, bayramın 3. günü gelip alırım',
+    '2': 'Haberleşelim, bayramın 4. günü gelip alırım',
     '10': 'Bayramın 2. günü adresime getirin',
     '11': 'Bayramın 3. günü adresime getirin',
     '12': 'Bayramın 4. günü adresime getirin',

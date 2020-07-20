@@ -8,7 +8,7 @@ import { off } from "process";
 
 export class ButcherManualLogistics extends LogisticProvider {
     static key = "butcher";
-    name = DispatcherTypeDesc["butcher"];
+
 
     static register() {
         LogisticFactory.register(ButcherManualLogistics.key, ButcherManualLogistics)
@@ -78,8 +78,12 @@ export class ButcherManualLogistics extends LogisticProvider {
         return this.optimizedSlice(arr);
     }
 
-    constructor(config: any, options: any) {
+    constructor(config: any, options: LogisticProviderOptions) {
         super(config, options);
+        if (options.dispatcher) {
+            options.dispatcher.type = "butcher";
+            options.dispatcher.name = DispatcherTypeDesc[options.dispatcher.type];
+        }        
     }
 
 }
@@ -88,7 +92,6 @@ export class ButcherManualLogistics extends LogisticProvider {
 
 export class ButcherAutoLogistics extends LogisticProvider {
     static key = "butcher/auto";
-    name = DispatcherTypeDesc["butcher/auto"];
     private dispatcher: Dispatcher;
 
     static register() {
@@ -208,9 +211,7 @@ export class ButcherAutoLogistics extends LogisticProvider {
     constructor(config: any, options: LogisticProviderOptions) {
         super(config, options);
         this.dispatcher = options.dispatcher;
-        options.dispatcher.name = this.providerKey;
         options.dispatcher.min = this.getCustomerFeeConfig().minOrder;
-        //options.dispatcher.totalForFree = this.getCustomerFeeConfig().;
         options.dispatcher.type = "butcher/auto";
         options.dispatcher.name = DispatcherTypeDesc[options.dispatcher.type];
     }

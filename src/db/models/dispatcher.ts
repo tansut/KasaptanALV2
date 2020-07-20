@@ -21,7 +21,7 @@ export type DispatcherType = "butcher" | "butcher/auto" | "kasaptanal/motokurye"
 export let DispatcherTypeDesc = {
     "butcher": "Kasap",
     "butcher/auto": "Kasap",
-    "kasaptanal/motokurye": "Soğuk Zincir Kurye Sistemi",
+    "kasaptanal/motokurye": "Hızlı Kurye Sistemi",
     "kasaptanal/car": "Soğuk Zincir Araç Kurye Sistemi",
 }
 
@@ -201,6 +201,7 @@ class Dispatcher extends BaseModel<Dispatcher> {
     }
 
     get userNote() {
+        this.provider
         let desc = "";
 
         if (this.takeOnly) {
@@ -219,7 +220,12 @@ class Dispatcher extends BaseModel<Dispatcher> {
     butcherArea: ButcherArea;
 
     get priceInfo() {
-
+        if (this.type == "kasaptanal/motokurye") {
+            return `60-90 dk, ${this.name}` 
+        } else {
+            return "";
+            //return `${this.butcherArea.kmActive} km, 1-2 saat.`
+        }
 
         let desc = "";
 

@@ -166,7 +166,7 @@
         <p>
 
           <ul class="list-unstyled font-size-sm">
-            <% if (!controller.order.dispatcherType.startsWith('kasaptan')) { %>
+            <% if (!(controller.order.dispatcherType || "").startsWith('kasaptan')) { %>
             <li><span class="text-muted">*İsim:*&nbsp;</span><%= order.name %></li>
             <% if(order.address) { %>
             <li><span class="text-muted">*Adres:*&nbsp;</span><%= order.address%>

@@ -16,7 +16,10 @@ const helper_1 = require("../helper");
 class ButcherManualLogistics extends core_1.LogisticProvider {
     constructor(config, options) {
         super(config, options);
-        this.name = dispatcher_1.DispatcherTypeDesc["butcher"];
+        if (options.dispatcher) {
+            options.dispatcher.type = "butcher";
+            options.dispatcher.name = dispatcher_1.DispatcherTypeDesc[options.dispatcher.type];
+        }
     }
     static register() {
         core_1.LogisticFactory.register(ButcherManualLogistics.key, ButcherManualLogistics);
@@ -89,11 +92,8 @@ ButcherManualLogistics.key = "butcher";
 class ButcherAutoLogistics extends core_1.LogisticProvider {
     constructor(config, options) {
         super(config, options);
-        this.name = dispatcher_1.DispatcherTypeDesc["butcher/auto"];
         this.dispatcher = options.dispatcher;
-        options.dispatcher.name = this.providerKey;
         options.dispatcher.min = this.getCustomerFeeConfig().minOrder;
-        //options.dispatcher.totalForFree = this.getCustomerFeeConfig().;
         options.dispatcher.type = "butcher/auto";
         options.dispatcher.name = dispatcher_1.DispatcherTypeDesc[options.dispatcher.type];
     }
