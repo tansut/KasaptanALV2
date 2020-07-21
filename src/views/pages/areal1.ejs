@@ -30,7 +30,7 @@
 
         <h1 class="h3 text-light"><%= controller.address.display %> Kasapları</h1>
         <h2 class="h4 lead text-light">
-          Online et ve et ürünleri siparişi verebileceğiniz anlaşmalı kasap iş ortaklarımız</h2> 
+          Online et ve et ürünleri siparişi verebileceğiniz anlaşmalı iş ortaklarımız</h2> 
 
       </div>
 
@@ -52,6 +52,7 @@
 
 
       <div class="row">
+        <% var done = false; %>
         <% for(var i=0; i<butchers.length; i++) {%>
 
         <div class="col-md-3 col-6 mb-3 ">
@@ -81,6 +82,8 @@
 
         </div>
 
+
+
         <% } %>
       </div>
     </section>
@@ -89,9 +92,12 @@
   <% if(typeof(subs) != "undefined"){ %>
   <div class="container-fluid text-center pb-4 bg-light">
     <% for(var i=0; i<subs.length; i++) {%>
-
+    <% if (area.level < 2) { %>
     <a href="<%= `/${subs[i].slug}-kasap` %>" class="btn btn-sm btn-light mx-2 my-2"><%= subs[i].name %></a>
+<% } else { %>
+  <span class="mx-2 my-2 font-size-sm"><%= subs[i].name %></span>
 
+  <% } %>
 
     <% } %>
   </div>

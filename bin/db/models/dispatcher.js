@@ -80,7 +80,20 @@ let Dispatcher = class Dispatcher extends basemodel_1.default {
     }
     get priceInfo() {
         if (this.type == "kasaptanal/motokurye") {
-            return `60-90 dk, ${this.name}`;
+            let time = '60-90 dk';
+            if (this.butcherArea.kmActive <= 15.0) {
+                time = '45-60 dk';
+            }
+            else if (this.butcherArea.kmActive > 25.0 && this.butcherArea.kmActive <= 35.00) {
+                time = '75-120 dk';
+            }
+            else if (this.butcherArea.kmActive > 35 && this.butcherArea.kmActive <= 45.00) {
+                time = '90-150 dk';
+            }
+            else if (this.butcherArea.kmActive > 45.0) {
+                time = '120-180 dk';
+            }
+            return `${time} teslimat`;
         }
         else {
             return "";

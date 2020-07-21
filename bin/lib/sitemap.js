@@ -30,7 +30,8 @@ class SiteMapManager {
         return __awaiter(this, void 0, void 0, function* () {
             let items = yield area_1.default.findAll({
                 where: {
-                    status: 'active'
+                    status: 'active',
+                    level: [1, 2]
                 }
             });
             items.forEach(item => {

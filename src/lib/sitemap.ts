@@ -24,7 +24,8 @@ export default class SiteMapManager {
     static async fillArea(stream: SitemapStream) {
         let items = await Area.findAll({
             where: {
-                status: 'active'
+                status: 'active',
+                level: [1,2]
             }
         })
 

@@ -50,11 +50,16 @@ class Route extends router_1.ViewRouter {
     }
     renderPage(area, butchers, subs) {
         return __awaiter(this, void 0, void 0, function* () {
-            this.res.render('pages/areal1.ejs', this.viewData({
-                subs: subs, ellipsis: ellipsis,
-                pageDescription: `${this.address.display} Kasaplar, KasaptanAl.com güvenli kasap kriterlerini karşılayan güvenilir kasap iş ortaklarımızdır. ${this.address.display} bölgesinden güvenle et siparişi verebilirsiniz.`,
-                pageTitle: `${this.address.display} Kasaplar | Online Kasap Alışverişi & Et Siparişi`, area: area, butchers: butchers
-            }));
+            if (area.level == 3) {
+                this.res.redirect('/', 301);
+            }
+            else {
+                this.res.render('pages/areal1.ejs', this.viewData({
+                    subs: subs, ellipsis: ellipsis,
+                    pageDescription: `${this.address.display} Kasaplar, KasaptanAl.com güvenli kasap kriterlerini karşılayan güvenilir kasap iş ortaklarımızdır. ${this.address.display} bölgesinden güvenle et siparişi verebilirsiniz.`,
+                    pageTitle: `${this.address.display} Kasaplar | Online Kasap Alışverişi & Et Siparişi`, area: area, butchers: butchers
+                }));
+            }
         });
     }
     arealRouteOld() {

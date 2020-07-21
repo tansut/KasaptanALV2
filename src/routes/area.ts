@@ -43,11 +43,17 @@ export default class Route extends ViewRouter {
 
     async renderPage(area: AreaModel, butchers: ButcherModel[], subs?: AreaModel[]) {
 
-        this.res.render('pages/areal1.ejs', this.viewData({
-            subs: subs, ellipsis: ellipsis,
-            pageDescription: `${this.address.display} Kasaplar, KasaptanAl.com güvenli kasap kriterlerini karşılayan güvenilir kasap iş ortaklarımızdır. ${this.address.display} bölgesinden güvenle et siparişi verebilirsiniz.`,
-            pageTitle: `${this.address.display} Kasaplar | Online Kasap Alışverişi & Et Siparişi`, area: area, butchers: butchers
-        }))
+        if (area.level == 3) {
+            this.res.redirect('/', 301)
+        } else {
+            this.res.render('pages/areal1.ejs', this.viewData({
+                subs: subs, ellipsis: ellipsis,
+                pageDescription: `${this.address.display} Kasaplar, KasaptanAl.com güvenli kasap kriterlerini karşılayan güvenilir kasap iş ortaklarımızdır. ${this.address.display} bölgesinden güvenle et siparişi verebilirsiniz.`,
+                pageTitle: `${this.address.display} Kasaplar | Online Kasap Alışverişi & Et Siparişi`, area: area, butchers: butchers
+            }))
+        }
+
+
     }
 
     @Auth.Anonymous()
@@ -160,6 +166,7 @@ export default class Route extends ViewRouter {
             this.res.redirect('/kasap-urunleri');
             return;
         }
+
 
         await this.renderPage(area, butchers, subs)
     }
