@@ -193,7 +193,7 @@ class Route extends router_1.ApiRouter {
                 order: [["toarealevel", "DESC"]],
             });
             let ugly = {}, result = [];
-            let l3 = yield area_1.default.findByPk(q.adr.level3Id);
+            let l3 = yield area_1.default.findByPk(q.adr.level3Id || q.adr.level2Id);
             let areaApi = new area_2.default(this.constructorParams);
             let butcherAreaData = yield areaApi.ensureDistances(res.map(s => s.butcher), l3);
             for (let i = 0; i < res.length; i++) {
@@ -229,22 +229,34 @@ class Route extends router_1.ApiRouter {
     }
     getButchersDispatches(address) {
         return __awaiter(this, void 0, void 0, function* () {
-            let where = {
-                type: 'butcher'
-            };
-            where = yield this._where(where, address);
-            where["toarealevel"] = address.level3Id ? 3 : (address.level2Id ? 2 : 1);
-            let res = yield dispatcher_1.default.findAll({
-                where: where,
-                include: [
-                    {
-                        model: butcher_1.default,
-                        as: 'butcher'
-                    },
-                ],
-                order: [["toarealevel", "DESC"]]
+            let d = yield this.getDispatchers({
+                adr: address
             });
-            return res;
+            return d;
+            // let where = {
+            //     type: 'butcher'
+            // }
+            // where = await this._where(where, address);
+            // let children = address.level3Id ? []: await Area.findAll({
+            //     attributes: ['id'],
+            //     where: {
+            //         parentid: address.level2Id
+            //     }
+            // }).map(a => a.id)
+            // children.push(address.level3Id || address.level2Id || address.level1Id);
+            // where["toareaid"] = children;
+            // //where["toarealevel"] = address.level3Id ? 3 : (address.level2Id ? 2 : 1)
+            // let res = await Dispatcher.findAll({
+            //     where: where,
+            //     include: [
+            //         {
+            //             model: Butcher,
+            //             as: 'butcher'
+            //         },
+            //     ],
+            //     order: [["toarealevel", "DESC"]]
+            // })
+            // return res;
         });
     }
     dispatchingAvailable(address, useLevel1) {

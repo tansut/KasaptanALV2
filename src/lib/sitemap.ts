@@ -25,7 +25,7 @@ export default class SiteMapManager {
         let items = await Area.findAll({
             where: {
                 status: 'active',
-                level: [1,2]
+                level: [1,2,3]
             }
         })
 

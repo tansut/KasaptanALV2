@@ -43,9 +43,7 @@ export default class Route extends ViewRouter {
 
     async renderPage(area: AreaModel, butchers: ButcherModel[], subs?: AreaModel[]) {
 
-        if (area.level == 3) {
-            this.res.redirect('/', 301)
-        } else {
+        {
             this.res.render('pages/areal1.ejs', this.viewData({
                 subs: subs, ellipsis: ellipsis,
                 pageDescription: `${this.address.display} Kasaplar, KasaptanAl.com güvenli kasap kriterlerini karşılayan güvenilir kasap iş ortaklarımızdır. ${this.address.display} bölgesinden güvenle et siparişi verebilirsiniz.`,
@@ -123,36 +121,52 @@ export default class Route extends ViewRouter {
 
 
 
+        } else if (area.level == 2) {
+            let dp = new DispatcherApi(this.constructorParams);
+            let dispatchers = await dp.getButchersDispatches(this.address);
+            butchers = dispatchers.map(b => b.butcher);
+            let children = await Area.findAll({
+                attributes: ['id'],
+                where: {
+                    parentid: area.id
+                }
+            }).map(a => a.id)
+            dispatchers = await dp.getButchersDispatchesForAll(children);
+            butchers = butchers.concat(dispatchers.map(b => b.butcher));
+            butchers = _.uniqBy(butchers, 'id');
         } else {
             let dp = new DispatcherApi(this.constructorParams);
             let dispatchers = await dp.getButchersDispatches(this.address);
             butchers = dispatchers.map(b => b.butcher);
-            if (butchers.length == 0 && area.level == 3) {
-                let parent = area.parent;
-                let address = await parent.getPreferredAddress();
-                dispatchers = await dp.getButchersDispatches(address);
-                butchers = dispatchers.map(b => b.butcher);
-                butchers = _.uniqBy(butchers, 'id');
-            } else if (butchers.length == 0 && area.level == 2) {
-                let children = await Area.findAll({
-                    attributes: ['id'],
-                    where: {
-                        parentid: area.id
-                    }
-                }).map(a => a.id)
-                dispatchers = await dp.getButchersDispatchesForAll(children);
-                butchers = dispatchers.map(b => b.butcher);
-                butchers = _.uniqBy(butchers, 'id');
 
 
-            }
+        }   
+
+
+            // if (butchers.length == 0 && area.level == 3) {
+            //     let parent = area.parent;
+            //     let address = await parent.getPreferredAddress();
+            //     dispatchers = await dp.getButchersDispatches(address);
+            //     butchers = dispatchers.map(b => b.butcher);
+            //     butchers = _.uniqBy(butchers, 'id');
+            // } else if (butchers.length == 0 && area.level == 2) {
+            //     let children = await Area.findAll({
+            //         attributes: ['id'],
+            //         where: {
+            //             parentid: area.id
+            //         }
+            //     }).map(a => a.id)
+            //     dispatchers = await dp.getButchersDispatchesForAll(children);
+            //     butchers = dispatchers.map(b => b.butcher);
+            //     butchers = _.uniqBy(butchers, 'id');
+
+
+            // }
 
 
             if (area.level == 2) {
                 subs = await AreaModel.sequelize.query(`
-            SELECT a.* FROM  Areas a where a.parentid=:id and
-(a.id in (SELECT distinct d.toareaid FROM Dispatchers d where d.toarealevel=3))
-            `,
+            SELECT a.* FROM  Areas a where a.parentid=:id and a.status = 'active'`,
                     {
                 replacements: { id: area.id },
 
@@ -160,7 +174,7 @@ export default class Route extends ViewRouter {
                         mapToModel: true,
                     })
             }
-        }
+        
 
         if (this.req.query.save && butchers.length == 0) {
             this.res.redirect('/kasap-urunleri');

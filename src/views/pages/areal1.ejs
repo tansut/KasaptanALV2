@@ -21,17 +21,31 @@
       <div class="order-lg-2 mb-3 mb-lg-0 pt-lg-2">
         <nav aria-label="breadcrumb" class="d-none d-lg-block">
           <ol class="breadcrumb breadcrumb-light flex-lg-nowrap justify-content-center justify-content-lg-star">
-            <li class="breadcrumb-item"><a class="text-nowrap" href="/"><i class="czi-home"></i></a></li>
-            <li class="breadcrumb-item"><a class="text-nowrap" href="/kasaplar">Kasaplar</a></li>
+            <li class="breadcrumb-item text-nowrap"><a class="text-nowrap" href="/"><i class="czi-home"></i></a></li>
+            <li class="breadcrumb-item text-nowrap"><a class="text-nowrap" href="/kasaplar">Kasaplar</a></li>
+            <%  if (controller.address.level2Id) { %>
+            <li class="breadcrumb-item text-nowrap"><a class="text-nowrap" href="/<%=controller.address.level1Slug%>-kasap"><%=controller.address.level1Text%></a></li>
+            <% } %>
+            <%  if (controller.address.level3Id) { %>
+              <li class="breadcrumb-item text-nowrap"><a class="text-nowrap" href="/<%=controller.address.level2Slug%>-kasap"><%=controller.address.level2Text%></a></li>
+              <% } %>
           </ol>
         </nav>
       </div>
       <div class="order-lg-1 pr-lg-4 text-center text-lg-left">
 
-        <h1 class="h3 text-light"><%= controller.address.display %> Kasapları</h1>
+        <h1 class="h3 text-light"><%= controller.address.display %></h1>
         <h2 class="h4 lead text-light">
-          Online et ve et ürünleri siparişi verebileceğiniz anlaşmalı iş ortaklarımız</h2> 
+          <% if (controller.address.level3Id) { %>
+           <strong><%=controller.address.level3Text %> Kasapları</strong>, <%=controller.address.level3Text %> eve servis en yakın kasap olarak kategorize ettiğimiz bu semte servisi olan güvenilir kasap iş ortaklarımızdır.<br>
 
+          <% } else if (controller.address.level2Id) { %>
+            <strong><%=controller.address.level2Text %> Kasapları</strong>, 
+            <%=controller.address.level2Text%> ilçesinden online et ve et ürünleri siparişi verebileceğiniz güvenilir kasap iş ortaklarımızdır.
+          <% } else if (controller.address.level1Id) { %>
+             <strong><%=controller.address.level1Text%> Kasapları</strong>, <%=controller.address.level1Text%> ilinden et ve et ürünleri siparişi verebileceğiniz <strong>Online Kasap <%=controller.address.level1Text%></strong> olarak kategorize ettiğimiz güvenilir kasap iş ortaklarımızdır.
+          <% } %>
+          </h2>
       </div>
 
 
@@ -92,7 +106,7 @@
   <% if(typeof(subs) != "undefined"){ %>
   <div class="container-fluid text-center pb-4 bg-light">
     <% for(var i=0; i<subs.length; i++) {%>
-    <% if (area.level < 2) { %>
+    <% if (area.level < 5) { %>
     <a href="<%= `/${subs[i].slug}-kasap` %>" class="btn btn-sm btn-light mx-2 my-2"><%= subs[i].name %></a>
 <% } else { %>
   <span class="mx-2 my-2 font-size-sm"><%= subs[i].name %></span>

@@ -29,6 +29,7 @@ const email_1 = require("../../lib/email");
 class Route extends router_1.ApiRouter {
     ensureDistances(butchers, area) {
         return __awaiter(this, void 0, void 0, function* () {
+            yield area.ensureLocation();
             let list = yield butcherarea_1.default.findAll({
                 where: {
                     areaid: area.id,

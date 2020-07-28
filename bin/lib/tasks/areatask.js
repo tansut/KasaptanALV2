@@ -21,24 +21,29 @@ class AreaTask extends basetask_1.BaseTask {
         return __awaiter(this, void 0, void 0, function* () {
             console.log('running AreaTask job', Date.now());
             let items = yield area_1.default.sequelize.query(`
-        
+        select distinct areaLevel2Id as id from Orders
+        union
+        select distinct areaLevel3Id as id from Orders
+        union
         select id from Areas where level=1 and status='active'
         union
         select id from Areas ap where ap.level=2 and ( ap.id in 
         (
         SELECT distinct a.parentid FROM  Areas a where 
-        (a.id in (SELECT distinct d.toareaid FROM Dispatchers d where d.toarealevel=3))
+        (a.id in (SELECT distinct d.toareaid FROM Dispatchers d where d.enabled=1 and d.toarealevel=3))
         ) or 
-        (ap.id in (SELECT distinct d.toareaid FROM Dispatchers d where d.toarealevel=2))
+        (ap.id in (SELECT distinct d.toareaid FROM Dispatchers d where d.enabled=1 and d.toarealevel=2))
         )
         union SELECT a.id FROM  Areas a where 
-        (a.id in (SELECT distinct d.toareaid FROM Dispatchers d where d.toarealevel=3))
-        union select id from Areas ap where ap.level=3 and ( ap.id in 
-            (
-            SELECT distinct a.id FROM  Areas a where 
-            (a.parentid in (SELECT distinct d.toareaid FROM Dispatchers d where d.toarealevel=2))
-            )) 
-            `, {
+        (a.id in (SELECT distinct d.toareaid FROM Dispatchers d where d.enabled=1 and d.toarealevel=3))
+
+            `, 
+            // union select id from Areas ap where ap.level=3 and ( ap.id in 
+            //     (
+            //     SELECT distinct a.id FROM  Areas a where 
+            //     (a.parentid in (SELECT distinct d.toareaid FROM Dispatchers d where d.toarealevel=2))
+            //     )) 
+            {
                 type: sq.QueryTypes.SELECT,
                 mapToModel: false,
                 raw: true

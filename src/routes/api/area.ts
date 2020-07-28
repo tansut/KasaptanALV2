@@ -22,6 +22,7 @@ import email from '../../lib/email';
 export default class Route extends ApiRouter {
 
     async ensureDistances(butchers: Butcher [], area: Area) {    
+        await area.ensureLocation();
         let list = await ButcherArea.findAll({
             where: {
                 areaid: area.id,

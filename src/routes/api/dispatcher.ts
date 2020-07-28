@@ -19,6 +19,7 @@ import Helper from '../../lib/helper';
 import { ButcherManualLogistics, ButcherAutoLogistics } from '../../lib/logistic/butcher';
 import AreaApi from './area'
 import * as _ from "lodash"
+import { add } from 'lodash';
 
 export interface DispatcherQuery {
     adr: PreferredAddress,
@@ -210,7 +211,8 @@ export default class Route extends ApiRouter {
         })
 
         let ugly = {}, result: Dispatcher [] = [];
-        let l3 = await Area.findByPk(q.adr.level3Id);
+     
+        let l3 = await Area.findByPk(q.adr.level3Id || q.adr.level2Id);
         let areaApi = new AreaApi(this.constructorParams);
         let butcherAreaData = await areaApi.ensureDistances(res.map(s=>s.butcher), l3);
         for (let i = 0; i < res.length; i++) {            
@@ -221,6 +223,7 @@ export default class Route extends ApiRouter {
                 result.push(res[i]);
             }
         }
+    
         result = _.sortBy(result, ["butcherArea.kmActive"])
 
         return result;        
@@ -251,24 +254,43 @@ export default class Route extends ApiRouter {
 
 
     async getButchersDispatches(address: PreferredAddress) {
-        let where = {
-            type: 'butcher'
-        }
 
-        where = await this._where(where, address);
-        where["toarealevel"] = address.level3Id ? 3 : (address.level2Id ? 2 : 1)
-        let res = await Dispatcher.findAll({
-            where: where,
-            include: [
-                {
-                    model: Butcher,
-                    as: 'butcher'
-                },
-            ],
-            order: [["toarealevel", "DESC"]]
+        let d = await this.getDispatchers({
+            adr: address
         })
 
-        return res;
+        return d;
+
+
+        // let where = {
+        //     type: 'butcher'
+        // }
+
+        // where = await this._where(where, address);
+
+        // let children = address.level3Id ? []: await Area.findAll({
+        //     attributes: ['id'],
+        //     where: {
+        //         parentid: address.level2Id
+        //     }
+        // }).map(a => a.id)
+        
+        // children.push(address.level3Id || address.level2Id || address.level1Id);
+        // where["toareaid"] = children;
+
+        // //where["toarealevel"] = address.level3Id ? 3 : (address.level2Id ? 2 : 1)
+        // let res = await Dispatcher.findAll({
+        //     where: where,
+        //     include: [
+        //         {
+        //             model: Butcher,
+        //             as: 'butcher'
+        //         },
+        //     ],
+        //     order: [["toarealevel", "DESC"]]
+        // })
+
+        // return res;
     }
 
     async dispatchingAvailable(address: PreferredAddress, useLevel1: boolean) {
