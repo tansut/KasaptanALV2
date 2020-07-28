@@ -34,14 +34,14 @@
       </div>
       <div class="order-lg-1 pr-lg-4 text-center text-lg-left">
 
-        <h1 class="h3 text-light"><%= controller.address.display %></h1>
+        <h1 class="h3 text-light"><%= controller.address.level3Text || controller.address.level2Text || controller.address.level1Text %> Kasap</h1>
         <h2 class="h4 lead text-light">
           <% if (controller.address.level3Id) { %>
-           <strong><%=controller.address.level3Text %> Kasapları</strong>, <%=controller.address.level3Text %> eve servis en yakın kasap olarak kategorize ettiğimiz bu semte servisi olan güvenilir kasap iş ortaklarımızdır.<br>
+           <strong><%=controller.address.level3Text %> Kasapları</strong>, eve servis en yakın kasap olarak kategorize ettiğimiz bu semte servisi olan güvenilir kasap iş ortaklarımızdır.<br>
 
           <% } else if (controller.address.level2Id) { %>
             <strong><%=controller.address.level2Text %> Kasapları</strong>, 
-            <%=controller.address.level2Text%> ilçesinden online et ve et ürünleri siparişi verebileceğiniz güvenilir kasap iş ortaklarımızdır.
+            <%=controller.address.display%> ilçesinden online et ve et ürünleri siparişi verebileceğiniz güvenilir kasap iş ortaklarımızdır.
           <% } else if (controller.address.level1Id) { %>
              <strong><%=controller.address.level1Text%> Kasapları</strong>, <%=controller.address.level1Text%> ilinden et ve et ürünleri siparişi verebileceğiniz <strong>Online Kasap <%=controller.address.level1Text%></strong> olarak kategorize ettiğimiz güvenilir kasap iş ortaklarımızdır.
           <% } %>
