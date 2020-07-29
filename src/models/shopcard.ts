@@ -77,7 +77,8 @@ export interface ShopcardButcherView {
     id: number;
     onlinePayment: boolean;
     subTotal: number;
-    products: number[]
+    products: number[];
+    userSelected: boolean;
 }
 
 export class ShopCard {

@@ -15,6 +15,10 @@ import { method } from 'lodash';
 import { ShipmentType, HowToShipType } from '../../models/shipment';
 const orderid = require('order-id')('dkfjsdklfjsdlkg450435034.,')
 
+
+
+export type OrderButcherSelection = "default" | "user"
+
 @Table({
     tableName: "Orders",
     indexes: [{
@@ -68,6 +72,13 @@ class Order extends BaseModel<Order> {
         defaultValue: OrderSource.kasaptanal
     })
     orderSource: string;    
+
+    @Column({
+        allowNull: false,
+        defaultValue: "default"
+    })
+    butcherSelection: OrderButcherSelection;    
+
 
     @Column({
         allowNull: false,

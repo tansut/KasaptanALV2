@@ -851,6 +851,7 @@ class Route extends router_1.ApiRouter {
                 order.ordergroupnum = groupid;
                 order.butcherid = parseInt(bi);
                 order.butcher = yield butcher_1.default.findByPk(order.butcherid);
+                order.butcherSelection = butchers[bi].userSelected ? "user" : "default";
                 order.butcherName = butchers[bi].name;
                 order.securityCode = `${butchers[bi].name[0]}-${helper_1.default.getRandomInt(999) + 1000}`;
                 order.userId = this.req.user ? this.req.user.id : 0;

@@ -22,6 +22,7 @@ const router_1 = require("../lib/router");
 const common_1 = require("../lib/common");
 let ellipsis = require('text-ellipsis');
 const productManager_1 = require("../lib/productManager");
+const product_1 = require("./api/product");
 class Route extends router_1.ViewRouter {
     renderPage(view) {
         let pageTitle = this.category.pageTitle;
@@ -46,8 +47,35 @@ class Route extends router_1.ViewRouter {
             if (!this.category)
                 return this.next();
             this.products = yield productManager_1.default.getProductsOfCategories([this.category.categoryid]);
+            let api = new product_1.default(this.constructorParams);
+            this.prices = yield api.getPriceStats(this.products.map(p => p.id));
             this.renderPage('pages/pricecategory.ejs');
         });
+    }
+    getPriceData(product) {
+        let price = this.prices.find(p => p.pid == product.id);
+        if (!price)
+            return null;
+        let units = ['kg', 'unit1', 'unit2', 'unit3'];
+        let usedUnit = null;
+        for (let i = 0; i < units.length; i++) {
+            let avgPrice = price[`${units[i]}avg`];
+            if (avgPrice > 0) {
+                usedUnit = units[i];
+                break;
+            }
+        }
+        if (usedUnit) {
+            return {
+                offerCount: price['count'],
+                highPrice: Number(price[`${usedUnit}max`].toFixed(2)),
+                lowPrice: Number(price[`${usedUnit}min`].toFixed(2)),
+                priceUnit: usedUnit == 'kg' ? 'KG' : product[`${usedUnit}title`],
+                priceCurrency: "TRY"
+            };
+        }
+        else
+            return null;
     }
     static SetRoutes(router) {
         router.get("/:category", Route.BindRequest(Route.prototype.viewProductCategoryRoute));

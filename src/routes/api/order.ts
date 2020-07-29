@@ -940,7 +940,8 @@ export default class Route extends ApiRouter {
             let order = await Order.fromShopcard(card, <any>bi);
             order.ordergroupnum = groupid;
             order.butcherid = parseInt(bi);
-            order.butcher = await Butcher.findByPk(order.butcherid)
+            order.butcher = await Butcher.findByPk(order.butcherid);
+            order.butcherSelection = butchers[bi].userSelected ? "user": "default";
             order.butcherName = butchers[bi].name;
             order.securityCode = `${butchers[bi].name[0]}-${Helper.getRandomInt(999) + 1000}`;
             order.userId = this.req.user ? this.req.user.id : 0;

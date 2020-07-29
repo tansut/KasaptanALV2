@@ -205,12 +205,39 @@ export default class Route extends ApiRouter {
     }
 
 
+    async getPriceStats(productids: number []): Promise<Array<any>> {
+        let sql = `(${productids.join(',')})`
+        let q = `select ButcherProducts.productid as pid,  count(*) as count, 
+        min(kgPrice) as kgmin, avg(kgPrice) as kgavg, max(kgPrice) as kgmax, 
+        min(unit1price) as unit1min, avg(unit1price) as unit1avg, max(unit1price) as unit1max,
+        min(unit2price)  as unit2min, avg(unit1price)  as unit2avg, max(unit2price) as unit2max,
+        min(unit3price)  as unit3min, avg(unit1price)  as unit2avg, max(unit3price) as unit3max
+        from ButcherProducts, Butchers 
+        where 
+        ButcherProducts.productid in ${sql} and 
+        ButcherProducts.enabled=true and 
+        ButcherProducts.butcherid = Butchers.id 
+        and Butchers.approved=true
+        group by ButcherProducts.productid
+        `
+
+        let res = await Product.sequelize.query<any>(q, {
+            raw: true  ,
+            mapToModel: false,
+            type: sq.QueryTypes.SELECT       
+        } )        
+
+        return res;
+    }
+
+
     async getProductLd(product: Product): Promise<IProductLd> {
         let res = new ProductLd(product)
-        let price = await product.getPriceStats();
+        let prices = await this.getPriceStats([product.id]);
         let units = ['kg', 'unit1', 'unit2', 'unit3'];
         let usedUnit = null;
-        if (price) {
+        if (prices && prices.length) {
+            let price = prices[0];
             for(let i = 0; i < units.length;i++) {
                 let avgPrice = price[`${units[i]}avg`];
                 if (avgPrice > 0)  {

@@ -201,6 +201,10 @@
                         <li><span class="text-muted">Paketim çıkmadan bana haber ver:&nbsp;</span><%= __helper.boolStr(order.shipmentInformMe)%>
             </li>
             <li><span class="text-muted">**Planlanan** Ödeme:&nbsp;</span><%= order.paymentTypeText%> </li>
+            <% if (order.butcherSelection == "user") { %>
+              <li><span class="text-muted">*Müşteriniz özellikle sizi diğer kasaplar arasından seçerek sipariş vermiştir.*</span></li>
+            
+            <% } %>
           </ul>
           <% if (order.shipLocation && order.shipLocation.coordinates) { %>
 

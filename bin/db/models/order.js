@@ -205,6 +205,13 @@ __decorate([
 __decorate([
     sequelize_typescript_1.Column({
         allowNull: false,
+        defaultValue: "default"
+    }),
+    __metadata("design:type", String)
+], Order.prototype, "butcherSelection", void 0);
+__decorate([
+    sequelize_typescript_1.Column({
+        allowNull: false,
         defaultValue: order_1.OrderType.generic
     }),
     __metadata("design:type", String)

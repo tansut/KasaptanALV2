@@ -33,8 +33,9 @@
     
       <div class="row">
         <% for(var j=0; j< controller.products.length; j++) {%>
+        <% var price = controller.getPriceData(controller.products[j]) %>
         <div class="col-md-3 col-6 ">
-          <%- include('./_partial/product-view.ejs', {product: controller.products[j]}) %>
+          <%- include('./_partial/product-view.ejs', {lowPrice: price ? price.lowPrice: 0.00, highPrice: price ? price.highPrice: 0.00, priceUnit: price ? price.priceUnit: '', product: controller.products[j]}) %>
         </div>
         <% } %>
       </div>

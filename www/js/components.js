@@ -560,6 +560,9 @@ window.initComponents = function initComponents() {
                         }
                     }
 
+                    var urlParams = new URLSearchParams(window.location.search);
+
+
 
                     return App.Backend.post(url, {
                         id: this.product.id,
@@ -568,7 +571,8 @@ window.initComponents = function initComponents() {
                         purchaseoption: this.selectedUnit,
                         productTypeData: productTypeData,
                         note: this.note,
-                        shopcardIndex: this.shopCardIndex
+                        shopcardIndex: this.shopCardIndex,
+                        userSelectedButcher: urlParams.has('butcher') ? urlParams.get('butcher'): undefined
                     }).then(result => {
                         this.newlyAddedItem = result.items[result.items.length-1];
                         this.$nextTick(function () {

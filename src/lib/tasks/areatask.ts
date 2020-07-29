@@ -4,9 +4,10 @@ import * as sq from 'sequelize';
 import { OrderItemStatus } from "../../models/order";
 import Butcher from "../../db/models/butcher";
 import Review from "../../db/models/review";
-import { Op, Sequelize } from "sequelize";
+import { Op, Sequelize, Transaction } from "sequelize";
 import Product from "../../db/models/product";
 import Area from "../../db/models/area";
+import db from "../../db/context";
 
 
 
@@ -27,18 +28,19 @@ export default class AreaTask extends BaseTask {
         select distinct areaLevel3Id as id from Orders
         union
         select id from Areas where level=1 and status='active'
-        union
-        select id from Areas ap where ap.level=2 and ( ap.id in 
-        (
-        SELECT distinct a.parentid FROM  Areas a where 
-        (a.id in (SELECT distinct d.toareaid FROM Dispatchers d where d.enabled=1 and d.toarealevel=3))
-        ) or 
-        (ap.id in (SELECT distinct d.toareaid FROM Dispatchers d where d.enabled=1 and d.toarealevel=2))
-        )
-        union SELECT a.id FROM  Areas a where 
-        (a.id in (SELECT distinct d.toareaid FROM Dispatchers d where d.enabled=1 and d.toarealevel=3))
+        
 
             `,
+        //     union
+        // select id from Areas ap where ap.level=2 and ( ap.id in 
+        // (
+        // SELECT distinct a.parentid FROM  Areas a where 
+        // (a.id in (SELECT distinct d.toareaid FROM Dispatchers d where d.enabled=1 and d.toarealevel=3))
+        // ) or 
+        // (ap.id in (SELECT distinct d.toareaid FROM Dispatchers d where d.enabled=1 and d.toarealevel=2))
+        // )
+        // union SELECT a.id FROM  Areas a where 
+        // (a.id in (SELECT distinct d.toareaid FROM Dispatchers d where d.enabled=1 and d.toarealevel=3))
             // union select id from Areas ap where ap.level=3 and ( ap.id in 
             //     (
             //     SELECT distinct a.id FROM  Areas a where 
@@ -53,30 +55,42 @@ export default class AreaTask extends BaseTask {
 
         let arr = items.map(i => i['id']);
 
-
-        await Area.update({
-            status: 'active'
-        },
-            {
-                where: {
-                    id: {
-                        [Op.in]: arr
+        let res = db.getContext().transaction((t: Transaction) => {
+            let result = []
+            result.push(
+                Area.update({
+                    status: 'generic'
+                },
+                    {
+                        transaction: t,
+                        where: {
+                            level: {
+                                [Op.notIn]: [1]
+                            }
+                        }
+                    }
+                )
+            )
+            result.push(Area.update({
+                status: 'active'
+            },
+                {
+                    transaction: t,
+                    where: {
+                        id: {
+                            [Op.in]: arr
+                        }
                     }
                 }
-            }
-        )
+            ))
 
-        await Area.update({
-            status: 'generic'
-        },
-            {
-                where: {
-                    id: {
-                        [Op.notIn]: arr
-                    }
-                }
-            }
-        )
+
+            
+            
+            return Promise.all(result)
+        })
+
+        await res;
 
         console.log('done AreaTask job', Date.now())
 

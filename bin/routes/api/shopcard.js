@@ -56,6 +56,13 @@ class Route extends router_1.ApiRouter {
                 shopcard.remove(item.shopcardIndex);
             }
             shopcard.addProduct(productView, item.quantity, item.purchaseoption, item.note, item.productTypeData || {});
+            if (this.req.body.userSelectedButcher) {
+                for (var bi in shopcard.butchers) {
+                    if (shopcard.butchers[bi].slug == this.req.body.userSelectedButcher) {
+                        shopcard.butchers[bi].userSelected = true;
+                    }
+                }
+            }
             yield shopcard.saveToRequest(this.req);
             this.res.send(shopcard);
         });
