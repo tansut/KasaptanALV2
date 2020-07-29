@@ -393,7 +393,7 @@ class Order extends BaseModel<Order> {
             if (this.orderType == OrderType.kurban) {
                 return this.butcher.kurbanCommissionRate;    
             } else {
-                if (this.dispatcherType == "butcher") {
+                if (this.dispatcherType == "butcher" || this.dispatcherType == "butcher/auto") {
                     return this.butcher.commissionRate                               
                 } else {
                     return this.butcher.noshipCommissionRate;
@@ -407,7 +407,7 @@ class Order extends BaseModel<Order> {
             if (this.orderType == OrderType.kurban) {
                 return this.butcher.kurbanCommissionFee;    
             } else {
-                if (this.dispatcherType == "butcher") {
+                if (this.dispatcherType == "butcher" || this.dispatcherType == "butcher/auto") {
                     return this.butcher.commissionFee                               
                 } else {
                     return this.butcher.noshipCommissionFee;
