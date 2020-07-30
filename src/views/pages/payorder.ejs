@@ -56,9 +56,9 @@
       </div>
       <div class="order-lg-1 pr-lg-4 text-center text-lg-left d-print-none">
         <h1 class="h3">Online Ödeme</h1>
-        <h2 class="lead h4">
+        <!-- <h2 class="lead h4">
           <%=order.name%>
-        </h2>
+        </h2> -->
         <h2 class="lead h4">
           <%= __helper.formatDate(order.creationDate) + ' tarihli ' + order.butcherName + ' siparişim' %></h2>
         <a class="font-size-xs text-muted" href="#orderdetails">Sipariş Bilgileri &raquo;</a>
@@ -140,15 +140,17 @@
 
       <a id="orderdetails"></a>
       </div>
+      <% if (true) { %>
       <div class="mb-3">
         <%- include('./_partial/order.details.ejs', {
           order: order,
           hidePhone: true,
-          hidePayLink: true               
+          hidePayLink: true,
+          hideUser: controller.hideOrderDetails
       }) %>
       </div>
 
-
+<% } %>
 
 
 

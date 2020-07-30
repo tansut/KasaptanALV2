@@ -31,6 +31,7 @@ import { PuanResult } from '../models/puan';
 import email from '../lib/email';
 import { OrderSource } from '../models/order';
 
+
 export default class Route extends PaymentRouter {
     order: Order;
     api: OrderApi;
@@ -94,6 +95,14 @@ export default class Route extends PaymentRouter {
             this.possiblePuanList.forEach(pg => this.mayEarnPuanTotal += pg.earned)
             this.mayEarnPuanTotal = Helper.asCurrency(this.mayEarnPuanTotal)
         }
+    }
+
+    get hideOrderDetails() {
+        if (this.req.user && this.req.user.hasRole('admin')) return false;
+        // const diffTime = Math.abs(Helper.Now() - new Date(this.order.creationDate));
+        // const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24)); 
+        //if (this.shouldBePaid)
+        return true;
     }
 
 

@@ -61,11 +61,11 @@
         <tr>
             <td>
               <% if (__req.user.hasRole('admin')) { %>
-              <a target="_blank" href="<%= `/pay/${orders[i].ordernum}` %>"><%= orders[i].name %> </a>
               <%} else { %>
-                <a target="_blank" href=""><%= orders[i].name %> </a>
+                <!-- <a target="_blank" href=""><%= orders[i].name %> </a> -->
 
               <%}%>
+              <a target="_blank" href="<%= `/pay/${orders[i].ordernum}` %>"><%= orders[i].name %> </a>
 
             </td>
             <td><%= __helper.formatDate(orders[i].creationDate) %></td>

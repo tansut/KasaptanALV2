@@ -2,6 +2,7 @@
   var operator = typeof(operator) == 'undefined' ? false: operator
   var hidePhone = typeof(hidePhone) == 'undefined' ? false: hidePhone
   var hidePayLink = typeof(hidePayLink) == 'undefined' ? false: hidePayLink
+  var hideUser = typeof(hideUser) == 'undefined' ? false: hideUser
 %>
 
 
@@ -69,8 +70,11 @@
     </div>
 <% } %>
 
-
+<% if (!hideUser) { %>
 <div>
+
+  
+
   <% if(order.address) { %>
     <h3 class="h4 ">Adres</h3>
   <%}%>
@@ -91,9 +95,7 @@
         <li><span class="text-muted">Not:&nbsp;</span><%= order.note%>
           </li>
       <%}%>
-    <% if (order.noInteraction) { %>
-    <li>Güvenli Teslimat: <%= order.noInteraction ? 'Evet': 'Hayır'%></li>
-    <% } %>
+
     <% if (!hidePhone) { %>
     <li id="orderphone" onclick="javascript:$('#orderphone').hide()"><span
         class="text-muted">Telefon:&nbsp;</span><%= order.phone%></li>
@@ -118,6 +120,8 @@
 
   <%}%>
 </div>
+
+<% } %>
 
 <div class="row mb-3 d-print-none">
   <div class="col-sm-4 mb-2">
@@ -151,6 +155,9 @@
 
   <ul class="px-4 list-unstyled font-size-sm">
     <li><span class="text-muted">Teslimat:&nbsp;</span><%= shipment[bi].howToDesc %></li>
+    <% if (order.noInteraction) { %>
+      <li>Güvenli Teslimat: <%= order.noInteraction ? 'Evet': 'Hayır'%></li>
+      <% } %>
     <li><span class="text-muted">Teslimat Kodu:&nbsp;</span><%= shipment[bi].securityCode %></li>
     <li><span class="text-muted">Teslimat planı:&nbsp;</span><%= shipment[bi].desc %></li>
     <% if (shipment[bi].type != 'callme') {%>
