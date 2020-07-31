@@ -54,6 +54,10 @@ class ButcherArea extends BaseModel<ButcherArea> {
     })
     kmActive: number;    
 
+    get bestKm() {
+        return this.kmActive || this.kmGoogle || this.kmDirect * 1.5
+    }
+
 
     @Column({
         allowNull: true,

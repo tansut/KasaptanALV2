@@ -14,6 +14,9 @@ const basemodel_1 = require("./basemodel");
 const butcher_1 = require("./butcher");
 const area_1 = require("./area");
 let ButcherArea = class ButcherArea extends basemodel_1.default {
+    get bestKm() {
+        return this.kmActive || this.kmGoogle || this.kmDirect * 1.5;
+    }
 };
 __decorate([
     sequelize_typescript_1.ForeignKey(() => butcher_1.default),

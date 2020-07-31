@@ -234,7 +234,7 @@ export default class Route extends ViewRouter {
                     sId: this.butcher.id.toString()
                 }
                 this.logisticsPriceSlice = await this.logisticsProvider.priceSlice(fromTo);
-                this.distance = areaInfo ? (areaInfo.kmActive || areaInfo.kmGoogle || areaInfo.kmDirect * 1.5) : await this.logisticsProvider.distance(fromTo)
+                this.distance = areaInfo ? areaInfo.bestKm : await this.logisticsProvider.distance(fromTo)
             }
         }
         

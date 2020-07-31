@@ -164,7 +164,7 @@ export class LogisticProvider {
         let km = 0;
         if (saved) {
             let distanceDif = params.areaOnly ? 0.0: Helper.distance(ft.finish, saved.area.location);
-            km = (saved.kmActive || saved.kmGoogle || saved.kmDirect * 1.5) + distanceDif;
+            km = saved.bestKm + distanceDif;
         } 
         return km || Helper.distance(ft.start, ft.finish) * 1.5;
     }

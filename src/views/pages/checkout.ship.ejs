@@ -9,7 +9,9 @@
   <% include ./_partial/header %>
 
 
-
+<script>
+  var disableShip = false;
+</script>
 
   <div class="page-title-overlap page-title bg-accent py-2 ">
     <div class="container d-lg-flex justify-content-between py-2 py-lg-3">
@@ -27,13 +29,19 @@
   </div>
 
     <!-- Page Content-->
+
     <div class="container mb-4">
+
         <form class="needs-validation" method="post" novalidate action="/alisveris-sepetim/saveship">
         <div class="row">
           
           <section class="col-lg-8 " v-cloak id="shopcardshipment">
         
             <%- include('./_partial/checkout-steps.ejs', {   step: 1        }); %>
+
+            <div class="alert alert-warning">
+              <h3 class="h5">Kasaplarımız teslimatı bayramdan sonra yapmaktadırlar</h3>
+            </div>
 
             <% for (let bi in shopcard.shipment) { %>
             <% let shipment = shopcard.shipment[bi]%>
@@ -53,11 +61,11 @@
               <nav class="text-center pl-1 pr-1 nav nav-pills nav-pills-dark  mb-4">
                 <div class="row w-100">
                   <div class="col-6">
-                    <a id="ship-ship" class="nav-item shadow-none nav-link" @click="card.shipment[<%=bi%>].howTo = 'ship'" v-bind:class="{ active: card && card.shipment['<%=bi%>'].howTo == 'ship' }">Adrese</a>
+                    <a id="ship-ship" class="nav-item shadow-none nav-link" @click="setShipMethod(<%=bi%>, 'ship')" v-bind:class="{ active: card && card.shipment['<%=bi%>'].howTo == 'ship' }">Adrese</a>
 
                   </div>
                   <div class="col-6">
-                    <a id="ship-take" class="nav-item shadow-none nav-link" @click="card.shipment[<%=bi%>].howTo = 'take'" v-bind:class="{ active: card && card.shipment['<%=bi%>'].howTo == 'take' }">Gel-Al</a>
+                    <a id="ship-take" class="nav-item shadow-none nav-link" @click="setShipMethod(<%=bi%>, 'take')" v-bind:class="{ active: card && card.shipment['<%=bi%>'].howTo == 'take' }">Gel-Al</a>
 
                   </div>
                 </div>
@@ -106,6 +114,11 @@
                  </div> 
 
               <% } else if (shipment.dispatcher && (shipment.dispatcher.min > shopcard.butchers[bi].subTotal)) { %>
+
+                <script>
+                  disableShip = true;
+                </script>
+                
                 <div class="alert alert-danger  mx-4 mb-4" v-if="card && card.shipment[<%=bi%>].howTo == 'ship'">
                   <p class="font-weight-bold">Bir miktar daha ürün alın</p>
                   <p>
@@ -114,7 +127,7 @@
                   Alışveriş toplamınız <%- include('./_partial/currency.ejs', {value: shopcard.butchers[bi].subTotal}) %> olarak gözüküyor.
                 </p>  
                 <div>
-                  <a href="#gelal" @click="card.shipment[<%=bi%>].howTo = 'take'" class="btn btn-sm btn-accent">Gel-Al Yap</a>
+                  <a href="#gelal" @click="setShipMethod(<%=bi%>, 'take')" class="btn btn-sm btn-accent">Gel-Al Yap</a>
                   <a href="/alisveris-sepetim" class="btn btn-sm btn-info">Sepete Git &raquo;</a>
                 </div>
                  </div> 
@@ -246,7 +259,7 @@
 
             <div class="d-none d-lg-flex">
               <div class="w-50 pr-3"><a class="btn btn-secondary btn-block" href="/alisveris-sepetim"><i class="czi-arrow-left mt-sm-0 mr-1"></i><span class="d-none d-sm-inline">Geri</span><span class="d-inline d-sm-none">Geri</span></a></div>
-              <div class="w-50 pl-2"><button type="submit" id="save-adres" name="save-adres" class="btn btn-info btn-block"><span class="d-none d-sm-inline">Sonraki Adım</span><span class="d-inline d-sm-none">Sonraki</span><i class="czi-arrow-right mt-sm-0 ml-1"></i></button></div>
+              <div class="w-50 pl-2"><button type="submit" :disabled="disableShip" id="save-adres" name="save-adres" class="btn btn-info btn-block"><span class="d-none d-sm-inline">Sonraki Adım</span><span class="d-inline d-sm-none">Sonraki</span><i class="czi-arrow-right mt-sm-0 ml-1"></i></button></div>
             </div>
           </section>
   
@@ -255,7 +268,7 @@
         <div class="row d-lg-none">
           <div class="col-lg-8">
             <div class="d-flex pt-4 mt-3">
-              <div class="w-50 pr-3"><a class="btn btn-secondary btn-block" href="/alisveris-sepetim/adres"><i class="czi-arrow-left mt-sm-0 mr-1"></i><span class="d-none d-sm-inline">Önceki</span><span class="d-inline d-sm-none">Geri</span></a></div>              <div class="w-50 pl-2"><button type="submit" id="save-adres" name="save-adres" class="btn btn-info btn-block"><span class="d-none d-sm-inline">Sonraki Adım</span><span class="d-inline d-sm-none">Sonraki Adım</span><i class="czi-arrow-right mt-sm-0 ml-1"></i></button></div>
+              <div class="w-50 pr-3"><a class="btn btn-secondary btn-block" href="/alisveris-sepetim/adres"><i class="czi-arrow-left mt-sm-0 mr-1"></i><span class="d-none d-sm-inline">Önceki</span><span class="d-inline d-sm-none">Geri</span></a></div>              <div class="w-50 pl-2"><button type="submit" :disabled="disableShip" id="save-adres" name="save-adres" class="btn btn-info btn-block"><span class="d-none d-sm-inline">Sonraki Adım</span><span class="d-inline d-sm-none">Sonraki Adım</span><i class="czi-arrow-right mt-sm-0 ml-1"></i></button></div>
             </div>
           </div>
         </div></form>
@@ -265,6 +278,16 @@
   <% include ./_partial/scripts %>
 <script>
 window.App.ShopcardShipmentApp.card = window.shopcard.card.data;
+window.App.ShopcardShipmentApp.disableShip = disableShip;
+
+function setShip(val) {
+  //val ? $('#save-adres').removeAttr('disabled'): $('#save-adres').attr('disabled', true);
+}
+
+$(document).ready(function() {
+  //setShip(canShip);
+})
+
 </script>
 </body>
 

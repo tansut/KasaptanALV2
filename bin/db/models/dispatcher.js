@@ -30,13 +30,13 @@ exports.DispatcherTypeDesc = {
     "kasaptanal/car": "Soğuk Zincir Araç Kurye Sistemi",
 };
 let Dispatcher = class Dispatcher extends basemodel_1.default {
-    setProvider(useLevel1, l3, productType) {
+    setProvider(useLevel1, l3, productType, distance2Butcher) {
         let dispath = this;
         let butcherAvail = dispath.toarealevel > 1 || useLevel1;
         if (!useLevel1 && dispath.toarealevel == 1) {
             let forceL1 = dispath.butcher.dispatchArea == "citywide" || dispath.butcher.dispatchArea == "radius";
             if (dispath.butcher.dispatchArea == "radius") {
-                let distance = helper_1.default.distance(dispath.butcher.location, l3.location);
+                let distance = distance2Butcher || helper_1.default.distance(dispath.butcher.location, l3.location);
                 butcherAvail = dispath.butcher.radiusAsKm >= distance;
             }
             else
@@ -81,16 +81,16 @@ let Dispatcher = class Dispatcher extends basemodel_1.default {
     get priceInfo() {
         if (this.type == "kasaptanal/motokurye") {
             let time = '60-90 dk';
-            if (this.butcherArea.kmActive <= 15.0) {
+            if (this.butcherArea.bestKm <= 15.0) {
                 time = '45-60 dk';
             }
-            else if (this.butcherArea.kmActive > 25.0 && this.butcherArea.kmActive <= 35.00) {
+            else if (this.butcherArea.bestKm > 25.0 && this.butcherArea.bestKm <= 35.00) {
                 time = '75-120 dk';
             }
-            else if (this.butcherArea.kmActive > 35 && this.butcherArea.kmActive <= 45.00) {
+            else if (this.butcherArea.bestKm > 35 && this.butcherArea.bestKm <= 45.00) {
                 time = '90-150 dk';
             }
-            else if (this.butcherArea.kmActive > 45.0) {
+            else if (this.butcherArea.bestKm > 45.0) {
                 time = '120-180 dk';
             }
             return `${time} teslimat`;

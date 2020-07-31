@@ -643,13 +643,20 @@ window.initComponents = function initComponents() {
 
         data: function () {
             return {
-                card: null
+                card: null,
+                disableShip: false
             }
         },
         mounted: function () {
 
         },
         methods: {
+            setShipMethod(bi, method) {
+               this.card.shipment[bi].howTo = method;
+               if (method == 'take') {
+                   this.disableShip = false;
+               }
+            }
         },
 
         watch: {

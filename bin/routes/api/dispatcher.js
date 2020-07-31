@@ -197,9 +197,10 @@ class Route extends router_1.ApiRouter {
             let areaApi = new area_2.default(this.constructorParams);
             let butcherAreaData = yield areaApi.ensureDistances(res.map(s => s.butcher), l3);
             for (let i = 0; i < res.length; i++) {
-                let provider = res[i].setProvider(q.useLevel1, l3, q.orderType);
+                let areaData = butcherAreaData.find(ad => ad.butcherid == res[i].butcherid);
+                let provider = res[i].setProvider(q.useLevel1, l3, q.orderType, areaData.bestKm);
                 if (provider && !ugly[res[i].butcherid]) {
-                    res[i].butcherArea = butcherAreaData.find(ad => ad.butcherid == res[i].butcherid);
+                    res[i].butcherArea = areaData;
                     ugly[res[i].butcherid] = res[i];
                     result.push(res[i]);
                 }

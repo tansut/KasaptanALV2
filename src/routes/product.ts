@@ -142,9 +142,9 @@ export default class Route extends ViewRouter {
 
 
         let defaultButchers = serving;
-        let nearButchers = serving.filter(p=>p.butcherArea.kmActive <= 10.0);
-        let alternateButchers = serving.filter(p=>(p.butcherArea.kmActive > 10.0 && p.butcherArea.kmActive <= 20.0));
-        let farButchers = serving.filter(p=>p.butcherArea.kmActive > 20.0);
+        let nearButchers = serving.filter(p=>p.butcherArea.bestKm <= 10.0);
+        let alternateButchers = serving.filter(p=>(p.butcherArea.bestKm > 10.0 && p.butcherArea.bestKm <= 20.0));
+        let farButchers = serving.filter(p=>p.butcherArea.bestKm > 20.0);
 
         if (nearButchers.length < 2) {
             defaultButchers = nearButchers.concat(alternateButchers);
@@ -274,7 +274,7 @@ export default class Route extends ViewRouter {
                         min: dispatcher.min,
                         totalForFree: dispatcher.totalForFree,
                         type: dispatcher.type,
-                        distance: dispatcher.butcherArea.kmActive,
+                        distance: dispatcher.butcherArea.bestKm,
                         priceSlice: await dispatcher.provider.priceSlice(fromTo),
                         priceInfo: dispatcher.priceInfo,
                         userNote: dispatcher.userNote,
@@ -298,7 +298,7 @@ export default class Route extends ViewRouter {
                     totalForFree: dispatcher.totalForFree,
                     type: dispatcher.type,
                     priceInfo: dispatcher.priceInfo,
-                    distance: dispatcher.butcherArea.kmActive,
+                    distance: dispatcher.butcherArea.bestKm,
                     priceSlice: await dispatcher.provider.priceSlice(fromTo),                    
                     userNote: dispatcher.userNote,
                     takeOnly: dispatcher.takeOnly

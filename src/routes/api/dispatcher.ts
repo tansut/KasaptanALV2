@@ -215,10 +215,11 @@ export default class Route extends ApiRouter {
         let l3 = await Area.findByPk(q.adr.level3Id || q.adr.level2Id);
         let areaApi = new AreaApi(this.constructorParams);
         let butcherAreaData = await areaApi.ensureDistances(res.map(s=>s.butcher), l3);
-        for (let i = 0; i < res.length; i++) {            
-            let provider = res[i].setProvider(q.useLevel1, l3, q.orderType);
+        for (let i = 0; i < res.length; i++) {          
+            let areaData = butcherAreaData.find(ad=>ad.butcherid == res[i].butcherid)
+            let provider = res[i].setProvider(q.useLevel1, l3, q.orderType, areaData.bestKm);
             if (provider && !ugly[res[i].butcherid]) {
-                res[i].butcherArea = butcherAreaData.find(ad=>ad.butcherid == res[i].butcherid)
+                res[i].butcherArea = areaData;
                 ugly[res[i].butcherid] = res[i];
                 result.push(res[i]);
             }

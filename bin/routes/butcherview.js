@@ -170,7 +170,7 @@ class Route extends router_1.ViewRouter {
                         sId: this.butcher.id.toString()
                     };
                     this.logisticsPriceSlice = yield this.logisticsProvider.priceSlice(fromTo);
-                    this.distance = areaInfo ? (areaInfo.kmActive || areaInfo.kmGoogle || areaInfo.kmDirect * 1.5) : yield this.logisticsProvider.distance(fromTo);
+                    this.distance = areaInfo ? areaInfo.bestKm : yield this.logisticsProvider.distance(fromTo);
                 }
             }
             this.res.render('pages/butcher', this.viewData({ pageThumbnail: pageThumbnail, pageTitle: pageTitle, pageDescription: pageDescription, butcher: butcher, images: images }));
