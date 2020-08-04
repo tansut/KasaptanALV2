@@ -160,7 +160,7 @@ export default class Route extends ApiRouter {
         let res = await Order.findAll({
             where: where,
             order: [['ID', 'DESC']],
-            limit: 100,
+            limit: 200,
             include: [{
                 model: Butcher
             }, {
@@ -865,7 +865,7 @@ export default class Route extends ApiRouter {
         } else {
             op.accounts.push(new Account("odeme-bekleyen-satislar", [o.userId, o.ordernum, 100], "Ürün Bedeli").inc(o.subTotal));
             if (o.shippingTotal > 0.00) {
-                if (o.dispatcherType == "butcher") {
+                if (o.dispatcherType == "butcher" || o.dispatcherType == "butcher/auto") {
                     op.accounts.push(new Account("odeme-bekleyen-satislar", [o.userId, o.ordernum, 200], "Kasap Teslimat Bedeli").inc(o.shippingTotal));
                 } else op.accounts.push(new Account("odeme-bekleyen-satislar", [o.userId, o.ordernum, 201], "KasaptanAl.com Teslimat Bedeli").inc(o.shippingTotal));
             }

@@ -165,7 +165,7 @@ class Route extends router_1.ApiRouter {
             let res = yield order_1.Order.findAll({
                 where: where,
                 order: [['ID', 'DESC']],
-                limit: 100,
+                limit: 200,
                 include: [{
                         model: butcher_1.default
                     }, {
@@ -796,7 +796,7 @@ class Route extends router_1.ApiRouter {
         else {
             op.accounts.push(new account_1.Account("odeme-bekleyen-satislar", [o.userId, o.ordernum, 100], "Ürün Bedeli").inc(o.subTotal));
             if (o.shippingTotal > 0.00) {
-                if (o.dispatcherType == "butcher") {
+                if (o.dispatcherType == "butcher" || o.dispatcherType == "butcher/auto") {
                     op.accounts.push(new account_1.Account("odeme-bekleyen-satislar", [o.userId, o.ordernum, 200], "Kasap Teslimat Bedeli").inc(o.shippingTotal));
                 }
                 else

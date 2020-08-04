@@ -39,9 +39,6 @@
         
             <%- include('./_partial/checkout-steps.ejs', {   step: 1        }); %>
 
-            <div class="alert alert-warning">
-              <h3 class="h5">Kasaplarımız teslimatı bayramdan sonra yapmaktadırlar</h3>
-            </div>
 
             <% for (let bi in shopcard.shipment) { %>
             <% let shipment = shopcard.shipment[bi]%>
