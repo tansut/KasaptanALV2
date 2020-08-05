@@ -4,6 +4,7 @@ const Jimp2 = require("jimp");
 const path = require("path");
 const numeral = require("numeral");
 const moment = require("moment");
+const product_1 = require("../db/models/product");
 class Helper {
     static nvl(val, def = 0) {
         return parseInt(val) == NaN ? def : parseInt(val);
@@ -13,6 +14,12 @@ class Helper {
     }
     static distance(p1, p2) {
         return Helper._distance(p1.coordinates[0], p1.coordinates[1], p2.coordinates[0], p2.coordinates[1], 'K');
+    }
+    static isSingleShopcardProduct(type) {
+        return (type == product_1.ProductType.adak) ||
+            (type == product_1.ProductType.kurban) ||
+            (type == product_1.ProductType.kurbandiger) ||
+            (type == product_1.ProductType.tumkuzu);
     }
     static _distance(lat1, lon1, lat2, lon2, unit) {
         if ((lat1 == lat2) && (lon1 == lon2)) {

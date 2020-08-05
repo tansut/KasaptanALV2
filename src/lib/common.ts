@@ -51,17 +51,20 @@ export class AdakProductManager extends ProductTypeManager {
     vekalet: string = 'online';
     video: string = 'yes';
     hisse: string = '4';
+    kiminadina: string = '';
 
     saveToOrderItem(o:OrderItem) {
         o.custom1 = this.vekalet ;
         o.custom2 = this.video ;
         o.custom3 = this.hisse ;
+        o.custom4 = this.kiminadina;        
     }
 
     loadFromOrderItem(o:OrderItem) {
         this.vekalet = o.custom1;
         this.video = o.custom2;
         this.hisse = o.custom3;
+        this.kiminadina = o.custom4;
     }    
 }
 
@@ -120,7 +123,36 @@ export class KurbanProductManager extends ProductTypeManager {
     }    
 }
 
+export class KurbanDigerProductManager extends ProductTypeManager {
 
+    static vekaletData = {
+        'online': 'Sipariş vererek vekâletimi de veriyorum',
+        'callme': 'Vekâlet için beni arayın',        
+    }
+
+    static videoData = {
+        'yes': 'Kesim videosu gönderin',
+        'no': 'Kesim videosu istemiyorum',        
+    } 
+
+    
+    vekalet: string = 'online';
+    video: string = 'yes';
+    kiminadina: string = '';
+
+    saveToOrderItem(o:OrderItem) {
+        o.custom1 = this.vekalet ;
+        o.custom2 = this.video ;
+        o.custom3 = '' ;
+        o.custom4 = this.kiminadina;        
+    }
+
+    loadFromOrderItem(o:OrderItem) {
+        this.vekalet = o.custom1;
+        this.video = o.custom2;
+        this.kiminadina = o.custom4;
+    }    
+}
 
 export class ProductTypeFactory {
 
@@ -133,6 +165,7 @@ export class ProductTypeFactory {
     static registerAll() {
         ProductTypeFactory.register('adak', AdakProductManager);
         ProductTypeFactory.register('kurban', KurbanProductManager);
+        ProductTypeFactory.register('kurbandiger', KurbanDigerProductManager);
         ProductTypeFactory.register('generic', GenericProductManager);
     }
 

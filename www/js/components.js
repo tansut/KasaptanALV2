@@ -546,6 +546,7 @@ window.initComponents = function initComponents() {
                             vekalet: $('#adak-vekalet').val(),
                             video: $('#adak-video').val(),
                             hisse: $('#adak-hisse').val(),
+                            kiminadina: $('#kurban-kiminadina').val(),
                         }
                     } else if (this.product.productType == 'kurban') {
                         var bagis = document.getElementById("kurban-bagis-mi").checked;
@@ -557,6 +558,12 @@ window.initComponents = function initComponents() {
                             bagis: bagis,
                             bagisTarget: $('#kurban-bagis-target').val(),
                             bagisNote: $("#kurban-bagis-note").val()
+                        }
+                    } else if (this.product.productType == 'kurbandiger') {
+                        productTypeData = {
+                            vekalet: $('#adak-vekalet').val(),
+                            video: $('#adak-video').val(),
+                            kiminadina: $('#kurban-kiminadina').val(),
                         }
                     }
 

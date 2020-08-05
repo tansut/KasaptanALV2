@@ -96,7 +96,7 @@ class Route extends router_1.ViewRouter {
         return res;
     }
     useL1(product) {
-        return (product.productType == product_1.ProductType.adak || product.productType == product_1.ProductType.kurban);
+        return (product.productType == product_1.ProductType.kurban);
     }
     bestButchersForProduct(product, adr, userBest) {
         return __awaiter(this, void 0, void 0, function* () {

@@ -5,6 +5,7 @@ import moment = require('moment');
 import { AppRequest } from './http';
 import config from '../config';
 import { GeoLocation } from '../models/geo';
+import { ProductType } from '../db/models/product';
 
 export default class Helper {
 
@@ -27,6 +28,14 @@ export default class Helper {
 
     static distance(p1: GeoLocation, p2: GeoLocation) {
         return Helper._distance(p1.coordinates[0], p1.coordinates[1], p2.coordinates[0], p2.coordinates[1], 'K')
+    }
+
+
+    static isSingleShopcardProduct(type: string) {
+        return (type == ProductType.adak) ||
+        (type == ProductType.kurban) ||
+        (type == ProductType.kurbandiger) ||
+        (type == ProductType.tumkuzu)
     }
 
     static _distance(lat1, lon1, lat2, lon2, unit) {

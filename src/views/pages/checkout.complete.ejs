@@ -33,16 +33,17 @@
       <div class="card-body text-center">
         <h2 class="h4 pb-3">Teşekkürler!</h2>
         <p class="font-size-sm mb-2">Siparişiniz başarıyla aldık.</p>
-        <p class="font-size-sm mb-2">Sipariş numaranızı not edebilir veya profilim sayfasından siparişinizi takip
-          edebilirsiniz:</p>
 
         <% orders.forEach(order=> { %>
         <div class="mt-5">
           <span data-orderid="<%= order.ordernum %>" class='font-weight-medium'><%= order.ordernum %></span></p>
-          <p class="font-size-sm">Birazdan e-posta adresinize de gerekli bilgileri ulaştırıyor olacağız. Çok
-            teşekkürler!</p>
+          <!-- <p class="font-size-sm">Birazdan e-posta adresinize de gerekli bilgileri ulaştırıyor olacağız. Çok
+            teşekkürler!</p> -->
 
             <% if (order.paymentType == 'onlinepayment') { %>
+              <p class="font-weight-bold">
+                Şimdi Online Ödeme adımına güvenle geçebilirsiniz.
+              </p>
               <a class="btn mt-3 btn-success mr-2" href="/pay/<%=order.ordernum%>">Önline Ödeme Yap &raquo;</a>
     
               <% } else { %>

@@ -6,12 +6,19 @@ import Category from './category';
 import ButcherProduct from './butcherproduct';
 import Resource from './resource';
 import { Op, QueryTypes } from 'sequelize';
-import { AdakProductManager, KurbanProductManager } from '../../lib/common';
+import { AdakProductManager, KurbanProductManager, KurbanDigerProductManager } from '../../lib/common';
 
 export enum ProductType {
     generic = 'generic',
     kurban = 'kurban',
-    adak = 'adak'
+    kurbandiger = 'kurbandiger',
+    adak = 'adak',
+    tumkuzu = 'tumkuzu',
+}
+
+export enum ProductDispatch {
+    default = 'default',
+    citywide = 'citywide'
 }
 
 @Table({
@@ -49,6 +56,11 @@ class Product extends BaseModel<Product> {
         let obj = this.producttypedata || {};
         return Object.assign(new KurbanProductManager(), obj)        
     } 
+
+    get asKurbanDiger(): KurbanDigerProductManager {
+        let obj = this.producttypedata || {};
+        return Object.assign(new KurbanDigerProductManager(), obj)        
+    }     
 
     get producttypedata(): any {
         return this.producttypedatajson ? JSON.parse(this.getDataValue('producttypedatajson')) : null
@@ -136,6 +148,12 @@ class Product extends BaseModel<Product> {
         type: DataType.TEXT
     })
     featuresText: string;
+
+    // @Column({
+    //     allowNull: false,
+    //     defaultValue: 'default'
+    // })
+    // dispatchArea: string;    
     
 
     @Column({

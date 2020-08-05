@@ -182,7 +182,7 @@ class Dispatcher extends BaseModel<Dispatcher> {
 
             
 
-             if (productType == ProductType.adak || productType == ProductType.kurban) {
+             if (Helper.isSingleShopcardProduct(productType)) {
 
              } else {
                 if (usage != "none" && dispath.butcher.logisticProviderUsage != "disabled" && dispath.butcher.logisticProvider) {

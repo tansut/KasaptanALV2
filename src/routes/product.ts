@@ -100,7 +100,7 @@ export default class Route extends ViewRouter {
     }
 
     useL1(product: Product) {
-        return (product.productType == ProductType.adak || product.productType == ProductType.kurban)    
+        return (product.productType == ProductType.kurban)    
     }
 
     async bestButchersForProduct(product: Product, adr: PreferredAddress, userBest: Butcher): Promise<ButcherSelection> {

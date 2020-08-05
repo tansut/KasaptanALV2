@@ -19,7 +19,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 };
 var Product_1;
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.ProductType = void 0;
+exports.ProductDispatch = exports.ProductType = void 0;
 const sequelize_typescript_1 = require("sequelize-typescript");
 const basemodel_1 = require("./basemodel");
 const productcategory_1 = require("./productcategory");
@@ -31,8 +31,15 @@ var ProductType;
 (function (ProductType) {
     ProductType["generic"] = "generic";
     ProductType["kurban"] = "kurban";
+    ProductType["kurbandiger"] = "kurbandiger";
     ProductType["adak"] = "adak";
+    ProductType["tumkuzu"] = "tumkuzu";
 })(ProductType = exports.ProductType || (exports.ProductType = {}));
+var ProductDispatch;
+(function (ProductDispatch) {
+    ProductDispatch["default"] = "default";
+    ProductDispatch["citywide"] = "citywide";
+})(ProductDispatch = exports.ProductDispatch || (exports.ProductDispatch = {}));
 let Product = Product_1 = class Product extends basemodel_1.default {
     get asAdak() {
         let obj = this.producttypedata || {};
@@ -41,6 +48,10 @@ let Product = Product_1 = class Product extends basemodel_1.default {
     get asKurban() {
         let obj = this.producttypedata || {};
         return Object.assign(new common_1.KurbanProductManager(), obj);
+    }
+    get asKurbanDiger() {
+        let obj = this.producttypedata || {};
+        return Object.assign(new common_1.KurbanDigerProductManager(), obj);
     }
     get producttypedata() {
         return this.producttypedatajson ? JSON.parse(this.getDataValue('producttypedatajson')) : null;

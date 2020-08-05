@@ -25,14 +25,7 @@
             </select>
         </div>
     
-        <div class="form-group">
-            <label for="adak-hisse">Hisseleri nasıl ayarlayalım?</label>
-            <select id="adak-hisse" class="form-control bsselect" >
-                <% for (var k in man.constructor.hisseData) { %>
-                    <option <%= man.hisse == k ? 'selected':'' %> value="<%=k%>"><%=man.constructor.hisseData[k]%></option>
-                <% } %>
-            </select>
-        </div>    
+
     
     </div>
 </div>

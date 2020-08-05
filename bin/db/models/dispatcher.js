@@ -17,7 +17,6 @@ const area_1 = require("./area");
 const butcher_1 = require("./butcher");
 const order_1 = require("./order");
 const core_1 = require("../../lib/logistic/core");
-const product_1 = require("./product");
 var DispatcherSelection;
 (function (DispatcherSelection) {
     DispatcherSelection["full"] = "tam";
@@ -48,7 +47,7 @@ let Dispatcher = class Dispatcher extends basemodel_1.default {
         if (butcherAvail) {
             let usage = dispath.logisticProviderUsage == "default" ? dispath.butcher.logisticProviderUsage : dispath.logisticProviderUsage;
             let providerKey = "butcher";
-            if (productType == product_1.ProductType.adak || productType == product_1.ProductType.kurban) {
+            if (helper_1.default.isSingleShopcardProduct(productType)) {
             }
             else {
                 if (usage != "none" && dispath.butcher.logisticProviderUsage != "disabled" && dispath.butcher.logisticProvider) {

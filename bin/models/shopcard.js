@@ -276,11 +276,11 @@ class ShopCard {
         // }
         this.items.push(new ShopcardItem(product, quantity, price, purchaseoption, note, productTypeData));
         let removed = [];
-        if (product.productType == 'kurban') {
-            this.items = this.items.filter(p => p.product.productType == 'kurban');
+        if (helper_1.default.isSingleShopcardProduct(product.productType)) {
+            this.items = this.items.filter(p => p.product.productType == product.productType);
         }
         else {
-            this.items = this.items.filter(p => p.product.productType != 'kurban');
+            this.items = this.items.filter(p => !helper_1.default.isSingleShopcardProduct(p.product.productType));
         }
         this.arrangeButchers();
         this.calculateShippingCosts();
@@ -331,8 +331,8 @@ class ShopCard {
         this.butcherDiscounts[bi].length == 0 && delete this.butcherDiscounts[bi];
     }
     getOrderType() {
-        if (this.items.length && this.items[0].product.productType == 'kurban') {
-            return 'kurban';
+        if (this.items.length) {
+            return this.items[0].product.productType;
         }
         else
             return 'generic';

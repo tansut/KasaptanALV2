@@ -299,10 +299,10 @@ export class ShopCard {
         
         let removed = [];
 
-        if (product.productType == 'kurban') {
-            this.items = this.items.filter(p=>p.product.productType == 'kurban')
+        if (Helper.isSingleShopcardProduct(product.productType)) {
+            this.items = this.items.filter(p=>p.product.productType == product.productType)
         } else {
-            this.items = this.items.filter(p=>p.product.productType != 'kurban')                      
+            this.items = this.items.filter(p=> !Helper.isSingleShopcardProduct(p.product.productType))                      
         }
         this.arrangeButchers();
         this.calculateShippingCosts();
@@ -414,8 +414,8 @@ export class ShopCard {
     }
 
     getOrderType() {
-        if (this.items.length && this.items[0].product.productType == 'kurban') {
-            return 'kurban'
+        if (this.items.length) {
+            return this.items[0].product.productType
         } else return 'generic'
     }
 
