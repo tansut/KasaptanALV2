@@ -546,7 +546,7 @@ export default class Route extends ApiRouter {
                         earned: firstOrderPuan,
                         id: o.butcherid.toString(),
                         title: `Kasap Kart™ programı ilk sipariş puanı`,
-                        desc: `${o.ordernum} nolu ${o.butcherName} siparişi kasaptanAl.com Puan`,
+                        desc: `${o.ordernum} nolu ${o.butcherName} siparişi KasaptanAl.com Puan`,
                         based: firstOrder
                     })
                 }

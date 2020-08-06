@@ -96,13 +96,20 @@ class ProductManager {
         }
         else if (category.subItemsMode == category_1.CategorySubItemsMode.tag1) {
             let tags = _.uniq(products.map(p => p.tag1));
+            let tagOrder = {
+                'kuzu eti': 10,
+                'dana eti': 8,
+                'karışık': 6,
+                'beyaz et': 4,
+                'mandıra': 2
+            };
             let i = 0;
             tags.forEach(t => {
                 let subCat = new subcategory_1.default({
                     id: i++,
                     visible: true,
                     categoryid: 0,
-                    displayOrder: i,
+                    displayOrder: tagOrder[t],
                     title: t,
                     description: '',
                     category: null

@@ -137,6 +137,7 @@ class Route extends router_1.ApiRouter {
                 include[0]['include'] = [{
                         model: butcherproduct_1.default
                     }];
+                where['$butcher.status$'] = "open";
                 where['$butcher.products.productid$'] = q.product.id;
                 where['$butcher.products.enabled$'] = true;
                 let w = [{

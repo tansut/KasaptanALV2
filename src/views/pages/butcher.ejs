@@ -126,6 +126,12 @@
         </div>
       </div>
 
+      <% if (butcher.status == 'closed') { %>
+        <div class="text-center alert alert-danger">
+          Bu kasap geçici süreyle hizmet vermemektedir.
+        </div>
+      <% } %>
+
 
       <div class="row w-50 mx-auto">
         <div class="col-sm-6">

@@ -33,7 +33,8 @@ export class ComissionHelper {
    }
 
    calculateButcherComission(totalSales: number, puan: Puan = null): ComissionResult {
-       let product = Helper.asCurrency(totalSales / 1.08);
+       //let product = Helper.asCurrency(totalSales / 1.08);
+       let product = Helper.asCurrency(totalSales);
        let productVat = Helper.asCurrency(totalSales - product);
        let kalitteFee = Helper.asCurrency(product * this.rate + this.fee);
        let kalitteVat = Helper.asCurrency(kalitteFee * 0.18);

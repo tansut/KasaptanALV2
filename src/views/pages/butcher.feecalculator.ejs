@@ -68,8 +68,11 @@ Bedel
               Satış KDV
             </td>
             <td>
+              <% if (controller.feeResult.productVat == 0.00) { %>
+              Dahil
+              <% } else { %>
               <%- include('./_partial/currency.ejs', {value: controller.feeResult.productVat}) %>
-
+              <% } %>
             </td>
 
           </tr>

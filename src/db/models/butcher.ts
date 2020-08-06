@@ -14,6 +14,8 @@ import { GeoLocation } from '../../models/geo';
 
 export type DispatchArea = "manual" | "citywide" | "radius";
 
+export type ButcherStatus = "open" | "closed";
+
 @Table({
     tableName: "Butchers",
     indexes: [
@@ -48,6 +50,12 @@ class Butcher extends BaseModel<Butcher> {
         defaultValue: "manual",
     })    
     dispatchArea: DispatchArea;    
+
+    @Column({
+        allowNull: false,
+        defaultValue: "open",
+    })    
+    status: ButcherStatus;        
 
     @Column({
         allowNull: false,

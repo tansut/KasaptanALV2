@@ -20,7 +20,8 @@ class ComissionHelper {
         this.butcherBankRate = butcherBankRate;
     }
     calculateButcherComission(totalSales, puan = null) {
-        let product = helper_1.default.asCurrency(totalSales / 1.08);
+        //let product = Helper.asCurrency(totalSales / 1.08);
+        let product = helper_1.default.asCurrency(totalSales);
         let productVat = helper_1.default.asCurrency(totalSales - product);
         let kalitteFee = helper_1.default.asCurrency(product * this.rate + this.fee);
         let kalitteVat = helper_1.default.asCurrency(kalitteFee * 0.18);
