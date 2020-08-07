@@ -323,7 +323,12 @@ class Route extends router_1.ViewRouter {
                     order: [["displayOrder", "DESC"], ["updatedOn", "DESC"]]
                 });
             }
-            this.productLd = product.reviewCount > 0 ? yield api.getProductLd(product) : null;
+            this.productLd = (product.status == "onsale") ? yield api.getProductLd(product) : null;
+            if (this.productLd) {
+                if (!this.productLd.offers) {
+                    this.productLd = null;
+                }
+            }
             this.dispatchingAvailable = this.req.prefAddr && (view.butcher != null || (yield new dispatcher_1.default(this.constructorParams).dispatchingAvailable(this.req.prefAddr, this.useL1(this.product))));
             this.res.render('pages/product', this.viewData({
                 butcherProducts: this.butcherProducts.map(p => p.product), butchers: selectedButchers,

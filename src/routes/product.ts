@@ -360,7 +360,13 @@ export default class Route extends ViewRouter {
             })
         }
 
-        this.productLd = product.reviewCount > 0 ? await api.getProductLd(product) : null;
+        this.productLd = (product.status == "onsale") ? await api.getProductLd(product) : null;
+
+        if (this.productLd) {
+            if (!this.productLd.offers) {
+                this.productLd = null;
+            }
+        }
 
         this.dispatchingAvailable = this.req.prefAddr && (view.butcher != null || await new DispatcherApi(this.constructorParams).dispatchingAvailable(this.req.prefAddr, this.useL1(this.product)));
 

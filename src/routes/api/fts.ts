@@ -21,12 +21,12 @@ export default class Route extends ApiRouter {
     async getProducrs(search: string) {
         let psql = this.req.query.c ?
             "select p.name as name, p.slug as url, '' as type, match(p.name, p.shortdesc, p.slug, p.keywords) against (:search IN BOOLEAN MODE) as RELEVANCE " +
-            "from Products p, ProductCategories pc, Categories c where pc.productid = p.id and c.id = pc.categoryid and c.slug = :category and match(p.name, p.shortdesc, p.slug, p.keywords)  against (:search IN BOOLEAN MODE) ORDER BY RELEVANCE DESC LIMIT 10"
+            "from Products p, ProductCategories pc, Categories c where p.status='onsale' and pc.productid = p.id and c.id = pc.categoryid and c.slug = :category and match(p.name, p.shortdesc, p.slug, p.keywords)  against (:search IN BOOLEAN MODE) ORDER BY RELEVANCE DESC LIMIT 10"
 
             :
 
             "select name, slug as url, '' as type, match(name, shortdesc, slug, keywords) against (:search IN BOOLEAN MODE) as RELEVANCE " +
-            "from Products where match(name, shortdesc, slug, keywords)  against (:search IN BOOLEAN MODE) ORDER BY RELEVANCE DESC LIMIT 10"
+            "from Products where status='onsale' and match(name, shortdesc, slug, keywords)  against (:search IN BOOLEAN MODE) ORDER BY RELEVANCE DESC LIMIT 10"
 
         let prods = await User.sequelize.query(psql,
             {
@@ -52,7 +52,7 @@ export default class Route extends ApiRouter {
 
     async getCategories(search: string) {
         let cats = await User.sequelize.query("select name, slug as url, 'Kategoriler' as type, match(name, shortdesc, slug, keywords) against (:search IN BOOLEAN MODE) as RELEVANCE " +
-            "from Categories where match(name, shortdesc, slug, keywords)  against (:search IN BOOLEAN MODE) ORDER BY Categories.type, RELEVANCE DESC LIMIT 10",
+            "from Categories where status = 'active' and match(name, shortdesc, slug, keywords)  against (:search IN BOOLEAN MODE) ORDER BY Categories.type, RELEVANCE DESC LIMIT 10",
             {
                 replacements: { search: search },
                 type: sq.QueryTypes.SELECT,

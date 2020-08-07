@@ -35,10 +35,10 @@ class Route extends router_1.ApiRouter {
         return __awaiter(this, void 0, void 0, function* () {
             let psql = this.req.query.c ?
                 "select p.name as name, p.slug as url, '' as type, match(p.name, p.shortdesc, p.slug, p.keywords) against (:search IN BOOLEAN MODE) as RELEVANCE " +
-                    "from Products p, ProductCategories pc, Categories c where pc.productid = p.id and c.id = pc.categoryid and c.slug = :category and match(p.name, p.shortdesc, p.slug, p.keywords)  against (:search IN BOOLEAN MODE) ORDER BY RELEVANCE DESC LIMIT 10"
+                    "from Products p, ProductCategories pc, Categories c where p.status='onsale' and pc.productid = p.id and c.id = pc.categoryid and c.slug = :category and match(p.name, p.shortdesc, p.slug, p.keywords)  against (:search IN BOOLEAN MODE) ORDER BY RELEVANCE DESC LIMIT 10"
                 :
                     "select name, slug as url, '' as type, match(name, shortdesc, slug, keywords) against (:search IN BOOLEAN MODE) as RELEVANCE " +
-                        "from Products where match(name, shortdesc, slug, keywords)  against (:search IN BOOLEAN MODE) ORDER BY RELEVANCE DESC LIMIT 10";
+                        "from Products where status='onsale' and match(name, shortdesc, slug, keywords)  against (:search IN BOOLEAN MODE) ORDER BY RELEVANCE DESC LIMIT 10";
             let prods = yield user_1.default.sequelize.query(psql, {
                 replacements: { search: search, category: this.req.query.c },
                 type: sq.QueryTypes.SELECT,
@@ -61,7 +61,7 @@ class Route extends router_1.ApiRouter {
     getCategories(search) {
         return __awaiter(this, void 0, void 0, function* () {
             let cats = yield user_1.default.sequelize.query("select name, slug as url, 'Kategoriler' as type, match(name, shortdesc, slug, keywords) against (:search IN BOOLEAN MODE) as RELEVANCE " +
-                "from Categories where match(name, shortdesc, slug, keywords)  against (:search IN BOOLEAN MODE) ORDER BY Categories.type, RELEVANCE DESC LIMIT 10", {
+                "from Categories where status = 'active' and match(name, shortdesc, slug, keywords)  against (:search IN BOOLEAN MODE) ORDER BY Categories.type, RELEVANCE DESC LIMIT 10", {
                 replacements: { search: search },
                 type: sq.QueryTypes.SELECT,
                 mapToModel: false,

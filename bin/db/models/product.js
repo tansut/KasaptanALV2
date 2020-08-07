@@ -172,6 +172,13 @@ __decorate([
 ], Product.prototype, "slug", void 0);
 __decorate([
     sequelize_typescript_1.Column({
+        allowNull: false,
+        defaultValue: "onsale"
+    }),
+    __metadata("design:type", String)
+], Product.prototype, "status", void 0);
+__decorate([
+    sequelize_typescript_1.Column({
         allowNull: true,
     }),
     __metadata("design:type", String)

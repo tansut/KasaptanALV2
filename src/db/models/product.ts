@@ -21,6 +21,8 @@ export enum ProductDispatch {
     citywide = 'citywide'
 }
 
+export type ProductStatus = "onsale" | "archieved" 
+
 @Table({
     tableName: "Products",
     indexes: [{
@@ -119,6 +121,12 @@ class Product extends BaseModel<Product> {
         allowNull: false,
     })
     slug: string;
+
+    @Column({
+        allowNull: false,
+        defaultValue: "onsale"        
+    })
+    status: ProductStatus;
 
 
     @Column({
