@@ -4,7 +4,8 @@ class MiddlewareLoader {
     static use(app) {
         return [
             require('./auth').default(app),
-            require('./sitemap').default(app)
+            require('./sitemap').default(app),
+            require('./productfeed').default(app)
         ];
     }
 }

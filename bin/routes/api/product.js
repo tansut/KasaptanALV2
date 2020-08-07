@@ -235,6 +235,36 @@ class Route extends router_1.ApiRouter {
             return res;
         });
     }
+    getProductsFeed() {
+        return __awaiter(this, void 0, void 0, function* () {
+            let res = [];
+            let products = yield product_1.default.findAll({
+                where: { status: "onsale" }
+            });
+            for (let i = 0; i < products.length; i++) {
+                let p = products[i];
+                yield p.loadResources();
+                let ld = yield this.getProductLd(p);
+                if (ld.offers) {
+                    let feed = {
+                        id: p.id.toString(),
+                        availability: "in stock",
+                        brand: ld.brand.name,
+                        condition: "new",
+                        description: ld.description,
+                        images: ld.image,
+                        price: ld.offers.lowPrice,
+                        link: "https://www.kasaptanal.com/" + p.slug,
+                        title: ld.name,
+                        mpn: "",
+                        gtin: "KA" + p.id.toString()
+                    };
+                    res.push(feed);
+                }
+            }
+            return res;
+        });
+    }
     getProductLd(product) {
         return __awaiter(this, void 0, void 0, function* () {
             let res = new ProductLd_1.ProductLd(product);

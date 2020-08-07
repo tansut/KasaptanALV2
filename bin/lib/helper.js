@@ -112,9 +112,9 @@ class Helper {
     static formattedCurrency(n, symbol = 'TL') {
         let parts = Helper.splitCurrency(Helper.asCurrency(n));
         if (parts.krs <= 0)
-            return numeral(parts.val).format('0,0') + 'TL';
+            return numeral(parts.val).format('0,0') + symbol;
         else
-            return numeral(parts.val).format('0,0') + '.' + numeral(parts.krs).format('0,0') + 'TL';
+            return numeral(parts.val).format('0,0') + '.' + numeral(parts.krs).format('0,0') + symbol;
     }
     static getPhoneNumber(phone) {
         //05326274151

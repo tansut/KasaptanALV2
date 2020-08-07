@@ -22,7 +22,7 @@ class ProductLd {
         };
         this.brand = {
             '@type': 'Thing',
-            name: 'kasaptanAl.com'
+            name: 'KasaptanAl.com'
         };
     }
 }

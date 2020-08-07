@@ -4,7 +4,8 @@ export default class MiddlewareLoader {
     static use(app: express.IRouter) {
         return [
             require('./auth').default(app),
-            require('./sitemap').default(app)
+            require('./sitemap').default(app),
+            require('./productfeed').default(app)
         ]
     }
 }

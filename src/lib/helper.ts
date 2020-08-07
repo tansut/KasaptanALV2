@@ -141,8 +141,8 @@ export default class Helper {
 
     static formattedCurrency(n: number, symbol: string = 'TL') {
         let parts = Helper.splitCurrency(Helper.asCurrency(n));
-        if (parts.krs <= 0) return numeral(parts.val).format('0,0') + 'TL'
-        else return numeral(parts.val).format('0,0') + '.' + numeral(parts.krs).format('0,0') + 'TL'
+        if (parts.krs <= 0) return numeral(parts.val).format('0,0') + symbol
+        else return numeral(parts.val).format('0,0') + '.' + numeral(parts.krs).format('0,0') + symbol
     }
 
     static getPhoneNumber(phone: string) {

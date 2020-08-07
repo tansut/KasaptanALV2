@@ -19,6 +19,20 @@ import { ProductLd, IProductLd } from '../../models/ProductLd';
 import DispatcherApi from './dispatcher';
 import Review from '../../db/models/review';
 
+export interface ProductFeedItem {
+    id: string;
+    title: string;
+    description: string;
+    link: string;
+    images: string [];
+    condition: string;
+    availability: string;
+    price: number;
+    gtin: string;
+    brand: string;
+    mpn: string;
+}
+
 export default class Route extends ApiRouter {
     markdown = new MarkdownIt();
 
@@ -229,6 +243,40 @@ export default class Route extends ApiRouter {
 
         return res;
     }
+
+    async getProductsFeed(): Promise<ProductFeedItem []> {
+        let res: ProductFeedItem [] = [];
+        let products = await Product.findAll({ 
+             where: { status: "onsale" }
+        });
+
+        for(let i = 0; i < products.length; i++) {
+            let p = products[i];
+            await p.loadResources();
+            let ld = await this.getProductLd(p);
+            if (ld.offers) {
+                let feed: ProductFeedItem = {
+                    id: p.id.toString(),
+                    availability: "in stock",
+                    brand: ld.brand.name,
+                    condition: "new",
+                    description: ld.description,
+                    images: ld.image,
+                    price: ld.offers.lowPrice,
+                    link: "https://www.kasaptanal.com/" + p.slug,
+                    title: ld.name,
+                    mpn: "",
+                    gtin: "KA" + p.id.toString()
+                }
+                res.push(feed)
+            }
+        }
+
+          
+
+       return res;
+  }
+
 
 
     async getProductLd(product: Product): Promise<IProductLd> {
