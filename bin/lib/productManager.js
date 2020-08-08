@@ -40,7 +40,8 @@ class ProductManager {
                         ]
                     },
                 ], where: {
-                    '$categories.category.id$': catids
+                    '$categories.category.id$': catids,
+                    'status': 'onsale'
                 },
                 order: [[{ model: productcategory_1.default, as: 'categories' }, "displayOrder", "desc"], ["displayorder", "desc"]]
             });

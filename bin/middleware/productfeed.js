@@ -56,6 +56,7 @@ class ProductFeedMiddleware extends base_1.default {
                     let entry = feed.ele("entry");
                     entry.ele("g:id", p.id);
                     entry.ele("g:title", p.title);
+                    entry.ele("g:description", p.description);
                     entry.ele("g:link", p.link);
                     entry.ele("g:condition", p.condition);
                     entry.ele("g:availability", p.availability);
@@ -64,10 +65,10 @@ class ProductFeedMiddleware extends base_1.default {
                     ship.ele("g:country", "TR");
                     ship.ele("g:service", "Same Day");
                     ship.ele("g:price", "0TRY");
-                    entry.ele("g:gtin", p.gtin);
-                    entry.ele("g:brand", p.brand);
+                    //entry.ele("g:gtin", p.gtin);
+                    entry.ele("g:brand", "");
                     p.images.forEach((im, i) => {
-                        entry.ele(i == 0 ? "g:image_link" : "g:additional_image_link", `${ProductFeedMiddleware.baseUrl}/${im}`);
+                        (i < 5) && entry.ele(i == 0 ? "g:image_link" : "g:additional_image_link", `${im}`);
                     });
                 });
                 res.send(feed.end({ pretty: config_1.default.nodeenv == "development" }));

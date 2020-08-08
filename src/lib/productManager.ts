@@ -38,7 +38,8 @@ export default class ProductManager {
                 ]
             },
             ], where: {
-                '$categories.category.id$': catids
+                '$categories.category.id$': catids,
+                'status': 'onsale'
             },
             order: [[ { model: ProductCategory, as: 'categories' }, "displayOrder", "desc"], [ "displayorder", "desc"]]
         });
