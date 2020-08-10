@@ -32,9 +32,6 @@ export type ProductStatus = "onsale" | "archieved"
     },
     { type: 'FULLTEXT', name: 'product_fts', fields: ['name', 'shortdesc', 'slug', 'keywords'] }]
 })
-
-
-
 class Product extends BaseModel<Product> {
     @Column({
         allowNull: false,

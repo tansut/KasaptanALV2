@@ -46,6 +46,8 @@
   <% include ./_partial/header %>
 
   <!-- Page Title (Light)-->
+  <% if (__req.query.print != '1') { %>
+
   <div class="bg-secondary pt-0p ">
     <div class="container d-lg-flex justify-content-between py-2 py-lg-3">
       <div class="order-lg-2 mb-3 mb-lg-0 pt-lg-2">
@@ -62,17 +64,19 @@
         <h2 class="lead h4">
           <%= __helper.formatDate(order.creationDate) + ' tarihli ' + order.butcherName + ' siparişim' %></h2>
         <a class="font-size-xs text-muted" href="#orderdetails">Sipariş Bilgileri &raquo;</a>
+        <a class="font-size-xs text-muted" href="<%=__req.url%>?print=1">Yazdır &raquo;</a>
       </div>
     </div>
   </div>
 
 
-
+<% } %>
 
 
 
   <div class="container mb-3 ">
 
+    <% if (__req.query.print != '1') { %>
     <div class="d-print-none">
 
     
@@ -140,7 +144,9 @@
 
       <a id="orderdetails"></a>
       </div>
-      <% if (true) { %>
+
+    <% } %>
+      <% if (__req.query.print != '1') { %>
       <div class="mb-3">
         <%- include('./_partial/order.details.ejs', {
           order: order,
@@ -150,6 +156,45 @@
       }) %>
       </div>
 
+<% } else { %>
+<h3>
+  <%=order.butcherName%>
+</h3>
+<p>
+  <%= order.name %>
+</p>
+<ul>
+
+
+<% for(var i = 0; i < order.items.length; i++) { %>
+<% var item = order.items[i] %>
+<li>
+  <p class="mb-1">
+    <%=item.productName%>
+
+  </p>
+  <p>
+    <%=item.quantity%>
+    <%=item.pounitTitle%>
+    
+    <%=item.pounitWeight && '(' + item.pounitWeight + ')' %>
+    <%- include('./_partial/currency.ejs', {value: item.price}) %><br>
+    <span class="text-muted font-size-sm">
+      <%- include('./_partial/currency.ejs', {value: item.pounitPrice}) %> /<%=item.pounitTitle%>     
+
+    </span>
+  </p>
+
+  
+  
+
+
+
+
+  
+</li>
+<% } %>
+</ul>
 <% } %>
 
 
@@ -173,6 +218,15 @@
     <% include ./_partial/scripts %>
 
     <script>
+
+
+
+
+<% if (__req.query.print=='1') { %>
+  window.print();
+<%}%>
+
+
 
 
       function beforeSubmit() {

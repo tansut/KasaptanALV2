@@ -19,7 +19,7 @@
   
 %>
 
-
+<% if (req.query.print != '1') {  %>
 <header class="d-print-none">
 
   <div class="topbar topbar-dark bg-primary-darkest d-none d-lg-block ">
@@ -210,3 +210,5 @@
 <div class="d-print-none" id="__whatsup"></div>
 
 <%}%>
+
+<% } %>
