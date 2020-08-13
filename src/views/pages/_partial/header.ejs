@@ -6,7 +6,7 @@
 <% } %>
 
 
-<% if (!__req.user) { %>
+<% if (!__req.user && req.query.print != '1') { %>
 <%- include ./signinup %>
 <% } %>
 
