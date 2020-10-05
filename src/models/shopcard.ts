@@ -457,6 +457,7 @@ export class ShopCard {
     }
 
     async manageFirstOrderDiscount(hasFirstOrder: Order) {
+        return;
         firstOrderDiscount.subTotal = this.subTotal;
         for (let b in this.butchers) {
             let applied = this.getButcherDiscount(b, firstOrderDiscount.code);

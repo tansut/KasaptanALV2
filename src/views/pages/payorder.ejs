@@ -160,9 +160,52 @@
 <h3>
   <%=order.butcherName%>
 </h3>
-<p>
-  <%= order.name %>
-</p>
+
+<ul class="list-unstyled font-size-sm">
+  <li><span class="text-muted">Dağtımı yapacak:&nbsp;</span><%=order.dispatcherName%></li>
+
+  <% if (!(order.dispatcherType || "").startsWith('kasaptan')) { %>
+  <li><span class="text-muted">*İsim:*&nbsp;</span><%= order.name %></li>
+  <% if(order.address) { %>
+  <li><span class="text-muted">*Adres:*&nbsp;</span><%= order.address%>
+  Bina: <%=order.bina%>,Kat: <%=order.kat%>,Daire: <%=order.daire%>
+
+    <%= order.areaLevel3Text%>/<%= order.areaLevel1Text%></li>
+    <% if (order.adresTarif) { %>
+      <li>
+        Adres tarifi: <%= order.adresTarif%>
+      </li>
+      <%}%>
+    <%}%>
+  <% } %>
+    <% if(order.note) { %>
+      <li><span class="text-muted">Not:&nbsp;</span><%= order.note%>
+        </li>
+    <%}%>
+  <% if (order.noInteraction) { %>
+  <li>Güvenli Teslimat: <%= order.noInteraction ? 'Evet': 'Hayır'%></li>
+  <% } %>
+</ul>
+
+<ul class="list-unstyled ">
+  <li><span class="text-muted">Teslimat planı:&nbsp;</span><%= order.shipmentHowToText %></li>
+  <li><span class="text-muted">Teslimat kodu:&nbsp;</span>*<%= order.securityCode %>*</li>
+  <% if (order.shipmentType != 'callme') {%>
+  <li><span class="text-muted">Gün:&nbsp;</span><strong>*<%= __helper.formatDate(order.shipmentdate) %>*</strong></li>
+  <li><span class="text-muted">Saat Aralığı:&nbsp;</span><strong>*<%= order.shipmenthourText%>*</strong> </li>
+  <%} else { %>
+    <li><span class="text-muted">Teslimat planı:&nbsp;</span>*<%= order.shipmentTypeText%>*</li>
+
+  <% } %>
+              <li><span class="text-muted">Paketim çıkmadan bana haber ver:&nbsp;</span><%= __helper.boolStr(order.shipmentInformMe)%>
+  </li>
+  <li><span class="text-muted">**Planlanan** Ödeme:&nbsp;</span><%= order.paymentTypeText%> </li>
+  <% if (order.butcherSelection == "user") { %>
+    <li><span class="text-muted">*Müşteriniz özellikle sizi diğer kasaplar arasından seçerek sipariş vermiştir.*</span></li>
+  
+  <% } %>
+</ul>
+
 <ul>
 
 
@@ -177,12 +220,20 @@
     <%=item.quantity%>
     <%=item.pounitTitle%>
     
-    <%=item.pounitWeight && '(' + item.pounitWeight + ')' %>
     <%- include('./_partial/currency.ejs', {value: item.price}) %><br>
+    <%if (item.pounitWeight) { %>
+      <span class="text-muted font-size-sm d-block">1 <%=item.pounitTitle%> <%=item.pounitWeight%></span>
+      <% } %>
+
     <span class="text-muted font-size-sm">
+      Birim Fiyatı: 
       <%- include('./_partial/currency.ejs', {value: item.pounitPrice}) %> /<%=item.pounitTitle%>     
 
     </span>
+
+    <% if (item.note) {%>     
+      <div class="font-size-sm text-info"><span class="font-weight-bold">Not:</span> <%=item.note%></div>
+      <%}%> 
   </p>
 
   

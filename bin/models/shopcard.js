@@ -371,6 +371,7 @@ class ShopCard {
     }
     manageFirstOrderDiscount(hasFirstOrder) {
         return __awaiter(this, void 0, void 0, function* () {
+            return;
             exports.firstOrderDiscount.subTotal = this.subTotal;
             for (let b in this.butchers) {
                 let applied = this.getButcherDiscount(b, exports.firstOrderDiscount.code);

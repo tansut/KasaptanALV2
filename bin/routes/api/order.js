@@ -515,25 +515,25 @@ class Route extends router_1.ApiRouter {
     getPossiblePuanGain(o, total, includeAvailable = false) {
         let calculator = new commissionHelper_1.PuanCalculator();
         let result = [];
-        let firstOrder = {
-            minPuanForUsage: 0.00,
-            minSales: 0.00,
-            name: 'ilk sipariş indirimi',
-            rate: 0.03
-        };
+        // let firstOrder: Puan = {
+        //     minPuanForUsage: 0.00,
+        //     minSales: 0.00,
+        //     name: 'ilk sipariş indirimi',
+        //     rate: 0.00
+        // }
         if (o.butcher.enableCreditCard) {
             if (o.isFirstButcherOrder && o.orderType != 'kurban') {
-                let firstOrderPuan = calculator.calculateCustomerPuan(firstOrder, total);
-                if (firstOrderPuan > 0.00 || includeAvailable) {
-                    result.push({
-                        type: "kalitte-by-butcher",
-                        earned: firstOrderPuan,
-                        id: o.butcherid.toString(),
-                        title: `Kasap Kart™ programı ilk sipariş puanı`,
-                        desc: `${o.ordernum} nolu ${o.butcherName} siparişi KasaptanAl.com Puan`,
-                        based: firstOrder
-                    });
-                }
+                //let firstOrderPuan = calculator.calculateCustomerPuan(firstOrder, total);
+                // if (firstOrderPuan > 0.00 || includeAvailable) {
+                //     result.push({
+                //         type: "kalitte-by-butcher",
+                //         earned: firstOrderPuan,
+                //         id: o.butcherid.toString(),
+                //         title: `Kasap Kart™ programı ilk sipariş puanı`,
+                //         desc: `${o.ordernum} nolu ${o.butcherName} siparişi KasaptanAl.com Puan`,
+                //         based: firstOrder
+                //     })
+                // }
             }
             if (o.butcher.enablePuan) {
                 let butcherPuan = o.butcher.getPuanData(o.orderType);
@@ -550,7 +550,7 @@ class Route extends router_1.ApiRouter {
                         });
                     }
                     else {
-                        let toKalitteRatio = o.orderType == order_3.OrderType.kurban ? 1 : 0.5;
+                        let toKalitteRatio = o.orderType == order_3.OrderType.kurban ? 1 : 0.0;
                         let toKalitte = helper_1.default.asCurrency(earnedPuanb * toKalitteRatio);
                         let toButcher = helper_1.default.asCurrency(earnedPuanb - toKalitte);
                         if (toButcher > 0.00) {

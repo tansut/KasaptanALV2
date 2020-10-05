@@ -528,28 +528,28 @@ export default class Route extends ApiRouter {
         let calculator = new PuanCalculator();
         let result: PuanResult[] = [];
 
-        let firstOrder: Puan = {
+        // let firstOrder: Puan = {
 
-            minPuanForUsage: 0.00,
-            minSales: 0.00,
-            name: 'ilk sipariş indirimi',
-            rate: 0.03
+        //     minPuanForUsage: 0.00,
+        //     minSales: 0.00,
+        //     name: 'ilk sipariş indirimi',
+        //     rate: 0.00
 
-        }
+        // }
 
         if (o.butcher.enableCreditCard) {
             if (o.isFirstButcherOrder && o.orderType != 'kurban') {
-                let firstOrderPuan = calculator.calculateCustomerPuan(firstOrder, total);
-                if (firstOrderPuan > 0.00 || includeAvailable) {
-                    result.push({
-                        type: "kalitte-by-butcher",
-                        earned: firstOrderPuan,
-                        id: o.butcherid.toString(),
-                        title: `Kasap Kart™ programı ilk sipariş puanı`,
-                        desc: `${o.ordernum} nolu ${o.butcherName} siparişi KasaptanAl.com Puan`,
-                        based: firstOrder
-                    })
-                }
+                //let firstOrderPuan = calculator.calculateCustomerPuan(firstOrder, total);
+                // if (firstOrderPuan > 0.00 || includeAvailable) {
+                //     result.push({
+                //         type: "kalitte-by-butcher",
+                //         earned: firstOrderPuan,
+                //         id: o.butcherid.toString(),
+                //         title: `Kasap Kart™ programı ilk sipariş puanı`,
+                //         desc: `${o.ordernum} nolu ${o.butcherName} siparişi KasaptanAl.com Puan`,
+                //         based: firstOrder
+                //     })
+                // }
             }
 
             if (o.butcher.enablePuan) {
@@ -568,7 +568,7 @@ export default class Route extends ApiRouter {
                             }
                         )
                     } else {
-                        let toKalitteRatio = o.orderType == OrderType.kurban ? 1: 0.5;
+                        let toKalitteRatio = o.orderType == OrderType.kurban ? 1: 0.0;
                         let toKalitte = Helper.asCurrency(earnedPuanb * toKalitteRatio);
                         let toButcher = Helper.asCurrency(earnedPuanb - toKalitte);
                         if (toButcher > 0.00) {
