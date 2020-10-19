@@ -111,7 +111,7 @@ class Route extends paymentrouter_1.PaymentRouter {
             debt[this.order.butcherid] = 0.00;
             if (this.order.orderSource == order_2.OrderSource.kasaptanal) {
                 this.api.fillPuanAccounts(this.order, this.productTotal);
-                let butcherDebptAccounts = yield accountmodel_1.default.summary([account_1.Account.generateCode("kasaplardan-alacaklar", [this.order.butcherid])]);
+                let butcherDebptAccounts = yield accountmodel_1.default.summary([account_1.Account.generateCode("kasaplardan-alacaklar", [this.order.butcherid], true)]);
                 let butcherDebt = helper_1.default.asCurrency(butcherDebptAccounts.borc - butcherDebptAccounts.alacak);
                 debt[this.order.butcherid] = butcherDebt;
             }

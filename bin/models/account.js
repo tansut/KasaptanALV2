@@ -109,9 +109,9 @@ class Account {
             throw new Error('Invalid account:' + parent);
         return item;
     }
-    static generateCode(parent, values = null) {
+    static generateCode(parent, values, appendDot = false) {
         let accountCode = Account.getType(parent).code;
-        return `${accountCode}.` + values.join(".");
+        return `${accountCode}.` + values.join(".") + (appendDot ? '.' : '');
     }
     inc(val) {
         if (this.info.type == 'active')
