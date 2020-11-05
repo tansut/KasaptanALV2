@@ -651,7 +651,8 @@ window.initComponents = function initComponents() {
         data: function () {
             return {
                 card: null,
-                disableShip: false
+                disableShip: false,
+                cannotShip: false
             }
         },
         mounted: function () {
@@ -662,6 +663,8 @@ window.initComponents = function initComponents() {
                this.card.shipment[bi].howTo = method;
                if (method == 'take') {
                    this.disableShip = false;
+               } else{
+                this.disableShip = this.cannotShip;
                }
             }
         },

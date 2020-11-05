@@ -129,7 +129,7 @@ class Route extends router_1.ApiRouter {
             let include = [
                 {
                     model: butcher_1.default,
-                    as: 'butcher',
+                    as: 'butcher'
                 }
             ];
             where = yield this._where(where, q.adr);

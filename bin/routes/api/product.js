@@ -433,7 +433,8 @@ class Route extends router_1.ApiRouter {
                     puanData: butcher.getPuanData(product.productType),
                     earnedPuan: 0.00,
                     productNote: '',
-                    kgPrice: kgPrice
+                    kgPrice: kgPrice,
+                    locationText: `${butcher.locationText}`
                 } : null,
                 butcherNote: (butcherProduct && butcherProduct.mddesc) ? butcherProduct.mddesc : '',
                 butcherLongNote: (butcherProduct && butcherProduct.longdesc) ? butcherProduct.longdesc : '',

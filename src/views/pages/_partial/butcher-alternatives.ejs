@@ -28,7 +28,13 @@
 
                     
                     <div class="media-body pl-2">
-                      <h5 class="h6 mb-1">{{alt.butcher.name}}</h5>
+                      <h5 class="h6 mb-0">{{alt.butcher.name}}
+
+                        
+                      </h5>
+                      <span class="text-muted font-size-xs d-block">
+                        {{alt.butcher.locationText}}
+                      </span>
                       
                         <div v-if="alt.butcher.badges.length > 0" class="butcher-badges">
               

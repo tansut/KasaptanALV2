@@ -10,7 +10,8 @@
 
 
 <script>
-  var disableShip = false;
+  var cannotShip = false;
+  var disableShipBtn = false;
 </script>
 
   <div class="page-title-overlap page-title bg-accent py-2 ">
@@ -113,6 +114,7 @@
               <% } else if (shipment.dispatcher && (shipment.dispatcher.min > shopcard.butchers[bi].subTotal)) { %>
 
                 <script>
+                  cannotShip = true;
                   disableShip = true;
                 </script>
                 
@@ -276,6 +278,7 @@
 <script>
 window.App.ShopcardShipmentApp.card = window.shopcard.card.data;
 window.App.ShopcardShipmentApp.disableShip = disableShip;
+window.App.ShopcardShipmentApp.cannotShip = cannotShip;
 
 function setShip(val) {
   //val ? $('#save-adres').removeAttr('disabled'): $('#save-adres').attr('disabled', true);

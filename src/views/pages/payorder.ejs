@@ -231,6 +231,16 @@
 
     </span>
 
+    <% if (item.pounit != 'kg') { %>
+      <span class="text-muted font-size-sm ">
+        
+          Kg Fiyatı: 
+          <%- include('./_partial/currency.ejs', {value: item.kgPrice}) %> /<%='KG'%>    
+       
+ 
+      </span>
+    <% } %>
+
     <% if (item.note) {%>     
       <div class="font-size-sm text-info"><span class="font-weight-bold">Not:</span> <%=item.note%></div>
       <%}%> 

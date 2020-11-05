@@ -29,8 +29,10 @@ class="gallery-item-caption"><%= butcherVideo.title %></span></a>
     src="<%= `${__req.helper.imgUrl('butcher-google-photos', view.butcher.slug)}` %>" alt="<%=view.butcher.name%>">
  <% } %>
       <div class="media-body   p-2">
-        <h5 class="h6 mb-1 mr-2"><%= view.butcher.name %></h6>
-
+        <h5 class="h6 mb-0 mr-2"><%= view.butcher.name %></h6>
+          <span class="text-muted font-size-xs d-block">
+            <%=view.butcher.locationText%>
+          </span>
           <!-- <% if (view.butcher.badges.length > 0 ) { %>
             <div class="butcher-badges mb-1">
           

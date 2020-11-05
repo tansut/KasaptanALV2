@@ -57,6 +57,10 @@ class Butcher extends BaseModel<Butcher> {
     })    
     status: ButcherStatus;        
 
+    @AllowNull(true)
+    @Column
+    locationText: string;
+
     @Column({
         allowNull: false,
         defaultValue: 50,

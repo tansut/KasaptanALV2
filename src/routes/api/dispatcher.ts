@@ -144,7 +144,7 @@ export default class Route extends ApiRouter {
         let include = [
             {
                 model: Butcher,
-                as: 'butcher',
+                as: 'butcher'             
             }           
         ]
         where = await this._where(where, q.adr);

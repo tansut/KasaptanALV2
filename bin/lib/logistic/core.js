@@ -82,14 +82,14 @@ class LogisticProvider {
             vehicleType: VehicleType.Motor,
             points: [{
                     address: 'Foo',
-                    contactPhone: '05326374151',
+                    contactPhone: '05326274151',
                     id: fromTo.sId,
                     lat: fromTo.start.coordinates[0],
                     lng: fromTo.start.coordinates[1],
                     orderId: ''
                 }, {
                     address: 'Foo',
-                    contactPhone: '05326374151',
+                    contactPhone: '05326274151',
                     id: fromTo.fId,
                     lat: fromTo.finish.coordinates[0],
                     lng: fromTo.finish.coordinates[1],
