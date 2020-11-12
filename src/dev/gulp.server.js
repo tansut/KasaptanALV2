@@ -68,11 +68,11 @@ function deployBin() {
     return tsc(deployDir + "bin", false);
 }
 
-// function deployRemaning() {
+// function deploy Remaning() {
 //     return gulp.src(['./package.json'])
 //         .pipe(gulp.dest("deploy"));
 // }
 
 
-
+ 
 gulp.task('server.deploy', gulp.series(deployClean, gulp.parallel(deployBin)))
