@@ -647,25 +647,25 @@
                 <div>
 
                   <ul class="nav nav-tabs" id="optionsTab" role="tablist">
-                    <li class="nav-item">
-                      <a class="nav-link active" id="home-tab" data-toggle="tab" href="#home" role="tab"
-                        aria-controls="home" aria-selected="true">Bilgi</a>
-                    </li>
+           
                     <%if (controller.reviews.length) { %>
                        
                         <li id="usercomments" class="nav-item">
-                          <a class="nav-link" id="comments-tab" data-toggle="tab" href="#comments" role="tab"
-                            aria-controls="comments" aria-selected="false">Yorumlar</a>
+                          <a class="nav-link active" id="comments-tab" data-toggle="tab" href="#comments" role="tab"
+                            aria-controls="comments" aria-selected="true">Yorumlar</a>
                         </li>
                         <% } %>
 
-
+                        <li class="nav-item">
+                          <a class="nav-link <%=controller.reviews.length?'': 'active' %>" id="home-tab" data-toggle="tab" href="#home" role="tab"
+                            aria-controls="home" aria-selected="<%=controller.reviews.length?'false': 'true' %>">Bilgi</a>
+                        </li>
 
 
                         </ul>
 
                         <div class="tab-content px-4" id="myTabContent">
-                          <div class="tab-pane fade show active" id="home" role="tabpanel" aria-labelledby="home-tab">
+                          <div class="tab-pane fade <%=controller.reviews.length?'': 'show active' %> " id="home" role="tabpanel" aria-labelledby="home-tab">
 
                             <%if (product.mddesc) { %>
 
@@ -834,14 +834,14 @@
                             </p>
                             <%  } %>
                             <p>
-                              Ayrıca <strong>online kasap</strong>larımızın <a href="/et-fiyatlari">tüm
+                              Ayrıca <a href="/kasaplar">kasaplar</a>ımızın <a href="/et-fiyatlari">tüm
                                 et fiyatlarını</a> da görüntülemek isteyebilirsiniz.
                             </p>
 
                           </div>
 
                           <%if (controller.reviews.length) { %>
-                          <div class="tab-pane fade" id="comments" role="tabpanel" aria-labelledby="comments-tab">
+                          <div class="tab-pane fade <%=controller.reviews.length?'show active': '' %> " id="comments" role="tabpanel" aria-labelledby="comments-tab">
 
                             <% controller.reviews.forEach(r => {  %>
                             <div class="product-review pb-4 mb-4 border-bottom">

@@ -27,8 +27,9 @@
                             Online Kasap Alışverişi & Et Siparişi
                         </h1>
                         <p class="lead">
-                            <a href="/kasap-urunleri" class="font-weight-bolder text-dark">En İyi Etler</a>,
-                            şehrin <a class="font-weight-bolder text-dark" href="/kasaplar">En İyi Kasaplar</a>ından <span class="font-weight-bolder">60-90 dakika</span> içerisinde kapınızda.
+                      
+                            <a href="/kasap-urunleri" class="font-weight-bolder text-dark">Sağlıklı ve Lezzetli Et</a>, şehrin
+                             <a class="font-weight-bolder text-dark" href="/kasaplar">En Köklü Kasaplar</a>ından <span class="font-weight-bolder">60-120 dakikada</span> kapınızda.
                 
                         </p>
                 
@@ -54,10 +55,10 @@
         </div>
     </div>
 
-    <div class="container mb-3">
-        <%- include('./_partial/category-products-slider', {category: 'populer-etler', limit: 4, reverse: true, img: 'img/category/premium.jpg'}); %>
-    </div>
 
+    <div class="container mb-3 ">
+        <%- include('./_partial/category-products-slider', {limit: 4, category: 'bu-hafta', reverse: true, img: 'img/category/premium.jpg'}); %>
+    </div>
 
 
 
@@ -112,12 +113,12 @@
         </div>
     </section>
 
-
-
-
-    <div class="container mb-3 ">
-        <%- include('./_partial/category-products-slider', {limit: 4, category: 'bu-hafta', reverse: true, img: 'img/category/premium.jpg'}); %>
+    <div class="container mb-3">
+        <%- include('./_partial/category-products-slider', {category: 'populer-etler', limit: 4, reverse: true, img: 'img/category/premium.jpg'}); %>
     </div>
+
+
+
 
 
 
@@ -133,7 +134,19 @@
     <section class="container">
         <div class="row">
 
+            <div class="col-md-6 mb-3">
+                <div class="d-flex flex-column h-100 justify-content-center bg-size-cover bg-position-center rounded-lg"
+                    style="background-image: url(<%=__config.staticDomain %>/resource/img/banner-bg.jpg);">
+                    <div class="py-4 my-2 my-md-0 py-md-5 px-4 ml-md-3 text-center text-sm-left">
+                        <h4 class="h6 font-size-lg font-weight-light mb-2">Doğal, Taze ve Lezzetli</h4>
+                        <h3 class="mb-4 h5">Alışverişe şimdi başlayın</h3>
 
+                        <a class="btn btn-primary " href="/kasap-urunleri">Tüm Ürünler &raquo;</a>
+                    </div>
+                </div>
+
+
+            </div>
 
 
 
@@ -153,19 +166,7 @@
             </div>
 
 
-            <div class="col-md-6 mb-3">
-                <div class="d-flex flex-column h-100 justify-content-center bg-size-cover bg-position-center rounded-lg"
-                    style="background-image: url(<%=__config.staticDomain %>/resource/img/banner-bg.jpg);">
-                    <div class="py-4 my-2 my-md-0 py-md-5 px-4 ml-md-3 text-center text-sm-left">
-                        <h4 class="h6 font-size-lg font-weight-light mb-2">Doğal, Taze ve Lezzetli</h4>
-                        <h3 class="mb-4 h5">Alışverişe buradan başlayın</h3>
-
-                        <a class="btn btn-primary " href="/kasap-urunleri">Tüm Ürünler &raquo;</a>
-                    </div>
-                </div>
-
-
-            </div>
+ 
 
 
 
