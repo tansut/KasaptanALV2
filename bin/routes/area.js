@@ -174,7 +174,7 @@ class Route extends router_1.ViewRouter {
             where["approved"] = true;
             let butchers = yield butcher_1.default.findAll({
                 where: where,
-                limit: 25,
+                limit: 50,
                 order: [["updatedon", "DESC"]],
                 include: [{
                         all: true

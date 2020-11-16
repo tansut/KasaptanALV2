@@ -462,7 +462,7 @@
             <div class="row">
             <% sc.products.forEach((product,i) => { %>
               <div data-tag="<%= __helper.slugify(product.tag1) %>" class="col-md-3 col-6 ">
-                <%- include('./_partial/product-view.ejs', { showPurchase: true, butcher: butcher.slug, butcherProduct: butcher.products.find(p=>p.productid == product.id), product: product}) %>
+                <%- include('./_partial/product-view.ejs', { hidePrice: !butcher.enabled || butcher.status != 'open', showPurchase: butcher.enabled && butcher.status == 'open', butcher: butcher.slug, butcherProduct: butcher.products.find(p=>p.productid == product.id), product: product}) %>
               </div>
               <% if (controller.foods && controller.foods.length > 0 && !foodsInserted && i>controller.products.length/5) { %>
               <% foodsInserted = true; %>

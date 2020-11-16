@@ -166,7 +166,7 @@ class Route extends router_1.ViewRouter {
             if (!this.req.params.butcher) {
                 return this.next();
             }
-            let butcher = yield butcher_1.default.loadButcherWithProducts(this.req.params.butcher);
+            let butcher = this.butcher = yield butcher_1.default.loadButcherWithProducts(this.req.params.butcher);
             if (!butcher) {
                 return this.next();
             }

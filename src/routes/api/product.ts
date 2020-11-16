@@ -228,7 +228,7 @@ export default class Route extends ApiRouter {
         ButcherProducts.${unit}Price > 0 and
         ButcherProducts.enabled=true and 
         ButcherProducts.butcherid = Butchers.id 
-        and Butchers.approved=true
+        and Butchers.approved=true and Butchers.status='open'
         group by ButcherProducts.productid
         `
 

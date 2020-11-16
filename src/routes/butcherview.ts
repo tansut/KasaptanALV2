@@ -211,7 +211,7 @@ export default class Route extends ViewRouter {
             return this.next();
         }
 
-        let butcher = await ButcherModel.loadButcherWithProducts(this.req.params.butcher);
+        let butcher = this.butcher = await ButcherModel.loadButcherWithProducts(this.req.params.butcher);
 
         
         if (!butcher) {
