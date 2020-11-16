@@ -23,6 +23,7 @@ const sequelize_typescript_1 = require("sequelize-typescript");
 const basemodel_1 = require("./basemodel");
 const area_1 = require("./area");
 const butcherproduct_1 = require("./butcherproduct");
+const product_1 = require("./product");
 const sequelize_1 = require("sequelize");
 let Butcher = Butcher_1 = class Butcher extends basemodel_1.default {
     get userRatingAsPerc() {
@@ -81,6 +82,29 @@ let Butcher = Butcher_1 = class Butcher extends basemodel_1.default {
     }
     get lng() {
         return this.location ? this.location.coordinates[1] : 0;
+    }
+    static loadButcherWithProducts(slug) {
+        return __awaiter(this, void 0, void 0, function* () {
+            let butcher = yield Butcher_1.findOne({
+                include: [{
+                        model: butcherproduct_1.default,
+                        include: [product_1.default],
+                    },
+                    {
+                        model: area_1.default,
+                        all: true,
+                        as: "areaLevel1Id"
+                    }], where: {
+                    slug: slug,
+                }
+            });
+            if (butcher) {
+                butcher.products = butcher.products.filter(p => {
+                    return p.enabled && (p.kgPrice > 0 || (p.unit1price > 0 && p.unit1enabled) || (p.unit2price > 0 && p.unit2enabled) || (p.unit3price > 0 && p.unit1enabled));
+                });
+            }
+            return butcher;
+        });
     }
     getProducts() {
         let result = [];

@@ -25,8 +25,6 @@ const resource_1 = require("../db/models/resource");
 const resource_2 = require("./resource");
 const Jimp = require('jimp');
 const productManager_1 = require("../lib/productManager");
-const product_1 = require("../db/models/product");
-const butcherproduct_1 = require("../db/models/butcherproduct");
 const area_1 = require("../db/models/area");
 const productcategory_1 = require("../db/models/productcategory");
 var MarkdownIt = require('markdown-it');
@@ -35,6 +33,7 @@ const config_1 = require("../config");
 const review_1 = require("../db/models/review");
 const sq = require("sequelize");
 const dispatcher_1 = require("./api/dispatcher");
+const product_1 = require("./api/product");
 const area_2 = require("./api/area");
 class Route extends router_1.ViewRouter {
     constructor() {
@@ -73,18 +72,7 @@ class Route extends router_1.ViewRouter {
             if (!this.req.params.butcher) {
                 return this.next();
             }
-            let butcher = this.butcher = yield butcher_1.default.findOne({
-                include: [{
-                        model: butcherproduct_1.default,
-                        include: [product_1.default],
-                    },
-                    {
-                        model: area_1.default,
-                        all: true,
-                        as: "areaLevel1Id"
-                    }], where: { slug: this.req.params.butcher,
-                }
-            });
+            let butcher = yield butcher_1.default.loadButcherWithProducts(this.req.params.butcher);
             if (!butcher) {
                 return this.next();
             }
@@ -120,9 +108,6 @@ class Route extends router_1.ViewRouter {
             //     this.dispatchers[i].address = await this.dispatchers[i].toarea.getPreferredAddress()
             // }
             this.categories = [];
-            butcher.products = butcher.products.filter(p => {
-                return p.enabled && (p.kgPrice > 0 || (p.unit1price > 0 && p.unit1enabled) || (p.unit2price > 0 && p.unit2enabled) || (p.unit3price > 0 && p.unit1enabled));
-            });
             butcher.products = _.sortBy(butcher.products, ["displayOrder", "updatedOn"]).reverse();
             let productCategories = yield productcategory_1.default.findAll({
                 include: [{
@@ -176,6 +161,37 @@ class Route extends router_1.ViewRouter {
             this.res.render('pages/butcher', this.viewData({ pageThumbnail: pageThumbnail, pageTitle: pageTitle, pageDescription: pageDescription, butcher: butcher, images: images }));
         });
     }
+    butcherProductFeedRoute() {
+        return __awaiter(this, void 0, void 0, function* () {
+            if (!this.req.params.butcher) {
+                return this.next();
+            }
+            let butcher = yield butcher_1.default.loadButcherWithProducts(this.req.params.butcher);
+            if (!butcher) {
+                return this.next();
+            }
+            this.res.header('Content-Type', 'application/xml');
+            //res.header('Content-Encoding', 'gzip');               
+            let api = new product_1.default({
+                req: this.req,
+                res: this.res,
+                next: null
+            });
+            api.getProductsFeedOfButcher(butcher).then(products => {
+                try {
+                    let feed = api.getProductsFeedXML(products);
+                    this.res.send(feed.end({ pretty: config_1.default.nodeenv == "development" }));
+                }
+                catch (e) {
+                    console.error(e);
+                    this.res.status(500).end();
+                }
+            }).catch(e => {
+                console.error(e);
+                this.res.status(500).end();
+            });
+        });
+    }
     butcherPhotoRoute() {
         return __awaiter(this, void 0, void 0, function* () {
             if (!this.req.params.butcher || !this.req.params.filename)
@@ -204,6 +220,7 @@ class Route extends router_1.ViewRouter {
     }
     static SetRoutes(router) {
         router.get("/:butcher", Route.BindRequest(Route.prototype.butcherRoute));
+        router.get("/:butcher/feed", Route.BindRequest(Route.prototype.butcherProductFeedRoute));
         router.get("/:butcher/:category", Route.BindRequest(Route.prototype.butcherRoute));
         config_1.default.nodeenv == 'development' ? router.get("/:butcher/fotograf/:filename", Route.BindRequest(Route.prototype.butcherPhotoRoute)) : null;
     }
@@ -214,6 +231,12 @@ __decorate([
     __metadata("design:paramtypes", []),
     __metadata("design:returntype", Promise)
 ], Route.prototype, "butcherRoute", null);
+__decorate([
+    common_1.Auth.Anonymous(),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", []),
+    __metadata("design:returntype", Promise)
+], Route.prototype, "butcherProductFeedRoute", null);
 __decorate([
     common_1.Auth.Anonymous(),
     __metadata("design:type", Function),

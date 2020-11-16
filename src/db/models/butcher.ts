@@ -42,20 +42,20 @@ class Butcher extends BaseModel<Butcher> {
 
     get shipRatingAsPerc() {
         let succ = this.shipTotalCount - this.shipFailureCount;
-        return this.shipTotalCount > 0 ? Math.round((succ / this.shipTotalCount) * 100): 0;
+        return this.shipTotalCount > 0 ? Math.round((succ / this.shipTotalCount) * 100) : 0;
     }
 
     @Column({
         allowNull: false,
         defaultValue: "manual",
-    })    
-    dispatchArea: DispatchArea;    
+    })
+    dispatchArea: DispatchArea;
 
     @Column({
         allowNull: false,
         defaultValue: "open",
-    })    
-    status: ButcherStatus;        
+    })
+    status: ButcherStatus;
 
     @AllowNull(true)
     @Column
@@ -65,36 +65,36 @@ class Butcher extends BaseModel<Butcher> {
         allowNull: false,
         defaultValue: 50,
         type: DataType.INTEGER
-    })    
-    radiusAsKm: number;  
+    })
+    radiusAsKm: number;
 
     @Column({
         allowNull: false,
         defaultValue: 0,
         type: DataType.DECIMAL(5, 2)
-    })    
-    userRating: number;    
+    })
+    userRating: number;
 
     @Column({
         allowNull: false,
         type: DataType.INTEGER,
         defaultValue: 0
-    })    
-    userRatingCount: number;      
+    })
+    userRatingCount: number;
 
     @Column({
         allowNull: false,
         type: DataType.INTEGER,
         defaultValue: 0
-    })    
-    shipFailureCount: number;      
+    })
+    shipFailureCount: number;
 
     @Column({
         allowNull: false,
         type: DataType.INTEGER,
         defaultValue: 0
-    })    
-    shipTotalCount: number;          
+    })
+    shipTotalCount: number;
 
     @AllowNull(false)
     @Default(false)
@@ -167,13 +167,13 @@ class Butcher extends BaseModel<Butcher> {
         allowNull: false,
         defaultValue: "none"
     })
-    logisticProviderUsage: ExternalLogisticProviderUsage;    
+    logisticProviderUsage: ExternalLogisticProviderUsage;
 
     @Column({
         allowNull: false,
         defaultValue: "butcher"
     })
-    defaultDispatcher: DispatcherType;    
+    defaultDispatcher: DispatcherType;
 
     @Column
     logisticProvider: string;
@@ -229,46 +229,46 @@ class Butcher extends BaseModel<Butcher> {
     @Column({
         allowNull: true
     })
-    iban: string;    
+    iban: string;
 
     @Column({
         allowNull: true
     })
-    companyType: string;      
-    
-    @Column({
-        allowNull: true
-    })
-    taxOffice: string;        
-    
-    @Column({
-        allowNull: true
-    })
-    taxNumber: string;      
+    companyType: string;
 
     @Column({
         allowNull: true
     })
-    email: string;   
-    
+    taxOffice: string;
+
+    @Column({
+        allowNull: true
+    })
+    taxNumber: string;
+
+    @Column({
+        allowNull: true
+    })
+    email: string;
+
     @Column({
         allowNull: false,
         defaultValue: false
     })
-    enableCreditCard: boolean;   
+    enableCreditCard: boolean;
 
     @Column({
         allowNull: true
     })
-    badges: string;   
+    badges: string;
 
     getPuanData(orderType: string): Puan {
         return this.enablePuan ? {
             name: 'Kasap Kart Puanı',
             minSales: this.minSalesPuan,
-            rate: orderType == 'kurban' ? this.kurbanPuanRate: this.customerPuanRate,
+            rate: orderType == 'kurban' ? this.kurbanPuanRate : this.customerPuanRate,
             minPuanForUsage: this.minPuanUsage
-        }: null        
+        } : null
     }
 
 
@@ -276,14 +276,14 @@ class Butcher extends BaseModel<Butcher> {
     getBadgeList(): Badge[] {
         let list: Badge[] = []
 
-   
+
 
         if (this.enablePuan) {
             list.push({
                 icon: '',
                 name: 'Kasap Kart™',
                 tip: 'Alışverişlerinizden puan kazandırır'
-            })            
+            })
         }
 
         // if (this.enableCreditCard) {
@@ -293,66 +293,66 @@ class Butcher extends BaseModel<Butcher> {
         //         tip: 'Online veya kapıda ödeme yapabilirsiniz'
         //     })
         // } 
-     
+
         return list;
     }
 
     @Column({
         allowNull: true
     })
-    iyzicoSubMerchantKey: string;   
+    iyzicoSubMerchantKey: string;
 
     @Column({
         allowNull: true
     })
-    parentButcher: string;   
+    parentButcher: string;
 
     @Column({
         allowNull: true
     })
-    notifyMobilePhones: string;   
+    notifyMobilePhones: string;
 
     @Column({
         allowNull: false,
         type: DataType.DECIMAL(10, 4),
         defaultValue: 0.02
     })
-    payCommissionRate: number;    
+    payCommissionRate: number;
 
     @Column({
         allowNull: false,
         type: DataType.DECIMAL(13, 2),
         defaultValue: 0.00
     })
-    payCommissionFee: number;      
+    payCommissionFee: number;
 
     @Column({
         allowNull: false,
         type: DataType.DECIMAL(10, 4),
         defaultValue: 0.04
     })
-    kurbanCommissionRate: number;    
+    kurbanCommissionRate: number;
 
     @Column({
         allowNull: false,
         type: DataType.DECIMAL(13, 2),
         defaultValue: 0.00
     })
-    kurbanCommissionFee: number;      
+    kurbanCommissionFee: number;
 
     @Column({
         allowNull: false,
         type: DataType.DECIMAL(10, 4),
         defaultValue: 0.15
     })
-    noshipCommissionRate: number;    
+    noshipCommissionRate: number;
 
     @Column({
         allowNull: false,
         type: DataType.DECIMAL(13, 2),
         defaultValue: 0.00
     })
-    noshipCommissionFee: number;      
+    noshipCommissionFee: number;
 
 
     @Column({
@@ -360,50 +360,50 @@ class Butcher extends BaseModel<Butcher> {
         type: DataType.DECIMAL(10, 4),
         defaultValue: 0.1
     })
-    commissionRate: number;    
+    commissionRate: number;
 
     @Column({
         allowNull: false,
         type: DataType.DECIMAL(13, 2),
         defaultValue: 0.00
     })
-    commissionFee: number;   
+    commissionFee: number;
 
     @Column({
         allowNull: false,
         type: DataType.DECIMAL(13, 2),
         defaultValue: 0.00
     })
-    minSalesPuan: number;       
+    minSalesPuan: number;
 
     @Column({
         allowNull: false,
         type: DataType.DECIMAL(5, 2),
         defaultValue: 0.01
     })
-    customerPuanRate: number;    
-    
+    customerPuanRate: number;
+
     @Column({
         allowNull: false,
         type: DataType.DECIMAL(5, 2),
         defaultValue: 0.02
     })
-    kurbanPuanRate: number;          
+    kurbanPuanRate: number;
 
     @Column({
         allowNull: false,
         type: DataType.DECIMAL(13, 2),
         defaultValue: 50.00
     })
-    minPuanUsage: number;      
+    minPuanUsage: number;
 
     @Column({
         allowNull: false,
         defaultValue: false
     })
-    enablePuan: boolean;   
-    
-    
+    enablePuan: boolean;
+
+
 
     @Column
     videoinstagram: Buffer;
@@ -425,12 +425,62 @@ class Butcher extends BaseModel<Butcher> {
     }
 
     get lat(): number {
-        return this.location ? (<any>this.location).coordinates[0]: 0
+        return this.location ? (<any>this.location).coordinates[0] : 0
     }
 
     get lng(): number {
-        return this.location ? (<any>this.location).coordinates[1]: 0
-    }    
+        return this.location ? (<any>this.location).coordinates[1] : 0
+    }
+
+    static async loadButcherWithProducts(slug: string) {
+        let butcher = await Butcher.findOne({
+            include: [{
+                model: ButcherProduct,
+                include: [Product],
+                // where: {
+                //     [Op.or]: [{
+                //         '$products.kgPrice$': {
+                //             [Op.gt]: 0.0
+                //         }
+                //     },
+
+                //     {
+                //         '$products.unit1price$': {
+                //             [Op.gt]: 0.0
+                //         }
+                //     },
+
+                //     {
+                //         '$products.unit2price$': {
+                //             [Op.gt]: 0.0
+                //         }
+                //     },
+                //     {
+                //         '$products.unit3price$': {
+                //             [Op.gt]: 0.0
+                //         }
+                //     }
+                //     ]                    
+                // }
+            },
+            {
+                model: Area,
+                all: true,
+                as: "areaLevel1Id"
+
+            }], where: {
+                slug: slug,
+
+
+            }
+        });
+        if (butcher) {
+            butcher.products = butcher.products.filter(p => {
+                return p.enabled && (p.kgPrice > 0 || (p.unit1price > 0 && p.unit1enabled) || (p.unit2price > 0 && p.unit2enabled) || (p.unit3price > 0 && p.unit1enabled))
+            })
+        }
+        return butcher;
+    }
 
 
     getProducts(): Product[] {

@@ -30,6 +30,7 @@ import * as sq from 'sequelize';
 import SubCategory from '../db/models/subcategory';
 import { LogisticProvider, PriceSlice, FromTo } from '../lib/logistic/core';
 import  DispatcherApi from './api/dispatcher';
+import  ProductApi from './api/product';
 import { Provider } from 'nconf';
 import AreaApi from './api/area'
 
@@ -86,46 +87,10 @@ export default class Route extends ViewRouter {
         if (!this.req.params.butcher) {
             return this.next();
         }
-        let butcher = this.butcher = await ButcherModel.findOne({
-            include: [{
-                model: ButcherProduct,
-                include: [Product],
-                // where: {
-                //     [Op.or]: [{
-                //         '$products.kgPrice$': {
-                //             [Op.gt]: 0.0
-                //         }
-                //     },
 
-                //     {
-                //         '$products.unit1price$': {
-                //             [Op.gt]: 0.0
-                //         }
-                //     },
+        let butcher = await ButcherModel.loadButcherWithProducts(this.req.params.butcher);
 
-                //     {
-                //         '$products.unit2price$': {
-                //             [Op.gt]: 0.0
-                //         }
-                //     },
-                //     {
-                //         '$products.unit3price$': {
-                //             [Op.gt]: 0.0
-                //         }
-                //     }
-                //     ]                    
-                // }
-            },
-            {
-                model: Area,
-                all: true,
-                as: "areaLevel1Id"
-
-            }], where: { slug: this.req.params.butcher,
-            
-            
-            }
-        });
+        
         if (!butcher) {
             return this.next();
         } 
@@ -172,9 +137,6 @@ export default class Route extends ViewRouter {
 
         this.categories = [];
 
-        butcher.products = butcher.products.filter(p => {
-            return p.enabled && (p.kgPrice > 0 || (p.unit1price > 0 && p.unit1enabled) || (p.unit2price > 0 && p.unit2enabled) || (p.unit3price > 0 && p.unit1enabled))
-        })
 
 
         
@@ -241,6 +203,47 @@ export default class Route extends ViewRouter {
         this.res.render('pages/butcher', this.viewData({ pageThumbnail: pageThumbnail, pageTitle: pageTitle, pageDescription: pageDescription, butcher: butcher, images: images }));
     }
 
+    
+
+    @Auth.Anonymous()
+    async butcherProductFeedRoute() {
+        if (!this.req.params.butcher) {
+            return this.next();
+        }
+
+        let butcher = await ButcherModel.loadButcherWithProducts(this.req.params.butcher);
+
+        
+        if (!butcher) {
+            return this.next();
+        } 
+
+        this.res.header('Content-Type', 'application/xml');
+        //res.header('Content-Encoding', 'gzip');               
+        let api = new ProductApi({
+            req: this.req,
+            res: this.res,
+            next: null
+        })
+
+
+        
+        api.getProductsFeedOfButcher(butcher).then(products=> {
+
+            try {
+                let feed = api.getProductsFeedXML(products)
+                this.res.send(feed.end({pretty: config.nodeenv == "development" }))
+              } catch (e) {
+                console.error(e)
+                this.res.status(500).end();
+              }
+        }).catch(e => {
+            console.error(e)
+            this.res.status(500).end()
+        })        
+
+    }
+
 
     @Auth.Anonymous()
     async butcherPhotoRoute() {
@@ -275,6 +278,7 @@ export default class Route extends ViewRouter {
 
     static SetRoutes(router: express.Router) {
         router.get("/:butcher", Route.BindRequest(Route.prototype.butcherRoute));
+        router.get("/:butcher/feed", Route.BindRequest(Route.prototype.butcherProductFeedRoute));
         router.get("/:butcher/:category", Route.BindRequest(Route.prototype.butcherRoute));
         config.nodeenv == 'development' ? router.get("/:butcher/fotograf/:filename", Route.BindRequest(Route.prototype.butcherPhotoRoute)) : null;
     }

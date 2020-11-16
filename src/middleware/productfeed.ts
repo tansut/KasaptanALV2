@@ -64,44 +64,13 @@ class ProductFeedMiddleware extends Middleware {
             res: res,
             next: null
         })
+
+
         
         api.getProductsFeed().then(products=> {
 
             try {
-                var feed = builder.create('feed').att("xmlns", "http://www.w3.org/2005/Atom").att("xmlns:g","http://base.google.com/ns/1.0");
-                feed.ele("title", "KasaptanAl.com") ;   
-                feed.ele("link", ProductFeedMiddleware.baseUrl).att("rel", "self") ;   
-                feed.ele("updated", new Date().toISOString()) ;   
-                
-                products.forEach( p => {
-                    let entry = feed.ele("entry");
-                    entry.ele("g:id", p.id);
-                    entry.ele("g:title", p.title);
-                    entry.ele("g:description", p.description);
-                    entry.ele("g:link", p.link);
-                    entry.ele("g:condition", p.condition);
-                    entry.ele("g:availability", p.availability);
-                    entry.ele("g:price", Helper.formattedCurrency(p.price, "TRY"));
-
-                    let ship = entry.ele("g:shipping");
-                    ship.ele("g:country", "TR");
-                    ship.ele("g:service", "Same Day");
-                    ship.ele("g:price", "0TRY");
-
-                    //entry.ele("g:gtin", p.gtin);
-                    entry.ele("g:brand", "");
-
-
-
-                    p.images.forEach((im, i) => {
-                       (i < 5) && entry.ele(i == 0? "g:image_link":"g:additional_image_link", `${im}`);
-                    })
-
-                    
-
-                })
-
-
+                let feed = api.getProductsFeedXML(products)
                 res.send(feed.end({pretty: config.nodeenv == "development" }))
               } catch (e) {
                 console.error(e)

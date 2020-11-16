@@ -8,7 +8,7 @@ import ButcherProduct from '../../db/models/butcherproduct';
 import Helper from '../../lib/helper';
 var MarkdownIt = require('markdown-it')
 import * as sq from 'sequelize';
-
+import * as builder from "xmlbuilder"
 
 import * as _ from 'lodash';
 import Resource from '../../db/models/resource';
@@ -277,11 +277,56 @@ export default class Route extends ApiRouter {
         return res;
     }
 
+     getProductsFeedXML(products: ProductFeedItem []): builder.XMLElement {
+
+        var feed = builder.create('feed').att("xmlns", "http://www.w3.org/2005/Atom").att("xmlns:g","http://base.google.com/ns/1.0"); 
+                feed.ele("title", "KasaptanAl.com") ;   
+                feed.ele("link", 'https://www.kasaptanal.com').att("rel", "self") ;   
+                feed.ele("updated", new Date().toISOString()) ;   
+                
+                products.forEach( p => {
+                    let entry = feed.ele("entry");
+                    entry.ele("g:id", p.id);
+                    entry.ele("g:title", p.title);
+                    entry.ele("g:description", p.description);
+                    entry.ele("g:link", p.link);
+                    entry.ele("g:condition", p.condition);
+                    entry.ele("g:availability", p.availability);
+                    entry.ele("g:price", Helper.formattedCurrency(p.price, "TRY"));
+                    entry.ele("g:identifier_exists", "no");
+
+                    
+
+                    let ship = entry.ele("g:shipping");
+                    ship.ele("g:country", "TR");
+                    ship.ele("g:service", "Same Day");
+                    ship.ele("g:price", "0TRY");
+
+                    //entry.ele("g:gtin", p.gtin);
+                    entry.ele("g:brand", "");
+                    entry.ele("g:mpn", p.mpn);
+
+
+
+                    p.images.forEach((im, i) => {
+                       (i < 5) && entry.ele(i == 0? "g:image_link":"g:additional_image_link", `${im}`);
+                    })
+
+                    
+
+                })
+
+
+        return feed;
+    }
+
     async getProductsFeed(): Promise<ProductFeedItem []> {
         let res: ProductFeedItem [] = [];
         let products = await Product.findAll({ 
              where: { status: "onsale" }
         });
+
+
 
         for(let i = 0; i < products.length; i++) {
             let p = products[i];
@@ -299,18 +344,52 @@ export default class Route extends ApiRouter {
                         price: ld.offers.lowPrice,
                         link: "https://www.kasaptanal.com/" + p.slug,
                         title: ld.name,
-                        mpn: "",
+                        mpn: p.id.toString(),
                         gtin: "KA" + p.id.toString()
                     }
                     res.push(feed)
                 }
             }
         }
-
-          
-
+        
        return res;
   }
+
+  async getProductsFeedOfButcher(butcher: Butcher): Promise<ProductFeedItem []> {
+    let res: ProductFeedItem [] = [];
+    // let products = await Product.findAll({ 
+    //      where: { status: "onsale" }
+    // });
+
+    let products = butcher.products;
+
+
+    for(let i = 0; i < products.length; i++) {
+        let p = products[i].product;
+        if (p.status == "onsale" && (p.productType == ProductType.generic || p.productType == ProductType.tumkuzu)) {
+            await p.loadResources();
+            let ld = new ProductLd(p)            
+            
+                let feed: ProductFeedItem = {
+                    id: p.id.toString(),
+                    availability: "in stock",
+                    brand: butcher.name,
+                    condition: "new",
+                    description: ld.description,
+                    images: ld.image,
+                    price: products[i].priceView.price,
+                    link: "https://www.kasaptanal.com/" + p.slug + '?butcher=' + butcher.slug,
+                    title: ld.name,
+                    mpn: p.id.toString(),
+                    gtin: butcher.slug + p.id.toString()
+                }
+                res.push(feed)
+            
+        }
+    }
+    
+   return res;
+}  
 
 
 

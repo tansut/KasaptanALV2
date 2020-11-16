@@ -25,6 +25,7 @@ const butcherproduct_1 = require("../../db/models/butcherproduct");
 const helper_1 = require("../../lib/helper");
 var MarkdownIt = require('markdown-it');
 const sq = require("sequelize");
+const builder = require("xmlbuilder");
 const _ = require("lodash");
 const resource_1 = require("../../db/models/resource");
 const resourcecategory_1 = require("../../db/models/resourcecategory");
@@ -265,6 +266,34 @@ class Route extends router_1.ApiRouter {
             return res;
         });
     }
+    getProductsFeedXML(products) {
+        var feed = builder.create('feed').att("xmlns", "http://www.w3.org/2005/Atom").att("xmlns:g", "http://base.google.com/ns/1.0");
+        feed.ele("title", "KasaptanAl.com");
+        feed.ele("link", 'https://www.kasaptanal.com').att("rel", "self");
+        feed.ele("updated", new Date().toISOString());
+        products.forEach(p => {
+            let entry = feed.ele("entry");
+            entry.ele("g:id", p.id);
+            entry.ele("g:title", p.title);
+            entry.ele("g:description", p.description);
+            entry.ele("g:link", p.link);
+            entry.ele("g:condition", p.condition);
+            entry.ele("g:availability", p.availability);
+            entry.ele("g:price", helper_1.default.formattedCurrency(p.price, "TRY"));
+            entry.ele("g:identifier_exists", "no");
+            let ship = entry.ele("g:shipping");
+            ship.ele("g:country", "TR");
+            ship.ele("g:service", "Same Day");
+            ship.ele("g:price", "0TRY");
+            //entry.ele("g:gtin", p.gtin);
+            entry.ele("g:brand", "");
+            entry.ele("g:mpn", p.mpn);
+            p.images.forEach((im, i) => {
+                (i < 5) && entry.ele(i == 0 ? "g:image_link" : "g:additional_image_link", `${im}`);
+            });
+        });
+        return feed;
+    }
     getProductsFeed() {
         return __awaiter(this, void 0, void 0, function* () {
             let res = [];
@@ -287,11 +316,42 @@ class Route extends router_1.ApiRouter {
                             price: ld.offers.lowPrice,
                             link: "https://www.kasaptanal.com/" + p.slug,
                             title: ld.name,
-                            mpn: "",
+                            mpn: p.id.toString(),
                             gtin: "KA" + p.id.toString()
                         };
                         res.push(feed);
                     }
+                }
+            }
+            return res;
+        });
+    }
+    getProductsFeedOfButcher(butcher) {
+        return __awaiter(this, void 0, void 0, function* () {
+            let res = [];
+            // let products = await Product.findAll({ 
+            //      where: { status: "onsale" }
+            // });
+            let products = butcher.products;
+            for (let i = 0; i < products.length; i++) {
+                let p = products[i].product;
+                if (p.status == "onsale" && (p.productType == product_1.ProductType.generic || p.productType == product_1.ProductType.tumkuzu)) {
+                    yield p.loadResources();
+                    let ld = new ProductLd_1.ProductLd(p);
+                    let feed = {
+                        id: p.id.toString(),
+                        availability: "in stock",
+                        brand: butcher.name,
+                        condition: "new",
+                        description: ld.description,
+                        images: ld.image,
+                        price: products[i].priceView.price,
+                        link: "https://www.kasaptanal.com/" + p.slug + '?butcher=' + butcher.slug,
+                        title: ld.name,
+                        mpn: p.id.toString(),
+                        gtin: butcher.slug + p.id.toString()
+                    };
+                    res.push(feed);
                 }
             }
             return res;
