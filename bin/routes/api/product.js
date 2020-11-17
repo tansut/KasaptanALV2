@@ -49,14 +49,15 @@ class Route extends router_1.ApiRouter {
             }, products4, limit, catids, options);
         });
     }
-    loadReviews(productid) {
+    loadReviews(productid, butcherid) {
         return __awaiter(this, void 0, void 0, function* () {
             let res = yield review_1.default.sequelize.query(`
         SELECT r.* FROM Reviews r, Orders o, OrderItems oi 
         WHERE r.type='order' and oi.status='teslim edildi' and r.ref1=o.id and oi.orderid = o.id and oi.productid=:pid
+        and (:butcherid = 0 || :butcherid = ref2)
         ORDER BY r.ID DESC
         `, {
-                replacements: { pid: productid },
+                replacements: { butcherid: butcherid, pid: productid },
                 type: sq.QueryTypes.SELECT,
                 model: review_1.default,
                 mapToModel: true,
@@ -384,9 +385,14 @@ class Route extends router_1.ApiRouter {
                         offerCount: price['count'],
                         highPrice: high,
                         lowPrice: low,
+                        unit: product[`${usedUnit}title`],
                         priceCurrency: "TRY",
                         availability: "InStock"
                     };
+                    if (usedUnit == 'kg') {
+                        res.offers.unit_pricing_measure = "1 kg";
+                        res.offers.unit_pricing_base_measure = "1 kg";
+                    }
                 }
             }
             return res;
@@ -494,7 +500,7 @@ class Route extends router_1.ApiRouter {
                     earnedPuan: 0.00,
                     productNote: '',
                     kgPrice: kgPrice,
-                    locationText: `${butcher.locationText}`
+                    locationText: butcher.locationText
                 } : null,
                 butcherNote: (butcherProduct && butcherProduct.mddesc) ? butcherProduct.mddesc : '',
                 butcherLongNote: (butcherProduct && butcherProduct.longdesc) ? butcherProduct.longdesc : '',
@@ -504,6 +510,7 @@ class Route extends router_1.ApiRouter {
                 productType: product.productType,
                 shortDesc: product.shortdesc,
                 notePlaceholder: product.notePlaceholder,
+                priceView: null,
                 // viewUnitPrice: defaultUnitPrice,
                 // viewUnit: defaultUnitText,
                 // viewUnitDesc: product[`${defaultUnitCol}desc`] || (defaultUnit == 'kg' ? 'kg' : ''),
@@ -517,6 +524,13 @@ class Route extends router_1.ApiRouter {
                 product.resources.forEach(r => view.resources.push(r.asView()));
             }
             view.purchaseOptions = this.getPurchaseOptions(product, butcherProduct);
+            if (view.purchaseOptions.length) {
+                view.priceView = {
+                    price: view.purchaseOptions[0].unitPrice,
+                    unitTitle: view.purchaseOptions[0].unitTitle,
+                    unit: view.purchaseOptions[0].unit
+                };
+            }
             return view;
         });
     }

@@ -2,9 +2,12 @@ import Product from "../db/models/product";
 
 export interface IOffer {
     '@type': string;
+    unit_pricing_measure?: string;
+    unit_pricing_base_measure?: string;
     highPrice: number;
     lowPrice: number;
     offerCount: number;
+    unit?: string; 
     priceCurrency: string;
     availability: string;
 }

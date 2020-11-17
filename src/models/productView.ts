@@ -1,6 +1,7 @@
 import { Badge } from "./badge";
 import { Puan } from "./puan";
 import { PriceSlice } from "../lib/logistic/core";
+import { PriceView } from "./common";
 
 export interface PurchaseOption {
     id: number;
@@ -83,6 +84,7 @@ export interface ProductView {
     kgPrice: number;
     name: string;
     productType: string;
+    priceView: PriceView;
     // viewUnitPrice: number;
     // viewUnit: string;
     // viewUnitDesc: string;

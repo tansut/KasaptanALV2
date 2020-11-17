@@ -2,7 +2,7 @@
 <% var product = typeof(product) != 'undefined' ? product: butcherProduct.product %>
 <% var badge = typeof(badge) != 'undefined' ? badge: product.tag2 %>
 <% var showPurchase = typeof(showPurchase) != 'undefined' ? showPurchase: false %>
-<% var hidePrice = typeof(hidePrice) != 'undefined' ? hidePrice: false %>
+<% var showPrice = typeof(showPrice) != 'undefined' ? showPrice: true %>
 <% var lowPrice = typeof(lowPrice) == 'undefined' ? 0.00: lowPrice %>
 <% var highPrice = typeof(highPrice) == 'undefined' ? 0.00: highPrice %>
 <% var priceUnit = typeof(priceUnit) == 'undefined' ? '': priceUnit %>
@@ -38,7 +38,7 @@
                 href="/<%= product.slug%><%=(butcher ? `?butcher=${butcher}`:'') %>"><%= product.name  %></a>
         </h3>
 
-        <% if (typeof(butcherProduct) != 'undefined' && butcherProduct && !hidePrice) { %>
+        <% if (typeof(butcherProduct) != 'undefined' && butcherProduct && showPrice) { %>
             <% var view = butcherProduct.priceView;  %>
            
                 <div class="text-accent font-size-sm">

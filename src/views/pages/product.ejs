@@ -312,22 +312,71 @@
 
                       <% if (!view.butcher) { %>
                       <% if (!__req.prefAddr) { %>
+                     
 
-                      <div class="alert border-none rounded-0 alert-accent font-size-sm mb-2"
+                      <div class="alert border-none rounded-0 alert-secondary font-size-sm mb-2"
                         role="alert">
 
 
 
 
-                        <div class="mb-3 d-block font-size-sm text-info text-center">
-                          <h5 class="h6 text-info">Önce Semt</h5>
-                          <span class="font-weight-medium">Ürün fiyatları</span> ve alışveriş yapmak için
-                          önce semtinizi seçin.
+                        <div class="mb-3 d-block font-size-sm  text-center">
+                          <h6 class="h6">
+                            Anında Kapınızda!
+                          </h6>
+
+                          <h6 class="h7 text-info">
+                            <% if (controller.startPrice) { %>
+                              <%- include('./_partial/currency.ejs', {value: controller.startPrice.view.price, unit: controller.startPrice.view.unitTitle}) %>
+                              <% if (controller.startPrice.basedOn == 'global') { %>
+                              <span class="font-size-sm d-block">başlayan fiyatlarla!</span>
+                                
+
+                              
+                   
+                        
+
+                              <% } else { %>
+                           
+
+                                <%}%>
+                              <% } else { %>
+                                Önce Semt Seçin
+                              <%}%>
+
+                          </h5>
+                          <% if (controller.startPrice) { %>
+                            <% if (controller.startPrice.basedOn == 'global') { %>
+
+                              <div>
+                                <span class="font-weight-medium">Kasap alternatifleri</span> ve <span class="font-weight-medium">net ürün fiyatları</span> için önce semt seçin.
+                              </div>
+
+                        
+                            <% } else { %>
+                              <div>
+                                <span class="font-weight-medium">Alışverişe başlamak için</span> 
+                                şimdi semtinizi seçin.
+                              </div>
+
+                            <% } %>
+
+
+                          <% } else { %>
+                            <div>
+                              <span class="font-weight-medium">Alışverişe başlamak için</span> 
+                              önce semtinizi seçin.
+                            </div>
+                            <%}%>
+                      
+
+                         
+
 
                         </div>
 
                         <div class="text-center">
-                          <button @click="selectArea(null)" type="button" class="btn btn-info btn-sm"><i
+                          <button @click="selectArea(null)" type="button" class="btn btn-primary btn-sm"><i
                               class="czi-location font-size-lg mr-2"></i>Semt Seç</button>
                         </div>
 

@@ -30,9 +30,25 @@ class="gallery-item-caption"><%= butcherVideo.title %></span></a>
  <% } %>
       <div class="media-body   p-2">
         <h5 class="h6 mb-0 mr-2"><%= view.butcher.name %></h6>
+          
+          <% if (view.butcher.locationText) { %>
           <span class="text-muted font-size-xs d-block">
-            <%=view.butcher.locationText%>
+            <%=view.butcher.locationText%> 
+
+            <%  if (view.dispatcher && view.dispatcher.priceInfo) { %>
+               ,  
+                <%= view.dispatcher.priceInfo %>
+             
+             <% } %>
+
+            <%  if (view.dispatcher && view.dispatcher.distance) { %>
+              ,
+                <%= view.dispatcher.distance.toFixed(0) %> km
+             
+             <% } %>
+
           </span>
+          <% } %>
           <!-- <% if (view.butcher.badges.length > 0 ) { %>
             <div class="butcher-badges mb-1">
           
@@ -62,16 +78,8 @@ class="gallery-item-caption"><%= butcherVideo.title %></span></a>
 
 
           <money-view class="font-size-sm text-accent" :unit="product.kgPrice ? 'Kg': selectedUnit.unitTitle"  :money="product.kgPrice || selectedUnit.unitPrice"></money-view>
-          <%  if (view.dispatcher && view.dispatcher.distance) { %>
-           <span class=" text-secondary font-size-xs">
-             <%= view.dispatcher.distance.toFixed(0) %> km
-          </span>
-          <% } %>
-          <%  if (view.dispatcher && view.dispatcher.priceInfo) { %>
-            <span class="d-block text-muted font-size-xs">
-              <%= view.dispatcher.priceInfo %> 
-           </span>
-           <% } %>
+
+       
           
 
           

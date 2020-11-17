@@ -132,8 +132,8 @@ class Route extends router_1.ViewRouter {
             });
             let defaultButchers = serving;
             let nearButchers = serving.filter(p => p.butcherArea.bestKm <= 10.0);
-            let alternateButchers = serving.filter(p => (p.butcherArea.bestKm > 10.0 && p.butcherArea.bestKm <= 20.0));
-            let farButchers = serving.filter(p => p.butcherArea.bestKm > 20.0);
+            let alternateButchers = serving.filter(p => (p.butcherArea.bestKm > 10.0 && p.butcherArea.bestKm <= 15.0));
+            let farButchers = serving.filter(p => p.butcherArea.bestKm > 15.0);
             if (nearButchers.length < 2) {
                 defaultButchers = nearButchers.concat(alternateButchers);
             }
@@ -176,11 +176,11 @@ class Route extends router_1.ViewRouter {
             this.product = product;
             let api = new product_2.default(this.constructorParams);
             yield product.loadResources();
-            this.reviews = yield api.loadReviews(product.id);
             let shopcard = yield shopcard_1.ShopCard.createFromRequest(this.req);
             this.shopCardIndex = this.req.query.shopcarditem ? parseInt(this.req.query.shopcarditem) : -1;
             this.shopCardItem = (this.shopCardIndex >= 0 && shopcard.items) ? shopcard.items[this.shopCardIndex] : null;
             let butcher = this.shopCardItem ? yield butcher_1.default.getBySlug(this.shopCardItem.product.butcher.slug) : (this.req.query.butcher ? yield butcher_1.default.getBySlug(this.req.query.butcher) : null);
+            this.reviews = yield api.loadReviews(product.id, this.req.query.butcher ? butcher.id : 0);
             this.foods = yield api.getTarifVideos([product]);
             if (this.req.query.semt) {
                 let l3 = yield area_1.default.getBySlug(this.req.query.semt);
@@ -235,7 +235,7 @@ class Route extends router_1.ViewRouter {
                             puanData: butcher.getPuanData(this.product.productType),
                             earnedPuan: 0.00,
                             kgPrice: bp ? bp.kgPrice : 0,
-                            locationText: `${butcher.locationText}`,
+                            locationText: butcher.locationText,
                             productNote: bp ? (bp.mddesc ? this.markdown.render(bp.mddesc) : "") : "",
                             thumbnail: this.req.helper.imgUrl("butcher-google-photos", butcher.slug)
                         },
@@ -328,6 +328,25 @@ class Route extends router_1.ViewRouter {
             if (this.productLd) {
                 if (!this.productLd.offers) {
                     this.productLd = null;
+                }
+            }
+            if (!this.req.prefAddr) {
+                if (butcher && butcher.slug == this.req.query.butcher) {
+                    let pview = yield api.getProductView(product, butcher);
+                    this.startPrice = {
+                        basedOn: 'butcher',
+                        view: pview.priceView
+                    };
+                }
+                else {
+                    if (this.productLd && this.productLd.offers) {
+                        this.startPrice = {
+                            basedOn: 'global',
+                            view: {
+                                price: this.productLd.offers.lowPrice, unit: this.productLd.offers.unit, unitTitle: this.productLd.offers.unit
+                            }
+                        };
+                    }
                 }
             }
             this.dispatchingAvailable = this.req.prefAddr && (view.butcher != null || (yield new dispatcher_1.default(this.constructorParams).dispatchingAvailable(this.req.prefAddr, this.useL1(this.product))));
