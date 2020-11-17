@@ -421,7 +421,7 @@ export default class Route extends ApiRouter {
                     offerCount: price['count'],
                     highPrice: high ,
                     lowPrice: low,
-                    unit: product[`${usedUnit}title`],
+                    unit: usedUnit == "kg" ? "KG": product[`${usedUnit}title`],
                     priceCurrency: "TRY",
                     availability: "InStock"
                 }

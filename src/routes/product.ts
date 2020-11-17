@@ -45,6 +45,7 @@ interface ButcherSelection {
 interface StartPrice {
     view: PriceView;
     basedOn: 'butcher' | 'global';
+    title: string;
 }
 
 export default class Route extends ViewRouter {
@@ -381,12 +382,15 @@ export default class Route extends ViewRouter {
             if (butcher && butcher.slug == this.req.query.butcher) {
                 let pview = await api.getProductView(product, butcher);
                 this.startPrice = {
+                    title: butcher.name,
                     basedOn: 'butcher',
                     view: pview.priceView
                 }
             } else {
                 if (this.productLd && this.productLd.offers) {
+
                     this.startPrice = {
+                        title: 'Anında Kapınızda!',
                         basedOn: 'global',
                         view: {
                             price: this.productLd.offers.lowPrice, unit: this.productLd.offers.unit, unitTitle: this.productLd.offers.unit

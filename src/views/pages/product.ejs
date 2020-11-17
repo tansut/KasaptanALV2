@@ -194,6 +194,182 @@
 
 
                     <form id="product-form" class="" @submit.prevent="addToShopcard">
+                      <% if (!view.butcher) { %>
+                        <% if (!__req.prefAddr) { %>
+                       
+  
+                        <div class="alert border-none rounded-0 alert-secondary font-size-sm mb-2"
+                          role="alert">
+  
+  
+  
+  
+                          <div class="mb-3 d-block font-size-sm  text-center">
+                            <% if (controller.startPrice && controller.startPrice.title) { %>
+                              <h5 class="h6">
+                                <%=controller.startPrice.title%>
+                              </h5>
+                            <% } %>
+                          
+  
+                            <h6 class="h7 text-info">
+                              <% if (controller.startPrice) { %>
+                                <%- include('./_partial/currency.ejs', {value: controller.startPrice.view.price, unit: controller.startPrice.view.unitTitle}) %>
+                                <% if (controller.startPrice.basedOn == 'global') { %>
+                                <span class="font-size-sm d-block">başlayan fiyatlarla!</span>
+                                  
+  
+                                
+                     
+                          
+  
+                                <% } else { %>
+                             
+  
+                                  <%}%>
+                                <% } else { %>
+                                  Önce Semt Seçin
+                                <%}%>
+  
+                            </h5>
+                            <% if (controller.startPrice) { %>
+                              <% if (controller.startPrice.basedOn == 'global') { %>
+  
+                                <div>
+                                  <span class="font-weight-medium">Sipariş vermek</span> ve <span class="font-weight-medium">semt kasaplarınızın net ürün fiyatları</span> için önce semt seçin.
+                                </div>
+  
+                          
+                              <% } else { %>
+                                <div>
+                                  <span class="font-weight-medium">Alışverişe başlamak için</span> 
+                                  şimdi semtinizi seçin.
+                                </div>
+  
+                              <% } %>
+  
+  
+                            <% } else { %>
+                              <div>
+                                <span class="font-weight-medium">Alışverişe başlamak için</span> 
+                                önce semtinizi seçin.
+                              </div>
+                              <%}%>
+                        
+  
+                           
+  
+  
+                          </div>
+  
+                          <div class="text-center">
+                            <button @click="selectArea(null)" type="button" class="btn btn-primary btn-sm"><i
+                                class="czi-location font-size-lg mr-2"></i>Semt Seç</button>
+                          </div>
+  
+  
+                        </div>
+                        <%} else { %>
+                        <div class="alert border-none rounded-0 alert-secondary font-size-sm mb-2"
+                          role="alert">
+  
+  
+  
+  
+                          <div class="mb-3 d-block font-size-sm text-info text-center">
+                            <% if (__req.query.butcher) {  %>
+                          
+                              <% if (!controller.dispatchingAvailable) { %>
+                                <h5 class="h6 text-info">Henüz Semtinizde Değiliz</h5>
+                                <span class="font-weight-medium">
+      
+                                  Kasap seçim kriterlerimiz oldukça detaylı ve belirli bir planda ilerliyoruz.
+                                  Çünkü sizlere en iyiyi sunmak için çalışıyoruz.
+      
+                                </span>
+  
+                                <script>
+                                  window.App.gTag('location', 'noservice', '<%=__req.prefAddr.display%>');
+                                  window.App.gTag('product', 'unavail/location', '<%=product.slug%>/<%=__req.prefAddr.display%>');
+                                </script>
+      
+                                <%} else { %>
+                                <h5 class="h6 text-info"><i class="czi-thumb-up mr-2"></i>Semtinize hizmet
+                                  veren kasaplarımız mevcut</h5>
+                                <span class="font-weight-medium">Ancak bu kasabımız semtinize hizmet veremiyor veya bu ürünü sağlayamıyor.</span>
+                                <script>
+                                  window.App.gTag('location', 'noservice', '<%=__req.prefAddr.display%>');
+                                  window.App.gTag('product', 'unavail/location', '<%=product.slug%>/<%=__req.prefAddr.display%>');
+                                </script>
+                                <% } %>
+  
+  
+                            <% } else { %>
+                              <% if (!controller.dispatchingAvailable) { %>
+                                <h5 class="h6 text-info">Henüz Semtinizde Değiliz</h5>
+                                <span class="font-weight-medium">
+      
+                                  Kasap seçim kriterlerimiz oldukça detaylı ve belirli bir planda ilerliyoruz.
+                                  Çünkü sizlere en iyiyi sunmak için çalışıyoruz.
+      
+                                </span>
+  
+                                <script>
+                                  window.App.gTag('location', 'noservice', '<%=__req.prefAddr.display%>');
+                                  window.App.gTag('product', 'unavail/location', '<%=product.slug%>/<%=__req.prefAddr.display%>');
+                                </script>
+      
+                                <%} else { %>
+                                <h5 class="h6 text-info"><i class="czi-thumb-up mr-2"></i>Hizmet
+                                  Veriyoruz</h5>
+                                <span class="font-weight-medium">Ancak semtinize hizmet veren hiçbir kasabımız
+                                  bu ürünü şu anda sağlayamıyor.</span>
+                                  <script>                                  
+                                    window.App.gTag('product', 'unavail/noprovider', '<%=product.slug%>/<%=__req.prefAddr.display%>');
+                                  </script>
+                                <% } %>
+                            <% } %>
+                           
+  
+  
+                          </div>
+                          <% if (!controller.dispatchingAvailable) { %>
+                          <div class="d-flex justify-content-center">
+  
+                            <% if (__req.query.frame != '1') { %>
+                            <button @click="selectArea(null)" type="button" class="btn mr-2 btn-info btn-sm"><i
+                                class="czi-location font-size-lg mr-2"></i>Semt Seç</button>
+                            <% } else { %>
+                              <button onclick="window.parent.purchase.selectAddress('<%=product.slug%>')" type="button" class="btn mr-2 btn-info btn-sm"><i
+                                class="czi-location font-size-lg mr-2"></i>Semt Seç</button>
+                            <% } %>
+                            <a class="btn btn-sm btn-info " onclick="return showButchers()">Kasaplarımız<i
+                                class="czi-arrow-right ml-2 mr-n1"></i></a>
+                          </div>
+                          <%} else {%>
+         
+  
+                          <div class="d-flex justify-content-center">
+                            <a class="btn btn-sm btn-primary mr-2" onclick="return goBack()" >Alışverişe Devam &raquo;</a>
+  
+                            <% if (__req.query.frame != '1') { %>
+                              <button @click="selectArea(null)" type="button" class="btn mr-2 btn-info btn-sm"><i
+                                  class="czi-location font-size-lg "></i>Semt Seç</button>
+                              <% } else { %>
+                                <button onclick="window.parent.purchase.selectAddress('<%=product.slug%>')" type="button" class="btn mr-2 btn-info btn-sm"><i
+                                  class="czi-location font-size-lg "></i>Semt Seç</button>
+                              <% } %>
+  
+                          </div>
+  
+                         
+                          <%}%>
+                    
+                                  </div>
+                                <%}%>
+  
+                          <% } %>
+
                       <% if (controller.reviews.length) { %>
                       <div class="mb-3 text-center">
                         <div class="mb-1">
@@ -310,178 +486,7 @@
 
                       <a id="aftersetloc"></a>
 
-                      <% if (!view.butcher) { %>
-                      <% if (!__req.prefAddr) { %>
-                     
 
-                      <div class="alert border-none rounded-0 alert-secondary font-size-sm mb-2"
-                        role="alert">
-
-
-
-
-                        <div class="mb-3 d-block font-size-sm  text-center">
-                          <h6 class="h6">
-                            Anında Kapınızda!
-                          </h6>
-
-                          <h6 class="h7 text-info">
-                            <% if (controller.startPrice) { %>
-                              <%- include('./_partial/currency.ejs', {value: controller.startPrice.view.price, unit: controller.startPrice.view.unitTitle}) %>
-                              <% if (controller.startPrice.basedOn == 'global') { %>
-                              <span class="font-size-sm d-block">başlayan fiyatlarla!</span>
-                                
-
-                              
-                   
-                        
-
-                              <% } else { %>
-                           
-
-                                <%}%>
-                              <% } else { %>
-                                Önce Semt Seçin
-                              <%}%>
-
-                          </h5>
-                          <% if (controller.startPrice) { %>
-                            <% if (controller.startPrice.basedOn == 'global') { %>
-
-                              <div>
-                                <span class="font-weight-medium">Kasap alternatifleri</span> ve <span class="font-weight-medium">net ürün fiyatları</span> için önce semt seçin.
-                              </div>
-
-                        
-                            <% } else { %>
-                              <div>
-                                <span class="font-weight-medium">Alışverişe başlamak için</span> 
-                                şimdi semtinizi seçin.
-                              </div>
-
-                            <% } %>
-
-
-                          <% } else { %>
-                            <div>
-                              <span class="font-weight-medium">Alışverişe başlamak için</span> 
-                              önce semtinizi seçin.
-                            </div>
-                            <%}%>
-                      
-
-                         
-
-
-                        </div>
-
-                        <div class="text-center">
-                          <button @click="selectArea(null)" type="button" class="btn btn-primary btn-sm"><i
-                              class="czi-location font-size-lg mr-2"></i>Semt Seç</button>
-                        </div>
-
-
-                      </div>
-                      <%} else { %>
-                      <div class="alert border-none rounded-0 alert-secondary font-size-sm mb-2"
-                        role="alert">
-
-
-
-
-                        <div class="mb-3 d-block font-size-sm text-info text-center">
-                          <% if (__req.query.butcher) {  %>
-                        
-                            <% if (!controller.dispatchingAvailable) { %>
-                              <h5 class="h6 text-info">Henüz Semtinizde Değiliz</h5>
-                              <span class="font-weight-medium">
-    
-                                Kasap seçim kriterlerimiz oldukça detaylı ve belirli bir planda ilerliyoruz.
-                                Çünkü sizlere en iyiyi sunmak için çalışıyoruz.
-    
-                              </span>
-
-                              <script>
-                                window.App.gTag('location', 'noservice', '<%=__req.prefAddr.display%>');
-                                window.App.gTag('product', 'unavail/location', '<%=product.slug%>/<%=__req.prefAddr.display%>');
-                              </script>
-    
-                              <%} else { %>
-                              <h5 class="h6 text-info"><i class="czi-thumb-up mr-2"></i>Semtinize hizmet
-                                veren kasaplarımız mevcut</h5>
-                              <span class="font-weight-medium">Ancak bu kasabımız semtinize hizmet veremiyor veya bu ürünü sağlayamıyor.</span>
-                              <script>
-                                window.App.gTag('location', 'noservice', '<%=__req.prefAddr.display%>');
-                                window.App.gTag('product', 'unavail/location', '<%=product.slug%>/<%=__req.prefAddr.display%>');
-                              </script>
-                              <% } %>
-
-
-                          <% } else { %>
-                            <% if (!controller.dispatchingAvailable) { %>
-                              <h5 class="h6 text-info">Henüz Semtinizde Değiliz</h5>
-                              <span class="font-weight-medium">
-    
-                                Kasap seçim kriterlerimiz oldukça detaylı ve belirli bir planda ilerliyoruz.
-                                Çünkü sizlere en iyiyi sunmak için çalışıyoruz.
-    
-                              </span>
-
-                              <script>
-                                window.App.gTag('location', 'noservice', '<%=__req.prefAddr.display%>');
-                                window.App.gTag('product', 'unavail/location', '<%=product.slug%>/<%=__req.prefAddr.display%>');
-                              </script>
-    
-                              <%} else { %>
-                              <h5 class="h6 text-info"><i class="czi-thumb-up mr-2"></i>Hizmet
-                                Veriyoruz</h5>
-                              <span class="font-weight-medium">Ancak semtinize hizmet veren hiçbir kasabımız
-                                bu ürünü şu anda sağlayamıyor.</span>
-                                <script>                                  
-                                  window.App.gTag('product', 'unavail/noprovider', '<%=product.slug%>/<%=__req.prefAddr.display%>');
-                                </script>
-                              <% } %>
-                          <% } %>
-                         
-
-
-                        </div>
-                        <% if (!controller.dispatchingAvailable) { %>
-                        <div class="d-flex justify-content-center">
-
-                          <% if (__req.query.frame != '1') { %>
-                          <button @click="selectArea(null)" type="button" class="btn mr-2 btn-info btn-sm"><i
-                              class="czi-location font-size-lg mr-2"></i>Semt Seç</button>
-                          <% } else { %>
-                            <button onclick="window.parent.purchase.selectAddress('<%=product.slug%>')" type="button" class="btn mr-2 btn-info btn-sm"><i
-                              class="czi-location font-size-lg mr-2"></i>Semt Seç</button>
-                          <% } %>
-                          <a class="btn btn-sm btn-info " onclick="return showButchers()">Kasaplarımız<i
-                              class="czi-arrow-right ml-2 mr-n1"></i></a>
-                        </div>
-                        <%} else {%>
-       
-
-                        <div class="d-flex justify-content-center">
-                          <a class="btn btn-sm btn-primary mr-2" onclick="return goBack()" >Alışverişe Devam &raquo;</a>
-
-                          <% if (__req.query.frame != '1') { %>
-                            <button @click="selectArea(null)" type="button" class="btn mr-2 btn-info btn-sm"><i
-                                class="czi-location font-size-lg "></i>Semt Seç</button>
-                            <% } else { %>
-                              <button onclick="window.parent.purchase.selectAddress('<%=product.slug%>')" type="button" class="btn mr-2 btn-info btn-sm"><i
-                                class="czi-location font-size-lg "></i>Semt Seç</button>
-                            <% } %>
-
-                        </div>
-
-                       
-                        <%}%>
-                  
-                                </div>
-                              <%}%>
-
-                        <% } %>
 
 
 

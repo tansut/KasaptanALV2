@@ -334,6 +334,7 @@ class Route extends router_1.ViewRouter {
                 if (butcher && butcher.slug == this.req.query.butcher) {
                     let pview = yield api.getProductView(product, butcher);
                     this.startPrice = {
+                        title: butcher.name,
                         basedOn: 'butcher',
                         view: pview.priceView
                     };
@@ -341,6 +342,7 @@ class Route extends router_1.ViewRouter {
                 else {
                     if (this.productLd && this.productLd.offers) {
                         this.startPrice = {
+                            title: 'Anında Kapınızda!',
                             basedOn: 'global',
                             view: {
                                 price: this.productLd.offers.lowPrice, unit: this.productLd.offers.unit, unitTitle: this.productLd.offers.unit
