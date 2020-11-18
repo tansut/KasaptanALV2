@@ -150,8 +150,8 @@ export default class Route extends ViewRouter {
 
         let defaultButchers = serving;
         let nearButchers = serving.filter(p => p.butcherArea.bestKm <= 10.0);
-        let alternateButchers = serving.filter(p => (p.butcherArea.bestKm > 10.0 && p.butcherArea.bestKm <= 15.0));
-        let farButchers = serving.filter(p => p.butcherArea.bestKm > 15.0);
+        let alternateButchers = serving.filter(p => (p.butcherArea.bestKm > 10.0 && p.butcherArea.bestKm <= 20.0));
+        let farButchers = serving.filter(p => p.butcherArea.bestKm > 20.0);
 
         if (nearButchers.length < 2) {
             defaultButchers = nearButchers.concat(alternateButchers);
