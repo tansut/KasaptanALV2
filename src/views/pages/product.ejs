@@ -214,9 +214,7 @@
   
                             <h6 class="h7 text-info">
                               <% if (controller.startPrice) { %>
-                                <%- include('./_partial/currency.ejs', {value: controller.startPrice.view.price, unit: controller.startPrice.view.unitTitle}) %>
                                 <% if (controller.startPrice.basedOn == 'global') { %>
-                                <span class="font-size-sm d-block">başlayan fiyatlarla!</span>
                                   
   
                                 
@@ -224,6 +222,7 @@
                           
   
                                 <% } else { %>
+                                  <%- include('./_partial/currency.ejs', {value: controller.startPrice.view.price, unit: controller.startPrice.view.unitTitle}) %>
                              
   
                                   <%}%>
@@ -236,7 +235,7 @@
                               <% if (controller.startPrice.basedOn == 'global') { %>
   
                                 <div>
-                                  <span class="font-weight-medium">Sipariş vermek</span> ve <span class="font-weight-medium">semt kasaplarınızın net ürün fiyatları</span> için önce semt seçin.
+                                  <span class="font-weight-medium">Sipariş vermek</span> ve kasaplarımızın <span class="font-weight-medium">en iyi ürün fiyatları</span> için önce semt seçin.
                                 </div>
   
                           
