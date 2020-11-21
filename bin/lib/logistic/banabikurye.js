@@ -219,6 +219,24 @@ class BanabikuryeProvider extends core_1.LogisticProvider {
             return this.optimizedSlice(result);
         });
     }
+    safeResponse(req, distance) {
+        return __awaiter(this, void 0, void 0, function* () {
+            let resp = null;
+            try {
+                let result = yield this.post("calculate-order", req);
+                resp = this.fromOfferResponse(result.data);
+            }
+            catch (e) {
+                let fee = helper_1.default.asCurrency(10.00 + distance * 2);
+                resp = {
+                    customerFee: fee,
+                    totalFee: fee,
+                    orderTotal: 0.00
+                };
+            }
+            return resp;
+        });
+    }
     requestOffer(req) {
         return __awaiter(this, void 0, void 0, function* () {
             let request = this.toOfferRequest(req);
@@ -234,8 +252,7 @@ class BanabikuryeProvider extends core_1.LogisticProvider {
                 },
                 fId: req.points[1].id,
             });
-            let result = yield this.post("calculate-order", request);
-            let resp = this.fromOfferResponse(result.data);
+            let resp = yield this.safeResponse(request, req.distance);
             resp.orderTotal = req.orderTotal;
             resp.distance = req.distance;
             return this.calculateCustomerFee(resp);
@@ -256,8 +273,7 @@ class BanabikuryeProvider extends core_1.LogisticProvider {
                 fId: req.points[1].id,
             });
             let request = this.toOrderRequest(req);
-            let result = yield this.post("create-order", request);
-            let resp = this.fromOrderResponse(result.data);
+            let resp = yield this.safeResponse(request, req.distance);
             resp.orderTotal = req.orderTotal;
             resp.distance = req.distance;
             return this.calculateCustomerFee(resp);
