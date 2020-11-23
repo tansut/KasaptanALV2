@@ -16,10 +16,11 @@ export enum ProductType {
     tumkuzu = 'tumkuzu',
 }
 
-export enum ProductDispatch {
-    default = 'default',
-    citywide = 'citywide'
-}
+ export enum ProductDispatch {
+     dispatcherbased = 'dispatcherbased',
+     citywide = 'citywide',
+     countrywide = 'countrywide'
+ }
 
 export type ProductStatus = "onsale" | "archieved" 
 
@@ -113,6 +114,13 @@ class Product extends BaseModel<Product> {
         allowNull: true,
     })
     tag1: string;
+
+    @Column({
+        allowNull: false,
+        defaultValue: ProductDispatch.dispatcherbased
+        
+    })
+    dispatch: ProductDispatch;
 
     @Column({
         allowNull: false,

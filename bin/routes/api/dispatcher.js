@@ -10,6 +10,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 const router_1 = require("../../lib/router");
+const product_1 = require("../../db/models/product");
 const butcher_1 = require("../../db/models/butcher");
 const area_1 = require("../../db/models/area");
 const dispatcher_1 = require("../../db/models/dispatcher");
@@ -22,6 +23,9 @@ class Route extends router_1.ApiRouter {
         return __awaiter(this, void 0, void 0, function* () {
             where['enabled'] = true;
             where[sequelize_1.Op.or] = where[sequelize_1.Op.or] || [];
+            where[sequelize_1.Op.or].push({
+                toarealevel: [0]
+            });
             if (address && address.level1Id) {
                 where[sequelize_1.Op.or].push({
                     toareaid: [address.level1Id]
@@ -40,86 +44,6 @@ class Route extends router_1.ApiRouter {
             return where;
         });
     }
-    // async getDispatcher(butcher: Butcher, address: PreferredAddress): Promise< LogisticProvider> {
-    //     if (butcher.defaultDispatcher == "butcher") {
-    //         return LogisticFactory.getInstance("butcher")
-    //     } else if (butcher.defaultDispatcher == "butcher/auto")
-    //         return LogisticFactory.getInstance("butcher/auto")
-    //     else {
-    //         return LogisticFactory.getInstance(butcher.defaultDispatcher)
-    //     }
-    // }
-    // let where = {
-    //     type: 'butcher'
-    // }
-    // where = await this._where(where, address);
-    // where['$butcher.products.productid$'] = product.id;
-    // where['$butcher.products.enabled$'] = true;
-    // let w = [{
-    //     '$butcher.products.kgPrice$': {
-    //         [Op.gt]: 0.0
-    //     }
-    // },
-    // {
-    //     [Op.and]: [
-    //         {
-    //             '$butcher.products.unit1price$': {
-    //                 [Op.gt]: 0.0
-    //             }
-    //         },
-    //         {
-    //             '$butcher.products.unit1enabled$': true
-    //         }
-    //     ]
-    // },
-    // {
-    //     [Op.and]: [
-    //         {
-    //             '$butcher.products.unit2price$': {
-    //                 [Op.gt]: 0.0
-    //             }
-    //         },
-    //         {
-    //             '$butcher.products.unit2enabled$': true
-    //         }
-    //     ]
-    // },
-    // {
-    //     [Op.and]: [
-    //         {
-    //             '$butcher.products.unit3price$': {
-    //                 [Op.gt]: 0.0
-    //             }
-    //         },
-    //         {
-    //             '$butcher.products.unit3enabled$': true
-    //         }
-    //     ]
-    // }
-    // ]
-    // where[Op.or].push(w);
-    // // if (!useLevel1) {
-    // //     where[Op.and] = where[Op.and] || []
-    // //     where[Op.and].push({
-    // //         toarealevel: {
-    // //             [Op.ne]: 1
-    // //         }
-    // //     })
-    // // }
-    // let res = await Dispatcher.findAll({
-    //     where: where,
-    //     include: [
-    //         {
-    //             model: Butcher,
-    //             as: 'butcher',
-    //             include: [{
-    //                 model: ButcherProduct
-    //             }
-    //             ]
-    //         },
-    //     ],
-    //     order: [["toarealevel", "DESC"]]
-    // });
     getDispatchers(q) {
         return __awaiter(this, void 0, void 0, function* () {
             let where = {
@@ -182,6 +106,11 @@ class Route extends router_1.ApiRouter {
                         ]
                     }
                 ];
+                // if (productdispatch == ProductDispatch.countrywide) {
+                //     where[Op.or].push({
+                //         toarealevel: [0]
+                //     })
+                // }
                 where[sequelize_1.Op.or].push(w);
             }
             if (q.butcher) {
@@ -198,6 +127,8 @@ class Route extends router_1.ApiRouter {
             let areaApi = new area_2.default(this.constructorParams);
             let butcherAreaData = yield areaApi.ensureDistances(res.map(s => s.butcher), l3);
             for (let i = 0; i < res.length; i++) {
+                if (q.product && res[i].toarealevel == 0 && q.product.dispatch != product_1.ProductDispatch.countrywide)
+                    continue;
                 let areaData = butcherAreaData.find(ad => ad.butcherid == res[i].butcherid);
                 let provider = res[i].setProvider(q.useLevel1, l3, q.orderType, areaData.bestKm);
                 if (provider && !ugly[res[i].butcherid]) {
@@ -293,89 +224,6 @@ class Route extends router_1.ApiRouter {
             return res != null;
         });
     }
-    // async getButchersSelingAndDispatches(address: PreferredAddress, product: Product, useLevel1: boolean) {
-    //     let where = {
-    //         type: 'butcher'
-    //     }
-    //     where = await this._where(where, address);
-    //     where['$butcher.products.productid$'] = product.id;
-    //     where['$butcher.products.enabled$'] = true;
-    //     let w = [{
-    //         '$butcher.products.kgPrice$': {
-    //             [Op.gt]: 0.0
-    //         }
-    //     },
-    //     {
-    //         [Op.and]: [
-    //             {
-    //                 '$butcher.products.unit1price$': {
-    //                     [Op.gt]: 0.0
-    //                 }
-    //             },
-    //             {
-    //                 '$butcher.products.unit1enabled$': true
-    //             }
-    //         ]
-    //     },
-    //     {
-    //         [Op.and]: [
-    //             {
-    //                 '$butcher.products.unit2price$': {
-    //                     [Op.gt]: 0.0
-    //                 }
-    //             },
-    //             {
-    //                 '$butcher.products.unit2enabled$': true
-    //             }
-    //         ]
-    //     },
-    //     {
-    //         [Op.and]: [
-    //             {
-    //                 '$butcher.products.unit3price$': {
-    //                     [Op.gt]: 0.0
-    //                 }
-    //             },
-    //             {
-    //                 '$butcher.products.unit3enabled$': true
-    //             }
-    //         ]
-    //     }
-    //     ]
-    //     where[Op.or].push(w);
-    //     // if (!useLevel1) {
-    //     //     where[Op.and] = where[Op.and] || []
-    //     //     where[Op.and].push({
-    //     //         toarealevel: {
-    //     //             [Op.ne]: 1
-    //     //         }
-    //     //     })
-    //     // }
-    //     let res = await Dispatcher.findAll({
-    //         where: where,
-    //         include: [
-    //             {
-    //                 model: Butcher,
-    //                 as: 'butcher',
-    //                 include: [{
-    //                     model: ButcherProduct
-    //                 }
-    //                 ]
-    //             },
-    //         ],
-    //         order: [["toarealevel", "DESC"]]
-    //     });
-    //     let ugly = {}, result = [];
-    //     for (let i = 0; i < res.length; i++) {
-    //         let l3 = await Area.findByPk(address.level3Id);
-    //         //let provider = this.getProvider(res[i], useLevel1, l3)
-    //         if (!ugly[res[i].butcherid]) {
-    //             ugly[res[i].butcherid] = res[i];
-    //             result.push(res[i]);
-    //         }
-    //     }
-    //     return result;
-    // }
     static SetRoutes(router) {
     }
 }

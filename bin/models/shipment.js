@@ -57,7 +57,7 @@ class Shipment {
         if (isToday) {
             let res = {};
             Object.keys(exports.ShipmentHours).forEach(k => {
-                if (currentHour < 19) {
+                if (currentHour < 21) {
                     if (parseInt(k) > (currentHour * 100 + 100))
                         res[k] = exports.ShipmentHours[k];
                 }

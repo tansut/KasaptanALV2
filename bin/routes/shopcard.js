@@ -41,6 +41,7 @@ class Route extends router_1.ViewRouter {
         this.shipmentHours = shipment_1.ShipmentHours;
         this.shipmentDays = shipment_1.ShipmentDays;
         this.moment = moment;
+        this.markdown = new MarkdownIt();
         this.Shipment = shipment_1.Shipment;
         this.Butchers = null;
         this.mayEarnPuanTotal = 0.00;
@@ -139,6 +140,9 @@ class Route extends router_1.ViewRouter {
             if (this.shopcard.shipment[bi].dispatcher && !this.shopcard.shipment[bi].dispatcher.type.startsWith("butcher")) {
                 allow = false;
             }
+            if (allow && this.shopcard.shipment[bi].dispatcher) {
+                allow = this.shopcard.shipment[bi].dispatcher.toAreaLevel > 0;
+            }
         }
         return allow;
     }
@@ -225,6 +229,8 @@ class Route extends router_1.ViewRouter {
                         let dispatcher = this.shopcard.shipment[o].dispatcher = {
                             id: provider.options.dispatcher.id,
                             feeOffer: provider.options.dispatcher.feeOffer,
+                            toAreaLevel: provider.options.dispatcher.toarealevel,
+                            longDesc: provider.options.dispatcher.longdesc,
                             name: provider.options.dispatcher.name,
                             fee: provider.options.dispatcher.fee,
                             totalForFree: provider.options.dispatcher.totalForFree,

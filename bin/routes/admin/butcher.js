@@ -128,7 +128,7 @@ class Route extends router_1.ViewRouter {
                 ]
             });
             for (let i = 0; i < this.dispatchs.length; i++) {
-                this.dispatchs[i].address = yield this.dispatchs[i].toarea.getPreferredAddress();
+                this.dispatchs[i].address = this.dispatchs[i].toarea ? yield this.dispatchs[i].toarea.getPreferredAddress() : null;
             }
             let area1 = yield area_1.default.findAll({
                 where: {

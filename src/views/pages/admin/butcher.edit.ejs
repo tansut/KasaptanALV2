@@ -402,7 +402,7 @@
                                         <%controller.dispatchs.forEach(d=> {%>
                                             <tr>
                                                 <td>
-                                                    <%=d.address.display%>
+                                                    <%= d.address ? d.address.display: 'Türkiye'%>
                                                 </td>
                                                 <td>                                                    
                                                     <input type="text" name="min<%=d.id%>" value="<%=d.min%>">

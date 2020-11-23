@@ -45,7 +45,8 @@
             <% let shipment = shopcard.shipment[bi]%>
 
             <%
-             var cannotShip = !shipment.dispatcher || ((shipment.dispatcher.min > shipment.subTotal)) || ((shipment.dispatcher.takeOnly));            
+             var cannotShip = !shipment.dispatcher || ((shipment.dispatcher.min > shipment.subTotal)) || ((shipment.dispatcher.takeOnly));    
+             var countrywide =  shipment.dispatcher && shipment.dispatcher.toAreaLevel == 0;       
             %>
             <div class="border mb-4">
               <div class="bg-secondary p-3  mb-4"><a class="media align-items-center" href="/<%=shopcard.butchers[bi].slug%>"><img class="rounded-circle header-img"  
@@ -53,6 +54,15 @@
                 <div class="media-body pl-2"><span class="font-size-ms text-muted"></span>
                   <h3 class="h4 mb-0 mr-2"><%= shopcard.butchers[bi].name %></h3>
                 </div></a></div>
+
+
+                <%if (shipment.dispatcher && shipment.dispatcher.longDesc) { %>
+                  <div class="p-3">
+                    <%- controller.markdown.render(shipment.dispatcher.longDesc || '') %>
+
+                  </div>
+
+                  <%}%>
 
             <div class="px-3">
               <p class="font-size-md text-center"></p>
@@ -62,10 +72,12 @@
                     <a id="ship-ship" class="nav-item shadow-none nav-link" @click="setShipMethod(<%=bi%>, 'ship')" v-bind:class="{ active: card && card.shipment['<%=bi%>'].howTo == 'ship' }">Adrese</a>
 
                   </div>
+                  <% if (!countrywide) { %>
                   <div class="col-6">
                     <a id="ship-take" class="nav-item shadow-none nav-link" @click="setShipMethod(<%=bi%>, 'take')" v-bind:class="{ active: card && card.shipment['<%=bi%>'].howTo == 'take' }">Gel-Al</a>
 
                   </div>
+                  <% } %>
                 </div>
               </nav>
             </div>
@@ -160,22 +172,21 @@
 
                           <div v-if="card && card.shipment[<%=bi%>].dispatcher && (card.shipment[<%=bi%>].howTo == 'ship')">
                             <span class="text-dark font-weight-medium">Hemen Gelebilir</span><br><span class="text-muted">
-                              Çoğu ürünümüzü 60-90 dakika içerisinde gönderebiliyoruz.
+                              En hızlı şekilde göndereceğiz.
         
                             </span>
                           </div>
 
                           <div v-else>
                             <span class="text-dark font-weight-medium">Telefonda planlayalım</span><br><span class="text-muted">
-                              Sizi arayalım ve geliş saatinizi planlayalım. Çoğu ürünümüzü 60-90 dakika içerisinde gönderebiliyoruz.
-        
+                              Sizi arayalım ve geliş saatinizi planlayalım. 
                             </span>
                           </div>
                       
                     </td>
                     </tr>
                     
-                    <% if (controller.shipPossibleToday() > 0) {%>
+                    <% if (!countrywide && controller.shipPossibleToday() > 0) {%>
                       <tr>
 
                           <td>
@@ -204,7 +215,7 @@
                         
                         </tr> 
                         <%}%>
-                          
+                        <% if (!countrywide) {%>
                           <tr>
                               <td>
                                 <div class="custom-control custom-radio mb-4">
@@ -236,7 +247,9 @@
                                   }) %>
                                 </div>
                             </td>
-                            </tr>                           
+                            </tr>            
+                            
+                            <% } %>
                   </tbody>
                 </table>
               </div>

@@ -31,7 +31,7 @@ exports.DispatcherTypeDesc = {
 let Dispatcher = class Dispatcher extends basemodel_1.default {
     setProvider(useLevel1, l3, productType, distance2Butcher) {
         let dispath = this;
-        let butcherAvail = dispath.toarealevel > 1 || useLevel1;
+        let butcherAvail = dispath.toarealevel == 0 || (dispath.toarealevel > 1) || useLevel1;
         if (!useLevel1 && dispath.toarealevel == 1) {
             let forceL1 = dispath.butcher.dispatchArea == "citywide" || dispath.butcher.dispatchArea == "radius";
             if (dispath.butcher.dispatchArea == "radius") {
@@ -158,6 +158,13 @@ __decorate([
     }),
     __metadata("design:type", Number)
 ], Dispatcher.prototype, "fee", void 0);
+__decorate([
+    sequelize_typescript_1.Column({
+        allowNull: true,
+        type: sequelize_typescript_1.DataType.TEXT
+    }),
+    __metadata("design:type", String)
+], Dispatcher.prototype, "longdesc", void 0);
 __decorate([
     sequelize_typescript_1.Column({
         allowNull: false,

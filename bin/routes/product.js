@@ -62,9 +62,20 @@ class Route extends router_1.ViewRouter {
         let result = this.productTypeManager || (this.productTypeManager = common_1.ProductTypeFactory.create(this.product.productType, params));
         return result;
     }
+    showOtherButchers() {
+        let show = this.req.query.butcher && (this.req.query.utm_medium != 'Social');
+        // let shopcard = this.shopcard;
+        // let scButcher = (shopcard.items && shopcard.items.length) ? shopcard.items[0].product.butcher.id : null;
+        // if (scButcher) {
+        //     let inServing = serving.find(p => p.butcherid == scButcher);
+        //     let inOther = others.find(p => p.butcherid == scButcher);
+        //     return inServing || inOther
+        // } else return null;
+        return show;
+    }
     tryBestFromShopcard(serving, others = []) {
         return __awaiter(this, void 0, void 0, function* () {
-            let shopcard = yield shopcard_1.ShopCard.createFromRequest(this.req);
+            let shopcard = this.shopcard;
             let scButcher = (shopcard.items && shopcard.items.length) ? shopcard.items[0].product.butcher.id : null;
             if (scButcher) {
                 let inServing = serving.find(p => p.butcherid == scButcher);
@@ -132,8 +143,8 @@ class Route extends router_1.ViewRouter {
             });
             let defaultButchers = serving;
             let nearButchers = serving.filter(p => p.butcherArea.bestKm <= 10.0);
-            let alternateButchers = serving.filter(p => (p.butcherArea.bestKm > 10.0 && p.butcherArea.bestKm <= 20.0));
-            let farButchers = serving.filter(p => p.butcherArea.bestKm > 20.0);
+            let alternateButchers = serving.filter(p => (p.butcherArea.bestKm > 10.0 && p.butcherArea.bestKm <= 15.0));
+            let farButchers = serving.filter(p => p.butcherArea.bestKm > 15.0);
             if (nearButchers.length < 2) {
                 defaultButchers = nearButchers.concat(alternateButchers);
             }
@@ -175,6 +186,7 @@ class Route extends router_1.ViewRouter {
                 return this.next();
             this.product = product;
             let api = new product_2.default(this.constructorParams);
+            this.shopcard = yield shopcard_1.ShopCard.createFromRequest(this.req);
             yield product.loadResources();
             let shopcard = yield shopcard_1.ShopCard.createFromRequest(this.req);
             this.shopCardIndex = this.req.query.shopcarditem ? parseInt(this.req.query.shopcarditem) : -1;
@@ -217,8 +229,8 @@ class Route extends router_1.ViewRouter {
             }
             for (let i = 0; i < serving.length; i++) {
                 let s = serving[i];
-                let butcher = s instanceof dispatcher_2.default ? s.butcher : s;
-                let dispatcher = s instanceof dispatcher_2.default ? s : null;
+                let butcher = s.butcher;
+                let dispatcher = s;
                 if (view.butcher && (butcher.id != view.butcher.id)) {
                     let bp = butcher.products.find(bp => bp.productid == product.id);
                     fromTo.start = butcher.location;

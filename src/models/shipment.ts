@@ -51,6 +51,8 @@ export interface DispatcherView {
     totalForFree: number
     min: number;
     takeOnly: boolean;
+    toAreaLevel: number;
+    longDesc: string;
     //location: GeoLocation;
     km: number;
 }
@@ -82,7 +84,7 @@ export class Shipment {
         if (isToday) {
             let res = {}
             Object.keys(ShipmentHours).forEach(k=>{
-                if (currentHour < 19) {
+                if (currentHour < 21) {
                     if (parseInt(k) > (currentHour * 100 + 100)) res[k] = ShipmentHours[k]
                 }
             })

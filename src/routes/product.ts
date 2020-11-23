@@ -50,6 +50,7 @@ interface StartPrice {
 
 export default class Route extends ViewRouter {
     startPrice: StartPrice;
+    shopcard: ShopCard;
     butcherProducts: ButcherProduct[] = [];
     markdown = new MarkdownIt();
     foods: Resource[] = [];
@@ -76,10 +77,22 @@ export default class Route extends ViewRouter {
     }
 
 
+    showOtherButchers() {
+        let show = this.req.query.butcher && (this.req.query.utm_medium != 'Social');
 
+        // let shopcard = this.shopcard;
+        // let scButcher = (shopcard.items && shopcard.items.length) ? shopcard.items[0].product.butcher.id : null;
+        // if (scButcher) {
+        //     let inServing = serving.find(p => p.butcherid == scButcher);
+        //     let inOther = others.find(p => p.butcherid == scButcher);
+        //     return inServing || inOther
+        // } else return null;
+
+        return show;
+    }
 
     async tryBestFromShopcard(serving: Dispatcher[], others: Dispatcher[] = []) {
-        let shopcard = await ShopCard.createFromRequest(this.req);
+        let shopcard = this.shopcard;
         let scButcher = (shopcard.items && shopcard.items.length) ? shopcard.items[0].product.butcher.id : null;
         if (scButcher) {
             let inServing = serving.find(p => p.butcherid == scButcher);
@@ -150,8 +163,8 @@ export default class Route extends ViewRouter {
 
         let defaultButchers = serving;
         let nearButchers = serving.filter(p => p.butcherArea.bestKm <= 10.0);
-        let alternateButchers = serving.filter(p => (p.butcherArea.bestKm > 10.0 && p.butcherArea.bestKm <= 20.0));
-        let farButchers = serving.filter(p => p.butcherArea.bestKm > 20.0);
+        let alternateButchers = serving.filter(p => (p.butcherArea.bestKm > 10.0 && p.butcherArea.bestKm <= 15.0));
+        let farButchers = serving.filter(p => p.butcherArea.bestKm > 15.0);
 
         if (nearButchers.length < 2) {
             defaultButchers = nearButchers.concat(alternateButchers);
@@ -194,7 +207,7 @@ export default class Route extends ViewRouter {
         if (!product) return this.next();
         this.product = product;
         let api = new ProductApi(this.constructorParams);
-
+        this.shopcard = await ShopCard.createFromRequest(this.req);
 
         await product.loadResources();
 
@@ -255,8 +268,8 @@ export default class Route extends ViewRouter {
 
         for (let i = 0; i < serving.length; i++) {
             let s = serving[i];
-            let butcher = s instanceof Dispatcher ? s.butcher : s;
-            let dispatcher = s instanceof Dispatcher ? s : null;
+            let butcher =  s.butcher;
+            let dispatcher = s;
 
             if (view.butcher && (butcher.id != view.butcher.id)) {
                 let bp = butcher.products.find(bp => bp.productid == product.id);

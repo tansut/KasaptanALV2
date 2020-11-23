@@ -37,8 +37,9 @@ var ProductType;
 })(ProductType = exports.ProductType || (exports.ProductType = {}));
 var ProductDispatch;
 (function (ProductDispatch) {
-    ProductDispatch["default"] = "default";
+    ProductDispatch["dispatcherbased"] = "dispatcherbased";
     ProductDispatch["citywide"] = "citywide";
+    ProductDispatch["countrywide"] = "countrywide";
 })(ProductDispatch = exports.ProductDispatch || (exports.ProductDispatch = {}));
 let Product = Product_1 = class Product extends basemodel_1.default {
     get asAdak() {
@@ -164,6 +165,13 @@ __decorate([
     }),
     __metadata("design:type", String)
 ], Product.prototype, "tag1", void 0);
+__decorate([
+    sequelize_typescript_1.Column({
+        allowNull: false,
+        defaultValue: ProductDispatch.dispatcherbased
+    }),
+    __metadata("design:type", String)
+], Product.prototype, "dispatch", void 0);
 __decorate([
     sequelize_typescript_1.Column({
         allowNull: false,

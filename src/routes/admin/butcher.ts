@@ -132,7 +132,7 @@ export default class Route  extends ViewRouter {
         })
 
         for (let i = 0; i < this.dispatchs.length; i++) {
-            this.dispatchs[i].address = await this.dispatchs[i].toarea.getPreferredAddress()
+            this.dispatchs[i].address = this.dispatchs[i].toarea ? await this.dispatchs[i].toarea.getPreferredAddress(): null;
         }
 
         let area1 = await Area.findAll({

@@ -83,6 +83,12 @@ class Dispatcher extends BaseModel<Dispatcher> {
     fee: number;
 
     @Column({
+        allowNull: true,
+        type: DataType.TEXT
+    })
+    longdesc: string;     
+
+    @Column({
         allowNull: false,
         defaultValue: 0,
         type: DataType.DECIMAL(13, 2)
@@ -163,7 +169,7 @@ class Dispatcher extends BaseModel<Dispatcher> {
 
     setProvider(useLevel1: boolean, l3: Area, productType: ProductType | string, distance2Butcher: number) {
         let dispath = this;
-        let butcherAvail = dispath.toarealevel > 1 || useLevel1;
+        let butcherAvail = dispath.toarealevel == 0 || (dispath.toarealevel > 1) || useLevel1;
         if (!useLevel1 && dispath.toarealevel == 1) {
             let forceL1 = dispath.butcher.dispatchArea == "citywide" || dispath.butcher.dispatchArea == "radius";
             if (dispath.butcher.dispatchArea == "radius") {
