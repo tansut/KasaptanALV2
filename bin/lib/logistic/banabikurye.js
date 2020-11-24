@@ -227,6 +227,8 @@ class BanabikuryeProvider extends core_1.LogisticProvider {
                 resp = this.fromOfferResponse(result.data);
             }
             catch (e) {
+                if (this.safeRequests)
+                    throw e;
                 let fee = helper_1.default.asCurrency(10.00 + distance * 2);
                 resp = {
                     customerFee: fee,

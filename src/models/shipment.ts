@@ -6,8 +6,8 @@ import { LogisticProvider } from "../lib/logistic/core";
 
 export let ShipmentHours = {
     //0: 'Herhangi bir saat olabilir',
-    812: 'Sabah 8-10 arası',
-    1012: 'Sabah 10-12 arası',
+    911: 'Sabah 9-11 arası',
+    1112: 'Sabah 11-12 arası',
     1214: 'Öğlen 12-2 arası',
     1416: 'Öğleden sonra 2-4 arası',
     1618: 'Akşama doğru 4-6 arası',
@@ -24,6 +24,11 @@ export let ShipmentDays = {
     5: 'Cuma',
     6: 'Cumartesi',
     0: 'Pazar'
+}
+
+
+export interface ShipmentInfo {
+    excludeDays: number[]; 
 }
 
 export type ShipmentType = "callme" | "sameday" | "tomorrow" | "weekend" | "plan";

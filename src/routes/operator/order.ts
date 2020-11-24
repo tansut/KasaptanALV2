@@ -180,6 +180,7 @@ export default class Route extends ViewRouter {
                     }]
                 })
             });
+            provider.safeRequests = false;
             let request = provider.offerFromOrder(this.order);
             try {
                 let offer = await provider.requestOffer(request);
@@ -198,6 +199,7 @@ export default class Route extends ViewRouter {
                     }]
                 })
             });
+            provider.safeRequests = false;
             let request = provider.orderFromOrder(this.order);
             try {
                 let offer = await provider.createOrder(request);

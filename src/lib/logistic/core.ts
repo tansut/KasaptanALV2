@@ -143,7 +143,7 @@ export class LogisticProvider {
     options: LogisticProviderOptions;
     lastOffer: OfferResponse;
     description: string;
-
+    safeRequests: boolean = true;
     async distance(ft: FromTo, params: DistanceParams = null) {
         params = params || {
             areaOnly: true

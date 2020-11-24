@@ -63,7 +63,10 @@ class Route extends router_1.ViewRouter {
         return result;
     }
     showOtherButchers() {
-        let show = this.req.query.butcher && (this.req.query.utm_medium != 'Social');
+        let show = true;
+        if (this.req.query.butcher) {
+            show = this.req.query.utm_medium != 'Social';
+        }
         // let shopcard = this.shopcard;
         // let scButcher = (shopcard.items && shopcard.items.length) ? shopcard.items[0].product.butcher.id : null;
         // if (scButcher) {

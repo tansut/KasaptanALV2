@@ -11,6 +11,7 @@ import { Account } from '../../models/account';
 import Helper from '../../lib/helper';
 import { ExternalLogisticProviderUsage, DispatcherType } from './dispatcher';
 import { GeoLocation } from '../../models/geo';
+import { ShipmentInfo } from '../../models/shipment';
 
 export type DispatchArea = "manual" | "citywide" | "radius";
 
@@ -118,6 +119,58 @@ class Butcher extends BaseModel<Butcher> {
     set gpPlace(value: Object) {
         this.setDataValue('gpplacejson', Buffer.from(JSON.stringify(value), "utf-8"));
     }
+
+    @AllowNull(false)
+    @Default(true)
+    @Column
+    shipday0: boolean;    
+
+    @AllowNull(false)
+    @Default(true)
+    @Column
+    shipday1: boolean;   
+    
+    @AllowNull(false)
+    @Default(true)
+    @Column
+    shipday2: boolean;    
+    
+    @AllowNull(false)
+    @Default(true)
+    @Column
+    shipday3: boolean;    
+
+    @AllowNull(false)
+    @Default(true)
+    @Column
+    shipday4: boolean;    
+
+    @AllowNull(false)
+    @Default(true)
+    @Column
+    shipday5: boolean;    
+
+    @AllowNull(false)
+    @Default(true)
+    @Column
+    shipday6: boolean;    
+
+
+    // @Column
+    // shipmentjson: Buffer;
+
+    // get shipmentInfo(): ShipmentInfo {
+    //     if (!this.shipmentjson)
+    //         return {
+    //             excludeDays: []
+    //         }
+    //     return JSON.parse((<Buffer>this.getDataValue('shipmentjson')).toString())
+    // }
+
+    // set shipmentInfo(value: ShipmentInfo) {
+    //     this.setDataValue('shipmentjson', Buffer.from(JSON.stringify(value), "utf-8"));    
+    // }
+    
 
     @ForeignKey(() => Area)
     @Column

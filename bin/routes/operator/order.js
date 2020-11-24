@@ -139,6 +139,7 @@ class Route extends router_1.ViewRouter {
                             }]
                     })
                 });
+                provider.safeRequests = false;
                 let request = provider.offerFromOrder(this.order);
                 try {
                     let offer = yield provider.requestOffer(request);
@@ -157,6 +158,7 @@ class Route extends router_1.ViewRouter {
                             }]
                     })
                 });
+                provider.safeRequests = false;
                 let request = provider.orderFromOrder(this.order);
                 try {
                     let offer = yield provider.createOrder(request);

@@ -11,7 +11,8 @@
 
 <script>
   var cannotShip = false;
-  var disableShipBtn = false;
+  var disableShip = false;
+
 </script>
 
   <div class="page-title-overlap page-title bg-accent py-2 ">
@@ -138,7 +139,9 @@
                   Alışveriş toplamınız <%- include('./_partial/currency.ejs', {value: shopcard.butchers[bi].subTotal}) %> olarak gözüküyor.
                 </p>  
                 <div>
+                  <% if (!countrywide) { %>
                   <a href="#gelal" @click="setShipMethod(<%=bi%>, 'take')" class="btn btn-sm btn-accent">Gel-Al Yap</a>
+                  <% } %>
                   <a href="/alisveris-sepetim" class="btn btn-sm btn-info">Sepete Git &raquo;</a>
                 </div>
                  </div> 
@@ -160,7 +163,8 @@
              <div class="table-responsive">
              
                 <table class="table font-size-sm ">
-                  <tbody>                   
+                  <tbody>     
+                    <% if (countrywide) { %>              
                     <tr>
                       <td>
                         <div class="custom-control custom-radio mb-4">
@@ -185,7 +189,7 @@
                       
                     </td>
                     </tr>
-                    
+                    <% } %>
                     <% if (!countrywide && controller.shipPossibleToday() > 0) {%>
                       <tr>
 
@@ -225,10 +229,10 @@
                               </td>
                               <td class="align-middle"><span class="text-dark font-weight-medium">Yarın veya sonrası</span><br>
                                 <span v-if="card && card.shipment[<%=bi%>].dispatcher && (card.shipment[<%=bi%>].howTo == 'ship')" class="text-muted">
-                                Aşağıda belirttiğim şekilde bekliyorum.
+                                
                                 </span>
                                <span v-if="card &&  (card.shipment[<%=bi%>].howTo == 'take')" class="text-muted">
-                                  Ben gelip alacağım, geldiğimde hazır olsun.
+                                 
                                   </span>
                               <div class="mt-2">
                                   <%- include('./_partial/shipday.ejs', {
@@ -253,10 +257,10 @@
                   </tbody>
                 </table>
               </div>
-                <div v-if="card && card.shipment[<%=bi%>].dispatcher && (card.shipment[<%=bi%>].howTo == 'ship')" class="mx-4 mb-4 custom-control custom-checkbox">
+                <!-- <div v-if="card && card.shipment[<%=bi%>].dispatcher && (card.shipment[<%=bi%>].howTo == 'ship')" class="mx-4 mb-4 custom-control custom-checkbox">
                   <input class="custom-control-input" name="informme<%=bi%>" type="checkbox" <%= shipment.informMe ? 'checked':'' %> id="informme<%=bi%>">
                   <label class="custom-control-label" for="informme<%=bi%>">Paketim çıkmadan önce arayıp haber verirseniz sevinirim.</label>
-                </div> 
+                </div>  -->
 
 
              
@@ -298,7 +302,13 @@ function setShip(val) {
 }
 
 $(document).ready(function() {
-  //setShip(canShip);
+    $(':radio').each(function() { 
+        nam = $(this).attr('name'); 
+        if ( !$(':radio[name="'+nam+'"]:checked').length) { 
+          $(':radio[name="'+nam+'"]')[0].checked = true;            
+        }
+    });
+
 })
 
 </script>

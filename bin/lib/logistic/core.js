@@ -24,6 +24,7 @@ var VehicleType;
 })(VehicleType = exports.VehicleType || (exports.VehicleType = {}));
 class LogisticProvider {
     constructor(config, options) {
+        this.safeRequests = true;
         this.options = options;
     }
     distance(ft, params = null) {

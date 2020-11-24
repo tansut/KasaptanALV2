@@ -16,6 +16,7 @@ const area_1 = require("../../db/models/area");
 const dispatcher_1 = require("../../db/models/dispatcher");
 const butcherproduct_1 = require("../../db/models/butcherproduct");
 const sequelize_1 = require("sequelize");
+const helper_1 = require("../../lib/helper");
 const area_2 = require("./area");
 const _ = require("lodash");
 class Route extends router_1.ApiRouter {
@@ -61,6 +62,7 @@ class Route extends router_1.ApiRouter {
                 include[0]['include'] = [{
                         model: butcherproduct_1.default
                     }];
+                where[`$butcher.shipday${helper_1.default.Now().getDay()}$`] = true;
                 where['$butcher.status$'] = "open";
                 where['$butcher.products.productid$'] = q.product.id;
                 where['$butcher.products.enabled$'] = true;

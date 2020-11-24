@@ -233,6 +233,7 @@ export default class BanabikuryeProvider extends LogisticProvider {
             let result = await this.post<BanabikuryeResponse>("calculate-order", req);
             resp = this.fromOfferResponse(result.data);
         } catch(e) {
+            if (this.safeRequests) throw e;
             let fee = Helper.asCurrency(10.00 + distance * 2);
             resp = {
                 customerFee: fee,

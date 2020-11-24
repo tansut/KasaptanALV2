@@ -274,6 +274,48 @@ __decorate([
     __metadata("design:type", Buffer)
 ], Butcher.prototype, "gpplacejson", void 0);
 __decorate([
+    sequelize_typescript_1.AllowNull(false),
+    sequelize_typescript_1.Default(true),
+    sequelize_typescript_1.Column,
+    __metadata("design:type", Boolean)
+], Butcher.prototype, "shipday0", void 0);
+__decorate([
+    sequelize_typescript_1.AllowNull(false),
+    sequelize_typescript_1.Default(true),
+    sequelize_typescript_1.Column,
+    __metadata("design:type", Boolean)
+], Butcher.prototype, "shipday1", void 0);
+__decorate([
+    sequelize_typescript_1.AllowNull(false),
+    sequelize_typescript_1.Default(true),
+    sequelize_typescript_1.Column,
+    __metadata("design:type", Boolean)
+], Butcher.prototype, "shipday2", void 0);
+__decorate([
+    sequelize_typescript_1.AllowNull(false),
+    sequelize_typescript_1.Default(true),
+    sequelize_typescript_1.Column,
+    __metadata("design:type", Boolean)
+], Butcher.prototype, "shipday3", void 0);
+__decorate([
+    sequelize_typescript_1.AllowNull(false),
+    sequelize_typescript_1.Default(true),
+    sequelize_typescript_1.Column,
+    __metadata("design:type", Boolean)
+], Butcher.prototype, "shipday4", void 0);
+__decorate([
+    sequelize_typescript_1.AllowNull(false),
+    sequelize_typescript_1.Default(true),
+    sequelize_typescript_1.Column,
+    __metadata("design:type", Boolean)
+], Butcher.prototype, "shipday5", void 0);
+__decorate([
+    sequelize_typescript_1.AllowNull(false),
+    sequelize_typescript_1.Default(true),
+    sequelize_typescript_1.Column,
+    __metadata("design:type", Boolean)
+], Butcher.prototype, "shipday6", void 0);
+__decorate([
     sequelize_typescript_1.ForeignKey(() => area_1.default),
     sequelize_typescript_1.Column,
     __metadata("design:type", Number)
