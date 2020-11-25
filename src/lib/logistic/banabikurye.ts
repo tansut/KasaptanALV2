@@ -227,10 +227,10 @@ export default class BanabikuryeProvider extends LogisticProvider {
         return this.optimizedSlice(result);
     }
 
-    async safeResponse(req: BanabikuryeRequest, distance: number): Promise<OfferResponse> {
+    async safeResponse(method: string, req: BanabikuryeRequest, distance: number): Promise<OfferResponse> {
         let resp: OfferResponse = null;
         try {
-            let result = await this.post<BanabikuryeResponse>("calculate-order", req);
+            let result = await this.post<BanabikuryeResponse>(method, req);
             resp = this.fromOfferResponse(result.data);
         } catch(e) {
             if (this.safeRequests) throw e;
@@ -240,7 +240,7 @@ export default class BanabikuryeProvider extends LogisticProvider {
                 totalFee: fee,
                 orderTotal: 0.00
             }
-        }
+        } 
         return resp;
     }
 
@@ -260,7 +260,7 @@ export default class BanabikuryeProvider extends LogisticProvider {
             fId: req.points[1].id,
         });
 
-        let resp: OfferResponse = await this.safeResponse(request, req.distance);
+        let resp: OfferResponse = await this.safeResponse("calculate-order",request, req.distance);
         resp.orderTotal = req.orderTotal;
         resp.distance = req.distance;
         return this.calculateCustomerFee(resp)
@@ -282,7 +282,7 @@ export default class BanabikuryeProvider extends LogisticProvider {
             fId: req.points[1].id,
         });
         let request = this.toOrderRequest(req);
-        let resp: OfferResponse = await this.safeResponse(request, req.distance);
+        let resp: OfferResponse = await this.safeResponse("create-order", request, req.distance);
 
 
         resp.orderTotal = req.orderTotal;

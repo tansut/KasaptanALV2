@@ -7,6 +7,9 @@
   <script type="application/ld+json">
     <%- JSON.stringify(controller.productLd) %>
   </script>
+  <script>
+    var gtags = [];
+  </script>
   <% } %>
   <% if (Object.keys(__req.query).length != 0 ) {%>
   <meta name="robots" content="noindex,follow">
@@ -288,8 +291,7 @@
                                 </span>
   
                                 <script>
-                                  window.App.gTag('location', 'noservice', '<%=__req.prefAddr.display%>');
-                                  window.App.gTag('product', 'unavail/location', '<%=product.slug%>/<%=__req.prefAddr.display%>');
+                                  gtags.push(['noservice', '<%=__req.prefAddr.display%>', '<%=product.slug%>']);
                                 </script>
       
                                 <%} else { %>
@@ -297,8 +299,7 @@
                                   veren kasaplarımız mevcut</h5>
                                 <span class="font-weight-medium">Ancak bu kasabımız semtinize hizmet veremiyor veya bu ürünü sağlayamıyor.</span>
                                 <script>
-                                  window.App.gTag('location', 'noservice', '<%=__req.prefAddr.display%>');
-                                  window.App.gTag('product', 'unavail/location', '<%=product.slug%>/<%=__req.prefAddr.display%>');
+                                  gtags.push(['noproduct', '<%=product.slug%>', '<%=__req.prefAddr.display%>']);
                                 </script>
                                 <% } %>
   
@@ -313,18 +314,20 @@
       
                                 </span>
   
+                                
                                 <script>
-                                  window.App.gTag('location', 'noservice', '<%=__req.prefAddr.display%>');
-                                  window.App.gTag('product', 'unavail/location', '<%=product.slug%>/<%=__req.prefAddr.display%>');
+                                  gtags.push(['noservice', '<%=__req.prefAddr.display%>', '<%=product.slug%>']);
                                 </script>
+                               
       
                                 <%} else { %>
                                 <h5 class="h6 text-info"><i class="czi-thumb-up mr-2"></i>Hizmet
                                   Veriyoruz</h5>
                                 <span class="font-weight-medium">Ancak semtinize hizmet veren hiçbir kasabımız
                                   bu ürünü şu anda sağlayamıyor.</span>
-                                  <script>                                  
-                                    window.App.gTag('product', 'unavail/noprovider', '<%=product.slug%>/<%=__req.prefAddr.display%>');
+                                  <script>       
+                                  gtags.push(['noproduct', '<%=product.slug%>', '<%=__req.prefAddr.display%>']);
+
                                   </script>
                                 <% } %>
                             <% } %>
@@ -1078,6 +1081,10 @@
 
                   $(document).ready(function() {
                     setBody();
+                    for(var i=0;i<gtags.length;i++) {
+                      var tag = gtags[i];
+                      window.App.gTag(tag[0], tag[1], tag[2]);
+                    }
                   })
 
                   <% if (!view.butcher && __req.prefAddr) {%>

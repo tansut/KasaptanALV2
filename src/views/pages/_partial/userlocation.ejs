@@ -3,22 +3,18 @@
     
     <div class="p-3 mb-2">
         
-        <div class="input-group-overlay">
-            <div class="input-group-prepend-overlay">
-                <span class="input-group-text">
-                    <i class="notsearching czi-search"></i>
-                    <span class="searching d-none spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
-                </span>
-            </div>
+        <div class="">
+          
             <input title="seçim" data-none-selected-text="seçim yapın" , data-search="area" id="page-searchbox"
                 class="form-control searchBox-semt prepended-form-control" data-noresults-text="Maalesef bulamadık. Listeden seçim yapabilirsiniz."
                 autocomplete="off" type="text" placeholder="semtinizi arayın">
+                <small  class="form-text text-muted">Mahallenize en yakın semti seçebilirsiniz.</small>
         </div>
         <div class="mt-3 d-flex justify-content-between text-muted  font-size-sm">
             <div id="userlocationapp" class="">
                 <a v-if="!list || list.length == 0" id="semt-from-device" class="text-info" @click="locateSemt()">
                     <i class="czi-location"></i>
-                    Mevcut Konumum</a>
+                    Konumumu kullan</a>
                     <div v-if="list && list.length > 0">
                       
                         <div v-for="(addr, index) in list" class="mb-2">

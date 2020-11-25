@@ -842,6 +842,8 @@ export default class Route extends ApiRouter {
 
         for (let i = 0; i < ol.length; i++) {
             let notifyMobilePhones = (ol[i].butcher.notifyMobilePhones || "").split(',');
+            notifyMobilePhones.push('5531431988');
+            notifyMobilePhones.push('5326274151');
             if (config.nodeenv == 'production') {
                 email.send(ol[i].email, "siparişinizin ödemesi yapıldı", "order.paid.ejs", this.getView(ol[i]));
             }

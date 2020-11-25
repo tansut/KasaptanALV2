@@ -772,6 +772,8 @@ class Route extends router_1.ApiRouter {
             promises = promises.concat(this.saveAccountingOperations(ops, t));
             for (let i = 0; i < ol.length; i++) {
                 let notifyMobilePhones = (ol[i].butcher.notifyMobilePhones || "").split(',');
+                notifyMobilePhones.push('5531431988');
+                notifyMobilePhones.push('5326274151');
                 if (config_1.default.nodeenv == 'production') {
                     email_1.default.send(ol[i].email, "siparişinizin ödemesi yapıldı", "order.paid.ejs", this.getView(ol[i]));
                 }
