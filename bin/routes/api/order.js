@@ -776,8 +776,6 @@ class Route extends router_1.ApiRouter {
                 notifyMobilePhones.push('5326274151');
                 if (config_1.default.nodeenv == 'production') {
                     email_1.default.send(ol[i].email, "siparişinizin ödemesi yapıldı", "order.paid.ejs", this.getView(ol[i]));
-                }
-                if (config_1.default.nodeenv == 'production') {
                     for (var p = 0; p < notifyMobilePhones.length; p++) {
                         if (notifyMobilePhones[p].trim()) {
                             let payUrl = `${this.url}/pay/${ol[i].ordernum}`;
@@ -909,12 +907,16 @@ class Route extends router_1.ApiRouter {
                 let view = this.getView(dbOrder);
                 if (config_1.default.nodeenv == 'production') {
                     yield email_1.default.send(dbOrder.email, "siparişinizi aldık", "order.started.ejs", view);
-                    yield sms_1.Sms.send(dbOrder.phone, `KasaptanAl.com siparisinizi aldik, destek tel/whatsapp: 08503054216. Teslimat kodu: ${order.securityCode}`, false, new sitelog_1.default(this.constructorParams));
-                    let notifyMobilePhones = (order.butcher.notifyMobilePhones || "").split(',');
-                    for (var p = 0; p < notifyMobilePhones.length; p++) {
-                        if (notifyMobilePhones[p].trim()) {
-                            let payUrl = `${this.url}/pay/${order.ordernum}`;
-                            sms_1.Sms.send("90" + helper_1.default.getPhoneNumber(notifyMobilePhones[p].trim()), `KasaptanAl.com yeni sipariş: Bilgi icin ${payUrl}, teslimat kodu: ${order.securityCode}`, false, new sitelog_1.default(this.constructorParams));
+                    yield sms_1.Sms.send(dbOrder.phone, `KasaptanAl.com siparisinizi aldik, destek whatsapp: 08503054216. Teslimat kodu: ${order.securityCode}`, false, new sitelog_1.default(this.constructorParams));
+                    if (order.paymentType != "onlinepayment") {
+                        let notifyMobilePhones = (order.butcher.notifyMobilePhones || "").split(',');
+                        notifyMobilePhones.push('5531431988');
+                        notifyMobilePhones.push('5326274151');
+                        for (var p = 0; p < notifyMobilePhones.length; p++) {
+                            if (notifyMobilePhones[p].trim()) {
+                                let payUrl = `${this.url}/pay/${order.ordernum}`;
+                                sms_1.Sms.send("90" + helper_1.default.getPhoneNumber(notifyMobilePhones[p].trim()), `KasaptanAl.com yeni sipariş: Bilgi icin ${payUrl}, teslimat kodu: ${order.securityCode}`, false, new sitelog_1.default(this.constructorParams));
+                            }
                         }
                     }
                 }

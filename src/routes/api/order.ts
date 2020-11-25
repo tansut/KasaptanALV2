@@ -846,8 +846,6 @@ export default class Route extends ApiRouter {
             notifyMobilePhones.push('5326274151');
             if (config.nodeenv == 'production') {
                 email.send(ol[i].email, "siparişinizin ödemesi yapıldı", "order.paid.ejs", this.getView(ol[i]));
-            }
-            if (config.nodeenv == 'production') {
                 for (var p = 0; p < notifyMobilePhones.length; p++) {
                     if (notifyMobilePhones[p].trim()) {
                         let payUrl = `${this.url}/pay/${ol[i].ordernum}`;
@@ -1004,16 +1002,20 @@ export default class Route extends ApiRouter {
             let api = new OrderApi(this.constructorParams);
             let dbOrder = await api.getOrder(order.ordernum);
             let view = this.getView(dbOrder);
+            
+
             if (config.nodeenv == 'production') {
                 await email.send(dbOrder.email, "siparişinizi aldık", "order.started.ejs", view);
-                await Sms.send(dbOrder.phone, `KasaptanAl.com siparisinizi aldik, destek tel/whatsapp: 08503054216. Teslimat kodu: ${order.securityCode}`, false, new SiteLogRoute(this.constructorParams))
-
-                let notifyMobilePhones = (order.butcher.notifyMobilePhones || "").split(',');
-                
-                for (var p = 0; p < notifyMobilePhones.length; p++) {
-                    if (notifyMobilePhones[p].trim()) {
-                        let payUrl = `${this.url}/pay/${order.ordernum}`;
-                        Sms.send("90" + Helper.getPhoneNumber(notifyMobilePhones[p].trim()), `KasaptanAl.com yeni sipariş: Bilgi icin ${payUrl}, teslimat kodu: ${order.securityCode}`, false, new SiteLogRoute(this.constructorParams))
+                await Sms.send(dbOrder.phone, `KasaptanAl.com siparisinizi aldik, destek whatsapp: 08503054216. Teslimat kodu: ${order.securityCode}`, false, new SiteLogRoute(this.constructorParams))
+                if (order.paymentType != "onlinepayment") {
+                    let notifyMobilePhones = (order.butcher.notifyMobilePhones || "").split(',');
+                    notifyMobilePhones.push('5531431988');
+                    notifyMobilePhones.push('5326274151');                
+                    for (var p = 0; p < notifyMobilePhones.length; p++) {
+                        if (notifyMobilePhones[p].trim()) {
+                            let payUrl = `${this.url}/pay/${order.ordernum}`;
+                            Sms.send("90" + Helper.getPhoneNumber(notifyMobilePhones[p].trim()), `KasaptanAl.com yeni sipariş: Bilgi icin ${payUrl}, teslimat kodu: ${order.securityCode}`, false, new SiteLogRoute(this.constructorParams))
+                        }
                     }
                 }
             }

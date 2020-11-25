@@ -115,6 +115,8 @@ class LogisticProvider {
             fHour = o.shipmenthour % 100;
             start = new Date(o.shipmentdate.getFullYear(), o.shipmentdate.getMonth(), o.shipmentdate.getDate(), shour, 0, 0);
             finish = new Date(o.shipmentdate.getFullYear(), o.shipmentdate.getMonth(), o.shipmentdate.getDate(), fHour, 0, 0);
+            start = start < helper_1.default.Now() ? null : start;
+            finish = !start ? null : finish;
         }
         return {
             matter: 'Gıda',
@@ -130,7 +132,7 @@ class LogisticProvider {
                     lng: o.butcher.lng,
                     id: o.butcher.id.toString(),
                     orderId: o.ordernum,
-                    note: "Lütfen kasaba uğrayıp müşteri paketini alın: " + o.butcher.address,
+                    note: "Kasaba uğrayıp müşteri paketini alın"
                 },
                 {
                     id: o.areaLevel3Id ? o.areaLevel3Id.toString() : '',
@@ -140,7 +142,7 @@ class LogisticProvider {
                     lat: o.shipLocation.coordinates[0],
                     lng: o.shipLocation.coordinates[1],
                     orderId: o.ordernum,
-                    note: o.displayAddress,
+                    note: o.adresTarif,
                     apartment: `Bina: ${o.bina}`,
                     floor: `Kat: ${o.kat}`,
                     entrance: `Daire: ${o.daire}`,
