@@ -21,8 +21,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const router_1 = require("../lib/router");
 const butcher_1 = require("../db/models/butcher");
 const common_1 = require("../lib/common");
-const resource_1 = require("../db/models/resource");
-const resource_2 = require("./resource");
+const resource_1 = require("./resource");
 const Jimp = require('jimp');
 const productManager_1 = require("../lib/productManager");
 const area_1 = require("../db/models/area");
@@ -35,6 +34,7 @@ const sq = require("sequelize");
 const dispatcher_1 = require("./api/dispatcher");
 const product_1 = require("./api/product");
 const area_2 = require("./api/area");
+const ButcherLd_1 = require("../models/ButcherLd");
 class Route extends router_1.ViewRouter {
     constructor() {
         super(...arguments);
@@ -85,13 +85,7 @@ class Route extends router_1.ViewRouter {
                 };
                 yield butcher.save();
             }
-            let images = yield resource_1.default.findAll({
-                where: {
-                    type: ["butcher-google-photos", "butcher-videos"],
-                    ref1: butcher.id
-                },
-                order: [["displayOrder", "DESC"], ["updatedOn", "DESC"]]
-            });
+            let images = yield butcher.loadResources();
             // this.dispatchers = await Dispatcher.findAll({
             //     where: {
             //         butcherId: this.butcher.id,
@@ -158,6 +152,7 @@ class Route extends router_1.ViewRouter {
                     this.distance = areaInfo ? areaInfo.bestKm : yield this.logisticsProvider.distance(fromTo);
                 }
             }
+            this.butcherLd = this.butcher.approved ? new ButcherLd_1.ButcherLd(this.butcher) : null;
             this.res.render('pages/butcher', this.viewData({ pageThumbnail: pageThumbnail, pageTitle: pageTitle, pageDescription: pageDescription, butcher: butcher, images: images }));
         });
     }
@@ -202,7 +197,7 @@ class Route extends router_1.ViewRouter {
             if (!butcher)
                 return this.next();
             let photo, thumbnail = false, url = "";
-            let res = new resource_2.default({
+            let res = new resource_1.default({
                 req: this.req,
                 res: this.res,
                 next: this.next

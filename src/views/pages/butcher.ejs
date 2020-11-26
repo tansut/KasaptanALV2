@@ -6,6 +6,14 @@
   <% if (!butcher.approved) {%>
   <meta name="robots" content="noindex,follow">
   <%}%>
+
+  <% if (controller.butcherLd) { %>
+    <script type="application/ld+json">
+      <%- JSON.stringify(controller.butcherLd) %>
+    </script>
+  
+    <% } %>
+
   <% if (__req.params.category) { %>
     <link href="https://www.kasaptanal.com/<%=butcher.slug%>/<%=controller.category.slug%>" rel="canonical">
   <% } else { %>

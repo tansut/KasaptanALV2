@@ -25,6 +25,7 @@ const area_1 = require("./area");
 const butcherproduct_1 = require("./butcherproduct");
 const product_1 = require("./product");
 const sequelize_1 = require("sequelize");
+const resource_1 = require("./resource");
 let Butcher = Butcher_1 = class Butcher extends basemodel_1.default {
     get userRatingAsPerc() {
         return Math.round((this.userRating * 2) * 10);
@@ -176,6 +177,18 @@ let Butcher = Butcher_1 = class Butcher extends basemodel_1.default {
                     slug: slug
                 }
             });
+        });
+    }
+    loadResources() {
+        return __awaiter(this, void 0, void 0, function* () {
+            this.resources = yield resource_1.default.findAll({
+                where: {
+                    type: ["butcher-google-photos", "butcher-videos"],
+                    ref1: this.id
+                },
+                order: [["displayOrder", "DESC"], ["updatedOn", "DESC"]]
+            });
+            return this.resources;
         });
     }
 };

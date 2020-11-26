@@ -7,10 +7,12 @@
   <script type="application/ld+json">
     <%- JSON.stringify(controller.productLd) %>
   </script>
+
+  <% } %>
   <script>
     var gtags = [];
   </script>
-  <% } %>
+  
   <% if (Object.keys(__req.query).length != 0 ) {%>
   <meta name="robots" content="noindex,follow">
   <link href="https://www.kasaptanal.com<%=__req.path%>" rel="canonical">
@@ -292,6 +294,7 @@
   
                                 <script>
                                   gtags.push(['noservice', '<%=__req.prefAddr.display%>', '<%=product.slug%>']);
+                                  gtags.push(['noproduct', '<%=product.slug%>', '<%=__req.prefAddr.display%>']);
                                 </script>
       
                                 <%} else { %>
@@ -300,6 +303,7 @@
                                 <span class="font-weight-medium">Ancak bu kasabımız semtinize hizmet veremiyor veya bu ürünü sağlayamıyor.</span>
                                 <script>
                                   gtags.push(['noproduct', '<%=product.slug%>', '<%=__req.prefAddr.display%>']);
+                                  gtags.push(['noservice', '<%=__req.prefAddr.display%>', '<%=product.slug%>']);
                                 </script>
                                 <% } %>
   
@@ -316,6 +320,7 @@
   
                                 
                                 <script>
+                                  gtags.push(['noproduct', '<%=product.slug%>', '<%=__req.prefAddr.display%>']);
                                   gtags.push(['noservice', '<%=__req.prefAddr.display%>', '<%=product.slug%>']);
                                 </script>
                                
@@ -327,6 +332,7 @@
                                   bu ürünü şu anda sağlayamıyor.</span>
                                   <script>       
                                   gtags.push(['noproduct', '<%=product.slug%>', '<%=__req.prefAddr.display%>']);
+                                  gtags.push(['noservice', '<%=__req.prefAddr.display%>', '<%=product.slug%>']);
 
                                   </script>
                                 <% } %>

@@ -111,7 +111,7 @@ export default class Route extends ApiRouter {
             this.req.query.level ? (where["level"] = parseInt(this.req.query.level as string)) : where["level"] = 1;
             this.req.params.parentid ? (where["parentid"] = this.req.params.parentid) : null;
             if (where["level"] == 1) { 
-                where["status"] = "active"
+                //where["status"] = "active"
             }
             //where['status'] = 'generic';
             promise = Promise.resolve(where)

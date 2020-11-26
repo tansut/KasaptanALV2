@@ -12,6 +12,7 @@ import Helper from '../../lib/helper';
 import { ExternalLogisticProviderUsage, DispatcherType } from './dispatcher';
 import { GeoLocation } from '../../models/geo';
 import { ShipmentInfo } from '../../models/shipment';
+import Resource from './resource';
 
 export type DispatchArea = "manual" | "citywide" | "radius";
 
@@ -608,6 +609,21 @@ class Butcher extends BaseModel<Butcher> {
                 }
             }
         )
+    }
+
+    resources: Resource[];
+
+    async loadResources() {
+        this.resources = await Resource.findAll({
+            where: {
+                type: ["butcher-google-photos", "butcher-videos"],
+                ref1: this.id
+         
+            },
+            order: [["displayOrder", "DESC"], ["updatedOn", "DESC"]]
+        })
+
+        return this.resources;
     }
 
 }

@@ -33,6 +33,7 @@ import  DispatcherApi from './api/dispatcher';
 import  ProductApi from './api/product';
 import { Provider } from 'nconf';
 import AreaApi from './api/area'
+import { ButcherLd } from '../models/ButcherLd';
 
 
 
@@ -45,6 +46,8 @@ export default class Route extends ViewRouter {
     reviews: Review[] = [];
     category: Category;
     categories: Category[];
+    butcherLd: ButcherLd;
+
     _ = _;
     subCategories: SubCategory[] = [];
 
@@ -109,14 +112,9 @@ export default class Route extends ViewRouter {
             await butcher.save()
         }
 
-        let images = await Resource.findAll({
-            where: {
-                type: ["butcher-google-photos", "butcher-videos"],
-                ref1: butcher.id
-         
-            },
-            order: [["displayOrder", "DESC"], ["updatedOn", "DESC"]]
-        })
+        
+
+        let images = await butcher.loadResources();
 
         // this.dispatchers = await Dispatcher.findAll({
         //     where: {
@@ -199,6 +197,8 @@ export default class Route extends ViewRouter {
                 this.distance = areaInfo ? areaInfo.bestKm : await this.logisticsProvider.distance(fromTo)
             }
         }
+
+        this.butcherLd = this.butcher.approved ? new ButcherLd(this.butcher): null;
         
         this.res.render('pages/butcher', this.viewData({ pageThumbnail: pageThumbnail, pageTitle: pageTitle, pageDescription: pageDescription, butcher: butcher, images: images }));
     }
