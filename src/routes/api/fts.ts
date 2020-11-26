@@ -212,7 +212,7 @@ export default class Route extends ApiRouter {
         let foods = (!this.req.query.t || this.req.query.t == 'food') ? await this.getFoods(search): [];
         let butchers = (!this.req.query.t || this.req.query.t == 'butcher') ? await this.getButchers(search): [];
         //let areaBtchers = (!this.req.query.t || this.req.query.t == 'area-butcher') ? await this.getAreaButchers(search): [];
-        let areas = (this.req.query.t == 'area') ? await this.getAreas(search): [];
+        let areas = (!this.req.query.t || this.req.query.t == 'area') ? await this.getAreas(search): [];
 
          let combined = categories.concat(products.concat(foods.concat(butchers.concat(areas))));
          //let combined = categories.concat(products.concat(foods.concat(butchers.concat(areaBtchers.concat(areas)))));
