@@ -15,7 +15,8 @@ let appRoutes = [
     './shopcard',
     './creditcard',
     './payorder',
-    './butcherfeecalculator'
+    './butcherfeecalculator',
+    './manageorder'
 ];
 
 export default class RouteLoader {

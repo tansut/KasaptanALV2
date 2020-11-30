@@ -268,7 +268,20 @@
               *---------*<br>
               FATURA TOPLAMI (KDV DAHİL): *<%- include('./_partial/currency.ejs', {value: controller.productTotal + controller.teslimatButcher + controller.teslimatKasaptan}) %>*<br>
               
-              **yukarıdaki bedelle fatura kesip poşetin içine koymayı unutmayın**
+              **yukarıdaki bedelle fatura kesip poşetin içine koymayı unutmayın** <br>
+
+              *-------------------*
+                <p>
+                  Sipariş *bilgilerine* ve **ürün resimlerine** aşağıdaki bağlantıdan ulaşın: <br>
+                
+                   <a href="<%=controller.url%>/manageorder/<%=order.ordernum%>">
+                     <%=controller.url%>/manage/<%=order.ordernum%>
+                   </a><br>
+                
+                
+             
+              </p>
+              *-------------------*
    
         </div>
       </div>

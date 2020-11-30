@@ -15,7 +15,8 @@ let appRoutes = [
     './shopcard',
     './creditcard',
     './payorder',
-    './butcherfeecalculator'
+    './butcherfeecalculator',
+    './manageorder'
 ];
 class RouteLoader {
     static use(router) {

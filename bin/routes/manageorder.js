@@ -1,4 +1,13 @@
 "use strict";
+var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
+    var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
+    if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
+    else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
+    return c > 3 && r && Object.defineProperty(target, key, r), r;
+};
+var __metadata = (this && this.__metadata) || function (k, v) {
+    if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
+};
 var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
     function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
     return new (P || (P = Promise))(function (resolve, reject) {
@@ -9,23 +18,24 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-const router_1 = require("../../lib/router");
-const area_1 = require("../../db/models/area");
-const helper_1 = require("../../lib/helper");
+const router_1 = require("../lib/router");
+const common_1 = require("../lib/common");
+const area_1 = require("../db/models/area");
+const helper_1 = require("../lib/helper");
 let ellipsis = require('text-ellipsis');
 var MarkdownIt = require('markdown-it');
-const creditcard_1 = require("../../lib/payment/creditcard");
-const order_1 = require("../api/order");
-const sitelog_1 = require("../api/sitelog");
-const accountmodel_1 = require("../../db/models/accountmodel");
-const account_1 = require("../../models/account");
-const commissionHelper_1 = require("../../lib/commissionHelper");
-const review_1 = require("../../db/models/review");
-const order_2 = require("../../models/order");
-const geo_1 = require("../../models/geo");
-const core_1 = require("../../lib/logistic/core");
-const dispatcher_1 = require("../../db/models/dispatcher");
-const butcher_1 = require("../../db/models/butcher");
+const creditcard_1 = require("../lib/payment/creditcard");
+const order_1 = require("./api/order");
+const sitelog_1 = require("./api/sitelog");
+const accountmodel_1 = require("../db/models/accountmodel");
+const account_1 = require("../models/account");
+const commissionHelper_1 = require("../lib/commissionHelper");
+const review_1 = require("../db/models/review");
+const order_2 = require("../models/order");
+const geo_1 = require("../models/geo");
+const core_1 = require("../lib/logistic/core");
+const dispatcher_1 = require("../db/models/dispatcher");
+const butcher_1 = require("../db/models/butcher");
 var MarkdownIt = require('markdown-it');
 class Route extends router_1.ViewRouter {
     constructor() {
@@ -293,15 +303,18 @@ class Route extends router_1.ViewRouter {
             if (!this.order)
                 return this.next();
             yield this.getOrderSummary();
-            this.sendView("pages/operator.manageorder.ejs", Object.assign(Object.assign({}, this.api.getView(this.order)), { enableImgContextMenu: true }));
+            this.sendView("pages/manageorder.ejs", Object.assign(Object.assign({}, this.api.getView(this.order)), { enableImgContextMenu: true }));
         });
     }
     //approveSubMerchant
     static SetRoutes(router) {
-        router.get('/order/:ordernum', Route.BindRequest(Route.prototype.orderViewRoute));
-        router.get('/orders', Route.BindRequest(Route.prototype.ordersListRoute));
-        router.post('/order/:ordernum', Route.BindRequest(Route.prototype.orderSaveRoute));
-        router.post('/order/:ordernum/item', Route.BindRequest(Route.prototype.orderItemUpdateRoute));
+        router.get('/manageorder/:ordernum', Route.BindRequest(Route.prototype.orderViewRoute));
     }
 }
+__decorate([
+    common_1.Auth.Anonymous(),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", []),
+    __metadata("design:returntype", Promise)
+], Route.prototype, "orderViewRoute", null);
 exports.default = Route;
