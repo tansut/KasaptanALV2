@@ -25,7 +25,7 @@ var DispatcherSelection;
 exports.DispatcherTypeDesc = {
     "butcher": "Kasap",
     "butcher/auto": "Kasap",
-    "kasaptanal/motokurye": "Hızlı Kurye Sistemi",
+    "banabikurye": "Hızlı Kurye Sistemi",
     "kasaptanal/car": "Soğuk Zincir Araç Kurye Sistemi",
 };
 let Dispatcher = class Dispatcher extends basemodel_1.default {
@@ -78,7 +78,7 @@ let Dispatcher = class Dispatcher extends basemodel_1.default {
         return desc;
     }
     get priceInfo() {
-        if (this.type == "kasaptanal/motokurye") {
+        if (this.type == "banabikurye") {
             let time = '60-90 dk';
             if (this.butcherArea.bestKm <= 15.0) {
                 time = '45-60 dk';

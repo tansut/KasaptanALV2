@@ -329,6 +329,11 @@ class Order extends BaseModel<Order> {
 
     @Column({
         allowNull: true
+    })  
+    logisticProvider: string;  
+
+    @Column({
+        allowNull: true
     })
     shipmentHowTo: HowToShipType;
 
@@ -610,6 +615,8 @@ class OrderItem extends BaseModel<Order> {
         allowNull: true
     })  
     subMerchantStatus: string;    
+
+ 
 
     @Column({
         allowNull: true    

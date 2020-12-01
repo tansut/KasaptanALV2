@@ -5,6 +5,7 @@ var OrderItemStatus;
 (function (OrderItemStatus) {
     OrderItemStatus["supplying"] = "tedarik s\u00FCrecinde";
     OrderItemStatus["shipping"] = "teslim edilecek";
+    // waiting = 'teslim edilecek/kurye bekleniyor',
     OrderItemStatus["success"] = "teslim edildi";
     OrderItemStatus["successPartial"] = "k\u0131smen teslim edildi";
     OrderItemStatus["customerCanceled"] = "iptal: m\u00FC\u015Fteri";

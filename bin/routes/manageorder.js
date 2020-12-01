@@ -306,7 +306,6 @@ class Route extends router_1.ViewRouter {
             this.sendView("pages/manageorder.ejs", Object.assign(Object.assign({}, this.api.getView(this.order)), { enableImgContextMenu: true }));
         });
     }
-    //approveSubMerchant
     static SetRoutes(router) {
         router.get('/manageorder/:ordernum', Route.BindRequest(Route.prototype.orderViewRoute));
     }

@@ -207,7 +207,6 @@ export default class Route extends ViewRouter {
             } catch(err) {
                 userMessage = err.message
             }
-
         }             
 
 

@@ -848,8 +848,8 @@ export default class Route extends ApiRouter {
                 email.send(ol[i].email, "siparişinizin ödemesi yapıldı", "order.paid.ejs", this.getView(ol[i]));
                 for (var p = 0; p < notifyMobilePhones.length; p++) {
                     if (notifyMobilePhones[p].trim()) {
-                        let payUrl = `${this.url}/pay/${ol[i].ordernum}`;
-                        Sms.send("90" + Helper.getPhoneNumber(notifyMobilePhones[p].trim()), `Tebrikler, ${ol[i].name} ${Helper.formattedCurrency(paymentInfo.paidPrice)} online odeme yapti. Bilgi icin ${payUrl} `, false, new SiteLogRoute(this.constructorParams))
+                        let payUrl = `${this.url}/manageorder/${ol[i].ordernum}`;
+                        Sms.send("90" + Helper.getPhoneNumber(notifyMobilePhones[p].trim()), `KasaptanAl.com yeni sipariş: ${Helper.formattedCurrency(paymentInfo.paidPrice)} online odeme yapildi. Bilgi icin ${payUrl} `, false, new SiteLogRoute(this.constructorParams))
                     }
                 }
             }
@@ -1013,7 +1013,7 @@ export default class Route extends ApiRouter {
                     notifyMobilePhones.push('5326274151');                
                     for (var p = 0; p < notifyMobilePhones.length; p++) {
                         if (notifyMobilePhones[p].trim()) {
-                            let payUrl = `${this.url}/pay/${order.ordernum}`;
+                            let payUrl = `${this.url}/manageorder/${order.ordernum}`;
                             Sms.send("90" + Helper.getPhoneNumber(notifyMobilePhones[p].trim()), `KasaptanAl.com yeni sipariş: Bilgi icin ${payUrl}, teslimat kodu: ${order.securityCode}`, false, new SiteLogRoute(this.constructorParams))
                         }
                     }
@@ -1035,7 +1035,30 @@ export default class Route extends ApiRouter {
         this.res.send(view);
     }
 
+    async requestDispatcher(o: Order) {
+
+    }
+
+    @Auth.Anonymous()
+    async approveRoute() {
+        let ordernum = this.req.params.ordernum;
+        let order = await this.getOrder(ordernum, true);
+        if (!order)
+            return this.res.send(404);
+
+        let newStatus = OrderItemStatus.shipping;
+
+        order.status = OrderItemStatus.shipping;
+        order.statusDesc ? null : (order.statusDesc = '')
+        order.statusDesc += `\n- ${Helper.formatDate(Helper.Now(), true)} tarihinde ${order.status} -> ${newStatus}`
+        await order.save();   
+        this.res.send(200)  ;
+    }
+
+
     static SetRoutes(router: express.Router) {
+        router.post('/order/:ordernum/approve', Route.BindRequest(Route.prototype.approveRoute))
+
         //router.get("/admin/order/:ordernum", Route.BindRequest(this.prototype.getOrderRoute));
     }
 }

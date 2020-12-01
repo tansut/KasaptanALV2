@@ -144,15 +144,12 @@ class Route extends router_1.ViewRouter {
                 else
                     return false;
             });
-            let defaultButchers = serving;
-            let nearButchers = serving.filter(p => p.butcherArea.bestKm <= 10.0);
-            let alternateButchers = serving.filter(p => (p.butcherArea.bestKm > 10.0 && p.butcherArea.bestKm <= 15.0));
-            let farButchers = serving.filter(p => p.butcherArea.bestKm > 15.0);
-            if (nearButchers.length < 2) {
-                defaultButchers = nearButchers.concat(alternateButchers);
-            }
-            else {
-                defaultButchers = nearButchers;
+            let nearButchers = serving.filter(p => p.butcherArea.bestKm <= 12.0);
+            let alternateButchers = serving.filter(p => (p.butcherArea.bestKm > 12.0 && p.butcherArea.bestKm <= 20.0));
+            let farButchers = serving.filter(p => p.butcherArea.bestKm > 20.0);
+            let defaultButchers = nearButchers;
+            if (defaultButchers.length < 1) {
+                defaultButchers = defaultButchers.concat(alternateButchers);
             }
             defaultButchers = defaultButchers.length == 0 ? serving : defaultButchers;
             let mybest = (yield this.tryBestFromShopcard(serving)) ||

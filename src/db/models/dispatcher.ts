@@ -16,12 +16,14 @@ export enum DispatcherSelection {
 }
 
 
-export type DispatcherType = "butcher" | "butcher/auto" | "kasaptanal/motokurye" | "kasaptanal/car"
+export type DispatcherType = "butcher" | "butcher/auto" | "banabikurye" | "kasaptanal/car"
+
+
 
 export let DispatcherTypeDesc = {
     "butcher": "Kasap",
     "butcher/auto": "Kasap",
-    "kasaptanal/motokurye": "Hızlı Kurye Sistemi",
+    "banabikurye": "Hızlı Kurye Sistemi",
     "kasaptanal/car": "Soğuk Zincir Araç Kurye Sistemi",
 }
 
@@ -114,6 +116,8 @@ class Dispatcher extends BaseModel<Dispatcher> {
         defaultValue: "default"
     })
     logisticProviderUsage: ExternalLogisticProviderUsage;
+
+
 
     @Column({
         allowNull: false,
@@ -226,7 +230,7 @@ class Dispatcher extends BaseModel<Dispatcher> {
     butcherArea: ButcherArea;
 
     get priceInfo() {
-        if (this.type == "kasaptanal/motokurye") {
+        if (this.type == "banabikurye") {
             let time = '60-90 dk';
             if (this.butcherArea.bestKm <= 15.0) {
                  time = '45-60 dk';

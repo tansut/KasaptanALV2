@@ -22,7 +22,7 @@ class BanabikuryeProvider extends core_1.LogisticProvider {
         if (options.dispatcher) {
             options.dispatcher.min = 0.00;
             options.dispatcher.totalForFree = 0.00;
-            options.dispatcher.type = "kasaptanal/motokurye";
+            options.dispatcher.type = "banabikurye";
             options.dispatcher.name = dispatcher_1.DispatcherTypeDesc[options.dispatcher.type];
         }
     }

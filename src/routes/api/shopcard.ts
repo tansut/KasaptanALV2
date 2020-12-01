@@ -100,7 +100,6 @@ export default class Route extends ApiRouter {
         this.res.send(address);
     }
 
-    
 
 
     static SetRoutes(router: express.Router) {
@@ -109,6 +108,7 @@ export default class Route extends ApiRouter {
         router.post("/shopcard/add", Route.BindRequest(this.prototype.addRoute));
         router.post("/shopcard/update", Route.BindRequest(this.prototype.updateRoute));
         router.post("/shopcard/remove", Route.BindRequest(this.prototype.removeRoute));
+
     }
 }
 

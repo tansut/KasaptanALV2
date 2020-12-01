@@ -300,7 +300,7 @@ export default class BanabikuryeProvider extends LogisticProvider {
         if (options.dispatcher) {
             options.dispatcher.min = 0.00;
             options.dispatcher.totalForFree = 0.00;
-            options.dispatcher.type = "kasaptanal/motokurye";
+            options.dispatcher.type = "banabikurye";
             options.dispatcher.name = DispatcherTypeDesc[options.dispatcher.type];
         }
 

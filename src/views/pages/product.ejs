@@ -211,23 +211,24 @@
   
                           <div class="mb-3 d-block font-size-sm  text-center">
                             <% if (controller.startPrice && controller.startPrice.title) { %>
-                              <h5 class="h6">
+                              <h5 class="h5">
                                 <%=controller.startPrice.title%>
                               </h5>
                             <% } %>
                           
   
-                            <h6 class="h7 text-info">
+                            <p class="lead text-info font-weight-medium">
                               <% if (controller.startPrice) { %>
                                 <% if (controller.startPrice.basedOn == 'global') { %>
                                   
   
+                                  <%- include('./_partial/currency.ejs', {value: controller.startPrice.view.price, unit: controller.startPrice.view.unitTitle}) %><br>başlangıç fiyatlarıyla.
                                 
                      
                           
   
                                 <% } else { %>
-                                  <%- include('./_partial/currency.ejs', {value: controller.startPrice.view.price, unit: controller.startPrice.view.unitTitle}) %>
+                                  <%- include('./_partial/currency.ejs', {value: controller.startPrice.view.price, unit: controller.startPrice.view.unitTitle}) %>'
                              
   
                                   <%}%>
@@ -235,22 +236,25 @@
                                   Önce Semt Seçin
                                 <%}%>
   
-                            </h5>
+                                </p>
                             <% if (controller.startPrice) { %>
-                              <% if (controller.startPrice.basedOn == 'global') { %>
+                              <div class="font-size-lg">
+                                <% if (controller.startPrice.basedOn == 'global') { %>
   
-                                <div>
-                                  <span class="font-weight-medium">Sipariş vermek</span> ve kasaplarımızın <span class="font-weight-medium">en iyi ürün fiyatları</span> için önce semt seçin.
-                                </div>
-  
-                          
-                              <% } else { %>
-                                <div>
-                                  <span class="font-weight-medium">Alışverişe başlamak için</span> 
-                                  şimdi semtinizi seçin.
-                                </div>
-  
-                              <% } %>
+                                  <div>
+                                    <span class="font-weight-medium">Semt kasaplarınızın en iyi fiyatları</span> ve <span class="font-weight-medium">şimdi alışverişe başlamak</span> için semt seçin.
+                                  </div>
+    
+                            
+                                <% } else { %>
+                                  <div>
+                                    <span class="font-weight-medium">Alışverişe başlamak için</span> 
+                                    şimdi semtinizi seçin.
+                                  </div>
+    
+                                <% } %>
+                              </div>
+                            
   
   
                             <% } else { %>
@@ -267,7 +271,7 @@
                           </div>
   
                           <div class="text-center">
-                            <button @click="selectArea(null)" type="button" class="btn btn-primary btn-sm"><i
+                            <button @click="selectArea(null)" type="button" class="btn btn-primary"><i
                                 class="czi-location font-size-lg mr-2"></i>Semt Seç</button>
                           </div>
   
@@ -503,7 +507,7 @@
 
                         <a id="noteanchor"></a>
 
-                        <% if (view.butcher && __req.prefAddr) { %>
+                       
 
 
                         <h5 v-if="product && product.purchaseOptions.length > 1" class="h6 mb-2 text-accent">
@@ -542,7 +546,7 @@
                                      
                                   </div>
                        
-                         
+                                  <% if (view.butcher && __req.prefAddr) { %>
                                   <div class="d-flex  flex-nowrap justify-content-between align-items-center">
                                     <h5 class="h6 mb-2 text-accent "><i class="czi-thumb-up mr-2"></i>Şimdi satın alın</h5>
                   
@@ -564,6 +568,7 @@
 
 
                         </div>
+                        <% } %>
                         <div class="mb-1 bg-secondary border">
                           <%if (view.butcher) {  %>
 
@@ -688,7 +693,7 @@
 
 
 
-                        <%}%>
+                       
                   
                                   </form>
                          

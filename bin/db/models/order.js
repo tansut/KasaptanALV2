@@ -492,6 +492,12 @@ __decorate([
         allowNull: true
     }),
     __metadata("design:type", String)
+], Order.prototype, "logisticProvider", void 0);
+__decorate([
+    sequelize_typescript_1.Column({
+        allowNull: true
+    }),
+    __metadata("design:type", String)
 ], Order.prototype, "shipmentHowTo", void 0);
 __decorate([
     sequelize_typescript_1.Column({

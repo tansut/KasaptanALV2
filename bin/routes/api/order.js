@@ -1,4 +1,13 @@
 "use strict";
+var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
+    var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
+    if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
+    else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
+    return c > 3 && r && Object.defineProperty(target, key, r), r;
+};
+var __metadata = (this && this.__metadata) || function (k, v) {
+    if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
+};
 var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
     function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
     return new (P || (P = Promise))(function (resolve, reject) {
@@ -778,8 +787,8 @@ class Route extends router_1.ApiRouter {
                     email_1.default.send(ol[i].email, "siparişinizin ödemesi yapıldı", "order.paid.ejs", this.getView(ol[i]));
                     for (var p = 0; p < notifyMobilePhones.length; p++) {
                         if (notifyMobilePhones[p].trim()) {
-                            let payUrl = `${this.url}/pay/${ol[i].ordernum}`;
-                            sms_1.Sms.send("90" + helper_1.default.getPhoneNumber(notifyMobilePhones[p].trim()), `Tebrikler, ${ol[i].name} ${helper_1.default.formattedCurrency(paymentInfo.paidPrice)} online odeme yapti. Bilgi icin ${payUrl} `, false, new sitelog_1.default(this.constructorParams));
+                            let payUrl = `${this.url}/manageorder/${ol[i].ordernum}`;
+                            sms_1.Sms.send("90" + helper_1.default.getPhoneNumber(notifyMobilePhones[p].trim()), `KasaptanAl.com yeni sipariş: ${helper_1.default.formattedCurrency(paymentInfo.paidPrice)} online odeme yapildi. Bilgi icin ${payUrl} `, false, new sitelog_1.default(this.constructorParams));
                         }
                     }
                 }
@@ -914,7 +923,7 @@ class Route extends router_1.ApiRouter {
                         notifyMobilePhones.push('5326274151');
                         for (var p = 0; p < notifyMobilePhones.length; p++) {
                             if (notifyMobilePhones[p].trim()) {
-                                let payUrl = `${this.url}/pay/${order.ordernum}`;
+                                let payUrl = `${this.url}/manageorder/${order.ordernum}`;
                                 sms_1.Sms.send("90" + helper_1.default.getPhoneNumber(notifyMobilePhones[p].trim()), `KasaptanAl.com yeni sipariş: Bilgi icin ${payUrl}, teslimat kodu: ${order.securityCode}`, false, new sitelog_1.default(this.constructorParams));
                             }
                         }
@@ -934,8 +943,33 @@ class Route extends router_1.ApiRouter {
             this.res.send(view);
         });
     }
+    requestDispatcher(o) {
+        return __awaiter(this, void 0, void 0, function* () {
+        });
+    }
+    approveRoute() {
+        return __awaiter(this, void 0, void 0, function* () {
+            let ordernum = this.req.params.ordernum;
+            let order = yield this.getOrder(ordernum, true);
+            if (!order)
+                return this.res.send(404);
+            let newStatus = order_3.OrderItemStatus.shipping;
+            order.status = order_3.OrderItemStatus.shipping;
+            order.statusDesc ? null : (order.statusDesc = '');
+            order.statusDesc += `\n- ${helper_1.default.formatDate(helper_1.default.Now(), true)} tarihinde ${order.status} -> ${newStatus}`;
+            yield order.save();
+            this.res.send(200);
+        });
+    }
     static SetRoutes(router) {
+        router.post('/order/:ordernum/approve', Route.BindRequest(Route.prototype.approveRoute));
         //router.get("/admin/order/:ordernum", Route.BindRequest(this.prototype.getOrderRoute));
     }
 }
+__decorate([
+    common_1.Auth.Anonymous(),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", []),
+    __metadata("design:returntype", Promise)
+], Route.prototype, "approveRoute", null);
 exports.default = Route;

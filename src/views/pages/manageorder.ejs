@@ -19,11 +19,7 @@
 
 
         <h1 class="h3">
-          <%= order.name  %></h1>
-          <h2 class=" lead h4">
-            <%=order.areaLevel3Text%>/<%=order.areaLevel2Text%>
-          </h2>
-        <a class="font-size-xs text-muted" href="<%=__req.url%>?print=1">Yazdır &raquo;</a>
+          Sipariş Bilgileri</h1>
       </div>
     </div>
   </div>
@@ -36,17 +32,15 @@
   <div class="container mb-3 ">
 
 
-   
 
-    
+
+
 
     <% if (controller.shouldBePaid > 0) { %>
-      <p class="mt-3 text-muted text-center">
-
-        <%- include('./_partial/currency.ejs', {value: controller.shouldBePaid}) %>
-
-      </p>
-      <%}%>
+    <p class="mt-3 text-muted text-center">
+      <%- include('./_partial/currency.ejs', {value: controller.shouldBePaid}) %>
+    </p>
+    <%}%>
 
 
 
@@ -60,30 +54,30 @@
       
 
         <% for (let bi in butchers) { %>
-          <% let butcher = butchers[bi]%>
-          
-          
-          
-          <div class="mb-3 border-top border-left border-right">
-          
-            <div class="bg-secondary p-3  mb-4 d-print-none"><a class="media align-items-center" href="/<%=butcher.slug%>"><img
-                  class="rounded-circle header-img d-print-none" src="<%= `${__req.helper.imgUrl('butcher-google-photos', butcher.slug)}` %>"
-                  alt="<%=butcher.name%>">
-                <div class="media-body pl-2"><span class="font-size-ms text-muted"></span>
-                  <h3 class="h4 mb-0 mr-2"><%= butchers[bi].name %></h3>
-                </div>
-              </a></div>
+    <% let butcher = butchers[bi]%>
 
-              <div class="px-2">
-                <h3 class="h4 border-bottom">Sipariş</h3>
-                <ul class="px-4 list-unstyled font-size-sm">
-                  <li><span class="text-muted">Durum:&nbsp;</span> <%= order.status %></li>
-                  <li><span class="text-muted">Müşteri:&nbsp;</span><%=order.name%></li>
-            
-                  <% if(order.note) { %>
-                    <li><span class="text-muted">Not:&nbsp;</span><%= order.note%>
-                      </li>
-                  <%}%>  
+
+
+    <div class="mb-3 border-top border-left border-right">
+
+      <div class="bg-secondary p-3  mb-4 d-print-none"><a class="media align-items-center"
+          href="/<%=butcher.slug%>"><img class="rounded-circle header-img d-print-none"
+            src="<%= `${__req.helper.imgUrl('butcher-google-photos', butcher.slug)}` %>" alt="<%=butcher.name%>">
+          <div class="media-body pl-2"><span class="font-size-ms text-muted"></span>
+            <h3 class="h4 mb-0 mr-2"><%= butchers[bi].name %></h3>
+          </div>
+        </a></div>
+
+      <div class="px-2">
+        <h3 class="h4 border-bottom">Sipariş</h3>
+        <ul class="px-4 list-unstyled font-size-sm">
+          <li><span class="text-muted">Durum:&nbsp;</span> <%= order.status %></li>
+          <li><span class="text-muted">Müşteri:&nbsp;</span><%=order.name%></li>
+
+          <% if(order.note) { %>
+          <li><span class="text-muted">Not:&nbsp;</span><%= order.note%>
+          </li>
+          <%}%>  
                       
                               
 
@@ -91,84 +85,44 @@
                 </ul>
                 
 
-                <h3 class="h4 border-bottom">Teslimat</h3>
-                <ul class="px-4 list-unstyled font-size-sm">
-                  <li><span class="text-muted">Dağıtımı Yapacak:&nbsp;</span><%=order.dispatcherName%>/<%= shipment[bi].howToDesc %></li>
-                  <% if (order.noInteraction) { %>
-                    <li><span class="text-muted">Temassız Teslimat:</span> <%= order.noInteraction ? 'Evet': 'Hayır'%></li>
-                    <% } %>
-                  <li><span class="text-muted">Teslimat Kodu:&nbsp;</span><%= shipment[bi].securityCode %></li>
-                  <li><span class="text-muted">Teslimat Talebi :&nbsp;</span><span class="font-weight-bolder"><%=__helper.formatDate(order.shipmentdate)%> <span>
-                    <%=order.shipmenthourText%>
-                  </span></li>
-                  <% if (!controller.hideOrderDetails) { %>
-                    <li><span class="text-muted">Adres:&nbsp;</span><%=order.address%>/ Bina: <%=order.bina%>,Kat: <%=order.kat%>,Daire: <%=order.daire%></li>
+     
 
-                  <% if (order.adresTarif) { %>                   
-                      <li><span class="text-muted">Adres Tarifi:&nbsp;</span><%=order.adresTarif%></li>                                        
-                    <%}%>
-                    <% if (order.shipLocation && order.shipLocation.coordinates) { %>
 
-                      <li><span class="text-muted">Tahmini Uzaklık:&nbsp;</span><%=(order.dispatcherDistance) %>km</li>
-                      <li><span class="text-muted">Noktasal Adres:&nbsp;</span><a target="_blank" class="font-size-sm"
-                        href="https://www.google.com/maps/dir/?api=1&origin=<%=order.butcher.location.coordinates[0]%>%20<%=order.butcher.location.coordinates[1]%>&destination=<%=order.shipLocation.coordinates[0]%>%20<%=order.shipLocation.coordinates[1]%>">
-                      Müşteri Adresine Gidin                        
-                        
-                      </a> </li>
-        
-                    <%}%>
+        <h3 class="h4 border-bottom">Ürünler</h3>
+        <div class="mb-3">
+          <% butcher.products.forEach((pi, i) => { %>
+          <% let item = items[pi] %>
 
-                  
+          <div id="shop-card-item-<%=i%>"
+            class="px-4 d-sm-flex justify-content-between align-items-center mt-2 pb-3 border-bottom">
+            <div class="media media-ie-fix d-block d-sm-flex align-items-center text-center text-sm-left"><a
+                class="d-inline-block mx-auto mr-sm-4" href="/<%=item.product.slug%>?butcher=<%=butcher.slug%>"
+                style="width: 10rem;"><img src="<%=`${__req.helper.imgUrl('product-photos', item.product.slug)}`%>"
+                  class="d-print-none " alt="Product"></a>
+              <div class="media-body pt-2">
+                <h3 class="product-title font-size-base mb-2"><a
+                    href="/<%=item.product.slug%>?butcher=<%=item.butcher.slug%>"><%=item.product.name%></a>
+                </h3>
+                <div class="font-size-normal"><span class="font-weight-medium"><%=item.quantity%></span> <span
+                    class="text-muted"><%=item.pounitTitle%>/</span>
+                  <span class="font-size-sm">
+                    <%- include('./_partial/currency.ejs', {value: item.price}) %>
+                  </span>
+                  <%if (item.pounitWeight) { %>
+                  <span class="text-muted font-size-sm d-block">1 <%=item.pounitTitle%> <%=item.pounitWeight%></span>
                   <% } %>
-                  <li><span class="text-muted">Semt:&nbsp;</span><%=order.areaLevel3Text%>/<%=order.areaLevel2Text%></li>
-                                   
-              
-                </ul>
-<!-- 
-                <h3 class="h4 border-bottom">Ödeme</h3>
+                </div>
+                <div class="mb-3 text-nowrap text-muted d-print-none">
+                  Durum: <%=item.status%>
+                </div>
+                <div>
+                  <%- include(`./_partial/product.${item.productType || 'generic'}-view.ejs`, {man: item.productTypeManager}) %>
 
 
-                <ul class="px-4 list-unstyled font-size-sm">
-                  <li><span class="text-muted">Planlanan Ödeme:&nbsp;</span><%= payment[bi].desc%> </li>
-                  <li><span class="text-muted">Yapılan Ödeme:&nbsp;</span><span class="font-weight-bolder"><%- include('./_partial/currency.ejs', {value: controller.paid })%></span>  </li>
-                  
-                </ul> -->
-
-                <h3 class="h4 border-bottom">Ürünler</h3>
-                <div class="mb-3">
-                  <% butcher.products.forEach((pi, i) => { %>
-                    <% let item = items[pi] %>
-                  
-                    <div id="shop-card-item-<%=i%>"
-                      class="px-4 d-sm-flex justify-content-between align-items-center mt-2 pb-3 border-bottom">
-                      <div class="media media-ie-fix d-block d-sm-flex align-items-center text-center text-sm-left"><a
-                          class="d-inline-block mx-auto mr-sm-4" href="/<%=item.product.slug%>?butcher=<%=butcher.slug%>"
-                          style="width: 10rem;"><img src="<%=`${__req.helper.imgUrl('product-photos', item.product.slug)}`%>"
-                            class="d-print-none " alt="Product"></a>
-                        <div class="media-body pt-2">
-                          <h3 class="product-title font-size-base mb-2"><a
-                              href="/<%=item.product.slug%>?butcher=<%=item.butcher.slug%>"><%=item.product.name%></a>
-                          </h3>
-                          <div class="font-size-normal"><span class="font-weight-medium"><%=item.quantity%></span> <span
-                              class="text-muted"><%=item.pounitTitle%>/</span>
-                            <span class="font-size-sm">
-                              <%- include('./_partial/currency.ejs', {value: item.price}) %>
-                            </span>
-                            <%if (item.pounitWeight) { %>
-                            <span class="text-muted font-size-sm d-block">1 <%=item.pounitTitle%> <%=item.pounitWeight%></span>
-                            <% } %>
-                          </div>
-                          <div class="mb-3 text-nowrap text-muted d-print-none">
-                            Durum: <%=item.status%>
-                          </div>
-                          <div>
-                            <%- include(`./_partial/product.${item.productType || 'generic'}-view.ejs`, {man: item.productTypeManager}) %>
-                  
-                            
-                          </div>
-                          <% if (item.note) {%>
-                          <div class="font-size-sm text-info"><%=item.note%></div>
-                          <%}%> 
+                </div>
+                <% if (item.note) {%>
+                <div class="font-size-sm text-info"><%=item.note%></div>
+                <%}%> 
                                
                                             </div>
                                           </div>
@@ -179,37 +133,111 @@
         
                                     <% }) %>
 
+              </div>
+              <h3 class="h4 border-bottom">Teslimat</h3>
+              <ul class="px-4 list-unstyled font-size-sm">
+                <li><span class="text-muted">Dağıtımı Yapacak:&nbsp;</span><%=order.dispatcherName%>/<%= shipment[bi].howToDesc %>
+        </li>
+        <% if (order.noInteraction) { %>
+        <li><span class="text-muted">Temassız Teslimat:</span> <%= order.noInteraction ? 'Evet': 'Hayır'%></li>
+        <% } %>
+        <li><span class="text-muted">Teslimat Kodu:&nbsp;</span><%= shipment[bi].securityCode %></li>
+        <li><span class="text-muted">Teslimat Talebi :&nbsp;</span><span
+            class="font-weight-bolder"><%=__helper.formatDate(order.shipmentdate)%> <span>
+              <%=order.shipmenthourText%>
+            </span></li>
+        <% if (!controller.hideOrderDetails) { %>
+        <li><span class="text-muted">Adres:&nbsp;</span><%=order.address%>/ Bina: <%=order.bina%>,Kat:
+          <%=order.kat%>,Daire: <%=order.daire%></li>
+
+        <% if (order.adresTarif) { %>
+        <li><span class="text-muted">Adres Tarifi:&nbsp;</span><%=order.adresTarif%></li>
+        <%}%>
+                  <% if (order.shipLocation && order.shipLocation.coordinates) { %>
+
+        <li><span class="text-muted">Tahmini Uzaklık:&nbsp;</span><%=(order.dispatcherDistance) %>km</li>
+        <li><span class="text-muted">Noktasal Adres:&nbsp;</span><a target="_blank" class="font-size-sm"
+            href="https://www.google.com/maps/dir/?api=1&origin=<%=order.butcher.location.coordinates[0]%>%20<%=order.butcher.location.coordinates[1]%>&destination=<%=order.shipLocation.coordinates[0]%>%20<%=order.shipLocation.coordinates[1]%>">
+            Müşteri Adresine Gidin
+
+          </a> </li>
+
+        <%}%>
+
+                
+                <% } %>
+        <li><span class="text-muted">Semt:&nbsp;</span><%=order.areaLevel3Text%>/<%=order.areaLevel2Text%></li>
+
+
+      </ul>
+
+              <h3 class="h4 border-bottom">
+                Mali Bilgiler
+              </h3>
+              <ul class="px-4 list-unstyled font-size-sm">
+                <li><span class="text-muted">Planlanan Ödeme:&nbsp;</span><%= payment[bi].desc%> </li>
+                <li><span class="text-muted">Yapılan Ödeme:&nbsp;</span><span
+                    class="font-weight-bolder"><%- include('./_partial/currency.ejs', {value: controller.paid })%></span>
+                </li>
+                <li><span class="text-muted">Toplam Ürün Bedeli:&nbsp;</span><span
+                    class="font-weight-bolder"><%- include('./_partial/currency.ejs', {value: controller.productTotal}) %></span>
+                </li>
+                <li><span class="text-muted">Teslimat Ücreti:&nbsp;</span><span
+                    class="font-weight-bolder"><%- include('./_partial/currency.ejs', {value: controller.teslimatButcher + controller.teslimatKasaptan}) %>
+                </li>
+                <li><span class="text-muted">FATURA TOPLAMI:&nbsp;</span><span
+                    class="font-weight-bolder"><%- include('./_partial/currency.ejs', {value: controller.productTotal + controller.teslimatButcher + controller.teslimatKasaptan}) %>
+                </li>
+                <li><span class="text-muted">Önemli:&nbsp;</span><span class="font-weight-bolder">yukarıdaki bedelle
+                    fatura kesip poşetin içine koymayı unutmayın</li>
+
+
+              </ul>
+              <h3 class="h4 border-bottom">
+                Siparişi Yönetin
+              </h3>
+              <p>
+                Aşağıdaki iki seçenekten birini <span class="font-weight-bolder">şimdi</span> kullanın.
+              </p>
+
+              <div class="px-4">
+                <div class="border p-2 bg-secondary mb-3">
+                  <h5 class="h6">1. Ürünler ve teslimat saati uygun mu?</h5>
+                  <p class="font-size-md">Sipariş verilen <span class="font-weight-bolder"><%=order.items.length%></span> kalem ürün ve <br> <span
+                    class="font-weight-bolder"><%=__helper.formatDate(order.shipmentdate)%>
+                    <%=order.shipmenthourText%></span> teslimat saati uygundur.</p>
+                  <div class="">
+                  
+                    <button class="btn btn-success" id="approveOrder">Herşey uygun, siparişi Onaylıyorum</button>
+                  </div>
                 </div>
 
+                <div class="border p-2 bg-secondary mb-3">
+                  <h5 class="h6">2. Ürünler elinizde yok veya teslimat saati uygun değil mi ?</h5>
+                  <p>
+                    Ürünler elinizde yoksa veya teslimat saati uygun değilse lütfen whatsapp üzerinden iletişime geçin.
+                  </p>
+                  <button class="btn btn-info" id="getSupport">Whatsapp destek alacağım</button>
 
-                <h3 class="h4 border-bottom">
-                  Mali Bilgiler
-                </h3>
-                <ul class="px-4 list-unstyled font-size-sm">
-                  <li><span class="text-muted">Planlanan Ödeme:&nbsp;</span><%= payment[bi].desc%> </li>
-                  <li><span class="text-muted">Yapılan Ödeme:&nbsp;</span><span class="font-weight-bolder"><%- include('./_partial/currency.ejs', {value: controller.paid })%></span>  </li>
-                  <li><span class="text-muted">Toplam Ürün Bedeli:&nbsp;</span><span class="font-weight-bolder"><%- include('./_partial/currency.ejs', {value: controller.productTotal}) %></span>  </li>
-                  <li><span class="text-muted">Teslimat Ücreti:&nbsp;</span><span class="font-weight-bolder"><%- include('./_partial/currency.ejs', {value: controller.teslimatButcher + controller.teslimatKasaptan}) %>  </li>
-                  <li><span class="text-muted">FATURA TOPLAMI:&nbsp;</span><span class="font-weight-bolder"><%- include('./_partial/currency.ejs', {value: controller.productTotal + controller.teslimatButcher + controller.teslimatKasaptan}) %> </li>
-                    <li><span class="text-muted">Önemli:&nbsp;</span><span class="font-weight-bolder">yukarıdaki bedelle fatura kesip poşetin içine koymayı unutmayın</li>
-                  
-
-                </ul>
-
+                  </div>
+                </div>
 
 
 
               </div>
 
-          
 
-          
+            </div>
 
-                </div>
-          
-          
-          
-            <%}%>  
+
+
+
+
+          </div>
+
+
+
+          <%}%>  
 
 
 
@@ -227,7 +255,27 @@
     <% include ./_partial/footer %>
     <% include ./_partial/scripts %>
 
-    
+          <script>
+            $(document).ready(function () {
+              $('#approveOrder').click(function () {
+                if (window.confirm('Onay sonrasında direkt müşteriye teslimat yapabilirsiniz. Siparişi onaylıyor musunuz?')) {
+                  $('#approveOrder').attr('disabled');
+                  App.Backend.post('order/<%=order.ordernum%>/approve', {
+                    
+                  }).finally(function() {
+                    $('#approveOrder').removeAttr('disabled');
+                  }).then(function() {
+                    alert('Siparişin teslimatını yapabilirsiniz. Kolay gelsin!')
+                  })
+                }
+              })
+
+              $('#getSupport').click(function () {
+                alert('Whatsapp ekranını açarak lütfen bize sorunu iletin, müşteri ile görüşüp çözmeye çalışacağız')
+              })
+
+            })
+          </script>
 
 </body>
 

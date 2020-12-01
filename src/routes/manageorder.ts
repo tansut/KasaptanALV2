@@ -360,7 +360,7 @@ export default class Route extends ViewRouter {
         this.sendView("pages/manageorder.ejs", { ...this.api.getView(this.order), ...{ enableImgContextMenu: true } });
     }
 
-    //approveSubMerchant
+
 
 
 

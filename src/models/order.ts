@@ -3,12 +3,16 @@ import { PuanResult } from "./puan";
 export enum OrderItemStatus {    
     supplying = 'tedarik sürecinde',
     shipping = 'teslim edilecek',
+    // waiting = 'teslim edilecek/kurye bekleniyor',
     success = 'teslim edildi',
     successPartial = 'kısmen teslim edildi',
     customerCanceled= 'iptal: müşteri',
     butcherCannotShip = 'iptal: teslimat yapılamadı',
     butcherCannotProvide = 'iptal: tedarik edilemedi'
 }
+
+
+
 
 export enum OrderType {
     generic = 'generic',
