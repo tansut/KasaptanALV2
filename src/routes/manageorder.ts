@@ -107,7 +107,7 @@ export default class Route extends ViewRouter {
         }
 
         this.butcherFee.butcherToCustomer = Helper.asCurrency(butcherToCustomer);
-        await  this.api.fillButcherDebtAccounts(this.order)
+        await this.api.fillButcherDebtAccounts(this.order)
 
         let butcherDebptAccounts = await AccountModel.summary([Account.generateCode("kasaplardan-alacaklar", [this.order.butcherid], true)]);
         this.butcherDebt = butcherDebptAccounts.borc - butcherDebptAccounts.alacak;
@@ -144,7 +144,7 @@ export default class Route extends ViewRouter {
             this.order.statusDesc += `\n- ${Helper.formatDate(Helper.Now(), true)} tarihinde ${this.order.status} -> ${this.req.body.orderStatus}`
             await this.api.completeOrderStatus(this.order, this.req.body.orderStatus);
             if (this.req.body.orderStatus == OrderItemStatus.success)
-                 userMessage = "KASABA MAKBUZ İLETMEYİ UNUTMAYIN"
+                userMessage = "KASABA MAKBUZ İLETMEYİ UNUTMAYIN"
         }
 
         if (this.req.body.makeManuelPayment == "true") {
@@ -185,13 +185,13 @@ export default class Route extends ViewRouter {
             try {
                 let offer = await provider.requestOffer(request);
                 userMessage = `Taşıma: ${offer.totalFee}, İndirim: ${offer.discount}`;
-            } catch(err) {
+            } catch (err) {
                 userMessage = err.message
             }
-        }        
+        }
 
         if (this.req.body["kurye-cagir"] == "true" && this.order.butcher.logisticProvider) {
-            let provider = LogisticFactory.getInstance(this.order.butcher.logisticProvider, { 
+            let provider = LogisticFactory.getInstance(this.order.butcher.logisticProvider, {
                 dispatcher: await Dispatcher.findByPk(this.order.dispatcherid, {
                     include: [{
                         model: Butcher,
@@ -204,11 +204,11 @@ export default class Route extends ViewRouter {
             try {
                 let offer = await provider.createOrder(request);
                 userMessage = `Kurye çağrıldı:`;
-            } catch(err) {
+            } catch (err) {
                 userMessage = err.message
             }
 
-        }             
+        }
 
 
         if (this.req.body.approveOrderSubMerchant == "true") {
@@ -245,7 +245,7 @@ export default class Route extends ViewRouter {
                 review.type = 'order';
                 review.ref1 = this.order.id;
                 review.ref2 = this.order.butcherid,
-                review.itemDate = this.order.creationDate;
+                    review.itemDate = this.order.creationDate;
                 review.ref2Text = this.order.butcher.name;
                 review.ref2slug = this.order.butcher.slug;
                 review.content = comment;
@@ -257,10 +257,10 @@ export default class Route extends ViewRouter {
                 review.level3Text = this.order.areaLevel3Text;
                 review.areaSlug = (await AreaModel.findByPk(review.level3Id)).slug;
                 review.userRating1 = puan;
-                let words = this.order.name.match(/\S+/g).map(w=> `${w}`)
+                let words = this.order.name.match(/\S+/g).map(w => `${w}`)
                 if (words.length >= 2)
-                    review.displayUser = words[0]  + ' ' + words[1][0] + '.';
-                else  review.displayUser = words[0]  + '.'
+                    review.displayUser = words[0] + ' ' + words[1][0] + '.';
+                else review.displayUser = words[0] + '.'
 
             } else {
                 review.content = comment;
@@ -281,6 +281,15 @@ export default class Route extends ViewRouter {
         this.sendView("pages/operator.manageorder.ejs", { ...{ _usrmsg: { text: userMessage } }, ...this.api.getView(this.order), ...{ enableImgContextMenu: true } });
 
 
+    }
+
+    get hideOrderDetails() {
+        if (this.req.user && this.req.user.hasRole('admin')) return false;
+        // const diffTime = Math.abs(Helper.Now() - new Date(this.order.creationDate));
+        // const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24)); 
+        //if (this.shouldBePaid)
+        if (this.order.dispatcherType == 'butcher' || this.order.dispatcherType == 'butcher/auto') return false;
+        return true;
     }
 
     async getOrder() {
@@ -332,7 +341,7 @@ export default class Route extends ViewRouter {
                     orderitem.statusDesc += `\n- ${Helper.formatDate(Helper.Now(), true)} tarihinde ${orderitem.status} -> ${this.req.body.orderItemStatus}\n`
                     await this.api.completeOrderItemStatus(orderitem, this.req.body.orderItemStatus)
                     userMessage = `${orderitem.productName} yeni durum: ${orderitem.status}`
-                    
+
                 }
             }
         } catch (err) {
@@ -357,7 +366,25 @@ export default class Route extends ViewRouter {
 
         await this.getOrderSummary();
 
-        this.sendView("pages/manageorder.ejs", { ...this.api.getView(this.order), ...{ enableImgContextMenu: true } });
+        let pageInfo = {};
+
+        let pageTitle = '', pageDescription = '';
+
+
+        pageTitle = `${this.order.butcherName} ${Helper.formatDate(this.order.creationDate)} tarihli sipariş`;
+        pageDescription = `KasaptanAl.com online siparişi`
+        let pageThumbnail = this.req.helper.imgUrl('butcher-google-photos', this.order.butcher.slug)
+
+
+        pageInfo = {
+            pageTitle: pageTitle,
+            pageDescription: pageDescription,
+            pageThumbnail: pageThumbnail
+        }
+
+
+
+        this.sendView("pages/manageorder.ejs", { ...pageInfo, ...this.api.getView(this.order), ...{ enableImgContextMenu: true } });
     }
 
 

@@ -241,6 +241,16 @@ class Route extends router_1.ViewRouter {
             this.sendView("pages/operator.manageorder.ejs", Object.assign(Object.assign({ _usrmsg: { text: userMessage } }, this.api.getView(this.order)), { enableImgContextMenu: true }));
         });
     }
+    get hideOrderDetails() {
+        if (this.req.user && this.req.user.hasRole('admin'))
+            return false;
+        // const diffTime = Math.abs(Helper.Now() - new Date(this.order.creationDate));
+        // const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24)); 
+        //if (this.shouldBePaid)
+        if (this.order.dispatcherType == 'butcher' || this.order.dispatcherType == 'butcher/auto')
+            return false;
+        return true;
+    }
     getOrder() {
         return __awaiter(this, void 0, void 0, function* () {
             let ordernum = this.req.params.ordernum;
@@ -303,7 +313,17 @@ class Route extends router_1.ViewRouter {
             if (!this.order)
                 return this.next();
             yield this.getOrderSummary();
-            this.sendView("pages/manageorder.ejs", Object.assign(Object.assign({}, this.api.getView(this.order)), { enableImgContextMenu: true }));
+            let pageInfo = {};
+            let pageTitle = '', pageDescription = '';
+            pageTitle = `${this.order.butcherName} ${helper_1.default.formatDate(this.order.creationDate)} tarihli sipariş`;
+            pageDescription = `KasaptanAl.com online siparişi`;
+            let pageThumbnail = this.req.helper.imgUrl('butcher-google-photos', this.order.butcher.slug);
+            pageInfo = {
+                pageTitle: pageTitle,
+                pageDescription: pageDescription,
+                pageThumbnail: pageThumbnail
+            };
+            this.sendView("pages/manageorder.ejs", Object.assign(Object.assign(Object.assign({}, pageInfo), this.api.getView(this.order)), { enableImgContextMenu: true }));
         });
     }
     static SetRoutes(router) {
