@@ -47,6 +47,12 @@ let Order = Order_1 = class Order extends basemodel_1.default {
     get displayAddress() {
         return `${this.address} Bina: ${this.bina}, Kat: ${this.kat}, Daire: ${this.daire}. + ${this.areaLevel3Text}, ${this.areaLevel2Text}/${this.areaLevel1Text}`;
     }
+    get dispatcherData() {
+        return JSON.parse(this.getDataValue('dispatcherjson').toString());
+    }
+    set dispatcherData(value) {
+        this.setDataValue('dispatcherjson', Buffer.from(JSON.stringify(value), "utf-8"));
+    }
     get shopcard() {
         return JSON.parse(this.getDataValue('shopcardjson').toString());
     }
@@ -422,6 +428,18 @@ __decorate([
 ], Order.prototype, "status", void 0);
 __decorate([
     sequelize_typescript_1.Column({
+        allowNull: true
+    }),
+    __metadata("design:type", String)
+], Order.prototype, "deliveryStatus", void 0);
+__decorate([
+    sequelize_typescript_1.Column({
+        allowNull: true
+    }),
+    __metadata("design:type", String)
+], Order.prototype, "deliveryOrderId", void 0);
+__decorate([
+    sequelize_typescript_1.Column({
         allowNull: true,
         type: sequelize_typescript_1.DataType.TEXT
     }),
@@ -533,6 +551,12 @@ __decorate([
     sequelize_typescript_1.Column({
         allowNull: true
     }),
+    __metadata("design:type", Date)
+], Order.prototype, "shipmentstart", void 0);
+__decorate([
+    sequelize_typescript_1.Column({
+        allowNull: true
+    }),
     __metadata("design:type", String)
 ], Order.prototype, "paymentType", void 0);
 __decorate([
@@ -553,6 +577,10 @@ __decorate([
     }),
     __metadata("design:type", Boolean)
 ], Order.prototype, "shipmentInformMe", void 0);
+__decorate([
+    sequelize_typescript_1.Column,
+    __metadata("design:type", Buffer)
+], Order.prototype, "dispatcherjson", void 0);
 Order = Order_1 = __decorate([
     sequelize_typescript_1.Table({
         tableName: "Orders",

@@ -162,6 +162,7 @@ export default class BanabikuryeProvider extends LogisticProvider {
         if (ores.is_successful) {
             let order = ores['order'];
             let res: OfferResponse = {
+                
                 deliveryFee: parseFloat(order['delivery_fee_amount']),
                 discount: parseFloat(order['discount_amount']),
                 points: order['points'].map(p => this.fromBnbPoint(p)),

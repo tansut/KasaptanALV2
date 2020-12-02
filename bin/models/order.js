@@ -1,6 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.OrderSource = exports.OrderPaymentStatus = exports.OrderType = exports.OrderItemStatus = void 0;
+exports.OrderSource = exports.OrderPaymentStatus = exports.OrderType = exports.DeliveryStatusDesc = exports.OrderItemStatus = void 0;
 var OrderItemStatus;
 (function (OrderItemStatus) {
     OrderItemStatus["supplying"] = "tedarik s\u00FCrecinde";
@@ -12,6 +12,21 @@ var OrderItemStatus;
     OrderItemStatus["butcherCannotShip"] = "iptal: teslimat yap\u0131lamad\u0131";
     OrderItemStatus["butcherCannotProvide"] = "iptal: tedarik edilemedi";
 })(OrderItemStatus = exports.OrderItemStatus || (exports.OrderItemStatus = {}));
+exports.DeliveryStatusDesc = {
+    invalid: 'Invalid draft delivery',
+    draft: 'Draft delivery',
+    planned: 'Planlandı',
+    active: 'Yolda',
+    finished: 'Tamamlandı',
+    canceled: 'İptal edildi',
+    delayed: 'Gecikme var',
+    failed: 'Müşteri bulunamadı, başarısız',
+    courier_assigned: 'Süreç başlayacak',
+    courier_departed: 'Kasaba ulaşıldı',
+    parcel_picked_up: 'Paket kasaptan alındı',
+    courier_arrived: 'Müşteri bekleniyor',
+    deleted: 'Silindi'
+};
 var OrderType;
 (function (OrderType) {
     OrderType["generic"] = "generic";

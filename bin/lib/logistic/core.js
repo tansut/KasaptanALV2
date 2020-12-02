@@ -132,6 +132,7 @@ class LogisticProvider {
                     lng: o.butcher.lng,
                     id: o.butcher.id.toString(),
                     orderId: o.ordernum,
+                    start: o.shipmentstart || undefined,
                     note: "Kasaba uğrayıp müşteri paketini alın"
                 },
                 {

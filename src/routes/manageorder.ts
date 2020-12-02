@@ -30,7 +30,7 @@ import { stringify } from 'querystring';
 import { ComissionResult, ComissionHelper } from '../lib/commissionHelper';
 import { PuanResult } from '../models/puan';
 import Review from '../db/models/review';
-import { OrderItemStatus } from '../models/order';
+import { DeliveryStatus, DeliveryStatusDesc, OrderItemStatus } from '../models/order';
 import { LocationType, LocationTypeDesc } from '../models/geo';
 import { LogisticFactory } from '../lib/logistic/core';
 import { off } from 'process';
@@ -41,6 +41,7 @@ var MarkdownIt = require('markdown-it')
 export default class Route extends ViewRouter {
     order: Order;
     api: OrderApi;
+    DeliveryStatusDesc = DeliveryStatusDesc;
     _paymentProvider: CreditcardPaymentProvider
     markdown = new MarkdownIt();
     butcherFee: ComissionResult;
@@ -357,6 +358,36 @@ export default class Route extends ViewRouter {
         });
 
     }
+
+     availableTimes(date: Date = Helper.Now()): Object {       
+        let ShipmentHours = []
+        let oh = Math.round(this.order.shipmenthour - (this.order.shipmenthour%100));
+        for (let i = 9; i < 20; i++) {
+            ShipmentHours.push({
+                hour: i*100,
+                text: i.toString() + ':00',
+                selected: i*100 == oh
+            })
+            ShipmentHours.push({
+                hour: i*100+30,
+                text: i.toString() + ':30',
+                selected: i*100+30 == oh
+            })            
+        }
+         return ShipmentHours;
+    }
+
+     availableDays(date: Date = Helper.Now()): Object {        
+        //let tomorrow = new Date(Helper.Now().getTime() + 24 * 60 * 60 * 1000)  
+        let res = {};
+        let nextDay = Helper.Now()
+        for(let i = 0; i < 3; i++) {            
+            let text = i == 0 ? 'Bugün': Helper.formatDate(nextDay)
+            res[nextDay.toDateString()] = text;
+            nextDay = Helper.NextDay(nextDay);
+        }
+        return res;
+    }  
 
     @Auth.Anonymous()
     async orderViewRoute() {

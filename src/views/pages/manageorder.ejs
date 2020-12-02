@@ -71,7 +71,9 @@
       <div class="px-2">
         <h3 class="h4 border-bottom">Sipariş</h3>
         <ul class="px-4 list-unstyled font-size-sm">
-          <li><span class="text-muted">Durum:&nbsp;</span> <%= order.status %></li>
+          <li><span class="text-muted">Sipariş Durumu:&nbsp;</span> <%= order.status %></li>
+          <li><span class="text-muted">Teslimat Süreci:&nbsp;</span>
+            <%= controller.DeliveryStatusDesc[order.deliveryStatus] %></li>
           <% if (!controller.hideOrderDetails) { %>
           <li><span class="text-muted">Müşteri:&nbsp;</span><%=order.name%></li>
           <% } %>
@@ -137,40 +139,41 @@
               </div>
               <h3 class="h4 border-bottom">Teslimat</h3>
               <ul class="px-4 list-unstyled font-size-sm">
-                <li><span class="text-muted">Dağıtımı Yapacak:&nbsp;</span><%=order.dispatcherName%>/<%= shipment[bi].howToDesc %>
-        </li>
-        <% if (order.noInteraction) { %>
-        <li><span class="text-muted">Temassız Teslimat:</span> <%= order.noInteraction ? 'Evet': 'Hayır'%></li>
-        <% } %>
-        <li><span class="text-muted">Teslimat Kodu:&nbsp;</span><%= shipment[bi].securityCode %></li>
-        <li><span class="text-muted">Teslimat Talebi :&nbsp;</span><span
-            class="font-weight-bolder"><%=__helper.formatDate(order.shipmentdate)%> <span>
-              <%=order.shipmenthourText%>
-            </span></li>
-        <% if (!controller.hideOrderDetails) { %>
-        <li><span class="text-muted">Adres:&nbsp;</span><%=order.address%>/ Bina: <%=order.bina%>,Kat:
-          <%=order.kat%>,Daire: <%=order.daire%></li>
+                <li><span class="text-muted">Dağıtımı
+                    Yapacak:&nbsp;</span><%=order.dispatcherName%>/<%= shipment[bi].howToDesc %>
+                </li>
+                <% if (order.noInteraction) { %>
+                <li><span class="text-muted">Temassız Teslimat:</span> <%= order.noInteraction ? 'Evet': 'Hayır'%></li>
+                <% } %>
+                <li><span class="text-muted">Teslimat Kodu:&nbsp;</span><%= shipment[bi].securityCode %></li>
+                <li><span class="text-muted">Teslimat Talebi :&nbsp;</span><span
+                    class="font-weight-bolder"><%=__helper.formatDate(order.shipmentdate)%> <span>
+                      <%=order.shipmenthourText%>
+                    </span></li>
+                <% if (!controller.hideOrderDetails) { %>
+                <li><span class="text-muted">Adres:&nbsp;</span><%=order.address%>/ Bina: <%=order.bina%>,Kat:
+                  <%=order.kat%>,Daire: <%=order.daire%></li>
 
-        <% if (order.adresTarif) { %>
-        <li><span class="text-muted">Adres Tarifi:&nbsp;</span><%=order.adresTarif%></li>
-        <%}%>
+                <% if (order.adresTarif) { %>
+                <li><span class="text-muted">Adres Tarifi:&nbsp;</span><%=order.adresTarif%></li>
+                <%}%>
                   <% if (order.shipLocation && order.shipLocation.coordinates) { %>
 
-        <li><span class="text-muted">Tahmini Uzaklık:&nbsp;</span><%=(order.dispatcherDistance) %>km</li>
-        <li><span class="text-muted">Noktasal Adres:&nbsp;</span><a target="_blank" class="font-size-sm"
-            href="https://www.google.com/maps/dir/?api=1&origin=<%=order.butcher.location.coordinates[0]%>%20<%=order.butcher.location.coordinates[1]%>&destination=<%=order.shipLocation.coordinates[0]%>%20<%=order.shipLocation.coordinates[1]%>">
-            Müşteri Adresine Gidin
+                <li><span class="text-muted">Tahmini Uzaklık:&nbsp;</span><%=(order.dispatcherDistance) %>km</li>
+                <li><span class="text-muted">Noktasal Adres:&nbsp;</span><a target="_blank" class="font-size-sm"
+                    href="https://www.google.com/maps/dir/?api=1&origin=<%=order.butcher.location.coordinates[0]%>%20<%=order.butcher.location.coordinates[1]%>&destination=<%=order.shipLocation.coordinates[0]%>%20<%=order.shipLocation.coordinates[1]%>">
+                    Müşteri Adresine Gidin
 
-          </a> </li>
+                  </a> </li>
 
-        <%}%>
+                <%}%>
 
                 
                 <% } %>
-        <li><span class="text-muted">Semt:&nbsp;</span><%=order.areaLevel3Text%>/<%=order.areaLevel2Text%></li>
+                <li><span class="text-muted">Semt:&nbsp;</span><%=order.areaLevel3Text%>/<%=order.areaLevel2Text%></li>
 
 
-      </ul>
+              </ul>
 
               <h3 class="h4 border-bottom">
                 Mali Bilgiler
@@ -204,12 +207,17 @@
               <div class="px-4">
                 <div class="border p-2 bg-secondary mb-3">
                   <h5 class="h6">1. Ürünler ve teslimat saati uygun mu?</h5>
-                  <p class="font-size-md">Sipariş verilen <span class="font-weight-bolder"><%=order.items.length%></span> kalem ürün ve <br> <span
-                    class="font-weight-bolder"><%=__helper.formatDate(order.shipmentdate)%>
-                    <%=order.shipmenthourText%></span> teslimat saati uygundur.</p>
+                  <p class="font-size-md">Sipariş verilen <span
+                      class="font-weight-bolder"><%=order.items.length%></span> kalem ürün ve <br> <span
+                      class="font-weight-bolder"><%=__helper.formatDate(order.shipmentdate)%>
+                      <%=order.shipmenthourText%></span> teslimat ?</p>
                   <div class="">
-                  
-                    <button class="btn btn-success" id="approveOrder">Herşey uygun, siparişi Onaylıyorum</button>
+
+                    <button class="btn btn-success" id="approveOrder">Evet uygun, siparişi onaylıyorum</button>
+                    <% if (order.dispatcherType == 'banabikurye') { %>
+                    <button class="btn btn-info" data-toggle="modal" data-target="#kurye-modal" id="kuryeBtn">Kurye
+                      Çağır</button>
+                    <% } %>
                   </div>
                 </div>
 
@@ -220,32 +228,86 @@
                   </p>
                   <button class="btn btn-info" id="getSupport">Whatsapp destek alacağım</button>
 
-                  </div>
                 </div>
-
-
-
               </div>
 
 
+
             </div>
-
-
-
 
 
           </div>
 
 
 
-          <%}%>  
+
+
+      </div>
+
+
+
+      <%}%>  
 
 
 
 
 
+      <% if (order.dispatcherType == 'banabikurye') { %>}
+          <div class="modal fade" id="kurye-modal" tabindex="-1" role="dialog">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                      <h5 class="modal-title">Kurye Planı</h5>
+                        <button class="close" type="button" data-dismiss="modal" aria-label="Close"><span
+                                aria-hidden="true">&times;</span></button>
+                    </div>
+                    <div class="modal-body  pt-3">
+            <h6 class="h6 border-bottom">Müşteri Talebi</h6>
+            <p>
+              <%=__helper.formatDate(order.shipmentdate)%> <span>
+        <%=order.shipmenthourText%>
+        </p>
+
+        <h6 class="h6 border-bottom">Kurye kasabınıza ne zaman gelsin?</h6>
+        <div class="row">
+          <div class="form-group col-md">
+            <label for="kuryeDay">Gün</label> 
+            <select class="form-control custom-select" id="kuryeDay" name="kuryeDay">
+              <% let days = controller.availableDays()%>
+              <% Object.keys(days).forEach(key=> { %>
+                
+                      <option <%= key == order.shipmentdate.toDateString() ? 'selected':'' %> value="<%=key%>"><%= days[key]%></option>
+                
+              <%})%>
+          </select>   
+        </div>
+          <div class="form-group col-md">
+            <label for="kuryeTime">Saat</label> 
+            <select class="form-control custom-select" id="kuryeTime" name="kuryeTime">  
+              <% let hours = controller.availableTimes()%>
+              <% hours.forEach(h=> { %>
+               
+                  <option <%= h.selected?  'selected':'' %> value="<%=h.hour%>"><%= h.text%></option>        
+                  
+              <%})%>
+          </select>
+          </div>
+        </div>
 
 
+        
+
+      <button class="btn btn-info" id="kuryeCagir">Kurye Çağır</button>
+
+      </span>
+
+
+
+    </div>
+  </div>
+  </div>
+  </div>
+  <% } %>
 
 
 
@@ -253,30 +315,62 @@
 
   </div>
 
-    <% include ./_partial/footer %>
-    <% include ./_partial/scripts %>
+  <% include ./_partial/footer %>
+  <% include ./_partial/scripts %>
 
-          <script>
-            $(document).ready(function () {
-              $('#approveOrder').click(function () {
-                if (window.confirm('Onay sonrasında direkt müşteriye teslimat yapabilirsiniz. Siparişi onaylıyor musunuz?')) {
-                  $('#approveOrder').attr('disabled');
-                  App.Backend.post('order/<%=order.ordernum%>/approve', {
-                    
-                  }).finally(function() {
-                    $('#approveOrder').removeAttr('disabled');
-                  }).then(function() {
-                    alert('Siparişin teslimatını yapabilirsiniz. Kolay gelsin!')
-                  })
-                }
+  <script>
+
+    function kuryeCagir() {
+      var day = $('#kuryeDay').val();
+      var hour = $('#kuryeTime').val();
+      $('#kuryeCagir').attr('disabled');
+      App.Backend.post('order/<%=order.ordernum%>/kuryeCagir', {
+        day: day,
+        hour: hour
+      }).finally(function () {
+        $('#kuryeCagir').removeAttr('disabled');
+      }).then(function () {
+        alert('Kurye başarıyla çağrıldı. Kolay gelsin!')
+      }).catch(function (err) {
+        App.HandleError(err)
+      })
+    }
+    $(document).ready(function () {
+      <% if (order.status != 'teslim edilecek') { %>
+        $('#kuryeBtn').hide();
+      <% } %>
+      
+      $("#kuryeCagir").click(function () {
+        if (window.confirm('Kuryeyi onaylıyor musunuz?')) {
+          kuryeCagir();
+        }
+      });
+      $('#approveOrder').click(function () {
+        if (window.confirm('Onay sonrasında direkt müşteriye teslimat yapabilirsiniz. Siparişi onaylıyor musunuz?')) {
+          $('#approveOrder').attr('disabled');
+          App.Backend.post('order/<%=order.ordernum%>/approve', {
+
+          }).finally(function () {
+            $('#approveOrder').removeAttr('disabled');
+          }).then(function () {
+                    <% if (order.dispatcherType == 'banabikurye') { %>
+                      $('#kuryeBtn').show();
+                      $('#kurye-modal').modal('show')
+                    <% } else { %>
+              alert('Siparişin teslimatını yapabilirsiniz. Kolay gelsin!');
+                    <% } %>
+                  }).catch(function (err) {
+                App.HandleError(err)
               })
+        }
+      })
 
-              $('#getSupport').click(function () {
-                alert('Whatsapp ekranını açarak lütfen bize sorunu iletin, müşteri ile görüşüp çözmeye çalışacağız')
-              })
+      $('#getSupport').click(function () {
+        alert('Whatsapp ekranını açarak lütfen bize sorunu iletin, müşteri ile görüşüp çözmeye çalışacağız')
+      })
 
-            })
-          </script>
+    })
+  </script>
 
 </body>
 

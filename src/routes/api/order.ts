@@ -24,6 +24,8 @@ import config from '../../config';
 import { PuanCalculator } from '../../lib/commissionHelper';
 import { PuanResult, Puan } from '../../models/puan';
 import { Op } from 'sequelize';
+import { LogisticFactory } from '../../lib/logistic/core';
+import { throws } from 'assert';
 
 
 const orderid = require('order-id')('dkfjsdklfjsdlkg450435034.,')
@@ -62,14 +64,14 @@ export default class Route extends ApiRouter {
 
         let list = [
             Account.generateCode("kasaplardan-kesilen-komisyonlar", [100, o.butcherid, o.ordernum]),
-            Account.generateCode("kasaplardan-kesilen-komisyonlar", [200, o.butcherid, o.ordernum])            
+            Account.generateCode("kasaplardan-kesilen-komisyonlar", [200, o.butcherid, o.ordernum])
         ]
-        
+
         let accounts = await AccountModel.list(list);
         o.butcherComissiomAccounts = accounts;
         return accounts;
 
-    }    
+    }
 
     async getKalittePuanAccounts(o: Order) {
         let list = [
@@ -128,7 +130,7 @@ export default class Route extends ApiRouter {
     }
 
     calculateTeslimatOfKasaptanAl(o: Order) {
-        let codeKasaptanAl = Account.generateCode("odeme-bekleyen-satislar", [o.userId, o.ordernum, 201]);        
+        let codeKasaptanAl = Account.generateCode("odeme-bekleyen-satislar", [o.userId, o.ordernum, 201]);
         let total = 0.00;
         o.workedAccounts.forEach(a => {
             if (a.code == codeKasaptanAl) total += a.alacak;
@@ -213,7 +215,7 @@ export default class Route extends ApiRouter {
                     model: Product,
                     all: true
                 }]
-            },{
+            }, {
                 model: Dispatcher,
                 all: true
             }]
@@ -483,7 +485,7 @@ export default class Route extends ApiRouter {
     }
 
     async completeManualPaymentDept(o: Order) {
-       
+
         let res = db.getContext().transaction((t: Transaction) => {
             return this.createManualPaymentDept(o, t)
         })
@@ -524,7 +526,7 @@ export default class Route extends ApiRouter {
 
     getPossiblePuanGain(o: Order, total: number, includeAvailable: boolean = false): PuanResult[] {
 
-        
+
         let calculator = new PuanCalculator();
         let result: PuanResult[] = [];
 
@@ -568,7 +570,7 @@ export default class Route extends ApiRouter {
                             }
                         )
                     } else {
-                        let toKalitteRatio = o.orderType == OrderType.kurban ? 1: 0.0;
+                        let toKalitteRatio = o.orderType == OrderType.kurban ? 1 : 0.0;
                         let toKalitte = Helper.asCurrency(earnedPuanb * toKalitteRatio);
                         let toButcher = Helper.asCurrency(earnedPuanb - toKalitte);
                         if (toButcher > 0.00) {
@@ -625,10 +627,10 @@ export default class Route extends ApiRouter {
 
         return result
     }
-    
+
 
     getComissionAccounts(o: Order, total: number, kasaptanAlShip: number): AccountingOperation {
-        let result: AccountingOperation = new AccountingOperation(`${o.ordernum} nolu ${o.butcherName} kasap komisyon hesabı`);        
+        let result: AccountingOperation = new AccountingOperation(`${o.ordernum} nolu ${o.butcherName} kasap komisyon hesabı`);
 
         let butcherFee = o.getButcherComission(total);
         let puanTotal = o.getPuanTotal(total);
@@ -736,7 +738,7 @@ export default class Route extends ApiRouter {
     //     promises = promises.concat(this.saveAccountingOperations(ops, t));
     //     return Promise.all(promises)
     // }
-    
+
 
     // async completeLoadPuan(o: Order, total: number) {
     //     let res = db.getContext().transaction((t: Transaction) => {
@@ -752,7 +754,7 @@ export default class Route extends ApiRouter {
     // }
 
 
-   
+
 
 
     async updateButcherDebtAfterPayment(o: Order, paymentRequest: PaymentRequest, paymentInfo: PaymentResult, t?: Transaction) {
@@ -792,7 +794,7 @@ export default class Route extends ApiRouter {
         let puanAccounts = this.getPuanAccounts(o, productPrice);
         this.fillPuanAccounts(o, productPrice);
         let comissionAccounts = this.getComissionAccounts(o, butcherShip + productPrice, kasaptanAlShip);
-  
+
 
         ops.push(puanAccounts);
         ops.push(comissionAccounts);
@@ -824,7 +826,7 @@ export default class Route extends ApiRouter {
                 op.accounts.push(new Account("odeme-bekleyen-satislar", [o.userId, o.ordernum, 500]).dec(paymentInfo.paidPrice))
                 op.accounts.push(new Account("satis-alacaklari", [o.userId, o.ordernum]).dec(paymentInfo.paidPrice))
                 ops.push(op);
-                
+
                 let butcherShip = this.calculateTeslimatOfButcher(o)
                 let kasaptanAlShip = this.calculateTeslimatOfKasaptanAl(o);
                 let productPrice = this.calculateProduct(o);
@@ -941,7 +943,7 @@ export default class Route extends ApiRouter {
             order.ordergroupnum = groupid;
             order.butcherid = parseInt(bi);
             order.butcher = await Butcher.findByPk(order.butcherid);
-            order.butcherSelection = butchers[bi].userSelected ? "user": "default";
+            order.butcherSelection = butchers[bi].userSelected ? "user" : "default";
             order.butcherName = butchers[bi].name;
             order.securityCode = `${butchers[bi].name[0]}-${Helper.getRandomInt(999) + 1000}`;
             order.userId = this.req.user ? this.req.user.id : 0;
@@ -1002,7 +1004,7 @@ export default class Route extends ApiRouter {
             let api = new OrderApi(this.constructorParams);
             let dbOrder = await api.getOrder(order.ordernum);
             let view = this.getView(dbOrder);
-            
+
 
             if (config.nodeenv == 'production') {
                 await email.send(dbOrder.email, "siparişinizi aldık", "order.started.ejs", view);
@@ -1010,7 +1012,7 @@ export default class Route extends ApiRouter {
                 if (order.paymentType != "onlinepayment") {
                     let notifyMobilePhones = (order.butcher.notifyMobilePhones || "").split(',');
                     notifyMobilePhones.push('5531431988');
-                    notifyMobilePhones.push('5326274151');                
+                    notifyMobilePhones.push('5326274151');
                     for (var p = 0; p < notifyMobilePhones.length; p++) {
                         if (notifyMobilePhones[p].trim()) {
                             let payUrl = `${this.url}/manageorder/${order.ordernum}`;
@@ -1051,13 +1053,56 @@ export default class Route extends ApiRouter {
         order.status = OrderItemStatus.shipping;
         order.statusDesc ? null : (order.statusDesc = '')
         order.statusDesc += `\n- ${Helper.formatDate(Helper.Now(), true)} tarihinde ${order.status} -> ${newStatus}`
-        await order.save();   
-        this.res.send(200)  ;
+        await order.save();
+        this.res.send(200);
+    }
+
+    @Auth.Anonymous()
+    async kuryeCagirRoute() {
+        let ordernum = this.req.params.ordernum;
+        let order = await this.getOrder(ordernum, true);
+        if (!order)
+            return this.res.send(404);
+
+
+        let provider = LogisticFactory.getInstance(order.butcher.logisticProvider, {
+            dispatcher: await Dispatcher.findByPk(order.dispatcherid, {
+                include: [{
+                    model: Butcher,
+                    as: 'butcher',
+                }]
+            })
+        });
+
+        let hour = Number.parseInt(this.req.body.hour);
+
+        provider.safeRequests = false;
+        let day = new Date(this.req.body.day);
+        let shour = Math.round(hour / 100);
+        let fHour = hour % 100;
+        
+        order.shipmentstart = new Date(day.getFullYear(), day.getMonth(), day.getDate(), shour, fHour, 0);
+        let request = provider.orderFromOrder(order);
+        
+        try {
+            let offer = await provider.createOrder(request);
+            order.deliveryStatus = 'planned';
+            order.deliveryOrderId = offer.orderId;
+        } catch (err) {
+            throw err;
+        }
+
+
+        order.statusDesc ? null : (order.statusDesc = '')
+        order.statusDesc += `\n- ${Helper.formatDate(Helper.Now(), true)} tarihinde kurye çağrıldı`
+        await order.save();
+        this.res.send(200);
     }
 
 
     static SetRoutes(router: express.Router) {
         router.post('/order/:ordernum/approve', Route.BindRequest(Route.prototype.approveRoute))
+        router.post('/order/:ordernum/kuryeCagir', Route.BindRequest(Route.prototype.kuryeCagirRoute))
 
         //router.get("/admin/order/:ordernum", Route.BindRequest(this.prototype.getOrderRoute));
     }

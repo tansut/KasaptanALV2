@@ -40,6 +40,7 @@ var MarkdownIt = require('markdown-it');
 class Route extends router_1.ViewRouter {
     constructor() {
         super(...arguments);
+        this.DeliveryStatusDesc = order_2.DeliveryStatusDesc;
         this.markdown = new MarkdownIt();
         this.LocationTypeDesc = geo_1.LocationTypeDesc;
         this.shouldBePaid = 0.00;
@@ -306,6 +307,34 @@ class Route extends router_1.ViewRouter {
             yield this.getOrderSummary();
             this.sendView("pages/operator.manageorder.ejs", Object.assign(Object.assign({ _usrmsg: { text: userMessage } }, this.api.getView(this.order)), { enableImgContextMenu: true }));
         });
+    }
+    availableTimes(date = helper_1.default.Now()) {
+        let ShipmentHours = [];
+        let oh = Math.round(this.order.shipmenthour - (this.order.shipmenthour % 100));
+        for (let i = 9; i < 20; i++) {
+            ShipmentHours.push({
+                hour: i * 100,
+                text: i.toString() + ':00',
+                selected: i * 100 == oh
+            });
+            ShipmentHours.push({
+                hour: i * 100 + 30,
+                text: i.toString() + ':30',
+                selected: i * 100 + 30 == oh
+            });
+        }
+        return ShipmentHours;
+    }
+    availableDays(date = helper_1.default.Now()) {
+        //let tomorrow = new Date(Helper.Now().getTime() + 24 * 60 * 60 * 1000)  
+        let res = {};
+        let nextDay = helper_1.default.Now();
+        for (let i = 0; i < 3; i++) {
+            let text = i == 0 ? 'Bugün' : helper_1.default.formatDate(nextDay);
+            res[nextDay.toDateString()] = text;
+            nextDay = helper_1.default.NextDay(nextDay);
+        }
+        return res;
     }
     orderViewRoute() {
         return __awaiter(this, void 0, void 0, function* () {

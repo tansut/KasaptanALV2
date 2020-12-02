@@ -39,6 +39,7 @@ const order_3 = require("../../models/order");
 const config_1 = require("../../config");
 const commissionHelper_1 = require("../../lib/commissionHelper");
 const sequelize_1 = require("sequelize");
+const core_1 = require("../../lib/logistic/core");
 const orderid = require('order-id')('dkfjsdklfjsdlkg450435034.,');
 class Route extends router_1.ApiRouter {
     getButcherPuanAccounts(o) {
@@ -961,8 +962,44 @@ class Route extends router_1.ApiRouter {
             this.res.send(200);
         });
     }
+    kuryeCagirRoute() {
+        return __awaiter(this, void 0, void 0, function* () {
+            let ordernum = this.req.params.ordernum;
+            let order = yield this.getOrder(ordernum, true);
+            if (!order)
+                return this.res.send(404);
+            let provider = core_1.LogisticFactory.getInstance(order.butcher.logisticProvider, {
+                dispatcher: yield dispatcher_1.default.findByPk(order.dispatcherid, {
+                    include: [{
+                            model: butcher_1.default,
+                            as: 'butcher',
+                        }]
+                })
+            });
+            let hour = Number.parseInt(this.req.body.hour);
+            provider.safeRequests = false;
+            let day = new Date(this.req.body.day);
+            let shour = Math.round(hour / 100);
+            let fHour = hour % 100;
+            order.shipmentstart = new Date(day.getFullYear(), day.getMonth(), day.getDate(), shour, fHour, 0);
+            let request = provider.orderFromOrder(order);
+            try {
+                let offer = yield provider.createOrder(request);
+                order.deliveryStatus = 'planned';
+                order.deliveryOrderId = offer.orderId;
+            }
+            catch (err) {
+                throw err;
+            }
+            order.statusDesc ? null : (order.statusDesc = '');
+            order.statusDesc += `\n- ${helper_1.default.formatDate(helper_1.default.Now(), true)} tarihinde kurye çağrıldı`;
+            yield order.save();
+            this.res.send(200);
+        });
+    }
     static SetRoutes(router) {
         router.post('/order/:ordernum/approve', Route.BindRequest(Route.prototype.approveRoute));
+        router.post('/order/:ordernum/kuryeCagir', Route.BindRequest(Route.prototype.kuryeCagirRoute));
         //router.get("/admin/order/:ordernum", Route.BindRequest(this.prototype.getOrderRoute));
     }
 }
@@ -972,4 +1009,10 @@ __decorate([
     __metadata("design:paramtypes", []),
     __metadata("design:returntype", Promise)
 ], Route.prototype, "approveRoute", null);
+__decorate([
+    common_1.Auth.Anonymous(),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", []),
+    __metadata("design:returntype", Promise)
+], Route.prototype, "kuryeCagirRoute", null);
 exports.default = Route;

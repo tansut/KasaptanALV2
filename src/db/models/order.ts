@@ -4,7 +4,7 @@ import Helper from '../../lib/helper';
 import { ShopCard, ShopcardItem, firstOrderDiscount } from '../../models/shopcard';
 import Product from './product';
 import Butcher from './butcher';
-import { OrderItemStatus, OrderSource, OrderType } from '../../models/order';
+import { DeliveryStatus, OrderItemStatus, OrderSource, OrderType } from '../../models/order';
 import Dispatcher, { DispatcherType } from './dispatcher';
 import { GeoLocation, LocationSource, LocationType } from '../../models/geo';
 import AccountModel from './accountmodel';
@@ -271,6 +271,16 @@ class Order extends BaseModel<Order> {
     status: string;    
 
     @Column({
+        allowNull: true    
+    })    
+    deliveryStatus: DeliveryStatus;      
+
+    @Column({
+        allowNull: true    
+    })    
+    deliveryOrderId: string;     
+
+    @Column({
         allowNull: true    ,
         type: DataType.TEXT
     })    
@@ -365,6 +375,13 @@ class Order extends BaseModel<Order> {
     @Column({
         allowNull: true
     })
+    shipmentstart: Date;    
+
+   
+
+    @Column({
+        allowNull: true
+    })
     paymentType: string;
 
     @Column({
@@ -381,6 +398,18 @@ class Order extends BaseModel<Order> {
         allowNull: true
     })
     shipmentInformMe: boolean;    
+
+    @Column
+    dispatcherjson: Buffer
+
+    get dispatcherData(): Object {
+        return JSON.parse((<Buffer>this.getDataValue('dispatcherjson')).toString())
+    }
+
+    set dispatcherData(value: Object) {
+        this.setDataValue('dispatcherjson', Buffer.from(JSON.stringify(value), "utf-8"));
+    }
+
 
 
 
