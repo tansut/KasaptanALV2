@@ -245,9 +245,6 @@ class Route extends router_1.ViewRouter {
     get hideOrderDetails() {
         if (this.req.user && this.req.user.hasRole('admin'))
             return false;
-        // const diffTime = Math.abs(Helper.Now() - new Date(this.order.creationDate));
-        // const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24)); 
-        //if (this.shouldBePaid)
         if (this.order.dispatcherType == 'butcher' || this.order.dispatcherType == 'butcher/auto')
             return false;
         return true;
@@ -311,22 +308,25 @@ class Route extends router_1.ViewRouter {
     availableTimes(date = helper_1.default.Now()) {
         let ShipmentHours = [];
         let oh = Math.round(this.order.shipmenthour - (this.order.shipmenthour % 100));
+        let od = this.order.shipmentdate.setHours(oh);
         for (let i = 9; i < 20; i++) {
+            let selected = true;
+            if (helper_1.default.isToday(this.order.shipmentdate) && helper_1.default.Now().getHours() > i)
+                selected = false;
             ShipmentHours.push({
                 hour: i * 100,
                 text: i.toString() + ':00',
-                selected: i * 100 == oh
+                selected: selected && (i * 100 == oh)
             });
             ShipmentHours.push({
                 hour: i * 100 + 30,
                 text: i.toString() + ':30',
-                selected: i * 100 + 30 == oh
+                selected: selected && (i * 100 + 30 == oh)
             });
         }
         return ShipmentHours;
     }
     availableDays(date = helper_1.default.Now()) {
-        //let tomorrow = new Date(Helper.Now().getTime() + 24 * 60 * 60 * 1000)  
         let res = {};
         let nextDay = helper_1.default.Now();
         for (let i = 0; i < 3; i++) {

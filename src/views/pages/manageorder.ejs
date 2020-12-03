@@ -252,125 +252,126 @@
 
 
 
-      <% if (order.dispatcherType == 'banabikurye') { %>}
-          <div class="modal fade" id="kurye-modal" tabindex="-1" role="dialog">
-            <div class="modal-dialog" role="document">
-                <div class="modal-content">
-                    <div class="modal-header">
-                      <h5 class="modal-title">Kurye Planı</h5>
-                        <button class="close" type="button" data-dismiss="modal" aria-label="Close"><span
-                                aria-hidden="true">&times;</span></button>
-                    </div>
-                    <div class="modal-body  pt-3">
-            <h6 class="h6 border-bottom">Müşteri Talebi</h6>
-            <p>
-              <%=__helper.formatDate(order.shipmentdate)%> <span>
-        <%=order.shipmenthourText%>
-        </p>
+      <% if (order.dispatcherType == 'banabikurye') { %>
+      <div class="modal fade" id="kurye-modal" tabindex="-1" role="dialog">
+        <div class="modal-dialog" role="document">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h5 class="modal-title">Kurye Planı</h5>
+              <button class="close" type="button" data-dismiss="modal" aria-label="Close"><span
+                  aria-hidden="true">&times;</span></button>
+            </div>
+            <div class="modal-body  pt-3">
+              <h6 class="h6 border-bottom">Müşteri Talebi</h6>
+              <p>
+                <%=__helper.formatDate(order.shipmentdate)%> <span>
+                  <%=order.shipmenthourText%>
+              </p>
 
-        <h6 class="h6 border-bottom">Kurye kasabınıza ne zaman gelsin?</h6>
-        <div class="row">
-          <div class="form-group col-md">
-            <label for="kuryeDay">Gün</label> 
-            <select class="form-control custom-select" id="kuryeDay" name="kuryeDay">
-              <% let days = controller.availableDays()%>
-              <% Object.keys(days).forEach(key=> { %>
-                
-                      <option <%= key == order.shipmentdate.toDateString() ? 'selected':'' %> value="<%=key%>"><%= days[key]%></option>
-                
-              <%})%>
-          </select>   
-        </div>
-          <div class="form-group col-md">
-            <label for="kuryeTime">Saat</label> 
-            <select class="form-control custom-select" id="kuryeTime" name="kuryeTime">  
-              <% let hours = controller.availableTimes()%>
-              <% hours.forEach(h=> { %>
-               
-                  <option <%= h.selected?  'selected':'' %> value="<%=h.hour%>"><%= h.text%></option>        
-                  
-              <%})%>
-          </select>
+              <h6 class="h6 border-bottom">Kurye kasabınıza ne zaman gelsin?</h6>
+              <div class="row">
+                <div class="form-group col-md">
+                  <label for="kuryeDay">Gün</label>
+                  <select class="form-control custom-select" id="kuryeDay" name="kuryeDay">
+                    <% let days = controller.availableDays()%>
+                    <% Object.keys(days).forEach(key=> { %>
+
+                    <option <%= key == order.shipmentdate.toDateString() ? 'selected':'' %> value="<%=key%>">
+                      <%= days[key]%></option>
+
+                    <%})%>
+                  </select>
+                </div>
+                <div class="form-group col-md">
+                  <label for="kuryeTime">Saat</label>
+                  <select class="form-control custom-select" id="kuryeTime" name="kuryeTime">
+                    <% let hours = controller.availableTimes()%>
+                    <% hours.forEach(h=> { %>
+
+                    <option <%= h.selected?  'selected':'' %> value="<%=h.hour%>"><%= h.text%></option>
+
+                    <%})%>
+                  </select>
+                </div>
+              </div>
+
+
+
+
+              <button class="btn btn-info" id="kuryeCagir">Kurye Çağır</button>
+
+              </span>
+
+
+
+            </div>
           </div>
         </div>
-
-
-        
-
-      <button class="btn btn-info" id="kuryeCagir">Kurye Çağır</button>
-
-      </span>
-
-
-
-    </div>
-  </div>
-  </div>
-  </div>
-  <% } %>
-
-
-
-
-
-  </div>
-
-  <% include ./_partial/footer %>
-  <% include ./_partial/scripts %>
-
-  <script>
-
-    function kuryeCagir() {
-      var day = $('#kuryeDay').val();
-      var hour = $('#kuryeTime').val();
-      $('#kuryeCagir').attr('disabled');
-      App.Backend.post('order/<%=order.ordernum%>/kuryeCagir', {
-        day: day,
-        hour: hour
-      }).finally(function () {
-        $('#kuryeCagir').removeAttr('disabled');
-      }).then(function () {
-        alert('Kurye başarıyla çağrıldı. Kolay gelsin!')
-      }).catch(function (err) {
-        App.HandleError(err)
-      })
-    }
-    $(document).ready(function () {
-      <% if (order.status != 'teslim edilecek') { %>
-        $('#kuryeBtn').hide();
+      </div>
       <% } %>
-      
-      $("#kuryeCagir").click(function () {
-        if (window.confirm('Kuryeyi onaylıyor musunuz?')) {
-          kuryeCagir();
-        }
-      });
-      $('#approveOrder').click(function () {
-        if (window.confirm('Onay sonrasında direkt müşteriye teslimat yapabilirsiniz. Siparişi onaylıyor musunuz?')) {
-          $('#approveOrder').attr('disabled');
-          App.Backend.post('order/<%=order.ordernum%>/approve', {
 
+
+
+
+
+
+
+      <% include ./_partial/footer %>
+      <% include ./_partial/scripts %>
+
+      <script>
+
+        function kuryeCagir() {
+          var day = $('#kuryeDay').val();
+          var hour = $('#kuryeTime').val();
+          $('#kuryeCagir').attr('disabled');
+          App.Backend.post('order/<%=order.ordernum%>/kuryeCagir', {
+            day: day,
+            hour: hour
           }).finally(function () {
-            $('#approveOrder').removeAttr('disabled');
+            $('#kuryeCagir').removeAttr('disabled');
           }).then(function () {
+            alert('Kurye başarıyla çağrıldı. Kolay gelsin!')
+          }).catch(function (err) {
+            App.HandleError(err)
+          })
+        }
+        $(document).ready(function () {
+      <% if (order.status != 'teslim edilecek') { %>
+            $('#kuryeBtn').hide();
+      <% } %>
+
+            $("#kuryeCagir").click(function () {
+              if (window.confirm('Kuryeyi onaylıyor musunuz?')) {
+                kuryeCagir();
+              }
+            });
+          $('#approveOrder').click(function () {
+            if (window.confirm('Onay sonrasında direkt müşteriye teslimat yapabilirsiniz. Siparişi onaylıyor musunuz?')) {
+              $('#approveOrder').attr('disabled');
+              App.Backend.post('order/<%=order.ordernum%>/approve', {
+
+              }).finally(function () {
+                $('#approveOrder').removeAttr('disabled');
+              }).then(function () {
                     <% if (order.dispatcherType == 'banabikurye') { %>
-                      $('#kuryeBtn').show();
-                      $('#kurye-modal').modal('show')
+                  $('#kuryeBtn').show();
+                  $('#kurye-modal').modal('show')
                     <% } else { %>
-              alert('Siparişin teslimatını yapabilirsiniz. Kolay gelsin!');
+                      alert('Siparişin teslimatını yapabilirsiniz. Kolay gelsin!');
                     <% } %>
                   }).catch(function (err) {
-                App.HandleError(err)
-              })
-        }
-      })
+                        App.HandleError(err)
+                      })
+            }
+          })
 
-      $('#getSupport').click(function () {
-        alert('Whatsapp ekranını açarak lütfen bize sorunu iletin, müşteri ile görüşüp çözmeye çalışacağız')
-      })
+          $('#getSupport').click(function () {
+            alert('Whatsapp ekranını açarak lütfen bize sorunu iletin, müşteri ile görüşüp çözmeye çalışacağız')
+          })
 
-    })
-  </script>
+        })
+      </script>
 
 </body>
 

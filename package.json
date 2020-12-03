@@ -13,10 +13,10 @@
     "node": "12.18.1"
   },
   "scripts": {
-    "start": "node --icu-data-dir=./node_modules/full-icu ./bin/kasaptanal",
+    "start": "export TZ='Europe/Istanbul';node --icu-data-dir=./node_modules/full-icu ./bin/kasaptanal",
     "deploy-production": "./node_modules/shipit-cli/bin/shipit production deploy",
     "postinstall": "node_modules/.bin/gulp deploy",
-    "debug": "source ./.vscode/debug.sh;  nodemon  --inspect --icu-data-dir=./node_modules/full-icu ./bin/kasaptanal",
+    "debug": "export TZ='Europe/Istanbul'; source ./.vscode/debug.sh;  nodemon  --inspect --icu-data-dir=./node_modules/full-icu ./bin/kasaptanal",
     "prod": "source ./.vscode/prod-aws.sh;  nodemon --inspect ./bin/kasaptanal",
     "prodaws": "source ./.vscode/prod-aws.sh;  nodemon --inspect ./bin/kasaptanal",
     "build:live-api": "nodemon --exec ./node_modules/.bin/ts-node -- ./src/app.ts /start api"

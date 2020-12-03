@@ -978,10 +978,10 @@ class Route extends router_1.ApiRouter {
             });
             let hour = Number.parseInt(this.req.body.hour);
             provider.safeRequests = false;
-            let day = new Date(this.req.body.day);
+            let day = helper_1.default.newDate(this.req.body.day);
             let shour = Math.round(hour / 100);
             let fHour = hour % 100;
-            order.shipmentstart = new Date(day.getFullYear(), day.getMonth(), day.getDate(), shour, fHour, 0);
+            order.shipmentstart = helper_1.default.newDate2(day.getFullYear(), day.getMonth(), day.getDate(), shour, fHour, 0);
             let request = provider.orderFromOrder(order);
             try {
                 let offer = yield provider.createOrder(request);

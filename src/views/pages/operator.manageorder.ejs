@@ -159,6 +159,7 @@
         <h5>Teslimat talebi: *<%=__helper.formatDate(order.shipmentdate)%>
           <%=order.shipmenthourText%>*</h5>
           <h5>Sipariş tutarı: <%- include('./_partial/currency.ejs', {value: order.total}) %></h5>
+          <h5>Dağıtımı Yapacak: <%= order.dispatcherName %></h5>
 
         <br>
 

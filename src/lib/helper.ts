@@ -6,6 +6,7 @@ import { AppRequest } from './http';
 import config from '../config';
 import { GeoLocation } from '../models/geo';
 import { ProductType } from '../db/models/product';
+import { min } from 'lodash';
 
 export default class Helper {
 
@@ -83,9 +84,23 @@ export default class Helper {
 
     static Now() {
         let now = new Date();
-        let res = moment(now).add('minutes', now.getTimezoneOffset()).add('hour', 3);
+        let res = moment(now).add(now.getTimezoneOffset(), 'minutes').add(3, 'hour');
         return res.toDate();
     }
+
+    static newDate(value: string | number) {
+        let d = new Date(value);
+        let res = moment(d).add(d.getTimezoneOffset(), 'minutes').add(3, 'hour');
+        return res.toDate();        
+    }
+
+    static newDate2(year: number, month: number, date?: number, hours?: number, minutes?: number, seconds?: number, ms?: number) {
+        let d = new Date(year, month, date, hours|| 0, minutes || 0, seconds || 0, ms ||0);
+        let res = moment(d).add(d.getTimezoneOffset(), 'minutes').add(3, 'hour');
+        return res.toDate();        
+    }
+
+
 
     static shuffle(array) {
         var currentIndex = array.length, temporaryValue, randomIndex;

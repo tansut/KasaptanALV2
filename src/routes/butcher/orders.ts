@@ -47,7 +47,7 @@ export default class Route extends ButcherRouter {
     async viewRoute() {
         await this.setButcher();
 
-        let sdate = new Date(2000,1,1);
+        let sdate = Helper.newDate2(2000,1,1);
         let fdate = moment().endOf("month").toDate();
 
         let q = this.req.query.q || '7days';

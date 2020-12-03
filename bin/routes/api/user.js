@@ -290,9 +290,6 @@ class UserRoute extends router_1.ApiRouter {
         });
     }
     signOff() {
-        // this.res.cookie("auth", "", {
-        //     expires: new Date(0)
-        // })
         this.req.session.shopcard = this.req.user.shopcard;
         this.req.logout();
     }

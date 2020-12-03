@@ -68,7 +68,6 @@ class Shipment {
             return exports.ShipmentHours;
     }
     static availableDays(date = helper_1.default.Now()) {
-        //let tomorrow = new Date(Helper.Now().getTime() + 24 * 60 * 60 * 1000)  
         let res = {};
         let nextDay = helper_1.default.Now();
         for (let i = 0; i < 14; i++) {

@@ -11,6 +11,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 Object.defineProperty(exports, "__esModule", { value: true });
 const moment = require("moment");
 const home_1 = require("./home");
+const helper_1 = require("../../lib/helper");
 const order_1 = require("../../db/models/order");
 const sequelize_1 = require("sequelize");
 class Route extends home_1.ButcherRouter {
@@ -37,7 +38,7 @@ class Route extends home_1.ButcherRouter {
     viewRoute() {
         return __awaiter(this, void 0, void 0, function* () {
             yield this.setButcher();
-            let sdate = new Date(2000, 1, 1);
+            let sdate = helper_1.default.newDate2(2000, 1, 1);
             let fdate = moment().endOf("month").toDate();
             let q = this.req.query.q || '7days';
             if (q == '7days') {

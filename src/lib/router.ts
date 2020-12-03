@@ -126,15 +126,6 @@ export default class BaseRouter {
         return new Promise((resolve, reject) => {
             let fpath = fromRoot ? path.resolve(path.join(config.projectDir, file)) : file;
 
-            //var stats = fs.statSync(fpath);
-            //var mtime = stats.mtime;
-
-            //this.res.append("Last-Modified", mtime.toUTCString())
-            //this.res.append("Cache-Control", "public")
-            //this.res.append("Expires", moment.utc().toString())
-
-            // this.res.append('Last-Modified', (new Date(lastModifiedStringDate)).toUTCString());
-
             this.res.sendFile(fpath, (err) => { err ? reject(err) : resolve(); });
         })
     }

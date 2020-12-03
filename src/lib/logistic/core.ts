@@ -237,8 +237,8 @@ export class LogisticProvider {
         if (o.shipmentType == "plan" || o.shipmentType == "sameday") {
             shour = Math.round(o.shipmenthour / 100);
             fHour = o.shipmenthour % 100;
-            start = new Date(o.shipmentdate.getFullYear(), o.shipmentdate.getMonth(), o.shipmentdate.getDate(), shour, 0, 0);
-            finish = new Date(o.shipmentdate.getFullYear(), o.shipmentdate.getMonth(), o.shipmentdate.getDate(), fHour, 0, 0);
+            start = Helper.newDate2(o.shipmentdate.getFullYear(), o.shipmentdate.getMonth(), o.shipmentdate.getDate(), shour, 0, 0);
+            finish = Helper.newDate2(o.shipmentdate.getFullYear(), o.shipmentdate.getMonth(), o.shipmentdate.getDate(), fHour, 0, 0);
             start = start < Helper.Now() ? null: start;
             finish = !start ? null: finish;
         }

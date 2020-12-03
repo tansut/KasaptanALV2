@@ -98,7 +98,7 @@ export class Shipment {
     }
 
     static  availableDays(date: Date = Helper.Now()): Object {        
-        //let tomorrow = new Date(Helper.Now().getTime() + 24 * 60 * 60 * 1000)  
+        
         let res = {};
         let nextDay = Helper.Now()
         for(let i = 0; i < 14; i++) {

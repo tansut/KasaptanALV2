@@ -291,9 +291,7 @@ export default class UserRoute extends ApiRouter {
     }
 
     signOff() {
-        // this.res.cookie("auth", "", {
-        //     expires: new Date(0)
-        // })
+
         this.req.session.shopcard = this.req.user.shopcard;
         (<any>this.req).logout();
     }

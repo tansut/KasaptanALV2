@@ -87,9 +87,6 @@ class Route extends paymentrouter_1.PaymentRouter {
     get hideOrderDetails() {
         if (this.req.user && this.req.user.hasRole('admin'))
             return false;
-        // const diffTime = Math.abs(Helper.Now() - new Date(this.order.creationDate));
-        // const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24)); 
-        //if (this.shouldBePaid)
         return true;
     }
     paymentSuccess(request, payment) {

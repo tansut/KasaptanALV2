@@ -168,7 +168,7 @@ let Order = Order_1 = class Order extends basemodel_1.default {
             o.paymentTypeText = c.payment[bi].desc;
             o.shipmentType = c.shipment[bi].type;
             o.shipmentTypeText = c.shipment[bi].desc;
-            o.shipmentdate = c.shipment[bi].days[0] ? new Date(c.shipment[bi].days[0]) : null;
+            o.shipmentdate = c.shipment[bi].days[0] ? helper_1.default.newDate(c.shipment[bi].days[0]) : null;
             o.shipmenthour = c.shipment[bi].hours[0];
             o.shipmenthourText = c.shipment[bi].hoursText[0];
             o.shipmentInformMe = c.shipment[bi].informMe;
@@ -623,7 +623,7 @@ let OrderItem = OrderItem_1 = class OrderItem extends basemodel_1.default {
         c.paymentTypeText = sc.payment[c.butcherid].desc;
         c.shipmentType = sc.shipment[c.butcherid].type;
         c.shipmentTypeText = sc.shipment[c.butcherid].desc;
-        c.shipmentdate = sc.shipment[c.butcherid].days[0] ? new Date(sc.shipment[c.butcherid].days[0]) : null;
+        c.shipmentdate = sc.shipment[c.butcherid].days[0] ? helper_1.default.newDate(sc.shipment[c.butcherid].days[0]) : null;
         c.shipmenthour = sc.shipment[c.butcherid].hours[0];
         c.shipmenthourText = sc.shipment[c.butcherid].hoursText[0];
         c.shipmentInformMe = sc.shipment[c.butcherid].informMe;
