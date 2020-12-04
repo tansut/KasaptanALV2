@@ -789,7 +789,7 @@ class Route extends router_1.ApiRouter {
                     for (var p = 0; p < notifyMobilePhones.length; p++) {
                         if (notifyMobilePhones[p].trim()) {
                             let payUrl = `${this.url}/manageorder/${ol[i].ordernum}`;
-                            sms_1.Sms.send("90" + helper_1.default.getPhoneNumber(notifyMobilePhones[p].trim()), `KasaptanAl.com yeni sipariş: ${helper_1.default.formattedCurrency(paymentInfo.paidPrice)} online odeme yapildi. Bilgi icin ${payUrl} `, false, new sitelog_1.default(this.constructorParams));
+                            sms_1.Sms.send("90" + helper_1.default.getPhoneNumber(notifyMobilePhones[p].trim()), `KasaptanAl.com/${ol[i].butcherName}: ${helper_1.default.formattedCurrency(paymentInfo.paidPrice)} online odeme yapildi. Bilgi icin ${payUrl} `, false, new sitelog_1.default(this.constructorParams));
                         }
                     }
                 }
@@ -925,7 +925,7 @@ class Route extends router_1.ApiRouter {
                         for (var p = 0; p < notifyMobilePhones.length; p++) {
                             if (notifyMobilePhones[p].trim()) {
                                 let payUrl = `${this.url}/manageorder/${order.ordernum}`;
-                                sms_1.Sms.send("90" + helper_1.default.getPhoneNumber(notifyMobilePhones[p].trim()), `KasaptanAl.com yeni sipariş: Bilgi icin ${payUrl}, teslimat kodu: ${order.securityCode}`, false, new sitelog_1.default(this.constructorParams));
+                                sms_1.Sms.send("90" + helper_1.default.getPhoneNumber(notifyMobilePhones[p].trim()), `KasaptanAl.com/${order.butcherName} yeni sipariş: Bilgi icin ${payUrl}, teslimat kodu: ${order.securityCode}`, false, new sitelog_1.default(this.constructorParams));
                             }
                         }
                     }
@@ -963,7 +963,7 @@ class Route extends router_1.ApiRouter {
             notifyMobilePhones.push('5531431988');
             notifyMobilePhones.push('5326274151');
             let payUrl = `${this.url}/manageorder/${order.ordernum}`;
-            let text = `${order.butcherName} teslim edeceğini iletti. ${payUrl}`;
+            let text = `${order.butcherName} teslim edeceğini iletti[${order.name}]. ${payUrl}`;
             yield sms_1.Sms.sendMultiple(notifyMobilePhones, text, false, new sitelog_1.default(this.constructorParams));
             this.res.send(200);
         });
@@ -1011,6 +1011,10 @@ class Route extends router_1.ApiRouter {
                 if (this.req.body.order.status == 'available') {
                     order.status = order_3.OrderItemStatus.shipping;
                     order.statusDesc += `\n- ${helper_1.default.formatDate(helper_1.default.Now(), true)}: kurye çağrıldı, atama bekleniyor.`;
+                }
+                if (this.req.body.order.status == 'new') {
+                    order.statusDesc += `\n- ${helper_1.default.formatDate(helper_1.default.Now(), true)}: teslimat talebi oluşturuldu.`;
+                    order.deliveryStatus = order.deliveryStatus || 'planned';
                 }
                 if (this.req.body.order.status == 'active') {
                     order.statusDesc += `\n- ${helper_1.default.formatDate(helper_1.default.Now(), true)}: teslimat süreci başladı, yolda.`;
