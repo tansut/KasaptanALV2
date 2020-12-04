@@ -5,7 +5,7 @@ import * as http from '../lib/http';
 import User from '../db/models/user';
 import UserApi from '../routes/api/user';
 import * as authCntroller from '../lib/authorizationToken';
-// const RememberMeStrategy = require("passport-remember-me")
+// const RememberMeStrategy = require("passport-remember-me").
 
 var passport = require('passport')
     , LocalStrategy = require('passport-local').Strategy;
