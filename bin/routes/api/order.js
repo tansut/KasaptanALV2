@@ -970,6 +970,20 @@ class Route extends router_1.ApiRouter {
             this.res.send(200);
         });
     }
+    sendPlanNotifications(order) {
+        return __awaiter(this, void 0, void 0, function* () {
+            let notifyMobilePhones = (order.butcher.notifyMobilePhones || "").split(',');
+            notifyMobilePhones.push('5531431988');
+            notifyMobilePhones.push('5326274151');
+            for (var p = 0; p < notifyMobilePhones.length; p++) {
+                if (notifyMobilePhones[p].trim()) {
+                    let payUrl = `${this.url}/manageorder/${order.ordernum}`;
+                    let text = `${order.butcherName} teslimat planlaması yapildi [${order.name}]: ${order.shipmentStartText}. Siparişi açmak için ${payUrl}`;
+                    sms_1.Sms.send("90" + helper_1.default.getPhoneNumber(notifyMobilePhones[p].trim()), text, false, new sitelog_1.default(this.constructorParams));
+                }
+            }
+        });
+    }
     kuryeCagirRoute() {
         return __awaiter(this, void 0, void 0, function* () {
             let ordernum = this.req.params.ordernum;
@@ -1002,12 +1016,7 @@ class Route extends router_1.ApiRouter {
                 throw err;
             }
             yield order.save();
-            let notifyMobilePhones = [];
-            notifyMobilePhones.push('5531431988');
-            notifyMobilePhones.push('5326274151');
-            let payUrl = `${this.url}/manageorder/${order.ordernum}`;
-            let text = `${order.butcherName} teslimat planlaması yaptı[${order.name}]. ${payUrl}`;
-            yield sms_1.Sms.sendMultiple(notifyMobilePhones, text, false, new sitelog_1.default(this.constructorParams));
+            yield this.sendPlanNotifications(order);
             let customerText = `KasaptanAl.com siparişiniz için ${order.butcherName} tarafından teslimat planlaması yapıldı: ${order.shipmentStartText}. Teslimat bilgi kasap tel: ${order.butcher.phone}, diger konular KasaptanAl.com whatsapp: 0850 305 4216`;
             yield sms_1.Sms.send(order.phone, customerText, false, new sitelog_1.default(this.constructorParams));
             email_1.default.send(order.email, `KasaptanAl.com ${order.butcherName} siparişiniz teslimat bilgisi`, "order.planed.ejs", this.getView(order));
@@ -1036,12 +1045,13 @@ class Route extends router_1.ApiRouter {
             order.statusDesc ? null : (order.statusDesc = '');
             order.statusDesc += `\n- ${helper_1.default.formatDate(helper_1.default.Now(), true)}: Teslimat ${order.shipmentStartText} olarak planlandı`;
             yield order.save();
-            let notifyMobilePhones = [];
-            notifyMobilePhones.push('5531431988');
-            notifyMobilePhones.push('5326274151');
-            let payUrl = `${this.url}/manageorder/${order.ordernum}`;
-            let text = `${order.butcherName} teslimat planlaması yaptı[${order.name}]. ${payUrl}`;
-            yield sms_1.Sms.sendMultiple(notifyMobilePhones, text, false, new sitelog_1.default(this.constructorParams));
+            yield this.sendPlanNotifications(order);
+            // let notifyMobilePhones = [];
+            // notifyMobilePhones.push('5531431988');
+            // notifyMobilePhones.push('5326274151');
+            // let payUrl = `${this.url}/manageorder/${order.ordernum}`;
+            // let text = `${order.butcherName} teslimat planlaması yaptı[${order.name}]. ${payUrl}`;
+            // await Sms.sendMultiple(notifyMobilePhones, text, false, new SiteLogRoute(this.constructorParams))
             let customerText = `KasaptanAl.com siparişiniz için ${order.butcherName} tarafından teslimat planlaması yapıldı: ${order.shipmentStartText}. Teslimat bilgi kasap tel: ${order.butcher.phone}, diger konular KasaptanAl.com whatsapp: 0850 305 4216`;
             yield sms_1.Sms.send(order.phone, customerText, false, new sitelog_1.default(this.constructorParams));
             email_1.default.send(order.email, `KasaptanAl.com ${order.butcherName} siparişiniz teslimat bilgisi`, "order.planed.ejs", this.getView(order));

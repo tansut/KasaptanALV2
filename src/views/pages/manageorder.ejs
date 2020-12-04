@@ -72,6 +72,7 @@
         <h3 class="h4 border-bottom">Sipariş</h3>
         <ul class="px-4 list-unstyled font-size-sm">
           <li><span class="text-muted">Sipariş Durumu:&nbsp;</span> <%= order.status %></li>
+          <li><span class="text-muted">Müşteri:&nbsp;</span><%=order.name%></li>          
           <li><span class="text-muted">Teslimat Süreci:&nbsp;</span>
             <%= controller.DeliveryStatusDesc[order.deliveryStatus] %></li>
             <% if (order.shipmentStartText) { %>
@@ -84,9 +85,9 @@
               <%-controller.markdown.render(order.statusDesc) %>
             </li>
             <% } %>
-          <% if (!controller.hideOrderDetails) { %>
-          <li><span class="text-muted">Müşteri:&nbsp;</span><%=order.name%></li>
-          <% } %>
+         
+         
+          
           <% if(order.note) { %>
           <li><span class="text-muted">Not:&nbsp;</span><%= order.note%>
           </li>
