@@ -74,6 +74,11 @@
           <li><span class="text-muted">Sipariş Durumu:&nbsp;</span> <%= order.status %></li>
           <li><span class="text-muted">Teslimat Süreci:&nbsp;</span>
             <%= controller.DeliveryStatusDesc[order.deliveryStatus] %></li>
+            <% if (order.shipmentStartText) { %>
+              <li><span class="text-muted">Kasap Teslimat Planı:&nbsp;</span>
+              <%= order.shipmentStartText %>
+            </li>   
+            <%}%>         
             <% if (order.statusDesc) { %>
               <li><span class="text-muted">Sipariş Geçmişi:&nbsp;</span>
               <%-controller.markdown.render(order.statusDesc) %>
@@ -86,7 +91,10 @@
           <li><span class="text-muted">Not:&nbsp;</span><%= order.note%>
           </li>
           <%}%>  
-                      
+          <% if (order.butcherSelection == "user") { %>
+            <li>Not: <span class="font-weight-bolder">Müşteriniz diğer kasaplar arasından özellikle sizi seçerek sipariş vermiştir.</span></li>
+          
+          <% } %>                      
                               
 
                   
@@ -222,6 +230,8 @@
                     <% if (order.dispatcherType == 'banabikurye') { %>
                     <button class="btn btn-info" data-toggle="modal" data-target="#kurye-modal" id="kuryeBtn">Kurye
                       Çağır</button>
+                    <% } else { %>
+                      <button class="btn btn-info" data-toggle="modal" data-target="#deliv-modal" id="delivBtn">Teslimatı Planlayın</button>                      
                     <% } %>
                   </div>
                 </div>
@@ -273,7 +283,7 @@
                   <%=order.shipmenthourText%>
               </p>
 
-              <h6 class="h6 border-bottom">Kurye kasabınıza ne zaman gelsin?</h6>
+              <h6 class="h6 border-bottom">Kurye ne zaman gelsin?</h6>
               <div class="row">
                 <div class="form-group col-md">
                   <label for="kuryeDay">Gün</label>
@@ -313,6 +323,62 @@
           </div>
         </div>
       </div>
+      <% } else { %>
+        <div class="modal fade" id="deliv-modal" tabindex="-1" role="dialog">
+          <div class="modal-dialog" role="document">
+            <div class="modal-content">
+              <div class="modal-header">
+                <h5 class="modal-title">Teslimat Planı</h5>
+                <button class="close" type="button" data-dismiss="modal" aria-label="Close"><span
+                    aria-hidden="true">&times;</span></button>
+              </div>
+              <div class="modal-body  pt-3">
+                <h6 class="h6 border-bottom">Müşteri Talebi</h6>
+                <p>
+                  <%=__helper.formatDate(order.shipmentdate)%> <span>
+                    <%=order.shipmenthourText%>
+                </p>
+  
+                <h6 class="h6 border-bottom">Teslimatı ne zaman yapabilirsiniz?</h6>
+                <div class="row">
+                  <div class="form-group col-md">
+                    <label for="delivDay">Gün</label>
+                    <select class="form-control custom-select" id="delivDay" name="delivDay">
+                      <% let days = controller.availableDays(true)%>
+                      <% Object.keys(days).forEach(key=> { %>
+  
+                      <option <%= key == order.shipmentdate.toDateString() ? 'selected':'' %> value="<%=key%>">
+                        <%= days[key]%></option>
+  
+                      <%})%>
+                    </select>
+                  </div>
+                  <div class="form-group col-md">
+                    <label for="delivTime">Saat</label>
+                    <select class="form-control custom-select" id="delivTime" name="delivTime">
+                      <% let hours = controller.availableTimes(true)%>
+                      <% hours.forEach(h=> { %>
+  
+                      <option <%= h.selected?  'selected':'' %> value="<%=h.hour%>"><%= h.text%></option>
+  
+                      <%})%>
+                    </select>
+                  </div>
+                </div>
+  
+  
+  
+  
+                <button class="btn btn-info" id="delivSet">Teslimatı Planla</button>
+  
+                </span>
+  
+  
+  
+              </div>
+            </div>
+          </div>
+        </div>
       <% } %>
 
 
@@ -326,6 +392,23 @@
 
       <script>
 
+      function setDeliveryTime() {
+          var day = $('#delivDay').val();
+          var hour = $('#delivTime').val();
+          $('#delivSet').attr('disabled');
+          App.Backend.post('order/<%=order.ordernum%>/setDelivery', {
+            day: day,
+            hour: hour
+          }).finally(function () {
+            $('#delivSet').removeAttr('disabled');
+          }).then(function () {
+            alert('Müşterinize bilgi gönderildi ve planlama başarıyla yapıldı, kolay gelsin!');
+            window.location.reload(true);
+          }).catch(function (err) {
+            App.HandleError(err)
+          })
+        }        
+
         function kuryeCagir() {
           var day = $('#kuryeDay').val();
           var hour = $('#kuryeTime').val();
@@ -336,7 +419,8 @@
           }).finally(function () {
             $('#kuryeCagir').removeAttr('disabled');
           }).then(function () {
-            alert('Kurye başarıyla çağrıldı. Kolay gelsin!')
+            alert('Müşterinize bilgi gönderildi ve planlama başarıyla yapıldı, kolay gelsin!');
+            window.location.reload(true);
           }).catch(function (err) {
             App.HandleError(err)
           })
@@ -347,6 +431,7 @@
 
       <% if (order.status != 'teslim edilecek') { %>
             $('#kuryeBtn').hide();
+            $('#delivBtn').hide();
       <% } %>
 
             $("#kuryeCagir").click(function () {
@@ -354,6 +439,12 @@
                 kuryeCagir();
               }
             });
+            $("#delivSet").click(function () {
+              if (window.confirm('Teslimat planını onaylıyor musunuz?')) {
+                setDeliveryTime();
+              }
+            });     
+
           $('#approveOrder').click(function () {
             if (window.confirm('Onay sonrasında direkt müşteriye teslimat yapabilirsiniz. Siparişi onaylıyor musunuz?')) {
               $('#approveOrder').attr('disabled');
@@ -366,7 +457,8 @@
                   $('#kuryeBtn').show();
                   $('#kurye-modal').modal('show')
                     <% } else { %>
-                      alert('Siparişin teslimatını yapabilirsiniz. Kolay gelsin!');
+                  $('#delivBtn').show();
+                  $('#deliv-modal').modal('show')
                     <% } %>
                   }).catch(function (err) {
                         App.HandleError(err)

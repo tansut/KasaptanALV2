@@ -36,11 +36,13 @@ import { LogisticFactory } from '../lib/logistic/core';
 import { off } from 'process';
 import Dispatcher from '../db/models/dispatcher';
 import Butcher from '../db/models/butcher';
+import { Shipment, ShipmentHours } from '../models/shipment';
 var MarkdownIt = require('markdown-it')
 
 export default class Route extends ViewRouter {
     order: Order;
     api: OrderApi;
+
     DeliveryStatusDesc = DeliveryStatusDesc;
     _paymentProvider: CreditcardPaymentProvider
     markdown = new MarkdownIt();
@@ -356,33 +358,44 @@ export default class Route extends ViewRouter {
 
     }
 
-     availableTimes(date: Date = Helper.Now()): Object {       
-        let ShipmentHours = []
+     availableTimes(): Object {       
+        let shipmentHours = []
         let oh = Math.round(this.order.shipmenthour - (this.order.shipmenthour%100));
-        let od = this.order.shipmentdate.setHours(oh)
-        for (let i = 9; i < 20; i++) {
-            let selected = true;
-            if (Helper.isToday(this.order.shipmentdate) && Helper.Now().getHours() > i)
-                selected = false;
-            ShipmentHours.push({
-                hour: i*100,
-                text: i.toString() + ':00',
-                selected: selected && (i*100 == oh)
+        let od = this.order.shipmentdate.setHours(oh);
+        if (this.order.dispatcherType == 'banabikurye') {
+            for (let i = 9; i < 20; i++) {
+                let selected = true;
+                if (Helper.isToday(this.order.shipmentdate) && Helper.Now().getHours() > i)
+                    selected = false;
+                    shipmentHours.push({
+                    hour: i*100,
+                    text: i.toString() + ':00',
+                    selected: selected && (i*100 == oh)
+                })
+                shipmentHours.push({
+                    hour: i*100+30,
+                    text: i.toString() + ':30',
+                    selected: selected && (i*100+30 == oh)
+                })            
+            }
+        } else {
+            let hours = ShipmentHours;
+            Object.keys(hours).forEach(k=> {
+                shipmentHours.push({
+                    hour: k,
+                    text: hours[k],
+                    selected: this.order.shipmenthour == parseInt(k)
+                })                    
             })
-            ShipmentHours.push({
-                hour: i*100+30,
-                text: i.toString() + ':30',
-                selected: selected && (i*100+30 == oh)
-            })            
         }
-         return ShipmentHours;
+
+         return shipmentHours;
     }
 
-     availableDays(date: Date = Helper.Now()): Object {        
-        
+     availableDays(): Object {                
         let res = {};
         let nextDay = Helper.Now()
-        for(let i = 0; i < 3; i++) {            
+        for(let i = 0; i < 7; i++) {            
             let text = i == 0 ? 'Bugün': Helper.formatDate(nextDay)
             res[nextDay.toDateString()] = text;
             nextDay = Helper.NextDay(nextDay);

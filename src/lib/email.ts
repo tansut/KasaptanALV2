@@ -32,12 +32,13 @@ class EmailManager {
             }, (err, res) => {
                 if (err) return reject(err);
                 var mailOptions = {
-                    to: to,
+                    to: (config.nodeenv == 'production' ? to: "tansut@gmail.com"),
                     cc: 'archive@kasaptanal.com',
-                    from: 'kasaptanAl.com <noreply@kasaptanal.com>',
+                    from: 'KasaptanAl.com <noreply@kasaptanal.com>',
                     subject: subject,
                     html: res
                 }
+
                 EmailManager.transporter.sendMail(mailOptions, (error, info) => {
                     // error ? reject(error) : resolve(info.response)
                 });

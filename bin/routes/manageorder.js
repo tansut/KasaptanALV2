@@ -36,6 +36,7 @@ const geo_1 = require("../models/geo");
 const core_1 = require("../lib/logistic/core");
 const dispatcher_1 = require("../db/models/dispatcher");
 const butcher_1 = require("../db/models/butcher");
+const shipment_1 = require("../models/shipment");
 var MarkdownIt = require('markdown-it');
 class Route extends router_1.ViewRouter {
     constructor() {
@@ -305,31 +306,43 @@ class Route extends router_1.ViewRouter {
             this.sendView("pages/operator.manageorder.ejs", Object.assign(Object.assign({ _usrmsg: { text: userMessage } }, this.api.getView(this.order)), { enableImgContextMenu: true }));
         });
     }
-    availableTimes(date = helper_1.default.Now()) {
-        let ShipmentHours = [];
+    availableTimes() {
+        let shipmentHours = [];
         let oh = Math.round(this.order.shipmenthour - (this.order.shipmenthour % 100));
         let od = this.order.shipmentdate.setHours(oh);
-        for (let i = 9; i < 20; i++) {
-            let selected = true;
-            if (helper_1.default.isToday(this.order.shipmentdate) && helper_1.default.Now().getHours() > i)
-                selected = false;
-            ShipmentHours.push({
-                hour: i * 100,
-                text: i.toString() + ':00',
-                selected: selected && (i * 100 == oh)
-            });
-            ShipmentHours.push({
-                hour: i * 100 + 30,
-                text: i.toString() + ':30',
-                selected: selected && (i * 100 + 30 == oh)
+        if (this.order.dispatcherType == 'banabikurye') {
+            for (let i = 9; i < 20; i++) {
+                let selected = true;
+                if (helper_1.default.isToday(this.order.shipmentdate) && helper_1.default.Now().getHours() > i)
+                    selected = false;
+                shipmentHours.push({
+                    hour: i * 100,
+                    text: i.toString() + ':00',
+                    selected: selected && (i * 100 == oh)
+                });
+                shipmentHours.push({
+                    hour: i * 100 + 30,
+                    text: i.toString() + ':30',
+                    selected: selected && (i * 100 + 30 == oh)
+                });
+            }
+        }
+        else {
+            let hours = shipment_1.ShipmentHours;
+            Object.keys(hours).forEach(k => {
+                shipmentHours.push({
+                    hour: k,
+                    text: hours[k],
+                    selected: this.order.shipmenthour == parseInt(k)
+                });
             });
         }
-        return ShipmentHours;
+        return shipmentHours;
     }
-    availableDays(date = helper_1.default.Now()) {
+    availableDays() {
         let res = {};
         let nextDay = helper_1.default.Now();
-        for (let i = 0; i < 3; i++) {
+        for (let i = 0; i < 7; i++) {
             let text = i == 0 ? 'Bugün' : helper_1.default.formatDate(nextDay);
             res[nextDay.toDateString()] = text;
             nextDay = helper_1.default.NextDay(nextDay);

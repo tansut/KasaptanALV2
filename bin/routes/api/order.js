@@ -959,12 +959,14 @@ class Route extends router_1.ApiRouter {
             order.statusDesc ? null : (order.statusDesc = '');
             order.statusDesc += `\n- ${helper_1.default.formatDate(helper_1.default.Now(), true)}: ${order.status} -> ${newStatus}`;
             yield order.save();
-            let notifyMobilePhones = [];
-            notifyMobilePhones.push('5531431988');
-            notifyMobilePhones.push('5326274151');
-            let payUrl = `${this.url}/manageorder/${order.ordernum}`;
-            let text = `${order.butcherName} teslim edeceğini iletti[${order.name}]. ${payUrl}`;
-            yield sms_1.Sms.sendMultiple(notifyMobilePhones, text, false, new sitelog_1.default(this.constructorParams));
+            // if (config.nodeenv == 'production') {
+            //     let notifyMobilePhones = [];
+            //     notifyMobilePhones.push('5531431988');
+            //     notifyMobilePhones.push('5326274151');
+            //     let payUrl = `${this.url}/manageorder/${order.ordernum}`;
+            //     let text =`${order.butcherName} teslim edeceğini iletti[${order.name}]. ${payUrl}`;
+            //     await Sms.sendMultiple(notifyMobilePhones, text, false, new SiteLogRoute(this.constructorParams))    
+            // }
             this.res.send(200);
         });
     }
@@ -974,7 +976,7 @@ class Route extends router_1.ApiRouter {
             let order = yield this.getOrder(ordernum, true);
             if (!order)
                 return this.res.send(404);
-            let provider = core_1.LogisticFactory.getInstance(order.butcher.logisticProvider, {
+            let provider = core_1.LogisticFactory.getInstance(order.dispatcherType, {
                 dispatcher: yield dispatcher_1.default.findByPk(order.dispatcherid, {
                     include: [{
                             model: butcher_1.default,
@@ -990,6 +992,7 @@ class Route extends router_1.ApiRouter {
             order.shipmentstart = helper_1.default.newDate2(day.getFullYear(), day.getMonth(), day.getDate(), shour, fHour, 0);
             if (order.shipmentstart < helper_1.default.Now())
                 order.shipmentstart = helper_1.default.Now();
+            order.shipmentStartText = helper_1.default.formatDate(order.shipmentstart, true) + ' kasap çıkış olarak belirlendi';
             let request = provider.orderFromOrder(order);
             try {
                 let offer = yield provider.createOrder(request);
@@ -999,6 +1002,49 @@ class Route extends router_1.ApiRouter {
                 throw err;
             }
             yield order.save();
+            let notifyMobilePhones = [];
+            notifyMobilePhones.push('5531431988');
+            notifyMobilePhones.push('5326274151');
+            let payUrl = `${this.url}/manageorder/${order.ordernum}`;
+            let text = `${order.butcherName} teslimat planlaması yaptı[${order.name}]. ${payUrl}`;
+            yield sms_1.Sms.sendMultiple(notifyMobilePhones, text, false, new sitelog_1.default(this.constructorParams));
+            let customerText = `KasaptanAl.com siparişiniz için ${order.butcherName} tarafından teslimat planlaması yapıldı: ${order.shipmentStartText}. Teslimat bilgi kasap tel: ${order.butcher.phone}, diger konular KasaptanAl.com whatsapp: 0850 305 4216`;
+            yield sms_1.Sms.send(order.phone, customerText, false, new sitelog_1.default(this.constructorParams));
+            email_1.default.send(order.email, `KasaptanAl.com ${order.butcherName} siparişiniz teslimat bilgisi`, "order.planed.ejs", this.getView(order));
+            this.res.send(200);
+        });
+    }
+    setDeliveryRoute() {
+        return __awaiter(this, void 0, void 0, function* () {
+            let ordernum = this.req.params.ordernum;
+            let order = yield this.getOrder(ordernum, true);
+            if (!order)
+                return this.res.send(404);
+            let hour = Number.parseInt(this.req.body.hour);
+            let day = helper_1.default.newDate(this.req.body.day);
+            let shour = Math.round(hour / 100);
+            let fHour = hour % 100;
+            order.shipmentstart = helper_1.default.newDate2(day.getFullYear(), day.getMonth(), day.getDate(), shour, fHour, 0);
+            if (order.shipmentstart < helper_1.default.Now()) {
+                order.shipmentstart = helper_1.default.Now();
+                order.shipmentStartText = "En kısa zamanda";
+            }
+            else
+                order.shipmentStartText = shipment_1.ShipmentHours[hour];
+            order.shipmentStartText = `${helper_1.default.formatDate(order.shipmentstart)} ${order.shipmentStartText}`;
+            order.deliveryStatus = 'planned';
+            order.statusDesc ? null : (order.statusDesc = '');
+            order.statusDesc += `\n- ${helper_1.default.formatDate(helper_1.default.Now(), true)}: Teslimat ${order.shipmentStartText} olarak planlandı`;
+            yield order.save();
+            let notifyMobilePhones = [];
+            notifyMobilePhones.push('5531431988');
+            notifyMobilePhones.push('5326274151');
+            let payUrl = `${this.url}/manageorder/${order.ordernum}`;
+            let text = `${order.butcherName} teslimat planlaması yaptı[${order.name}]. ${payUrl}`;
+            yield sms_1.Sms.sendMultiple(notifyMobilePhones, text, false, new sitelog_1.default(this.constructorParams));
+            let customerText = `KasaptanAl.com siparişiniz için ${order.butcherName} tarafından teslimat planlaması yapıldı: ${order.shipmentStartText}. Teslimat bilgi kasap tel: ${order.butcher.phone}, diger konular KasaptanAl.com whatsapp: 0850 305 4216`;
+            yield sms_1.Sms.send(order.phone, customerText, false, new sitelog_1.default(this.constructorParams));
+            email_1.default.send(order.email, `KasaptanAl.com ${order.butcherName} siparişiniz teslimat bilgisi`, "order.planed.ejs", this.getView(order));
             this.res.send(200);
         });
     }
@@ -1010,6 +1056,7 @@ class Route extends router_1.ApiRouter {
                 order.statusDesc ? null : (order.statusDesc = '');
                 if (this.req.body.order.status == 'available') {
                     order.status = order_3.OrderItemStatus.shipping;
+                    order.deliveryStatus = order.deliveryStatus || 'planned';
                     order.statusDesc += `\n- ${helper_1.default.formatDate(helper_1.default.Now(), true)}: kurye çağrıldı, atama bekleniyor.`;
                 }
                 if (this.req.body.order.status == 'new') {
@@ -1049,6 +1096,7 @@ class Route extends router_1.ApiRouter {
         router.post('/order/:ordernum/approve', Route.BindRequest(Route.prototype.approveRoute));
         router.post('/order/:ordernum/kuryeCagir', Route.BindRequest(Route.prototype.kuryeCagirRoute));
         router.post('/order/bnbCallback', Route.BindRequest(Route.prototype.bnbCallbackRoute));
+        router.post('/order/:ordernum/setDelivery', Route.BindRequest(Route.prototype.setDeliveryRoute));
         //router.get("/admin/order/:ordernum", Route.BindRequest(this.prototype.getOrderRoute));
     }
 }
@@ -1064,6 +1112,12 @@ __decorate([
     __metadata("design:paramtypes", []),
     __metadata("design:returntype", Promise)
 ], Route.prototype, "kuryeCagirRoute", null);
+__decorate([
+    common_1.Auth.Anonymous(),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", []),
+    __metadata("design:returntype", Promise)
+], Route.prototype, "setDeliveryRoute", null);
 __decorate([
     common_1.Auth.Anonymous(),
     __metadata("design:type", Function),

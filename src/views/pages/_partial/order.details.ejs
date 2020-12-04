@@ -157,6 +157,12 @@
     <li><span class="text-muted">Teslimat:&nbsp;</span><%= shipment[bi].howToDesc %></li>
     <li><span class="text-muted">Teslimat Süreci:&nbsp;</span>
       <%= controller.DeliveryStatusDesc[order.deliveryStatus] %></li>
+      <% if (order.shipmentStartText) { %>
+        <li><span class="text-muted">Kasap Teslimat Planı:&nbsp;</span>
+        <%= order.shipmentStartText %>
+      </li>   
+      <%}%>   
+            
       <% if (order.statusDesc) { %>
         <li><span class="text-muted">Sipariş Geçmişi:&nbsp;</span>
         <%-controller.markdown.render(order.statusDesc) %>

@@ -11,6 +11,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.Sms = void 0;
 const Nexmo = require("nexmo");
+const config_1 = require("../config");
 const axios_1 = require("axios");
 const email_1 = require("./email");
 class Sms {
@@ -26,9 +27,11 @@ class Sms {
             let url = `https://api.netgsm.com.tr/sms/send/get?usercode=${8503054216}&password=BOV0MN1M&gsmno=${to.trim()}&message=${encodeURI(text)}&msgheader=${('KasaptanAl')}`;
             let resp;
             try {
-                resp = yield axios_1.default.get(url);
-                if (["20", "30", "40", "70"].indexOf(resp.data.toString()) > 0)
-                    throw new Error("SMS iletilemedi");
+                if (config_1.default.nodeenv == 'production') {
+                    resp = yield axios_1.default.get(url);
+                    if (["20", "30", "40", "70"].indexOf(resp.data.toString()) > 0)
+                        throw new Error("SMS iletilemedi");
+                }
                 if (logger) {
                     yield logger.log({
                         logData: text,

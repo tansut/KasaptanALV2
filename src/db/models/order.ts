@@ -377,6 +377,11 @@ class Order extends BaseModel<Order> {
     })
     shipmentstart: Date;    
 
+    @Column({
+        allowNull: true
+    })
+    shipmentStartText: string;    
+
    
 
     @Column({

@@ -155,16 +155,16 @@
         <h5>*----YENİ SİPARİŞ----*</h5>
         <h5>*<%=order.butcherName%>*</h5>
         <br>
-        <h5>Sipariş No: <%=order.ordernum%></h5>
+        <h5>Sipariş No: <%=order.ordernum%>/<%=order.name%></h5>
         <h5>Teslimat talebi: *<%=__helper.formatDate(order.shipmentdate)%>
           <%=order.shipmenthourText%>*</h5>
           <h5>Sipariş tutarı: <%- include('./_partial/currency.ejs', {value: order.total}) %></h5>
           <h5>Dağıtımı Yapacak: <%= order.dispatcherName %></h5>
-
+          <h5>Semt: <%=order.areaLevel3Text%>/<%=order.areaLevel2Text%></h5>
         <br>
 
         <p>
-           Siparişi aşağıdaki bağlantıdan görüntüleyin: <br><br>
+           Siparişi açın: <br><br>
          
            <a href="<%=controller.url%>/manageorder/<%=order.ordernum%>">
             <%=controller.url%>/manageorder/<%=order.ordernum%>

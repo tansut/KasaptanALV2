@@ -23,9 +23,9 @@ class EmailManager {
                 if (err)
                     return reject(err);
                 var mailOptions = {
-                    to: to,
+                    to: (config_1.default.nodeenv == 'production' ? to : "tansut@gmail.com"),
                     cc: 'archive@kasaptanal.com',
-                    from: 'kasaptanAl.com <noreply@kasaptanal.com>',
+                    from: 'KasaptanAl.com <noreply@kasaptanal.com>',
                     subject: subject,
                     html: res
                 };
