@@ -175,6 +175,11 @@ class LogisticProvider {
             return null;
         });
     }
+    cancelOrder(id) {
+        return __awaiter(this, void 0, void 0, function* () {
+            return null;
+        });
+    }
     get providerKey() {
         return "unset";
     }

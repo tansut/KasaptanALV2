@@ -991,39 +991,60 @@ class Route extends router_1.ApiRouter {
             email_1.default.send(order.email, `KasaptanAl.com ${order.butcherName} siparişiniz teslimat bilgisi`, "order.planed.ejs", this.getView(order));
         });
     }
-    kuryeCagirRoute() {
+    // @Auth.Anonymous()
+    // async kuryeCagirRoute() {
+    //     let ordernum = this.req.params.ordernum;
+    //     let order = await this.getOrder(ordernum, true);
+    //     if (!order)
+    //         return this.res.send(404);
+    //     let provider = LogisticFactory.getInstance(order.dispatcherType, {
+    //         dispatcher: await Dispatcher.findByPk(order.dispatcherid, {
+    //             include: [{
+    //                 model: Butcher,
+    //                 as: 'butcher',
+    //             }]
+    //         })
+    //     });
+    //     let hour = Number.parseInt(this.req.body.hour);
+    //     provider.safeRequests = false;
+    //     let day = Helper.newDate(this.req.body.day);
+    //     let shour = Math.round(hour / 100);
+    //     let fHour = hour % 100;
+    //     order.shipmentstart = Helper.newDate2(day.getFullYear(), day.getMonth(), day.getDate(), shour, fHour, 0);
+    //     if (order.shipmentstart < Helper.Now())
+    //         order.shipmentstart = Helper.Now();
+    //     order.shipmentStartText = Helper.formatDate(order.shipmentstart, true) + ' kasap çıkış olarak kurye planlandı';
+    //     let request = provider.orderFromOrder(order);
+    //     try {
+    //         let offer = await provider.createOrder(request);
+    //         order.deliveryOrderId = offer.orderId;
+    //     } catch (err) {
+    //         throw err;
+    //     }
+    //     await order.save();
+    //     await this.sendPlanNotifications(order);
+    //     this.res.send(200);
+    // }
+    cancelDeliveryRoute() {
         return __awaiter(this, void 0, void 0, function* () {
             let ordernum = this.req.params.ordernum;
             let order = yield this.getOrder(ordernum, true);
             if (!order)
                 return this.res.send(404);
-            let provider = core_1.LogisticFactory.getInstance(order.dispatcherType, {
-                dispatcher: yield dispatcher_1.default.findByPk(order.dispatcherid, {
-                    include: [{
-                            model: butcher_1.default,
-                            as: 'butcher',
-                        }]
-                })
-            });
-            let hour = Number.parseInt(this.req.body.hour);
-            provider.safeRequests = false;
-            let day = helper_1.default.newDate(this.req.body.day);
-            let shour = Math.round(hour / 100);
-            let fHour = hour % 100;
-            order.shipmentstart = helper_1.default.newDate2(day.getFullYear(), day.getMonth(), day.getDate(), shour, fHour, 0);
-            if (order.shipmentstart < helper_1.default.Now())
-                order.shipmentstart = helper_1.default.Now();
-            order.shipmentStartText = helper_1.default.formatDate(order.shipmentstart, true) + ' kasap çıkış olarak kurye planlandı';
-            let request = provider.orderFromOrder(order);
-            try {
-                let offer = yield provider.createOrder(request);
-                order.deliveryOrderId = offer.orderId;
+            if (order.dispatcherType == 'banabikurye' && order.deliveryOrderId) {
+                let provider = core_1.LogisticFactory.getInstance(order.dispatcherType, {
+                    dispatcher: yield dispatcher_1.default.findByPk(order.dispatcherid, {
+                        include: [{
+                                model: butcher_1.default,
+                                as: 'butcher',
+                            }]
+                    })
+                });
+                provider.safeRequests = false;
+                yield provider.cancelOrder(order.deliveryOrderId);
+                order.deliveryOrderId = null;
+                yield order.save();
             }
-            catch (err) {
-                throw err;
-            }
-            yield order.save();
-            yield this.sendPlanNotifications(order);
             this.res.send(200);
         });
     }
@@ -1038,27 +1059,37 @@ class Route extends router_1.ApiRouter {
             let shour = Math.round(hour / 100);
             let fHour = hour % 100;
             order.shipmentstart = helper_1.default.newDate2(day.getFullYear(), day.getMonth(), day.getDate(), shour, fHour, 0);
-            if (order.shipmentstart < helper_1.default.Now()) {
-                order.shipmentstart = helper_1.default.Now();
-                order.shipmentStartText = "En kısa zamanda";
+            if (order.shipmentstart < helper_1.default.Now())
+                throw new Error("Lütfen teslimat gün ve saatini kontrol edin, hatalı gözüküyor.");
+            if (order.dispatcherType == 'banabikurye') {
+                let provider = core_1.LogisticFactory.getInstance(order.dispatcherType, {
+                    dispatcher: yield dispatcher_1.default.findByPk(order.dispatcherid, {
+                        include: [{
+                                model: butcher_1.default,
+                                as: 'butcher',
+                            }]
+                    })
+                });
+                provider.safeRequests = false;
+                order.shipmentStartText = helper_1.default.formatDate(order.shipmentstart, true) + ' kasap çıkış olarak kurye planlandı';
+                let request = provider.orderFromOrder(order);
+                try {
+                    let offer = yield provider.createOrder(request);
+                    order.deliveryOrderId = offer.orderId;
+                }
+                catch (err) {
+                    throw err;
+                }
             }
-            else
-                order.shipmentStartText = shipment_1.ShipmentHours[hour];
-            order.shipmentStartText = `${helper_1.default.formatDate(order.shipmentstart)} ${order.shipmentStartText}`;
+            else {
+                order.shipmentStartText = `${helper_1.default.formatDate(order.shipmentstart)} ${shipment_1.ShipmentHours[hour]}`;
+                order.statusDesc ? null : (order.statusDesc = '');
+                order.statusDesc += `\n- ${helper_1.default.formatDate(helper_1.default.Now(), true)}: Teslimat ${order.shipmentStartText} olarak planlandı`;
+            }
+            order.status = order_3.OrderItemStatus.shipping;
             order.deliveryStatus = 'planned';
-            order.statusDesc ? null : (order.statusDesc = '');
-            order.statusDesc += `\n- ${helper_1.default.formatDate(helper_1.default.Now(), true)}: Teslimat ${order.shipmentStartText} olarak planlandı`;
             yield order.save();
             yield this.sendPlanNotifications(order);
-            // let notifyMobilePhones = [];
-            // notifyMobilePhones.push('5531431988');
-            // notifyMobilePhones.push('5326274151');
-            // let payUrl = `${this.url}/manageorder/${order.ordernum}`;
-            // let text = `${order.butcherName} teslimat planlaması yaptı[${order.name}]. ${payUrl}`;
-            // await Sms.sendMultiple(notifyMobilePhones, text, false, new SiteLogRoute(this.constructorParams))
-            // let customerText = `KasaptanAl.com siparişiniz için ${order.butcherName} tarafından teslimat planlaması yapıldı: ${order.shipmentStartText}. Teslimat bilgi kasap tel: ${order.butcher.phone}, diger konular KasaptanAl.com whatsapp: 0850 305 4216`
-            // await Sms.send(order.phone, customerText, false, new SiteLogRoute(this.constructorParams))
-            // email.send(order.email, `KasaptanAl.com ${order.butcherName} siparişiniz teslimat bilgisi`, "order.planed.ejs", this.getView(order));
             this.res.send(200);
         });
     }
@@ -1068,10 +1099,11 @@ class Route extends router_1.ApiRouter {
             if (this.req.body.event_type == "order_created" || this.req.body.event_type == "order_changed") {
                 order = yield this.getOrder(this.req.body.order.points[0].client_order_id, false);
                 order.statusDesc ? null : (order.statusDesc = '');
+                order.deliveryOrderId = this.req.body.order.order_id;
                 if (this.req.body.order.status == 'available') {
                     order.status = order_3.OrderItemStatus.shipping;
                     order.deliveryStatus = order.deliveryStatus || 'planned';
-                    order.statusDesc += `\n- ${helper_1.default.formatDate(helper_1.default.Now(), true)}: kurye çağrıldı, atama bekleniyor.`;
+                    order.statusDesc += `\n- ${helper_1.default.formatDate(helper_1.default.Now(), true)}: kurye atama bekleniyor.`;
                 }
                 if (this.req.body.order.status == 'new') {
                     order.statusDesc += `\n- ${helper_1.default.formatDate(helper_1.default.Now(), true)}: teslimat talebi oluşturuldu.`;
@@ -1082,6 +1114,7 @@ class Route extends router_1.ApiRouter {
                 }
                 if (this.req.body.order.status == 'canceled') {
                     order.statusDesc += `\n- ${helper_1.default.formatDate(helper_1.default.Now(), true)}: teslimat iptal edildi.`;
+                    order.deliveryOrderId = null;
                 }
                 if (this.req.body.order.status == 'completed') {
                     order.status = order_3.OrderItemStatus.success;
@@ -1108,9 +1141,10 @@ class Route extends router_1.ApiRouter {
     }
     static SetRoutes(router) {
         router.post('/order/:ordernum/approve', Route.BindRequest(Route.prototype.approveRoute));
-        router.post('/order/:ordernum/kuryeCagir', Route.BindRequest(Route.prototype.kuryeCagirRoute));
+        // router.post('/order/:ordernum/kuryeCagir', Route.BindRequest(Route.prototype.kuryeCagirRoute))
         router.post('/order/bnbCallback', Route.BindRequest(Route.prototype.bnbCallbackRoute));
         router.post('/order/:ordernum/setDelivery', Route.BindRequest(Route.prototype.setDeliveryRoute));
+        router.post('/order/:ordernum/cancelDelivery', Route.BindRequest(Route.prototype.cancelDeliveryRoute));
         //router.get("/admin/order/:ordernum", Route.BindRequest(this.prototype.getOrderRoute));
     }
 }
@@ -1125,7 +1159,7 @@ __decorate([
     __metadata("design:type", Function),
     __metadata("design:paramtypes", []),
     __metadata("design:returntype", Promise)
-], Route.prototype, "kuryeCagirRoute", null);
+], Route.prototype, "cancelDeliveryRoute", null);
 __decorate([
     common_1.Auth.Anonymous(),
     __metadata("design:type", Function),

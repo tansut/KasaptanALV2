@@ -29,7 +29,7 @@ export let DeliveryStatusDesc = {
     canceled: 'İptal edildi',
     delayed: 'Gecikme var',
     failed: 'Müşteri bulunamadı, başarısız',   
-    courier_assigned: 'Süreç başlayacak',    
+    courier_assigned: 'Kurye atandı, süreç başlayacak',    
     courier_departed: 'Kasaba ulaşıldı',
     parcel_picked_up: 'Paket kasaptan alındı',
     courier_arrived: 'Müşteri bekleniyor',

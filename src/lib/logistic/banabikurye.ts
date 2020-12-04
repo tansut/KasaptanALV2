@@ -228,11 +228,11 @@ export default class BanabikuryeProvider extends LogisticProvider {
         return this.optimizedSlice(result);
     }
 
-    async safeResponse<T>(method: string, req: BanabikuryeRequest, distance: number, convert: Function): Promise<T> {
+    async safeResponse<T>(method: string, req: BanabikuryeRequest, distance: number, convert?: Function): Promise<T> {
         let resp: T = null;
         try {
             let result = await this.post<BanabikuryeResponse>(method, req);
-            resp = convert(result.data) 
+            resp = convert ? convert(result.data): result.data;
         } catch(e) {
             if (!this.safeRequests) throw e;
             let fee = Helper.asCurrency(10.00 + distance * 2);
@@ -266,6 +266,13 @@ export default class BanabikuryeProvider extends LogisticProvider {
         resp.distance = req.distance;
         return this.calculateCustomerFee(resp)
         
+    }
+
+    async cancelOrder(id: string) {
+            let resp = await this.post<BanabikuryeResponse>("cancel-order", {order_id: id});
+        if (!resp.data.is_successful) {
+            throw new Error("Kurye iptal edilemedi")
+        }
     }
 
     async createOrder(req: OrderRequest): Promise<OrderResponse> {

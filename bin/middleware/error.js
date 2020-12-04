@@ -15,7 +15,7 @@ class ErrorMiddleware extends base_1.default {
         if (ErrorMiddleware.isXhr(req)) {
             let isHttpErr = err instanceof http_1.HttpError;
             let httpErr = isHttpErr ? err : null;
-            let msg = httpErr ? httpErr.message : err.name || err.message;
+            let msg = httpErr ? httpErr.message : (err.message || err.name);
             if (config_1.default.nodeenv == 'production') {
                 email_1.default.send('tansut@gmail.com', 'hata/XHR: kasaptanAl.com', "error.ejs", {
                     text: err + '/' + err.sql,

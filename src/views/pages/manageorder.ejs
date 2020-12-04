@@ -68,11 +68,15 @@
           </div>
         </a></div>
 
-      <div class="px-2">
-        <h3 class="h4 border-bottom">Sipariş</h3>
+      <div id="orderstart" class="px-2">
+        <h3  class="h4 border-bottom">Sipariş</h3>
         <ul class="px-4 list-unstyled font-size-sm">
           <li><span class="text-muted">Sipariş Durumu:&nbsp;</span> <%= order.status %></li>
-          <li><span class="text-muted">Müşteri:&nbsp;</span><%=order.name%></li>          
+          <li><span class="text-muted">Müşteri:&nbsp;</span><%=order.name%></li>    
+          <% if (order.deliveryOrderId) { %>
+          <li><span class="text-muted">Kurye Planlandı:&nbsp;</span><%=order.deliveryOrderId%></li>    
+
+          <% } %>      
           <li><span class="text-muted">Teslimat Süreci:&nbsp;</span>
             <%= controller.DeliveryStatusDesc[order.deliveryStatus] %></li>
             <% if (order.shipmentStartText) { %>
@@ -81,7 +85,7 @@
             </li>   
             <%}%>         
             <% if (order.statusDesc) { %>
-              <li><span class="text-muted">Sipariş Geçmişi:&nbsp;</span>
+              <li class="font-weight-bolder"><span class="text-muted">Sipariş Geçmişi:&nbsp;</span><br>
               <%-controller.markdown.render(order.statusDesc) %>
             </li>
             <% } %>
@@ -215,22 +219,48 @@
                 Siparişi Yönetin
               </h3>
               <p>
-                Aşağıdaki iki seçenekten birini <span class="font-weight-bolder">şimdi</span> kullanın.
+                Aşağıdaki seçeneklerden birini <span class="font-weight-bolder">şimdi</span> kullanın.
               </p>
 
               <div class="px-4">
                 <div class="border p-2 bg-secondary mb-3">
-                  <h5 class="h6">1. Ürünler ve teslimat saati uygun mu?</h5>
+                  <h5 class="h6">1. Ürünler ve teslimat saati uygundur</h5>
                   <p class="font-size-md">Sipariş verilen <span
                       class="font-weight-bolder"><%=order.items.length%></span> kalem ürün ve <br> <span
                       class="font-weight-bolder"><%=__helper.formatDate(order.shipmentdate)%>
-                      <%=order.shipmenthourText%></span> teslimat ?</p>
+                      <%=order.shipmenthourText%></span> teslimat saati uygundur.</p>
                   <div class="">
 
-                    <button class="btn btn-success" id="approveOrder">Evet uygun, siparişi onaylıyorum</button>
+                    <!-- <button class="btn btn-success" id="approveOrder">Evet uygun, siparişi onaylıyorum</button> -->
                     <% if (order.dispatcherType == 'banabikurye') { %>
-                    <button class="btn btn-info" data-toggle="modal" data-target="#kurye-modal" id="kuryeBtn">Kurye
-                      Çağır</button>
+                      <% if (order.deliveryOrderId) { %>
+                        <button class="btn btn-danger" id="kuryeIptalBtn">Kurye
+                          İptal</button>
+                        <% } else { %>
+                          <button class="btn btn-success" data-toggle="modal" data-target="#kurye-modal" id="kuryeBtn">Kurye
+                            Çağır</button>
+                        <% } %>
+            
+                    <% } else { %>
+                      <button class="btn btn-success" data-toggle="modal" data-target="#deliv-modal" id="delivBtn">Siparişi Onaylayın</button>                      
+                    <% } %>
+                  </div>
+                </div>
+
+                <div class="d-none border p-2 bg-secondary mb-3">
+                  <h5 class="h6">2. Ürünler OK ancak o saate teslimat yapamam</h5>
+                  <p class="font-size-md">Sipariş verilen <span
+                      class="font-weight-bolder"><%=order.items.length%></span> kalem ürünün teslimatını planlayın.</p>
+                  <div class="">
+
+                    <!-- <button class="btn btn-success" id="approveOrder">Evet uygun, siparişi onaylıyorum</button> -->
+                    <% if (order.dispatcherType == 'banabikurye') { %>
+                      <% if (order.deliveryOrderId) { %>
+                      <% } else { %>
+                        <button class="btn btn-info" data-toggle="modal" data-target="#kurye-modal" id="kuryeBtn">Kurye
+                          Çağır</button>
+                      <% } %>
+                 
                     <% } else { %>
                       <button class="btn btn-info" data-toggle="modal" data-target="#deliv-modal" id="delivBtn">Teslimatı Planlayın</button>                      
                     <% } %>
@@ -238,11 +268,11 @@
                 </div>
 
                 <div class="border p-2 bg-secondary mb-3">
-                  <h5 class="h6">2. Ürünler elinizde yok veya teslimat saati uygun değil mi ?</h5>
+                  <h5 class="h6">2. Ürünler veya teslimat saatleri uygun değil mi?</h5>
                   <p>
-                    Ürünler elinizde yoksa veya teslimat saati uygun değilse lütfen whatsapp üzerinden iletişime geçin.
+                    Ürünler elinizde yoksa veya teslimat saatleri uygun değilse lütfen whatsapp üzerinden iletişime geçin.
                   </p>
-                  <button class="btn btn-info" id="getSupport">Whatsapp destek alacağım</button>
+                  <button class="btn btn-danger" id="getSupport">Whatsapp destek alacağım</button>
 
                 </div>
               </div>
@@ -313,7 +343,7 @@
 
 
 
-
+              
               <button class="btn btn-info" id="kuryeCagir">Kurye Çağır</button>
 
               </span>
@@ -408,13 +438,27 @@
           }).catch(function (err) {
             App.HandleError(err)
           })
-        }        
+        }       
+        
+        function kuryeIptal() {
+
+          $('#kuryeIptalBtn').attr('disabled');
+          App.Backend.post('order/<%=order.ordernum%>/cancelDelivery', {
+          }).finally(function () {
+            $('#kuryeIptalBtn').removeAttr('disabled');
+          }).then(function () {
+            alert('Kurye iptal edildi, kolay gelsin!');
+            window.location.reload(true);
+          }).catch(function (err) {
+            App.HandleError(err)
+          })
+        }
 
         function kuryeCagir() {
           var day = $('#kuryeDay').val();
           var hour = $('#kuryeTime').val();
           $('#kuryeCagir').attr('disabled');
-          App.Backend.post('order/<%=order.ordernum%>/kuryeCagir', {
+          App.Backend.post('order/<%=order.ordernum%>/setDelivery', {
             day: day,
             hour: hour
           }).finally(function () {
@@ -431,9 +475,18 @@
 
 
       <% if (order.status != 'teslim edilecek') { %>
-            $('#kuryeBtn').hide();
-            $('#delivBtn').hide();
+            // $('#kuryeBtn').hide();
+            // $('#delivBtn').hide();
       <% } %>
+
+      
+
+      $("#kuryeIptalBtn").click(function () {
+              if (window.confirm('Kuryeyi iptal etmek istiyor musunuz?')) {
+                kuryeIptal();
+              }
+            });
+
 
             $("#kuryeCagir").click(function () {
               if (window.confirm('Kuryeyi onaylıyor musunuz?')) {
@@ -446,30 +499,16 @@
               }
             });     
 
-          $('#approveOrder').click(function () {
-            if (window.confirm('Onay sonrasında direkt müşteriye teslimat yapabilirsiniz. Siparişi onaylıyor musunuz?')) {
-              $('#approveOrder').attr('disabled');
-              App.Backend.post('order/<%=order.ordernum%>/approve', {
-
-              }).finally(function () {
-                $('#approveOrder').removeAttr('disabled');
-              }).then(function () {
-                    <% if (order.dispatcherType == 'banabikurye') { %>
-                  $('#kuryeBtn').show();
-                  $('#kurye-modal').modal('show')
-                    <% } else { %>
-                  $('#delivBtn').show();
-                  $('#deliv-modal').modal('show')
-                    <% } %>
-                  }).catch(function (err) {
-                        App.HandleError(err)
-                      })
-            }
-          })
+        
 
           $('#getSupport').click(function () {
             alert('Whatsapp ekranını açarak lütfen bize sorunu iletin, müşteri ile görüşüp çözmeye çalışacağız')
           })
+
+          setTimeout(() => {
+          $(window).scrollTop(0);
+            
+          },500);
 
         })
       </script>

@@ -38,7 +38,7 @@
               <th>Kasap</th>
               <th>Durum</th>
               <th>Ödeme Tipi</th>
-              <th>Payment</th>
+              <th>Teslimat</th>
               <th>Ödenen</th>
           </tr>
       </thead>
@@ -52,9 +52,10 @@
               <td><%= orders[i].butcherName %></td>
               <td><%= orders[i].status %></td>
               <td><%= orders[i].paymentType %></td>
-              <td><%= orders[i].subMerchantStatus %></td>
+              <td><%= orders[i].dispatcherType %></td>
               <td>
-    <%- include('./_partial/currency.ejs', {value: orders[i].paidTotal}) %>
+                <a href="/manageorder/<%=orders[i].ordernum%>">
+    <%- include('./_partial/currency.ejs', {value: orders[i].paidTotal}) %></a>
                 
             
               

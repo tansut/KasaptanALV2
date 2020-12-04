@@ -304,6 +304,10 @@ export class LogisticProvider {
         return null;
     }
 
+    async cancelOrder(id: string): Promise<any> {
+        return null;
+    }
+
     constructor(config: any, options: LogisticProviderOptions) {
         this.options = options;
     }

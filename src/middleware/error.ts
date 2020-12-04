@@ -19,7 +19,7 @@ class ErrorMiddleware extends Middleware {
         if (ErrorMiddleware.isXhr(req)) {
             let isHttpErr = err instanceof HttpError
             let httpErr = isHttpErr ? <HttpError>err : null;
-            let msg = httpErr ? httpErr.message : err.name || err.message;
+            let msg = httpErr ? httpErr.message : (err.message || err.name) ;
             if (config.nodeenv == 'production') {
                 email.send('tansut@gmail.com', 'hata/XHR: kasaptanAl.com', "error.ejs", {
                     text: err + '/' + err.sql,

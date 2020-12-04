@@ -224,7 +224,7 @@ class BanabikuryeProvider extends core_1.LogisticProvider {
             let resp = null;
             try {
                 let result = yield this.post(method, req);
-                resp = convert(result.data);
+                resp = convert ? convert(result.data) : result.data;
             }
             catch (e) {
                 if (!this.safeRequests)
@@ -258,6 +258,14 @@ class BanabikuryeProvider extends core_1.LogisticProvider {
             resp.orderTotal = req.orderTotal;
             resp.distance = req.distance;
             return this.calculateCustomerFee(resp);
+        });
+    }
+    cancelOrder(id) {
+        return __awaiter(this, void 0, void 0, function* () {
+            let resp = yield this.post("cancel-order", { order_id: id });
+            if (!resp.data.is_successful) {
+                throw new Error("Kurye iptal edilemedi");
+            }
         });
     }
     createOrder(req) {
