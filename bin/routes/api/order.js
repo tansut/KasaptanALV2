@@ -957,8 +957,14 @@ class Route extends router_1.ApiRouter {
             let newStatus = order_3.OrderItemStatus.shipping;
             order.status = order_3.OrderItemStatus.shipping;
             order.statusDesc ? null : (order.statusDesc = '');
-            order.statusDesc += `\n- ${helper_1.default.formatDate(helper_1.default.Now(), true)} tarihinde ${order.status} -> ${newStatus}`;
+            order.statusDesc += `\n- ${helper_1.default.formatDate(helper_1.default.Now(), true)}: ${order.status} -> ${newStatus}`;
             yield order.save();
+            let notifyMobilePhones = [];
+            notifyMobilePhones.push('5531431988');
+            notifyMobilePhones.push('5326274151');
+            let payUrl = `${this.url}/manageorder/${order.ordernum}`;
+            let text = `${order.butcherName} teslim edeceğini iletti. ${payUrl}`;
+            yield sms_1.Sms.sendMultiple(notifyMobilePhones, text, false, new sitelog_1.default(this.constructorParams));
             this.res.send(200);
         });
     }
@@ -982,24 +988,63 @@ class Route extends router_1.ApiRouter {
             let shour = Math.round(hour / 100);
             let fHour = hour % 100;
             order.shipmentstart = helper_1.default.newDate2(day.getFullYear(), day.getMonth(), day.getDate(), shour, fHour, 0);
+            if (order.shipmentstart < helper_1.default.Now())
+                order.shipmentstart = helper_1.default.Now();
             let request = provider.orderFromOrder(order);
             try {
                 let offer = yield provider.createOrder(request);
-                order.deliveryStatus = 'planned';
                 order.deliveryOrderId = offer.orderId;
             }
             catch (err) {
                 throw err;
             }
-            order.statusDesc ? null : (order.statusDesc = '');
-            order.statusDesc += `\n- ${helper_1.default.formatDate(helper_1.default.Now(), true)} tarihinde kurye çağrıldı`;
             yield order.save();
+            this.res.send(200);
+        });
+    }
+    bnbCallbackRoute() {
+        return __awaiter(this, void 0, void 0, function* () {
+            let order = null;
+            if (this.req.body.event_type == "order_created" || this.req.body.event_type == "order_changed") {
+                order = yield this.getOrder(this.req.body.order.points[0].client_order_id, false);
+                order.statusDesc ? null : (order.statusDesc = '');
+                if (this.req.body.order.status == 'available') {
+                    order.status = order_3.OrderItemStatus.shipping;
+                    order.statusDesc += `\n- ${helper_1.default.formatDate(helper_1.default.Now(), true)}: kurye çağrıldı, atama bekleniyor.`;
+                }
+                if (this.req.body.order.status == 'active') {
+                    order.statusDesc += `\n- ${helper_1.default.formatDate(helper_1.default.Now(), true)}: teslimat süreci başladı, yolda.`;
+                }
+                if (this.req.body.order.status == 'canceled') {
+                    order.statusDesc += `\n- ${helper_1.default.formatDate(helper_1.default.Now(), true)}: teslimat iptal edildi.`;
+                }
+                if (this.req.body.order.status == 'completed') {
+                    order.status = order_3.OrderItemStatus.success;
+                    order.statusDesc += `\n- ${helper_1.default.formatDate(helper_1.default.Now(), true)}: başarıyla teslim edildi`;
+                }
+                yield order.save();
+            }
+            else if (this.req.body.event_type == "delivery_created" || this.req.body.event_type == "delivery_changed") {
+                order = yield this.getOrder(this.req.body.delivery.client_order_id, false);
+                order.statusDesc ? null : (order.statusDesc = '');
+                order.deliveryStatus = this.req.body.delivery.status;
+                yield order.save();
+            }
+            let log = new sitelog_1.default(this.constructorParams);
+            let data = {
+                logData: JSON.stringify(this.req.body),
+                f1: order ? order.ordernum : undefined,
+                status: this.req.body.event_type + '/' + (order ? order.deliveryStatus : ""),
+                logtype: "BNB"
+            };
+            yield log.log(data);
             this.res.send(200);
         });
     }
     static SetRoutes(router) {
         router.post('/order/:ordernum/approve', Route.BindRequest(Route.prototype.approveRoute));
         router.post('/order/:ordernum/kuryeCagir', Route.BindRequest(Route.prototype.kuryeCagirRoute));
+        router.post('/order/bnbCallback', Route.BindRequest(Route.prototype.bnbCallbackRoute));
         //router.get("/admin/order/:ordernum", Route.BindRequest(this.prototype.getOrderRoute));
     }
 }
@@ -1015,4 +1060,10 @@ __decorate([
     __metadata("design:paramtypes", []),
     __metadata("design:returntype", Promise)
 ], Route.prototype, "kuryeCagirRoute", null);
+__decorate([
+    common_1.Auth.Anonymous(),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", []),
+    __metadata("design:returntype", Promise)
+], Route.prototype, "bnbCallbackRoute", null);
 exports.default = Route;

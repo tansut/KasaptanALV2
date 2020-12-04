@@ -97,7 +97,7 @@ class Helper {
     static formatDate(date, useTime = false) {
         if (date) {
             const options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
-            return date.toLocaleDateString('tr-TR', options);
+            return date.toLocaleDateString('tr-TR', options) + (useTime ? ` ${date.getHours()}:${date.getMinutes()}` : '');
         }
         else
             return '';
@@ -151,7 +151,7 @@ class Helper {
     static normalizePhoto(url, thumbnail) {
         return Jimp2.read(path.resolve(url))
             .then(image => {
-            let _img = image.resize(1080, Jimp2.AUTO);
+            let _img = image.resize(1200, Jimp2.AUTO);
             return new Promise((resolve, reject) => {
                 _img.write(path.resolve(url), (err) => {
                     if (thumbnail) {

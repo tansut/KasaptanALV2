@@ -228,15 +228,15 @@ export default class BanabikuryeProvider extends LogisticProvider {
         return this.optimizedSlice(result);
     }
 
-    async safeResponse(method: string, req: BanabikuryeRequest, distance: number): Promise<OfferResponse> {
-        let resp: OfferResponse = null;
+    async safeResponse<T>(method: string, req: BanabikuryeRequest, distance: number, convert: Function): Promise<T> {
+        let resp: T = null;
         try {
             let result = await this.post<BanabikuryeResponse>(method, req);
-            resp = this.fromOfferResponse(result.data);
+            resp = convert(result.data) 
         } catch(e) {
             if (!this.safeRequests) throw e;
             let fee = Helper.asCurrency(10.00 + distance * 2);
-            resp = {
+            resp = <any>{                
                 customerFee: fee,
                 totalFee: fee,
                 orderTotal: 0.00
@@ -261,7 +261,7 @@ export default class BanabikuryeProvider extends LogisticProvider {
             fId: req.points[1].id,
         });
 
-        let resp: OfferResponse = await this.safeResponse("calculate-order",request, req.distance);
+        let resp: OfferResponse = await this.safeResponse<OfferResponse>("calculate-order",request, req.distance, this.fromOfferResponse.bind(this));
         resp.orderTotal = req.orderTotal;
         resp.distance = req.distance;
         return this.calculateCustomerFee(resp)
@@ -283,9 +283,7 @@ export default class BanabikuryeProvider extends LogisticProvider {
             fId: req.points[1].id,
         });
         let request = this.toOrderRequest(req);
-        let resp: OfferResponse = await this.safeResponse("create-order", request, req.distance);
-
-
+        let resp: OrderResponse = await this.safeResponse<OrderResponse>("create-order", request, req.distance, this.fromOrderResponse.bind(this));
         resp.orderTotal = req.orderTotal;
         resp.distance = req.distance;
         return <any>this.calculateCustomerFee(resp)

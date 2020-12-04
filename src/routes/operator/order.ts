@@ -30,15 +30,16 @@ import { stringify } from 'querystring';
 import { ComissionResult, ComissionHelper } from '../../lib/commissionHelper';
 import { PuanResult } from '../../models/puan';
 import Review from '../../db/models/review';
-import { OrderItemStatus } from '../../models/order';
 import { LocationType, LocationTypeDesc } from '../../models/geo';
 import { LogisticFactory } from '../../lib/logistic/core';
 import { off } from 'process';
 import Dispatcher from '../../db/models/dispatcher';
 import Butcher from '../../db/models/butcher';
 var MarkdownIt = require('markdown-it')
+import { DeliveryStatus, DeliveryStatusDesc, OrderItemStatus } from '../../models/order';
 
 export default class Route extends ViewRouter {
+    DeliveryStatusDesc = DeliveryStatusDesc;
     order: Order;
     api: OrderApi;
     _paymentProvider: CreditcardPaymentProvider

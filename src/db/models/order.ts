@@ -268,7 +268,7 @@ class Order extends BaseModel<Order> {
     @Column({
         allowNull: true    
     })    
-    status: string;    
+    status: OrderItemStatus;    
 
     @Column({
         allowNull: true    

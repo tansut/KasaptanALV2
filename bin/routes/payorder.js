@@ -28,9 +28,11 @@ const account_1 = require("../models/account");
 const paymentrouter_1 = require("../lib/paymentrouter");
 const email_1 = require("../lib/email");
 const order_2 = require("../models/order");
+const order_3 = require("../models/order");
 class Route extends paymentrouter_1.PaymentRouter {
     constructor() {
         super(...arguments);
+        this.DeliveryStatusDesc = order_3.DeliveryStatusDesc;
         this.paySession = {};
         this.shouldBePaid = 0.00;
         this.earnedPuanButcher = 0.00;
@@ -38,6 +40,7 @@ class Route extends paymentrouter_1.PaymentRouter {
         this.earnedPuanTotal = 0.00;
         this.mayEarnPuanTotal = 0.00;
         this.productTotal = 0.00;
+        this.markdown = new MarkdownIt();
         this.possiblePuanList = [];
     }
     renderPage(userMessage, view) {

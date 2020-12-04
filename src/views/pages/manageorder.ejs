@@ -74,6 +74,11 @@
           <li><span class="text-muted">Sipariş Durumu:&nbsp;</span> <%= order.status %></li>
           <li><span class="text-muted">Teslimat Süreci:&nbsp;</span>
             <%= controller.DeliveryStatusDesc[order.deliveryStatus] %></li>
+            <% if (order.statusDesc) { %>
+              <li><span class="text-muted">Sipariş Geçmişi:&nbsp;</span>
+              <%-controller.markdown.render(order.statusDesc) %>
+            </li>
+            <% } %>
           <% if (!controller.hideOrderDetails) { %>
           <li><span class="text-muted">Müşteri:&nbsp;</span><%=order.name%></li>
           <% } %>
@@ -337,6 +342,9 @@
           })
         }
         $(document).ready(function () {
+
+
+
       <% if (order.status != 'teslim edilecek') { %>
             $('#kuryeBtn').hide();
       <% } %>

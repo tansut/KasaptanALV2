@@ -13,13 +13,16 @@ const router_1 = require("../../lib/router");
 const user_1 = require("../../db/models/user");
 const user_2 = require("../api/user");
 const order_1 = require("../../db/models/order");
-const order_2 = require("../api/order");
+var MarkdownIt = require('markdown-it');
+const order_2 = require("../../models/order");
+const order_3 = require("../api/order");
 const accountmodel_1 = require("../../db/models/accountmodel");
 const account_1 = require("../../models/account");
 const helper_1 = require("../../lib/helper");
 class Route extends router_1.ViewRouter {
     constructor() {
         super(...arguments);
+        this.DeliveryStatusDesc = order_2.DeliveryStatusDesc;
         this.shouldBePaid = 0.00;
         this.earnedPuanButcher = 0.00;
         this.earnedPuanKalitte = 0.00;
@@ -27,6 +30,7 @@ class Route extends router_1.ViewRouter {
         this.mayEarnPuanTotal = 0.00;
         this.productTotal = 0.00;
         this.possiblePuanList = [];
+        this.markdown = new MarkdownIt();
         this.puanAccountsKalitte = [];
         this.puanAccountsButcher = [];
     }
@@ -78,7 +82,7 @@ class Route extends router_1.ViewRouter {
     }
     emailOrderDetails() {
         return __awaiter(this, void 0, void 0, function* () {
-            let api = new order_2.default(this.constructorParams);
+            let api = new order_3.default(this.constructorParams);
             let order = yield api.getOrder(this.req.params.orderid);
             this.render("email/order.started.ejs", api.getView(order));
         });
@@ -92,7 +96,7 @@ class Route extends router_1.ViewRouter {
     }
     viewOrderDetails() {
         return __awaiter(this, void 0, void 0, function* () {
-            let api = this.api = new order_2.default(this.constructorParams);
+            let api = this.api = new order_3.default(this.constructorParams);
             this.user = yield user_1.default.findByPk(this.req.user.id);
             let order = this.order = yield api.getOrder(this.req.params.orderid, true);
             yield this.getOrderSummary();

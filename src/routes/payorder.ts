@@ -30,9 +30,12 @@ import { PuanCalculator } from '../lib/commissionHelper';
 import { PuanResult } from '../models/puan';
 import email from '../lib/email';
 import { OrderSource } from '../models/order';
+import { DeliveryStatus, DeliveryStatusDesc, OrderItemStatus } from '../models/order';
 
 
 export default class Route extends PaymentRouter {
+    DeliveryStatusDesc = DeliveryStatusDesc;
+
     order: Order;
     api: OrderApi;
     balance: AccountModel;
@@ -45,6 +48,7 @@ export default class Route extends PaymentRouter {
     earnedPuanTotal = 0.00;
     mayEarnPuanTotal = 0.00;
     productTotal = 0.00;
+    markdown = new MarkdownIt();
 
     possiblePuanList: PuanResult[] = [];
 

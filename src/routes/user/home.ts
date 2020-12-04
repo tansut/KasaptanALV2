@@ -6,6 +6,8 @@ import UserRoute from "../api/user";
 import { Order, OrderItem } from "../../db/models/order";
 import { PermissionError } from "../../lib/http";
 import * as _ from "lodash";
+var MarkdownIt = require('markdown-it')
+import { DeliveryStatus, DeliveryStatusDesc, OrderItemStatus } from '../../models/order';
 
 
 import  OrderApi from '../api/order';
@@ -19,6 +21,7 @@ export default class Route extends ViewRouter {
     order: Order;
     api: OrderApi;
     user: User;
+    DeliveryStatusDesc = DeliveryStatusDesc;
     balance: AccountModel;
     shouldBePaid = 0.00;
     puanBalanceButcher: AccountModel;
@@ -29,6 +32,9 @@ export default class Route extends ViewRouter {
     mayEarnPuanTotal = 0.00;
     productTotal = 0.00;
     possiblePuanList: PuanResult[] = [];
+
+    markdown = new MarkdownIt();
+
 
     puanAccountsKalitte: AccountModel[] = []
     puanAccountsButcher: AccountModel[] = []

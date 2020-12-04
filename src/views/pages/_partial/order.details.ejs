@@ -155,6 +155,14 @@
 
   <ul class="px-4 list-unstyled font-size-sm">
     <li><span class="text-muted">Teslimat:&nbsp;</span><%= shipment[bi].howToDesc %></li>
+    <li><span class="text-muted">Teslimat Süreci:&nbsp;</span>
+      <%= controller.DeliveryStatusDesc[order.deliveryStatus] %></li>
+      <% if (order.statusDesc) { %>
+        <li><span class="text-muted">Sipariş Geçmişi:&nbsp;</span>
+        <%-controller.markdown.render(order.statusDesc) %>
+      </li>
+      <% } %>
+      
     <% if (order.noInteraction) { %>
       <li>Güvenli Teslimat: <%= order.noInteraction ? 'Evet': 'Hayır'%></li>
       <% } %>

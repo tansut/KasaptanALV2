@@ -1049,11 +1049,16 @@ export default class Route extends ApiRouter {
             return this.res.send(404);
 
         let newStatus = OrderItemStatus.shipping;
-
-        order.status = OrderItemStatus.shipping;
+        order.status = OrderItemStatus.shipping;        
         order.statusDesc ? null : (order.statusDesc = '')
-        order.statusDesc += `\n- ${Helper.formatDate(Helper.Now(), true)} tarihinde ${order.status} -> ${newStatus}`
-        await order.save();
+        order.statusDesc += `\n- ${Helper.formatDate(Helper.Now(), true)}: ${order.status} -> ${newStatus}`
+        await order.save()
+        let notifyMobilePhones = [];
+        notifyMobilePhones.push('5531431988');
+        notifyMobilePhones.push('5326274151');
+        let payUrl = `${this.url}/manageorder/${order.ordernum}`;
+        let text =`${order.butcherName} teslim edeceğini iletti. ${payUrl}`;
+        await Sms.sendMultiple(notifyMobilePhones, text, false, new SiteLogRoute(this.constructorParams))
         this.res.send(200);
     }
 
@@ -1082,20 +1087,66 @@ export default class Route extends ApiRouter {
         let fHour = hour % 100;
         
         order.shipmentstart = Helper.newDate2(day.getFullYear(), day.getMonth(), day.getDate(), shour, fHour, 0);
+        if (order.shipmentstart < Helper.Now())
+            order.shipmentstart = Helper.Now();
         let request = provider.orderFromOrder(order);
         
         try {
             let offer = await provider.createOrder(request);
-            order.deliveryStatus = 'planned';
             order.deliveryOrderId = offer.orderId;
         } catch (err) {
             throw err;
         }
 
 
-        order.statusDesc ? null : (order.statusDesc = '')
-        order.statusDesc += `\n- ${Helper.formatDate(Helper.Now(), true)} tarihinde kurye çağrıldı`
+
         await order.save();
+        this.res.send(200);
+    }
+
+    @Auth.Anonymous()
+    async bnbCallbackRoute() {        
+        let order: Order = null;
+
+        if (this.req.body.event_type == "order_created" || this.req.body.event_type == "order_changed") {
+            order = await this.getOrder(this.req.body.order.points[0].client_order_id, false);
+            order.statusDesc ? null : (order.statusDesc = '')
+            
+            if (this.req.body.order.status == 'available') {
+                order.status = OrderItemStatus.shipping;
+                order.statusDesc += `\n- ${Helper.formatDate(Helper.Now(), true)}: kurye çağrıldı, atama bekleniyor.`
+            }
+
+            if (this.req.body.order.status == 'active') {
+                order.statusDesc += `\n- ${Helper.formatDate(Helper.Now(), true)}: teslimat süreci başladı, yolda.`
+            }
+
+            if (this.req.body.order.status == 'canceled') {
+                order.statusDesc += `\n- ${Helper.formatDate(Helper.Now(), true)}: teslimat iptal edildi.`
+            }            
+                        
+            if (this.req.body.order.status == 'completed') {
+                order.status = OrderItemStatus.success;
+                order.statusDesc += `\n- ${Helper.formatDate(Helper.Now(), true)}: başarıyla teslim edildi`
+
+            }
+            await order.save();
+        } else if (this.req.body.event_type == "delivery_created" || this.req.body.event_type == "delivery_changed") {
+            order = await this.getOrder(this.req.body.delivery.client_order_id, false);
+            order.statusDesc ? null : (order.statusDesc = '')
+            order.deliveryStatus = this.req.body.delivery.status;
+            await order.save();
+        }
+        
+                
+        let log = new SiteLogRoute(this.constructorParams);
+        let data = {
+            logData: JSON.stringify(this.req.body),
+            f1: order ? order.ordernum: undefined,
+            status: this.req.body.event_type + '/' + (order ? order.deliveryStatus: ""),
+            logtype: "BNB"
+        }
+        await log.log(data);
         this.res.send(200);
     }
 
@@ -1103,6 +1154,7 @@ export default class Route extends ApiRouter {
     static SetRoutes(router: express.Router) {
         router.post('/order/:ordernum/approve', Route.BindRequest(Route.prototype.approveRoute))
         router.post('/order/:ordernum/kuryeCagir', Route.BindRequest(Route.prototype.kuryeCagirRoute))
+        router.post('/order/bnbCallback', Route.BindRequest(Route.prototype.bnbCallbackRoute))
 
         //router.get("/admin/order/:ordernum", Route.BindRequest(this.prototype.getOrderRoute));
     }
