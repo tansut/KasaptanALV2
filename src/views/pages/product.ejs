@@ -242,7 +242,7 @@
                                 <% if (controller.startPrice.basedOn == 'global') { %>
   
                                   <div>
-                                    <span class="font-weight-medium">Semt kasaplarınızın en iyi fiyatları</span> ve <span class="font-weight-medium">şimdi alışverişe başlamak</span> için semt seçin.
+                                    <span class="font-weight-medium">Semt kasaplarınızın fiyatları</span> ve <span class="font-weight-medium">şimdi alışverişe başlamak</span> için semt seçin.
                                   </div>
     
                             
@@ -272,7 +272,7 @@
   
                           <div class="text-center">
                             <button @click="selectArea(null)" type="button" class="btn btn-primary"><i
-                                class="czi-location font-size-lg mr-2"></i>Semt Seç</button>
+                                class="czi-location font-size-lg mr-2"></i>Semtinizi Seçin</button>
                           </div>
   
   
@@ -350,10 +350,10 @@
   
                             <% if (__req.query.frame != '1') { %>
                             <button @click="selectArea(null)" type="button" class="btn mr-2 btn-info btn-sm"><i
-                                class="czi-location font-size-lg mr-2"></i>Semt Seç</button>
+                                class="czi-location font-size-lg mr-2"></i>Semtinizi Seçin</button>
                             <% } else { %>
                               <button onclick="window.parent.purchase.selectAddress('<%=product.slug%>')" type="button" class="btn mr-2 btn-info btn-sm"><i
-                                class="czi-location font-size-lg mr-2"></i>Semt Seç</button>
+                                class="czi-location font-size-lg mr-2"></i>Semtinizi Seçin</button>
                             <% } %>
                             <a class="btn btn-sm btn-info " onclick="return showButchers()">Kasaplarımız<i
                                 class="czi-arrow-right ml-2 mr-n1"></i></a>
@@ -366,10 +366,10 @@
   
                             <% if (__req.query.frame != '1') { %>
                               <button @click="selectArea(null)" type="button" class="btn mr-2 btn-info btn-sm"><i
-                                  class="czi-location font-size-lg "></i>Semt Seç</button>
+                                  class="czi-location font-size-lg "></i>Semtinizi Seçin</button>
                               <% } else { %>
                                 <button onclick="window.parent.purchase.selectAddress('<%=product.slug%>')" type="button" class="btn mr-2 btn-info btn-sm"><i
-                                  class="czi-location font-size-lg "></i>Semt Seç</button>
+                                  class="czi-location font-size-lg "></i>Semtinizi Seçin</button>
                               <% } %>
   
                           </div>
@@ -551,11 +551,11 @@
                                     <h5 class="h6 mb-2 text-accent "><i class="czi-thumb-up mr-2"></i>Şimdi satın alın</h5>
                   
                                     <%if (__req.query.frame != '1') { %> 
-                                    <button title="<%= __req.prefAddr ? __req.prefAddr.level3Text: 'Semt Seçin' %>"
+                                    <button title="<%= __req.prefAddr ? __req.prefAddr.level3Text: 'Semtinizi Seçin' %>"
                                 @click="selectArea(null, '')" type="button" class="rounded-0 btn
                                 btn-secondary btn-sm"><i class="czi-location font-size-lg "></i>
                                       <% } else {  %>
-                                        <button title="<%= __req.prefAddr ? __req.prefAddr.level3Text: 'Semt Seçin' %>"
+                                        <button title="<%= __req.prefAddr ? __req.prefAddr.level3Text: 'Semtinizi Seçin' %>"
                                           onclick="window.parent.purchase.selectAddress('<%=product.slug%>')" type="button" class="rounded-0 btn
                                           btn-secondary btn-sm"><i class="czi-location font-size-lg "></i>
                                         
@@ -686,6 +686,10 @@
                               class="czi-cart font-size-lg mr-2"></i><%= controller.shopCardIndex >= 0 ? 'Sepeti Güncelle': 'Sepete Ekle' %></button>
 
                           <% } else { %>
+                            
+                              <button @click="selectArea(null)" type="button" class="btn btn-block btn-primary"><i
+                                  class="czi-location font-size-lg mr-2"></i>Semtinizi Seçin</button>
+                           
                           <% } %>
 
 

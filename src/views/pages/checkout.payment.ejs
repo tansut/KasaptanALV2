@@ -113,7 +113,10 @@
                         </div>   
                         <% }%>       
                         <% if (controller.allowNonOnline(bi) ) { %>
-                        <a class="text-muted font-size-sm" onclick="$('.non-cc').show(); $(this).hide()">Diğer Ödeme Şekilleri &raquo;</a>             
+                        <a id="btnShowOthers" class="mt-3 d-block text-muted font-size-sm" onclick="$('.non-cc').show(); $('#btnShowOthers').hide()">Diğer Ödeme Şekilleri &raquo;</a>             
+                        <% } else { %>
+
+                        
                         <% } %>
                     </td>
                   </tr>

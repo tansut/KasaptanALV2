@@ -5,7 +5,7 @@ var OrderItemStatus;
 (function (OrderItemStatus) {
     OrderItemStatus["supplying"] = "tedarik s\u00FCrecinde";
     OrderItemStatus["shipping"] = "teslim edilecek";
-    // waiting = 'teslim edilecek/kurye bekleniyor',
+    OrderItemStatus["onway"] = "paket yolda";
     OrderItemStatus["success"] = "teslim edildi";
     OrderItemStatus["successPartial"] = "k\u0131smen teslim edildi";
     OrderItemStatus["customerCanceled"] = "iptal: m\u00FC\u015Fteri";
@@ -22,7 +22,7 @@ exports.DeliveryStatusDesc = {
     delayed: 'Gecikme var',
     failed: 'Müşteri bulunamadı, başarısız',
     courier_assigned: 'Kurye atandı, süreç başlayacak',
-    courier_departed: 'Kasaba ulaşıldı',
+    courier_departed: 'Kasaba doğru yola çıkıldı',
     parcel_picked_up: 'Paket kasaptan alındı',
     courier_arrived: 'Müşteri bekleniyor',
     deleted: 'Silindi'

@@ -371,6 +371,7 @@ class Route extends router_1.ViewRouter {
                 pageThumbnail: this.req.helper.imgUrl('product-photos', product.slug),
                 pageDescription: product.generatedDesc,
                 product: product, view: view,
+                __hidesupportMessage: true,
                 __supportMessage: `${`Merhaba, kasaptanal.com üzerinden size ulaşıyorum. ${product.name} ile ilgili whatsapp üzerinden yardımcı olabilir misiniz?`}`
             }));
         });

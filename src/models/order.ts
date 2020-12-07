@@ -3,7 +3,7 @@ import { PuanResult } from "./puan";
 export enum OrderItemStatus {    
     supplying = 'tedarik sürecinde',
     shipping = 'teslim edilecek',
-    // waiting = 'teslim edilecek/kurye bekleniyor',
+    onway = 'paket yolda',
     success = 'teslim edildi',
     successPartial = 'kısmen teslim edildi',
     customerCanceled= 'iptal: müşteri',
@@ -30,7 +30,7 @@ export let DeliveryStatusDesc = {
     delayed: 'Gecikme var',
     failed: 'Müşteri bulunamadı, başarısız',   
     courier_assigned: 'Kurye atandı, süreç başlayacak',    
-    courier_departed: 'Kasaba ulaşıldı',
+    courier_departed: 'Kasaba doğru yola çıkıldı',
     parcel_picked_up: 'Paket kasaptan alındı',
     courier_arrived: 'Müşteri bekleniyor',
     deleted: 'Silindi'

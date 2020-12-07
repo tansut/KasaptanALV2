@@ -425,6 +425,9 @@ window.initComponents = function initComponents() {
                     this.note = urlParams.get('note')
                 }
 
+                this.selectedUnit = this.selectedUnit || this.product.purchaseOptions[0];
+
+
             },
 
             selectNewButcher(butcher) {

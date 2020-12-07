@@ -142,7 +142,7 @@
 
                 </div>
                 <% if (item.note) {%>
-                <div class="font-size-sm text-info"><%=item.note%></div>
+                <div class="font-size-sm font-weight-bolder text-info"><%=item.note%></div>
                 <%}%> 
                                
                                             </div>
@@ -322,7 +322,7 @@
                     <% let days = controller.availableDays()%>
                     <% Object.keys(days).forEach(key=> { %>
 
-                    <option <%= key == order.shipmentdate.toDateString() ? 'selected':'' %> value="<%=key%>">
+                    <option <%= key == (order.shipmentdate && (order.shipmentdate == order.shipmentdate.toDateString())) ? 'selected':'' %> value="<%=key%>">
                       <%= days[key]%></option>
 
                     <%})%>

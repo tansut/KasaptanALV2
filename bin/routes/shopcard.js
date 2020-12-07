@@ -205,7 +205,7 @@ class Route extends router_1.ViewRouter {
         return __awaiter(this, void 0, void 0, function* () {
             let api = new dispatcher_1.default(this.constructorParams);
             let orders = yield this.orderapi.getFromShopcard(this.shopcard);
-            var self = this;
+            let offers = {};
             for (let o in this.shopcard.shipment) {
                 let order = orders.find(oo => oo.butcherid == parseInt(o));
                 if (this.shopcard.shipment[o].howTo == 'unset') {
@@ -239,15 +239,16 @@ class Route extends router_1.ViewRouter {
                             takeOnly: provider.options.dispatcher.takeOnly,
                             km: 0,
                         };
-                        let offer, req;
+                        let req;
                         if (order && order.shipLocation) {
                             req = provider.offerFromOrder(order);
-                            offer = yield provider.requestOffer(req);
+                            let offer = yield provider.requestOffer(req);
                             if (offer) {
                                 provider.lastOffer = offer;
                                 dispatcher.feeOffer = provider.lastOffer.totalFee;
                                 dispatcher.fee = provider.lastOffer.customerFee;
                                 dispatcher.km = provider.lastOffer.distance;
+                                offers[o] = offer;
                             }
                             else {
                                 // dispatcher = this.shopcard.shipment[o].dispatcher = null;
@@ -288,6 +289,7 @@ class Route extends router_1.ViewRouter {
                     this.shopcard.shipment[o].dispatcher = null;
                 }
             }
+            return offers;
         });
     }
     saveadresTakeRoute() {
@@ -370,6 +372,7 @@ class Route extends router_1.ViewRouter {
         return __awaiter(this, void 0, void 0, function* () {
             this.shopcard = yield shopcard_1.ShopCard.createFromRequest(this.req);
             let needAddress = false;
+            let hasDispatcher = true;
             for (let k in this.shopcard.butchers) {
                 let butcher = this.shopcard.butchers[k];
                 this.shopcard.shipment[k].type = this.req.body[`shipping-method${k}`];
@@ -392,7 +395,18 @@ class Route extends router_1.ViewRouter {
                 }
             }
             this.fillDefaultAddress();
-            yield this.setDispatcher();
+            let offer = yield this.setDispatcher();
+            for (let o in this.shopcard.shipment) {
+                if (offer[o]) {
+                }
+                else if (this.shopcard.shipment[o].howTo == 'ship') {
+                    hasDispatcher = false;
+                }
+            }
+            if (!hasDispatcher) {
+                this.renderPage("pages/checkout.ship.ejs", { _usrmsg: { type: 'danger', text: 'Lütfen en az sipariş tutarını gözeterek devam edin.' } });
+                return;
+            }
             this.shopcard.calculateShippingCosts();
             yield this.shopcard.saveToRequest(this.req);
             //this.renderPage("pages/checkout.adres.ejs")

@@ -6,7 +6,7 @@ const base_1 = require("./base");
 const http = require("../lib/http");
 const user_1 = require("../db/models/user");
 const authCntroller = require("../lib/authorizationToken");
-// const RememberMeStrategy = require("passport-remember-me")
+// const RememberMeStrategy = require("passport-remember-me").
 var passport = require('passport'), LocalStrategy = require('passport-local').Strategy;
 class AuthMiddleware extends base_1.default {
     tryLoadUser(req, res, next) {

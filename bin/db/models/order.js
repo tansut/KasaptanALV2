@@ -168,7 +168,7 @@ let Order = Order_1 = class Order extends basemodel_1.default {
             o.paymentTypeText = c.payment[bi].desc;
             o.shipmentType = c.shipment[bi].type;
             o.shipmentTypeText = c.shipment[bi].desc;
-            o.shipmentdate = c.shipment[bi].days[0] ? helper_1.default.newDate(c.shipment[bi].days[0]) : null;
+            o.shipmentdate = c.shipment[bi].days[0] ? helper_1.default.newDate(c.shipment[bi].days[0]) : helper_1.default.Now();
             o.shipmenthour = c.shipment[bi].hours[0];
             o.shipmenthourText = c.shipment[bi].hoursText[0];
             o.shipmentInformMe = c.shipment[bi].informMe;

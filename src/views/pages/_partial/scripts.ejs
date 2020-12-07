@@ -305,6 +305,7 @@
   </script>
   
   <script>
+    <% if (typeof(__supportMessage) == "undefined" || !__hidesupportMessage) { %>
   $('#__whatsup').floatingWhatsApp({
       phone: '908503054216',
       popupMessage: 'Nasıl yardımcı olabilirim ?',
@@ -317,6 +318,8 @@
       size: '3.2rem',
       
     });
+
+    <% } %>
   
   </script>
   <% if (!__req.user) { %>

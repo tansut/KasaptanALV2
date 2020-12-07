@@ -219,10 +219,10 @@ export default class Route extends ViewRouter {
     //     }
     // }
 
-    async setDispatcher() {
+    async setDispatcher(): Promise<{ [key: number]: OfferResponse; }> {
         let api = new Dispatcher(this.constructorParams);
         let orders = await this.orderapi.getFromShopcard(this.shopcard);
-        var self = this;
+        let offers = {};
         for (let o in this.shopcard.shipment) {
             let order = orders.find(oo => oo.butcherid == parseInt(o));
             if (this.shopcard.shipment[o].howTo == 'unset') {
@@ -261,15 +261,16 @@ export default class Route extends ViewRouter {
                         km: 0,
                         //location: provider.options.dispatcher.butcher ? <any>provider.options.dispatcher.butcher.location : null,
                     }
-                    let offer: OfferResponse, req: OfferRequest;
+                    let req: OfferRequest;
                     if (order && order.shipLocation) {
                         req = provider.offerFromOrder(order);
-                        offer = await provider.requestOffer(req)
+                        let offer = await provider.requestOffer(req)
                         if (offer) {
                             provider.lastOffer = offer;
                             dispatcher.feeOffer = provider.lastOffer.totalFee;
                             dispatcher.fee = provider.lastOffer.customerFee;
                             dispatcher.km = provider.lastOffer.distance;
+                            offers[o] = offer;
                         } else {
                             // dispatcher = this.shopcard.shipment[o].dispatcher = null;
                             // this.shopcard.shipment[o].howTo = 'take';
@@ -312,6 +313,8 @@ export default class Route extends ViewRouter {
             }
 
         }
+
+        return offers;
     }
 
     async saveadresTakeRoute() {
@@ -391,6 +394,7 @@ export default class Route extends ViewRouter {
     async saveshipRoute() {
         this.shopcard = await ShopCard.createFromRequest(this.req);
         let needAddress = false;
+        let hasDispatcher = true;
         for (let k in this.shopcard.butchers) {
             let butcher = this.shopcard.butchers[k];
             this.shopcard.shipment[k].type = this.req.body[`shipping-method${k}`];
@@ -413,9 +417,22 @@ export default class Route extends ViewRouter {
             }
         }
         this.fillDefaultAddress();        
-        await this.setDispatcher();        
+        let offer = await this.setDispatcher();       
+        for (let o in this.shopcard.shipment) {
+            if (offer[o]) {
+                
+            } else if (this.shopcard.shipment[o].howTo == 'ship') {
+                hasDispatcher = false;
+            }
+            
+        }
+        if (!hasDispatcher) {
+            this.renderPage("pages/checkout.ship.ejs", { _usrmsg: {type:'danger', text: 'Lütfen en az sipariş tutarını gözeterek devam edin.'} });
+            return;
+        }
         this.shopcard.calculateShippingCosts();
         await this.shopcard.saveToRequest(this.req);
+
         //this.renderPage("pages/checkout.adres.ejs")
         needAddress ? this.renderPage("pages/checkout.adres.ejs") : this.renderPage("pages/checkout.adres-take.ejs");
     }
@@ -477,6 +494,7 @@ export default class Route extends ViewRouter {
     async savereviewRoute() {
         this.shopcard = await ShopCard.createFromRequest(this.req);
         await this.setDispatcher();
+
         this.shopcard.calculateShippingCosts();
         try {
             let api = new OrderApi(this.constructorParams);

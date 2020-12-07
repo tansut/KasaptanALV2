@@ -539,7 +539,7 @@ class Order extends BaseModel<Order> {
         o.paymentTypeText = c.payment[bi].desc;
         o.shipmentType = c.shipment[bi].type;
         o.shipmentTypeText = c.shipment[bi].desc;
-        o.shipmentdate = c.shipment[bi].days[0] ? Helper.newDate(c.shipment[bi].days[0]): null;
+        o.shipmentdate = c.shipment[bi].days[0] ? Helper.newDate(c.shipment[bi].days[0]): Helper.Now();
         o.shipmenthour = c.shipment[bi].hours[0];
         o.shipmenthourText = c.shipment[bi].hoursText[0];
         o.shipmentInformMe = c.shipment[bi].informMe;

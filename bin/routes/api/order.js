@@ -789,7 +789,7 @@ class Route extends router_1.ApiRouter {
                     for (var p = 0; p < notifyMobilePhones.length; p++) {
                         if (notifyMobilePhones[p].trim()) {
                             let payUrl = `${this.url}/manageorder/${ol[i].ordernum}`;
-                            sms_1.Sms.send("90" + helper_1.default.getPhoneNumber(notifyMobilePhones[p].trim()), `KasaptanAl.com/${ol[i].butcherName}: ${helper_1.default.formattedCurrency(paymentInfo.paidPrice)} online odeme yapildi. Bilgi icin ${payUrl} `, false, new sitelog_1.default(this.constructorParams));
+                            sms_1.Sms.send("90" + helper_1.default.getPhoneNumber(notifyMobilePhones[p].trim()), `${ol[i].butcherName} yeni siparis[${ol[i].name}]: ${helper_1.default.formattedCurrency(paymentInfo.paidPrice)} online odeme yapildi. LUTFEN SIPARISI YANITLAYIN: ${payUrl} `, false, new sitelog_1.default(this.constructorParams));
                         }
                     }
                 }
@@ -926,7 +926,8 @@ class Route extends router_1.ApiRouter {
                         for (var p = 0; p < notifyMobilePhones.length; p++) {
                             if (notifyMobilePhones[p].trim()) {
                                 let manageUrl = `${this.url}/manageorder/${order.ordernum}`;
-                                sms_1.Sms.send("90" + helper_1.default.getPhoneNumber(notifyMobilePhones[p].trim()), `KasaptanAl.com/${order.butcherName} yeni sipariş: Siparişi aç: ${manageUrl}, teslimat kodu: ${order.securityCode}`, false, new sitelog_1.default(this.constructorParams));
+                                sms_1.Sms.send("90" + helper_1.default.getPhoneNumber(notifyMobilePhones[p].trim()), `${order.butcherName} yeni siparis [${order.name}]. LUTFEN SIPARISI YANITLAYIN: ${manageUrl} `, false, new sitelog_1.default(this.constructorParams));
+                                //Sms.send("90" + Helper.getPhoneNumber(notifyMobilePhones[p].trim()), `KasaptanAl.com/${order.butcherName} yeni sipariş: Siparişi aç: ${manageUrl}, teslimat kodu: ${order.securityCode}`, false, new SiteLogRoute(this.constructorParams))
                             }
                         }
                     }
@@ -980,13 +981,13 @@ class Route extends router_1.ApiRouter {
             let viewUrl = `${this.url}/user/orders/${order.ordernum}`;
             for (var p = 0; p < notifyMobilePhones.length; p++) {
                 if (notifyMobilePhones[p].trim()) {
-                    let text = `${order.butcherName} teslimat planlaması yapildi [${order.name}]: ${order.shipmentStartText}. Siparişi açmak için ${manageUrl}`;
+                    let text = `${order.butcherName} musteriniz ${order.name} teslimat icin bilgilendirildi: ${order.shipmentStartText}. Siparis: ${manageUrl}`;
                     sms_1.Sms.send("90" + helper_1.default.getPhoneNumber(notifyMobilePhones[p].trim()), text, false, new sitelog_1.default(this.constructorParams));
                 }
             }
             let customerText = order.dispatcherType == 'banabikurye' ?
-                `KasaptanAl.com siparişiniz için ${order.butcherName} teslimat planlaması yapti: ${order.shipmentStartText}. Bilgi için ${viewUrl}` :
-                `KasaptanAl.com siparişiniz için ${order.butcherName} teslimat planlaması yapti: ${order.shipmentStartText}. Teslimat bilgi kasap tel: ${order.butcher.phone}, diger konular KasaptanAl.com whatsapp: 0850 305 4216`;
+                `Siparisiniz için ${order.butcherName} teslimat planlamasi yapti: ${order.shipmentStartText}. Bilgi için ${viewUrl}` :
+                `Siparisiniz için ${order.butcherName} teslimat planlamasi yapti: ${order.shipmentStartText}. Teslimat bilgi kasap tel: ${order.butcher.phone}, diger konular KasaptanAl.com whatsapp: 0850 305 4216`;
             yield sms_1.Sms.send(order.phone, customerText, false, new sitelog_1.default(this.constructorParams));
             email_1.default.send(order.email, `KasaptanAl.com ${order.butcherName} siparişiniz teslimat bilgisi`, "order.planed.ejs", this.getView(order));
         });
@@ -1110,10 +1111,21 @@ class Route extends router_1.ApiRouter {
                     order.deliveryStatus = order.deliveryStatus || 'planned';
                 }
                 if (this.req.body.order.status == 'active') {
+                    order.status = order_3.OrderItemStatus.onway;
                     order.statusDesc += `\n- ${helper_1.default.formatDate(helper_1.default.Now(), true)}: teslimat süreci başladı, yolda.`;
+                    let notifyMobilePhones = (order.butcher.notifyMobilePhones || "").split(',');
+                    notifyMobilePhones.push('5531431988');
+                    notifyMobilePhones.push('5326274151');
+                    for (var p = 0; p < notifyMobilePhones.length; p++) {
+                        if (notifyMobilePhones[p].trim()) {
+                            let manageUrl = `${this.url}/manageorder/${order.ordernum}`;
+                            sms_1.Sms.send("90" + helper_1.default.getPhoneNumber(notifyMobilePhones[p].trim()), `${order.butcherName} kurye yola cikti. Siparis[${order.name}]: ${manageUrl} `, false, new sitelog_1.default(this.constructorParams));
+                        }
+                    }
                 }
                 if (this.req.body.order.status == 'canceled') {
                     order.statusDesc += `\n- ${helper_1.default.formatDate(helper_1.default.Now(), true)}: teslimat iptal edildi.`;
+                    order.deliveryStatus = "canceled";
                     order.deliveryOrderId = null;
                 }
                 if (this.req.body.order.status == 'completed') {
@@ -1126,6 +1138,7 @@ class Route extends router_1.ApiRouter {
                 order = yield this.getOrder(this.req.body.delivery.client_order_id, false);
                 order.statusDesc ? null : (order.statusDesc = '');
                 order.deliveryStatus = this.req.body.delivery.status;
+                order.statusDesc += `\n- ${helper_1.default.formatDate(helper_1.default.Now(), true)}: teslimat şu aşamada: ${order_3.DeliveryStatusDesc[order.deliveryStatus] || ''}`;
                 yield order.save();
             }
             let log = new sitelog_1.default(this.constructorParams);

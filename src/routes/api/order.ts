@@ -19,7 +19,7 @@ import { Sms } from '../../lib/sms';
 import { AccountingOperation, Account } from '../../models/account';
 import Helper from '../../lib/helper';
 import { Creditcard, CreditcardPaymentFactory, PaymentTotal, PaymentRequest, PaymentResult } from '../../lib/payment/creditcard';
-import { OrderPaymentStatus, OrderItemStatus, OrderSource, OrderType } from '../../models/order';
+import { OrderPaymentStatus, OrderItemStatus, OrderSource, OrderType, DeliveryStatusDesc } from '../../models/order';
 import config from '../../config';
 import { PuanCalculator } from '../../lib/commissionHelper';
 import { PuanResult, Puan } from '../../models/puan';
@@ -851,7 +851,7 @@ export default class Route extends ApiRouter {
                 for (var p = 0; p < notifyMobilePhones.length; p++) {
                     if (notifyMobilePhones[p].trim()) {
                         let payUrl = `${this.url}/manageorder/${ol[i].ordernum}`;
-                        Sms.send("90" + Helper.getPhoneNumber(notifyMobilePhones[p].trim()), `KasaptanAl.com/${ol[i].butcherName}: ${Helper.formattedCurrency(paymentInfo.paidPrice)} online odeme yapildi. Bilgi icin ${payUrl} `, false, new SiteLogRoute(this.constructorParams))
+                        Sms.send("90" + Helper.getPhoneNumber(notifyMobilePhones[p].trim()), `${ol[i].butcherName} yeni siparis[${ol[i].name}]: ${Helper.formattedCurrency(paymentInfo.paidPrice)} online odeme yapildi. LUTFEN SIPARISI YANITLAYIN: ${payUrl} `, false, new SiteLogRoute(this.constructorParams))
                     }
                 }
             }
@@ -1017,7 +1017,8 @@ export default class Route extends ApiRouter {
                     for (var p = 0; p < notifyMobilePhones.length; p++) {
                         if (notifyMobilePhones[p].trim()) {
                             let manageUrl = `${this.url}/manageorder/${order.ordernum}`;
-                            Sms.send("90" + Helper.getPhoneNumber(notifyMobilePhones[p].trim()), `KasaptanAl.com/${order.butcherName} yeni sipariş: Siparişi aç: ${manageUrl}, teslimat kodu: ${order.securityCode}`, false, new SiteLogRoute(this.constructorParams))
+                            Sms.send("90" + Helper.getPhoneNumber(notifyMobilePhones[p].trim()), `${order.butcherName} yeni siparis [${order.name}]. LUTFEN SIPARISI YANITLAYIN: ${manageUrl} `, false, new SiteLogRoute(this.constructorParams))
+                            //Sms.send("90" + Helper.getPhoneNumber(notifyMobilePhones[p].trim()), `KasaptanAl.com/${order.butcherName} yeni sipariş: Siparişi aç: ${manageUrl}, teslimat kodu: ${order.securityCode}`, false, new SiteLogRoute(this.constructorParams))
                         }
                     }
                 }
@@ -1074,14 +1075,14 @@ export default class Route extends ApiRouter {
 
         for (var p = 0; p < notifyMobilePhones.length; p++) {
             if (notifyMobilePhones[p].trim()) {
-                let text = `${order.butcherName} teslimat planlaması yapildi [${order.name}]: ${order.shipmentStartText}. Siparişi açmak için ${manageUrl}`;
+                let text = `${order.butcherName} musteriniz ${order.name} teslimat icin bilgilendirildi: ${order.shipmentStartText}. Siparis: ${manageUrl}`;
                 Sms.send("90" + Helper.getPhoneNumber(notifyMobilePhones[p].trim()), text, false, new SiteLogRoute(this.constructorParams))
             }
         }
 
         let customerText = order.dispatcherType == 'banabikurye' ?
-            `KasaptanAl.com siparişiniz için ${order.butcherName} teslimat planlaması yapti: ${order.shipmentStartText}. Bilgi için ${viewUrl}` :
-            `KasaptanAl.com siparişiniz için ${order.butcherName} teslimat planlaması yapti: ${order.shipmentStartText}. Teslimat bilgi kasap tel: ${order.butcher.phone}, diger konular KasaptanAl.com whatsapp: 0850 305 4216`
+            `Siparisiniz için ${order.butcherName} teslimat planlamasi yapti: ${order.shipmentStartText}. Bilgi için ${viewUrl}` :
+            `Siparisiniz için ${order.butcherName} teslimat planlamasi yapti: ${order.shipmentStartText}. Teslimat bilgi kasap tel: ${order.butcher.phone}, diger konular KasaptanAl.com whatsapp: 0850 305 4216`
         await Sms.send(order.phone, customerText, false, new SiteLogRoute(this.constructorParams))
         email.send(order.email, `KasaptanAl.com ${order.butcherName} siparişiniz teslimat bilgisi`, "order.planed.ejs", this.getView(order));
 
@@ -1211,6 +1212,7 @@ export default class Route extends ApiRouter {
             order = await this.getOrder(this.req.body.order.points[0].client_order_id, false);
             order.statusDesc ? null : (order.statusDesc = '')
             order.deliveryOrderId = this.req.body.order.order_id;
+
             if (this.req.body.order.status == 'available') {
                 order.status = OrderItemStatus.shipping;
                 order.deliveryStatus = order.deliveryStatus || 'planned';
@@ -1223,24 +1225,35 @@ export default class Route extends ApiRouter {
             }
 
             if (this.req.body.order.status == 'active') {
+                order.status = OrderItemStatus.onway;
                 order.statusDesc += `\n- ${Helper.formatDate(Helper.Now(), true)}: teslimat süreci başladı, yolda.`
+                let notifyMobilePhones = (order.butcher.notifyMobilePhones || "").split(',');
+                notifyMobilePhones.push('5531431988');
+                notifyMobilePhones.push('5326274151');
+                for (var p = 0; p < notifyMobilePhones.length; p++) {
+                    if (notifyMobilePhones[p].trim()) {
+                        let manageUrl = `${this.url}/manageorder/${order.ordernum}`;
+                        Sms.send("90" + Helper.getPhoneNumber(notifyMobilePhones[p].trim()), `${order.butcherName} kurye yola cikti. Siparis[${order.name}]: ${manageUrl} `, false, new SiteLogRoute(this.constructorParams))
+                    }
+                }
             }
 
             if (this.req.body.order.status == 'canceled') {
                 order.statusDesc += `\n- ${Helper.formatDate(Helper.Now(), true)}: teslimat iptal edildi.`;
+                order.deliveryStatus = "canceled";
                 order.deliveryOrderId = null;
             }
 
             if (this.req.body.order.status == 'completed') {
                 order.status = OrderItemStatus.success;
                 order.statusDesc += `\n- ${Helper.formatDate(Helper.Now(), true)}: başarıyla teslim edildi`
-
             }
             await order.save();
         } else if (this.req.body.event_type == "delivery_created" || this.req.body.event_type == "delivery_changed") {
             order = await this.getOrder(this.req.body.delivery.client_order_id, false);
-            order.statusDesc ? null : (order.statusDesc = '')
+            order.statusDesc ? null : (order.statusDesc = '');
             order.deliveryStatus = this.req.body.delivery.status;
+            order.statusDesc += `\n- ${Helper.formatDate(Helper.Now(), true)}: teslimat şu aşamada: ${DeliveryStatusDesc[order.deliveryStatus] || ''}`;
             await order.save();
         }
 
