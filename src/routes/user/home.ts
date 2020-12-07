@@ -93,9 +93,8 @@ export default class Route extends ViewRouter {
 
     
     async getUserSummary() {        
-        
         this.puanAccountsKalitte = await AccountModel.list([Account.generateCode("musteri-kalitte-kazanilan-puan", [this.user.id, 1]),
-        Account.generateCode("musteri-kalitte-kazanilan-puan", [this.user.id, 2])])
+            Account.generateCode("musteri-kalitte-kazanilan-puan", [this.user.id, 2])])
         this.puanAccountsButcher = await AccountModel.list([Account.generateCode("musteri-kasap-kazanilan-puan", [this.user.id])])
     }
 

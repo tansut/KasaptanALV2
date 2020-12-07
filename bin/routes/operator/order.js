@@ -84,6 +84,8 @@ class Route extends router_1.ViewRouter {
             yield this.api.fillButcherDebtAccounts(this.order);
             let butcherDebptAccounts = yield accountmodel_1.default.summary([account_1.Account.generateCode("kasaplardan-alacaklar", [this.order.butcherid], true)]);
             this.butcherDebt = butcherDebptAccounts.borc - butcherDebptAccounts.alacak;
+            // let puans = await this.api.getEarnedPuans(this.order);
+            // console.log(puans)
         });
     }
     get paymentProvider() {

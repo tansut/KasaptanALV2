@@ -8,6 +8,15 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
 var __metadata = (this && this.__metadata) || function (k, v) {
     if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
 };
+var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
+    function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
+    return new (P || (P = Promise))(function (resolve, reject) {
+        function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
+        function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
+        function step(result) { result.done ? resolve(result.value) : adopt(result.value).then(fulfilled, rejected); }
+        step((generator = generator.apply(thisArg, _arguments || [])).next());
+    });
+};
 var User_1;
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.UserRole = void 0;
@@ -18,10 +27,28 @@ const user_1 = require("../../models/user");
 const bcrypt = require("bcryptjs");
 const helper_1 = require("../../lib/helper");
 const validator_1 = require("validator");
+const accountmodel_1 = require("./accountmodel");
+const account_1 = require("../../models/account");
 var UserRole;
 (function (UserRole) {
 })(UserRole = exports.UserRole || (exports.UserRole = {}));
 let User = User_1 = class User extends basemodel_1.default {
+    constructor() {
+        super(...arguments);
+        this.usablePuans = 0.00;
+    }
+    loadPuanView() {
+        return __awaiter(this, void 0, void 0, function* () {
+            this.puans = yield accountmodel_1.default.summary([
+                account_1.Account.generateCode("musteri-kalitte-kazanilan-puan", [this.id, 1]),
+                account_1.Account.generateCode("musteri-kalitte-kazanilan-puan", [this.id, 2]),
+                account_1.Account.generateCode("musteri-kasap-kazanilan-puan", [this.id])
+            ]);
+            this.usablePuans = helper_1.default.asCurrency(this.puans.alacak - this.puans.borc);
+            this.usablePuans = this.usablePuans < 0 ? helper_1.default.asCurrency(0) : this.usablePuans;
+            return this;
+        });
+    }
     static retrieveByEMailOrPhone(email) {
         email = email || "";
         let where = validator_1.default.isEmail(email) ? {
@@ -29,7 +56,9 @@ let User = User_1 = class User extends basemodel_1.default {
         } : {
             mphone: helper_1.default.getPhoneNumber(email)
         };
-        var q = User_1.findOne({ where: where });
+        var q = User_1.findOne({ where: where }).then(u => {
+            return u.loadPuanView();
+        });
         return q;
     }
     hasRole(role) {

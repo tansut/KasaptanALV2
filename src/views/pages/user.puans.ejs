@@ -48,7 +48,7 @@
             <div>
                 <% if (controller.puanAccountsKalitte.length > 1) { %>
                     <%- include('./_partial/accounts-view.ejs', { showDate: true, hideBorc: true, accounts: controller.puanAccountsKalitte, title:'kasaptanAl.com Puanlarınız' }) %>
-                    <p class="font-size-sm text-info">
+                    <p class="d-none font-size-sm text-info">
                         <i class="czi-thumb-up mr-1 "></i>
                         kasaptanAl.com puanlarınızı tüm alışverişlerinizde kullanabilirsiniz.
                     </p>                    
@@ -57,7 +57,7 @@
                   
                   <% if (controller.puanAccountsButcher.length > 1) { %>
                     <%- include('./_partial/accounts-view.ejs', { showDate: true, hideBorc: true, accounts: controller.puanAccountsButcher, title:'Kasap Puanlarınız' }) %>
-                    <p class="font-size-sm text-info">
+                    <p class="d-none font-size-sm text-info">
                         <i class="czi-thumb-up mr-1 "></i>
                         Kasap puanlarınızı sadece puan kazandığınız kasap alışverişlerinizde kullanabilirsiniz.
                     </p>

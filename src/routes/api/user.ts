@@ -22,6 +22,7 @@ var generator = require('generate-password');
 let passport = require("passport")
 import * as sq from 'sequelize';
 import { add } from 'lodash';
+import AccountModel from '../../db/models/accountmodel';
 
  
 interface GeneratedTokenData {
@@ -51,6 +52,9 @@ export default class UserRoute extends ApiRouter {
     //         console.log(err)
     //     })
     // }
+
+
+
 
     @Auth.Anonymous()
     async sendResetLink() {

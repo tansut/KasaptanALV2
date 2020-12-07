@@ -68,7 +68,10 @@ class AuthMiddleware extends Middleware {
 
         passport.deserializeUser(function (id, done) {
             User.findByPk(id).then(user => {
-                done(null, user);
+                user.loadPuanView().then(user => {
+                    done(null, user);
+                }).catch(err=>done())
+                
             }).catch(done);
         });
 
@@ -86,6 +89,11 @@ class AuthMiddleware extends Middleware {
                         return done(null, false, { message: 'Incorrect user.' });
                     }
                     return done(null, user, { s: true });
+                    // user.loadPuanView().then(p=>{
+                        
+                    // }).catch(err=>{
+                    //     return done(null, false, { message: 'Unknown error' });
+                    // })
                 });
             }
         ));

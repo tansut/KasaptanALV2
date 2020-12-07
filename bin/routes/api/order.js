@@ -609,7 +609,7 @@ class Route extends router_1.ApiRouter {
         return result;
     }
     getComissionAccounts(o, total, kasaptanAlShip) {
-        let result = new account_1.AccountingOperation(`${o.ordernum} nolu ${o.butcherName} kasap komisyon hesabı`);
+        let result = new account_1.AccountingOperation(`${o.ordernum} nolu ${o.butcherName} kasap komisyon hesabı`, o.ordernum);
         let butcherFee = o.getButcherComission(total);
         let puanTotal = o.getPuanTotal(total);
         result.accounts.push(new account_1.Account("kasaplardan-kesilen-komisyonlar", [100, o.butcherid, o.ordernum], `${o.ordernum} nolu satış kasaptanal.com komisyonu`).inc(butcherFee));
@@ -630,7 +630,7 @@ class Route extends router_1.ApiRouter {
     // }    
     getPuanAccounts(o, total) {
         let gains = this.getPossiblePuanGain(o, total);
-        let result = new account_1.AccountingOperation(`${o.ordernum} nolu ${o.butcherName} siparişi puan kazancı`);
+        let result = new account_1.AccountingOperation(`${o.ordernum} nolu ${o.butcherName} siparişi puan kazancı`, o.ordernum);
         gains.forEach(pg => {
             if (pg.earned > 0.00) {
                 if (pg.type == "butcher") {
@@ -673,6 +673,16 @@ class Route extends router_1.ApiRouter {
         this.arrangeKalittePuans(o);
         accountmodel_1.default.addTotals(o.butcherPuanAccounts);
         accountmodel_1.default.addTotals(o.kalittePuanAccounts);
+    }
+    getEarnedPuans(o) {
+        return __awaiter(this, void 0, void 0, function* () {
+            let puans = yield accountmodel_1.default.summary([
+                account_1.Account.generateCode("musteri-kalitte-kazanilan-puan", [o.userId, 1, o.ordernum]),
+                account_1.Account.generateCode("musteri-kalitte-kazanilan-puan", [o.userId, 2, o.ordernum]),
+                account_1.Account.generateCode("musteri-kasap-kazanilan-puan", [o.userId, o.butcherid, o.ordernum])
+            ]);
+            return puans;
+        });
     }
     completeManuelPayment(o, total) {
         return __awaiter(this, void 0, void 0, function* () {
@@ -731,7 +741,7 @@ class Route extends router_1.ApiRouter {
             let ops = [];
             let promises = [];
             let paymentId = "manuel";
-            let op = new account_1.AccountingOperation(`${o.ordernum} ödemesi - ${paymentId}`);
+            let op = new account_1.AccountingOperation(`${o.ordernum} ödemesi - ${paymentId}`, o.ordernum);
             op.accounts.push(new account_1.Account("odeme-bekleyen-satislar", [o.userId, o.ordernum, 600]).dec(total));
             op.accounts.push(new account_1.Account("satis-alacaklari", [o.userId, o.ordernum]).dec(total));
             ops.push(op);
@@ -748,7 +758,19 @@ class Route extends router_1.ApiRouter {
                 transaction: t
             }));
             promises = promises.concat(this.saveAccountingOperations(ops, t));
-            return Promise.all(promises);
+            let res = yield Promise.all(promises);
+            this.sendPuanNotification(o);
+            return res;
+        });
+    }
+    sendPuanNotification(o) {
+        return __awaiter(this, void 0, void 0, function* () {
+            let puans = yield this.getEarnedPuans(o);
+            let total = puans.alacak - puans.borc;
+            if (total > 0.00) {
+                let text = `Tebrikler ${o.name}! KasaptanAl.com tercihiniz size ${helper_1.default.formattedCurrency(total)} puan kazandirdi. Bir sonraki siparisinizde kullanmayi unutmayin`;
+                sms_1.Sms.send("90" + helper_1.default.getPhoneNumber('5326274151'), text, false, new sitelog_1.default(this.constructorParams));
+            }
         });
     }
     makeCreditcardPayment(ol, paymentRequest, paymentInfo, t) {
@@ -757,7 +779,7 @@ class Route extends router_1.ApiRouter {
             let promises = [];
             for (let i = 0; i < ol.length; i++) {
                 let o = ol[i];
-                let op = new account_1.AccountingOperation(`${o.ordernum} kredi kartı ödemesi - ${paymentInfo.paymentId}`);
+                let op = new account_1.AccountingOperation(`${o.ordernum} kredi kartı ödemesi - ${paymentInfo.paymentId}`, o.ordernum);
                 if (o.orderSource == order_3.OrderSource.butcher) {
                     op.accounts.push(new account_1.Account("odeme-bekleyen-satislar", [o.userId, o.ordernum, 1000]).dec(paymentInfo.paidPrice));
                     op.accounts.push(new account_1.Account("satis-alacaklari", [o.userId, o.ordernum]).dec(paymentInfo.paidPrice));
@@ -780,25 +802,25 @@ class Route extends router_1.ApiRouter {
                 }
             }
             promises = promises.concat(this.saveAccountingOperations(ops, t));
+            let result = yield Promise.all(promises);
             for (let i = 0; i < ol.length; i++) {
                 let notifyMobilePhones = (ol[i].butcher.notifyMobilePhones || "").split(',');
                 notifyMobilePhones.push('5531431988');
                 notifyMobilePhones.push('5326274151');
-                if (config_1.default.nodeenv == 'production') {
-                    email_1.default.send(ol[i].email, "siparişinizin ödemesi yapıldı", "order.paid.ejs", this.getView(ol[i]));
-                    for (var p = 0; p < notifyMobilePhones.length; p++) {
-                        if (notifyMobilePhones[p].trim()) {
-                            let payUrl = `${this.url}/manageorder/${ol[i].ordernum}`;
-                            sms_1.Sms.send("90" + helper_1.default.getPhoneNumber(notifyMobilePhones[p].trim()), `${ol[i].butcherName} yeni siparis[${ol[i].name}]: ${helper_1.default.formattedCurrency(paymentInfo.paidPrice)} online odeme yapildi. LUTFEN SIPARISI YANITLAYIN: ${payUrl} `, false, new sitelog_1.default(this.constructorParams));
-                        }
+                email_1.default.send(ol[i].email, "siparişinizin ödemesi yapıldı", "order.paid.ejs", this.getView(ol[i]));
+                for (var p = 0; p < notifyMobilePhones.length; p++) {
+                    if (notifyMobilePhones[p].trim()) {
+                        let payUrl = `${this.url}/manageorder/${ol[i].ordernum}`;
+                        sms_1.Sms.send("90" + helper_1.default.getPhoneNumber(notifyMobilePhones[p].trim()), `${ol[i].butcherName} yeni siparis[${ol[i].name}]: ${helper_1.default.formattedCurrency(paymentInfo.paidPrice)} online odeme yapildi. LUTFEN SIPARISI YANITLAYIN: ${payUrl} `, false, new sitelog_1.default(this.constructorParams));
                     }
                 }
+                this.sendPuanNotification(ol[i]);
             }
-            return Promise.all(promises);
+            return result;
         });
     }
     generateInitialAccounting(o) {
-        let op = new account_1.AccountingOperation(`${o.ordernum} numaralı sipariş`);
+        let op = new account_1.AccountingOperation(`${o.ordernum} numaralı sipariş`, o.ordernum);
         if (o.orderSource == order_3.OrderSource.butcher) {
             op.accounts.push(new account_1.Account("odeme-bekleyen-satislar", [o.userId, o.ordernum, 500], "Sipariş Bedeli").inc(o.subTotal));
             op.accounts.push(new account_1.Account("satis-alacaklari", [o.userId, o.ordernum]).inc(o.total));
@@ -1122,6 +1144,8 @@ class Route extends router_1.ApiRouter {
                             sms_1.Sms.send("90" + helper_1.default.getPhoneNumber(notifyMobilePhones[p].trim()), `${order.butcherName} kurye yola cikti. Siparis[${order.name}]: ${manageUrl} `, false, new sitelog_1.default(this.constructorParams));
                         }
                     }
+                    let userUrl = `${this.url}/orders/order/${order.ordernum}`;
+                    yield sms_1.Sms.send(order.phone, `Siparişiniz yola cikti. Bilgi: ${userUrl} `, false, new sitelog_1.default(this.constructorParams));
                 }
                 if (this.req.body.order.status == 'canceled') {
                     order.statusDesc += `\n- ${helper_1.default.formatDate(helper_1.default.Now(), true)}: teslimat iptal edildi.`;

@@ -7,6 +7,8 @@ import * as bcrypt from 'bcryptjs';
 import Helper from '../../lib/helper';
 import validator from 'validator';
 import { GeoLocation, LocationType } from '../../models/geo';
+import AccountModel from './accountmodel';
+import { Account } from '../../models/account';
 
 
 export enum UserRole {
@@ -96,9 +98,21 @@ export default class User extends BaseModel<User> {
     lastLocation: GeoLocation;
 
     @Column
-    lastLocationType: LocationType    
-    
+    lastLocationType: LocationType;
 
+    puans: AccountModel;
+    usablePuans = 0.00;
+    
+    async loadPuanView() {
+        this.puans  = await AccountModel.summary([
+            Account.generateCode("musteri-kalitte-kazanilan-puan", [this.id, 1]),
+            Account.generateCode("musteri-kalitte-kazanilan-puan", [this.id, 2]), 
+            Account.generateCode("musteri-kasap-kazanilan-puan", [this.id])
+            ])
+            this.usablePuans = Helper.asCurrency(this.puans.alacak - this.puans.borc);
+            this.usablePuans = this.usablePuans < 0 ? Helper.asCurrency(0): this.usablePuans;
+            return this;
+    }
 
     @Column
     butcherid: number;
@@ -110,7 +124,11 @@ export default class User extends BaseModel<User> {
         } : {
                 mphone: Helper.getPhoneNumber(email)
             }
-        var q = User.findOne({ where: where });
+        var q = User.findOne({ where: where }).then(u=> {
+             
+                return u.loadPuanView()
+            
+        });
         return q;
     }
 

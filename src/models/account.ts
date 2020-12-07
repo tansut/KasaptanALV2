@@ -180,9 +180,9 @@ export class AccountingOperation {
     opcode: string;
     accounts: Account[] = [];
 
-    constructor(desc: string) {
+    constructor(desc: string, opcode?: string) {
         this.desc = desc;
-        this.opcode = orderid.generate();
+        this.opcode = opcode || orderid.generate();
     }
 
     summary() {

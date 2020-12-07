@@ -59,7 +59,9 @@ class AuthMiddleware extends base_1.default {
         });
         passport.deserializeUser(function (id, done) {
             user_1.default.findByPk(id).then(user => {
-                done(null, user);
+                user.loadPuanView().then(user => {
+                    done(null, user);
+                }).catch(err => done());
             }).catch(done);
         });
         passport.use(new LocalStrategy({
@@ -75,6 +77,10 @@ class AuthMiddleware extends base_1.default {
                     return done(null, false, { message: 'Incorrect user.' });
                 }
                 return done(null, user, { s: true });
+                // user.loadPuanView().then(p=>{
+                // }).catch(err=>{
+                //     return done(null, false, { message: 'Unknown error' });
+                // })
             });
         }));
         app.post('/api/v1/authenticate', passport.authenticate('local', { failureFlash: true, successRedirect: "/api/v1/status", successFlash: true }));

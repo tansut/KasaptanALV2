@@ -109,7 +109,14 @@
           <% if (__req.user) { %>
           <a class="d-none d-lg-flex  text-dark navbar-tool ml-1 ml-lg-0 mr-n1 mr-lg-2" href="/user/">
             <div class="navbar-tool-icon-box bg-primary"><i class="navbar-tool-icon czi-user"></i></div>
-            <div class="navbar-tool-text ml-n2"><small><%= req.user.name %></small>Hesabım</div>
+            <div class="navbar-tool-text ml-n2"><small><%= req.user.name %></small>
+              <% if (__req.user.usablePuans <= 0) { %>
+                Hesabım
+              <% } else { %>
+                <%=__helper.formattedCurrency(__req.user.usablePuans)%> Puan
+
+              <% } %>
+            </div>
           </a>
           <% } else { %>
           <a class="d-none d-lg-flex  text-dark navbar-tool ml-1 ml-lg-0 mr-n1 mr-lg-2"
@@ -168,6 +175,15 @@
             <li class="d-lg-none nav-item"><a class="nav-link" href="/user" rel="nofollow">Profilim</a>
             </li>
             <li class="d-lg-none nav-item"><a class="nav-link" rel="nofollow" href="/user/orders">Siparişlerim</a>
+            </li>
+            <li class="d-lg-none nav-item"><a class="nav-link" rel="nofollow" href="/user/puans">Puanlarım
+              <% if (__req.user.usablePuans <= 0) { %>
+                
+              <% } else { %>
+                [<%=__helper.formattedCurrency(__req.user.usablePuans)%>]
+
+              <% } %>
+            </a>
             </li>
             <%} else {%>
             <li class="d-lg-none nav-item"><a href="javascript:window.App.showSignupDlg()" data-label=""

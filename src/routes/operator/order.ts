@@ -113,6 +113,10 @@ export default class Route extends ViewRouter {
         let butcherDebptAccounts = await AccountModel.summary([Account.generateCode("kasaplardan-alacaklar", [this.order.butcherid], true)]);
         this.butcherDebt = butcherDebptAccounts.borc - butcherDebptAccounts.alacak;
 
+        // let puans = await this.api.getEarnedPuans(this.order);
+        // console.log(puans)
+
+
     }
 
     get paymentProvider() {

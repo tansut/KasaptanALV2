@@ -130,10 +130,10 @@ class Account {
 }
 exports.Account = Account;
 class AccountingOperation {
-    constructor(desc) {
+    constructor(desc, opcode) {
         this.accounts = [];
         this.desc = desc;
-        this.opcode = orderid.generate();
+        this.opcode = opcode || orderid.generate();
     }
     summary() {
         let borc = 0.00, alacak = 0.00;
