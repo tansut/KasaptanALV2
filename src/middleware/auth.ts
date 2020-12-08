@@ -68,10 +68,11 @@ class AuthMiddleware extends Middleware {
 
         passport.deserializeUser(function (id, done) {
             User.findByPk(id).then(user => {
-                user.loadPuanView().then(user => {
-                    done(null, user);
-                }).catch(err=>done())
-                
+                if (user) {
+                    user.loadPuanView().then(user => {
+                        done(null, user);
+                    }).catch(err=>done())
+                } else done()
             }).catch(done);
         });
 

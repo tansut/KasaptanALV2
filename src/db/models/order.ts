@@ -246,15 +246,7 @@ class Order extends BaseModel<Order> {
         defaultValue: 0.00
         
     })
-    requestedPuan: number;    
-
-    @Column({
-        allowNull: false,
-        type: DataType.DECIMAL(13, 2),
-        defaultValue: 0.00
-        
-    })
-    usedPuan: number;        
+    requestedPuan: number;         
 
     @Column({
         allowNull: false,
@@ -443,12 +435,13 @@ class Order extends BaseModel<Order> {
     }
 
 
-    getButcherRate() {
+    getButcherRate(dispatcherType: DispatcherType = null) {
+        dispatcherType = dispatcherType || this.dispatcherType;
         if (this.orderSource == OrderSource.kasaptanal) {
             if (this.orderType == OrderType.kurban) {
                 return this.butcher.kurbanCommissionRate;    
             } else {
-                if (this.dispatcherType == "butcher" || this.dispatcherType == "butcher/auto") {
+                if (dispatcherType == "butcher" || dispatcherType == "butcher/auto") {
                     return this.butcher.commissionRate                               
                 } else {
                     return this.butcher.noshipCommissionRate;
@@ -457,12 +450,13 @@ class Order extends BaseModel<Order> {
         } else return this.butcher.payCommissionRate;   
     }
 
-    getButcherFee() {
+    getButcherFee(dispatcherType: DispatcherType = null) {
+        dispatcherType = dispatcherType || this.dispatcherType;
         if (this.orderSource == OrderSource.kasaptanal) {
             if (this.orderType == OrderType.kurban) {
                 return this.butcher.kurbanCommissionFee;    
             } else {
-                if (this.dispatcherType == "butcher" || this.dispatcherType == "butcher/auto") {
+                if (dispatcherType == "butcher" || dispatcherType == "butcher/auto") {
                     return this.butcher.commissionFee                               
                 } else {
                     return this.butcher.noshipCommissionFee;
@@ -500,7 +494,7 @@ class Order extends BaseModel<Order> {
         
 
         if (usablePuan) {
-            let newFee = Helper.asCurrency(totalFee.kalitteFee - usablePuan);
+            let newFee = Math.max(0.00, Helper.asCurrency(totalFee.kalitteFee - usablePuan));
             newFee = Helper.asCurrency(newFee + newFee * 0.18);
             return newFee;
         } else return Helper.asCurrency(totalFee.kalitteFee + totalFee.kalitteVat);     

@@ -40,6 +40,7 @@ const config_1 = require("../../config");
 const commissionHelper_1 = require("../../lib/commissionHelper");
 const sequelize_1 = require("sequelize");
 const core_1 = require("../../lib/logistic/core");
+const user_1 = require("../../db/models/user");
 const orderid = require('order-id')('dkfjsdklfjsdlkg450435034.,');
 class Route extends router_1.ApiRouter {
     getButcherPuanAccounts(o) {
@@ -126,9 +127,10 @@ class Route extends router_1.ApiRouter {
     calculatePaid(o) {
         let codeCredit = account_1.Account.generateCode("odeme-bekleyen-satislar", [o.userId, o.ordernum, 500]);
         let codeManual = account_1.Account.generateCode("odeme-bekleyen-satislar", [o.userId, o.ordernum, 600]);
+        let codePuan = account_1.Account.generateCode("odeme-bekleyen-satislar", [o.userId, o.ordernum, 1100]);
         let total = 0.00;
         o.workedAccounts.forEach(a => {
-            if (a.code == codeCredit || a.code == codeManual)
+            if (a.code == codeCredit || a.code == codeManual || a.code == codePuan)
                 total += a.borc;
         });
         return helper_1.default.asCurrency(total);
@@ -167,6 +169,15 @@ class Route extends router_1.ApiRouter {
         o.workedAccounts.forEach(a => {
             if (a.code == code)
                 total += a.alacak;
+        });
+        return helper_1.default.asCurrency(total);
+    }
+    calculateUsedPuan(o) {
+        let code = account_1.Account.generateCode("odeme-bekleyen-satislar", [o.userId, o.ordernum, 1100]);
+        let total = 0.00;
+        o.workedAccounts.forEach(a => {
+            if (a.code == code)
+                total += a.borc;
         });
         return helper_1.default.asCurrency(total);
     }
@@ -525,18 +536,24 @@ class Route extends router_1.ApiRouter {
     getUsablePuans(o) {
         return __awaiter(this, void 0, void 0, function* () {
             o.workedAccounts = o.workedAccounts.length == 0 ? this.generateInitialAccounting(o).accounts.map(a => accountmodel_1.default.fromAccount(a)) : o.workedAccounts;
-            if (this.req.user && this.req.user.usablePuans > 0) {
+            let user = (this.req.user && this.req.user.id == o.userId) ? this.req.user : null;
+            if (!user) {
+                user = yield user_1.default.findByPk(o.userId);
+                if (user)
+                    yield user.loadPuanView();
+            }
+            if (user && user.usablePuans > 0) {
                 let butcherShip = this.calculateTeslimatOfButcher(o);
                 let kasaptanAlShip = this.calculateTeslimatOfKasaptanAl(o);
                 let productPrice = this.calculateProduct(o);
                 let puanAccounts = this.getEarnedPuanAccounts(o, productPrice);
                 this.fillEarnedPuanAccounts(o, productPrice);
-                let rate = o.getButcherRate();
-                let fee = o.getButcherFee();
+                let rate = o.getButcherRate("butcher");
+                let fee = o.getButcherFee("butcher");
                 let calc = new commissionHelper_1.ComissionHelper(rate, fee);
                 let totalFee = calc.calculateButcherComission(productPrice + butcherShip);
                 let max = totalFee.kalitteFee;
-                return Math.min(this.req.user.usablePuans, max);
+                return Math.min(user.usablePuans, max);
             }
             return 0.00;
         });
@@ -774,11 +791,11 @@ class Route extends router_1.ApiRouter {
             let ops = [];
             let promises = [];
             let paymentId = "manuel";
-            let usablePuan = o.requestedPuan;
+            let usablePuan = Math.min(o.requestedPuan, yield this.getUsablePuans(o));
             let op = new account_1.AccountingOperation(`${o.ordernum} ödemesi - ${paymentId}`, o.ordernum);
-            op.accounts.push(new account_1.Account("odeme-bekleyen-satislar", [o.userId, o.ordernum, 600], "ödeme").dec(total - usablePuan));
+            op.accounts.push(new account_1.Account("odeme-bekleyen-satislar", [o.userId, o.ordernum, 600], "kapıda ödeme").dec(total - usablePuan));
             if (usablePuan) {
-                op.accounts.push(new account_1.Account("odeme-bekleyen-satislar", [o.userId, o.ordernum, 600], "puan kullanımı").dec(usablePuan));
+                op.accounts.push(new account_1.Account("odeme-bekleyen-satislar", [o.userId, o.ordernum, 1100], "puan kullanımı").dec(usablePuan));
             }
             op.accounts.push(new account_1.Account("satis-alacaklari", [o.userId, o.ordernum]).dec(total));
             ops.push(op);
@@ -829,7 +846,7 @@ class Route extends router_1.ApiRouter {
                 else {
                     op.accounts.push(new account_1.Account("odeme-bekleyen-satislar", [o.userId, o.ordernum, 500], "kart ödemesi").dec(paymentInfo.paidPrice));
                     if (usablePuan) {
-                        op.accounts.push(new account_1.Account("odeme-bekleyen-satislar", [o.userId, o.ordernum, 500], "puan kullanımı").dec(usablePuan));
+                        op.accounts.push(new account_1.Account("odeme-bekleyen-satislar", [o.userId, o.ordernum, 1100], "puan kullanımı").dec(usablePuan));
                     }
                     op.accounts.push(new account_1.Account("satis-alacaklari", [o.userId, o.ordernum]).dec(paymentInfo.paidPrice + usablePuan));
                     ops.push(op);

@@ -26,6 +26,7 @@ import { PuanResult, Puan } from '../../models/puan';
 import { Op } from 'sequelize';
 import { LogisticFactory } from '../../lib/logistic/core';
 import { throws } from 'assert';
+import User from '../../db/models/user';
 
 
 const orderid = require('order-id')('dkfjsdklfjsdlkg450435034.,')
@@ -113,9 +114,10 @@ export default class Route extends ApiRouter {
     calculatePaid(o: Order) {
         let codeCredit = Account.generateCode("odeme-bekleyen-satislar", [o.userId, o.ordernum, 500]);
         let codeManual = Account.generateCode("odeme-bekleyen-satislar", [o.userId, o.ordernum, 600]);
+        let codePuan = Account.generateCode("odeme-bekleyen-satislar", [o.userId, o.ordernum, 1100]);
         let total = 0.00;
         o.workedAccounts.forEach(a => {
-            if (a.code == codeCredit || a.code == codeManual) total += a.borc;
+            if (a.code == codeCredit || a.code == codeManual || a.code == codePuan) total += a.borc;
         })
         return Helper.asCurrency(total);
     }
@@ -154,6 +156,15 @@ export default class Route extends ApiRouter {
         let total = 0.00;
         o.workedAccounts.forEach(a => {
             if (a.code == code) total += a.alacak;
+        })
+        return Helper.asCurrency(total);
+    }
+
+    calculateUsedPuan(o: Order) {
+        let code = Account.generateCode("odeme-bekleyen-satislar", [o.userId, o.ordernum, 1100]);
+        let total = 0.00;
+        o.workedAccounts.forEach(a => {
+            if (a.code == code) total += a.borc;
         })
         return Helper.asCurrency(total);
     }
@@ -525,21 +536,25 @@ export default class Route extends ApiRouter {
 
     async getUsablePuans(o: Order) {
         o.workedAccounts = o.workedAccounts.length == 0 ? this.generateInitialAccounting(o).accounts.map(a=>AccountModel.fromAccount(a)): o. workedAccounts;
-
-        if (this.req.user && this.req.user.usablePuans > 0) {
+        let user = (this.req.user && this.req.user.id == o.userId) ? this.req.user: null;
+        if (!user) {
+            user = await User.findByPk(o.userId);
+            if (user) await user.loadPuanView();
+        }
+        if (user && user.usablePuans > 0) {
             let butcherShip = this.calculateTeslimatOfButcher(o)
             let kasaptanAlShip = this.calculateTeslimatOfKasaptanAl(o);
             let productPrice = this.calculateProduct(o);    
             let puanAccounts = this.getEarnedPuanAccounts(o, productPrice);
             this.fillEarnedPuanAccounts(o, productPrice);            
 
-            let rate = o.getButcherRate(); 
-            let fee = o.getButcherFee();
+            let rate = o.getButcherRate("butcher"); 
+            let fee = o.getButcherFee("butcher");
             let calc = new ComissionHelper(rate, fee);
             let totalFee = calc.calculateButcherComission(productPrice + butcherShip);
             let max = totalFee.kalitteFee;
 
-            return Math.min(this.req.user.usablePuans, max)
+            return Math.min(user.usablePuans, max)
         } return 0.00;
     }
 
@@ -831,12 +846,12 @@ export default class Route extends ApiRouter {
 
         let paymentId = "manuel";
 
-        let usablePuan = o.requestedPuan;
+        let usablePuan = Math.min(o.requestedPuan, await this.getUsablePuans(o));
 
         let op = new AccountingOperation(`${o.ordernum} ödemesi - ${paymentId}`, o.ordernum);
-        op.accounts.push(new Account("odeme-bekleyen-satislar", [o.userId, o.ordernum, 600], "ödeme").dec(total-usablePuan));
+        op.accounts.push(new Account("odeme-bekleyen-satislar", [o.userId, o.ordernum, 600], "kapıda ödeme").dec(total-usablePuan));
         if (usablePuan) {
-            op.accounts.push(new Account("odeme-bekleyen-satislar", [o.userId, o.ordernum, 600], "puan kullanımı").dec(usablePuan));
+            op.accounts.push(new Account("odeme-bekleyen-satislar", [o.userId, o.ordernum, 1100], "puan kullanımı").dec(usablePuan));
 
         }
         op.accounts.push(new Account("satis-alacaklari", [o.userId, o.ordernum]).dec(total));
@@ -902,7 +917,7 @@ export default class Route extends ApiRouter {
                 op.accounts.push(new Account("odeme-bekleyen-satislar", [o.userId, o.ordernum, 500], "kart ödemesi").dec(paymentInfo.paidPrice));
                 
                 if (usablePuan) {
-                    op.accounts.push(new Account("odeme-bekleyen-satislar", [o.userId, o.ordernum, 500], "puan kullanımı").dec(usablePuan))                            
+                    op.accounts.push(new Account("odeme-bekleyen-satislar", [o.userId, o.ordernum, 1100], "puan kullanımı").dec(usablePuan))                            
                 }
 
                 op.accounts.push(new Account("satis-alacaklari", [o.userId, o.ordernum]).dec(paymentInfo.paidPrice+usablePuan))

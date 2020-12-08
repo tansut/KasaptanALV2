@@ -427,7 +427,7 @@ export default class Route extends ViewRouter {
             if (offer[o]) {
                 
             } else if (this.shopcard.shipment[o].howTo == 'ship') {
-                hasDispatcher = false;
+                //hasDispatcher = false;
             }
             
         }

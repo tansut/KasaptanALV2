@@ -127,7 +127,7 @@ export default class User extends BaseModel<User> {
             }
         var q = User.findOne({ where: where }).then(u=> {
              
-                return u.loadPuanView()
+                return u ? u.loadPuanView(): u
             
         });
         return q;

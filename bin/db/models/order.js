@@ -59,13 +59,14 @@ let Order = Order_1 = class Order extends basemodel_1.default {
     set shopcard(value) {
         this.setDataValue('shopcardjson', Buffer.from(JSON.stringify(value), "utf-8"));
     }
-    getButcherRate() {
+    getButcherRate(dispatcherType = null) {
+        dispatcherType = dispatcherType || this.dispatcherType;
         if (this.orderSource == order_1.OrderSource.kasaptanal) {
             if (this.orderType == order_1.OrderType.kurban) {
                 return this.butcher.kurbanCommissionRate;
             }
             else {
-                if (this.dispatcherType == "butcher" || this.dispatcherType == "butcher/auto") {
+                if (dispatcherType == "butcher" || dispatcherType == "butcher/auto") {
                     return this.butcher.commissionRate;
                 }
                 else {
@@ -76,13 +77,14 @@ let Order = Order_1 = class Order extends basemodel_1.default {
         else
             return this.butcher.payCommissionRate;
     }
-    getButcherFee() {
+    getButcherFee(dispatcherType = null) {
+        dispatcherType = dispatcherType || this.dispatcherType;
         if (this.orderSource == order_1.OrderSource.kasaptanal) {
             if (this.orderType == order_1.OrderType.kurban) {
                 return this.butcher.kurbanCommissionFee;
             }
             else {
-                if (this.dispatcherType == "butcher" || this.dispatcherType == "butcher/auto") {
+                if (dispatcherType == "butcher" || dispatcherType == "butcher/auto") {
                     return this.butcher.commissionFee;
                 }
                 else {
@@ -113,7 +115,7 @@ let Order = Order_1 = class Order extends basemodel_1.default {
         let calc = new commissionHelper_1.ComissionHelper(rate, fee);
         let totalFee = calc.calculateButcherComission(shouldBePaid);
         if (usablePuan) {
-            let newFee = helper_1.default.asCurrency(totalFee.kalitteFee - usablePuan);
+            let newFee = Math.max(0.00, helper_1.default.asCurrency(totalFee.kalitteFee - usablePuan));
             newFee = helper_1.default.asCurrency(newFee + newFee * 0.18);
             return newFee;
         }
@@ -404,14 +406,6 @@ __decorate([
     }),
     __metadata("design:type", Number)
 ], Order.prototype, "requestedPuan", void 0);
-__decorate([
-    sequelize_typescript_1.Column({
-        allowNull: false,
-        type: sequelize_typescript_1.DataType.DECIMAL(13, 2),
-        defaultValue: 0.00
-    }),
-    __metadata("design:type", Number)
-], Order.prototype, "usedPuan", void 0);
 __decorate([
     sequelize_typescript_1.Column({
         allowNull: false,

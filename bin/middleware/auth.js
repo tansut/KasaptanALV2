@@ -59,9 +59,13 @@ class AuthMiddleware extends base_1.default {
         });
         passport.deserializeUser(function (id, done) {
             user_1.default.findByPk(id).then(user => {
-                user.loadPuanView().then(user => {
-                    done(null, user);
-                }).catch(err => done());
+                if (user) {
+                    user.loadPuanView().then(user => {
+                        done(null, user);
+                    }).catch(err => done());
+                }
+                else
+                    done();
             }).catch(done);
         });
         passport.use(new LocalStrategy({

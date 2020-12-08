@@ -61,7 +61,7 @@ export default class Route extends ViewRouter {
     earnedPuanKalitte = 0.00;
     earnedPuanTotal = 0.00;
     mayEarnPuanTotal = 0.00;
-
+    usedPuanTotal = 0.00;
     butcherDebt = 0.00
 
 
@@ -84,13 +84,16 @@ export default class Route extends ViewRouter {
 
         this.balance = this.order.workedAccounts.find(p => p.code == 'total')
         this.shouldBePaid = Helper.asCurrency(this.balance.alacak - this.balance.borc);
-        this.paid = this.api.calculatePaid(this.order);
+        this.usedPuanTotal = this.api.calculateUsedPuan(this.order);
+
+        this.paid = this.api.calculatePaid(this.order) - this.usedPuanTotal;
         this.puanBalanceKalitte = this.order.kalittePuanAccounts.find(p => p.code == 'total');
         this.puanBalanceButcher = this.order.butcherPuanAccounts.find(p => p.code == 'total');
         this.earnedPuanKalitte = this.puanBalanceKalitte ? Helper.asCurrency(this.puanBalanceKalitte.alacak - this.puanBalanceKalitte.borc) : 0.00
         this.earnedPuanButcher = this.puanBalanceButcher ? Helper.asCurrency(this.puanBalanceButcher.alacak - this.puanBalanceButcher.borc) : 0.00
         this.earnedPuanTotal = Helper.asCurrency(this.earnedPuanKalitte + this.earnedPuanButcher)
         this.mayEarnPuanTotal = 0.00;
+
         if (this.shouldBePaid > 0) {
             this.possiblePuanList = this.api.getPossiblePuanGain(this.order, this.productTotal);
             this.possiblePuanList.forEach(pg => this.mayEarnPuanTotal += pg.earned)

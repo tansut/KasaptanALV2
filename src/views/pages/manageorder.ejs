@@ -198,17 +198,25 @@
               </h3>
               <ul class="px-4 list-unstyled font-size-sm">
                 <li><span class="text-muted">Planlanan Ödeme:&nbsp;</span><%= payment[bi].desc%> </li>
-                <li><span class="text-muted">Yapılan Ödeme:&nbsp;</span><span
-                    class="font-weight-bolder"><%- include('./_partial/currency.ejs', {value: controller.paid })%></span>
-                </li>
+
                 <li><span class="text-muted">Toplam Ürün Bedeli:&nbsp;</span><span
-                    class="font-weight-bolder"><%- include('./_partial/currency.ejs', {value: controller.productTotal}) %></span>
+                    class=""><%- include('./_partial/currency.ejs', {value: controller.productTotal}) %></span>
                 </li>
+                <% if (controller.teslimatButcher + controller.teslimatKasaptan > 0) { %>
                 <li><span class="text-muted">Teslimat Ücreti:&nbsp;</span><span
-                    class="font-weight-bolder"><%- include('./_partial/currency.ejs', {value: controller.teslimatButcher + controller.teslimatKasaptan}) %>
+                    class=""><%- include('./_partial/currency.ejs', {value: controller.teslimatButcher + controller.teslimatKasaptan}) %>
                 </li>
+                <% } %>
+                <% if (controller.usedPuanTotal)  { %>
+                <li><span class="text-muted">Kullanılan Puan:&nbsp;</span><span
+                  class=""><%- include('./_partial/currency.ejs', {value: controller.usedPuanTotal}) %>
+              </li>
+              <% } %>
+              <li><span class="text-muted">Yapılan Ödeme:&nbsp;</span><span
+                class="font-weight-bolder <%= controller.paid == 0.00 ? 'text-danger': 'text-success'%>"><%- include('./_partial/currency.ejs', {value: controller.paid })%></span>
+            </li>
                 <li><span class="text-muted">FATURA TOPLAMI:&nbsp;</span><span
-                    class="font-weight-bolder"><%- include('./_partial/currency.ejs', {value: controller.productTotal + controller.teslimatButcher + controller.teslimatKasaptan}) %>
+                    class="font-weight-bolder"><%- include('./_partial/currency.ejs', {value: controller.productTotal + controller.teslimatButcher + controller.teslimatKasaptan - controller.usedPuanTotal}) %>
                 </li>
                 <li><span class="text-muted">Önemli:&nbsp;</span><span class="font-weight-bolder">yukarıdaki bedelle
                     fatura kesip poşetin içine koymayı unutmayın</li>

@@ -58,7 +58,7 @@ let User = User_1 = class User extends basemodel_1.default {
             mphone: helper_1.default.getPhoneNumber(email)
         };
         var q = User_1.findOne({ where: where }).then(u => {
-            return u.loadPuanView();
+            return u ? u.loadPuanView() : u;
         });
         return q;
     }

@@ -405,7 +405,7 @@ class Route extends router_1.ViewRouter {
                 if (offer[o]) {
                 }
                 else if (this.shopcard.shipment[o].howTo == 'ship') {
-                    hasDispatcher = false;
+                    //hasDispatcher = false;
                 }
             }
             if (!hasDispatcher) {

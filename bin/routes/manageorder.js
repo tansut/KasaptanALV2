@@ -48,6 +48,7 @@ class Route extends router_1.ViewRouter {
         this.earnedPuanKalitte = 0.00;
         this.earnedPuanTotal = 0.00;
         this.mayEarnPuanTotal = 0.00;
+        this.usedPuanTotal = 0.00;
         this.butcherDebt = 0.00;
         this.possiblePuanList = [];
         this.puanAccountsKalitte = [];
@@ -66,7 +67,8 @@ class Route extends router_1.ViewRouter {
             this.teslimatKasaptan = this.api.calculateTeslimatOfKasaptanAl(this.order);
             this.balance = this.order.workedAccounts.find(p => p.code == 'total');
             this.shouldBePaid = helper_1.default.asCurrency(this.balance.alacak - this.balance.borc);
-            this.paid = this.api.calculatePaid(this.order);
+            this.usedPuanTotal = this.api.calculateUsedPuan(this.order);
+            this.paid = this.api.calculatePaid(this.order) - this.usedPuanTotal;
             this.puanBalanceKalitte = this.order.kalittePuanAccounts.find(p => p.code == 'total');
             this.puanBalanceButcher = this.order.butcherPuanAccounts.find(p => p.code == 'total');
             this.earnedPuanKalitte = this.puanBalanceKalitte ? helper_1.default.asCurrency(this.puanBalanceKalitte.alacak - this.puanBalanceKalitte.borc) : 0.00;
