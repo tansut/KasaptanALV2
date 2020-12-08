@@ -115,7 +115,7 @@ export default class Route extends ViewRouter {
         this.butcherFee.butcherToCustomer = Helper.asCurrency(butcherToCustomer);
         await this.api.fillButcherDebtAccounts(this.order)
 
-        let butcherDebptAccounts = await AccountModel.summary([Account.generateCode("kasaplardan-alacaklar", [this.order.butcherid], true)]);
+        let butcherDebptAccounts = await AccountModel.summary([Account.generateCode("kasaplardan-alacaklar", [this.order.butcherid])]);
         this.butcherDebt = butcherDebptAccounts.borc - butcherDebptAccounts.alacak;
 
     }

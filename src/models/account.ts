@@ -168,9 +168,9 @@ export class Account {
         return item;
     }
 
-    static generateCode(parent: ParentAccount, values: Object[], appendDot: boolean = false) {
+    static generateCode(parent: ParentAccount, values: Object[]) {
         let accountCode = Account.getType(parent).code;
-        return `${accountCode}.` + values.join(".") + (appendDot ? '.':'')
+        return `${accountCode}.` + values.join(".");
     }
 
     inc(val: number) {

@@ -57,8 +57,12 @@ class AccountModel extends BaseModel<AccountModel> {
             where: {
                 code: {
                     [Op.or]: codes.map(c=>{
-                        return {
-                            [Op.like]: c + '%' 
+                        return  {
+                            [Op.or]: [
+                                {[Op.like]: c + '.%' },
+                                {[Op.eq]: c  },
+                            ]
+                            
                         }
                     })
                 }
@@ -80,10 +84,10 @@ class AccountModel extends BaseModel<AccountModel> {
         let b = 0.00, a = 0.00
         for(let i=0;i<codes.length;i++) {
             let totals = await <any>AccountModel.sequelize.query(
-                "SELECT sum(borc) as b, sum(alacak) as a FROM Accounts where code like :code"
+                "SELECT sum(borc) as b, sum(alacak) as a FROM Accounts where code like :code1 or code = :code"
                ,
                 {                
-                    replacements: { code: codes[i] + '%' },
+                    replacements: { code: codes[i], code1: codes[i] + '.%' },
                     type: sq.QueryTypes.SELECT,
                     mapToModel: false,
                     raw: true

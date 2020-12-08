@@ -126,7 +126,7 @@ export default class Route extends PaymentRouter {
         
         if (this.order.orderSource == OrderSource.kasaptanal) {
             this.api.fillEarnedPuanAccounts(this.order, this.productTotal);
-            let butcherDebptAccounts = await AccountModel.summary([Account.generateCode("kasaplardan-alacaklar", [this.order.butcherid], true)])
+            let butcherDebptAccounts = await AccountModel.summary([Account.generateCode("kasaplardan-alacaklar", [this.order.butcherid])])
             let butcherDebt = Helper.asCurrency(butcherDebptAccounts.borc - butcherDebptAccounts.alacak);
             debt[this.order.butcherid] = butcherDebt;   
             // if (this.req.body.puanusage == 'yes') {
