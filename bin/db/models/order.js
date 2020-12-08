@@ -107,13 +107,18 @@ let Order = Order_1 = class Order extends basemodel_1.default {
         }
         return result;
     }
-    getButcherComission(shouldBePaid) {
+    getButcherComission(shouldBePaid, usablePuan) {
         let rate = this.getButcherRate();
         let fee = this.getButcherFee();
         let calc = new commissionHelper_1.ComissionHelper(rate, fee);
         let totalFee = calc.calculateButcherComission(shouldBePaid);
-        let merchantPrice = helper_1.default.asCurrency(totalFee.kalitteFee + totalFee.kalitteVat);
-        return merchantPrice;
+        if (usablePuan) {
+            let newFee = helper_1.default.asCurrency(totalFee.kalitteFee - usablePuan);
+            newFee = helper_1.default.asCurrency(newFee + newFee * 0.18);
+            return newFee;
+        }
+        else
+            return helper_1.default.asCurrency(totalFee.kalitteFee + totalFee.kalitteVat);
     }
     static fromShopcard(c, bi) {
         return __awaiter(this, void 0, void 0, function* () {
@@ -391,6 +396,22 @@ __decorate([
     }),
     __metadata("design:type", Number)
 ], Order.prototype, "subTotal", void 0);
+__decorate([
+    sequelize_typescript_1.Column({
+        allowNull: false,
+        type: sequelize_typescript_1.DataType.DECIMAL(13, 2),
+        defaultValue: 0.00
+    }),
+    __metadata("design:type", Number)
+], Order.prototype, "requestedPuan", void 0);
+__decorate([
+    sequelize_typescript_1.Column({
+        allowNull: false,
+        type: sequelize_typescript_1.DataType.DECIMAL(13, 2),
+        defaultValue: 0.00
+    }),
+    __metadata("design:type", Number)
+], Order.prototype, "usedPuan", void 0);
 __decorate([
     sequelize_typescript_1.Column({
         allowNull: false,

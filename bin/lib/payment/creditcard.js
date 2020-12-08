@@ -54,12 +54,12 @@ class CreditcardPaymentProvider {
         return __awaiter(this, void 0, void 0, function* () {
         });
     }
-    getMerchantMoney(o, shouldBePaid, productPrice, shipOfButcher, shipOfKasaptanAl) {
-        let comission = o.getButcherComission(productPrice + shipOfButcher);
+    getMerchantMoney(o, shouldBePaid, productPrice, shipOfButcher, shipOfKasaptanAl, puanUsage) {
+        let merchantPrice = o.getButcherComission(productPrice + shipOfButcher, puanUsage);
         let puan = o.getPuanTotal(productPrice);
-        return helper_1.default.asCurrency(shouldBePaid - comission - puan - shipOfKasaptanAl);
+        return helper_1.default.asCurrency(shouldBePaid - merchantPrice - puan - shipOfKasaptanAl);
     }
-    requestFromOrder(ol, debts = {}) {
+    requestFromOrder(ol, debts = {} = {}) {
         let basketItems = [];
         let price = 0.00, paidPrice = 0.00;
         ol.forEach((o, j) => {
@@ -71,7 +71,7 @@ class CreditcardPaymentProvider {
             let merchantPrice = 0.00;
             let butcherDebt = 0.00, debtApplied = 0.00;
             if (this.marketPlace) {
-                merchantPrice = this.getMerchantMoney(o, shouldBePaid, productPrice, shipOfButcher, shipOfKasaptanAl);
+                merchantPrice = this.getMerchantMoney(o, shouldBePaid, productPrice, shipOfButcher, shipOfKasaptanAl, o.requestedPuan);
                 butcherDebt = debts[o.butcherid];
                 if (merchantPrice <= butcherDebt) {
                     debtApplied = merchantPrice - 1.00;
@@ -80,18 +80,19 @@ class CreditcardPaymentProvider {
                     debtApplied = butcherDebt;
                 merchantPrice = helper_1.default.asCurrency(merchantPrice - debtApplied);
             }
+            let userPrice = helper_1.default.asCurrency(shouldBePaid - o.requestedPuan);
             basketItems.push({
                 category1: o.butcherName,
                 id: o.ordernum,
                 itemType: 'PHYSICAL',
                 name: o.name + ' ' + o.ordernum + ' nolu ' + 'ürün siparişi',
-                price: helper_1.default.asCurrency(shouldBePaid),
+                price: userPrice,
                 merchantDebtApplied: debtApplied,
                 subMerchantKey: this.marketPlace ? this.getSubmerchantId(o) : undefined,
                 subMerchantPrice: merchantPrice > 0.00 ? merchantPrice : undefined
             });
-            price += helper_1.default.asCurrency(shouldBePaid);
-            paidPrice += helper_1.default.asCurrency(shouldBePaid);
+            price += userPrice;
+            paidPrice += userPrice;
         });
         let orderids = ol.map(o => o.ordernum).join(',');
         let o = ol[0];

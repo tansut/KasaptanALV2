@@ -242,6 +242,22 @@ class Order extends BaseModel<Order> {
 
     @Column({
         allowNull: false,
+        type: DataType.DECIMAL(13, 2),
+        defaultValue: 0.00
+        
+    })
+    requestedPuan: number;    
+
+    @Column({
+        allowNull: false,
+        type: DataType.DECIMAL(13, 2),
+        defaultValue: 0.00
+        
+    })
+    usedPuan: number;        
+
+    @Column({
+        allowNull: false,
         type: DataType.DECIMAL(13, 2)
     })
     discountTotal: number;
@@ -476,13 +492,18 @@ class Order extends BaseModel<Order> {
 
   
 
-    getButcherComission(shouldBePaid: number) {
+    getButcherComission(shouldBePaid: number, usablePuan: number) {
         let rate = this.getButcherRate(); 
         let fee = this.getButcherFee();
         let calc = new ComissionHelper(rate, fee);
         let totalFee = calc.calculateButcherComission(shouldBePaid);
-        let merchantPrice = Helper.asCurrency(totalFee.kalitteFee + totalFee.kalitteVat);
-        return merchantPrice;     
+        
+
+        if (usablePuan) {
+            let newFee = Helper.asCurrency(totalFee.kalitteFee - usablePuan);
+            newFee = Helper.asCurrency(newFee + newFee * 0.18);
+            return newFee;
+        } else return Helper.asCurrency(totalFee.kalitteFee + totalFee.kalitteVat);     
     }
 
     static async fromShopcard(c: ShopCard, bi: number): Promise<Order> {

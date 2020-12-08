@@ -197,14 +197,14 @@ export class CreditcardPaymentProvider {
 
     }
 
-    getMerchantMoney(o: Order, shouldBePaid: number, productPrice, shipOfButcher, shipOfKasaptanAl) {
-        let comission = o.getButcherComission(productPrice + shipOfButcher);        
+    getMerchantMoney(o: Order, shouldBePaid: number, productPrice, shipOfButcher, shipOfKasaptanAl, puanUsage) {        
+        let merchantPrice = o.getButcherComission(productPrice + shipOfButcher, puanUsage);    
         let puan = o.getPuanTotal(productPrice);
-        return Helper.asCurrency(shouldBePaid - comission - puan - shipOfKasaptanAl)
+        return Helper.asCurrency(shouldBePaid - merchantPrice - puan - shipOfKasaptanAl)
     }
 
 
-    requestFromOrder(ol: Order[], debts: { [key: string]: number; } = {}): PaymentRequest {
+    requestFromOrder(ol: Order[], debts: { [key: string]: number; } = {} = {}): PaymentRequest {
         let basketItems: BasketItem[] = [];
         let price = 0.00, paidPrice = 0.00;
         ol.forEach((o, j) => {
@@ -217,26 +217,27 @@ export class CreditcardPaymentProvider {
             let butcherDebt = 0.00, debtApplied = 0.00;
 
             if (this.marketPlace) {
-                merchantPrice = this.getMerchantMoney(o, shouldBePaid, productPrice, shipOfButcher, shipOfKasaptanAl);
+                merchantPrice = this.getMerchantMoney(o, shouldBePaid, productPrice, shipOfButcher, shipOfKasaptanAl, o.requestedPuan);
                 butcherDebt = debts[o.butcherid];
                 if (merchantPrice <= butcherDebt) {
                     debtApplied = merchantPrice - 1.00;
                 } else debtApplied = butcherDebt;
                 merchantPrice = Helper.asCurrency(merchantPrice - debtApplied);
             }
+            let userPrice = Helper.asCurrency(shouldBePaid-o.requestedPuan);
             basketItems.push({
                 category1: o.butcherName,
                 id: o.ordernum,
                 itemType: 'PHYSICAL',
                 name: o.name + ' ' + o.ordernum + ' nolu ' + 'ürün siparişi',
-                price: Helper.asCurrency(shouldBePaid),
+                price: userPrice,
                 merchantDebtApplied: debtApplied,
                 subMerchantKey: this.marketPlace ? this.getSubmerchantId(o) : undefined,
                 subMerchantPrice: merchantPrice > 0.00 ? merchantPrice : undefined
             })
 
-            price += Helper.asCurrency(shouldBePaid);
-            paidPrice += Helper.asCurrency(shouldBePaid);
+            price += userPrice;
+            paidPrice += userPrice;
         })
 
         let orderids = ol.map(o => o.ordernum).join(',');

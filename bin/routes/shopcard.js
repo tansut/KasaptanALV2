@@ -45,6 +45,7 @@ class Route extends router_1.ViewRouter {
         this.Shipment = shipment_1.Shipment;
         this.Butchers = null;
         this.mayEarnPuanTotal = 0.00;
+        this.usablePuanTotal = 0.00;
         this.possiblePuanList = [];
         this.destinationMatrix = {};
         this.puanCalculator = new commissionHelper_1.PuanCalculator();
@@ -55,11 +56,15 @@ class Route extends router_1.ViewRouter {
             yield this.loadButchers();
             let orders = [];
             this.mayEarnPuanTotal = 0.00;
+            this.usablePuanTotal = 0.00;
             if (this.shopcard.items.length > 0) {
                 orders = yield this.orderapi.getFromShopcard(this.shopcard);
                 for (var i = 0; i < orders.length; i++) {
-                    if (this.req.user)
+                    if (this.req.user) {
                         yield this.orderapi.fillFirstOrderDetails(orders[i]);
+                    }
+                    let puanUsable = yield this.orderapi.getUsablePuans(orders[i]);
+                    this.usablePuanTotal += puanUsable;
                     let list = this.orderapi.getPossiblePuanGain(orders[i], this.shopcard.getButcherTotalWithoutShipping(orders[i].butcherid), true);
                     this.possiblePuanList = this.possiblePuanList.concat(list);
                 }
@@ -468,6 +473,10 @@ class Route extends router_1.ViewRouter {
             try {
                 let api = new order_1.default(this.constructorParams);
                 let orders = yield api.create(this.shopcard);
+                if (this.req.body.usepuan == "true") {
+                    orders[0].requestedPuan = yield this.orderapi.getUsablePuans(orders[0]);
+                    yield orders[0].save();
+                }
                 yield shopcard_1.ShopCard.empty(this.req);
                 // if (orders.length == 1 && orders[0].paymentType == 'onlinepayment') {
                 //     this.res.redirect(`/user/orders/${orders[0].ordernum}?new=1`)

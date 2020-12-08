@@ -39,6 +39,7 @@ class Route extends paymentrouter_1.PaymentRouter {
         this.earnedPuanKalitte = 0.00;
         this.earnedPuanTotal = 0.00;
         this.mayEarnPuanTotal = 0.00;
+        this.usablePuanTotal = 0.00;
         this.productTotal = 0.00;
         this.markdown = new MarkdownIt();
         this.possiblePuanList = [];
@@ -80,10 +81,12 @@ class Route extends paymentrouter_1.PaymentRouter {
             this.earnedPuanButcher = this.puanBalanceButcher ? helper_1.default.asCurrency(this.puanBalanceButcher.alacak - this.puanBalanceButcher.borc) : 0.00;
             this.earnedPuanTotal = helper_1.default.asCurrency(this.earnedPuanKalitte + this.earnedPuanButcher);
             this.mayEarnPuanTotal = 0.00;
+            this.usablePuanTotal = 0.00;
             if (this.shouldBePaid > 0 && this.order.orderSource == order_2.OrderSource.kasaptanal) {
                 this.possiblePuanList = this.api.getPossiblePuanGain(this.order, this.productTotal);
                 this.possiblePuanList.forEach(pg => this.mayEarnPuanTotal += pg.earned);
                 this.mayEarnPuanTotal = helper_1.default.asCurrency(this.mayEarnPuanTotal);
+                this.usablePuanTotal = Math.min(this.order.requestedPuan, yield this.api.getUsablePuans(this.order));
             }
         });
     }
@@ -107,18 +110,21 @@ class Route extends paymentrouter_1.PaymentRouter {
         return __awaiter(this, void 0, void 0, function* () {
             if (this.shouldBePaid <= 0.00)
                 throw new Error("Geçersiz ödeme işlemi, siparişin borcu yoktur");
-            let debt = {};
+            let debt = {}, puanUsage = {};
             debt[this.order.butcherid] = 0.00;
             if (this.order.orderSource == order_2.OrderSource.kasaptanal) {
-                this.api.fillPuanAccounts(this.order, this.productTotal);
+                this.api.fillEarnedPuanAccounts(this.order, this.productTotal);
                 let butcherDebptAccounts = yield accountmodel_1.default.summary([account_1.Account.generateCode("kasaplardan-alacaklar", [this.order.butcherid], true)]);
                 let butcherDebt = helper_1.default.asCurrency(butcherDebptAccounts.borc - butcherDebptAccounts.alacak);
                 debt[this.order.butcherid] = butcherDebt;
+                // if (this.req.body.puanusage == 'yes') {
+                //     puanUsage[this.order.butcherid] = this.usablePuanTotal;
+                // }        
             }
             let request = this.paymentProvider.requestFromOrder([this.order], debt);
             request.callbackUrl = this.url + '/3dnotify?provider=' + this.paymentProvider.providerKey;
-            if (this.shouldBePaid != request.paidPrice)
-                throw new Error("Geçersiz sipariş ve muhasebesel tutarlar");
+            // if (this.shouldBePaid != request.paidPrice)
+            //     throw new Error("Geçersiz sipariş ve muhasebesel tutarlar");
             return request;
         });
     }
@@ -161,6 +167,18 @@ class Route extends paymentrouter_1.PaymentRouter {
                         paymentResult = yield this.createPayment(req, creditCard);
                         yield this.paymentSuccess(req, paymentResult);
                         userMessage = "Ödemenizi başarıyla aldık";
+                    }
+                }
+                else {
+                    if (this.req.body.usepuan == 'true') {
+                        this.order.requestedPuan = this.usablePuanTotal;
+                        yield this.order.save();
+                        return this.payOrderViewRoute();
+                    }
+                    else if (this.req.body.usepuan == 'false') {
+                        this.order.requestedPuan = 0.00;
+                        yield this.order.save();
+                        return this.payOrderViewRoute();
                     }
                 }
             }

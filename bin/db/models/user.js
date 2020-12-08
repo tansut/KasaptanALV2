@@ -42,7 +42,8 @@ let User = User_1 = class User extends basemodel_1.default {
             this.puans = yield accountmodel_1.default.summary([
                 account_1.Account.generateCode("musteri-kalitte-kazanilan-puan", [this.id, 1]),
                 account_1.Account.generateCode("musteri-kalitte-kazanilan-puan", [this.id, 2]),
-                account_1.Account.generateCode("musteri-kasap-kazanilan-puan", [this.id])
+                account_1.Account.generateCode("musteri-kasap-kazanilan-puan", [this.id]),
+                account_1.Account.generateCode("musteri-harcanan-puan", [this.id])
             ]);
             this.usablePuans = helper_1.default.asCurrency(this.puans.alacak - this.puans.borc);
             this.usablePuans = this.usablePuans < 0 ? helper_1.default.asCurrency(0) : this.usablePuans;

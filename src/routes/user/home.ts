@@ -38,6 +38,7 @@ export default class Route extends ViewRouter {
 
     puanAccountsKalitte: AccountModel[] = []
     puanAccountsButcher: AccountModel[] = []
+    usedPuans: AccountModel[] = []
 
     async getOrderSummary() {        
         this.productTotal = this.api.calculateProduct(this.order);
@@ -96,6 +97,7 @@ export default class Route extends ViewRouter {
         this.puanAccountsKalitte = await AccountModel.list([Account.generateCode("musteri-kalitte-kazanilan-puan", [this.user.id, 1]),
             Account.generateCode("musteri-kalitte-kazanilan-puan", [this.user.id, 2])])
         this.puanAccountsButcher = await AccountModel.list([Account.generateCode("musteri-kasap-kazanilan-puan", [this.user.id])])
+        this.usedPuans = await AccountModel.list([Account.generateCode("musteri-harcanan-puan", [this.user.id])])
     }
 
     async viewOrderDetails() {

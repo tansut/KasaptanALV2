@@ -133,158 +133,158 @@ export default class Route extends ViewRouter {
 
 
 
-    async orderSaveRoute() {
-        let userMessage = "";
+    // async orderSaveRoute() {
+    //     let userMessage = "";
 
-        await this.getOrder();
-        await this.getOrderSummary()
+    //     await this.getOrder();
+    //     await this.getOrderSummary()
 
-        if (!this.order)
-            return this.next();
+    //     if (!this.order)
+    //         return this.next();
 
-        if (this.req.body.saveOrderStatus == "true" && this.order.status != this.req.body.orderStatus) {
-            this.order.statusDesc ? null : (this.order.statusDesc = '')
-            this.order.statusDesc += `\n- ${Helper.formatDate(Helper.Now(), true)} tarihinde ${this.order.status} -> ${this.req.body.orderStatus}`
-            await this.api.completeOrderStatus(this.order, this.req.body.orderStatus);
-            if (this.req.body.orderStatus == OrderItemStatus.success)
-                userMessage = "KASABA MAKBUZ İLETMEYİ UNUTMAYIN"
-        }
+    //     if (this.req.body.saveOrderStatus == "true" && this.order.status != this.req.body.orderStatus) {
+    //         this.order.statusDesc ? null : (this.order.statusDesc = '')
+    //         this.order.statusDesc += `\n- ${Helper.formatDate(Helper.Now(), true)} tarihinde ${this.order.status} -> ${this.req.body.orderStatus}`
+    //         await this.api.completeOrderStatus(this.order, this.req.body.orderStatus);
+    //         if (this.req.body.orderStatus == OrderItemStatus.success)
+    //             userMessage = "KASABA MAKBUZ İLETMEYİ UNUTMAYIN"
+    //     }
 
-        if (this.req.body.makeManuelPayment == "true") {
-            if (this.shouldBePaid > 0) {
-                await this.api.completeManuelPayment(this.order, this.shouldBePaid)
-            } else userMessage = "Ödemesi yok siparişin";
-        }
+    //     if (this.req.body.makeManuelPayment == "true") {
+    //         if (this.shouldBePaid > 0) {
+    //             await this.api.completeManuelPayment(this.order, this.shouldBePaid)
+    //         } else userMessage = "Ödemesi yok siparişin";
+    //     }
 
-        if (this.req.body.makeManuelPaymentDebt == "true") {
-            if (this.paid > 0) {
-                let toKalitte = Helper.asCurrency(this.butcherFee.kalitteFee + this.butcherFee.kalitteVat)
-                await this.api.completeManualPaymentDept(this.order)
-            } else userMessage = "Ödemesi yok siparişin";
-        }
-
-
+    //     if (this.req.body.makeManuelPaymentDebt == "true") {
+    //         if (this.paid > 0) {
+    //             let toKalitte = Helper.asCurrency(this.butcherFee.kalitteFee + this.butcherFee.kalitteVat)
+    //             await this.api.completeManualPaymentDept(this.order)
+    //         } else userMessage = "Ödemesi yok siparişin";
+    //     }
 
 
-        // if (this.req.body.loadPuans == "true") {
-        //     if (this.shouldBePaid > 0) {
-        //         userMessage = "Ödemesi henüz yapılmamış siparişin";
-
-        //     } else await this.api.completeLoadPuan(this.order, this.paid)
-
-        // }
-
-        if (this.req.body["kurye-maliyet"] == "true" && this.order.butcher.logisticProvider) {
-            let provider = LogisticFactory.getInstance(this.order.butcher.logisticProvider, {
-                dispatcher: await Dispatcher.findByPk(this.order.dispatcherid, {
-                    include: [{
-                        model: Butcher,
-                        as: 'butcher',
-                    }]
-                })
-            });
-            provider.safeRequests = false;
-            let request = provider.offerFromOrder(this.order);
-            try {
-                let offer = await provider.requestOffer(request);
-                userMessage = `Taşıma: ${offer.totalFee}, İndirim: ${offer.discount}`;
-            } catch (err) {
-                userMessage = err.message
-            }
-        }
-
-        if (this.req.body["kurye-cagir"] == "true" && this.order.butcher.logisticProvider) {
-            let provider = LogisticFactory.getInstance(this.order.butcher.logisticProvider, {
-                dispatcher: await Dispatcher.findByPk(this.order.dispatcherid, {
-                    include: [{
-                        model: Butcher,
-                        as: 'butcher',
-                    }]
-                })
-            });
-            provider.safeRequests = false;
-            let request = provider.orderFromOrder(this.order);
-            try {
-                let offer = await provider.createOrder(request);
-                userMessage = `Kurye çağrıldı:`;
-            } catch (err) {
-                userMessage = err.message
-            }
-
-        }
 
 
-        if (this.req.body.approveOrderSubMerchant == "true") {
-            await this.paymentProvider.approveItem({
-                paymentTransactionId: this.order.paymentTransactionId
-            })
-            this.order.subMerchantStatus = 'approved';
-            userMessage = `${this.order.ordernum} subMerchant ONAYLANDI`
-            await this.order.save();
-        }
-        if (this.req.body.disApproveOrderSubMerchant == "true") {
-            await this.paymentProvider.disApproveItem({
-                paymentTransactionId: this.order.paymentTransactionId
-            })
-            this.order.subMerchantStatus = 'disapproved';
-            userMessage = `${this.order.ordernum} subMerchant ONAY KALDIRILDI`
+    //     // if (this.req.body.loadPuans == "true") {
+    //     //     if (this.shouldBePaid > 0) {
+    //     //         userMessage = "Ödemesi henüz yapılmamış siparişin";
 
-            await this.order.save();
-        }
+    //     //     } else await this.api.completeLoadPuan(this.order, this.paid)
 
-        if (this.req.body.addcomment) {
-            let comment = this.req.body.comment;
-            let puan = Helper.parseFloat(this.req.body.commentpuan);
-            let review = await Review.findOne({
-                where: {
-                    userId: this.order.userId,
-                    type: 'order',
-                    ref1: this.order.id
-                }
-            })
-            if (review == null) {
-                review = new Review();
-                review.userId = this.order.userId;
-                review.type = 'order';
-                review.ref1 = this.order.id;
-                review.ref2 = this.order.butcherid,
-                    review.itemDate = this.order.creationDate;
-                review.ref2Text = this.order.butcher.name;
-                review.ref2slug = this.order.butcher.slug;
-                review.content = comment;
-                review.level1Id = this.order.areaLevel1Id;
-                review.level2Id = this.order.areaLevel2Id;
-                review.level3Id = this.order.areaLevel3Id;
-                review.level1Text = this.order.areaLevel1Text;
-                review.level2Text = this.order.areaLevel2Text;
-                review.level3Text = this.order.areaLevel3Text;
-                review.areaSlug = (await AreaModel.findByPk(review.level3Id)).slug;
-                review.userRating1 = puan;
-                let words = this.order.name.match(/\S+/g).map(w => `${w}`)
-                if (words.length >= 2)
-                    review.displayUser = words[0] + ' ' + words[1][0] + '.';
-                else review.displayUser = words[0] + '.'
+    //     // }
 
-            } else {
-                review.content = comment;
-                review.userRating1 = puan;
-            }
+    //     if (this.req.body["kurye-maliyet"] == "true" && this.order.butcher.logisticProvider) {
+    //         let provider = LogisticFactory.getInstance(this.order.butcher.logisticProvider, {
+    //             dispatcher: await Dispatcher.findByPk(this.order.dispatcherid, {
+    //                 include: [{
+    //                     model: Butcher,
+    //                     as: 'butcher',
+    //                 }]
+    //             })
+    //         });
+    //         provider.safeRequests = false;
+    //         let request = provider.offerFromOrder(this.order);
+    //         try {
+    //             let offer = await provider.requestOffer(request);
+    //             userMessage = `Taşıma: ${offer.totalFee}, İndirim: ${offer.discount}`;
+    //         } catch (err) {
+    //             userMessage = err.message
+    //         }
+    //     }
 
-            await review.save();
-            userMessage = "Yorum eklendi"
-        }
+    //     if (this.req.body["kurye-cagir"] == "true" && this.order.butcher.logisticProvider) {
+    //         let provider = LogisticFactory.getInstance(this.order.butcher.logisticProvider, {
+    //             dispatcher: await Dispatcher.findByPk(this.order.dispatcherid, {
+    //                 include: [{
+    //                     model: Butcher,
+    //                     as: 'butcher',
+    //                 }]
+    //             })
+    //         });
+    //         provider.safeRequests = false;
+    //         let request = provider.orderFromOrder(this.order);
+    //         try {
+    //             let offer = await provider.createOrder(request);
+    //             userMessage = `Kurye çağrıldı:`;
+    //         } catch (err) {
+    //             userMessage = err.message
+    //         }
+
+    //     }
 
 
-        //
+    //     if (this.req.body.approveOrderSubMerchant == "true") {
+    //         await this.paymentProvider.approveItem({
+    //             paymentTransactionId: this.order.paymentTransactionId
+    //         })
+    //         this.order.subMerchantStatus = 'approved';
+    //         userMessage = `${this.order.ordernum} subMerchant ONAYLANDI`
+    //         await this.order.save();
+    //     }
+    //     if (this.req.body.disApproveOrderSubMerchant == "true") {
+    //         await this.paymentProvider.disApproveItem({
+    //             paymentTransactionId: this.order.paymentTransactionId
+    //         })
+    //         this.order.subMerchantStatus = 'disapproved';
+    //         userMessage = `${this.order.ordernum} subMerchant ONAY KALDIRILDI`
+
+    //         await this.order.save();
+    //     }
+
+    //     if (this.req.body.addcomment) {
+    //         let comment = this.req.body.comment;
+    //         let puan = Helper.parseFloat(this.req.body.commentpuan);
+    //         let review = await Review.findOne({
+    //             where: {
+    //                 userId: this.order.userId,
+    //                 type: 'order',
+    //                 ref1: this.order.id
+    //             }
+    //         })
+    //         if (review == null) {
+    //             review = new Review();
+    //             review.userId = this.order.userId;
+    //             review.type = 'order';
+    //             review.ref1 = this.order.id;
+    //             review.ref2 = this.order.butcherid,
+    //                 review.itemDate = this.order.creationDate;
+    //             review.ref2Text = this.order.butcher.name;
+    //             review.ref2slug = this.order.butcher.slug;
+    //             review.content = comment;
+    //             review.level1Id = this.order.areaLevel1Id;
+    //             review.level2Id = this.order.areaLevel2Id;
+    //             review.level3Id = this.order.areaLevel3Id;
+    //             review.level1Text = this.order.areaLevel1Text;
+    //             review.level2Text = this.order.areaLevel2Text;
+    //             review.level3Text = this.order.areaLevel3Text;
+    //             review.areaSlug = (await AreaModel.findByPk(review.level3Id)).slug;
+    //             review.userRating1 = puan;
+    //             let words = this.order.name.match(/\S+/g).map(w => `${w}`)
+    //             if (words.length >= 2)
+    //                 review.displayUser = words[0] + ' ' + words[1][0] + '.';
+    //             else review.displayUser = words[0] + '.'
+
+    //         } else {
+    //             review.content = comment;
+    //             review.userRating1 = puan;
+    //         }
+
+    //         await review.save();
+    //         userMessage = "Yorum eklendi"
+    //     }
 
 
-        await this.getOrder();
-        await this.getOrderSummary()
-
-        this.sendView("pages/operator.manageorder.ejs", { ...{ _usrmsg: { text: userMessage } }, ...this.api.getView(this.order), ...{ enableImgContextMenu: true } });
+    //     //
 
 
-    }
+    //     await this.getOrder();
+    //     await this.getOrderSummary()
+
+    //     this.sendView("pages/operator.manageorder.ejs", { ...{ _usrmsg: { text: userMessage } }, ...this.api.getView(this.order), ...{ enableImgContextMenu: true } });
+
+
+    // }
 
     get hideOrderDetails() {
         if (this.req.user && this.req.user.hasRole('admin')) return false;

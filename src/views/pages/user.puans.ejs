@@ -46,6 +46,10 @@
                         href="/user/signoff" rel="nofollow"><i class="czi-sign-out mr-2"></i>Çıkış</a>
                 </div>
             <div>
+                <% if (controller.usedPuans.length > 1) { %>
+                    <%- include('./_partial/accounts-view.ejs', { showDate: true, hideAlacak: true, accounts: controller.usedPuans, title:'Kullandığınız Puanlarınız' }) %>
+                  <%}%>
+
                 <% if (controller.puanAccountsKalitte.length > 1) { %>
                     <%- include('./_partial/accounts-view.ejs', { showDate: true, hideBorc: true, accounts: controller.puanAccountsKalitte, title:'kasaptanAl.com Puanlarınız' }) %>
                     <p class="d-none font-size-sm text-info">

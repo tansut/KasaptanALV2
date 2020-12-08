@@ -43,6 +43,7 @@ export default class Route extends ViewRouter {
     Butchers: ButcherModel[] = null;
     puanCalculator: PuanCalculator;
     mayEarnPuanTotal = 0.00;
+    usablePuanTotal = 0.00;
     possiblePuanList: PuanResult[] = [];
     orderapi: OrderApi;
 
@@ -53,11 +54,15 @@ export default class Route extends ViewRouter {
         await this.loadButchers();
         let orders = []
         this.mayEarnPuanTotal = 0.00;
+        this.usablePuanTotal = 0.00;
         if (this.shopcard.items.length > 0) {
             orders = await this.orderapi.getFromShopcard(this.shopcard);
             for (var i = 0; i < orders.length; i++) {
-                if (this.req.user)
+                if (this.req.user) {
                     await this.orderapi.fillFirstOrderDetails(orders[i]);
+                }
+                let puanUsable = await this.orderapi.getUsablePuans(orders[i]);
+                this.usablePuanTotal+=puanUsable;
                 let list = this.orderapi.getPossiblePuanGain(orders[i], this.shopcard.getButcherTotalWithoutShipping(orders[i].butcherid), true);
                 this.possiblePuanList = this.possiblePuanList.concat(list);
             }
@@ -499,6 +504,10 @@ export default class Route extends ViewRouter {
         try {
             let api = new OrderApi(this.constructorParams);
             let orders = await api.create(this.shopcard);
+            if (this.req.body.usepuan == "true") {
+                orders[0].requestedPuan = await this.orderapi.getUsablePuans(orders[0]);
+                await orders[0].save();
+            }
             await ShopCard.empty(this.req);
             // if (orders.length == 1 && orders[0].paymentType == 'onlinepayment') {
             //     this.res.redirect(`/user/orders/${orders[0].ordernum}?new=1`)

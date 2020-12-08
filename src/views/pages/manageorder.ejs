@@ -317,7 +317,7 @@
               <h6 class="h6 border-bottom">Kurye ne zaman gelsin?</h6>
               <div class="row">
                 <div class="form-group col-md">
-                  <label for="kuryeDay">Gün</label>
+                  <label class="d-none" for="kuryeDay">Gün</label>
                   <select class="form-control custom-select" id="kuryeDay" name="kuryeDay">
                     <% let days = controller.availableDays()%>
                     <% Object.keys(days).forEach(key=> { %>
@@ -329,7 +329,7 @@
                   </select>
                 </div>
                 <div class="form-group col-md">
-                  <label for="kuryeTime">Saat</label>
+                  <label class="d-none" for="kuryeTime">Saat</label>
                   <select class="form-control custom-select" id="kuryeTime" name="kuryeTime">
                     <% let hours = controller.availableTimes()%>
                     <% hours.forEach(h=> { %>
@@ -373,7 +373,7 @@
                 <h6 class="h6 border-bottom">Teslimatı ne zaman yapabilirsiniz?</h6>
                 <div class="row">
                   <div class="form-group col-md">
-                    <label for="delivDay">Gün</label>
+                    <label class="d-none" for="delivDay">Gün</label>
                     <select class="form-control custom-select" id="delivDay" name="delivDay">
                       <% let days = controller.availableDays(true)%>
                       <% Object.keys(days).forEach(key=> { %>
@@ -385,7 +385,7 @@
                     </select>
                   </div>
                   <div class="form-group col-md">
-                    <label for="delivTime">Saat</label>
+                    <label class="d-none" for="delivTime">Saat</label>
                     <select class="form-control custom-select" id="delivTime" name="delivTime">
                       <% let hours = controller.availableTimes(true)%>
                       <% hours.forEach(h=> { %>

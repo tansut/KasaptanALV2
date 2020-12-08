@@ -24,6 +24,11 @@ exports.KnownAccounts = {
         name: "",
         code: "600"
     },
+    "musteri-harcanan-puan": {
+        type: "active",
+        name: "Kullanılan puanlar",
+        code: "602"
+    },
     "banka": {
         type: "active",
         name: "",
@@ -38,6 +43,11 @@ exports.KnownAccounts = {
         type: "passive",
         name: "",
         code: "130"
+    },
+    "kullanilan-puanlar": {
+        type: "passive",
+        name: "",
+        code: "126"
     },
     "musteri-kalitte-kazanilan-puan": {
         type: "passive",

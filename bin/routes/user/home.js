@@ -33,6 +33,7 @@ class Route extends router_1.ViewRouter {
         this.markdown = new MarkdownIt();
         this.puanAccountsKalitte = [];
         this.puanAccountsButcher = [];
+        this.usedPuans = [];
     }
     getOrderSummary() {
         return __awaiter(this, void 0, void 0, function* () {
@@ -92,6 +93,7 @@ class Route extends router_1.ViewRouter {
             this.puanAccountsKalitte = yield accountmodel_1.default.list([account_1.Account.generateCode("musteri-kalitte-kazanilan-puan", [this.user.id, 1]),
                 account_1.Account.generateCode("musteri-kalitte-kazanilan-puan", [this.user.id, 2])]);
             this.puanAccountsButcher = yield accountmodel_1.default.list([account_1.Account.generateCode("musteri-kasap-kazanilan-puan", [this.user.id])]);
+            this.usedPuans = yield accountmodel_1.default.list([account_1.Account.generateCode("musteri-harcanan-puan", [this.user.id])]);
         });
     }
     viewOrderDetails() {

@@ -47,6 +47,7 @@ export default class Route extends PaymentRouter {
     earnedPuanKalitte = 0.00;
     earnedPuanTotal = 0.00;
     mayEarnPuanTotal = 0.00;
+    usablePuanTotal = 0.00;
     productTotal = 0.00;
     markdown = new MarkdownIt();
 
@@ -94,10 +95,13 @@ export default class Route extends PaymentRouter {
         this.earnedPuanButcher = this.puanBalanceButcher ? Helper.asCurrency(this.puanBalanceButcher.alacak - this.puanBalanceButcher.borc) : 0.00
         this.earnedPuanTotal = Helper.asCurrency(this.earnedPuanKalitte + this.earnedPuanButcher)
         this.mayEarnPuanTotal = 0.00;
+        this.usablePuanTotal = 0.00;
         if (this.shouldBePaid > 0 && this.order.orderSource == OrderSource.kasaptanal) {
             this.possiblePuanList = this.api.getPossiblePuanGain(this.order, this.productTotal);
             this.possiblePuanList.forEach(pg => this.mayEarnPuanTotal += pg.earned)
-            this.mayEarnPuanTotal = Helper.asCurrency(this.mayEarnPuanTotal)
+            this.mayEarnPuanTotal = Helper.asCurrency(this.mayEarnPuanTotal);
+            this.usablePuanTotal = Math.min(this.order.requestedPuan, await this.api.getUsablePuans(this.order))
+            
         }
     }
 
@@ -117,22 +121,26 @@ export default class Route extends PaymentRouter {
     async getPaymentRequest() {
         if (this.shouldBePaid <= 0.00)
             throw new Error("Geçersiz ödeme işlemi, siparişin borcu yoktur");
-        let debt = {};     
+        let debt = {}, puanUsage = {};     
         debt[this.order.butcherid] = 0.00;       
         
         if (this.order.orderSource == OrderSource.kasaptanal) {
-            this.api.fillPuanAccounts(this.order, this.productTotal);
+            this.api.fillEarnedPuanAccounts(this.order, this.productTotal);
             let butcherDebptAccounts = await AccountModel.summary([Account.generateCode("kasaplardan-alacaklar", [this.order.butcherid], true)])
             let butcherDebt = Helper.asCurrency(butcherDebptAccounts.borc - butcherDebptAccounts.alacak);
-            debt[this.order.butcherid] = butcherDebt;            
+            debt[this.order.butcherid] = butcherDebt;   
+            // if (this.req.body.puanusage == 'yes') {
+            //     puanUsage[this.order.butcherid] = this.usablePuanTotal;
+            // }        
         }
+        
 
 
         
         let request = this.paymentProvider.requestFromOrder([this.order], debt);
         request.callbackUrl = this.url + '/3dnotify?provider=' + this.paymentProvider.providerKey;        
-        if (this.shouldBePaid != request.paidPrice)
-            throw new Error("Geçersiz sipariş ve muhasebesel tutarlar");
+        // if (this.shouldBePaid != request.paidPrice)
+        //     throw new Error("Geçersiz sipariş ve muhasebesel tutarlar");
 
         return request;
     }
@@ -178,6 +186,17 @@ export default class Route extends PaymentRouter {
                     await this.paymentSuccess(req, paymentResult)
                     userMessage = "Ödemenizi başarıyla aldık"
                 }
+            } else {
+                if (this.req.body.usepuan == 'true') {
+                    this.order.requestedPuan = this.usablePuanTotal;
+                    await this.order.save();   
+                    return this.payOrderViewRoute();
+                    
+                } else if (this.req.body.usepuan == 'false') {
+                    this.order.requestedPuan = 0.00;
+                    await this.order.save();       
+                    return this.payOrderViewRoute();             
+                }                
             }
         } catch (err) {
             userMessage = err.message || err.errorMessage;

@@ -107,7 +107,8 @@ export default class User extends BaseModel<User> {
         this.puans  = await AccountModel.summary([
             Account.generateCode("musteri-kalitte-kazanilan-puan", [this.id, 1]),
             Account.generateCode("musteri-kalitte-kazanilan-puan", [this.id, 2]), 
-            Account.generateCode("musteri-kasap-kazanilan-puan", [this.id])
+            Account.generateCode("musteri-kasap-kazanilan-puan", [this.id]),
+            Account.generateCode("musteri-harcanan-puan", [this.id])
             ])
             this.usablePuans = Helper.asCurrency(this.puans.alacak - this.puans.borc);
             this.usablePuans = this.usablePuans < 0 ? Helper.asCurrency(0): this.usablePuans;

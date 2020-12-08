@@ -21,7 +21,7 @@ import Helper from '../../lib/helper';
 import { Creditcard, CreditcardPaymentFactory, PaymentTotal, PaymentRequest, PaymentResult } from '../../lib/payment/creditcard';
 import { OrderPaymentStatus, OrderItemStatus, OrderSource, OrderType, DeliveryStatusDesc } from '../../models/order';
 import config from '../../config';
-import { PuanCalculator } from '../../lib/commissionHelper';
+import { ComissionHelper, PuanCalculator } from '../../lib/commissionHelper';
 import { PuanResult, Puan } from '../../models/puan';
 import { Op } from 'sequelize';
 import { LogisticFactory } from '../../lib/logistic/core';
@@ -523,6 +523,26 @@ export default class Route extends ApiRouter {
 
     }
 
+    async getUsablePuans(o: Order) {
+        o.workedAccounts = o.workedAccounts.length == 0 ? this.generateInitialAccounting(o).accounts.map(a=>AccountModel.fromAccount(a)): o. workedAccounts;
+
+        if (this.req.user && this.req.user.usablePuans > 0) {
+            let butcherShip = this.calculateTeslimatOfButcher(o)
+            let kasaptanAlShip = this.calculateTeslimatOfKasaptanAl(o);
+            let productPrice = this.calculateProduct(o);    
+            let puanAccounts = this.getEarnedPuanAccounts(o, productPrice);
+            this.fillEarnedPuanAccounts(o, productPrice);            
+
+            let rate = o.getButcherRate(); 
+            let fee = o.getButcherFee();
+            let calc = new ComissionHelper(rate, fee);
+            let totalFee = calc.calculateButcherComission(productPrice + butcherShip);
+            let max = totalFee.kalitteFee;
+
+            return Math.min(this.req.user.usablePuans, max)
+        } return 0.00;
+    }
+
 
     getPossiblePuanGain(o: Order, total: number, includeAvailable: boolean = false): PuanResult[] {
 
@@ -629,21 +649,24 @@ export default class Route extends ApiRouter {
     }
 
 
-    getComissionAccounts(o: Order, total: number, kasaptanAlShip: number): AccountingOperation {
+    getComissionAccounts(o: Order, total: number, kasaptanAlShip: number, usablePuan: number): AccountingOperation {
         let result: AccountingOperation = new AccountingOperation(`${o.ordernum} nolu ${o.butcherName} kasap komisyon hesabı`, o.ordernum);
 
-        let butcherFee = o.getButcherComission(total);
-        let puanTotal = o.getPuanTotal(total);
+        let butcherFee = o.getButcherComission(total, usablePuan);
+        let earnedPuan = o.getPuanTotal(total);
 
-        result.accounts.push(new Account("kasaplardan-kesilen-komisyonlar", [100, o.butcherid, o.ordernum], `${o.ordernum} nolu satış kasaptanal.com komisyonu`).inc(butcherFee))
-        if (puanTotal > 0.00) {
-            result.accounts.push(new Account("kasaplardan-kesilen-komisyonlar", [200, o.butcherid, o.ordernum], `${o.ordernum} nolu müşteriye iletilen puan`).inc(puanTotal))
+        if (butcherFee)
+            result.accounts.push(new Account("kasaplardan-kesilen-komisyonlar", [100, o.butcherid, o.ordernum], `${o.ordernum} nolu satış kasaptanal.com komisyonu`).inc(butcherFee))
+        if (earnedPuan > 0.00) {
+            result.accounts.push(new Account("kasaplardan-kesilen-komisyonlar", [200, o.butcherid, o.ordernum], `${o.ordernum} nolu müşteriye iletilen puan`).inc(earnedPuan))
         }
         if (kasaptanAlShip > 0.00) {
             result.accounts.push(new Account("banka", [300, o.ordernum], `${o.ordernum} nolu satış kasaptanal.com müşteriden alınan teslimat bedeli`).inc(kasaptanAlShip))
-
         }
-        result.accounts.push(new Account("gelirler", [100, o.butcherid], `${o.ordernum} nolu ${o.butcherName} satış geliri`).inc(butcherFee + puanTotal + kasaptanAlShip))
+
+        let income = butcherFee + earnedPuan + kasaptanAlShip;
+        if (income)
+            result.accounts.push(new Account("gelirler", [100, o.butcherid], `${o.ordernum} nolu ${o.butcherName} satış geliri`).inc(income))
 
         return result;
     }
@@ -657,7 +680,7 @@ export default class Route extends ApiRouter {
     //     return result;
     // }    
 
-    getPuanAccounts(o: Order, total: number): AccountingOperation {
+    getEarnedPuanAccounts(o: Order, total: number): AccountingOperation {
 
         let gains = this.getPossiblePuanGain(o, total);
         let result: AccountingOperation = new AccountingOperation(`${o.ordernum} nolu ${o.butcherName} siparişi puan kazancı`, o.ordernum);
@@ -686,13 +709,13 @@ export default class Route extends ApiRouter {
 
 
 
-    fillPuanAccounts(o: Order, paidPrice: number) {
+    fillEarnedPuanAccounts(o: Order, paidPrice: number) {
         o.butcherPuanAccounts = [];
         o.kalittePuanAccounts = [];
         o.kalitteOnlyPuanAccounts = [];
         o.kalitteByButcherPuanAccounts = [];
 
-        let accounts = this.getPuanAccounts(o, paidPrice).accounts;
+        let accounts = this.getEarnedPuanAccounts(o, paidPrice).accounts;
 
         let butcherCode = Account.generateCode("musteri-kasap-kazanilan-puan", [o.userId, o.butcherid, o.ordernum]);
         let kalitteCode = Account.generateCode("musteri-kalitte-kazanilan-puan", [o.userId, 1, o.ordernum]);
@@ -715,6 +738,24 @@ export default class Route extends ApiRouter {
         AccountModel.addTotals(o.kalittePuanAccounts)
 
     }
+
+    getUsedPuanAccounts(o: Order, puan: number) {
+
+        let result: AccountingOperation = new AccountingOperation(`${o.ordernum} nolu ${o.butcherName} siparişi puan kullanımı`, o.ordernum);
+        if (puan > 0) {
+            let acc1 = new Account("musteri-harcanan-puan", [o.userId, o.ordernum]).inc(puan);
+            let acc2 = new Account("kullanilan-puanlar", [o.userId], `${o.ordernum} nolu sipariş puan kullanımı`).inc(puan);
+    
+    
+            result.accounts.push(acc1);
+            result.accounts.push(acc2);
+        }
+
+        result.validate();
+
+        return result;
+
+    }    
 
     async getEarnedPuans(o: Order) {
         let puans  = await AccountModel.summary([
@@ -790,22 +831,30 @@ export default class Route extends ApiRouter {
 
         let paymentId = "manuel";
 
+        let usablePuan = o.requestedPuan;
+
         let op = new AccountingOperation(`${o.ordernum} ödemesi - ${paymentId}`, o.ordernum);
-        op.accounts.push(new Account("odeme-bekleyen-satislar", [o.userId, o.ordernum, 600]).dec(total))
+        op.accounts.push(new Account("odeme-bekleyen-satislar", [o.userId, o.ordernum, 600], "ödeme").dec(total-usablePuan));
+        if (usablePuan) {
+            op.accounts.push(new Account("odeme-bekleyen-satislar", [o.userId, o.ordernum, 600], "puan kullanımı").dec(usablePuan));
+
+        }
         op.accounts.push(new Account("satis-alacaklari", [o.userId, o.ordernum]).dec(total));
 
         ops.push(op);
 
-        let butcherShip = this.calculateTeslimatOfButcher(o)
+        let butcherShip = this.calculateTeslimatOfButcher(o);
         let kasaptanAlShip = this.calculateTeslimatOfKasaptanAl(o);
         let productPrice = this.calculateProduct(o);
+        
 
-        let puanAccounts = this.getPuanAccounts(o, productPrice);
-        this.fillPuanAccounts(o, productPrice);
-        let comissionAccounts = this.getComissionAccounts(o, butcherShip + productPrice, kasaptanAlShip);
+        let puanAccounts = this.getEarnedPuanAccounts(o, productPrice);
+        let usedPuanAccounts = this.getUsedPuanAccounts(o, usablePuan);
+        let comissionAccounts = this.getComissionAccounts(o, butcherShip + productPrice, kasaptanAlShip, usablePuan);
 
 
         ops.push(puanAccounts);
+        ops.push(usedPuanAccounts);
         ops.push(comissionAccounts);
 
         o.paidTotal = total;
@@ -826,7 +875,7 @@ export default class Route extends ApiRouter {
         let total = puans.alacak - puans.borc;
         if (total > 0.00) {
             let text = `Tebrikler ${o.name}! KasaptanAl.com tercihiniz size ${Helper.formattedCurrency(total)} puan kazandirdi. Bir sonraki siparisinizde kullanmayi unutmayin`;
-            Sms.send("90" + Helper.getPhoneNumber('5326274151'), text, false, new SiteLogRoute(this.constructorParams));
+            Sms.send(o.phone, text, false, new SiteLogRoute(this.constructorParams));
         }
     }
 
@@ -838,6 +887,10 @@ export default class Route extends ApiRouter {
 
         for (let i = 0; i < ol.length; i++) {
             let o = ol[i];
+
+            //let usablePuan = Math.min(o.requestedPuan, await this.getUsablePuans(o));
+            let usablePuan = o.requestedPuan;
+
             let op = new AccountingOperation(`${o.ordernum} kredi kartı ödemesi - ${paymentInfo.paymentId}`, o.ordernum);
             if (o.orderSource == OrderSource.butcher) {
                 op.accounts.push(new Account("odeme-bekleyen-satislar", [o.userId, o.ordernum, 1000]).dec(paymentInfo.paidPrice))
@@ -845,18 +898,28 @@ export default class Route extends ApiRouter {
                 ops.push(op);
                 promises = promises.concat(this.updateOrderByCreditcardPayment(o, paymentInfo, t));
             } else {
-                op.accounts.push(new Account("odeme-bekleyen-satislar", [o.userId, o.ordernum, 500]).dec(paymentInfo.paidPrice))
-                op.accounts.push(new Account("satis-alacaklari", [o.userId, o.ordernum]).dec(paymentInfo.paidPrice))
+
+                op.accounts.push(new Account("odeme-bekleyen-satislar", [o.userId, o.ordernum, 500], "kart ödemesi").dec(paymentInfo.paidPrice));
+                
+                if (usablePuan) {
+                    op.accounts.push(new Account("odeme-bekleyen-satislar", [o.userId, o.ordernum, 500], "puan kullanımı").dec(usablePuan))                            
+                }
+
+                op.accounts.push(new Account("satis-alacaklari", [o.userId, o.ordernum]).dec(paymentInfo.paidPrice+usablePuan))
                 ops.push(op);
 
                 let butcherShip = this.calculateTeslimatOfButcher(o)
                 let kasaptanAlShip = this.calculateTeslimatOfKasaptanAl(o);
                 let productPrice = this.calculateProduct(o);
 
-                let puanAccounts = this.getPuanAccounts(o, productPrice);
-                let comissionAccounts = this.getComissionAccounts(o, butcherShip + productPrice, kasaptanAlShip);
+                let puanAccounts = this.getEarnedPuanAccounts(o, productPrice);
+                let usedPuanAccounts = this.getUsedPuanAccounts(o, usablePuan);
+
+                let comissionAccounts = this.getComissionAccounts(o, butcherShip + productPrice, kasaptanAlShip, usablePuan);
                 ops.push(puanAccounts);
+                ops.push(usedPuanAccounts);
                 ops.push(comissionAccounts);
+
                 promises = promises.concat(this.updateOrderByCreditcardPayment(o, paymentInfo, t));
                 promises = promises.concat(this.updateButcherDebtAfterPayment(o, paymentRequest, paymentInfo, t));
             }
