@@ -154,7 +154,9 @@ export default class Route extends ViewRouter {
 
         if (this.req.body.makeManuelPayment == "true") {
             if (this.shouldBePaid > 0) {
-                await this.api.completeManuelPayment(this.order, this.shouldBePaid)
+                await this.api.completeManuelPayment(this.order, this.shouldBePaid);
+                await this.getOrder();
+                await this.api.completeManualPaymentDept(this.order);
             } else userMessage = "Ödemesi yok siparişin";
         }
 

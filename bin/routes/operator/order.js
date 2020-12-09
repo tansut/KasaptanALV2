@@ -116,6 +116,8 @@ class Route extends router_1.ViewRouter {
             if (this.req.body.makeManuelPayment == "true") {
                 if (this.shouldBePaid > 0) {
                     yield this.api.completeManuelPayment(this.order, this.shouldBePaid);
+                    yield this.getOrder();
+                    yield this.api.completeManualPaymentDept(this.order);
                 }
                 else
                     userMessage = "Ödemesi yok siparişin";

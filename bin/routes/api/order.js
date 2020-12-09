@@ -186,7 +186,7 @@ class Route extends router_1.ApiRouter {
             let res = yield order_1.Order.findAll({
                 where: where,
                 order: [['ID', 'DESC']],
-                limit: 200,
+                limit: 300,
                 include: [{
                         model: butcher_1.default
                     }, {
@@ -494,25 +494,6 @@ class Route extends router_1.ApiRouter {
             return o.isNewRecord ? null : Promise.all(promises);
         });
     }
-    completeManualPaymentDept(o) {
-        return __awaiter(this, void 0, void 0, function* () {
-            let res = context_1.default.getContext().transaction((t) => {
-                return this.createManualPaymentDept(o, t);
-            });
-            yield res;
-        });
-    }
-    createManualPaymentDept(o, t) {
-        return __awaiter(this, void 0, void 0, function* () {
-            yield this.fillButcherComissionAccounts(o);
-            let butcherDebtAcc = o.butcherComissiomAccounts.find(p => p.code == 'total');
-            let butcherDebt = helper_1.default.asCurrency(butcherDebtAcc.borc - butcherDebtAcc.alacak);
-            let result = new account_1.AccountingOperation(`${o.ordernum} nolu ${o.butcherName} siparişi kasaptan alacak`);
-            result.accounts.push(new account_1.Account("kasaplardan-alacaklar", [o.butcherid, 1, o.ordernum], `${o.ordernum} nolu siparişten doğan borç komisyonu`).inc(butcherDebt));
-            result.accounts.push(new account_1.Account("kasap-borc-tahakkuk", [1, o.butcherid, o.ordernum], `${o.ordernum} nolu manuel ödemesi`).inc(helper_1.default.asCurrency(butcherDebt)));
-            return this.saveAccountingOperations([result], t);
-        });
-    }
     completeCreditcardPayment(ol, paymentRequest, paymentInfo) {
         return __awaiter(this, void 0, void 0, function* () {
             let res = context_1.default.getContext().transaction((t) => {
@@ -784,6 +765,25 @@ class Route extends router_1.ApiRouter {
                 }
             }
             return promises;
+        });
+    }
+    completeManualPaymentDept(o) {
+        return __awaiter(this, void 0, void 0, function* () {
+            let res = context_1.default.getContext().transaction((t) => {
+                return this.createManualPaymentDept(o, t);
+            });
+            yield res;
+        });
+    }
+    createManualPaymentDept(o, t) {
+        return __awaiter(this, void 0, void 0, function* () {
+            yield this.fillButcherComissionAccounts(o);
+            let butcherDebtAcc = o.butcherComissiomAccounts.find(p => p.code == 'total');
+            let butcherDebt = helper_1.default.asCurrency(butcherDebtAcc.borc - butcherDebtAcc.alacak);
+            let result = new account_1.AccountingOperation(`${o.ordernum} nolu ${o.butcherName} siparişi kasaptan alacak`);
+            result.accounts.push(new account_1.Account("kasaplardan-alacaklar", [o.butcherid, 1, o.ordernum], `${o.ordernum} nolu siparişten doğan komisyon ve puan borcu`).inc(butcherDebt));
+            result.accounts.push(new account_1.Account("kasap-borc-tahakkuk", [1, o.butcherid, o.ordernum], `${o.ordernum} nolu manuel ödemesi`).inc(helper_1.default.asCurrency(butcherDebt)));
+            return this.saveAccountingOperations([result], t);
         });
     }
     makeManuelPayment(o, total, t) {

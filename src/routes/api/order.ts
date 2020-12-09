@@ -173,7 +173,7 @@ export default class Route extends ApiRouter {
         let res = await Order.findAll({
             where: where,
             order: [['ID', 'DESC']],
-            limit: 200,
+            limit: 300,
             include: [{
                 model: Butcher
             }, {
@@ -493,25 +493,6 @@ export default class Route extends ApiRouter {
             }
         })
         return o.isNewRecord ? null : Promise.all(promises);
-    }
-
-    async completeManualPaymentDept(o: Order) {
-
-        let res = db.getContext().transaction((t: Transaction) => {
-            return this.createManualPaymentDept(o, t)
-        })
-        await res;
-    }
-
-    async createManualPaymentDept(o: Order, t?: Transaction) {
-        await this.fillButcherComissionAccounts(o);
-
-        let butcherDebtAcc = o.butcherComissiomAccounts.find(p => p.code == 'total');
-        let butcherDebt = Helper.asCurrency(butcherDebtAcc.borc - butcherDebtAcc.alacak)
-        let result: AccountingOperation = new AccountingOperation(`${o.ordernum} nolu ${o.butcherName} siparişi kasaptan alacak`);
-        result.accounts.push(new Account("kasaplardan-alacaklar", [o.butcherid, 1, o.ordernum], `${o.ordernum} nolu siparişten doğan borç komisyonu`).inc(butcherDebt))
-        result.accounts.push(new Account("kasap-borc-tahakkuk", [1, o.butcherid, o.ordernum], `${o.ordernum} nolu manuel ödemesi`).inc(Helper.asCurrency(butcherDebt)))
-        return this.saveAccountingOperations([result], t)
     }
 
 
@@ -839,6 +820,28 @@ export default class Route extends ApiRouter {
         }
         return promises;
     }
+
+
+    async completeManualPaymentDept(o: Order) {
+
+        let res = db.getContext().transaction((t: Transaction) => {
+            return this.createManualPaymentDept(o, t)
+        })
+        await res;
+    }
+
+    async createManualPaymentDept(o: Order, t?: Transaction) {
+        await this.fillButcherComissionAccounts(o);
+        let butcherDebtAcc = o.butcherComissiomAccounts.find(p => p.code == 'total');
+        let butcherDebt = Helper.asCurrency(butcherDebtAcc.borc - butcherDebtAcc.alacak);        
+
+        let result: AccountingOperation = new AccountingOperation(`${o.ordernum} nolu ${o.butcherName} siparişi kasaptan alacak`);
+        result.accounts.push(new Account("kasaplardan-alacaklar", [o.butcherid, 1, o.ordernum], `${o.ordernum} nolu siparişten doğan komisyon ve puan borcu`).inc(butcherDebt))
+        result.accounts.push(new Account("kasap-borc-tahakkuk", [1, o.butcherid, o.ordernum], `${o.ordernum} nolu manuel ödemesi`).inc(Helper.asCurrency(butcherDebt)))
+        return this.saveAccountingOperations([result], t)
+    }
+
+
 
     async makeManuelPayment(o: Order, total: number, t?: Transaction): Promise<any> {
         let ops: AccountingOperation[] = [];
