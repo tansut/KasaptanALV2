@@ -516,8 +516,8 @@ export default class Route extends ApiRouter {
     }
 
     async getUsablePuans(o: Order) {
-        o.workedAccounts = o.workedAccounts.length == 0 ? this.generateInitialAccounting(o).accounts.map(a=>AccountModel.fromAccount(a)): o. workedAccounts;
-        let user = (this.req.user && this.req.user.id == o.userId) ? this.req.user: null;
+        o.workedAccounts = o.workedAccounts.length == 0 ? this.generateInitialAccounting(o).accounts.map(a => AccountModel.fromAccount(a)) : o.workedAccounts;
+        let user = (this.req.user && this.req.user.id == o.userId) ? this.req.user : null;
         if (!user) {
             user = await User.findByPk(o.userId);
             if (user) await user.loadPuanView();
@@ -525,11 +525,11 @@ export default class Route extends ApiRouter {
         if (user && user.usablePuans > 0) {
             let butcherShip = this.calculateTeslimatOfButcher(o)
             let kasaptanAlShip = this.calculateTeslimatOfKasaptanAl(o);
-            let productPrice = this.calculateProduct(o);    
+            let productPrice = this.calculateProduct(o);
             let puanAccounts = this.getEarnedPuanAccounts(o, productPrice);
-            this.fillEarnedPuanAccounts(o, productPrice);            
+            this.fillEarnedPuanAccounts(o, productPrice);
 
-            let rate = o.getButcherRate("butcher"); 
+            let rate = o.getButcherRate("butcher");
             let fee = o.getButcherFee("butcher");
             let calc = new ComissionHelper(rate, fee);
             let totalFee = calc.calculateButcherComission(productPrice + butcherShip);
@@ -741,8 +741,8 @@ export default class Route extends ApiRouter {
         if (puan > 0) {
             let acc1 = new Account("musteri-harcanan-puan", [o.userId, o.ordernum]).inc(puan);
             let acc2 = new Account("kullanilan-puanlar", [o.userId], `${o.ordernum} nolu sipariş puan kullanımı`).inc(puan);
-    
-    
+
+
             result.accounts.push(acc1);
             result.accounts.push(acc2);
         }
@@ -751,14 +751,14 @@ export default class Route extends ApiRouter {
 
         return result;
 
-    }    
+    }
 
     async getEarnedPuans(o: Order) {
-        let puans  = await AccountModel.summary([
+        let puans = await AccountModel.summary([
             Account.generateCode("musteri-kalitte-kazanilan-puan", [o.userId, 1, o.ordernum]),
-            Account.generateCode("musteri-kalitte-kazanilan-puan", [o.userId, 2, o.ordernum]), 
+            Account.generateCode("musteri-kalitte-kazanilan-puan", [o.userId, 2, o.ordernum]),
             Account.generateCode("musteri-kasap-kazanilan-puan", [o.userId, o.butcherid, o.ordernum])
-            ])
+        ])
         return puans;
     }
 
@@ -833,7 +833,7 @@ export default class Route extends ApiRouter {
     async createManualPaymentDept(o: Order, t?: Transaction) {
         await this.fillButcherComissionAccounts(o);
         let butcherDebtAcc = o.butcherComissiomAccounts.find(p => p.code == 'total');
-        let butcherDebt = Helper.asCurrency(butcherDebtAcc.borc - butcherDebtAcc.alacak);        
+        let butcherDebt = Helper.asCurrency(butcherDebtAcc.borc - butcherDebtAcc.alacak);
 
         let result: AccountingOperation = new AccountingOperation(`${o.ordernum} nolu ${o.butcherName} siparişi kasaptan alacak`);
         result.accounts.push(new Account("kasaplardan-alacaklar", [o.butcherid, 1, o.ordernum], `${o.ordernum} nolu siparişten doğan komisyon ve puan borcu`).inc(butcherDebt))
@@ -852,7 +852,7 @@ export default class Route extends ApiRouter {
         let usablePuan = Math.min(o.requestedPuan, await this.getUsablePuans(o));
 
         let op = new AccountingOperation(`${o.ordernum} ödemesi - ${paymentId}`, o.ordernum);
-        op.accounts.push(new Account("odeme-bekleyen-satislar", [o.userId, o.ordernum, 600], "kapıda ödeme").dec(total-usablePuan));
+        op.accounts.push(new Account("odeme-bekleyen-satislar", [o.userId, o.ordernum, 600], "kapıda ödeme").dec(total - usablePuan));
         if (usablePuan) {
             op.accounts.push(new Account("odeme-bekleyen-satislar", [o.userId, o.ordernum, 1100], "puan kullanımı").dec(usablePuan));
 
@@ -864,7 +864,7 @@ export default class Route extends ApiRouter {
         let butcherShip = this.calculateTeslimatOfButcher(o);
         let kasaptanAlShip = this.calculateTeslimatOfKasaptanAl(o);
         let productPrice = this.calculateProduct(o);
-        
+
 
         let puanAccounts = this.getEarnedPuanAccounts(o, productPrice);
         let usedPuanAccounts = this.getUsedPuanAccounts(o, usablePuan);
@@ -918,12 +918,12 @@ export default class Route extends ApiRouter {
             } else {
 
                 op.accounts.push(new Account("odeme-bekleyen-satislar", [o.userId, o.ordernum, 500], "kart ödemesi").dec(paymentInfo.paidPrice));
-                
+
                 if (usablePuan) {
-                    op.accounts.push(new Account("odeme-bekleyen-satislar", [o.userId, o.ordernum, 1100], "puan kullanımı").dec(usablePuan))                            
+                    op.accounts.push(new Account("odeme-bekleyen-satislar", [o.userId, o.ordernum, 1100], "puan kullanımı").dec(usablePuan))
                 }
 
-                op.accounts.push(new Account("satis-alacaklari", [o.userId, o.ordernum]).dec(paymentInfo.paidPrice+usablePuan))
+                op.accounts.push(new Account("satis-alacaklari", [o.userId, o.ordernum]).dec(paymentInfo.paidPrice + usablePuan))
                 ops.push(op);
 
                 let butcherShip = this.calculateTeslimatOfButcher(o)
@@ -1113,23 +1113,22 @@ export default class Route extends ApiRouter {
             let view = this.getView(dbOrder);
 
 
-            if (config.nodeenv == 'production') {
-                let viewUrl = `${this.url}/user/orders/${order.ordernum}`;
-                await email.send(dbOrder.email, "siparişinizi aldık", "order.started.ejs", view);
-                await Sms.send(dbOrder.phone, `KasaptanAl.com siparisinizi aldik, Teslimat kodu: ${order.securityCode}. Bilgi: ${viewUrl}`, false, new SiteLogRoute(this.constructorParams))
-                if (order.paymentType != "onlinepayment") {
-                    let notifyMobilePhones = (order.butcher.notifyMobilePhones || "").split(',');
-                    notifyMobilePhones.push('5531431988');
-                    notifyMobilePhones.push('5326274151');
-                    for (var p = 0; p < notifyMobilePhones.length; p++) {
-                        if (notifyMobilePhones[p].trim()) {
-                            let manageUrl = `${this.url}/manageorder/${order.ordernum}`;
-                            Sms.send("90" + Helper.getPhoneNumber(notifyMobilePhones[p].trim()), `${order.butcherName} yeni siparis [${order.name}]. LUTFEN SIPARISI YANITLAYIN: ${manageUrl} `, false, new SiteLogRoute(this.constructorParams))
-                            //Sms.send("90" + Helper.getPhoneNumber(notifyMobilePhones[p].trim()), `KasaptanAl.com/${order.butcherName} yeni sipariş: Siparişi aç: ${manageUrl}, teslimat kodu: ${order.securityCode}`, false, new SiteLogRoute(this.constructorParams))
-                        }
+
+            let viewUrl = `${this.url}/user/orders/${order.ordernum}`;
+            await email.send(dbOrder.email, "siparişinizi aldık", "order.started.ejs", view);
+            await Sms.send(dbOrder.phone, `KasaptanAl.com siparisinizi aldik, Teslimat kodu: ${order.securityCode}. ${order.paymentType == 'onlinepayment' ? 'Odeme yapabilirsiniz' : 'Bilgi'}: ${viewUrl}`, false, new SiteLogRoute(this.constructorParams))
+            if (order.paymentType != "onlinepayment") {
+                let notifyMobilePhones = (order.butcher.notifyMobilePhones || "").split(',');
+                notifyMobilePhones.push('5531431988');
+                notifyMobilePhones.push('5326274151');
+                for (var p = 0; p < notifyMobilePhones.length; p++) {
+                    if (notifyMobilePhones[p].trim()) {
+                        let manageUrl = `${this.url}/manageorder/${order.ordernum}`;
+                        Sms.send("90" + Helper.getPhoneNumber(notifyMobilePhones[p].trim()), `${order.butcherName} yeni siparis [${order.name}]. LUTFEN SIPARISI YANITLAYIN: ${manageUrl} `, false, new SiteLogRoute(this.constructorParams))
                     }
                 }
             }
+
 
             fres.push(dbOrder)
         }
@@ -1276,7 +1275,10 @@ export default class Route extends ApiRouter {
         let fHour = hour % 100;
         order.shipmentstart = Helper.newDate2(day.getFullYear(), day.getMonth(), day.getDate(), shour, fHour, 0);
 
-        if (order.shipmentstart < Helper.Now())
+
+        let max = new Date(order.shipmentstart); 
+        max.setTime(max.getTime() + (4*60*60*1000));
+        if (max < Helper.Now())
             throw new Error("Lütfen teslimat gün ve saatini kontrol edin, hatalı gözüküyor.")
         if (order.dispatcherType == 'banabikurye') {
             let provider = LogisticFactory.getInstance(order.dispatcherType, {

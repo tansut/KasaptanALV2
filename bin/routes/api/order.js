@@ -36,7 +36,6 @@ const sms_1 = require("../../lib/sms");
 const account_1 = require("../../models/account");
 const helper_1 = require("../../lib/helper");
 const order_3 = require("../../models/order");
-const config_1 = require("../../config");
 const commissionHelper_1 = require("../../lib/commissionHelper");
 const sequelize_1 = require("sequelize");
 const core_1 = require("../../lib/logistic/core");
@@ -999,20 +998,17 @@ class Route extends router_1.ApiRouter {
                 let api = new order_2.default(this.constructorParams);
                 let dbOrder = yield api.getOrder(order.ordernum);
                 let view = this.getView(dbOrder);
-                if (config_1.default.nodeenv == 'production') {
-                    let viewUrl = `${this.url}/user/orders/${order.ordernum}`;
-                    yield email_1.default.send(dbOrder.email, "siparişinizi aldık", "order.started.ejs", view);
-                    yield sms_1.Sms.send(dbOrder.phone, `KasaptanAl.com siparisinizi aldik, Teslimat kodu: ${order.securityCode}. Bilgi: ${viewUrl}`, false, new sitelog_1.default(this.constructorParams));
-                    if (order.paymentType != "onlinepayment") {
-                        let notifyMobilePhones = (order.butcher.notifyMobilePhones || "").split(',');
-                        notifyMobilePhones.push('5531431988');
-                        notifyMobilePhones.push('5326274151');
-                        for (var p = 0; p < notifyMobilePhones.length; p++) {
-                            if (notifyMobilePhones[p].trim()) {
-                                let manageUrl = `${this.url}/manageorder/${order.ordernum}`;
-                                sms_1.Sms.send("90" + helper_1.default.getPhoneNumber(notifyMobilePhones[p].trim()), `${order.butcherName} yeni siparis [${order.name}]. LUTFEN SIPARISI YANITLAYIN: ${manageUrl} `, false, new sitelog_1.default(this.constructorParams));
-                                //Sms.send("90" + Helper.getPhoneNumber(notifyMobilePhones[p].trim()), `KasaptanAl.com/${order.butcherName} yeni sipariş: Siparişi aç: ${manageUrl}, teslimat kodu: ${order.securityCode}`, false, new SiteLogRoute(this.constructorParams))
-                            }
+                let viewUrl = `${this.url}/user/orders/${order.ordernum}`;
+                yield email_1.default.send(dbOrder.email, "siparişinizi aldık", "order.started.ejs", view);
+                yield sms_1.Sms.send(dbOrder.phone, `KasaptanAl.com siparisinizi aldik, Teslimat kodu: ${order.securityCode}. ${order.paymentType == 'onlinepayment' ? 'Odeme yapabilirsiniz' : 'Bilgi'}: ${viewUrl}`, false, new sitelog_1.default(this.constructorParams));
+                if (order.paymentType != "onlinepayment") {
+                    let notifyMobilePhones = (order.butcher.notifyMobilePhones || "").split(',');
+                    notifyMobilePhones.push('5531431988');
+                    notifyMobilePhones.push('5326274151');
+                    for (var p = 0; p < notifyMobilePhones.length; p++) {
+                        if (notifyMobilePhones[p].trim()) {
+                            let manageUrl = `${this.url}/manageorder/${order.ordernum}`;
+                            sms_1.Sms.send("90" + helper_1.default.getPhoneNumber(notifyMobilePhones[p].trim()), `${order.butcherName} yeni siparis [${order.name}]. LUTFEN SIPARISI YANITLAYIN: ${manageUrl} `, false, new sitelog_1.default(this.constructorParams));
                         }
                     }
                 }
@@ -1144,7 +1140,9 @@ class Route extends router_1.ApiRouter {
             let shour = Math.round(hour / 100);
             let fHour = hour % 100;
             order.shipmentstart = helper_1.default.newDate2(day.getFullYear(), day.getMonth(), day.getDate(), shour, fHour, 0);
-            if (order.shipmentstart < helper_1.default.Now())
+            let max = new Date(order.shipmentstart);
+            max.setTime(max.getTime() + (4 * 60 * 60 * 1000));
+            if (max < helper_1.default.Now())
                 throw new Error("Lütfen teslimat gün ve saatini kontrol edin, hatalı gözüküyor.");
             if (order.dispatcherType == 'banabikurye') {
                 let provider = core_1.LogisticFactory.getInstance(order.dispatcherType, {
