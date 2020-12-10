@@ -24,12 +24,12 @@ class Sms {
         });
     }
     static canSend(to) {
-        let phone = libphonenumber_js_1.default(to);
+        let phone = libphonenumber_js_1.default(to, 'TR');
         return phone ? phone.countryCallingCode == '90' : false;
     }
     static send(to, text, throwexc = true, logger) {
         return __awaiter(this, void 0, void 0, function* () {
-            let phone = libphonenumber_js_1.default(to);
+            let phone = libphonenumber_js_1.default(to, 'TR');
             to = phone && phone.number ? phone.number.toString() : to;
             if (Sms.canSend(to)) {
                 let url = `https://api.netgsm.com.tr/sms/send/get?usercode=${8503054216}&password=BOV0MN1M&gsmno=${encodeURI(to.trim())}&message=${encodeURI(text)}&msgheader=${('KasaptanAl')}`;

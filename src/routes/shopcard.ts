@@ -67,7 +67,10 @@ export default class Route extends ViewRouter {
                 this.possiblePuanList = this.possiblePuanList.concat(list);
             }
             this.possiblePuanList.forEach(pg => this.mayEarnPuanTotal += pg.earned)
-            this.mayEarnPuanTotal = Helper.asCurrency(this.mayEarnPuanTotal)
+            this.mayEarnPuanTotal = Helper.asCurrency(this.mayEarnPuanTotal);
+            if (this.req.user) {
+                this.usablePuanTotal = Math.min(this.usablePuanTotal, this.req.user.usablePuans);
+            }
         }
         return orders;
     }
@@ -505,8 +508,10 @@ export default class Route extends ViewRouter {
             let api = new OrderApi(this.constructorParams);
             let orders = await api.create(this.shopcard);
             if (this.req.body.usepuan == "true") {
-                orders[0].requestedPuan = await this.orderapi.getUsablePuans(orders[0]);
-                await orders[0].save();
+                for (var i = 0; i < orders.length;i++) {
+                    orders[i].requestedPuan = await this.orderapi.getUsablePuans(orders[i]);
+                    await orders[i].save();
+                }                
             }
             await ShopCard.empty(this.req);
             // if (orders.length == 1 && orders[0].paymentType == 'onlinepayment') {

@@ -70,6 +70,9 @@ class Route extends router_1.ViewRouter {
                 }
                 this.possiblePuanList.forEach(pg => this.mayEarnPuanTotal += pg.earned);
                 this.mayEarnPuanTotal = helper_1.default.asCurrency(this.mayEarnPuanTotal);
+                if (this.req.user) {
+                    this.usablePuanTotal = Math.min(this.usablePuanTotal, this.req.user.usablePuans);
+                }
             }
             return orders;
         });
@@ -474,8 +477,10 @@ class Route extends router_1.ViewRouter {
                 let api = new order_1.default(this.constructorParams);
                 let orders = yield api.create(this.shopcard);
                 if (this.req.body.usepuan == "true") {
-                    orders[0].requestedPuan = yield this.orderapi.getUsablePuans(orders[0]);
-                    yield orders[0].save();
+                    for (var i = 0; i < orders.length; i++) {
+                        orders[i].requestedPuan = yield this.orderapi.getUsablePuans(orders[i]);
+                        yield orders[i].save();
+                    }
                 }
                 yield shopcard_1.ShopCard.empty(this.req);
                 // if (orders.length == 1 && orders[0].paymentType == 'onlinepayment') {

@@ -23,7 +23,7 @@ let passport = require("passport")
 import * as sq from 'sequelize';
 import { add } from 'lodash';
 import AccountModel from '../../db/models/accountmodel';
-import parsePhoneNumber from 'libphonenumber-js';
+
 
  
 interface GeneratedTokenData {
