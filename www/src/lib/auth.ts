@@ -16,19 +16,24 @@ export class Auth {
     static async  signup() {
         if ((<HTMLFormElement>$("#signup-form-1")[0]).checkValidity()) {
             event.preventDefault();
-            var tel = $('#su-tel').val();
+            var iti = window['intlTelInputGlobals'].getInstance(document.querySelector('#su-tel'));
+            var tel = iti.getNumber();
             App.gTag('signup', 'try-send-sms-code', tel);
-            $('#btn-signup-sendsms').attr("disabled", "true");
-
+            $('#btn-signup-sendsms').attr("disabled", "true");              
             
             try {
+                if (!iti.isValidNumber()) throw new Error('Geçersiz telefon numarası');
                 let result = await Backend.post('user/signup', {
-                    phone: tel
+                    phone: tel                    
                 });
                 Auth.phone = <string>tel;
                 App.gTag('signup', 'send-sms-code', tel);
                 $("#signup-form-2").removeClass('d-none');
                 $("#signup-form-1").addClass('d-none');
+                if (result && result.pwd) {
+                    alert('Otomatik doğrulama yapıldı. Lütfen SMS/KasaptanAl.com şifrenizi not edin: ' + result.pwd)
+                    $('#su-sms').val(result.pwd);
+                }
                 setTimeout(() => {
                     $('#signupad').hide();
                     $('#su-sms').focus();

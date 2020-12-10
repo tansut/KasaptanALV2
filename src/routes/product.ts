@@ -406,7 +406,7 @@ export default class Route extends ViewRouter {
                 if (this.productLd && this.productLd.offers) {
 
                     this.startPrice = {
-                        title: 'Anında Kapınızda!',
+                        title: 'İstediğiniz gün ve saatte kapınızda!',
                         basedOn: 'global',
                         view: {
                             price: this.productLd.offers.lowPrice, unit: this.productLd.offers.unit, unitTitle: this.productLd.offers.unit

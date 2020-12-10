@@ -872,7 +872,7 @@ class Route extends router_1.ApiRouter {
                 for (var p = 0; p < notifyMobilePhones.length; p++) {
                     if (notifyMobilePhones[p].trim()) {
                         let payUrl = `${this.url}/manageorder/${ol[i].ordernum}`;
-                        sms_1.Sms.send("90" + helper_1.default.getPhoneNumber(notifyMobilePhones[p].trim()), `${ol[i].butcherName} yeni siparis[${ol[i].name}]: ${helper_1.default.formattedCurrency(paymentInfo.paidPrice)} online odeme yapildi. LUTFEN SIPARISI YANITLAYIN: ${payUrl} `, false, new sitelog_1.default(this.constructorParams));
+                        sms_1.Sms.send(notifyMobilePhones[p].trim(), `${ol[i].butcherName} yeni siparis[${ol[i].name}]: ${helper_1.default.formattedCurrency(paymentInfo.paidPrice)} online odeme yapildi. LUTFEN SIPARISI YANITLAYIN: ${payUrl} `, false, new sitelog_1.default(this.constructorParams));
                     }
                 }
                 this.sendPuanNotification(ol[i]);
@@ -1000,7 +1000,7 @@ class Route extends router_1.ApiRouter {
                 let view = this.getView(dbOrder);
                 let viewUrl = `${this.url}/user/orders/${order.ordernum}`;
                 yield email_1.default.send(dbOrder.email, "siparişinizi aldık", "order.started.ejs", view);
-                yield sms_1.Sms.send(dbOrder.phone, `KasaptanAl.com siparisinizi aldik, Teslimat kodu: ${order.securityCode}. ${order.paymentType == 'onlinepayment' ? 'Odeme yapabilirsiniz' : 'Bilgi'}: ${viewUrl}`, false, new sitelog_1.default(this.constructorParams));
+                yield sms_1.Sms.send(dbOrder.phone, `KasaptanAl.com ${dbOrder.butcherName} siparisinizi aldik, Teslimat kodu: ${order.securityCode}. ${order.paymentType == 'onlinepayment' ? 'Simdi odeme yapabilirsiniz' : 'Bilgi'}: ${viewUrl}`, false, new sitelog_1.default(this.constructorParams));
                 if (order.paymentType != "onlinepayment") {
                     let notifyMobilePhones = (order.butcher.notifyMobilePhones || "").split(',');
                     notifyMobilePhones.push('5531431988');
@@ -1008,7 +1008,7 @@ class Route extends router_1.ApiRouter {
                     for (var p = 0; p < notifyMobilePhones.length; p++) {
                         if (notifyMobilePhones[p].trim()) {
                             let manageUrl = `${this.url}/manageorder/${order.ordernum}`;
-                            sms_1.Sms.send("90" + helper_1.default.getPhoneNumber(notifyMobilePhones[p].trim()), `${order.butcherName} yeni siparis [${order.name}]. LUTFEN SIPARISI YANITLAYIN: ${manageUrl} `, false, new sitelog_1.default(this.constructorParams));
+                            sms_1.Sms.send(notifyMobilePhones[p].trim(), `${order.butcherName} yeni siparis [${order.name}]. LUTFEN SIPARISI YANITLAYIN: ${manageUrl} `, false, new sitelog_1.default(this.constructorParams));
                         }
                     }
                 }
@@ -1062,7 +1062,7 @@ class Route extends router_1.ApiRouter {
             for (var p = 0; p < notifyMobilePhones.length; p++) {
                 if (notifyMobilePhones[p].trim()) {
                     let text = `${order.butcherName} musteriniz ${order.name} teslimat icin bilgilendirildi: ${order.shipmentStartText}. Siparis: ${manageUrl}`;
-                    sms_1.Sms.send("90" + helper_1.default.getPhoneNumber(notifyMobilePhones[p].trim()), text, false, new sitelog_1.default(this.constructorParams));
+                    sms_1.Sms.send(notifyMobilePhones[p].trim(), text, false, new sitelog_1.default(this.constructorParams));
                 }
             }
             let customerText = order.dispatcherType == 'banabikurye' ?
@@ -1201,7 +1201,7 @@ class Route extends router_1.ApiRouter {
                     for (var p = 0; p < notifyMobilePhones.length; p++) {
                         if (notifyMobilePhones[p].trim()) {
                             let manageUrl = `${this.url}/manageorder/${order.ordernum}`;
-                            sms_1.Sms.send("90" + helper_1.default.getPhoneNumber(notifyMobilePhones[p].trim()), `${order.butcherName} kurye yola cikti. Siparis[${order.name}]: ${manageUrl} `, false, new sitelog_1.default(this.constructorParams));
+                            sms_1.Sms.send(notifyMobilePhones[p].trim(), `${order.butcherName} kurye yola cikti. Siparis[${order.name}]: ${manageUrl} `, false, new sitelog_1.default(this.constructorParams));
                         }
                     }
                     let userUrl = `${this.url}/orders/order/${order.ordernum}`;

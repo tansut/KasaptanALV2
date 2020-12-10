@@ -7,6 +7,7 @@ import config from '../config';
 import { GeoLocation } from '../models/geo';
 import { ProductType } from '../db/models/product';
 import { min } from 'lodash';
+import parsePhoneNumber from 'libphonenumber-js';
 
 export default class Helper {
 
@@ -160,13 +161,19 @@ export default class Helper {
         else return numeral(parts.val).format('0,0') + '.' + numeral(parts.krs).format('0,0') + symbol
     }
 
-    static getPhoneNumber(phone: string) {
-        //05326274151
-        let f = phone.replace(' ', '');
-        if (f.length == 11 && f[0] == '0')
-            f = f.slice(1);
-        return f;
+    static isValidPhone(num: string) {
+        let phone = parsePhoneNumber(num, 'TR')
+        return phone.isValid();
     }
+
+    static getPhoneNumber(num: string) {
+        let phone = parsePhoneNumber(num, 'TR');
+        return (phone && phone.number) ?  phone.number.toString() :num;
+
+    }
+
+
+
 
     static ResourcePaths = {
         "butcher-google-photos": "kasap-resimleri",

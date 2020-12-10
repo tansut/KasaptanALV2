@@ -91,7 +91,7 @@ class Route extends router_1.ApiRouter {
             let payUrl = `${this.url}/pay/${o.ordernum}`;
             let text = `${this.butcher.name} ${helper_1.default.formattedCurrency(tutar)} sipariş tutarı online ödeme yapmak için lütfen ${payUrl} adresini ziyaret edin. ${this.req.body.desc}`;
             let log = new sitelog_1.default(this.constructorParams);
-            yield sms_1.Sms.send('90' + o.phone, text, true, log);
+            yield sms_1.Sms.send(o.phone, text, true, log);
             this.res.send({
                 text: text,
                 url: payUrl

@@ -299,6 +299,17 @@
         }
       })
       <%}%>
+
+
+    document.querySelectorAll("input.iphone").forEach(function(el) {
+      let hi = $(el).attr("hiddentel")
+    window.intlTelInput(el, {
+      initialCountry: "TR",
+      autoPlaceholder: "aggressive",
+      hiddenInput: hi ? hi: undefined
+  });
+  })
+
     });
   
   
@@ -369,4 +380,9 @@
         }, 100 );
         return false;
       })
+</script>
+
+<script>
+
+
 </script>

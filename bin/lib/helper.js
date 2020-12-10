@@ -5,6 +5,7 @@ const path = require("path");
 const numeral = require("numeral");
 const moment = require("moment");
 const product_1 = require("../db/models/product");
+const libphonenumber_js_1 = require("libphonenumber-js");
 class Helper {
     static nvl(val, def = 0) {
         return parseInt(val) == NaN ? def : parseInt(val);
@@ -126,12 +127,13 @@ class Helper {
         else
             return numeral(parts.val).format('0,0') + '.' + numeral(parts.krs).format('0,0') + symbol;
     }
-    static getPhoneNumber(phone) {
-        //05326274151
-        let f = phone.replace(' ', '');
-        if (f.length == 11 && f[0] == '0')
-            f = f.slice(1);
-        return f;
+    static isValidPhone(num) {
+        let phone = libphonenumber_js_1.default(num, 'TR');
+        return phone.isValid();
+    }
+    static getPhoneNumber(num) {
+        let phone = libphonenumber_js_1.default(num, 'TR');
+        return (phone && phone.number) ? phone.number.toString() : num;
     }
     static getRandomInt(max) {
         return Math.floor(Math.random() * Math.floor(max));

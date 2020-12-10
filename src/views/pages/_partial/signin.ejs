@@ -42,14 +42,18 @@
 
     function sendResetLink() {
         if (!$('#si-reset-email').val()) alert('Lütfen telefon numaranızı girin');
-        else App.sendResetLink($('#si-reset-email').val()).then(function () {
+        else {
+            var iti = window['intlTelInputGlobals'].getInstance(document.querySelector('#si-reset-email'));
+            var tel = iti.getNumber()
+            App.sendResetLink(tel).then(function () {
             alert('Şifre yenileme bağlantısını telefonunuza SMS olara gönderdik. Şifrenizi belirleyip giriş yapabilirsiniz.');
-            $('#si-email').val($('#si-reset-email').val());
+            $('#si-email').val(tel);
             $('#reset-password-modal').modal('hide')
             $('#signin-modal').modal('show');
         }).catch(function (err) {
             alert(err.message)
         })
+        } 
     }
 
 </script>

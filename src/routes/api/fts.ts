@@ -99,8 +99,8 @@ export default class Route extends ApiRouter {
     }
 
     async getAreas(search: string) {
-        let areas =  await User.sequelize.query("select id, name, slug as url, 'Semt' as type, match(name, slug, keywords) against (:search IN BOOLEAN MODE) as RELEVANCE " +
-            "from Areas where level=3 and match(name, slug, keywords)  against (:search IN BOOLEAN MODE) ORDER BY RELEVANCE DESC LIMIT 25",
+        let areas =  await User.sequelize.query("select id, level, name, slug as url, 'Lokasyon' as type, match(name, slug, keywords) against (:search IN BOOLEAN MODE) as RELEVANCE " +
+            "from Areas where level=3 and match(name, slug, keywords)  against (:search IN BOOLEAN MODE) ORDER BY level, RELEVANCE DESC LIMIT 25",
             {
                 replacements: { search: search },
                 type: sq.QueryTypes.SELECT,
@@ -112,7 +112,7 @@ export default class Route extends ApiRouter {
             let px = <any>p;
             return {
                 id: px.id,
-                name: px.name,
+                name: px.name + (px.level > 1 ? ` [${px.url}]`:''),
                 url: px.url,
                 type: px.type,
                 score: px.RELEVANCE

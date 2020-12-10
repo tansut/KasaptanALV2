@@ -23,6 +23,7 @@ let passport = require("passport")
 import * as sq from 'sequelize';
 import { add } from 'lodash';
 import AccountModel from '../../db/models/accountmodel';
+import parsePhoneNumber from 'libphonenumber-js';
 
  
 interface GeneratedTokenData {
@@ -66,7 +67,7 @@ export default class UserRoute extends ApiRouter {
         let res = moment(utc).add('minutes', 30).toDate()
         user.resetTokenValid = res;
         await user.save();
-        await Sms.send('90' + user.mphone, `KasaptanAl.com sifrenizi yenilemek icin ${this.url}/rpwd?k=${user.resetToken}`, true, null)
+        await Sms.send(user.mphone, `KasaptanAl.com sifrenizi yenilemek icin ${this.url}/rpwd?k=${user.resetToken}`, true, null)
         this.res.sendStatus(200);
     }
 
@@ -201,17 +202,22 @@ export default class UserRoute extends ApiRouter {
     async signupRoute() {
         var model = <SignupModel>this.req.body;
         model.phone = model.phone || "";
+        
+        
         if (validator.isEmpty(model.phone))
             throw new http.ValidationError('Cep telefonu gereklidir');
-        if (!validator.isMobilePhone(model.phone))
-            throw new http.ValidationError('Cep telefonu geçersiz:' + model.phone);
-        // if (!validator.isLength(model.password, {
-        //     min: 6,
-        //     max: 20
-        // })) return Promise.reject(new http.ValidationError('Password should be at least 6 characters'));
+        if (!Helper.isValidPhone(model.phone))
+            throw new http.ValidationError('Geçersiz telefon:' + model.phone);
+        model.phone = Helper.getPhoneNumber(model.phone);
+        let pwd = this.generatePwd();
         try {
-            await this.create(this.req.body)
-            this.res.sendStatus(200);
+            await this.create(this.req.body, pwd);
+            if (Sms.canSend(model.phone)) {
+                this.res.sendStatus(200);
+            } else this.res.send({
+                pwd: pwd
+            })
+            
         } catch (err) {
             if (err.original && err.original.code == 'ER_DUP_ENTRY') {
                 let existingUser = await this.retrieveByEMailOrPhone(model.phone);
@@ -229,7 +235,7 @@ export default class UserRoute extends ApiRouter {
 
     }
 
-    generatePwd() {
+    generatePwd(): string {
         let pwd = generator.generate({
             length: 5,
             numbers: true,
@@ -244,7 +250,7 @@ export default class UserRoute extends ApiRouter {
     }
 
     async sendPassword(pwd: string, phoneNumber: string) {
-        await Sms.send('90' + phoneNumber, `${pwd} kasaptanal.com giris sifreniz ile isleme devam edin.`, true, new SiteLogRoute(this.constructorParams));
+        await Sms.send(phoneNumber, `${pwd} kasaptanal.com giris sifreniz ile isleme devam edin.`, true, new SiteLogRoute(this.constructorParams));
         return pwd;
     }
 
@@ -256,12 +262,12 @@ export default class UserRoute extends ApiRouter {
     }
 
 
-    async create(model: SignupModel): Promise<UserModel> {
+    async create(model: SignupModel, pwd?: string): Promise<UserModel> {
         var user = new UserModel();
         user.mphone = Helper.getPhoneNumber(model.phone);
         user.email = user.mphone + '@unverified.kasaptanal.com';
         user.ivCode = (Math.random() * 999999).toString();
-        let pwd = await this.generatePwd()
+        pwd = pwd || this.generatePwd();
         user.setPassword(pwd);
         await user.save();
         await this.sendPassword(pwd, user.mphone);
@@ -345,194 +351,16 @@ export default class UserRoute extends ApiRouter {
         });
     }
 
-    // useRefreshToken(refreshTokenData: string) {
-    //     return new Promise((resolve, reject) => {
-    //         authorization.default.decryptRefreshToken(refreshTokenData).then((user: IUserDocument) => {
-    //             return this.createTokens(user).then((generatedTokens => {
-    //                 return new AccountRoute(this.constructorParams).retrieve(user.account).then(account => {
-    //                     this.res.send(<LoginResult>{ user: user.toClient(), account: account.toClient(), token: generatedTokens });
-    //                 });
-    //             }));
-    //         }).then((responseData) => {
-    //             this.res.send(responseData);
-    //             resolve();
-    //         }).catch((err) => {
-    //             var errorDetail = { message: 'Refresh Token Not Validated Msg :' + err, PermissionErrorType: 'refreshTokenNotValidated' };
-    //             var generatedError = new http.ValidationError(JSON.stringify(errorDetail));
-    //             reject(generatedError);
-    //         });
-    //     });
-    // }
-
-    // @Auth.Anonymous()
-    // useRefreshTokenRoute() {
-    //     var refreshTokenData = <string>this.req.body.refreshTokenData;
-    //     if (!refreshTokenData) {
-    //         var errorDetail = { message: 'Refresh Token Not Granted', PermissionErrorType: 'refreshTokenRequired' };
-    //         return Promise.reject(new http.ValidationError(JSON.stringify(errorDetail)));
-    //     } else {
-    //         return this.useRefreshToken(refreshTokenData);
-    //     }
-    // }
-
-    // @Auth.Anonymous()
-    // resetPasswordRequestRoute() {
-    //     var email = this.req.body.email;
-    //     if (validator.isEmpty(email) || !validator.isEmail(email))
-    //         return Promise.reject(new http.ValidationError('Invalid e-mail address'));
-    //     var url = this.req.protocol + '://' + this.req.get('host');
-    //     return this.resetPasswordRequest(email, url).then(() => {
-    //         this.res.sendStatus(200)
-    //     });
-    // }
-
-    // resetPasswordRequest(email: string, url: string): Promise<any> {
-    //     return this.retrieveByEMail(email).then((user) => {
-    //         if (!user) return Promise.reject(new http.NotFoundError('There is no user with this e-mail address'));
-    //         user.resetToken = crypto.randomBytes(32).toString('hex');
-    //         user.resetTokenValid = moment.utc().add(1, 'days').toDate();
-    //         return user.save().then((user) => {
-    //             return emailmanager.send(user.email, 'Jdash Cloud - Password Reset Request', 'resetpassword.ejs', {
-    //                 email: user.email,
-    //                 resetLink: `${url}/#!/app/account/resetpasswordreturn/${user.resetToken}`
-    //             });
-    //         });
-    //     })
-    // }
-
-    // @Auth.Anonymous()
-    // passwordResetReturnRoute() {
-    //     var resetToken = this.req.params.token
-    //     var newPassword = this.req.body.password
-    //     if (typeof resetToken === 'undefined' || validator.isEmpty(newPassword)) {
-    //         return Promise.reject(new http.ValidationError('Invalid Token'));
-    //     }
-    //     return this.passwordResetReturn(newPassword, resetToken).then(() => {
-    //         this.res.sendStatus(200);
-    //     })
-    // }
-
-    // passwordResetReturn(pass: string, token: string) {
-
-    //     return UserModel.findOne().where('resetToken', token).then((user) => {
-    //         if (!user) {
-    //             return Promise.reject(new http.NotFoundError('No password request for this user has been found.'))
-    //         }
-    //         if (moment.utc().toDate() > user.resetTokenValid) {
-    //             return Promise.reject(new http.ValidationError('Token has expired. Please request a new token.'));
-    //         }
-    //         user.resetToken = null;
-    //         user.resetTokenValid = null;
-
-    //         var passwordSalt = bcrypt.genSaltSync(10);
-    //         var hash = bcrypt.hashSync(pass, passwordSalt);
-    //         user.password = hash;
-
-    //         user.save().then((user) => {
-    //             return emailmanager.send(user.email, 'JDash Cloud - Password Change', 'passwordchange.ejs', {});
-    //         })
-    //     });
-
-    // }
-
-    // changePasswordRoute() {
-    //     var oldPass = this.req.body.oldPass;
-    //     var newPass = this.req.body.newPass;
-    //     if (validator.isEmpty(newPass) || validator.isEmpty(oldPass)) return this.next(new http.ValidationError('Empty Password'));
-    //     return this.retrieve(this.req.params.userid).then((user) => {
-    //         if (!bcrypt.compareSync(oldPass, user.password)) return Promise.reject<any>(new http.PermissionError());
-    //         return this.changePassword(user, newPass).then(() => this.res.sendStatus(200));
-    //     })
-    // }
-
-    // changePassword(user: IUserDocument, newPass: string) {
-    //     var passwordSalt = bcrypt.genSaltSync(10);
-    //     var hash = bcrypt.hashSync(newPass, passwordSalt);
-    //     user.password = hash;
-    //     return user.save().then((user) => {
-    //         return emailmanager.send(user.email, 'JDash Cloud - Password Change', 'passwordchange.ejs', {
-    //         });
-    //     })
-    // }
-
-    // @Auth.Anonymous()
-    // changeSettingsRoute() {
-
-    // }
-
-    // changeSettings() {
-
-    // }
-
-    // @Auth.Anonymous()
-    // startDemoRoute() {
-    //     var email = this.req.body.email;
-    //     return this.startDemo(email).then((token) => {
-    //         var result = {
-    //             usertoken: token
-    //         }
-    //         this.res.send(result);
-    //     })
-    // }
-
-    // startDemo(email: string) {
-    //     return this.retrieveByEMail(email).then((user) => {
-    //         if (user) {
-    //             return ApplicationModel.findOne({ account: user.account }).exec();
-    //         } else {
-    //             var randomPass = (Math.floor(Math.random() * 999999) + 100000).toString();
-    //             var newUser: SignupModel = {
-    //                 email: email,
-    //                 password: randomPass
-    //             }
-    //             return this.create(newUser).then((createdUser) => {
-    //                 return ApplicationModel.findOne({ account: createdUser.account }).exec();
-    //             });
-    //         }
-    //     }).then((defaultApp) => {
-    //         return JDashAuth.userToken(email, { secret: defaultApp.secret, apikey: defaultApp.apikey });
-    //     });
-    // }
-
-    // delete(user: IUserDocument) {
-    //     var promiseList = [];
-    //     if (user.integrations.stripe && user.integrations.stripe.remoteId)
-    //         promiseList.push(stripe.deleteCustomer(user.integrations.stripe.remoteId));
-    //     promiseList.push(RefreshTokenModel.find({ userId: user._id }).remove());
-    //     return Promise.all(promiseList).then(() => super.delete(user));
-    // }
-
-    // update(doc: IUserDocument, updateValues: any) {
-    //     debugger;
-    //     doc.country = updateValues.country || doc.country;
-    //     doc.language = updateValues.language || doc.language;
-    //     return doc.save().then((doc) => null);
-    // }
-
-    // protected static generateCreateRoute(url: string, router: express.Router) {
-    //     router.post(url, this.BindRequest('createRoute'));
-    // }
 
     static SetRoutes(router: express.Router) {
-        // UserRoute.SetCrudRoutes("/user", router, {
-        //     create: true,
-        //     update: true
-        // });
-
-        //router.post("/user/authenticate", UserRoute.BindRequest(this.prototype.authenticateRoute));
+   
         router.post("/user/signup", UserRoute.BindRequest(this.prototype.signupRoute));
         router.post("/user/signupverify", UserRoute.BindRequest(this.prototype.verifysignupRoute));
         router.post("/user/signupcomplete", UserRoute.BindRequest(this.prototype.completesignupRoute));
         router.post("/user/findsemt", UserRoute.BindRequest(this.prototype.findSemtRoute));
         router.post("/user/sendResetLink", UserRoute.BindRequest(this.prototype.sendResetLink));
 
-        
-        // router.post("/user/resetpassword", UserRoute.BindRequest('resetPasswordRequestRoute'));
-        // router.post("/user/changepassword/:userid", UserRoute.BindRequest('changePasswordRoute'));
-        // router.post("/user/useRefreshToken", UserRoute.BindRequest('useRefreshTokenRoute'));
-        // router.post("/user/settings", UserRoute.BindRequest('changeSettingsRoute'));
-        // router.post("/user/resetpasswordreturn/:token", UserRoute.BindRequest('passwordResetReturnRoute'));
-        // router.post("/user/startdemo", UserRoute.BindRequest('startDemoRoute'));
+
 
 
     }
