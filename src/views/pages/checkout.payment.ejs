@@ -71,34 +71,10 @@
                       
                       </span>
                      
-                      <!-- <% if (butcher.enablePuan)  { %>
-                      <div class="mt-3">
-                        <span class="font-weight-medium mb-2">
-                        Tebrikler!
-                        </span>
-                        <p>
-                          <%= butcher.name %> <strong>Kasap Kart</strong> iş ortağıdır. Online ödeme yaparak kasabımızdan puan
-                          kazanabilirsiniz.
-                        </p>
-                        <div class="text-accent">
-                          <%- include('./_partial/puan-data-view.ejs', {puan: butcher.getPuanData(), hideMinPuanForUsage: true}) %>
-
-                        </div>
-
-                       
-                      </div>
-
-                      <% } %> -->
 
                       <% if (controller.mayEarnPuanTotal > 0) { %>
                         <div class="alert alert-success rounded-0 mb-3 mt-3">
-                          <!-- <p class="font-weight-medium text-dark">Online ödeme size puan kazandırır</p> -->
-                       
-                        <!-- <% controller.possiblePuanList.forEach(pg => { %>
-                           <span class="d-block">
-                            <strong><%- include('./_partial/currency.ejs', {value: pg.earned}) %></strong>, <%=pg.title%> tarafından
-                          </span> 
-                        <% }) %> -->
+        
                         <span class="d-block">   
                           <h6 class="text-success">Online ödeyin, puan kazanın.</h6> 
                           <span class=" font-weight-medium"> Tebrikler!</span> <strong><%- include('./_partial/currency.ejs', {value: controller.mayEarnPuanTotal}) %></strong> değerinde Kasap Kart™ puanını sonraki alışverişlerinizde kullanabilir, kârlı çıkabilirsiniz. 
@@ -115,7 +91,9 @@
                         <% if (controller.allowNonOnline(bi) ) { %>
                         <a id="btnShowOthers" class="mt-3 d-block text-muted font-size-sm" onclick="$('.non-cc').show(); $('#btnShowOthers').hide()">Diğer Ödeme Şekilleri &raquo;</a>             
                         <% } else { %>
-
+                            <p class="font-size-sm">
+                              <span class="font-weight-bolder">Not: </span>Bu siparişi sadece online ödeyebilirsiniz. 
+                            </p>
                         
                         <% } %>
                     </td>
