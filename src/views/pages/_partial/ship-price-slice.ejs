@@ -1,5 +1,5 @@
 <% let totalprice = typeof(total) == 'undefined' ? -1 : total %>
-<div class="dispatch-info text-muted text-dark font-size-sm">
+<div class="">
 
     <div class="d-flex justify-content-between w-100 border-bottom mb-1">
         <div>
@@ -27,7 +27,7 @@
 
             </div>
 
-            <div>
+            <div class="<%= l.cost <= 0.00 ? 'font-weight-bolder':''%>">
                 <%- include('../_partial/currency.ejs', {value: l.cost, zero: 'ücretsiz'}) %>
 
             </div>

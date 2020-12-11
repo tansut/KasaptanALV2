@@ -572,7 +572,7 @@
                         <div class="mb-1 bg-secondary border">
                           <%if (view.butcher) {  %>
 
-                          <div class="border-bottom">
+                          <div class="">
                             <%- include('./_partial/butcher-product-panel.ejs', { butcherVideo: butcherVideo }) %>
 
                           </div>
@@ -582,42 +582,47 @@
                       
                   
                   
-                                      <div class="mt-2 d-flex align-items-center justify-content-center mb-1">
-                                        <span v-if="selectedUnit.unit != 'kg'">Kaç <b>{{ selectedUnit.unitTitle }}</b> hazırlayalım?</span>
-                                        <span v-if="selectedUnit.unit == 'kg'"><b>Ne kadar</b> hazırlayalım?</span>
-                                     
-                                        
-                  
-                                      </div>
-                  
-                                     <div class="text-center" v-if="selectedUnit && selectedUnit.unitWeight">
-                                      <span class="d-block text-muted font-size-xs">{{selectedUnit.unit != 'kg' ? '1 ' + selectedUnit.unit:''}} {{selectedUnit.unitWeight}}</span>
-                  
-                                     </div>
-                            
-                                     
-                  
-                                    <amount-input :def="quantity || selectedUnit.default" :min="selectedUnit.min"
-                                    :max="selectedUnit.max" :step="selectedUnit.step" v-model="quantity"
-                                    :unit="selectedUnit.unitTitle" >
-                               
-                                  </amount-input>
-                                  
                   
                   
                   
                                   </div>
                    
                         <%if (view.butcher) { %>
-                          <div v-if="selectedUnit" class="mb-3 p-2 d-flex justify-content-end border bg-secondary">
-                            <span class="text-muted d-block mr-2">
-                              Tutar:
-                            </span>
 
-                            <money-view class="d-block text-center text-accent" :money="price">
-                            </money-view>
-
+                          <div class="bg-secondary border mb-3">
+                            <div class="mt-2 d-flex align-items-center justify-content-center mb-1">
+                              <span v-if="selectedUnit.unit != 'kg'">Kaç <b>{{ selectedUnit.unitTitle }}</b> hazırlayalım?</span>
+                              <span v-if="selectedUnit.unit == 'kg'"><b>Ne kadar</b> hazırlayalım?</span>
+                           
+                              
+        
+                            </div>
+        
+                           <div class="text-center" v-if="selectedUnit && selectedUnit.unitWeight">
+                            <span class="d-block text-muted font-size-xs">{{selectedUnit.unit != 'kg' ? '1 ' + selectedUnit.unit:''}} {{selectedUnit.unitWeight}}</span>
+        
+                           </div>
+                  
+                           
+        
+                          <amount-input :def="quantity || selectedUnit.default" :min="selectedUnit.min"
+                          :max="selectedUnit.max" :step="selectedUnit.step" v-model="quantity"
+                          :unit="selectedUnit.unitTitle" >
+                     
+                        </amount-input>
+                        
+                            <div v-if="selectedUnit" class="p-2 d-flex justify-content-end  bg-secondary">
+                              <span class="text-muted d-block mr-2">
+                                Tutar:
+                              </span>
+  
+                              <money-view class="d-block text-center text-accent" :money="price">
+                              </money-view>
+  
+                            </div>
                           </div>
+
+                        
                           <%}%>  
                   
                                   <div v-if="selectedUnit && selectedUnit.perPerson" class="d-flex align-items-center justify-content-center">

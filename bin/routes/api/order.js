@@ -790,7 +790,7 @@ class Route extends router_1.ApiRouter {
             let ops = [];
             let promises = [];
             let paymentId = "manuel";
-            let usablePuan = Math.min(o.requestedPuan, yield this.getUsablePuans(o));
+            let usablePuan = Math.min(0.00, yield this.getUsablePuans(o));
             let op = new account_1.AccountingOperation(`${o.ordernum} ödemesi - ${paymentId}`, o.ordernum);
             op.accounts.push(new account_1.Account("odeme-bekleyen-satislar", [o.userId, o.ordernum, 600], "kapıda ödeme").dec(total - usablePuan));
             if (usablePuan) {

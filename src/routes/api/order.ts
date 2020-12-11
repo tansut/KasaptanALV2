@@ -849,7 +849,7 @@ export default class Route extends ApiRouter {
 
         let paymentId = "manuel";
 
-        let usablePuan = Math.min(o.requestedPuan, await this.getUsablePuans(o));
+        let usablePuan = Math.min(0.00, await this.getUsablePuans(o));
 
         let op = new AccountingOperation(`${o.ordernum} ödemesi - ${paymentId}`, o.ordernum);
         op.accounts.push(new Account("odeme-bekleyen-satislar", [o.userId, o.ordernum, 600], "kapıda ödeme").dec(total - usablePuan));

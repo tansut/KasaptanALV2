@@ -142,24 +142,11 @@ class="gallery-item-caption"><%= butcherVideo.title %></span></a>
       <%}%>
     </div>
 
-    <% if (view.butcher.puanData) { %>
-      <div class="px-3 mb-3">
-        <h5 class="h6 border-bottom">Kasap Kart&trade;</h5>
-        <div class="font-size-sm">
-          <%- include('./puan-data-view.ejs', {puan: view.butcher.puanData, hideMinPuanForUsage: true}) %> 
-      
-        </div>
-      </div>
-
-    <% } %>    
     <%  if (view.dispatcher && view.dispatcher.priceSlice) { %>
       <div class="px-3 mb-3">
         <h5 class="h6 border-bottom">Teslimat</h5>
-        <p class="font-size-sm">
-          <%=controller.logisticsProvider.options.dispatcher.name%> tarafından yapılmakta.
 
-        </p>
-        <div class="dispatch-info font-size-sm">
+        <div class="font-size-sm text-muted  ">
           <%- include('./ship-price-slice.ejs', {                                
             slices: view.dispatcher.priceSlice
               }) %>
@@ -171,6 +158,18 @@ class="gallery-item-caption"><%= butcherVideo.title %></span></a>
 
 
       <% }  %>
+
+    <% if (view.butcher.puanData) { %>
+      <div class="px-3 mb-3">
+        <h5 class="h6 border-bottom">Kasap Kart&trade;</h5>
+        <div class="font-size-sm text-muted">
+          <%- include('./puan-data-view.ejs', {puan: view.butcher.puanData, hideMinPuanForUsage: true}) %> 
+      
+        </div>
+      </div>
+
+    <% } %>    
+  
 
 
 
@@ -189,7 +188,7 @@ class="gallery-item-caption"><%= butcherVideo.title %></span></a>
          
         </p> 
         
-      <p class="mb-1 font-size-sm"><a class="text-dark font-weight-medium" href="javascript:showOtherButchers()"><span>Diğer kasaplar (</span><span class="text-primary"><%=otherButcherAlternatives %></span><span>)</span></a> </p> 
+      <p class="mb-2 font-size-sm"><a class="text-dark font-weight-medium" href="javascript:showOtherButchers()"><span>Diğer kasaplar (</span><span class="text-primary"><%=otherButcherAlternatives %></span><span>)</span></a> </p> 
       
     </div>
     <%}%>
