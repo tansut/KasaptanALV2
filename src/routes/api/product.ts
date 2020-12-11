@@ -295,9 +295,8 @@ export default class Route extends ApiRouter {
                     entry.ele("g:availability", p.availability);
                     entry.ele("g:price", Helper.formattedCurrency(p.price, "TRY"));
                     entry.ele("g:identifier_exists", "no");
-
-                    
-
+                    entry.ele("g:fb_product_category", "10");
+                    entry.ele("g:google_product_category", "4628");
                     let ship = entry.ele("g:shipping");
                     ship.ele("g:country", "TR");
                     ship.ele("g:service", "Same Day");
