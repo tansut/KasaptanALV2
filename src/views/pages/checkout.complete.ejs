@@ -37,6 +37,9 @@
         <% orders.forEach(order=> { %>
         <div class="mt-5">
           <span data-orderid="<%= order.ordernum %>"><%= order.ordernum %></span></p>
+          <p>
+            <%=order.butcherName%>
+          </p>
           <!-- <p class="font-size-sm">Birazdan e-posta adresinize de gerekli bilgileri ulaştırıyor olacağız. Çok
             teşekkürler!</p> -->
 

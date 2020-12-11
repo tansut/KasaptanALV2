@@ -215,16 +215,16 @@ export class CreditcardPaymentProvider {
             let shouldBePaid = Helper.asCurrency(total.alacak - total.borc);
             let merchantPrice = 0.00;            
             let butcherDebt = 0.00, debtApplied = 0.00;
-
+            let userPrice = Helper.asCurrency(shouldBePaid-o.requestedPuan);
             if (this.marketPlace) {
-                merchantPrice = this.getMerchantMoney(o, shouldBePaid, productPrice, shipOfButcher, shipOfKasaptanAl, o.requestedPuan);
+                merchantPrice = this.getMerchantMoney(o, userPrice, productPrice, shipOfButcher, shipOfKasaptanAl, o.requestedPuan);
                 butcherDebt = debts[o.butcherid];
                 if (merchantPrice <= butcherDebt) {
                     debtApplied = merchantPrice - 1.00;
                 } else debtApplied = butcherDebt;
                 merchantPrice = Helper.asCurrency(merchantPrice - debtApplied);
             }
-            let userPrice = Helper.asCurrency(shouldBePaid-o.requestedPuan);
+            
             basketItems.push({
                 category1: o.butcherName,
                 id: o.ordernum,

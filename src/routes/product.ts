@@ -31,7 +31,8 @@ import ProductCategory from '../db/models/productcategory';
 import Review from '../db/models/review';
 import Product from '../db/models/product';
 import { PuanCalculator } from '../lib/commissionHelper';
-import { FromTo } from '../lib/logistic/core';
+import { LogisticProvider, PriceSlice, FromTo } from '../lib/logistic/core';
+
 import { PriceView } from '../models/common';
 
 interface ButcherSelection {
@@ -63,6 +64,7 @@ export default class Route extends ViewRouter {
     dispatchingAvailable: boolean = true;
 
     productTypeManager: ProductTypeManager = null;
+    logisticsProvider: LogisticProvider;
 
 
     get ProductTypeManager() {
@@ -317,6 +319,7 @@ export default class Route extends ViewRouter {
             } else if (view.butcher && view.butcher.id == s.butcher.id) {
                 fromTo.start = s.butcher.location;
                 fromTo.sId = s.butcher.id.toString();
+                this.logisticsProvider = dispatcher ? dispatcher.provider: null;
                 view.dispatcher = dispatcher ? {
                     id: dispatcher.id,
                     fee: dispatcher.fee,

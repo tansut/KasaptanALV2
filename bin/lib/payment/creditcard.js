@@ -70,8 +70,9 @@ class CreditcardPaymentProvider {
             let shouldBePaid = helper_1.default.asCurrency(total.alacak - total.borc);
             let merchantPrice = 0.00;
             let butcherDebt = 0.00, debtApplied = 0.00;
+            let userPrice = helper_1.default.asCurrency(shouldBePaid - o.requestedPuan);
             if (this.marketPlace) {
-                merchantPrice = this.getMerchantMoney(o, shouldBePaid, productPrice, shipOfButcher, shipOfKasaptanAl, o.requestedPuan);
+                merchantPrice = this.getMerchantMoney(o, userPrice, productPrice, shipOfButcher, shipOfKasaptanAl, o.requestedPuan);
                 butcherDebt = debts[o.butcherid];
                 if (merchantPrice <= butcherDebt) {
                     debtApplied = merchantPrice - 1.00;
@@ -80,7 +81,6 @@ class CreditcardPaymentProvider {
                     debtApplied = butcherDebt;
                 merchantPrice = helper_1.default.asCurrency(merchantPrice - debtApplied);
             }
-            let userPrice = helper_1.default.asCurrency(shouldBePaid - o.requestedPuan);
             basketItems.push({
                 category1: o.butcherName,
                 id: o.ordernum,

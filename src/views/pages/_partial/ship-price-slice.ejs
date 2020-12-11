@@ -3,7 +3,7 @@
 
     <div class="d-flex justify-content-between w-100 border-bottom mb-1">
         <div>
-            Sepet 
+            Alışveriş Toplamı
         </div>
 
         <div>   
@@ -12,13 +12,17 @@
         
     </div>
     <% slices.forEach(l => { %>
-        <% let mention = (totalprice >= l.start && totalprice < l.end)  %>
+        <% let mention = (totalprice >= l.start && (totalprice < l.end || l.end <=0))  %>
     <div class="d-flex justify-content-between w-100 <%=mention ? 'font-weight-bolder':''%>">
 
       
             <div>
-                <%- include('../_partial/currency.ejs', {value: l.start, zero: 'min yok'}) %> -
+                <% if (l.start <= 0) {  %>
+                    <%- include('../_partial/currency.ejs', {value: l.end}) %> - ve altı
+                <% } else { %>
+                <%- include('../_partial/currency.ejs', {value: l.start}) %> -
                 <%- include('../_partial/currency.ejs', {value: l.end, zero: ' ve üzeri'}) %>
+                <% } %>
 
 
             </div>

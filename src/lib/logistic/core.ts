@@ -142,6 +142,7 @@ export class LogisticProvider {
     ip: string;
     options: LogisticProviderOptions;
     lastOffer: OfferResponse;
+    name: string;
     description: string;
     safeRequests: boolean = true;
     async distance(ft: FromTo, params: DistanceParams = null) {

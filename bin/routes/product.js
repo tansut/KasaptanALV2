@@ -275,6 +275,7 @@ class Route extends router_1.ViewRouter {
                 else if (view.butcher && view.butcher.id == s.butcher.id) {
                     fromTo.start = s.butcher.location;
                     fromTo.sId = s.butcher.id.toString();
+                    this.logisticsProvider = dispatcher ? dispatcher.provider : null;
                     view.dispatcher = dispatcher ? {
                         id: dispatcher.id,
                         fee: dispatcher.fee,

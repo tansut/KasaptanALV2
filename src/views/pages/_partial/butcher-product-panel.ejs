@@ -4,7 +4,7 @@
                    
 
                    
-    <div id="butchervendor" class="bg-secondary">
+    <div id="butchervendor">
    
       <div class="d-flex mb-3">
 
@@ -29,7 +29,7 @@ class="gallery-item-caption"><%= butcherVideo.title %></span></a>
     src="<%= `${__req.helper.imgUrl('butcher-google-photos', view.butcher.slug)}` %>" alt="<%=view.butcher.name%>">
  <% } %>
       <div class="media-body   p-2">
-        <h5 class="h6 mb-0 mr-2"><%= view.butcher.name %></h6>
+        <h4 class="h5 mb-0 mr-2"><%= view.butcher.name %></h4>
           
           <% if (view.butcher.locationText) { %>
           <span class="text-muted font-size-xs d-block">
@@ -41,11 +41,11 @@ class="gallery-item-caption"><%= butcherVideo.title %></span></a>
              
              <% } %>
 
-            <!-- <%  if (view.dispatcher && view.dispatcher.distance) { %>
-              
+         <%  if (view.dispatcher && view.dispatcher.distance && view.dispatcher.distance < 50) { %>
+              ,
                 <%= view.dispatcher.distance.toFixed(0) %> km
              
-             <% } %> -->
+             <% } %> 
 
           </span>
           <% } %>
@@ -84,44 +84,7 @@ class="gallery-item-caption"><%= butcherVideo.title %></span></a>
 
           
 
-          <%  if (view.dispatcher && view.dispatcher.priceSlice && false) { %>
-          <div class="dispatch-info text-muted text-dark font-size-sm">
 
-          
-               <% let list = view.dispatcher.priceSlice %>
-              <table class="w-100 mb-3 table-responsive">
-                <th>
-                  Alt Limit
-                </th>
-                <th>
-                  Üst Limit
-                </th>
-                <th>
-                  Ücret
-                </th>
-              
-               <% list.forEach(l => { %>
-               <tr>
-<td>
-<%- include('../_partial/currency.ejs', {value: l.start, zero: '-'}) %> 
-
-</td>
-<td>
-<%- include('../_partial/currency.ejs', {value: l.end, zero: '-'}) %> 
-
-</td>
-<td>
-<%- include('../_partial/currency.ejs', {value: l.cost, zero: 'ücretsiz'}) %> 
-
-</td>
-               </tr>
-               
-               <% }) %>
-              </table>
-
-          </div>
-
-          <% }  %>
       </div></a>
       
                      
@@ -152,7 +115,7 @@ class="gallery-item-caption"><%= butcherVideo.title %></span></a>
 
     
     
-    <div class="pt-3 px-3 row">
+    <div class="pt-3 px-3 row mb-3">
       <% if (view.butcher.userRatingAsPerc > 0 ) { %>
         <div class="col">
           <div class="font-size-xs text-muted ">Ürün Memnuniyeti</div>
@@ -180,12 +143,37 @@ class="gallery-item-caption"><%= butcherVideo.title %></span></a>
     </div>
 
     <% if (view.butcher.puanData) { %>
-      <div class="px-3 mb-3 font-size-sm mt-3">
-        <span class="text-dark"><%=view.butcher.name%>, Kasap Kart&trade; iş ortağıdır.</span>
-        <%- include('./puan-data-view.ejs', {puan: view.butcher.puanData, hideMinPuanForUsage: true}) %> 
-    
+      <div class="px-3 mb-3">
+        <h5 class="h6 border-bottom">Kasap Kart&trade;</h5>
+        <div class="font-size-sm">
+          <%- include('./puan-data-view.ejs', {puan: view.butcher.puanData, hideMinPuanForUsage: true}) %> 
+      
+        </div>
       </div>
+
     <% } %>    
+    <%  if (view.dispatcher && view.dispatcher.priceSlice) { %>
+      <div class="px-3 mb-3">
+        <h5 class="h6 border-bottom">Teslimat</h5>
+        <p class="font-size-sm">
+          <%=controller.logisticsProvider.options.dispatcher.name%> tarafından yapılmakta.
+
+        </p>
+        <div class="dispatch-info font-size-sm">
+          <%- include('./ship-price-slice.ejs', {                                
+            slices: view.dispatcher.priceSlice
+              }) %>
+        
+  
+  
+        </div>
+      </div>
+
+
+      <% }  %>
+
+
+
   </div>
 
 

@@ -11,7 +11,6 @@ exports.ShipmentHours = {
     1618: 'Akşama doğru 4-6 arası',
     1819: 'Akşam 6-7 arası',
     1920: 'Akşam 7-8 arası',
-    2021: 'Akşam 8-9 arası',
 };
 exports.ShipmentDays = {
     1: 'Pazartesi',
