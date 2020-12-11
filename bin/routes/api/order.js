@@ -532,7 +532,7 @@ class Route extends router_1.ApiRouter {
                 let fee = o.getButcherFee("butcher");
                 let calc = new commissionHelper_1.ComissionHelper(rate, fee);
                 let totalFee = calc.calculateButcherComission(productPrice + butcherShip);
-                let max = totalFee.kalitteFee;
+                let max = helper_1.default.asCurrency(totalFee.kalitteFee * 0.80);
                 return Math.min(user.usablePuans, max);
             }
             return 0.00;
