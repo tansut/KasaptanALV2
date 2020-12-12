@@ -58,7 +58,7 @@
  %>
 
 
-  <div class="text-center bg-primary">
+  <div class="text-center">
 
 
 
@@ -74,7 +74,7 @@
   </div>
 
 
-  <div class="bg-primary mb-3">
+  <div>
 
     <% if (bgCover) { %>
     <div class="bg-cover" style="background-image: url('<%=bgCover.fileUrl%>');">
@@ -87,7 +87,7 @@
     <div class="container pt-2" 
        <% if (bgCover) { %> 
         
-          style="position: relative; top: -4rem;" <% 
+          style="position: relative; top: 0rem;" <% 
         
       } %>>
 
@@ -104,7 +104,7 @@
         <% if (butcherVideo) { %>
 
         <button onclick="javascript:window.App.openSlider(<%=butcherVideo.id%>)" type="button"
-          class="btn btn-sm btn-dark mb-3"><i class="czi-video mr-2"> </i>Yakından Tanıyın</button>
+          class="btn btn-sm btn-info mb-3"><i class="czi-video mr-2"> </i>Yakından Tanıyın</button>
 
         <% } else if(butcher.videoInstagramStr) { %>
         <button onclick="$('#videomodal').modal().show()" type="button" class="btn btn-sm btn-dark mb-3"><i
@@ -112,12 +112,12 @@
         <% } %>
 
         <div>
-          <h1 class="h2 text-light"><%=butcher.name%></h1>
-          <h2 class="h5 text-light  opacity-60">
+          <h1 class="h2 "><%=butcher.name%></h1>
+          <h2 class="h5  opacity-60">
             <%= butcher.areaLevel3.name %>/<%= butcher.areaLevel1.name %>
           </h2>
           <% if (butcher.getBadgeList().length > 0 ) { %>
-          <div class="butcher-badges">
+          <div class="d-none butcher-badges">
 
 
             <% butcher.getBadgeList().forEach(b=> {  %>
@@ -143,9 +143,9 @@
 
       <div class="row w-50 mx-auto">
         <div class="col-sm-6">
-          <div class="font-size-sm text-light mb-2">Ürün Memnuniyeti</div>
+          <div class="font-size-sm  mb-2">Ürün Memnuniyeti</div>
           <div class="progress mb-3">
-            <div class="progress-bar font-weight-medium bg-dark" role="progressbar"
+            <div class="progress-bar font-weight-medium bg-info" role="progressbar"
               style="width: <%=butcher.userRatingAsPerc %>%" aria-valuenow="<%=butcher.userRatingAsPerc %>"
               aria-valuemin="0" aria-valuemax="100">
               <%=butcher.userRatingAsPerc %>%
@@ -155,10 +155,10 @@
 
 
         <div class="col-sm-6">
-          <div class="font-size-sm text-light mb-2">Teslimat Başarısı</div>
+          <div class="font-size-sm  mb-2">Teslimat Başarısı</div>
 
           <div class="progress mb-3">
-            <div class="progress-bar font-weight-medium bg-dark" role="progressbar"
+            <div class="progress-bar font-weight-medium bg-info" role="progressbar"
               style="width: <%=butcher.shipRatingAsPerc %>%" aria-valuenow="<%=butcher.shipRatingAsPerc %>"
               aria-valuemin="0" aria-valuemax="100">
               <%=butcher.shipRatingAsPerc %>%
@@ -170,15 +170,6 @@
 
 
     </div>
-
-
-
-
-
-
-
-
-
 
     <div class="cz-gallery slider" data-simplebar>
       <div class="ml-2 d-flex ">
