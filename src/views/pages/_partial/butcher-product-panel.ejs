@@ -82,7 +82,16 @@ class="gallery-item-caption"><%= butcherVideo.title %></span></a>
        
           
 
+          <% if (view.butcher.puanData ) { %>
+            <div>
+              <span class="badge badge-success font-weight-medium">
+                %<%=view.butcher.puanData.rate * 100 %> Puan
+              </span>
+            </div>
           
+       
+      
+          <% } %>
 
 
       </div></a>
@@ -159,7 +168,7 @@ class="gallery-item-caption"><%= butcherVideo.title %></span></a>
 
       <% }  %>
 
-    <% if (view.butcher.puanData) { %>
+    <% if (view.butcher.puanData && false) { %>
       <div class="px-3 mb-3">
         <h5 class="h6 border-bottom">Kasap Kart&trade;</h5>
         <div class="font-size-sm text-muted">

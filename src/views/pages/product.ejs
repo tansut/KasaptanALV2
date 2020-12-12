@@ -510,7 +510,7 @@
                        
 
 
-                        <h5 v-if="product && product.purchaseOptions.length > 1" class="h6 mb-2 text-accent">
+                        <h5 v-if="false && product && product.purchaseOptions.length > 1" class="h6 mb-2 text-accent">
  
                           Seçim yapın:
                         </h5>
@@ -547,8 +547,8 @@
                                   </div>
                        
                                   <% if (view.butcher && __req.prefAddr) { %>
-                                  <div class="d-flex  flex-nowrap justify-content-between align-items-center">
-                                    <h5 class="h6 mb-2 text-accent "><i class="czi-thumb-up mr-2"></i>Şimdi satın alın</h5>
+                                  <div class="d-flex  flex-nowrap justify-content-end align-items-center">
+                                    <h5 class="h6 d-none mb-2 text-accent "><i class="czi-thumb-up mr-2"></i>Şimdi satın alın</h5>
                   
                                     <%if (__req.query.frame != '1') { %> 
                                     <button title="<%= __req.prefAddr ? __req.prefAddr.level3Text: 'Semtinizi Seçin' %>"
@@ -611,13 +611,25 @@
                      
                         </amount-input>
                         
-                            <div v-if="selectedUnit" class="p-2 d-flex justify-content-end  bg-secondary">
-                              <span class="text-muted d-block mr-2">
-                                Tutar:
-                              </span>
-  
-                              <money-view class="d-block text-center text-accent" :money="price">
-                              </money-view>
+                            <div v-if="selectedUnit" class="p-2 d-flex justify-content-between  bg-secondary">
+                              <div v-if="puan > 0" class="text-center">
+                                <span class="text-muted font-size-sm d-block">
+                                  Puan Kazancınız
+                                </span>
+    
+                                <money-view class="badge badge-success font-size-md font-weight-medium" :money="puan">
+                                </money-view>
+                              </div>
+
+                              <div class="text-center">
+                                <span class="text-muted font-size-sm d-block">
+                                  Tutar
+                                </span>
+    
+                                <money-view class="badge badge-accent font-weight-medium font-size-md" :money="price">
+                                </money-view>
+                              </div>
+
   
                             </div>
                           </div>

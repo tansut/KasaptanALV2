@@ -142,8 +142,21 @@
 
                 </div>
                 <% if (item.note) {%>
-                <div class="font-size-sm font-weight-bolder text-info"><%=item.note%></div>
+                  <p>
+                    <span class="font-size-sm font-weight-bolder text-sccent"><%=item.note%></span>
+
+                  </p> 
+
                 <%}%> 
+
+                <% if (item.product.butcherNote) {%>
+                
+                    <div class="font-size-sm font-weight-bolder text-dark">
+                      <%-controller.markdown.render(item.product.butcherNote) %>
+                    </div>
+                    <%}%> 
+                 
+                
                                
                                             </div>
                                           </div>

@@ -637,6 +637,13 @@ window.initComponents = function initComponents() {
                     var quantity = Number(this.quantity.toFixed(3)); 
                     return this.asCurrency(this.selectedUnit.unitPrice * quantity);
                 } else return 0.00;
+            },
+
+            puan: function() {
+                var price = this.price;
+                if (price >= 0 && this.product && this.product.butcher && this.product.butcher.puanData && this.product.butcher.puanData.rate > 0) {
+                    return Number((price * this.product.butcher.puanData.rate).toFixed(2))
+                } else return 0.00;
             }
         }
     })
