@@ -128,16 +128,16 @@
                     <div class="toast-container toast-top-center">
                       <div id="shopcard-added-toast" class="toast mb-3" id="accent-toast" data-delay="50000"
                         role="alert" aria-live="assertive" aria-atomic="true">
-                        <div class="toast-header bg-accent text-white"><i class="czi-cart  mr-2"></i>
-                          <h6 class="font-size-sm text-white mb-0 mr-auto">Sepetiniz güncellendi</h6>
-                          <button class="close text-white ml-2 mb-1" type="button" data-dismiss="toast"
+                        <div class="toast-header bg-secondary"><i class="czi-cart  mr-2"></i>
+                          <h6 class="font-size-sm  mb-0 mr-auto">Sepetiniz güncellendi</h6>
+                          <button class="close ml-2 mb-1" type="button" data-dismiss="toast"
                             aria-label="Close"><span aria-hidden="true">&times;</span></button>
                         </div>
                         <div class="toast-body p-0 text-accent">
 
                           <div v-if="newlyAddedItem" class="mb-2">
 
-                            <div class="bg-secondary p-2 mb-3"><a class="media align-items-center"
+                            <div class="p-2 mb-3"><a class="media align-items-center"
                                 href="/<%=view.butcher.slug%>"><img width="500" height="500" class="rounded-circle header-img"
                                   src="<%= `${__req.helper.imgUrl('butcher-google-photos', view.butcher.slug)}` %>"
                                   alt="<%=view.butcher.name%>">
@@ -349,13 +349,13 @@
                           <div class="d-flex justify-content-center">
   
                             <% if (__req.query.frame != '1') { %>
-                            <button @click="selectArea(null)" type="button" class="btn mr-2 btn-info btn-sm"><i
+                            <button @click="selectArea(null)" type="button" class="btn mr-2 btn-primary btn-sm"><i
                                 class="czi-location font-size-lg mr-2"></i>Semtinizi Seçin</button>
                             <% } else { %>
-                              <button onclick="window.parent.purchase.selectAddress('<%=product.slug%>')" type="button" class="btn mr-2 btn-info btn-sm"><i
+                              <button onclick="window.parent.purchase.selectAddress('<%=product.slug%>')" type="button" class="btn mr-2 btn-primary btn-sm"><i
                                 class="czi-location font-size-lg mr-2"></i>Semtinizi Seçin</button>
                             <% } %>
-                            <a class="btn btn-sm btn-info " onclick="return showButchers()">Kasaplarımız<i
+                            <a class="btn btn-sm btn-primary " onclick="return showButchers()">Kasaplarımız<i
                                 class="czi-arrow-right ml-2 mr-n1"></i></a>
                           </div>
                           <%} else {%>
@@ -365,10 +365,10 @@
                             <a class="btn btn-sm btn-primary mr-2" onclick="return goBack()" >Alışverişe Devam &raquo;</a>
   
                             <% if (__req.query.frame != '1') { %>
-                              <button @click="selectArea(null)" type="button" class="btn mr-2 btn-info btn-sm"><i
+                              <button @click="selectArea(null)" type="button" class="btn mr-2 btn-primary btn-sm"><i
                                   class="czi-location font-size-lg "></i>Semtinizi Seçin</button>
                               <% } else { %>
-                                <button onclick="window.parent.purchase.selectAddress('<%=product.slug%>')" type="button" class="btn mr-2 btn-info btn-sm"><i
+                                <button onclick="window.parent.purchase.selectAddress('<%=product.slug%>')" type="button" class="btn mr-2 btn-primary btn-sm"><i
                                   class="czi-location font-size-lg "></i>Semtinizi Seçin</button>
                               <% } %>
   
@@ -591,8 +591,8 @@
 
                           <div class="bg-secondary pt-2 mb-3">
                             <div class="mt-2 d-flex align-items-center justify-content-center mb-1">
-                              <p v-if="selectedUnit.unit != 'kg'">Kaç <b>{{ selectedUnit.unitTitle }}</b> hazırlayalım?</p>
-                              <p v-if="selectedUnit.unit == 'kg'"><b>Ne kadar</b> hazırlayalım?</p>
+                              <p class="font-size-lg" v-if="selectedUnit.unit != 'kg'">Kaç <b>{{ selectedUnit.unitTitle }}</b> hazırlayalım?</p>
+                              <p class="font-size-lg" v-if="selectedUnit.unit == 'kg'"><b>Ne kadar</b> hazırlayalım?</p>
                            
                               
         
@@ -626,7 +626,7 @@
                                   Tutar
                                 </span>
     
-                                <money-view class="badge badge-accent font-weight-medium font-size-md" :money="price">
+                                <money-view class="badge badge-dark font-weight-medium font-size-md" :money="price">
                                 </money-view>
                               </div>
 
@@ -679,9 +679,7 @@
                          
 
                           <div class="form-group">
-                            <label class="mb-2" for="note"><span
-                                class="badge badge-info font-size-xs mr-2">Notunuz</span><span
-                                class="font-size-sm"></span>
+                            
 
                             </label>
                             <textarea v-model="note" maxlength="250"
@@ -698,7 +696,7 @@
                           <% if (view.butcher && __req.prefAddr) { %>
 
                           <button data-tag="true" data-category="shopcard/add" data-action="<%=view.butcher.slug%>"
-                            data-label="<%=product.slug%>" id="addtoscbtn" class="btn btn-info btn-block"
+                            data-label="<%=product.slug%>" id="addtoscbtn" class="btn btn-primary btn-block"
                             type="submit"><i
                               class="czi-cart font-size-lg mr-2"></i><%= controller.shopCardIndex >= 0 ? 'Sepeti Güncelle': 'Sepete Ekle' %></button>
 
