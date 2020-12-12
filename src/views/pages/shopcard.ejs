@@ -13,18 +13,18 @@
 
 
 
-  <div class="page-title bg-accent py-2">
+  <div class="page-title py-2">
     <div class="container d-lg-flex justify-content-between py-2 py-lg-3">
       <div class="order-lg-2 mb-3 mb-lg-0 pt-lg-2">
         <nav aria-label="breadcrumb" class="d-none d-lg-block">
-          <ol class="breadcrumb breadcrumb-light flex-lg-nowrap justify-content-center justify-content-lg-star">
+          <ol class="breadcrumb breadcrumb-dark flex-lg-nowrap justify-content-center justify-content-lg-star">
             <li class="breadcrumb-item"><a class="text-nowrap" href="/"><i class="czi-home"></i></a></li>
                    </ol>
         </nav>
       </div>
       <div class="order-lg-1 pr-lg-4 text-center text-lg-left">
-        <h1 class="h3 text-light">Sepetim</h1>
-        <h2 class=" text-light h4 lead">Hızlı ve Güvenilir Alışveriş</h2>
+        <h1 class="h3">Sepetim</h1>
+        <h2 class=" h4 lead">Hızlı ve Güvenilir Alışveriş</h2>
       </div>
     </div>
   </div>
@@ -43,7 +43,7 @@
 
         <section class="col-lg-8">
     
-          <div class="px-4 py-4 mb-3">
+          <div class="py-4 mb-3">
     
     
             
@@ -164,10 +164,10 @@
           </div>
         </section>
     
-        <aside class="col-lg-4 pt-4 pt-lg-0">
+        <aside class="col-lg-4">
 
 
-          <div class="cz-sidebar-static rounded-lg box-shadow-lg ml-lg-auto">
+          <div class="ml-lg-auto">
       
             
               <div class="accordion mb-4" id="order-options">
@@ -233,7 +233,7 @@
                     </div>
                   
                     <div class="collapse" id="order-ship" data-parent="#order-ship">
-                      <div class="card-body text-center">
+                      <div class="card-body font-size-xs text-muted text-center">
                           <% for(var o in shopcard.shipment) { %>
                           
                             <% if (controller.destinationMatrix[o] && controller.destinationMatrix[o].provider) { %>

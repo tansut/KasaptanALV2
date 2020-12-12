@@ -9,18 +9,18 @@
   <% include ./_partial/header %>
 
 
-  <div class="page-title bg-primary py-2" >
+  <div class="page-title py-2" >
     <div class="container d-lg-flex justify-content-between py-2 py-lg-3">
       <div class="order-lg-2 mb-3 mb-lg-0 pt-lg-2">
         <nav aria-label="breadcrumb" class="d-none d-lg-block">
-          <ol class="breadcrumb breadcrumb-light flex-lg-nowrap justify-content-center justify-content-lg-star">
+          <ol class="breadcrumb breadcrumb-dark flex-lg-nowrap justify-content-center justify-content-lg-star">
             <li class="breadcrumb-item"><a class="text-nowrap" href="/"><i class="czi-home"></i></a></li>
           </ol>
         </nav>
       </div>
       <div class="order-lg-1 pr-lg-4 text-center text-lg-left">
-        <h1 class="h3 text-light">Kasap Ürünleri</h1>
-        <h2 class="text-light h4 lead">Doğal, taze ve lezzetli çünkü en iyi kasaplardan</h2>
+        <h1 class="h3 ">Kasap Ürünleri</h1>
+        <h2 class="h4 lead">Doğal, taze ve lezzetli çünkü en iyi kasaplardan</h2>
 
       </div>
     </div>
@@ -31,7 +31,7 @@
 
 
 
-    <div class="alert alert-secondary rounded-0 mb-0 border-0" role="alert">
+    <div class="container d-none bg-secondary border" role="alert">
 
       <button type="button" class="close u-alert-close--light" data-dismiss="alert" aria-label="Close">
         <span class="bg-color-white" aria-hidden="true">×</span>
@@ -84,7 +84,7 @@
     
       
       <hr class="mb-3">
-      <div class="text-center ">
+      <div class="text-center mb-3">
         <a  class="select-area-action alert-link btn btn-primary">Semt Seç</a>
       </div>
       
@@ -157,7 +157,7 @@
 
 
             <% if (__req.query.nodesc!='1') { %>
-              <div class="container mb-3">
+              <div class=" mb-3">
                   <div class="collapse-container page-footer-text">
                       <div class="collapse" id="collapseSummary">
                           <h2>Usta <strong>Kasaplar</strong>, <strong>Doğal</strong> Ürünler, <strong>Online</strong> Alışveriş</h2>

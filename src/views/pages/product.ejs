@@ -31,12 +31,12 @@
 
 
   <%if (__req.query.frame != '1') { %>
-  <div  class="bg-primary page-title py-2 <%= product.categories && product.categories[0] ? product.categories[0].category.slug:'' %> <%=product.slug%>">
+  <div  class=" page-title py-2 <%= product.categories && product.categories[0] ? product.categories[0].category.slug:'' %> <%=product.slug%>">
     <div class="container d-lg-flex justify-content-between py-2 py-lg-3">
       <div class="order-lg-2 mb-3 mb-lg-0 pt-lg-2">
         
         <nav aria-label="breadcrumb" class="d-none d-lg-block">
-          <ol class="breadcrumb breadcrumb-light flex-lg-nowrap justify-content-center justify-content-lg-star">
+          <ol class="breadcrumb breadcrumb-dark flex-lg-nowrap justify-content-center justify-content-lg-star">
             <li class="breadcrumb-item"><a class="text-nowrap" href="/"><i class="czi-home"></i></a></li>
             <li class="breadcrumb-item text-nowrap"><a href="/kasap-urunleri">Ürünler</a>
             </li>
@@ -45,8 +45,8 @@
         
       </div>
       <div class="order-lg-1 pr-lg-4 text-center text-lg-left">
-        <h1 class="h3 text-light"><%= view.name %></h1>
-        <h2 class="lead h4 text-light"><%= view.shortDesc %></h2>
+        <h1 class="h3"><%= view.name %></h1>
+        <h2 class="lead h4"><%= view.shortDesc %></h2>
         <% if (__req.user && __req.user.hasRole('admin')) {%>
         <a target="_blank" class="btn btn-dark btn-sm" href="/pages/admin/product/<%=product.slug%>">Düzenle
           <%=product.id%></a>
@@ -120,7 +120,7 @@
 
               </div>
 
-              <div id="productapp" v-cloak class="col-lg-6 pt-lg-3 px-3 px-lg-4">
+              <div id="productapp" v-cloak class="col-lg-6 px-3 ">
                 <% if (view.butcher) {%>
                     <%- include('./_partial/butcher-alternatives.ejs', { alternates:  view.alternateButchers }) %>
                     <%}%>
@@ -198,12 +198,12 @@
                     <%} %>
 
 
-                    <form id="product-form" class="" @submit.prevent="addToShopcard">
+                    <form id="product-form" @submit.prevent="addToShopcard">
                       <% if (!view.butcher) { %>
                         <% if (!__req.prefAddr) { %>
                        
   
-                        <div class="alert border-none rounded-0 alert-secondary font-size-sm mb-2"
+                        <div class="font-size-sm mb-2"
                           role="alert">
   
   
@@ -217,7 +217,7 @@
                             <% } %>
                           
   
-                            <p class="lead text-info font-weight-medium">
+                            <p class="lead text-accent">
                               <% if (controller.startPrice) { %>
                                 <% if (controller.startPrice.basedOn == 'global') { %>
                                   
@@ -242,13 +242,13 @@
                                 <% if (controller.startPrice.basedOn == 'global') { %>
   
                                   <div>
-                                    <span class="font-weight-medium">Size hizmet veren kasaplarımızdan alışverişe başlamak için semt seçin.
+                                    <span>Size hizmet veren kasaplarımızdan alışverişe başlamak için semt seçin.
                                   </div>
     
                             
                                 <% } else { %>
                                   <div>
-                                    <span class="font-weight-medium">İstediğiniz gün ve saatte kapınıza getiriyoruz.</span> 
+                                    <span>İstediğiniz gün ve saatte kapınıza getiriyoruz.</span> 
                                     Alışverişe başlamak için şimdi semtinizi seçin.
                                   </div>
     
@@ -552,11 +552,11 @@
                   
                                     <%if (__req.query.frame != '1') { %> 
                                     <button title="<%= __req.prefAddr ? __req.prefAddr.level3Text: 'Semtinizi Seçin' %>"
-                                @click="selectArea(null, '')" type="button" class="rounded-0 btn
+                                @click="selectArea(null, '')" type="button" class="rounded-0 d-none btn
                                 btn-secondary btn-sm"><i class="czi-location font-size-lg "></i>
                                       <% } else {  %>
                                         <button title="<%= __req.prefAddr ? __req.prefAddr.level3Text: 'Semtinizi Seçin' %>"
-                                          onclick="window.parent.purchase.selectAddress('<%=product.slug%>')" type="button" class="rounded-0 btn
+                                          onclick="window.parent.purchase.selectAddress('<%=product.slug%>')" type="button" class="rounded-0 d-none btn
                                           btn-secondary btn-sm"><i class="czi-location font-size-lg "></i>
                                         
                               <% }%>
@@ -569,14 +569,14 @@
 
                         </div>
                         <% } %>
-                        <div class="mb-1 bg-secondary border">
+                        
                           <%if (view.butcher) {  %>
-
+                            <div class="mb-1">
                           <div class="">
                             <%- include('./_partial/butcher-product-panel.ejs', { butcherVideo: butcherVideo }) %>
 
                           </div>
-
+                        </div>
                           <%}%>
                   
                       
@@ -585,14 +585,14 @@
                   
                   
                   
-                                  </div>
+                                  
                    
                         <%if (view.butcher) { %>
 
-                          <div class="bg-secondary border mb-3">
+                          <div class="bg-secondary pt-2 mb-3">
                             <div class="mt-2 d-flex align-items-center justify-content-center mb-1">
-                              <span v-if="selectedUnit.unit != 'kg'">Kaç <b>{{ selectedUnit.unitTitle }}</b> hazırlayalım?</span>
-                              <span v-if="selectedUnit.unit == 'kg'"><b>Ne kadar</b> hazırlayalım?</span>
+                              <p v-if="selectedUnit.unit != 'kg'">Kaç <b>{{ selectedUnit.unitTitle }}</b> hazırlayalım?</p>
+                              <p v-if="selectedUnit.unit == 'kg'"><b>Ne kadar</b> hazırlayalım?</p>
                            
                               
         
@@ -735,25 +735,29 @@
                 <div>
 
                   <ul class="nav nav-tabs" id="optionsTab" role="tablist">
+
+                    <li class="nav-item">
+                      <a class="nav-link active %>" id="home-tab" data-toggle="tab" href="#home" role="tab"
+                        aria-controls="home" aria-selected="true">Bilgi</a>
+                    </li>
            
                     <%if (controller.reviews.length) { %>
+
+                 
                        
                         <li id="usercomments" class="nav-item">
-                          <a class="nav-link active" id="comments-tab" data-toggle="tab" href="#comments" role="tab"
-                            aria-controls="comments" aria-selected="true">Yorumlar</a>
+                          <a class="nav-link " id="comments-tab" data-toggle="tab" href="#comments" role="tab"
+                            aria-controls="comments">Yorumlar</a>
                         </li>
                         <% } %>
 
-                        <li class="nav-item">
-                          <a class="nav-link <%=controller.reviews.length?'': 'active' %>" id="home-tab" data-toggle="tab" href="#home" role="tab"
-                            aria-controls="home" aria-selected="<%=controller.reviews.length?'false': 'true' %>">Bilgi</a>
-                        </li>
+                   
 
 
                         </ul>
 
                         <div class="tab-content px-4" id="myTabContent">
-                          <div class="tab-pane fade <%=controller.reviews.length?'': 'show active' %> " id="home" role="tabpanel" aria-labelledby="home-tab">
+                          <div class="tab-pane fade show active" id="home" role="tabpanel" aria-labelledby="home-tab">
 
                             <%if (product.mddesc) { %>
 
@@ -929,7 +933,7 @@
                           </div>
 
                           <%if (controller.reviews.length) { %>
-                          <div class="tab-pane fade <%=controller.reviews.length?'show active': '' %> " id="comments" role="tabpanel" aria-labelledby="comments-tab">
+                          <div class="tab-pane fade <%=controller.reviews.length?'': '' %> " id="comments" role="tabpanel" aria-labelledby="comments-tab">
 
                             <% controller.reviews.forEach(r => {  %>
                             <div class="product-review pb-4 mb-4 border-bottom">
@@ -1013,10 +1017,10 @@
                         </div>
                         <%}%>
                   </div>
-                  <!--bglightbox-->
+               
 
 
-                </div> <!-- cz-gallery conrainer  -->
+                </div>
 
 
 

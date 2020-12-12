@@ -7,7 +7,7 @@
 
 <body>
   <% include ./_partial/header %>
-  <div class="bg-secondary mb-3 ">
+  <div class="page-title py-2">
     <div class="container d-lg-flex justify-content-between py-2 py-lg-3">
       <div class="order-lg-2 mb-3 mb-lg-0 pt-lg-2">
         <nav aria-label="breadcrumb" class="d-none d-lg-block">
@@ -58,19 +58,19 @@
 
 
 
-    <div class="mb-3 border-top border-left border-right">
+    <div class="mb-3">
 
-      <div class="bg-secondary p-3  mb-4 d-print-none"><a class="media align-items-center"
-          href="/<%=butcher.slug%>"><img class="rounded-circle header-img d-print-none"
+      <div class="bg-secondary  mb-4 d-print-none"><a class="media align-items-center"
+          href="/<%=butcher.slug%>"><img class="header-img d-print-none"
             src="<%= `${__req.helper.imgUrl('butcher-google-photos', butcher.slug)}` %>" alt="<%=butcher.name%>">
           <div class="media-body pl-2"><span class="font-size-ms text-muted"></span>
             <h3 class="h4 mb-0 mr-2"><%= butchers[bi].name %></h3>
           </div>
         </a></div>
 
-      <div id="orderstart" class="px-2">
+      <div id="orderstart" class="">
         <h3  class="h4 border-bottom">Sipariş</h3>
-        <ul class="px-4 list-unstyled font-size-sm">
+        <ul class="list-unstyled font-size-sm">
           <li><span class="text-muted">Sipariş Durumu:&nbsp;</span> <%= order.status %></li>
           <li><span class="text-muted">Müşteri:&nbsp;</span><%=order.name%></li>    
           <% if (order.deliveryOrderId) { %>
@@ -115,7 +115,7 @@
           <% let item = items[pi] %>
 
           <div id="shop-card-item-<%=i%>"
-            class="px-4 d-sm-flex justify-content-between align-items-center mt-2 pb-3 border-bottom">
+            class="d-sm-flex justify-content-between align-items-center mt-2 pb-3 border-bottom">
             <div class="media media-ie-fix d-block d-sm-flex align-items-center text-center text-sm-left"><a
                 class="d-inline-block mx-auto mr-sm-4" href="/<%=item.product.slug%>?butcher=<%=butcher.slug%>"
                 style="width: 10rem;"><img src="<%=`${__req.helper.imgUrl('product-photos', item.product.slug)}`%>"
@@ -169,7 +169,7 @@
 
               </div>
               <h3 class="h4 border-bottom">Teslimat</h3>
-              <ul class="px-4 list-unstyled font-size-sm">
+              <ul class="list-unstyled font-size-sm">
                 <li><span class="text-muted">Dağıtımı
                     Yapacak:&nbsp;</span><%=order.dispatcherName%>/<%= shipment[bi].howToDesc %>
                 </li>
@@ -209,7 +209,7 @@
               <h3 class="h4 border-bottom">
                 Mali Bilgiler
               </h3>
-              <ul class="px-4 list-unstyled font-size-sm">
+              <ul class="list-unstyled font-size-sm">
                 <li><span class="text-muted">Planlanan Ödeme:&nbsp;</span><%= payment[bi].desc%> </li>
 
                 <li><span class="text-muted">Toplam Ürün Bedeli:&nbsp;</span><span
@@ -243,8 +243,8 @@
                 Aşağıdaki seçeneklerden birini <span class="font-weight-bolder">şimdi</span> kullanın.
               </p>
 
-              <div class="px-4">
-                <div class="border p-2 bg-secondary mb-3">
+              <div class="">
+                <div class="mb-3">
                   <h5 class="h6">1. Ürünler ve teslimat saati uygundur</h5>
                   <p class="font-size-md">Sipariş verilen <span
                       class="font-weight-bolder"><%=order.items.length%></span> kalem ürün ve <br> <span
@@ -255,7 +255,7 @@
                     <!-- <button class="btn btn-success" id="approveOrder">Evet uygun, siparişi onaylıyorum</button> -->
                     <% if (order.dispatcherType == 'banabikurye') { %>
                       <% if (order.deliveryOrderId) { %>
-                        <button class="btn btn-danger" id="kuryeIptalBtn">Kurye
+                        <button class="btn btn-lg btn-danger" id="kuryeIptalBtn">Kurye
                           İptal</button>
                         <% } else { %>
                           <button class="btn btn-success" data-toggle="modal" data-target="#kurye-modal" id="kuryeBtn">Kurye
@@ -263,12 +263,12 @@
                         <% } %>
             
                     <% } else { %>
-                      <button class="btn btn-success" data-toggle="modal" data-target="#deliv-modal" id="delivBtn">Siparişi Onaylayın</button>                      
+                      <button class="btn btn-lg btn-success" data-toggle="modal" data-target="#deliv-modal" id="delivBtn">Siparişi Onaylayın</button>                      
                     <% } %>
                   </div>
                 </div>
 
-                <div class="d-none border p-2 bg-secondary mb-3">
+                <div class="d-none bg-secondary mb-3">
                   <h5 class="h6">2. Ürünler OK ancak o saate teslimat yapamam</h5>
                   <p class="font-size-md">Sipariş verilen <span
                       class="font-weight-bolder"><%=order.items.length%></span> kalem ürünün teslimatını planlayın.</p>
@@ -288,7 +288,7 @@
                   </div>
                 </div>
 
-                <div class="border p-2 bg-secondary mb-3">
+                <div class="mb-3">
                   <h5 class="h6">2. Ürünler veya teslimat saatleri uygun değil mi?</h5>
                   <p>
                     Ürünler elinizde yoksa veya teslimat saatleri uygun değilse lütfen whatsapp üzerinden iletişime geçin.

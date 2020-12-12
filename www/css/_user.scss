@@ -12,10 +12,6 @@
   opacity: 0;
 }
 
-.page-title {
-  min-height: 10rem !important;
-}
-
 
 .kurban {
   background-color: #cc7e23 !important;
@@ -32,8 +28,10 @@ img {
 
 .iti { width: 100%; }
 
-.product-card {
-  
+.navbar {
+  a.nav-link {
+    font-weight:500;
+  }
 
   
 }
