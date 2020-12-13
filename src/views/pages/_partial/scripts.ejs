@@ -150,12 +150,12 @@
 
       $('.modal').on('shown.bs.modal', function () {
         window.__saveScroll = window.scrollY || window.scrollTop || document.getElementsByTagName("html")[0].scrollTop;
-        $(window).scrollTop(0);
+        //$(window).scrollTop(0);
       })
 
       $('.modal').on('hidden.bs.modal', function () {
         if (window.__saveScroll) {
-          $(window).scrollTop(window.__saveScroll);
+          //$(window).scrollTop(window.__saveScroll);
 
         }
       })
