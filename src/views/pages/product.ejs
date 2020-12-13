@@ -199,12 +199,24 @@
 
 
                     <form id="product-form" @submit.prevent="addToShopcard">
+
+                      <% if (controller.reviews.length) { %>
+                        <div class="mb-3 text-center">
+                          <div class="mb-1">
+                            <%- include('./_partial/star-rating.ejs', {val: product.ratingValue }) %>
+                          </div>
+                          <a href="javascript:gotoComments()"
+                            class="font-size-sm text-dark font-weight-medium"><span>Yorumlar
+                              (</span><span class="text-primary"><%=controller.reviews.length %></span><span>)</span></a>
+  
+                        </div>
+                        <% } %>
+
                       <% if (!view.butcher) { %>
                         <% if (!__req.prefAddr) { %>
                        
   
-                        <div class="font-size-sm mb-2"
-                          role="alert">
+                        <div class="font-size-sm mb-3">
   
   
   
@@ -217,7 +229,7 @@
                             <% } %>
                           
   
-                            <p class="lead text-accent">
+                            <p class="lead text-info">
                               <% if (controller.startPrice) { %>
                                 <% if (controller.startPrice.basedOn == 'global') { %>
                                   
@@ -238,7 +250,7 @@
   
                                 </p>
                             <% if (controller.startPrice) { %>
-                              <div class="font-size-md">
+                              <div class="font-size-md mb-3">
                                 <% if (controller.startPrice.basedOn == 'global') { %>
   
                                   <div>
@@ -278,23 +290,23 @@
   
                         </div>
                         <%} else { %>
-                        <div class="alert border-none rounded-0 alert-secondary font-size-sm mb-2"
+                        <div class="bg-secondary border p-3  mb-2"
                           role="alert">
   
   
   
   
-                          <div class="mb-3 d-block font-size-sm text-info text-center">
+                          <div class="mb-3  text-center">
                             <% if (__req.query.butcher) {  %>
                           
                               <% if (!controller.dispatchingAvailable) { %>
-                                <h5 class="h6 text-info">Henüz Semtinizde Değiliz</h5>
-                                <span class="font-weight-medium">
+                                <h5 class="h6 ">Henüz Semtinizde Değiliz</h5>
+                                <p>
       
                                   Kasap seçim kriterlerimiz oldukça detaylı ve belirli bir planda ilerliyoruz.
                                   Çünkü sizlere en iyiyi sunmak için çalışıyoruz.
       
-                                </span>
+                                </p>
   
                                 <script>
                                   gtags.push(['noservice', '<%=__req.prefAddr.display%>', '<%=product.slug%>']);
@@ -302,9 +314,9 @@
                                 </script>
       
                                 <%} else { %>
-                                <h5 class="h6 text-info"><i class="czi-thumb-up mr-2"></i>Semtinize hizmet
+                                <h5 class="h5">Semtinize hizmet
                                   veren kasaplarımız mevcut</h5>
-                                <span class="font-weight-medium">Ancak bu kasabımız semtinize hizmet veremiyor veya bu ürünü sağlayamıyor.</span>
+                                <p>Ancak bu kasabımız semtinize hizmet veremiyor veya bu ürünü sağlayamıyor.</p>
                                 <script>
                                   gtags.push(['noproduct', '<%=product.slug%>', '<%=__req.prefAddr.display%>']);
                                   gtags.push(['noservice', '<%=__req.prefAddr.display%>', '<%=product.slug%>']);
@@ -314,13 +326,13 @@
   
                             <% } else { %>
                               <% if (!controller.dispatchingAvailable) { %>
-                                <h5 class="h6 text-info">Henüz Semtinizde Değiliz</h5>
-                                <span class="font-weight-medium">
+                                <h5 class="h6">Henüz Semtinizde Değiliz</h5>
+                                <p>
       
                                   Kasap seçim kriterlerimiz oldukça detaylı ve belirli bir planda ilerliyoruz.
                                   Çünkü sizlere en iyiyi sunmak için çalışıyoruz.
       
-                                </span>
+                                </p>
   
                                 
                                 <script>
@@ -330,10 +342,10 @@
                                
       
                                 <%} else { %>
-                                <h5 class="h6 text-info"><i class="czi-thumb-up mr-2"></i>Hizmet
+                                <h5 class="h5">Hizmet
                                   Veriyoruz</h5>
-                                <span class="font-weight-medium">Ancak semtinize hizmet veren hiçbir kasabımız
-                                  bu ürünü şu anda sağlayamıyor.</span>
+                                <p>Ancak semtinize hizmet veren hiçbir kasabımız
+                                  bu ürünü şu anda sağlayamıyor.</p>
                                   <script>       
                                   gtags.push(['noproduct', '<%=product.slug%>', '<%=__req.prefAddr.display%>']);
                                   gtags.push(['noservice', '<%=__req.prefAddr.display%>', '<%=product.slug%>']);
@@ -349,27 +361,27 @@
                           <div class="d-flex justify-content-center">
   
                             <% if (__req.query.frame != '1') { %>
-                            <button @click="selectArea(null)" type="button" class="btn mr-2 btn-primary btn-sm"><i
-                                class="czi-location font-size-lg mr-2"></i>Semtinizi Seçin</button>
+                            <button @click="selectArea(null)" type="button" class="btn mr-2 btn-primary"><i
+                                class="czi-location  mr-2"></i>Semt Seç</button>
                             <% } else { %>
-                              <button onclick="window.parent.purchase.selectAddress('<%=product.slug%>')" type="button" class="btn mr-2 btn-primary btn-sm"><i
-                                class="czi-location font-size-lg mr-2"></i>Semtinizi Seçin</button>
+                              <button onclick="window.parent.purchase.selectAddress('<%=product.slug%>')" type="button" class="btn mr-2 "><i
+                                class="czi-location  mr-2"></i>Semt Seç</button>
                             <% } %>
-                            <a class="btn btn-sm btn-primary " onclick="return showButchers()">Kasaplarımız<i
-                                class="czi-arrow-right ml-2 mr-n1"></i></a>
+                            <a class="btn btn-primary " onclick="return showButchers()">Kasaplarımız<i
+                                class="czi-arrow-right mr-2"></i></a>
                           </div>
                           <%} else {%>
          
   
                           <div class="d-flex justify-content-center">
-                            <a class="btn btn-sm btn-primary mr-2" onclick="return goBack()" >Alışverişe Devam &raquo;</a>
+                            <a class="btn  btn-primary mr-2" onclick="return goBack()" >Alışverişe Devam &raquo;</a>
   
                             <% if (__req.query.frame != '1') { %>
-                              <button @click="selectArea(null)" type="button" class="btn mr-2 btn-primary btn-sm"><i
-                                  class="czi-location font-size-lg "></i>Semtinizi Seçin</button>
+                              <button @click="selectArea(null)" type="button" class="btn mr-2 btn-primary "><i
+                                  class="czi-location mr-2 "></i>Semt Seç</button>
                               <% } else { %>
-                                <button onclick="window.parent.purchase.selectAddress('<%=product.slug%>')" type="button" class="btn mr-2 btn-primary btn-sm"><i
-                                  class="czi-location font-size-lg "></i>Semtinizi Seçin</button>
+                                <button onclick="window.parent.purchase.selectAddress('<%=product.slug%>')" type="button" class="btn mr-2 btn-primary "><i
+                                  class="czi-location mr-2 "></i>Semt Seç</button>
                               <% } %>
   
                           </div>
@@ -382,17 +394,11 @@
   
                           <% } %>
 
-                      <% if (controller.reviews.length) { %>
-                      <div class="mb-3 text-center">
-                        <div class="mb-1">
-                          <%- include('./_partial/star-rating.ejs', {val: product.ratingValue }) %>
-                        </div>
-                        <a href="javascript:gotoComments()"
-                          class="font-size-sm text-dark font-weight-medium"><span>Yorumlar
-                            (</span><span class="text-primary"><%=controller.reviews.length %></span><span>)</span></a>
+               
 
-                      </div>
-                      <% } %>
+
+
+
                       <% if (product.featuresText) { %>
                       <% var notes = product.featuresText.split('\n') %>
                       <div class="border-bottom mb-3  ">
@@ -614,7 +620,8 @@
                             <div v-if="selectedUnit" class="p-2 d-flex justify-content-between  bg-secondary">
                               <div v-if="puan > 0" class="text-center">
                                 <span class="text-muted font-size-sm d-block">
-                                  Puan Kazancınız
+                                  
+                                   Kazancınız
                                 </span>
     
                                 <money-view class="badge badge-success font-size-md font-weight-medium" :money="puan">
@@ -637,7 +644,7 @@
                         
                           <%}%>  
                   
-                                  <div v-if="selectedUnit && selectedUnit.perPerson" class="d-flex align-items-center justify-content-center">
+                                  <div v-if="selectedUnit && selectedUnit.perPerson">
                   <p> <a @click="showCalculator(selectedUnit)"
                   class="text-dark font-weight-medium " href="#size-chart"><i class="czi-calculator mr-1"></i>Miktar Hesaplama Aracı</a> ihtiyacınız kadar almanıza yardımcı olabilir. </p>
                                 
@@ -703,7 +710,7 @@
                           <% } else { %>
                             
                               <button @click="selectArea(null)" type="button" class="btn btn-block btn-primary"><i
-                                  class="czi-location font-size-lg mr-2"></i>Semtinizi Seçin</button>
+                                  class="czi-location font-size-lg mr-2"></i>Semt Seç</button>
                            
                           <% } %>
 

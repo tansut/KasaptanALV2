@@ -29,7 +29,7 @@ class="gallery-item-caption"><%= butcherVideo.title %></span></a>
     src="<%= `${__req.helper.imgUrl('butcher-google-photos', view.butcher.slug)}` %>" alt="<%=view.butcher.name%>">
  <% } %>
       <div class="media-body   p-2">
-        <h4 class="h4 mb-0 mr-2"><%= view.butcher.name %></h4>
+        <h4 class="h5 mb-0 mr-2"><%= view.butcher.name %></h4>
           
           <% if (view.butcher.locationText) { %>
           <span class="text-muted font-size-sm d-block mb-2">
@@ -77,7 +77,7 @@ class="gallery-item-caption"><%= butcherVideo.title %></span></a>
           <% } %>
 
 
-          <money-view class=" text-dark font-size-lg" :unit="product.kgPrice ? 'Kg': selectedUnit.unitTitle"  :money="product.kgPrice || selectedUnit.unitPrice"></money-view>
+          <money-view class=" text-dark font-size-md" :unit="product.kgPrice ? 'Kg': selectedUnit.unitTitle"  :money="product.kgPrice || selectedUnit.unitPrice"></money-view>
 
        
           

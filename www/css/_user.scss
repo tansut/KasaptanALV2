@@ -75,6 +75,10 @@ a:hover {
 }
 
 }
+.modal-content {
+  border-radius: 0rem;
+
+}
 
 
 
@@ -151,8 +155,13 @@ a:hover {
      -ms-user-select: none;
 }
 
+.btn {
+  border-radius: 0rem;
+}
+
 a {
   text-decoration: none !important;
+  color: $primary;
 }
 
 .avatar {
@@ -308,6 +317,7 @@ img{
   color: black !important;
   padding-right: 0.25rem !important;
   padding-left: 0.25rem !important;
+  border: none !important;
 }
 
 .hr_line {
@@ -317,10 +327,14 @@ img{
 
 /* active*/
 .nav-pills.nav-pills-dark .nav-link {
-   background-color: darken($primary, 0%) !important; 
-  color: white !important;
+  background-color: darken($gray-200, 0%) !important; 
+  color: black !important;
+
   padding-right: 0.25rem !important;
   padding-left: 0.25rem !important;
+  border-radius: 0rem !important;
+  border-bottom: 4px solid $primary;
+
 }
 
 .truncate {

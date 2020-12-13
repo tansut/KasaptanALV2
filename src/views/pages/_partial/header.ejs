@@ -32,7 +32,7 @@
 
           <li>
             <a class="dropdown-item" href="https://wa.me/+908503054216"><i class="czi-support text-muted mr-2"></i>
-              0 850 305 4216</a></li>
+              Destek</a></li>
           <li>
 
             <% if ( __req.prefAddr) { %>
@@ -57,7 +57,7 @@
 
         </ul>
       </div>
-      <div class="topbar-text text-nowrap d-none d-md-inline-block"><a class="topbar-link" target="_blank" href="https://wa.me/+908503054216">0 850 305 4216</a></div>
+      <div class="topbar-text text-nowrap d-none d-md-inline-block"><a class="topbar-link" target="_blank" href="https://wa.me/+908503054216">Destek</a></div>
       <div class="ml-3 text-nowrap w-100 text-right">
 
         <% if ( __req.prefAddr ) { %>
@@ -212,7 +212,7 @@
             </li>
 
             <li class="nav-item  d-lg-none">
-              <a target="_blank" class="nav-link" href="https://wa.me/+908503054216">Destek: 0 850 305 4216</a>
+              <a target="_blank" class="nav-link" href="https://wa.me/+908503054216">Destek</a>
             </li>
           </ul>
         </div>
@@ -222,9 +222,9 @@
 </header>
 
 
-
-<div class="d-print-none" id="__whatsup"></div>
-
+<% if (false) { %>
+<div class="d-print-none d-none" id="__whatsup"></div>
+<% } %>
 <%}%>
 
 <% } %>
