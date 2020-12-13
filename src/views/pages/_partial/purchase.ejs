@@ -79,6 +79,7 @@
       });
 
       $('#purchasemodal').on('show.bs.modal', function () {
+        $(this).find('.iframe-div').focus();
         // $(this).find('.modal-body').css({
         //   //height: window.innerHeight + 'px'
         // });
@@ -96,7 +97,8 @@
         };
         iframe.width = "100%";
         iframe.height = "100%";
-        iframe.style = "";
+        iframe.style.border ="none";
+        iframe.style.overflow = "scroll";
         iframe.classList.add('d-none');
         iframe.src = '/' + product + '?frame=1&' + '<%=butcher ? `butcher=${butcher.slug}`:`` %>';
         $('#purchasemodal-loading').show();
