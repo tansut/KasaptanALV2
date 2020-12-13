@@ -27,7 +27,7 @@
     
     
     <%} else { %>
-        <%- include('./products-view', {viewId: "", viewMode:'tab', products: products}); %>
+        <%- include('./products-view', {showPurchase: true, viewId: "", viewMode:'tab', products: products}); %>
         <div class="d-xs-block border-bottom d-md-none text-center mb-3">
             <a class="btn rounded-0 btn-sm btn-secondary" href="/<%=cat.slug%>">Tümü &raquo;
             </a>

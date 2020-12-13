@@ -501,7 +501,7 @@
 
 
 
-  <%- include('./_partial/purchase', { url: butcher.slug + '/', butcher: butcher  }); %>
+  <%- include('./_partial/purchase', { returnUrl: butcher.slug + '/' + controller.category.slug, butcher: butcher  }); %>
 
 
 

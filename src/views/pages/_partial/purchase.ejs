@@ -1,5 +1,6 @@
 <%
  var url = typeof(url) == 'undefined' ? '': url
+ var returnUrl = typeof(returnUrl) == 'undefined' ? '': returnUrl
  var butcher = typeof(butcher) == 'undefined' ? null: butcher
 
 
@@ -44,7 +45,7 @@
     p.selectAddress = function (product) {
       p.closePurchaseDialog();
       window.kb.selectArea(function (sender, ul) {
-        window.location.href = "/adres-belirle/" + ul.selectedDistrict.slug + '?r=' + encodeURIComponent('/<%=`${url}${controller.category.slug}?open=`%>' + product);
+        window.location.href = "/adres-belirle/" + ul.selectedDistrict.slug + '?r=' + encodeURIComponent('/<%=`${returnUrl}?open=`%>' + product);
       });
     }
 
@@ -111,7 +112,7 @@
           openPurchaseDialog($(e.currentTarget).data('product'))
           <% } else { %>
             window.kb.selectArea(function (sender, ul) {
-              window.location.href = "/adres-belirle/" + ul.selectedDistrict.slug + '?r=' + encodeURIComponent('/<%=`${url}${controller.category.slug}?open=`%>' + $(e.currentTarget).data('product'));
+              window.location.href = "/adres-belirle/" + ul.selectedDistrict.slug + '?r=' + encodeURIComponent('/<%=`${returnUrl}?open=`%>' + $(e.currentTarget).data('product'));
             });
   <% } %>
 })
@@ -123,7 +124,7 @@
       if (sb) {
         var scel = sb.getScrollElement();
         var scelOffset = $(scel).offset();
-        var selected = $("#cat-item-<%=controller.category.slug%>").offset();
+        var selected = $("#cat-item-<%=controller.category ? controller.category.slug: ''%>").offset();
         $(".category-slider-item a").click(function (e) {
             if (!scel.__progress) {
               e.currentTarget.innerHTML = '<span class="spinner-border text-primary spinner-border-sm"></span>' + e.currentTarget.innerHTML
@@ -138,7 +139,7 @@
           // } else scel.scrollLeft = -(scelOffset.left - selected.left);
           var scroll = (selected.left - scelOffset.left);
           if (scroll > $(scel).width() / 2) {
-            var labelSize = $("#cat-item-<%=controller.category.slug%>").width();
+            var labelSize = $("#cat-item-<%=controller.category ? controller.category.slug:''%>").width();
             scel.scrollLeft = selected.left - scelOffset.left - ($(scel).width() - labelSize) / 2
           }
 
