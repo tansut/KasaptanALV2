@@ -147,6 +147,25 @@
   
   
     $(document).ready(function () {
+
+      $('.modal').on('shown.bs.modal', function () {
+        window.__saveScroll = window.scrollY || window.scrollTop || document.getElementsByTagName("html")[0].scrollTop;
+        $(window).scrollTop(0);
+      })
+
+      $('.modal').on('hidden.bs.modal', function () {
+        if (window.__saveScroll) {
+          $(window).scrollTop(window.__saveScroll);
+
+        }
+      })
+
+      $('.toast').on('shown.bs.toast', function () {
+        $(window).scrollTop(0);
+      })
+
+      
+
   
       var ulg = window.kb.userlocation();
       var guideinited = false;
@@ -217,9 +236,9 @@
   
       $(window).scroll(function () {
         if (($(document).scrollTop() >= $(document).height() / 4) && !userGuide.autoPopuped) {
-          userGuide.autoPopuped = true;
-          window.App.setCookie("guidewindow", "1", 30);
-          window.App.showSignupDlg(null, true);
+          // userGuide.autoPopuped = true;
+          // window.App.setCookie("guidewindow", "1", 30);
+          // window.App.showSignupDlg(null, true);
           //userGuide.open();
         }
       });
