@@ -24,7 +24,7 @@
       </div>
       <div class="order-lg-1 pr-lg-4 text-center text-lg-left">
         <h1 class="h3">Sepetim</h1>
-        <h2 class=" h4 lead"></h2>
+        <h2 class=" h4 lead">Kârlı Alışveriş, Kaliteli Et</h2>
       </div>
     </div>
   </div>
@@ -62,7 +62,7 @@
             <% if (controller.possiblePuanList.length > 0) { %>
             <div class="mb-3">
     
-              <h6 class="h6">Kasap Kart&trade; Puan Kazancı</h6>
+              <h6 class="h6 font-weight-bold"><i class="czi-check-circle  mr-2"></i>Kasap Kart&trade; Puan Kazancı</h6>
 
 
                 <% controller.possiblePuanList.forEach(pg => { %>
@@ -116,7 +116,7 @@
 
             <% if (controller.usablePuanTotal > 0.00) { %>
               <div class="mb-3">
-                <h6 class="h6">Kullanılabilir Puanlarınız</h6>
+                <h6 class="h6 font-weight-bold"><i class="czi-check-circle mr-2"></i>Kullanılabilir Puanlarınız</h6>
 
 <ul>
   <li>
@@ -128,14 +128,14 @@
                   Not: Online ödeme aşamasında kullanılabilir puanlarınızı ödemenizden düşebilirsiniz. 
                 </span>
               </div>
-              <% } else { %>
+              <% } else if (!req.user) { %>
                    <div class="mb-3 bg-secondary border p-3">
                      <h5 class="h5">Mevcut Puanlarınızı Görüntüleyin</h5>
 
                     <p>
                       Önceki siparişlerinizden kazandığınız puanları görüntülemek için giriş yapın.
                     </p>
-                    <button type="button" onclick="App.showLoginDlg('/alisveris-sepetim')" class="btn btn-dark"><i class="czi-user text-white"></i> Giriş Yap</button>
+                    <button type="button" onclick="App.showLoginDlg('/alisveris-sepetim')" class="btn btn-primary"><i class="czi-user text-white"></i> Giriş Yap</button>
                     
                   </div>
               <% } %>
@@ -183,6 +183,8 @@
     
             <%}%>
           </div>
+
+
 
         </section>
     
@@ -234,7 +236,7 @@
                             <% if (controller.usablePuanTotal > 0.00) { %>
                               <div class="text-center">
                                 <p>
-                                    Düşebileceğiniz Tutar
+                                    Kullanılabilir Puan
                                 </p>
                                 <p class="font-weight-bold text-success">
                                     <%- include('./_partial/currency.ejs', {value: controller.usablePuanTotal}) %>
@@ -244,14 +246,14 @@
                             <% }%>
 
                             <% if (controller.mayEarnPuanTotal > 0.00 && controller.usablePuanTotal > 0.00) { %>
-                              <div class="text-center bg-secondary border p-3">
-                                  <p class="font-weight-bolder">
+                              <div class="text-center">
+                                  <h6 class="h6 font-weight-bold mb-3">
                                      Toplam Kazancınız
-                                  </p>
-                                  <p class="font-size-lg text-success font-weight-bold">
+                                  </h6>
+                                  <span class="badge badge-success font-size-lg font-weight-medium">
                                       <%- include('./_partial/currency.ejs', {value: controller.mayEarnPuanTotal + controller.usablePuanTotal}) %>
           
-                                  </p>
+                                  </span>
                               </div>
         
                             <% } %>

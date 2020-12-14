@@ -31,6 +31,7 @@
                 class="item-slider item-slider-sm <%= selected ? (selected == reyonlar[c].slug ? 'item-slider-selected': 'item-slider-unselected') : ''%>">
                 <%subUrl = reyonlar[c].type == 'resource' ? 'et-yemekleri/':'' %>
                 <div class="card product-card pb-0  ">
+  
                     <a href="<%= `/${subUrl}${reyonlar[c].slug}${urlParams ? '?' + urlParams:''}`%>"><img width="500" height="500"
                         class="lazyload" src="<%=`${__req.helper.imgUrl('category-photos', reyonlar[c].slug, 'thumbnail', true, 'list')}`%>"
                             alt="<%=reyonlar[c].name%>"></a>
