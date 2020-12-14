@@ -206,8 +206,8 @@
                       <div class="collapse show" id="order-discounts" data-parent="#order-options">
                         <div class="card-body">
                             <div class="text-center">
-                               <p>
-                                Ürünler Toplamı
+                               <p class="mb-1">
+                                Ürünler
                                </p>
                                <p class="font-weight-bold">
                                 <%- include('./_partial/currency.ejs', {value: shopcard.subTotal}) %>
@@ -223,7 +223,7 @@
                             </div>
                             <% if (controller.mayEarnPuanTotal > 0.00) { %>
                             <div class="text-center">
-                                <p>
+                                <p class="mb-1">
                                   Kasap Kart&trade; Puan Kazancı
                                 </p>
                                 <p class="font-weight-bold text-success">
@@ -235,8 +235,8 @@
 
                             <% if (controller.usablePuanTotal > 0.00) { %>
                               <div class="text-center">
-                                <p>
-                                    Kullanılabilir Puan
+                                <p class="mb-1">
+                                    İndirimler
                                 </p>
                                 <p class="font-weight-bold text-success">
                                     <%- include('./_partial/currency.ejs', {value: controller.usablePuanTotal}) %>
@@ -247,7 +247,7 @@
 
                             <% if (controller.mayEarnPuanTotal > 0.00 && controller.usablePuanTotal > 0.00) { %>
                               <div class="text-center">
-                                  <h6 class="h6 font-weight-bold mb-3">
+                                  <h6 class="h6 font-weight-bold mb-2">
                                      Toplam Kazancınız
                                   </h6>
                                   <span class="badge badge-success font-size-lg font-weight-medium">

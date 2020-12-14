@@ -45,7 +45,6 @@
 <body class="<%= controller.threeDhtml ? 'd-none':''%>">
   <% include ./_partial/header %>
 
-  <!-- Page Title (Light)-->
   <% if (__req.query.print != '1') { %>
 
   <div class="page-title py-2">
@@ -64,7 +63,6 @@
         <h2 class="lead h4">
           <%= __helper.formatDate(order.creationDate) + ' tarihli ' + order.butcherName + ' siparişim' %></h2>
         
-        <a class="font-size-xs text-muted" href="<%=__req.url%>?print=1">Yazdır &raquo;</a>
       </div>
     </div>
   </div>
@@ -76,39 +74,29 @@
 
   <div class="container mb-3 ">
 
-    <% if (__req.query.print != '1') { %>
-    <div class="d-print-none">
+    
+    <div>
 
     
 
     <% if (controller.shouldBePaid > 0) { %>
 
+      <% if (controller.mayEarnPuanTotal + controller.usablePuanTotal > 0.00) { %>
+        <h5 class="h5">
+          Kazançlar
+        </h5>
+      <% } %>
 
     <% if (controller.mayEarnPuanTotal) { %>
-    <div class="mt-3 mb-3 bg-secondary border p-3">
-      <h5 class="h5">Puan kazancınız var!</h5>
+    <div class="mb-3">
+      <h6 class="h6 font-weight-bold"><i class="czi-check-circle  mr-2"></i>Kasap Kart&trade; Puan Kazancı</h6>
 
 
       <p>
         Alışverişiniz size
-        <strong class="text-info"><%- include('./_partial/currency.ejs', {value: controller.mayEarnPuanTotal}) %></strong> değerinde puan
+        <strong class="text-success"><%- include('./_partial/currency.ejs', {value: controller.mayEarnPuanTotal}) %></strong> değerinde puan
         kazandırdı.
       </p> 
-
-      <% if (controller.possiblePuanList.length > 0) { %>
-       
-          <% controller.possiblePuanList.forEach(pg => { %>
-          <ul>
-            <li>
-              <strong><%- include('./_partial/currency.ejs', {value: pg.earned}) %></strong>, <%=pg.title%>
-            </li>
-          </ul>
-          <% }) %>
-  
-       
-        <%}%>
-            
-
     </div>
 
 
@@ -119,22 +107,19 @@
       
         
         </div>
-      <% } %>
+     
 
       <% if (controller.usablePuanTotal > 0.00) { %>
-        <div class="mb-3 bg-secondary border p-3">      
-          <h5 class="h5">Bu alışverişiniz çok daha kârlı!</h5>
+        <div class="mb-3">      
+          
+          <h6 class="h6 font-weight-bold"><i class="czi-check-circle mr-2"></i>İndirimler</h6>
+
           <span class="text-dark d-block mb-2">Önceki siparişlerinizden kazandığınız 
             <strong class="text-success"><%- include('./_partial/currency.ejs', {value: controller.usablePuanTotal}) %></strong>
             değerinde puanı düşüyoruz.
           </span>
         </div>
         <% } %>       
-      
-      
-
-
-
       <p class="mt-3 text-muted text-center">
         <% if (controller.usablePuanTotal > 0.00) { %>
           <del class="d-block">
@@ -162,120 +147,15 @@
       <% } %>
 
 
-      <a id="orderdetails"></a>
+      
       </div>
 
     <% } %>
       <% if (__req.query.print != '1') { %>
-      <div class="mb-3">
-        <%- include('./_partial/order.details.ejs', {
-          order: order,
-          hidePhone: true,
-          hidePayLink: true,
-          hideUser: controller.hideOrderDetails
-      }) %>
-      </div>
+
 
 <% } else { %>
-<h3>
-  <%=order.butcherName%>
-</h3>
 
-<ul class="list-unstyled font-size-sm">
-  <li><span class="text-muted">Dağtımı yapacak:&nbsp;</span><%=order.dispatcherName%></li>
-
-  <% if (!(order.dispatcherType || "").startsWith('kasaptan')) { %>
-  <li><span class="text-muted">*İsim:*&nbsp;</span><%= order.name %></li>
-  <% if(order.address) { %>
-  <li><span class="text-muted">*Adres:*&nbsp;</span><%= order.address%>
-  Bina: <%=order.bina%>,Kat: <%=order.kat%>,Daire: <%=order.daire%>
-
-    <%= order.areaLevel3Text%>/<%= order.areaLevel1Text%></li>
-    <% if (order.adresTarif) { %>
-      <li>
-        Adres tarifi: <%= order.adresTarif%>
-      </li>
-      <%}%>
-    <%}%>
-  <% } %>
-    <% if(order.note) { %>
-      <li><span class="text-muted">Not:&nbsp;</span><%= order.note%>
-        </li>
-    <%}%>
-  <% if (order.noInteraction) { %>
-  <li>Güvenli Teslimat: <%= order.noInteraction ? 'Evet': 'Hayır'%></li>
-  <% } %>
-</ul>
-
-<ul class="list-unstyled ">
-  <li><span class="text-muted">Teslimat planı:&nbsp;</span><%= order.shipmentHowToText %></li>
-  <li><span class="text-muted">Teslimat kodu:&nbsp;</span>*<%= order.securityCode %>*</li>
-  <% if (order.shipmentType != 'callme') {%>
-  <li><span class="text-muted">Gün:&nbsp;</span><strong>*<%= __helper.formatDate(order.shipmentdate) %>*</strong></li>
-  <li><span class="text-muted">Saat Aralığı:&nbsp;</span><strong>*<%= order.shipmenthourText%>*</strong> </li>
-  <%} else { %>
-    <li><span class="text-muted">Teslimat planı:&nbsp;</span>*<%= order.shipmentTypeText%>*</li>
-
-  <% } %>
-              <li><span class="text-muted">Paketim çıkmadan bana haber ver:&nbsp;</span><%= __helper.boolStr(order.shipmentInformMe)%>
-  </li>
-  <li><span class="text-muted">**Planlanan** Ödeme:&nbsp;</span><%= order.paymentTypeText%> </li>
-  <% if (order.butcherSelection == "user") { %>
-    <li><span class="text-muted">*Müşteriniz özellikle sizi diğer kasaplar arasından seçerek sipariş vermiştir.*</span></li>
-  
-  <% } %>
-</ul>
-
-<ul>
-
-
-<% for(var i = 0; i < order.items.length; i++) { %>
-<% var item = order.items[i] %>
-<li>
-  <p class="mb-1">
-    <%=item.productName%>
-
-  </p>
-  <p>
-    <%=item.quantity%>
-    <%=item.pounitTitle%>
-    
-    <%- include('./_partial/currency.ejs', {value: item.price}) %><br>
-    <%if (item.pounitWeight) { %>
-      <span class="text-muted font-size-sm d-block">1 <%=item.pounitTitle%> <%=item.pounitWeight%></span>
-      <% } %>
-
-    <span class="text-muted font-size-sm">
-      Birim Fiyatı: 
-      <%- include('./_partial/currency.ejs', {value: item.pounitPrice}) %> /<%=item.pounitTitle%>     
-
-    </span>
-
-    <% if (item.pounit != 'kg') { %>
-      <span class="text-muted font-size-sm ">
-        
-          Kg Fiyatı: 
-          <%- include('./_partial/currency.ejs', {value: item.kgPrice}) %> /<%='KG'%>    
-       
- 
-      </span>
-    <% } %>
-
-    <% if (item.note) {%>     
-      <div class="font-size-sm text-info"><span class="font-weight-bold">Not:</span> <%=item.note%></div>
-      <%}%> 
-  </p>
-
-  
-  
-
-
-
-
-  
-</li>
-<% } %>
-</ul>
 <% } %>
 
 
