@@ -148,16 +148,16 @@
               girmeyim.</label>
           </div>
           <div id="locdone" class="alert alert-secondary text-center mt-3" style="display: none;">
-            <p class="text-success font-size-sm">Noktasal adresiniz hazır. <strong>Bina No, Kat ve Daire No</strong>
+            <p class="font-size-sm">Teslimat konumu hazır hazır. <strong>Bina No, Kat ve Daire No</strong>
               bilgilerini
               kontrol edip işleme devam edebilirsiniz.</p>
-            <button onclick="showMap()" type="button" class="btn btn-sm btn-secondary">Teslimat Konumu</button>
+            <button onclick="showMap()" type="button" class="btn btn-sm btn-primary">Teslimat Konumu</button>
           </div>
           <!-- Navigation (desktop)-->
           <div class="d-none d-lg-flex pt-4 mt-3">
             <div class="w-50 pr-3"><a class="btn btn-secondary btn-block" href="/alisveris-sepetim/ship">&laquo; Geri</a></div>
             <div class="w-50 pl-2"><button type="button" onclick="goNext()" id="setadres" name="setadres"
-                class="btn btn-info btn-block gonext">Sonraki &raquo;</button>
+                class="btn btn-dark btn-block gonext">Sonraki &raquo;</button>
             </div>
           </div>
         </section>
@@ -169,7 +169,7 @@
           <div class="d-flex mt-3">
             <div class="w-50 pr-3"><a class="btn btn-secondary btn-block" href="/alisveris-sepetim/ship">&laquo; Geri</a></div>
             <div class="w-50 pl-2"><button type="button" onclick="goNext()" id="save-adres" name="save-adres"
-                class="btn btn-info btn-block gonext">Sonraki &raquo;</button>
+                class="btn btn-dark btn-block gonext">Sonraki &raquo;</button>
             </div>
           </div>
         </div>
@@ -201,7 +201,7 @@
                   <img class=" rounded"
                     :src="'https://maps.googleapis.com/maps/api/staticmap?center=' + addr.location.coordinates[0] +'+'+addr.location.coordinates[1] + '&zoom=18&scale=1&size=600x300&maptype=roadmap&key=AIzaSyBFqn2GNAhwbJnpga-3S3xQGBc0EcdAgH8&format=png&visual_refresh=true&markers=size:mid%7Ccolor:0xff0000%7Clabel:M%7C' + addr.location.coordinates[0] + '+' + addr.location.coordinates[1]">
                 </a>
-                <button @click="setloc(addr)" type="button" class="btn btn-accent btn-sm">Bu Bölgedeyim</button>
+                <button @click="setloc(addr)" type="button" class="btn btn-dark btn-sm">Bu Bölgedeyim</button>
               </div>
 
             </div>

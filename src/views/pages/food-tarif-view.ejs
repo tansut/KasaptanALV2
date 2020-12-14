@@ -20,11 +20,11 @@
   <%-include('./_partial/food-select-alternatives.ejs', {}) %>
 
 
-  <div class="page-title-overlap bg-primary pt-4">
+  <div class="page-title  py-2">
     <div class="container d-lg-flex justify-content-between py-2 py-lg-3">
       <div class="order-lg-2 mb-3 mb-lg-0 pt-lg-2">
         <nav aria-label="breadcrumb" class="d-none d-lg-block">
-          <ol class="breadcrumb breadcrumb-dark flex-lg-nowrap justify-content-center justify-content-lg-star">
+          <ol class="breadcrumb breadcrumb-light flex-lg-nowrap justify-content-center justify-content-lg-star">
             <li class="breadcrumb-item"><a class="text-nowrap" href="/"><i class="czi-home"></i></a></li>
             <% if (resource.tag1 && resource.tag1.includes('tarif')) { %>
             <li class="breadcrumb-item text-nowrap"><a href="/et-yemekleri">Et Yemekleri</a>
@@ -38,19 +38,14 @@
         </nav>
       </div>
       <div class="order-lg-1 pr-lg-4 text-center text-lg-left">
-        <h1 class="h3 mb-2 text-light mb-0"><%= resource.title %></h1>
-
-        <h2 class="h4"><%= resource.description || defaultDesc %></h2>
-
-
-          
+        <h1 class="h3 "><%= resource.title %></h1>
+        <h2 class=" h4 lead"><%= resource.description || defaultDesc %></h2>
         <% if (__req.user && __req.user.hasRole('admin')) {%>
 
-        <a class="btn btn-sm btn-dark" href="<%= `/pages/admin/resource/product-photos/${resource.product.id}?fileprefix=${resource.product.slug}&title=${resource.product.name}&videotype=product-videos#res${resource.id}` %>"
-          target="_blank">Düzenle</a>
-
-        <% } %>
-
+          <a class="btn btn-sm btn-dark" href="<%= `/pages/admin/resource/product-photos/${resource.product.id}?fileprefix=${resource.product.slug}&title=${resource.product.name}&videotype=product-videos#res${resource.id}` %>"
+            target="_blank">Düzenle</a>
+  
+          <% } %>
       </div>
     </div>
   </div>
@@ -61,13 +56,15 @@
 
 
 
+
+
   <!-- Page Content-->
-  <div class="container px-0 cz-gallery">
-    <!-- Gallery + details-->
-    <div class="bg-light box-shadow-lg mb-3 pb-4">
-      <div>
+  <div class="container">
+    
+    <div>
+     
         <div class="row ">
-          <!-- Product gallery-->
+         
 
           <div class="col-lg-6 ">
             <div class="">
@@ -88,11 +85,7 @@
                 </a>
 
                 <% if (resource.contentType == 'video-youtube') { %>
-                <div class="text-center mt-3 mb-3">
-
-                <button onclick="javascript:window.App.openSlider(<%=resource.id%>)"" class="btn btn-sm btn-primary"> <i class="czi-play mr-2"></i> Tarifi İzle</button>
-
-                </div>
+  
                 <% } %>
 
               
@@ -168,7 +161,7 @@
                   <li class="border-bottom">
                     <div class="d-flex flex-nowrap align-content-center justify-content-between">
                   <a class="text-truncate align-self-center" href="/<%=`${p.slug}?r=${resource.id}&autoNote=1&hideproduct=1`%>"><%=p.name%></a>
-                  <a class="rounded-0 align-self-center d-md-block btn btn-sm btn-info" href="/<%=`${p.slug}?r=${resource.id}&autoNote=1&hideproduct=1`%>">Satın Al<i class="czi-arrow-right font-size-xs align-middle ml-1"></i></a>
+                  <a class="rounded-0 align-self-center d-md-block btn btn-sm btn-dark" href="/<%=`${p.slug}?r=${resource.id}&autoNote=1&hideproduct=1`%>">Satın Al<i class="czi-arrow-right font-size-xs align-middle ml-1"></i></a>
 
                     </div>
                   
@@ -203,9 +196,10 @@
 
 
   </div>
+        </div>
+    </div>
 
-
-
+  </div>
 
 
 

@@ -58,7 +58,7 @@
                   <div class="d-flex w-100 justify-content-center">
                     <div class="mx-2 btn-group btn-group-sm" role="group" aria-label="">
     
-                      <button class="btn-info btn" v-for="(r, index) in foodResources().concat([{title:'Diğer Yemekler'}])" @click="setResource(r)">{{r.title || 'Diğer Yemekler'}}</button>
+                      <button class="btn-dark btn" v-for="(r, index) in foodResources().concat([{title:'Diğer Yemekler'}])" @click="setResource(r)">{{r.title || 'Diğer Yemekler'}}</button>
                       
                     </div>
                   </div>

@@ -1159,6 +1159,7 @@ class Route extends router_1.ApiRouter {
                 try {
                     let offer = yield provider.createOrder(request);
                     order.deliveryOrderId = offer.orderId;
+                    order.dispatcherFee = offer.totalFee;
                 }
                 catch (err) {
                     throw err;

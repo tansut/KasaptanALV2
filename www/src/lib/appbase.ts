@@ -43,11 +43,7 @@ export default class AppBase {
         message ? $('#signupDlgMessageDiv').show(): $('#signupDlgMessageDiv').hide();
         message ? $('#signupDlgMessage').html(message): $('#signupDlgMessage').html("")        
         this.activaTab("signup-tab");
-        this.RunConfig['returnUrl'] = returnUrl;
-        // $("#si-resetpwd").attr("href", "/reset-password");
-        // if (returnUrl) {
-        //     $("#si-resetpwd").attr("href", "/reset-password?r=" + encodeURIComponent(returnUrl));
-        // }        
+        this.RunConfig['returnUrl'] = returnUrl;    
         showAd ? this.jq('#signupad').show(): this.jq('#signupad').hide();
         this.jq('#signin-modal').modal('show');
         $('#signin-modal').one('shown.bs.modal', function () {
@@ -59,12 +55,10 @@ export default class AppBase {
     }    
 
     static showLoginDlg(returnUrl: string = null, showAd: boolean = false, user: string = '') {
+        $('#signupDlgMessageDiv').hide();
+        $('#signupDlgMessage').html("") 
         this.activaTab("signin-tab")
         this.RunConfig['returnUrl'] = returnUrl;
-        $("#si-resetpwd").attr("href", "/reset-password");
-        if (returnUrl) {
-            $("#si-resetpwd").attr("href", "/reset-password?r=" + encodeURIComponent(returnUrl));
-        }
         showAd ? this.jq('#signupad').show(): this.jq('#signupad').hide();
         user ?  this.jq('#si-email').val(user):null;
         this.jq('#signin-modal').modal('show');

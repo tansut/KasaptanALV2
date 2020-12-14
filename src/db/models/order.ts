@@ -494,8 +494,7 @@ class Order extends BaseModel<Order> {
         
 
         if (usablePuan) {
-            let newFee = Math.max(0.00, Helper.asCurrency(totalFee.kalitteFee - usablePuan));
-            newFee = Helper.asCurrency(newFee + newFee * 0.18);
+            let newFee = Math.max(0.00, Helper.asCurrency(totalFee.kalitteFee + totalFee.kalitteVat  - usablePuan));
             return newFee;
         } else return Helper.asCurrency(totalFee.kalitteFee + totalFee.kalitteVat);     
     }

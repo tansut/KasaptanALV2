@@ -73,11 +73,10 @@
                      
 
                       <% if (controller.mayEarnPuanTotal > 0) { %>
-                        <div class="alert alert-success rounded-0 mb-3 mt-3">
+                        <div class="mb-3 mt-3">
         
                         <span class="d-block">   
-                          <h6 class="text-success">Online ödeyin, puan kazanın.</h6> 
-                          <span class=" font-weight-medium"> Tebrikler!</span> <strong><%- include('./_partial/currency.ejs', {value: controller.mayEarnPuanTotal}) %></strong> değerinde Kasap Kart™ puanını sonraki alışverişlerinizde kullanabilir, kârlı çıkabilirsiniz. 
+                           <strong class="text-success"><%- include('./_partial/currency.ejs', {value: controller.mayEarnPuanTotal}) %></strong> değerinde Kasap Kart™ puanını sonraki alışverişlerinizde kullanabilir, kârlı çıkabilirsiniz. 
                         </span>
                       </div>
                         <%}%>     
@@ -143,7 +142,7 @@
               class="czi-arrow-left mt-sm-0 mr-1"></i><span class="d-none d-sm-inline">Geri</span><span
               class="d-inline d-sm-none">Geri</span></a></div>
         <div class="w-50 pl-2"><button type="submit" id="save-adres" name="save-adres"
-            class="btn btn-info btn-block"><span class="d-none d-sm-inline">Sonraki Adım</span><span
+            class="btn btn-dark btn-block"><span class="d-none d-sm-inline">Sonraki Adım</span><span
               class="d-inline d-sm-none">Sonraki</span><i class="czi-arrow-right mt-sm-0 ml-1"></i></button></div>
       </div>
       </section>
@@ -158,7 +157,7 @@
               class="czi-arrow-left mt-sm-0 mr-1"></i><span class="d-none d-sm-inline">Geri</span><span
               class="d-inline d-sm-none">Geri</span></a></div>
         <div class="w-50 pl-2"><button type="submit" id="save-adres" name="save-adres"
-            class="btn btn-info btn-block"><span class="d-none d-sm-inline">Sonraki Adım</span><span
+            class="btn btn-dark btn-block"><span class="d-none d-sm-inline">Sonraki Adım</span><span
               class="d-inline d-sm-none">Sonraki Adım</span><i class="czi-arrow-right mt-sm-0 ml-1"></i></button></div>
       </div>
     </div>

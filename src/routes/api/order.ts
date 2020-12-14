@@ -1295,6 +1295,7 @@ export default class Route extends ApiRouter {
             try {
                 let offer = await provider.createOrder(request);
                 order.deliveryOrderId = offer.orderId;
+                order.dispatcherFee = offer.totalFee;
             } catch (err) {
                 throw err;
             }

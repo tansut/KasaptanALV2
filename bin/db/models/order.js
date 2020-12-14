@@ -115,8 +115,7 @@ let Order = Order_1 = class Order extends basemodel_1.default {
         let calc = new commissionHelper_1.ComissionHelper(rate, fee);
         let totalFee = calc.calculateButcherComission(shouldBePaid);
         if (usablePuan) {
-            let newFee = Math.max(0.00, helper_1.default.asCurrency(totalFee.kalitteFee - usablePuan));
-            newFee = helper_1.default.asCurrency(newFee + newFee * 0.18);
+            let newFee = Math.max(0.00, helper_1.default.asCurrency(totalFee.kalitteFee + totalFee.kalitteVat - usablePuan));
             return newFee;
         }
         else
