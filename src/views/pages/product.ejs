@@ -231,7 +231,7 @@
                             <% } %>
                           
   
-                            <p class="lead text-info">
+                            <p class="lead">
                               <% if (controller.startPrice) { %>
                                 <% if (controller.startPrice.basedOn == 'global') { %>
                                   
@@ -550,7 +550,7 @@
                               
                               <div v-if="selectedUnit">
                               
-                                  <div class="md-content mb-3" v-html="selectedUnit.desc" v-if="selectedUnit.desc">
+                                  <div class="md-content mb-3 " v-html="selectedUnit.desc" v-if="selectedUnit.desc">
                                      
                                   </div>
                        

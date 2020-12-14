@@ -39,7 +39,7 @@
 
           </div>
 
-          <div class="bg-secondary border-bottom  pt-2">
+          <div class="border-bottom  pt-2">
             <div class=" d-flex align-items-center justify-content-center mb-1">
               <span class="font-weight-medium">Kaç kişilik hazırlayalım ?</span>
             </div>
@@ -72,11 +72,10 @@
 
           </div>
 <div class="px-2 pt-2" v-if="personcount > 0 && ((!foodResources().length) || (foodResources().length && selectedResource))">
-  <div v-if="note " class="mt-1 alert border-none rounded-0 alert-info alert-with-icon font-size-sm mb-2" role="alert">
+  <div v-if="note " class="mt-1  font-size-sm mb-2" role="alert">
 
 
-    <div class="alert-icon-box rounded-0"><i class="alert-icon czi-announcement"></i></div> 
-    <h6 class="h6 text-info">{{noteHeader || (food && food.title) || 'Usta Kasaplarımızından'}}</h6>
+    <h6 class="h6">{{noteHeader || (food && food.title) || 'Usta Kasaplarımızından'}}</h6>
     {{note}}
   </div>
 
@@ -94,16 +93,9 @@
 
 
    
-<div class="alert alert-info rounded-0 pt-1">
+<div class="pt-1">
 
-  <div class="form-group mb-0">
-    <label class="mb-2" for="wanote"><span
-     class="badge badge-info font-size-xs mr-2">Sipariş Notunuz</span><span class="font-size-sm"></span>
-     
- 
-
-    
-   </label> 
+  <div class="form-group mb-3">
    <textarea v-model="cardnote" :placeholder="cardnoteph || 'İletmek istediğiniz notunuz varsa burayı kullanabilirsiniz.'"
      class="form-control font-size-sm" rows="4" name="wanote" id="wanote">
 
@@ -111,7 +103,6 @@
                                    </textarea>
  </div>
 
-  <div class="text-center border-bottom pt-2 mb-3 font-size-md font-weight-medium" v-if="result && result.length > 0">Miktar seçin ve sepete ekleyin</div>
 
     <div class=" px-3 flex-wrap d-flex align-items-center justify-content-center">
       <button v-for="(option, index) in result" data-dismiss="modal" @click="setUnit(option)"
