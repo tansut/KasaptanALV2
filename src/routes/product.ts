@@ -83,7 +83,7 @@ export default class Route extends ViewRouter {
         let show = true;
         
         if (this.req.query.butcher) { 
-            show = this.req.query.utm_medium != 'Social';
+            show = (this.req.query.utm_medium != 'Social' ) && (this.req.query.utm_medium != 'Butcher');
         }
 
         // let shopcard = this.shopcard;

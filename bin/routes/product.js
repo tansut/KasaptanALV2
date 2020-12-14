@@ -65,7 +65,7 @@ class Route extends router_1.ViewRouter {
     showOtherButchers() {
         let show = true;
         if (this.req.query.butcher) {
-            show = this.req.query.utm_medium != 'Social';
+            show = (this.req.query.utm_medium != 'Social') && (this.req.query.utm_medium != 'Butcher');
         }
         // let shopcard = this.shopcard;
         // let scButcher = (shopcard.items && shopcard.items.length) ? shopcard.items[0].product.butcher.id : null;

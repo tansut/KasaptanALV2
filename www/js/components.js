@@ -450,9 +450,9 @@ window.initComponents = function initComponents() {
                     if (!returnUrl) {
                         var urlParams = new URLSearchParams(window.location.search);
                         if (urlParams.has('butcher')) {
-                            returnUrl = '/' + self.product.slug + '?butcher=' + urlParams.get('butcher') + '&action=add2sc';
+                            returnUrl = '/' + self.product.slug + '?butcher=' + urlParams.get('butcher') + '&action=add2sc&utm_medium=' + (urlParams.has("utm_medium") ? urlParams.get("utm_medium"):'');
                         }
-                        else returnUrl = '/' + self.product.slug + '?action=add2sc';
+                        else returnUrl = '/' + self.product.slug + '?action=add2sc&utm_medium=' + (urlParams.has("utm_medium") ? urlParams.get("utm_medium"):'');
                         self.selectedUnit && (returnUrl += '&selectedUnit=' + encodeURIComponent(self.selectedUnit.unit))
                         self.quantity && (returnUrl += '&quantity=' + encodeURIComponent(self.quantity))
                         self.note && (returnUrl += '&note=' + encodeURIComponent(self.note))
