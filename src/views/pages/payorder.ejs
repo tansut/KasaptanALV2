@@ -4,42 +4,6 @@
 <head>
   <% include ./_partial/head %>
 
-  <style>
-    @media print {
-    
-    
-    .d-print-w-75 {
-          width: 75% !important;
-      }
-      .d-print-w-50 {
-          width: 50% !important;
-      }
-    
-      .d-print-w-25 {
-          width: 25% !important;
-      }
-    
-      .d-print-none {
-        display: none !important
-      }
-    
-      .d-print-inline {
-        display: inline !important
-      }
-    
-      .d-print-inline-block {
-        display: inline-block !important
-      }
-    
-      .d-print-block {
-        display: block !important
-      }
-    
-  
-    
-    }
-    </style>
-
 </head>
 
 <body class="<%= controller.threeDhtml ? 'd-none':''%>">
@@ -75,7 +39,7 @@
   <div class="container mb-3 ">
 
     
-    <div>
+  
 
     
 
@@ -150,13 +114,18 @@
       
       </div>
 
+    <% } else { %>
+      <div class="border bg-secondary px-3 pt-3">
+        <h4 class="h5">Siparişin borcu yoktur</h5>
+          <p >
+            Sipariş Durumu: <strong><%=controller.order.status%></strong>
+          </p>
+          <p>
+            Sipariş bilgilerine <a href="/user/orders/<%=controller.order.ordernum%>">buradan</a> ulaşabilirsiniz.
+          </p>
+      </div>
     <% } %>
-      <% if (__req.query.print != '1') { %>
 
-
-<% } else { %>
-
-<% } %>
 
 
 

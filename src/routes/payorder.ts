@@ -73,7 +73,7 @@ export default class Route extends PaymentRouter {
                 pageDescription: pageDescription
             }
         } else {
-
+            
         }
 
         this.sendView(view, { ...pageInfo, ...{ _usrmsg: { text: userMessage } }, ...this.api.getView(this.order), ...{ enableImgContextMenu: true } });
