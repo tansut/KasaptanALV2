@@ -8,24 +8,24 @@
       </div>
       <div class="modal-body p-0">
         <div class="p-0">
-          <div class="border-bottom mb-3 p-3 alert-info">
-            <p class="mb-0 px-2 text-center font-size-sm">
+          <div class="p-3">
+            <p>
               <span class="font-weight-medium">{{title}}</span> yapmak için kasaplarımız aşağıdaki {{list.length}} alternatifi tercihinize sunmaktalar.
             </p>
           </div>
 
-          <div class="row no-gutters">
-            <div class="col-12 mb-3" v-for="item in list">
+          <div class="px-3 row">
+            <div class="col-6 col-md-6" v-for="item in list">
               <div class="card border-bottom rounded-0 product-card  h-100 ">
-                <a class=" d-flex overflow-hidden justify-content-center" :href="item.link"><img class="rounded-0" alt="" :src="item.src"
+                <a class="d-block overflow-hidden" :href="item.link"><img width="500" height="500" class="rounded-0" alt="" class="lazyload" :src="item.src"
                     :alt="item.name"></a>
-                <div class="card-body text-center">
+                <div class="card-body card-block d-flex flex-column text-center">
                   <h3 v-if="item && item.name" class="product-title font-size-md mb-1"><a :href="item.link">{{item.name}}</a>
                   </h3>
                   <p v-if="item && item.desc" class="px-2 mb-2 card-text text-muted font-size-sm ">
                     {{item.desc}}
                   </p>
-                  <a :href="item.link" class="btn btn-sm btn-dark">Satın Al</a>
+                  <a v-if="false" :href="item.link" class="btn btn-sm btn-primary">Satın Al</a>
                 </div>
       
               </div>

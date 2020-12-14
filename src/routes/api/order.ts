@@ -533,7 +533,7 @@ export default class Route extends ApiRouter {
             let fee = o.getButcherFee("butcher");
             let calc = new ComissionHelper(rate, fee);
             let totalFee = calc.calculateButcherComission(productPrice + butcherShip);
-            let max =Helper.asCurrency(totalFee.kalitteFee * 0.80);
+            let max = Helper.asCurrency(totalFee.kalitteFee * 0.80);
 
             return Math.min(user.usablePuans, max)
         } return 0.00;

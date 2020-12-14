@@ -77,6 +77,9 @@
   <% include ./_partial/footer %>
   <% include ./_partial/scripts %>
 
+  <%- include('./_partial/purchase', { returnUrl: 'blog/' + controller.content.slug }); %>
+
+
 </body>
 
 </html>
