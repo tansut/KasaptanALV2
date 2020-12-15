@@ -117,6 +117,7 @@ class Route extends router_1.ViewRouter {
         router.get("/", Route.BindRequest(this.prototype.defaultRoute));
         router.get("/adres-belirle/:slug", Route.BindRequest(this.prototype.setUserAddr));
         router.get("/hikayemiz", Route.BindToView("pages/content.kurumsal.ejs"));
+        router.get("/neden-kasaptanal", Route.BindToView("pages/content.neden-kasaptanal.ejs"));
         router.get("/iletisim", Route.BindToView("pages/content.contact.ejs"));
         router.get("/yardim", Route.BindToView("pages/content.yardim.ejs"));
         router.get("/kasap-secim-kriterleri", Route.BindToView("pages/content.kasap-secim.ejs"));

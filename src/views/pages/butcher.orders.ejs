@@ -8,7 +8,7 @@
 <body>
   <% include ./_partial/header %>
 
-  <div class="page-title-overlap bg-primary pt-4">
+  <div class="page-title py-4">
     <div class="container d-lg-flex justify-content-between py-2 py-lg-3">
       <div class="order-lg-2 mb-3 mb-lg-0 pt-lg-2">
         <nav aria-label="breadcrumb" class="d-none d-lg-block">
@@ -65,7 +65,7 @@
                 <!-- <a target="_blank" href=""><%= orders[i].name %> </a> -->
 
               <%}%>
-              <a target="_blank" href="<%= `/pay/${orders[i].ordernum}` %>"><%= orders[i].name %> </a>
+              <a target="_blank" href="<%= `/manageorder/${orders[i].ordernum}` %>"><%= orders[i].name %> </a>
 
             </td>
             <td><%= __helper.formatDate(orders[i].creationDate) %></td>

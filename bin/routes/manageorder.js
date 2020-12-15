@@ -36,6 +36,7 @@ var MarkdownIt = require('markdown-it');
 class Route extends router_1.ViewRouter {
     constructor() {
         super(...arguments);
+        this.OrderStatus = order_2.OrderItemStatus;
         this.DeliveryStatusDesc = order_2.DeliveryStatusDesc;
         this.markdown = new MarkdownIt();
         this.LocationTypeDesc = geo_1.LocationTypeDesc;

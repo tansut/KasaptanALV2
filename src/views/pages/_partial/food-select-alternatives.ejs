@@ -6,17 +6,17 @@
         <button class="close" type="button" data-dismiss="modal" aria-label="Close"><span
             aria-hidden="true">&times;</span></button>
       </div>
-      <div class="modal-body p-0">
+      <div class="modal-bod">
         <div class="p-0">
-          <div class="p-3">
-            <p>
+         
+            <p class="p-3">
               <span class="font-weight-medium">{{title}}</span> yapmak için kasaplarımız aşağıdaki {{list.length}} alternatifi tercihinize sunmaktalar.
             </p>
           </div>
 
-          <div class="px-3 row">
+          <div class="row p-3">
             <div class="col-6 col-md-6" v-for="item in list">
-              <div class="card border-bottom rounded-0 product-card  h-100 ">
+              <div class="card rounded-0 product-card  h-100 ">
                 <a class="d-block overflow-hidden" :href="item.link"><img width="500" height="500" class="rounded-0" alt="" class="lazyload" :src="item.src"
                     :alt="item.name"></a>
                 <div class="card-body card-block d-flex flex-column text-center">
@@ -32,7 +32,7 @@
             </div>
           </div>
 
-        </div>
+    
       </div>
     </div>
   </div>

@@ -5,6 +5,18 @@
   <% include ./_partial/head %>
 </head>
 
+<%
+var orderClosed = (order.status == controller.OrderStatus.success) || 
+                  (order.status == controller.OrderStatus.butcherCannotShip) || 
+                  (order.status == controller.OrderStatus.butcherCannotShip) ||
+                  (order.status == controller.OrderStatus.customerCanceled);
+
+if (orderClosed && __req.user && __req.user.hasRole('admin')) {
+  orderClosed = false;
+}
+
+%>
+
 <body>
   <% include ./_partial/header %>
   <div class="page-title py-2">
@@ -31,16 +43,17 @@
 
   <div class="container mb-3 ">
 
+<% if (order.status == controller.OrderStatus.supplying) { %>
+<div class="bg-secondary border p-3 mb-3">
+  <h4 class="h4 text-info">Müşteriniz sizden haber bekliyor</h4>
+  <p class="lead">
+    Sayfanın aşağısındaki butonları kullanarak siparişi onaylayın veya bizimle iletişime geçin.
+  </p>
+</div>
+<%}%>
 
 
 
-
-
-    <% if (controller.shouldBePaid > 0) { %>
-    <p class="mt-3 text-muted text-center">
-      <%- include('./_partial/currency.ejs', {value: controller.shouldBePaid}) %>
-    </p>
-    <%}%>
 
 
 
@@ -71,8 +84,10 @@
       <div id="orderstart" class="">
         <h3  class="h4 border-bottom">Sipariş</h3>
         <ul class="list-unstyled font-size-sm">
-          <li><span class="text-muted">Sipariş Durumu:&nbsp;</span> <%= order.status %></li>
+          <li><span class="text-muted">Sipariş Durumu:&nbsp;</span> <strong><%= order.status %></strong> </li>
+          <% if (!orderClosed) { %>
           <li><span class="text-muted">Müşteri:&nbsp;</span><%=order.name%></li>    
+          <% } %>
           <% if (order.deliveryOrderId) { %>
           <li><span class="text-muted">Kurye Planlandı:&nbsp;</span><%=order.deliveryOrderId%></li>    
 
@@ -175,6 +190,10 @@
                                     <% }) %>
 
               </div>
+
+
+              <% if (!orderClosed) { %>
+
               <h3 class="h4 border-bottom">Teslimat</h3>
               <ul class="list-unstyled font-size-sm">
                 <li><span class="text-muted">Dağıtımı
@@ -213,6 +232,8 @@
 
               </ul>
 
+              <% } %>
+              <% if (!orderClosed) { %>
               <h3 class="h4 border-bottom">
                 Mali Bilgiler
               </h3>
@@ -243,69 +264,74 @@
 
 
               </ul>
-              <h3 class="h4 border-bottom">
-                Siparişi Yönetin
-              </h3>
-              <p>
-                Aşağıdaki seçeneklerden birini <span class="font-weight-bolder">şimdi</span> kullanın.
-              </p>
-
-              <div class="">
-                <div class="mb-3">
-                  <h5 class="h6">1. Ürünler ve teslimat saati uygundur</h5>
-                  <p class="font-size-md">Sipariş verilen <span
-                      class="font-weight-bolder"><%=order.items.length%></span> kalem ürün ve <br> <span
-                      class="font-weight-bolder"><%=__helper.formatDate(order.shipmentdate)%>
-                      <%=order.shipmenthourText%></span> teslimat saati uygundur.</p>
-                  <div class="">
-
-                    <!-- <button class="btn btn-success" id="approveOrder">Evet uygun, siparişi onaylıyorum</button> -->
-                    <% if (order.dispatcherType == 'banabikurye') { %>
-                      <% if (order.deliveryOrderId) { %>
-                        <button class="btn btn-lg btn-danger" id="kuryeIptalBtn">Kurye
-                          İptal</button>
-                        <% } else { %>
-                          <button class="btn btn-success" data-toggle="modal" data-target="#kurye-modal" id="kuryeBtn">Kurye
-                            Çağır</button>
-                        <% } %>
-            
-                    <% } else { %>
-                      <button class="btn btn-lg btn-success" data-toggle="modal" data-target="#deliv-modal" id="delivBtn">Siparişi Onaylayın</button>                      
-                    <% } %>
-                  </div>
-                </div>
-
-                <div class="d-none bg-secondary mb-3">
-                  <h5 class="h6">2. Ürünler OK ancak o saate teslimat yapamam</h5>
-                  <p class="font-size-md">Sipariş verilen <span
-                      class="font-weight-bolder"><%=order.items.length%></span> kalem ürünün teslimatını planlayın.</p>
-                  <div class="">
-
-                    <!-- <button class="btn btn-success" id="approveOrder">Evet uygun, siparişi onaylıyorum</button> -->
-                    <% if (order.dispatcherType == 'banabikurye') { %>
-                      <% if (order.deliveryOrderId) { %>
-                      <% } else { %>
-                        <button class="btn btn-dark" data-toggle="modal" data-target="#kurye-modal" id="kuryeBtn">Kurye
-                          Çağır</button>
-                      <% } %>
-                 
-                    <% } else { %>
-                      <button class="btn btn-dark" data-toggle="modal" data-target="#deliv-modal" id="delivBtn">Teslimatı Planlayın</button>                      
-                    <% } %>
-                  </div>
-                </div>
-
-                <div class="mb-3">
-                  <h5 class="h6">2. Ürünler veya teslimat saatleri uygun değil mi?</h5>
+<% } %>
+              <% if (!orderClosed) { %>
+                <div class="bg-secondary border p-3">
+                  <h3 class="h4 ">
+                    Siparişi Yönetin
+                  </h3>
                   <p>
-                    Ürünler elinizde yoksa veya teslimat saatleri uygun değilse lütfen whatsapp üzerinden iletişime geçin.
+                    Aşağıdaki seçeneklerden birini <span class="font-weight-bolder">şimdi</span> kullanın.
                   </p>
-                  <button class="btn btn-danger" id="getSupport">Whatsapp destek alacağım</button>
-
+    
+                  <div class="">
+                    <div class="mb-3 bg-white p-3">
+                      <h5 class="h6">1. Ürünler ve teslimat saati uygundur</h5>
+                      <p class="font-size-md">Sipariş verilen <span
+                          class="font-weight-bolder"><%=order.items.length%></span> kalem ürün ve <br> <span
+                          class="font-weight-bolder"><%=__helper.formatDate(order.shipmentdate)%>
+                          <%=order.shipmenthourText%></span> teslimat saati uygundur.</p>
+                      <div class="">
+    
+                        <!-- <button class="btn btn-success" id="approveOrder">Evet uygun, siparişi onaylıyorum</button> -->
+                        <% if (order.dispatcherType == 'banabikurye') { %>
+                          <% if (order.deliveryOrderId) { %>
+                            <button class="btn btn-lg btn-danger" id="kuryeIptalBtn">Kurye
+                              İptal</button>
+                            <% } else { %>
+                              <button class="btn btn-success" data-toggle="modal" data-target="#kurye-modal" id="kuryeBtn">Kurye
+                                Çağır</button>
+                            <% } %>
+                
+                        <% } else { %>
+                          <button class="btn btn-lg btn-success" data-toggle="modal" data-target="#deliv-modal" id="delivBtn">Siparişi Onaylayın</button>                      
+                        <% } %>
+                      </div>
+                    </div>
+    
+                    <div class="d-none bg-secondary mb-3">
+                      <h5 class="h6">2. Ürünler OK ancak o saate teslimat yapamam</h5>
+                      <p class="font-size-md">Sipariş verilen <span
+                          class="font-weight-bolder"><%=order.items.length%></span> kalem ürünün teslimatını planlayın.</p>
+                      <div class="">
+    
+                        <!-- <button class="btn btn-success" id="approveOrder">Evet uygun, siparişi onaylıyorum</button> -->
+                        <% if (order.dispatcherType == 'banabikurye') { %>
+                          <% if (order.deliveryOrderId) { %>
+                          <% } else { %>
+                            <button class="btn btn-dark" data-toggle="modal" data-target="#kurye-modal" id="kuryeBtn">Kurye
+                              Çağır</button>
+                          <% } %>
+                     
+                        <% } else { %>
+                          <button class="btn btn-dark" data-toggle="modal" data-target="#deliv-modal" id="delivBtn">Teslimatı Planlayın</button>                      
+                        <% } %>
+                      </div>
+                    </div>
+    
+                    <div class="mb-3 bg-white p-3">
+                      <h5 class="h6">2. Ürünler veya teslimat saatleri uygun değil mi?</h5>
+                      <p>
+                        Ürünler elinizde yoksa veya teslimat saatleri uygun değilse lütfen whatsapp üzerinden iletişime geçin.
+                      </p>
+                      <button class="btn btn-lg btn-danger" id="getSupport">Whatsapp destek alacağım</button>
+    
+                    </div>
+                  </div>
                 </div>
-              </div>
 
 
+              <% } %>
 
             </div>
 

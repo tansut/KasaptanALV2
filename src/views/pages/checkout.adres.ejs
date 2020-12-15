@@ -97,7 +97,7 @@
               <div class="form-group">
                 <div class="d-flex justify-content-between">
                   <label for="address">Adres</label>
-                  <a id="getlatlong" onclick="javascript:setGeoLocation()" class="font-size-sm text-info"><i
+                  <a id="getlatlong" onclick="javascript:setGeoLocation()" class="font-size-sm"><i
                       class="czi-location mr-1"></i>Mevcut Konumumu Kullan</a>
                 </div>
 
@@ -105,15 +105,15 @@
                   id="address"><%= shopcard.address.adres %></textarea>
               </div>
             </div>
-            <div id="localaddrstart" class="col-sm-4">
+            <div id="localaddrstart" class="col-4">
               <label for="bina">Bina No</label>
               <input class="form-control" name="bina" id="bina" value="<%= shopcard.address.bina %>">
             </div>
-            <div class="col-sm-4">
+            <div class="col-4">
               <label for="bina">Kat</label>
               <input class="form-control" name="kat" id="kat" value="<%= shopcard.address.kat %>">
             </div>
-            <div class="col-sm-4">
+            <div class="col-4">
               <label for="daire">Daire No</label>
               <input class="form-control" name="daire" id="daire" value="<%= shopcard.address.daire %>">
             </div>

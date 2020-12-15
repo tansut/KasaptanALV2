@@ -42,6 +42,7 @@ var MarkdownIt = require('markdown-it')
 export default class Route extends ViewRouter {
     order: Order;
     api: OrderApi;
+    OrderStatus =  OrderItemStatus;
 
     DeliveryStatusDesc = DeliveryStatusDesc;
     _paymentProvider: CreditcardPaymentProvider

@@ -148,8 +148,8 @@
          <% if (!shopcard.items.length) { %>
       
             <div class="text-center">
-              <a class="btn btn-sm btn-primary" href="/kasap-urunleri">Alışverişe Başla<i
-                  class="czi-arrow-right ml-2 mr-n1"></i></a>
+              <a class="btn btn-lg btn-primary" href="/kasap-urunleri">Alışverişe Başla
+                  </a>
     
     
             </div>
@@ -190,7 +190,7 @@
     
         <aside class="col-lg-4">
 
-
+          <% if (shopcard.items.length > 0) { %>
           <div class="ml-lg-auto">
       
             
@@ -310,7 +310,7 @@
       <%}%>
               
           </div>
-      
+          <% } %>
       
       </aside>
       </div>
