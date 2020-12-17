@@ -32,7 +32,7 @@
 
                         
                       </h5>
-                      <div v-if="alt.butcher.locationText" class="text-muted font-size-sm mb-2 d-block">
+                      <div v-if="alt.butcher.locationText" class="text-muted font-size-sm d-block">
                         {{alt.butcher.locationText}}<span v-if="alt.dispatcher.priceInfo" >
                            , {{alt.dispatcher.priceInfo}} 
                        </span> 
@@ -63,6 +63,17 @@
                            {{alt.dispatcher.distance.toFixed(0)}} km 
                         </span>  -->
 
+                          <div v-if="alt.butcher.puanData">
+                            <span class="badge badge-success font-weight-medium">
+                              %{{alt.butcher.puanData.rate * 100 }}  Puan
+                            </span>
+                          </div>
+                        
+                     
+                    
+                       
+
+
                         <div class="font-size-sm text-dark mb-3" v-if="alt.butcher.productNote">  
                           
                           
@@ -75,7 +86,7 @@
                         <div class="d-flex w-100">
                           <div class="w-50 pr-2" v-if="alt.butcher.userRatingAsPerc > 0">
                             <div class="font-size-xs text-muted ">Memnuniyet</div>
-                            <div class="progress">
+                            <div class="progress rounded-0">
                               <div class="progress-bar font-weight-medium bg-warning" role="progressbar" :style="'width:' + alt.butcher.userRatingAsPerc + '%'" :aria-valuenow="alt.butcher.userRatingAsPerc" aria-valuemin="0" aria-valuemax="100">
                                 {{alt.butcher.userRatingAsPerc}}%
                               </div>  
@@ -83,7 +94,7 @@
                           </div>
                           <div class="w-50 " v-if="alt.butcher.shipRatingAsPerc > 0">
                             <div class="font-size-xs text-muted ">Teslimat</div>
-                            <div class="progress ">
+                            <div class="progress rounded-0">
                               <div class="progress-bar font-weight-medium bg-warning" role="progressbar" :style="'width:' + alt.butcher.shipRatingAsPerc + '%'" :aria-valuenow="alt.butcher.shipRatingAsPerc" aria-valuemin="0" aria-valuemax="100">
                                 {{alt.butcher.shipRatingAsPerc}}%
                               </div>  

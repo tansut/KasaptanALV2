@@ -12,7 +12,8 @@ import ButcherArea from './butcherarea';
 
 export enum DispatcherSelection {    
     full = 'tam',
-    listOnly = 'sadece liste'
+    listOnly = 'sadece liste',
+    onecikar = 'one cikar'
 }
 
 

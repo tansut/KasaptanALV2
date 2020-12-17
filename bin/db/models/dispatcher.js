@@ -21,6 +21,7 @@ var DispatcherSelection;
 (function (DispatcherSelection) {
     DispatcherSelection["full"] = "tam";
     DispatcherSelection["listOnly"] = "sadece liste";
+    DispatcherSelection["onecikar"] = "one cikar";
 })(DispatcherSelection = exports.DispatcherSelection || (exports.DispatcherSelection = {}));
 exports.DispatcherTypeDesc = {
     "butcher": "Kasap",

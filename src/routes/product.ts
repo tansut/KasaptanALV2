@@ -118,10 +118,12 @@ export default class Route extends ViewRouter {
     }
 
     tryBestAsRandom(serving: Dispatcher[]) {
-        let fullServing = serving.filter(s => s.selection == DispatcherSelection.full);
-        fullServing = Helper.shuffle(fullServing)
-        if (fullServing.length == 0) fullServing = serving;
-        let res = (fullServing.length > 0 ? fullServing[0] : null);
+        let fullServing = serving.filter(s => (s.selection == DispatcherSelection.full || s.selection == DispatcherSelection.onecikar));
+        let mention = fullServing.filter(s => s.selection == DispatcherSelection.onecikar);
+        let finalList = mention.length > 0 ? mention: fullServing;
+        finalList = Helper.shuffle(finalList)
+        if (finalList.length == 0) finalList = serving;
+        let res = (finalList.length > 0 ? finalList[0] : null);
         return res;
     }
 
@@ -283,6 +285,7 @@ export default class Route extends ViewRouter {
                 view.alternateButchers.push({
                     butcher: {
                         id: butcher.id,
+                        description: butcher.description,
                         enableCreditCard: butcher.enableCreditCard,
                         slug: butcher.slug,
                         badges: butcher.getBadgeList(),

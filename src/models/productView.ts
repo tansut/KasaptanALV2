@@ -49,6 +49,7 @@ export interface ProductButcherView {
     puanData: Puan;    
     locationText: string;
     earnedPuan: number;
+    description: string;
 }
 
 export interface ProductDispatcherView {

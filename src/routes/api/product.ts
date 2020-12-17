@@ -535,6 +535,7 @@ export default class Route extends ApiRouter {
                 enableCreditCard: butcher.enableCreditCard,
                 userRatingAsPerc: butcher.userRatingAsPerc,
                 shipRatingAsPerc: butcher.shipRatingAsPerc,
+                description: butcher.description,
                 slug: butcher.slug,
                 badges: butcher.getBadgeList(),
                 name: butcher.name,

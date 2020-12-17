@@ -102,11 +102,13 @@ class Route extends router_1.ViewRouter {
         });
     }
     tryBestAsRandom(serving) {
-        let fullServing = serving.filter(s => s.selection == dispatcher_2.DispatcherSelection.full);
-        fullServing = helper_1.default.shuffle(fullServing);
-        if (fullServing.length == 0)
-            fullServing = serving;
-        let res = (fullServing.length > 0 ? fullServing[0] : null);
+        let fullServing = serving.filter(s => (s.selection == dispatcher_2.DispatcherSelection.full || s.selection == dispatcher_2.DispatcherSelection.onecikar));
+        let mention = fullServing.filter(s => s.selection == dispatcher_2.DispatcherSelection.onecikar);
+        let finalList = mention.length > 0 ? mention : fullServing;
+        finalList = helper_1.default.shuffle(finalList);
+        if (finalList.length == 0)
+            finalList = serving;
+        let res = (finalList.length > 0 ? finalList[0] : null);
         return res;
     }
     useL1(product) {
@@ -238,6 +240,7 @@ class Route extends router_1.ViewRouter {
                     view.alternateButchers.push({
                         butcher: {
                             id: butcher.id,
+                            description: butcher.description,
                             enableCreditCard: butcher.enableCreditCard,
                             slug: butcher.slug,
                             badges: butcher.getBadgeList(),

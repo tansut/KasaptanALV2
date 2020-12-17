@@ -144,7 +144,7 @@
       <div class="container mb-3 row w-50 mx-auto">
         <div class="col-sm-6">
           <div class="font-size-sm  mb-1">Ürün Memnuniyeti</div>
-          <div class="progress mb-3">
+          <div class="progress rounded-0 mb-3">
             <div class="progress-bar font-weight-medium bg-warning" role="progressbar"
               style="width: <%=butcher.userRatingAsPerc %>%" aria-valuenow="<%=butcher.userRatingAsPerc %>"
               aria-valuemin="0" aria-valuemax="100">
@@ -157,7 +157,7 @@
         <div class="col-sm-6">
           <div class="font-size-sm  mb-1">Teslimat Başarısı</div>
 
-          <div class="progress mb-3">
+          <div class="progress rounded-0 mb-3">
             <div class="progress-bar font-weight-medium bg-warning" role="progressbar"
               style="width: <%=butcher.shipRatingAsPerc %>%" aria-valuenow="<%=butcher.shipRatingAsPerc %>"
               aria-valuemin="0" aria-valuemax="100">
@@ -208,7 +208,7 @@
     
                   <% if (puanData) { %>
     
-                  <div class="card">
+                  <div class="card rounded-0">
                     <div class="card-header" role="tab">
                       <h3 class="accordion-heading"><a href="#kasapkart" data-toggle="collapse"><i
                             class="font-size-lg mr-2 mt-n1 align-middle"></i>Kasap Kart&trade;<span
@@ -225,7 +225,7 @@
                   <% } %>
     
                   <%if (controller.reviews.length > 0 ) { %>
-                  <div class="card">
+                  <div class="card rounded-0">
                     <div class="card-header" role="tab">
                       <h3 class="accordion-heading"><a href="#revires" data-toggle="collapse"><i
                             class="font-size-lg mr-2 mt-n1 align-middle"></i><%='Yorumlar'%><span
@@ -283,7 +283,7 @@
     
     
     
-                  <div class="card">
+                  <div class="card rounded-0">
                     <div class="card-header" role="tab">
                       <h3 class="accordion-heading"><a href="#dispatchArea" data-toggle="collapse"><i
                             class="font-size-lg mr-2 mt-n1 align-middle"></i><%='Teslimat Bilgisi'%><span
@@ -332,7 +332,7 @@
                     </div>
                   </div>
     
-                  <div class="card">
+                  <div class="card rounded-0">
                     <div class="card-header" role="tab">
                       <h3 class="accordion-heading"><a href="#card" data-toggle="collapse"><i
                             class="font-size-lg mr-2 mt-n1 align-middle"></i><%='Hakkında'%><span
