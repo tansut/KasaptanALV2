@@ -116,6 +116,23 @@
           <h2 class="h5 opacity-60">
             <%= butcher.areaLevel3.name %>/<%= butcher.areaLevel1.name %>
           </h2>
+          <% if (puanData ) { %>
+            <div>
+            
+              <a class="mb-2 d-block" href="/blog/kasap-kart">
+                <span class="badge badge-success font-weight-medium font-size-md">
+                  %<%= puanData.rate * 100 %> Puan 
+                </span>
+              </a>
+              <p class="text-muted font-size-sm">
+               <a class="text-dark" href="/blog/kasap-kart">Kasap Kart&trade;</a> ile kârlı alışveriş
+              </p>
+             
+            </div>
+          
+       
+      
+          <% } %>
           <% if (butcher.getBadgeList().length > 0 ) { %>
           <div class="d-none butcher-badges">
 
