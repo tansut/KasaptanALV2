@@ -85,10 +85,10 @@
 
 
 
-          <div class="mb-3 pb-4 ">
+          <div class="mb-3 pb-2 ">
 
 
-            <div class="row no-gutters mb-3">
+            <div class="row no-gutters">
 
               <div class="col-lg-6 ">
                 <% if (firstImage) { %>
@@ -120,7 +120,7 @@
 
               </div>
 
-              <div id="productapp" v-cloak class="col-lg-6 px-3 ">
+              <div id="productapp" v-cloak class="col-lg-6 px-3">
                 <% if (view.butcher) {%>
                     <%- include('./_partial/butcher-alternatives.ejs', { alternates:  view.alternateButchers }) %>
                     <%}%>
@@ -133,19 +133,11 @@
                           <button class="close ml-2 mb-1" type="button" data-dismiss="toast"
                             aria-label="Close"><span aria-hidden="true">&times;</span></button>
                         </div>
-                        <div class="toast-body p-0 text-accent">
+                        <div class="toast-body">
 
                           <div v-if="newlyAddedItem" class="mb-2">
 
-                            <div class="p-2 mb-3"><a class="media align-items-center"
-                                href="/<%=view.butcher.slug%>"><img width="500" height="500" class="rounded-circle header-img"
-                                  src="<%= `${__req.helper.imgUrl('butcher-google-photos', view.butcher.slug)}` %>"
-                                  alt="<%=view.butcher.name%>">
-                                <div class="media-body pl-2">
-                                  <h3 class="h4 mb-0 mr-2"><%= view.butcher.name %></h3>
-                                  <span class="font-size-ms text-muted"></span>
-                                </div>
-                              </a></div>
+                            
 
                             <div class="text-center">
                               <div class="text-center mb-3">
@@ -181,9 +173,9 @@
                             </div>
                           </div>
 
-                          <div class="px-3 py-2">
-                            <div class="d-flex d-flex justify-content-around">
-                              <a onclick="return goBack()" class="btn btn-sm btn-primary mr-1">Alışverişe Devam &raquo;</a>
+                          <div class="">
+                            <div class="d-flex d-flex justify-content-center">
+                              <a onclick="return goBack()" class="btn btn-sm btn-primary mr-2">Alışverişe Devam</a>
 
                               <a onclick="return goShopcard()"  class="btn btn-sm btn-dark "><i
                                   class="czi-cart mr-1"></i>Sepete Git</a>
@@ -218,7 +210,7 @@
                         <% if (!__req.prefAddr) { %>
                        
   
-                        <div class="font-size-sm mb-3">
+                        <div class="bg-secondary border font-size-sm mb-2 p-3">
   
   
   
@@ -518,72 +510,18 @@
                        
 
 
-                        <h5 v-if="false && product && product.purchaseOptions.length > 1" class="h6 mb-2 text-accent">
- 
-                          Seçim yapın:
-                        </h5>
                         <input type="hidden" id="product-id" value="<%= product.id %>" />
 
-                        <div v-if="product && product.purchaseOptions.length > 1">
-                          <ul class="nav nav-pills nav-pills-dark nav-fill mb-2">
-                            <li v-for="(option, index) in product.purchaseOptions" class="nav-item h-100">
-                              <a class="nav-link h-100 shadow-none " v-bind:class="{ active: option == selectedUnit }"
-                                @click="selectedUnit = option">{{option.unitTitle}}
-                                <%if (false) { %>
-                                <span class="d-block" class="font-size-sm text-muted">
-                                  {{  formatCurrency(option.unitPrice).val}}.<small>{{formatCurrency(option.unitPrice).krs}}</small>
-                                  TL
-                                </span>
-                                <%}%>
-                                      </a>
-                                        
-                                    </li>
-                  
-                                  </ul>
-                  
-                                
-                  
-                  
-                              </div>
-                  
-                              
-                              
-                              <div v-if="selectedUnit">
-                              
-                                  <div class="md-content mb-3 " v-html="selectedUnit.desc" v-if="selectedUnit.desc">
-                                     
-                                  </div>
+                      
+                        <div class="">
+
                        
-                                  <% if (view.butcher && __req.prefAddr) { %>
-                                  <div class="d-flex  flex-nowrap justify-content-end align-items-center">
-                                    <h5 class="h6 d-none mb-2 text-accent "><i class="czi-thumb-up mr-2"></i>Şimdi satın alın</h5>
-                  
-                                    <%if (__req.query.frame != '1') { %> 
-                                    <button title="<%= __req.prefAddr ? __req.prefAddr.level3Text: 'Semtinizi Seçin' %>"
-                                @click="selectArea(null, '')" type="button" class="rounded-0 d-none btn
-                                btn-secondary btn-sm"><i class="czi-location font-size-lg "></i>
-                                      <% } else {  %>
-                                        <button title="<%= __req.prefAddr ? __req.prefAddr.level3Text: 'Semtinizi Seçin' %>"
-                                          onclick="window.parent.purchase.selectAddress('<%=product.slug%>')" type="button" class="rounded-0 d-none btn
-                                          btn-secondary btn-sm"><i class="czi-location font-size-lg "></i>
-                                        
-                              <% }%>
-
-
-                                </button>
-
-
-
-
-                        </div>
-                        <% } %>
-                        
                           <%if (view.butcher) {  %>
-                            <div class="mb-1">
-                          <div class="">
+                            <div class="mb-3">
+                         
                             <%- include('./_partial/butcher-product-panel.ejs', { butcherVideo: butcherVideo }) %>
 
-                          </div>
+                         
                         </div>
                           <%}%>
                   
@@ -595,63 +533,8 @@
                   
                                   
                    
-                        <%if (view.butcher) { %>
-
-                          <div class="bg-secondary pt-2 mb-3">
-                            <div class="mt-2 d-flex align-items-center justify-content-center mb-1">
-                              <p class="font-size-lg" v-if="selectedUnit.unit != 'kg'">Kaç <b>{{ selectedUnit.unitTitle }}</b> hazırlayalım?</p>
-                              <p class="font-size-lg" v-if="selectedUnit.unit == 'kg'"><b>Ne kadar</b> hazırlayalım?</p>
-                           
-                              
-        
-                            </div>
-        
-                           <div class="text-center" v-if="selectedUnit && selectedUnit.unitWeight">
-                            <span class="d-block text-muted font-size-xs">{{selectedUnit.unit != 'kg' ? '1 ' + selectedUnit.unit:''}} {{selectedUnit.unitWeight}}</span>
-        
-                           </div>
                   
-                           
-        
-                          <amount-input :def="quantity || selectedUnit.default" :min="selectedUnit.min"
-                          :max="selectedUnit.max" :step="selectedUnit.step" v-model="quantity"
-                          :unit="selectedUnit.unitTitle" >
-                     
-                        </amount-input>
-                        
-                            <div v-if="selectedUnit" class="p-2 d-flex justify-content-between  bg-secondary">
-                              <div v-if="puan > 0" class="text-center">
-                                <span class="text-muted font-size-sm d-block">
-                                  
-                                   Puan
-                                </span>
-    
-                                <money-view class="badge badge-success font-size-md font-weight-medium" :money="puan">
-                                </money-view>
-                              </div>
-
-                              <div class="text-center">
-                                <span class="text-muted font-size-sm d-block">
-                                  Tutar
-                                </span>
-    
-                                <money-view class="badge badge-dark font-weight-medium font-size-md" :money="price">
-                                </money-view>
-                              </div>
-
-  
-                            </div>
-                          </div>
-
-                        
-                          <%}%>  
-                  
-                                  <div v-if="selectedUnit && selectedUnit.perPerson">
-                  <p> <a @click="showCalculator(selectedUnit)"
-                  class="text-dark font-weight-medium " href="#size-chart"><i class="czi-calculator mr-1"></i>Miktar Hesaplama Aracı</a> ihtiyacınız kadar almanıza yardımcı olabilir. </p>
-                                
-                                  
-                                  </div>
+                             
                   
                                 <% if (hazirlanisResources.length) { %>
 
@@ -683,46 +566,243 @@
 
                           <% } %>
 
-                         <div class="mb-3">
+                        
                           <%- include(`./_partial/product.${product.productType}-editor.ejs`, {man: controller.ProductTypeManager}) %>
 
-                         </div>
+                      
+
                          
+                         <%if (view.butcher) { %>
+
+                          <div class="bg-white mb-2 pb-3 border">
+                            <div v-if="product && product.purchaseOptions.length > 1">
+                              <ul class="nav nav-pills nav-pills-dark nav-fill mb-2">
+                                <li v-for="(option, index) in product.purchaseOptions" class="nav-item h-100">
+                                  <a class="nav-link h-100 shadow-none " v-bind:class="{ active: option == selectedUnit }"
+                                    @click="selectedUnit = option">{{option.unitTitle}}
+                                   
+                                    <span class="d-block font-size-sm">
+                                      {{  formatCurrency(option.unitPrice).val}}.<small>{{formatCurrency(option.unitPrice).krs}}</small>
+                                      TL
+                                    </span>
+                                    
+                                          </a>
+                                            
+                                        </li>
+                      
+                                      </ul>
+                      
+                                    
+                      
+                      
+                                  </div>
+                      
+                                  
+                                  
+                                  <div v-if="selectedUnit" class="px-3">
+                                  
+                                      <div class="md-content mb-3 mt-3" v-html="selectedUnit.desc" v-if="selectedUnit.desc">
+                                         
+                                      </div>
+                           
+                                      <% if (view.butcher && __req.prefAddr) { %>
+                                      <div class="d-flex  flex-nowrap justify-content-end align-items-center">
+                                        <h5 class="h6 d-none mb-2 text-accent "><i class="czi-thumb-up mr-2"></i>Şimdi satın alın</h5>
+                      
+                                        <%if (__req.query.frame != '1') { %> 
+                                        <button title="<%= __req.prefAddr ? __req.prefAddr.level3Text: 'Semtinizi Seçin' %>"
+                                    @click="selectArea(null, '')" type="button" class="rounded-0 d-none btn
+                                    btn-secondary btn-sm"><i class="czi-location font-size-lg "></i>
+                                          <% } else {  %>
+                                            <button title="<%= __req.prefAddr ? __req.prefAddr.level3Text: 'Semtinizi Seçin' %>"
+                                              onclick="window.parent.purchase.selectAddress('<%=product.slug%>')" type="button" class="rounded-0 d-none btn
+                                              btn-secondary btn-sm"><i class="czi-location font-size-lg "></i>
+                                            
+                                  <% }%>
+    
+    
+                                    </button>
+    
+    
+    
+                            </div>
+                                  </div>
+                            <% } %>
+                            <div class="mt-2 d-flex align-items-center justify-content-center mb-1">
+                              <p class="font-size-lg" v-if="selectedUnit.unit != 'kg'">Kaç <b>{{ selectedUnit.unitTitle }}</b> hazırlayalım?</p>
+                              <p class="font-size-lg" v-if="selectedUnit.unit == 'kg'"><b>Ne kadar</b> hazırlayalım?</p>
+                           
+                              
+                      
+                            </div>
+                      
+                           <div class="text-center" v-if="selectedUnit && selectedUnit.unitWeight">
+                            <span class="d-block text-muted font-size-xs">{{selectedUnit.unit != 'kg' ? '1 ' + selectedUnit.unit:''}} {{selectedUnit.unitWeight}}</span>
+                      
+                           </div>
+                      
+                           
+                      
+                          <amount-input :def="quantity || selectedUnit.default" :min="selectedUnit.min"
+                          :max="selectedUnit.max" :step="selectedUnit.step" v-model="quantity"
+                          :unit="selectedUnit.unitTitle" >
+                      
+                        </amount-input>
+                        
+                            <div v-if="selectedUnit" class="px-3 d-flex justify-content-between">
+                              <div v-if="puan > 0" class="text-center">
+                                <span class="text-muted font-size-sm d-block">
+                                  
+                                   Puan
+                                </span>
+                      
+                                <money-view class="badge badge-success font-size-md font-weight-medium" :money="puan">
+                                </money-view>
+                              </div>
+                      
+                              <div class="text-center">
+                                <span class="text-muted font-size-sm d-block">
+                                  Tutar
+                                </span>
+                      
+                                <money-view class="badge badge-dark font-weight-medium font-size-md" :money="price">
+                                </money-view>
+                              </div>
+                      
+                      
+                            </div>
+                          </div>
+                      
+                        
+                          <div class="font-size-sm" v-if="selectedUnit && selectedUnit.perPerson">
+                            <p> <a @click="showCalculator(selectedUnit)"
+                            class="text-dark font-weight-medium" href="#size-chart"><i class="czi-calculator mr-1"></i>Miktar Hesaplama Aracı</a> ihtiyacınız kadar almanıza yardımcı olabilir. </p>
+                                          
+                                            
+                                            </div>
+
+                          <%}%>  
+
+
+
+
+
+                        <% if (view.butcher && __req.prefAddr) { %>
+
 
                           <div class="form-group">
                             
 
-                            </label>
-                            <textarea v-model="note" maxlength="250"
-                              :placeholder="(selectedUnit && selectedUnit.notePlaceholder) || (product && product.notePlaceholder) || 'İletmek istediğiniz notunuz varsa burayı kullanabilirsiniz.'"
-                              class="form-control font-size-sm" rows="3" name="note" id="note">
+                          </label>
+                          <textarea v-model="note" maxlength="250"
+                            :placeholder="(selectedUnit && selectedUnit.notePlaceholder) || (product && product.notePlaceholder) || 'İletmek istediğiniz notunuz varsa burayı kullanabilirsiniz.'"
+                            class="form-control font-size-sm" rows="3" name="note" id="note">
 
-                                                                    <%=view.note%>
-                                                                </textarea>
+                                                                  <%=view.note%>
+                                                              </textarea>
+                        </div>
+
+                          <div class=" mb-3 pb-3">
+                            <button data-tag="true" data-category="shopcard/add" data-action="<%=view.butcher.slug%>"
+                              data-label="<%=product.slug%>" id="addtoscbtn" class="btn btn-primary btn-block"
+                              type="submit"><i
+                                class="czi-cart font-size-lg mr-2"></i><%= controller.shopCardIndex >= 0 ? 'Sepeti Güncelle': 'Sepete Ekle' %></button>
                           </div>
 
+                     
 
+                        <% } else { %>
+                          
 
-
-                          <% if (view.butcher && __req.prefAddr) { %>
-
-                          <button data-tag="true" data-category="shopcard/add" data-action="<%=view.butcher.slug%>"
-                            data-label="<%=product.slug%>" id="addtoscbtn" class="btn btn-primary btn-block"
-                            type="submit"><i
-                              class="czi-cart font-size-lg mr-2"></i><%= controller.shopCardIndex >= 0 ? 'Sepeti Güncelle': 'Sepete Ekle' %></button>
-
-                          <% } else { %>
-                            
-  
+                         
+                        <% } %>
+                      
+                        <% if ( view.alternateButchers.length && controller.showOtherButchers()) { %>
+                          <div class="pb-3">
+                            <% let alt2Show = 2 %>
+                      
+                            <div>
+                              <p class="font-size-sm mb-1">Diğer Kasaplar 
+                      
+                      
+                                <% if (view.alternateButchers.length > alt2Show) { %>
+                                 - 
+                                    <a class="text-dark font-weight-bold" href="javascript:showOtherButchers()"><span>Tümü (</span><span class="text-primary"><%=otherButcherAlternatives %></span><span>)</span></a>
+                      
+                                 
+                                <% } %>
+                      
+                                </p>
+                            </div>
                            
-                          <% } %>
+                              <div class="font-size-sm px-2 rounded-lg border bg-white">
+                      
+                                <div v-if="product">
+                                  <div v-for="(alt, index) in product.alternateButchers.slice(0, <%=alt2Show%>)" class=" border-bottom py-2">
+                                    <a class="media align-items-start flex-grow-1" :data-butcher="alt.butcher.slug" href="#newbutcher" @click="selectNewButcher(alt.butcher)">
+                                     
+                                       <img class="w-25"
+                                          :src="alt.butcher.thumbnail" :alt="alt.butcher.name">
+                      
+                                    
+                      
+                                      
+                                      <div class="media-body pl-2">
+                                        <h6 class="h6  mb-0">{{alt.butcher.name}}
+                      
+                                          
+                                        </h5>
+                                        <div v-if="alt.butcher.locationText" class="text-muted font-size-xs d-block">
+                                          {{alt.butcher.locationText}}<span v-if="alt.dispatcher.priceInfo" >
+                                             , {{alt.dispatcher.priceInfo}} 
+                                         </span> 
+                      
+                                        </div>
+                                        
+                                        
+                                          <money-view v-if="!alt.butcher.kgPrice && selectedUnitForAlternate(alt.butcher)" :unit="selectedUnitForAlternate(alt.butcher).unitTitle" 
+                                          
+                                          class="font-size-md text-dark" :money="selectedUnitForAlternate(alt.butcher).unitPrice"></money-view>
+                                          <money-view v-else unit="Kg" 
+                                          
+                                          class="font-size-md text-dark" :money="alt.butcher.kgPrice"></money-view>
+                            
+                                       
+                                         
+                                            <div class="mb-2" v-if="alt.butcher.puanData">
+                                              <span class="badge badge-success font-weight-medium">
+                                                %{{alt.butcher.puanData.rate * 100 }}  Puan
+                                              </span>
+                                            </div>
+                                          
+                                       
+                                            <div class="font-size-sm font-italic text-dark" v-if="alt.butcher.productNote" v-html="alt.butcher.productNote">                            
+                       
+                                            </div>   
+                                         
+                      
+                      
+                                
+                      
+                      
+                                      </div>
+                                    </a></div> 
+                                </div>
+                      
+                      
+                      
+                           
+                          </div>
+                         <% } %>
+
+                      
 
 
                         </div>
 
 
 
-                       
+                        </div>
                   
                                   </form>
                          

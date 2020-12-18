@@ -1,6 +1,6 @@
 
 
-<div class="bg-secondary">
+<div class="mb-3">
                    
 
                    
@@ -28,7 +28,7 @@ class="gallery-item-caption"><%= butcherVideo.title %></span></a>
     <img class="w-25 gallery-item"
     src="<%= `${__req.helper.imgUrl('butcher-google-photos', view.butcher.slug)}` %>" alt="<%=view.butcher.name%>">
  <% } %>
-      <div class="media-body   p-2">
+      <div class="media-body px-2">
         <h4 class="h5 mb-0 mr-2"><%= view.butcher.name %></h4>
           
           <% if (view.butcher.locationText) { %>
@@ -49,21 +49,7 @@ class="gallery-item-caption"><%= butcherVideo.title %></span></a>
 
           </span>
           <% } %>
-          <!-- <% if (view.butcher.badges.length > 0 ) { %>
-            <div class="butcher-badges mb-1">
-          
-            
-          <% view.butcher.badges.forEach(b=> {  %>
-            <span class="badge border badge-secondary   font-size-xs" data-toggle="tooltip" data-original-title="<%=b.tip%>"  title="">
-              <%if (b.icon) { %>
-              <i class="<%= b.icon || '' %> mr-1"></i>
-              <%}%>
-              <%=b.name%>
-          
-            </span>
-          <% }) %>
-          </div>
-          <% } %> -->
+        
 
           <% if (false) { %>
             <div class="font-size-sm mt-3">
@@ -99,15 +85,10 @@ class="gallery-item-caption"><%= butcherVideo.title %></span></a>
                      
   </div>
 
-  <!-- <div>
-    <span class="h4 font-weight-normal text-dark mr-1">
-      <%- include('./currency.ejs', {value: view.viewUnitPrice, unit: view.viewUnit}) %>
-    </span>
-  </div> -->
 
     <% if (view.butcherNote) { %>
-      <div class="font-size-sm border shadow p-3 mx-2 mb-3">
-        <span class="font-size-sm font-weight-medium mb-1">Kasaptan Detaylı Açıklama</span> 
+      <div class="font-size-sm border pt-3 bg-white">
+      
         <div class="font-italic">
           
           <%- controller.markdown.render(view.butcherNote) %>
@@ -124,7 +105,7 @@ class="gallery-item-caption"><%= butcherVideo.title %></span></a>
 
     
     
-    <div class="pt-3 px-3 row mb-3">
+    <div class="pt-3 row mb-1">
       <% if (view.butcher.userRatingAsPerc > 0 ) { %>
         <div class="col">
           <div class="font-size-xs text-muted ">Ürün Memnuniyeti</div>
@@ -152,7 +133,7 @@ class="gallery-item-caption"><%= butcherVideo.title %></span></a>
     </div>
 
     <%  if (view.dispatcher && view.dispatcher.priceSlice) { %>
-      <div class="accordion mb-3 mx-3" id="teslimat-info-panel" role="tablist">
+      <div class="accordion pb-2 " id="teslimat-info-panel" role="tablist">
 
         <div class="card rounded-0">
           <div class="card-header py-0" role="tab">
@@ -183,10 +164,7 @@ class="gallery-item-caption"><%= butcherVideo.title %></span></a>
             </div>
           </div>
         </div>
-       
 
-
-    </div>
 
 
       <% }  %>
@@ -210,7 +188,11 @@ class="gallery-item-caption"><%= butcherVideo.title %></span></a>
 
 
 
-  <%if (otherButcherAlternatives && (controller.showOtherButchers())) {%>
+
+</div>
+
+
+  <%if (false && otherButcherAlternatives && (controller.showOtherButchers())) {%>
     <div class="d-flex px-3 align-items-center justify-content-between mt-2 ">
 
         <p  class="mb-1 text-dark font-weight-medium font-size-sm ">

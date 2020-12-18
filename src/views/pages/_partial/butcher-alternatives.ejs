@@ -63,7 +63,7 @@
                            {{alt.dispatcher.distance.toFixed(0)}} km 
                         </span>  -->
 
-                          <div v-if="alt.butcher.puanData">
+                          <div class="mb-2" v-if="alt.butcher.puanData">
                             <span class="badge badge-success font-weight-medium">
                               %{{alt.butcher.puanData.rate * 100 }}  Puan
                             </span>
@@ -74,13 +74,9 @@
                        
 
 
-                        <div class="font-size-sm text-dark mb-3" v-if="alt.butcher.productNote">  
-                          
-                          
-                          <div v-html="alt.butcher.productNote" class="font-italic">                            
+                          <div class="font-size-sm font-italic text-dark mb-1" v-if="alt.butcher.productNote" v-html="alt.butcher.productNote">                            
                        
-                          </div>                          
-                        </div>
+                          </div>   
 
 
                         <div class="d-flex w-100">

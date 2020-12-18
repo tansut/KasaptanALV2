@@ -46,14 +46,7 @@ if (orderClosed && __req.user && __req.user.hasRole('admin')) {
 
   <div class="container mb-3 ">
 
-<% if (order.status == controller.OrderStatus.supplying) { %>
-<div class="bg-secondary border p-3 mb-3">
-  <h4 class="h4 text-info">Müşteriniz sizden haber bekliyor</h4>
-  <p class="lead">
-    Sayfanın aşağısındaki butonları kullanarak siparişi onaylayın veya bizimle iletişime geçin.
-  </p>
-</div>
-<%}%>
+
 
 
 
@@ -268,13 +261,22 @@ if (orderClosed && __req.user && __req.user.hasRole('admin')) {
 
               </ul>
 <% } %>
+
+
+
               <% if (!orderClosed) { %>
                 <div class="bg-secondary border p-3">
                   <h3 class="h4 ">
                     Siparişi Yönetin
                   </h3>
+                  <% if (order.status == controller.OrderStatus.supplying) { %>
+                    <div class="bg-light border p-3 mb-3">
+                      <h4 class="h4 text-info">Müşteriniz sizden haber bekliyor</h4>
+                    
+                    </div>
+                    <%}%>
                   <p>
-                    Aşağıdaki seçeneklerden birini <span class="font-weight-bolder">şimdi</span> kullanın.
+                    Aşağıdaki seçeneklerden birini <span class="font-weight-bolder">ŞİMDİ</span> kullanın.
                   </p>
     
                   <div class="">
