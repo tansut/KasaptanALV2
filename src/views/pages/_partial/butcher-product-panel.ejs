@@ -85,9 +85,22 @@ class="gallery-item-caption"><%= butcherVideo.title %></span></a>
                      
   </div>
 
+  <%if (otherButcherAlternatives && (controller.showOtherButchers())) {%>
+    <div class="d-flex align-items-center justify-content-between  ">
+
+        <span  class=" text-dark font-weight-medium font-size-sm ">
+            
+        
+         
+        </span> 
+        
+      <a class="text-dark font-size-sm mb-3 font-weight-medium" href="javascript:App.scrollToAnchor('#other-butchers-panel')"><span>Diğer Kasaplar</span></a>
+      
+    </div>
+    <%}%>
 
     <% if (view.butcherNote) { %>
-      <div class="font-size-sm border pt-3 bg-white">
+      <div class="font-size-sm border px-3 pt-3 mb-3 bg-secondary">
       
         <div class="font-italic">
           
@@ -105,7 +118,7 @@ class="gallery-item-caption"><%= butcherVideo.title %></span></a>
 
     
     
-    <div class="pt-3 row mb-1">
+    <div class=" row mb-1">
       <% if (view.butcher.userRatingAsPerc > 0 ) { %>
         <div class="col">
           <div class="font-size-xs text-muted ">Ürün Memnuniyeti</div>
@@ -150,7 +163,7 @@ class="gallery-item-caption"><%= butcherVideo.title %></span></a>
           </div>
 
         </div>
-
+<% if (view.butcher.description) { %>
         <div class="card rounded-0">
   
           <div class="card-header" role="tab">
@@ -165,7 +178,7 @@ class="gallery-item-caption"><%= butcherVideo.title %></span></a>
           </div>
         </div>
 
-
+<% } %>
 
       <% }  %>
 
@@ -192,20 +205,7 @@ class="gallery-item-caption"><%= butcherVideo.title %></span></a>
 </div>
 
 
-  <%if (false && otherButcherAlternatives && (controller.showOtherButchers())) {%>
-    <div class="d-flex px-3 align-items-center justify-content-between mt-2 ">
 
-        <p  class="mb-1 text-dark font-weight-medium font-size-sm ">
-             <!-- {{  formatCurrency(selectedUnit.unitPrice).val}}.<small>{{formatCurrency(selectedUnit.unitPrice).krs}}</small> TL/{{selectedUnit.unitTitle}}  -->
-            
-        
-         
-        </p> 
-        
-      <p class="mb-2 font-size-sm"><a class="text-dark font-weight-medium" href="javascript:showOtherButchers()"><span>Diğer kasaplar (</span><span class="text-primary"><%=otherButcherAlternatives %></span><span>)</span></a> </p> 
-      
-    </div>
-    <%}%>
     
   </div>
 

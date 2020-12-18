@@ -120,7 +120,7 @@
 
               </div>
 
-              <div id="productapp" v-cloak class="col-lg-6 px-3">
+              <div id="productapp" v-cloak class="col-lg-6 px-3 ">
                 <% if (view.butcher) {%>
                     <%- include('./_partial/butcher-alternatives.ejs', { alternates:  view.alternateButchers }) %>
                     <%}%>
@@ -210,7 +210,7 @@
                         <% if (!__req.prefAddr) { %>
                        
   
-                        <div class="bg-secondary border font-size-sm mb-2 p-3">
+                        <div class="bg-white border font-size-sm mb-2 p-3">
   
   
   
@@ -284,8 +284,8 @@
   
                         </div>
                         <%} else { %>
-                        <div class="bg-secondary border p-3  mb-2"
-                          role="alert">
+                        <div class="bg-white border p-3  mb-2"
+                          >
   
   
   
@@ -368,13 +368,13 @@
          
   
                           <div class="d-flex justify-content-center">
-                            <a class="btn  btn-primary mr-2" onclick="return goBack()" >Alışverişe Devam &raquo;</a>
+                            <a class="btn  btn-primary mr-2 btn-sm" onclick="return goBack()" >Alışverişe Devam</a>
   
                             <% if (__req.query.frame != '1') { %>
-                              <button @click="selectArea(null)" type="button" class="btn mr-2 btn-primary "><i
+                              <button @click="selectArea(null)" type="button" class="btn btn-sm mr-2 btn-primary "><i
                                   class="czi-location mr-2 "></i>Semt Seç</button>
                               <% } else { %>
-                                <button onclick="window.parent.purchase.selectAddress('<%=product.slug%>')" type="button" class="btn mr-2 btn-primary "><i
+                                <button onclick="window.parent.purchase.selectAddress('<%=product.slug%>')" type="button" class="btn btn-sm mr-2 btn-primary "><i
                                   class="czi-location mr-2 "></i>Semt Seç</button>
                               <% } %>
   
@@ -394,8 +394,9 @@
 
 
                       <% if (product.featuresText) { %>
+                        
                       <% var notes = product.featuresText.split('\n') %>
-                      <div class="border-bottom mb-3  ">
+                      <div class=" border-bottom mb-3  ">
                         <ul class="list-unstyled mb-2">
                           <%notes.forEach((note, i) => { %>
                           <li><i class="czi-check-circle text-primary mr-1"></i> <%=note%></li>
@@ -416,7 +417,7 @@
 
 
 
-                          <h5 class="h6 mb-2 text-dark "></i>Yardımcı videolar</h5>
+                          <h5 class="h6 mb-2 font-size-sm text-dark "></i>Yardımcı videolar</h5>
 
 
 
@@ -458,7 +459,7 @@
                           <a href="#tarifVideos">
 
 
-                            <h5 class="h6 mb-2 text-dark ">Bu yemekler için ideal</h5>
+                            <h5 class="h6 font-size-sm mb-2 text-dark ">Bu yemekler için ideal</h5>
 
 
 
@@ -566,8 +567,10 @@
 
                           <% } %>
 
-                        
+                        <div class="mb-3">
                           <%- include(`./_partial/product.${product.productType}-editor.ejs`, {man: controller.ProductTypeManager}) %>
+
+                        </div>
 
                       
 
@@ -601,7 +604,7 @@
                                   
                                   <div v-if="selectedUnit" class="px-3">
                                   
-                                      <div class="md-content mb-3 mt-3" v-html="selectedUnit.desc" v-if="selectedUnit.desc">
+                                      <div class="md-content mb-3 mt-3 border-bottom" v-html="selectedUnit.desc" v-if="selectedUnit.desc">
                                          
                                       </div>
                            
@@ -628,28 +631,34 @@
                             </div>
                                   </div>
                             <% } %>
-                            <div class="mt-2 d-flex align-items-center justify-content-center mb-1">
+                        
+                      
+                        
+                      
+                           
+                            <div class="mt-2 d-flex align-items-center justify-content-center">
                               <p class="font-size-lg" v-if="selectedUnit.unit != 'kg'">Kaç <b>{{ selectedUnit.unitTitle }}</b> hazırlayalım?</p>
                               <p class="font-size-lg" v-if="selectedUnit.unit == 'kg'"><b>Ne kadar</b> hazırlayalım?</p>
                            
                               
                       
                             </div>
-                      
-                           <div class="text-center" v-if="selectedUnit && selectedUnit.unitWeight">
-                            <span class="d-block text-muted font-size-xs">{{selectedUnit.unit != 'kg' ? '1 ' + selectedUnit.unit:''}} {{selectedUnit.unitWeight}}</span>
-                      
-                           </div>
-                      
-                           
-                      
-                          <amount-input :def="quantity || selectedUnit.default" :min="selectedUnit.min"
+
+                          <amount-input class="mb-2 font-size-md" :def="quantity || selectedUnit.default" :min="selectedUnit.min"
                           :max="selectedUnit.max" :step="selectedUnit.step" v-model="quantity"
                           :unit="selectedUnit.unitTitle" >
                       
                         </amount-input>
-                        
-                            <div v-if="selectedUnit" class="px-3 d-flex justify-content-between">
+                        <div class="text-center mb-3" v-if="selectedUnit && selectedUnit.unitWeight">
+                          <span class="d-block text-muted font-size-sm">{{selectedUnit.unit != 'kg' ? '1 ' + selectedUnit.unit:''}} {{selectedUnit.unitWeight}}</span>
+                    
+                         </div>
+
+                     
+
+
+
+                            <div v-if="selectedUnit" class="px-3 mb-3 d-flex justify-content-between">
                               <div v-if="puan > 0" class="text-center">
                                 <span class="text-muted font-size-sm d-block">
                                   
@@ -671,6 +680,33 @@
                       
                       
                             </div>
+
+                            <% if (view.butcher && __req.prefAddr) { %>
+
+
+                              <div class="form-group px-3">
+                                
+    
+                              </label>
+                              <textarea v-model="note" maxlength="250"
+                                :placeholder="(selectedUnit && selectedUnit.notePlaceholder) || (product && product.notePlaceholder) || 'İletmek istediğiniz notunuz varsa burayı kullanabilirsiniz.'"
+                                class="form-control font-size-sm" rows="4" name="note" id="note">
+    
+                                                                      <%=view.note%>
+                                                                  </textarea>
+                            </div>
+    
+                          
+                            <div class="px-3">
+                              <button data-tag="true" data-category="shopcard/add" data-action="<%=view.butcher.slug%>"
+                                data-label="<%=product.slug%>" id="addtoscbtn" class="btn btn-primary btn-block"
+                                type="submit"><i
+                                  class="czi-cart font-size-lg mr-2"></i><%= controller.shopCardIndex >= 0 ? 'Sepeti Güncelle': 'Sepete Ekle' %></button>
+                            </div>
+                         
+    
+                            <% } %>
+
                           </div>
                       
                         
@@ -685,43 +721,15 @@
 
 
 
-
-
-                        <% if (view.butcher && __req.prefAddr) { %>
-
-
-                          <div class="form-group">
-                            
-
-                          </label>
-                          <textarea v-model="note" maxlength="250"
-                            :placeholder="(selectedUnit && selectedUnit.notePlaceholder) || (product && product.notePlaceholder) || 'İletmek istediğiniz notunuz varsa burayı kullanabilirsiniz.'"
-                            class="form-control font-size-sm" rows="3" name="note" id="note">
-
-                                                                  <%=view.note%>
-                                                              </textarea>
-                        </div>
-
-                          <div class=" mb-3 pb-3">
-                            <button data-tag="true" data-category="shopcard/add" data-action="<%=view.butcher.slug%>"
-                              data-label="<%=product.slug%>" id="addtoscbtn" class="btn btn-primary btn-block"
-                              type="submit"><i
-                                class="czi-cart font-size-lg mr-2"></i><%= controller.shopCardIndex >= 0 ? 'Sepeti Güncelle': 'Sepete Ekle' %></button>
-                          </div>
-
-                     
-
-                        <% } else { %>
-                          
-
                          
-                        <% } %>
+
+                    
                       
                         <% if ( view.alternateButchers.length && controller.showOtherButchers()) { %>
                           <div class="pb-3">
                             <% let alt2Show = 2 %>
                       
-                            <div>
+                            <div id="other-butchers-panel">
                               <p class="font-size-sm mb-1">Diğer Kasaplar 
                       
                       
@@ -735,7 +743,7 @@
                                 </p>
                             </div>
                            
-                              <div class="font-size-sm px-2 rounded-lg border bg-white">
+                              <div class="font-size-sm px-2 border bg-white">
                       
                                 <div v-if="product">
                                   <div v-for="(alt, index) in product.alternateButchers.slice(0, <%=alt2Show%>)" class=" border-bottom py-2">
@@ -781,7 +789,29 @@
                                             </div>   
                                          
                       
-                      
+                                            <div class="d-flex w-100">
+                                              <div class="w-50 pr-2" v-if="alt.butcher.userRatingAsPerc > 0">
+                                                <div class="font-size-xs text-muted ">Memnuniyet</div>
+                                                <div class="progress rounded-0">
+                                                  <div class="progress-bar font-weight-medium bg-warning" role="progressbar" :style="'width:' + alt.butcher.userRatingAsPerc + '%'" :aria-valuenow="alt.butcher.userRatingAsPerc" aria-valuemin="0" aria-valuemax="100">
+                                                    {{alt.butcher.userRatingAsPerc}}%
+                                                  </div>  
+                                                </div>
+                                              </div>
+                                              <div class="w-50 " v-if="alt.butcher.shipRatingAsPerc > 0">
+                                                <div class="font-size-xs text-muted ">Teslimat Başarısı</div>
+                                                <div class="progress rounded-0">
+                                                  <div class="progress-bar font-weight-medium bg-warning" role="progressbar" :style="'width:' + alt.butcher.shipRatingAsPerc + '%'" :aria-valuenow="alt.butcher.shipRatingAsPerc" aria-valuemin="0" aria-valuemax="100">
+                                                    {{alt.butcher.shipRatingAsPerc}}%
+                                                  </div>  
+                                                </div>
+                                              </div>
+                                             
+                                        
+                                             
+                    
+                                             
+                                            </div>
                                 
                       
                       
