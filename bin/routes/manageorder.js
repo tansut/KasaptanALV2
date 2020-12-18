@@ -337,6 +337,25 @@ class Route extends router_1.ViewRouter {
         }
         return res;
     }
+    printViewRoute() {
+        return __awaiter(this, void 0, void 0, function* () {
+            yield this.getOrder();
+            if (!this.order)
+                return this.next();
+            yield this.getOrderSummary();
+            let pageInfo = {};
+            let pageTitle = '', pageDescription = '';
+            pageTitle = `${this.order.butcherName} ${helper_1.default.formatDate(this.order.creationDate)} tarihli sipariş`;
+            pageDescription = `KasaptanAl.com Siparişi`;
+            let pageThumbnail = this.req.helper.imgUrl('butcher-google-photos', this.order.butcher.slug);
+            pageInfo = {
+                pageTitle: pageTitle,
+                pageDescription: pageDescription,
+                pageThumbnail: pageThumbnail
+            };
+            this.sendView("pages/printorder.ejs", Object.assign(Object.assign(Object.assign({}, pageInfo), this.api.getView(this.order)), { enableImgContextMenu: true }));
+        });
+    }
     orderViewRoute() {
         return __awaiter(this, void 0, void 0, function* () {
             yield this.getOrder();
@@ -358,8 +377,15 @@ class Route extends router_1.ViewRouter {
     }
     static SetRoutes(router) {
         router.get('/manageorder/:ordernum', Route.BindRequest(Route.prototype.orderViewRoute));
+        router.get('/printorder/:ordernum', Route.BindRequest(Route.prototype.printViewRoute));
     }
 }
+__decorate([
+    common_1.Auth.Anonymous(),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", []),
+    __metadata("design:returntype", Promise)
+], Route.prototype, "printViewRoute", null);
 __decorate([
     common_1.Auth.Anonymous(),
     __metadata("design:type", Function),

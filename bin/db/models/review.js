@@ -88,6 +88,19 @@ __decorate([
 ], Review.prototype, "content", void 0);
 __decorate([
     sequelize_typescript_1.Column({
+        allowNull: true
+    }),
+    __metadata("design:type", String)
+], Review.prototype, "replyDisplayUser", void 0);
+__decorate([
+    sequelize_typescript_1.Column({
+        allowNull: true,
+        type: sequelize_typescript_1.DataType.TEXT
+    }),
+    __metadata("design:type", String)
+], Review.prototype, "replyContent", void 0);
+__decorate([
+    sequelize_typescript_1.Column({
         allowNull: true,
         type: sequelize_typescript_1.DataType.DECIMAL(5, 2)
     }),

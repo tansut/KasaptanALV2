@@ -230,6 +230,26 @@ class Route extends router_1.ViewRouter {
                 yield review.save();
                 userMessage = "Yorum eklendi";
             }
+            if (this.req.body.addreplycomment) {
+                let comment = this.req.body.replycomment;
+                let puan = helper_1.default.parseFloat(this.req.body.commentpuan);
+                let review = yield review_1.default.findOne({
+                    where: {
+                        userId: this.order.userId,
+                        type: 'order',
+                        ref1: this.order.id
+                    }
+                });
+                if (review == null) {
+                    userMessage = "Yorum yok";
+                }
+                else {
+                    review.replyContent = comment;
+                    review.replyDisplayUser = this.order.butcherName;
+                }
+                yield review.save();
+                userMessage = "Yorum cevap eklendi";
+            }
             //
             yield this.getOrder();
             yield this.getOrderSummary();

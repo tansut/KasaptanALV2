@@ -284,6 +284,35 @@
                           <p class="font-size-md mb-2">
                             <%= r.content %>
                           </p>
+                          <% if (r.settings && r.settings.products) { %>
+                            <span class="d-block mb-1 font-weight-medium font-size-xs">
+                              Sipariş verilen ürünler:
+                            </span>
+
+
+                            <% r.settings.products.forEach(p => { %>
+
+                            <a class="mr-2 font-size-xs" href="/<%=p.slug%>?butcher=<%=butcher.slug%>"><i
+                                class="mr-1 czi-check-circle"></i><%=p.name%></a>
+
+
+
+
+                            <% })%>
+
+
+                            <% } %>
+                            <% if (r.replyContent) { %>
+                              <div class="font-size-sm text-dark mt-2 bg-secondary p-3 mt-3">
+                                <% if (r.replyDisplayUser) { %>
+                                  <span class="d-block font-weight-bold"><%=r.replyDisplayUser%></span> 
+                                <% } %>
+                                
+                                <%- controller.markdown.render(r.replyContent) %>
+                              </div>
+                  
+                            <% } %>
+                          
                         </div>
                         <% }) %>
     

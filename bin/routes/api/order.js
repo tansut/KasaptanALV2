@@ -822,7 +822,7 @@ class Route extends router_1.ApiRouter {
             let puans = yield this.getEarnedPuans(o);
             let total = puans.alacak - puans.borc;
             if (total > 0.00) {
-                let text = `Tebrikler ${o.name}! KasaptanAl.com tercihiniz size ${helper_1.default.formattedCurrency(total)} puan kazandirdi. Bir sonraki siparisinizde kullanmayi unutmayin`;
+                let text = `Tebrikler! KasaptanAl.com tercihiniz size ${helper_1.default.formattedCurrency(total)} puan kazandirdi. Bir sonraki siparisinizde kullanmayi unutmayin`;
                 sms_1.Sms.send(o.phone, text, false, new sitelog_1.default(this.constructorParams));
             }
         });
@@ -1065,9 +1065,7 @@ class Route extends router_1.ApiRouter {
                     sms_1.Sms.send(notifyMobilePhones[p].trim(), text, false, new sitelog_1.default(this.constructorParams));
                 }
             }
-            let customerText = order.dispatcherType == 'banabikurye' ?
-                `Siparisiniz için ${order.butcherName} teslimat planlamasi yapti: ${order.shipmentStartText}. Bilgi için ${viewUrl}` :
-                `Siparisiniz için ${order.butcherName} teslimat planlamasi yapti: ${order.shipmentStartText}. Teslimat bilgi kasap tel: ${order.butcher.phone}, diger konular KasaptanAl.com whatsapp: 0850 305 4216`;
+            let customerText = `KasaptanAl.com siparisiniz icin ${order.butcherName} teslimat planlamasi yapti: ${order.shipmentStartText}. Kasap tel: ${order.butcher.phone}`;
             yield sms_1.Sms.send(order.phone, customerText, false, new sitelog_1.default(this.constructorParams));
             email_1.default.send(order.email, `KasaptanAl.com ${order.butcherName} siparişiniz teslimat bilgisi`, "order.planed.ejs", this.getView(order));
         });

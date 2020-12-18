@@ -49,7 +49,7 @@ export default class Route extends ApiRouter {
     async loadReviews(productid: number, butcherid: number) {
         let res: Review[] = await Review.sequelize.query(`
         SELECT r.* FROM Reviews r, Orders o, OrderItems oi 
-        WHERE r.type='order' and oi.status='teslim edildi' and r.ref1=o.id and oi.orderid = o.id and oi.productid=:pid
+        WHERE r.type='order'  and r.ref1=o.id and oi.orderid = o.id and oi.productid=:pid
         and (:butcherid = 0 || :butcherid = ref2)
         ORDER BY r.ID DESC
         `

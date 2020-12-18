@@ -77,6 +77,17 @@ class Review extends BaseModel<Review> {
     content: string;
 
     @Column({
+        allowNull: true
+    })
+    replyDisplayUser: string;
+
+    @Column({
+        allowNull: true,
+        type: DataType.TEXT
+    })
+    replyContent: string;
+
+    @Column({
         allowNull: true,
         type: DataType.DECIMAL(5, 2)
     })    
@@ -129,7 +140,6 @@ class Review extends BaseModel<Review> {
     })
     areaSlug: string;       
          
-
 
     @Column({
         type: DataType.TEXT

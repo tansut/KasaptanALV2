@@ -67,16 +67,19 @@ export default class Route extends ViewRouter {
 
     async loadReviews(butcher: ButcherModel) {
         let res: Review[] = await Review.sequelize.query(`
-        SELECT r.* FROM Reviews r, Orders o  
-        WHERE r.type='order' and r.ref1=o.id and r.ref2=:bid
+
+        SELECT r.* FROM Reviews r
+        WHERE :butcherid = ref2
         ORDER BY r.ID DESC
+
          `
         ,
         {
-            replacements: { bid: butcher.id },
+            replacements: { butcherid: butcher.id },
             type: sq.QueryTypes.SELECT,
+            model: Review,
             mapToModel: true,
-            raw: true
+            raw: false
         }
         );
         this.reviews = res;

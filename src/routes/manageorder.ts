@@ -407,6 +407,37 @@ export default class Route extends ViewRouter {
         return res;
     }  
 
+
+    
+    @Auth.Anonymous()
+    async printViewRoute() {
+        await this.getOrder();
+        if (!this.order)
+            return this.next();
+
+        await this.getOrderSummary();
+
+        let pageInfo = {};
+
+        let pageTitle = '', pageDescription = '';
+
+
+        pageTitle = `${this.order.butcherName} ${Helper.formatDate(this.order.creationDate)} tarihli sipariş`;
+        pageDescription = `KasaptanAl.com Siparişi`
+        let pageThumbnail = this.req.helper.imgUrl('butcher-google-photos', this.order.butcher.slug)
+
+
+        pageInfo = {
+            pageTitle: pageTitle,
+            pageDescription: pageDescription,
+            pageThumbnail: pageThumbnail
+        }
+
+
+
+        this.sendView("pages/printorder.ejs", { ...pageInfo, ...this.api.getView(this.order), ...{ enableImgContextMenu: true } });
+    }
+
     @Auth.Anonymous()
     async orderViewRoute() {
         await this.getOrder();
@@ -441,7 +472,8 @@ export default class Route extends ViewRouter {
 
 
     static SetRoutes(router: express.Router) {
-        router.get('/manageorder/:ordernum', Route.BindRequest(Route.prototype.orderViewRoute))
+        router.get('/manageorder/:ordernum', Route.BindRequest(Route.prototype.orderViewRoute));
+        router.get('/printorder/:ordernum', Route.BindRequest(Route.prototype.printViewRoute));
 
     }
 }

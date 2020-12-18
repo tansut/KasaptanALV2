@@ -277,6 +277,28 @@ export default class Route extends ViewRouter {
             userMessage = "Yorum eklendi"
         }
 
+        if (this.req.body.addreplycomment) {
+            let comment = this.req.body.replycomment;
+            let puan = Helper.parseFloat(this.req.body.commentpuan);
+            let review = await Review.findOne({
+                where: {
+                    userId: this.order.userId,
+                    type: 'order',
+                    ref1: this.order.id
+                }
+            })
+            if (review == null) {
+                userMessage = "Yorum yok"
+
+            } else {
+                review.replyContent = comment;
+                review.replyDisplayUser = this.order.butcherName
+            }
+
+            await review.save();
+            userMessage = "Yorum cevap eklendi"
+        }
+
 
         //
 

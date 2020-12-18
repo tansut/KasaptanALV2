@@ -892,7 +892,7 @@ export default class Route extends ApiRouter {
         let puans = await this.getEarnedPuans(o);
         let total = puans.alacak - puans.borc;
         if (total > 0.00) {
-            let text = `Tebrikler ${o.name}! KasaptanAl.com tercihiniz size ${Helper.formattedCurrency(total)} puan kazandirdi. Bir sonraki siparisinizde kullanmayi unutmayin`;
+            let text = `Tebrikler! KasaptanAl.com tercihiniz size ${Helper.formattedCurrency(total)} puan kazandirdi. Bir sonraki siparisinizde kullanmayi unutmayin`;
             Sms.send(o.phone, text, false, new SiteLogRoute(this.constructorParams));
         }
     }
@@ -1112,8 +1112,6 @@ export default class Route extends ApiRouter {
             let dbOrder = await api.getOrder(order.ordernum);
             let view = this.getView(dbOrder);
 
-
-
             let viewUrl = `${this.url}/user/orders/${order.ordernum}`;
             await email.send(dbOrder.email, "siparişinizi aldık", "order.started.ejs", view);
             await Sms.send(dbOrder.phone, `KasaptanAl.com ${dbOrder.butcherName} siparisinizi aldik, Teslimat kodu: ${order.securityCode}. ${order.paymentType == 'onlinepayment' ? 'Simdi odeme yapabilirsiniz' : 'Bilgi'}: ${viewUrl}`, false, new SiteLogRoute(this.constructorParams))
@@ -1128,7 +1126,6 @@ export default class Route extends ApiRouter {
                     }
                 }
             }
-
 
             fres.push(dbOrder)
         }
@@ -1186,13 +1183,9 @@ export default class Route extends ApiRouter {
             }
         }
 
-        let customerText = order.dispatcherType == 'banabikurye' ?
-            `Siparisiniz için ${order.butcherName} teslimat planlamasi yapti: ${order.shipmentStartText}. Bilgi için ${viewUrl}` :
-            `Siparisiniz için ${order.butcherName} teslimat planlamasi yapti: ${order.shipmentStartText}. Teslimat bilgi kasap tel: ${order.butcher.phone}, diger konular KasaptanAl.com whatsapp: 0850 305 4216`
+        let customerText = `KasaptanAl.com siparisiniz icin ${order.butcherName} teslimat planlamasi yapti: ${order.shipmentStartText}. Kasap tel: ${order.butcher.phone}`
         await Sms.send(order.phone, customerText, false, new SiteLogRoute(this.constructorParams))
         email.send(order.email, `KasaptanAl.com ${order.butcherName} siparişiniz teslimat bilgisi`, "order.planed.ejs", this.getView(order));
-
-
     }
 
     // @Auth.Anonymous()

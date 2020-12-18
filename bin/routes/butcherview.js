@@ -55,14 +55,17 @@ class Route extends router_1.ViewRouter {
     loadReviews(butcher) {
         return __awaiter(this, void 0, void 0, function* () {
             let res = yield review_1.default.sequelize.query(`
-        SELECT r.* FROM Reviews r, Orders o  
-        WHERE r.type='order' and r.ref1=o.id and r.ref2=:bid
+
+        SELECT r.* FROM Reviews r
+        WHERE :butcherid = ref2
         ORDER BY r.ID DESC
+
          `, {
-                replacements: { bid: butcher.id },
+                replacements: { butcherid: butcher.id },
                 type: sq.QueryTypes.SELECT,
+                model: review_1.default,
                 mapToModel: true,
-                raw: true
+                raw: false
             });
             this.reviews = res;
         });

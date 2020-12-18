@@ -32,6 +32,9 @@ if (orderClosed && __req.user && __req.user.hasRole('admin')) {
 
         <h1 class="h3">
           Sipariş Bilgileri</h1>
+          <% if (!orderClosed) { %>
+            <a class="btn btn-secondary btn-sm" target="_blank" href="/printorder/<%=controller.order.ordernum%>">Yazdır</a>
+          <% } %>
       </div>
     </div>
   </div>
