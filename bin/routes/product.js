@@ -51,6 +51,7 @@ class Route extends router_1.ViewRouter {
         this.shopCardItem = null;
         this.dispatchingAvailable = true;
         this.productTypeManager = null;
+        this.dispatcherTypes = dispatcher_2.DispatcherTypeDesc;
     }
     get ProductTypeManager() {
         let params = {
