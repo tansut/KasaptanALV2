@@ -63,7 +63,7 @@ window.initComponents = function initComponents() {
              <div>
                 <slot />
                     <div class="d-flex align-items-center justify-content-center">
-                        <button type="button" @click="decrement()" class="no-zoom btn btn-lg btn-outline mr-4"><i class="czi-arrow-left-circle"></i></button>
+                        <button type="button" @click="decrement()" class="btn btn-sm btn-secondary rounded-lg mr-4"><i class="czi-arrow-left-circle"></i></button>
                         <div class="d-inline text-nowrap text-center" style="min-width:5rem">
                             <div class="font-size-lg " v-if="unit.toLowerCase()!='kg'">
                                 <span class="mb-1 font-weight-medium">{{value || '?'}}</span>
@@ -73,7 +73,7 @@ window.initComponents = function initComponents() {
                                 <weight-view v-if="unit.toLowerCase()=='kg'" :kg="value"></weight-view>
                             </div>
                         </div>
-                        <button type="button" @click="increment()" class="no-zoom btn btn-lg btn-outline ml-4"><i class="czi-arrow-right-circle"></i></button>
+                        <button type="button" @click="increment()" class="btn btn-sm rounded-lg btn-secondary ml-4"><i class="czi-arrow-right-circle"></i></button>
                     </div>     
             </div>
               `,

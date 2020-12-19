@@ -210,7 +210,7 @@
                         <% if (!__req.prefAddr) { %>
                        
   
-                        <div class="bg-white border font-size-sm mb-2 p-3">
+                        <div class="bg-secondary border font-size-sm mb-2 p-3">
   
   
   
@@ -284,7 +284,7 @@
   
                         </div>
                         <%} else { %>
-                        <div class="bg-white border p-3  mb-2"
+                        <div class="bg-secondary border p-3  mb-2"
                           >
   
   
@@ -497,6 +497,36 @@
 
                       <% } %>
 
+                      <% if (hazirlanisResources.length) { %>
+
+                        <div class="mb-3">
+                          <h5 class="h6 mb-2">Şu şekilde hazırlayabiliriz</h5>
+                          <div class="mb-2">
+                            <% hazirlanisResources.forEach(t=> { %>
+
+                            <div class="d-flex mb-2 pb-1  flex-wrap justify-content-between border-bottom">
+                              <a href="javascript:openSlider(<%=t.id%>)"><i
+                                  class=" czi-youtube mr-1"></i><%=t.title%></a>
+
+                              <a title="Bu şekilde hazırlayın"
+                                href="javascript:<%= include('./_partial/addtonote.ejs', {resource: t, options: {hideProduct: true} }) %>"><span
+                                  class="color-primary"><i class=" czi-add-circle"></i></span>
+                              </a>
+
+                            </div>
+
+
+
+
+
+                            <%})%>
+                          </div>
+                        </div>
+
+
+
+                        <% } %>
+
                       <a id="aftersetloc"></a>
 
 
@@ -537,35 +567,7 @@
                   
                              
                   
-                                <% if (hazirlanisResources.length) { %>
-
-                          <div class="mb-3">
-                            <h5 class="h6 mb-2">Şu şekilde hazırlayabiliriz</h5>
-                            <div class="mb-2">
-                              <% hazirlanisResources.forEach(t=> { %>
-
-                              <div class="d-flex mb-2 pb-1  flex-wrap justify-content-between border-bottom">
-                                <a href="javascript:openSlider(<%=t.id%>)"><i
-                                    class=" czi-youtube mr-1"></i><%=t.title%></a>
-
-                                <a title="Bu şekilde hazırlayın"
-                                  href="javascript:<%= include('./_partial/addtonote.ejs', {resource: t, options: {hideProduct: true} }) %>"><span
-                                    class="color-primary"><i class=" czi-add-circle"></i></span>
-                                </a>
-
-                              </div>
-
-
-
-
-
-                              <%})%>
-                            </div>
-                          </div>
-
-
-
-                          <% } %>
+                               
 
                         <div class="mb-3">
                           <%- include(`./_partial/product.${product.productType}-editor.ejs`, {man: controller.ProductTypeManager}) %>
@@ -575,16 +577,24 @@
                       
 
                          
-                         <%if (view.butcher) { %>
-
-                          <div class="bg-white mb-2 pb-3 border">
+                         
+                          <div class="d-flex font-size-sm mb-1 align-items-center justify-content-between ">
+                            <span>
+                             
+                            </span>
+                           
+                               <a v-if="selectedUnit && selectedUnit.perPerson" @click="showCalculator(selectedUnit)"
+                              class="text-dark font-weight-medium"><i class="czi-calculator mr-1"></i>Miktar Hesaplama</a> 
+                                           
+                          </div>
+                          <div class="bg-white mb-2 pb-3 border shadow-lg">
                             <div v-if="product && product.purchaseOptions.length > 1">
                               <ul class="nav nav-pills nav-pills-dark nav-fill mb-2">
                                 <li v-for="(option, index) in product.purchaseOptions" class="nav-item h-100">
                                   <a class="nav-link h-100 shadow-none " v-bind:class="{ active: option == selectedUnit }"
                                     @click="selectedUnit = option">{{option.unitTitle}}
                                    
-                                    <span class="d-block font-size-sm">
+                                    <span v-if="option.unitPrice > 0.00" class="d-block font-size-sm">
                                       {{  formatCurrency(option.unitPrice).val}}.<small>{{formatCurrency(option.unitPrice).krs}}</small>
                                       TL
                                     </span>
@@ -657,9 +667,10 @@
                      
 
 
+                        
 
-                            <div v-if="selectedUnit" class="px-3 mb-3 d-flex justify-content-between">
-                              <div v-if="puan > 0" class="text-center">
+                            <div v-if="selectedUnit" class="px-3 my-3 d-flex justify-content-between">
+                              <div class="text-center">
                                 <span class="text-muted font-size-sm d-block">
                                   
                                    Puan
@@ -680,6 +691,8 @@
                       
                       
                             </div>
+
+                        
 
                             <% if (view.butcher && __req.prefAddr) { %>
 
@@ -710,14 +723,9 @@
                           </div>
                       
                         
-                          <div class="font-size-sm" v-if="selectedUnit && selectedUnit.perPerson">
-                            <p> <a @click="showCalculator(selectedUnit)"
-                            class="text-dark font-weight-medium" href="#size-chart"><i class="czi-calculator mr-1"></i>Miktar Hesaplama Aracı</a> ihtiyacınız kadar almanıza yardımcı olabilir. </p>
-                                          
-                                            
-                                            </div>
+                     
 
-                          <%}%>  
+                           
 
 
 
@@ -726,16 +734,16 @@
                     
                       
                         <% if ( view.alternateButchers.length && controller.showOtherButchers()) { %>
-                          <div class="pb-3">
+                          <div class="bg-secondary">
                             <% let alt2Show = 2 %>
                       
                             <div id="other-butchers-panel">
-                              <p class="font-size-sm mb-1">Diğer Kasaplar 
+                              <p class="mb-3 font-size-md border-bottom">Diğer Kasaplar 
                       
                       
                                 <% if (view.alternateButchers.length > alt2Show) { %>
                                  - 
-                                    <a class="text-dark font-weight-bold" href="javascript:showOtherButchers()"><span>Tümü (</span><span class="text-primary"><%=otherButcherAlternatives %></span><span>)</span></a>
+                                    <a class="text-dark font-weight-bold" href="javascript:showOtherButchers()"><span>Tümünü Göster (</span><span class="text-primary"><%=otherButcherAlternatives %></span><span>)</span></a>
                       
                                  
                                 <% } %>
@@ -743,10 +751,10 @@
                                 </p>
                             </div>
                            
-                              <div class="font-size-sm px-2 border bg-white">
+                              <div class="">
                       
                                 <div v-if="product">
-                                  <div v-for="(alt, index) in product.alternateButchers.slice(0, <%=alt2Show%>)" class=" border-bottom py-2">
+                                  <div v-for="(alt, index) in product.alternateButchers.slice(0, <%=alt2Show%>)" class=" border-bottom mb-3">
                                     <a class="media align-items-start flex-grow-1" :data-butcher="alt.butcher.slug" href="#newbutcher" @click="selectNewButcher(alt.butcher)">
                                      
                                        <img class="w-25"
@@ -755,7 +763,7 @@
                                     
                       
                                       
-                                      <div class="media-body pl-2">
+                                      <div class="media-body px-3 pb-3">
                                         <h6 class="h6  mb-0">{{alt.butcher.name}}
                       
                                           
@@ -823,12 +831,13 @@
                       
                            
                           </div>
+                        </div>
                          <% } %>
 
                       
 
 
-                        </div>
+                        
 
 
 
@@ -1073,7 +1082,7 @@
                                   <div class="media-body pl-3">
                                     <h6 class="font-size-sm mb-0"><%=r.displayUser%></h6>
                                    
-                                      <span class="font-size-ms text-muted"><%=r.level3Text%></span>
+                                      <a href="/<%=r.areaSlug%>-kasap" class="font-size-ms"><%=r.level3Text%></a>
 
                                    
                                   </div>
