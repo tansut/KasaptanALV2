@@ -85,7 +85,7 @@ class="gallery-item-caption"><%= butcherVideo.title %></span></a>
                      
   </div>
 
-  <%if (otherButcherAlternatives && (controller.showOtherButchers())) {%>
+  <%if (controller.shopcard.items.length == 0 && otherButcherAlternatives && (controller.showOtherButchers())) {%>
     <div class="d-flex px-3 align-items-center justify-content-between  ">
 
         <span  class=" text-dark font-weight-medium font-size-sm ">
@@ -156,6 +156,11 @@ class="gallery-item-caption"><%= butcherVideo.title %></span></a>
           </div>
           <div class="collapse" id="teslimat-info" data-parent="#teslimat-info-panel" role="tabpanel">
             <div class="font-size-sm p-3  ">
+              <% if (__req.prefAddr) { %>
+                <p class="">
+                  <span class="font-weight-medium"><%=__req.prefAddr.display%></span> için
+                </p>
+              <% } %>
               <%- include('./ship-price-slice.ejs', {                                
                 slices: view.dispatcher.priceSlice
                   }) %>
