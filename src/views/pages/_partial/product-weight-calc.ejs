@@ -46,7 +46,7 @@
 
 
 
-            <amount-input  :def="2" :min="1" :max="25" :step="1" v-model="personcount" unit="kişi">
+            <amount-input class="mb-3"  :def="2" :min="1" :max="25" :step="1" v-model="personcount" unit="kişi">
             </amount-input>
 
             <div v-if="foodResources().length && (personcount > 0)" >

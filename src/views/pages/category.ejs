@@ -75,7 +75,7 @@
       <% } %>
       <%if (controller.category.slug != 'kurban' || __req.query.go) { %>
       <div id="cat-slider" class="py-2">
-        <%- include('./_partial/category-slider', { subUrl: '',  selected: controller.category.slug, mode:'browse', header: false, titles: false, viewCats: ['reyon', 'list'], title: 'Tüm Ürünlerimiz', allUrl: '/kasap-urunleri' }); %>
+        <%- include('./_partial/category-slider', { subUrl: '',  selected: controller.category.slug, mode:'browse', header: false, titles: false, title: 'Tüm Ürünlerimiz', allUrl: '/kasap-urunleri' }); %>
       </div>
       <% } %>
 
@@ -120,7 +120,7 @@
     <% }) %>
 
     <div class="mb-3">
-      <%- include('./_partial/category-slider', { urlParams: 'go=1#items', viewCats: ['reyon', 'list'], mode:'list', title: 'Ürünlerimiz', allUrl: '/kasap-urunleri' }); %>
+      <%- include('./_partial/category-slider', { urlParams: 'go=1#items', mode:'list', title: 'Ürünlerimiz', allUrl: '/kasap-urunleri' }); %>
     </div>
 
  

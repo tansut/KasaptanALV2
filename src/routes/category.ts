@@ -179,7 +179,19 @@ export default class Route extends ViewRouter {
             //this.renderPage('pages/category-food.ejs')
         }
 
-        else {
+        else if (this.category.type.startsWith("product")) {
+            let parse = this.category.type.split(':');
+            let filters = parse[1].split('=');
+            let where = {};
+            where[filters[0]] = filters[1];
+            this.products = await Product.findAll({
+                where: where,
+                order: ['tag1']
+            });
+            this.subCategories = ProductManager.generateSubcategories(this.category, this.products);
+
+            this.renderPage('pages/category.ejs')
+        } else {
             this.products = await ProductManager.getProductsOfCategories([this.category.id]);
 
             this.subCategories = ProductManager.generateSubcategories(this.category, this.products);

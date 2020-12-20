@@ -284,8 +284,7 @@
   
                         </div>
                         <%} else { %>
-                        <div class="bg-secondary border p-3  mb-2"
-                          >
+                        <div class="bg-secondary border p-3  mb-2">
   
   
   
@@ -336,10 +335,13 @@
                                
       
                                 <%} else { %>
-                                <h5 class="h5">Hizmet
-                                  Veriyoruz</h5>
-                                <p>Ancak semtinize hizmet veren hiçbir kasabımız
+                                <h5 class="h5">Hizmet Veriyoruz</h5>
+                                <p class="text-left">Ancak hiçbir kasabımız
                                   bu ürünü şu anda sağlayamıyor.</p>
+                                  <p class="border bg-white p-3 text-left">
+                                    <i class="czi-icon czi-truck mr-1"></i>
+                                    <a class="font-weight-bold" href="javascript:gotoUrl('/tum-turkiye')">Tüm Türkiye'ye</a> gönderebildiğimiz ürünlerimiz var, mutlaka göz atın.
+                                  </p>
                                   <script>       
                                   gtags.push(['noproduct', '<%=product.slug%>', '<%=__req.prefAddr.display%>']);
                                   gtags.push(['noservice', '<%=__req.prefAddr.display%>', '<%=product.slug%>']);
@@ -1149,7 +1151,7 @@
                       <%if (__req.query.frame != '1') { %> 
                         <div class="container">
         
-                          <%- include('./_partial/category-slider', { header:true, viewCats: ['reyon', 'list'], title: 'Ürünlerimiz', allUrl: '/kasap-urunleri' }); %>
+                          <%- include('./_partial/category-slider', { header:true, title: 'Ürünlerimiz', allUrl: '/kasap-urunleri' }); %>
                     
                         </div>
                         <%}%>
@@ -1196,6 +1198,14 @@
                       window.location.href = '/alisveris-sepetim';
                     <%} else { %>
                       window.parent.purchase.goShopcard();
+                    <% } %>
+                  }
+
+                  function gotoUrl(url) {
+                    <%if (__req.query.frame != '1') { %>
+                      location.href = url;
+                    <%} else { %>
+                      window.parent.purchase.go(url);
                     <% } %>
                   }
 

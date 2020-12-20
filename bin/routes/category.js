@@ -22,8 +22,9 @@ const router_1 = require("../lib/router");
 const common_1 = require("../lib/common");
 let ellipsis = require('text-ellipsis');
 const resource_1 = require("./resource");
+const product_1 = require("../db/models/product");
 const productManager_1 = require("../lib/productManager");
-const product_1 = require("./api/product");
+const product_2 = require("./api/product");
 const config_1 = require("../config");
 var MarkdownIt = require('markdown-it');
 const _ = require("lodash");
@@ -66,11 +67,11 @@ class Route extends router_1.ViewRouter {
             if (subcategory) {
                 let category = this.req.__categories.find(p => p.slug == subcategory);
                 this.products = yield productManager_1.default.getProductsOfCategories([category.id]);
-                this.foods = yield new product_1.default(this.constructorParams).getFoodAndTarifResources(this.products, null, (categoryid && !discardFoodCategory) ? [categoryid] : null);
+                this.foods = yield new product_2.default(this.constructorParams).getFoodAndTarifResources(this.products, null, (categoryid && !discardFoodCategory) ? [categoryid] : null);
                 this.foodsWithCats = this.generateFoodWithCats(this.foods);
             }
             else {
-                this.foods = yield new product_1.default(this.constructorParams).getFoodAndTarifResources(null, null, categoryid ? [categoryid] : null);
+                this.foods = yield new product_2.default(this.constructorParams).getFoodAndTarifResources(null, null, categoryid ? [categoryid] : null);
                 this.foodsWithCats = this.generateFoodWithCats(this.foods);
             }
         });
@@ -80,11 +81,11 @@ class Route extends router_1.ViewRouter {
             if (subcategory) {
                 let category = this.req.__categories.find(p => p.slug == subcategory);
                 this.products = yield productManager_1.default.getProductsOfCategories([category.id]);
-                this.foods = yield new product_1.default(this.constructorParams).getFoodResources(this.products, null, (categoryid && !discardFoodCategory) ? [categoryid] : null);
+                this.foods = yield new product_2.default(this.constructorParams).getFoodResources(this.products, null, (categoryid && !discardFoodCategory) ? [categoryid] : null);
                 this.foodsWithCats = this.generateFoodWithCats(this.foods);
             }
             else {
-                this.foods = yield new product_1.default(this.constructorParams).getFoodResources(null, null, categoryid ? [categoryid] : null);
+                this.foods = yield new product_2.default(this.constructorParams).getFoodResources(null, null, categoryid ? [categoryid] : null);
                 this.foodsWithCats = this.generateFoodWithCats(this.foods);
             }
         });
@@ -94,11 +95,11 @@ class Route extends router_1.ViewRouter {
             if (subcategory) {
                 let category = this.req.__categories.find(p => p.slug == subcategory);
                 this.products = yield productManager_1.default.getProductsOfCategories([category.id]);
-                this.foods = yield new product_1.default(this.constructorParams).getTarifResources(this.products, null, (categoryid && !discardFoodCategory) ? [categoryid] : null);
+                this.foods = yield new product_2.default(this.constructorParams).getTarifResources(this.products, null, (categoryid && !discardFoodCategory) ? [categoryid] : null);
                 this.foodsWithCats = this.generateFoodWithCats(this.foods);
             }
             else {
-                this.foods = yield new product_1.default(this.constructorParams).getTarifResources(null, null, categoryid ? [categoryid] : null);
+                this.foods = yield new product_2.default(this.constructorParams).getTarifResources(null, null, categoryid ? [categoryid] : null);
                 this.foodsWithCats = this.generateFoodWithCats(this.foods);
             }
         });
@@ -181,14 +182,26 @@ class Route extends router_1.ViewRouter {
                 //await this.fillFoods(this.category.id, this.req.params.subcategory);
                 //this.renderPage('pages/category-food.ejs')
             }
+            else if (this.category.type.startsWith("product")) {
+                let parse = this.category.type.split(':');
+                let filters = parse[1].split('=');
+                let where = {};
+                where[filters[0]] = filters[1];
+                this.products = yield product_1.default.findAll({
+                    where: where,
+                    order: ['tag1']
+                });
+                this.subCategories = productManager_1.default.generateSubcategories(this.category, this.products);
+                this.renderPage('pages/category.ejs');
+            }
             else {
                 this.products = yield productManager_1.default.getProductsOfCategories([this.category.id]);
                 this.subCategories = productManager_1.default.generateSubcategories(this.category, this.products);
                 if (this.category.relatedFoodCategory) {
-                    this.foods = yield new product_1.default(this.constructorParams).getFoodAndTarifResources(null, null, [this.category.relatedFoodCategory]);
+                    this.foods = yield new product_2.default(this.constructorParams).getFoodAndTarifResources(null, null, [this.category.relatedFoodCategory]);
                 }
                 else if (this.category.tarifTitle) {
-                    this.foods = yield new product_1.default(this.constructorParams).getFoodAndTarifResources(this.products, 15);
+                    this.foods = yield new product_2.default(this.constructorParams).getFoodAndTarifResources(this.products, 15);
                 }
                 this.renderPage('pages/category.ejs');
             }
