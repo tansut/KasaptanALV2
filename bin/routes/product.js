@@ -106,9 +106,9 @@ class Route extends router_1.ViewRouter {
         let fullServing = serving.filter(s => (s.selection == dispatcher_2.DispatcherSelection.full || s.selection == dispatcher_2.DispatcherSelection.onecikar));
         let mention = fullServing.filter(s => s.selection == dispatcher_2.DispatcherSelection.onecikar);
         let finalList = mention.length > 0 ? mention : fullServing;
-        finalList = helper_1.default.shuffle(finalList);
         if (finalList.length == 0)
             finalList = serving;
+        finalList = helper_1.default.shuffle(finalList);
         let res = (finalList.length > 0 ? finalList[0] : null);
         return res;
     }

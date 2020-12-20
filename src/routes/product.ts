@@ -123,8 +123,8 @@ export default class Route extends ViewRouter {
         let fullServing = serving.filter(s => (s.selection == DispatcherSelection.full || s.selection == DispatcherSelection.onecikar));
         let mention = fullServing.filter(s => s.selection == DispatcherSelection.onecikar);
         let finalList = mention.length > 0 ? mention: fullServing;
-        finalList = Helper.shuffle(finalList)
         if (finalList.length == 0) finalList = serving;
+        finalList = Helper.shuffle(finalList)
         let res = (finalList.length > 0 ? finalList[0] : null);
         return res;
     }
