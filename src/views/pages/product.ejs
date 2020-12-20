@@ -1174,6 +1174,22 @@
                 <% include ./_partial/scripts %>
 
                 <script>
+                  <% if (__req.prefAddr) {  %>
+                    gtags.push(['productview', '<%=product.slug%>', '<%=__req.prefAddr.display%>']);
+                    gtags.push(['locationproduct', '<%=__req.prefAddr.display%>', '<%=product.slug%>']);
+                  <% } %>
+                  <% if (view.butcher && __req.prefAddr) {  %>
+                    gtags.push(['butcherlocation', '<%=view.butcher.slug%>', '<%=__req.prefAddr.display%>']);
+                    gtags.push(['butcherproduct', '<%=view.butcher.slug%>', '<%=product.slug%>']);
+                    gtags.push(['butcherproductbylocation', '<%=view.butcher.slug%>/<%=product.slug%>', '<%=__req.prefAddr.display%>']);
+                    gtags.push(['butcherlocationbyproduct', '<%=view.butcher.slug%>/<%=__req.prefAddr.display%>', '<%=product.slug%>']);
+                  <% } %>
+
+
+          
+                </script>
+
+                <script>
                   window.App.ProductApp.shopCardIndex = <%= controller.shopCardIndex %>;
                   var prod = <%- JSON.stringify(view) %>;
                   window.App.ProductApp.product = prod;
