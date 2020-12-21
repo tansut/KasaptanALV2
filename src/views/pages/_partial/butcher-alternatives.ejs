@@ -12,7 +12,7 @@
             aria-hidden="true">&times;</span></button>
       </div>
       <div  class="modal-body p-0">
-        <div class="p-0">
+        <div class="p-0 bg-secondary">
           
           <div class="tab-content p-0 m-0 " id="butchers-serving-tabContent">
             <% if (dispatchers.length > 0) { %>
@@ -36,52 +36,42 @@
 
                 </li>
               </ul>
-              <div v-if="product" class="bg-secondary">
-                <div v-for="(alt, index) in sortedAlternates" class=" border-bottom pb-2">
-                  <a class="media mb-3 align-items-start pt-2 flex-grow-1" :data-butcher="alt.butcher.slug" href="#newbutcher" @click="selectNewButcher(alt.butcher)">
-                   
+         
+
+              <div v-if="product" class="p-2">
+                <div v-for="(alt, index) in sortedAlternates" class=" mb-3">
+                  <a class="media  align-items-start flex-grow-1" :data-butcher="alt.butcher.slug" href="#newbutcher" @click="selectNewButcher(alt.butcher)">
+                 
                      <img class="w-25"
                         :src="alt.butcher.thumbnail" :alt="alt.butcher.name">
-
+    
                   
-
+    
                     
-                    <div class="media-body px-2">
-                      <h6 class="h6 mb-0">{{alt.butcher.name}}
-
+                    <div class="media-body mb-2 px-2">
+                      <h6 class="h6  mb-0">{{alt.butcher.name}}
+    
                         
-                      </h6>
-                      <div v-if="alt.butcher.locationText" class="text-muted font-size-sm ">
+                      </h5>
+                      <div v-if="alt.butcher.locationText" class="text-muted font-size-xs">
                         {{alt.butcher.locationText}}<span v-if="alt.dispatcher.priceInfo" >
                            , {{alt.dispatcher.priceInfo}} 
                        </span> 
                        <span v-if="alt.dispatcher.distance && (alt.dispatcher.distance < 50)" class="text-muted font-size-xs">,
                         {{alt.dispatcher.distance.toFixed(0)}} km 
                      </span>  
-
                       </div>
                       
-                        <div v-if="alt.butcher.badges.length > 0" class="butcher-badges">
-              
-                        
-                     
-                         <!-- <span v-for="(badge, index) in alt.butcher.badges" class="badge badge-secondary border font-size-xs mr-1">
-                          <i v-if="badge.icon" :class="badge.icon || '' + 'mr-1'"></i>
-                          {{badge.name}}
-              
-                        </span>  -->
-                     
-                    </div>
+                      
                         <money-view v-if="!alt.butcher.kgPrice && selectedUnitForAlternate(alt.butcher)" :unit="selectedUnitForAlternate(alt.butcher).unitTitle" 
                         
                         class="font-size-md text-dark" :money="selectedUnitForAlternate(alt.butcher).unitPrice"></money-view>
                         <money-view v-else unit="Kg" 
                         
                         class="font-size-md text-dark" :money="alt.butcher.kgPrice"></money-view>
-                       <!-- <span v-if="alt.dispatcher.priceInfo" class="d-block text-muted font-size-xs">
-                           {{alt.dispatcher.priceInfo}} 
-                        </span>  -->
-               
+          
+                     
+                       
                           <div class="mb-2" v-if="alt.butcher.puanData">
                             <span class="badge badge-success font-weight-medium">
                               %{{alt.butcher.puanData.rate * 100 }}  Puan
@@ -89,20 +79,20 @@
                           </div>
                         
                      
-                    
-                       
-
-
-                          <div class="font-size-sm font-italic text-dark mb-1" v-if="alt.butcher.productNote" v-html="alt.butcher.productNote">                            
-                       
+                          <div class="font-size-sm font-italic text-dark" v-if="alt.butcher.productNote" v-html="alt.butcher.productNote">                            
+     
                           </div>   
 
-
-                        
+             
+                       
+                     
+              
+    
+    
                     </div>
                   </a>
                 
-                  <div class="bg-white border p-2 mx-3 mb-1">
+                  <div class="bg-white border p-2">
                     <div v-if="alt.butcher.shipSuccessText" class="text-center text-dark font-size-xs">
                       {{alt.butcher.shipSuccessText}} sipariş
                     </div>
@@ -129,7 +119,7 @@
 
                      
                     </div>
-                  </div>    
+                  </div>      
                 </div> 
               </div>
          

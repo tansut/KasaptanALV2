@@ -325,6 +325,10 @@
   <% include ./_partial/scripts %>
 
   <script>
+
+    <% if (shopcard.items.length) { %>
+      window.App.gTag('checkout', 'view/shopcardWithItems', "", <%=shopcard.items.length %>);
+    <% } %>
     window.App.gTag('checkout', 'view/shopcard', "<%=__req.user ? __req.user.mphone: ''  %>", <%=shopcard.items.length %>);
     
     <% Object.keys(shopcard.butchers).forEach(item => { %>
