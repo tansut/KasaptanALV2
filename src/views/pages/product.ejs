@@ -550,7 +550,26 @@
 
                        
                           <%if (view.butcher) {  %>
-                            <div class="mb-3">
+
+  <%if (controller.shopcard.items.length == 0 && otherButcherAlternatives && (controller.showOtherButchers())) {%>
+                             
+                          <div class="d-flex font-size-sm align-items-center justify-content-between ">
+                            <span>
+                             
+                            </span>
+
+
+                           
+                            <a class="text-dark font-size-sm font-weight-medium" href="javascript:App.scrollToAnchor('#other-butchers-panel')"><span>Diğer Kasaplar (</span><span class="text-primary"><%=otherButcherAlternatives %></span><span>)</span></a>
+          
+                          </div>
+<% } %>
+
+
+
+                            <div class="mb-3 border">
+
+                              
                          
                             <%- include('./_partial/butcher-product-panel.ejs', { butcherVideo: butcherVideo }) %>
 
@@ -580,7 +599,7 @@
 
                          
                          
-                          <div class="d-flex font-size-sm mb-1 align-items-center justify-content-between ">
+                          <div class="d-flex font-size-sm align-items-center justify-content-between ">
                             <span>
                              
                             </span>
@@ -754,7 +773,7 @@
                       
                                 </p>
 
-                                <ul class="nav  nav-pills nav-pills-dark nav-fill pb-2">
+                                <ul v-if="product  && (product.alternateButchers.length > 1)" class="nav nav-pills nav-pills-dark nav-fill pb-2">
                                   <li class="nav-item mr-0">
                                     <a class="nav-link shadow-none font-size-xs" @click="alternateSort = null" v-bind:class="{ active: alternateSort == null }">Oto Sıra</a>
 
@@ -782,7 +801,7 @@
                                 <div v-if="product" class="pt-2">
                                   <div v-for="(alt, index) in sortedAlternates.slice(0, <%=alt2Show%>)" class=" border-bottom mb-3">
                                     <a class="media align-items-start flex-grow-1" :data-butcher="alt.butcher.slug" href="#newbutcher" @click="selectNewButcher(alt.butcher)">
-                                     
+                                   
                                        <img class="w-25"
                                           :src="alt.butcher.thumbnail" :alt="alt.butcher.name">
                       
@@ -794,11 +813,13 @@
                       
                                           
                                         </h5>
-                                        <div v-if="alt.butcher.locationText" class="text-muted font-size-xs d-block">
+                                        <div v-if="alt.butcher.locationText" class="text-muted font-size-xs">
                                           {{alt.butcher.locationText}}<span v-if="alt.dispatcher.priceInfo" >
                                              , {{alt.dispatcher.priceInfo}} 
                                          </span> 
-                      
+                                         <span v-if="alt.dispatcher.distance && (alt.dispatcher.distance < 50)" class="text-muted font-size-xs">,
+                                          {{alt.dispatcher.distance.toFixed(0)}} km 
+                                       </span>  
                                         </div>
                                         
                                         
@@ -821,31 +842,37 @@
                                             <div class="font-size-sm font-italic text-dark" v-if="alt.butcher.productNote" v-html="alt.butcher.productNote">                            
                        
                                             </div>   
-                                         
+
+                   <div class="bg-white border p-2">
+                                              <div v-if="alt.butcher.shipSuccessText" class="text-center text-dark font-size-xs">
+                                                {{alt.butcher.shipSuccessText}} sipariş
+                                              </div>
+                                              <div class="d-flex w-100">
+                                                <div class="w-50 pr-2" v-if="alt.butcher.userRatingAsPerc > 0">
+                                                  <div class="font-size-xs text-muted ">Memnuniyet</div>
+                                                  <div class="progress rounded-0">
+                                                    <div class="progress-bar font-weight-medium bg-warning" role="progressbar" :style="'width:' + alt.butcher.userRatingAsPerc + '%'" :aria-valuenow="alt.butcher.userRatingAsPerc" aria-valuemin="0" aria-valuemax="100">
+                                                      {{alt.butcher.userRatingAsPerc}}%
+                                                    </div>  
+                                                  </div>
+                                                </div>
+                                                <div class="w-50 " v-if="alt.butcher.shipRatingAsPerc > 0">
+                                                  <div class="font-size-xs text-muted ">Teslimat Başarısı</div>
+                                                  <div class="progress rounded-0">
+                                                    <div class="progress-bar font-weight-medium bg-warning" role="progressbar" :style="'width:' + alt.butcher.shipRatingAsPerc + '%'" :aria-valuenow="alt.butcher.shipRatingAsPerc" aria-valuemin="0" aria-valuemax="100">
+                                                      {{alt.butcher.shipRatingAsPerc}}%
+                                                    </div>  
+                                                  </div>
+                                                </div>
+                                               
+                                          
+                                               
                       
-                                            <div class="d-flex w-100">
-                                              <div class="w-50 pr-2" v-if="alt.butcher.userRatingAsPerc > 0">
-                                                <div class="font-size-xs text-muted ">Memnuniyet</div>
-                                                <div class="progress rounded-0">
-                                                  <div class="progress-bar font-weight-medium bg-warning" role="progressbar" :style="'width:' + alt.butcher.userRatingAsPerc + '%'" :aria-valuenow="alt.butcher.userRatingAsPerc" aria-valuemin="0" aria-valuemax="100">
-                                                    {{alt.butcher.userRatingAsPerc}}%
-                                                  </div>  
-                                                </div>
+                                               
                                               </div>
-                                              <div class="w-50 " v-if="alt.butcher.shipRatingAsPerc > 0">
-                                                <div class="font-size-xs text-muted ">Teslimat Başarısı</div>
-                                                <div class="progress rounded-0">
-                                                  <div class="progress-bar font-weight-medium bg-warning" role="progressbar" :style="'width:' + alt.butcher.shipRatingAsPerc + '%'" :aria-valuenow="alt.butcher.shipRatingAsPerc" aria-valuemin="0" aria-valuemax="100">
-                                                    {{alt.butcher.shipRatingAsPerc}}%
-                                                  </div>  
-                                                </div>
-                                              </div>
-                                             
-                                        
-                                             
-                    
-                                             
-                                            </div>
+                                            </div>                         
+                                         
+                                       
                                 
                       
                       

@@ -46,6 +46,7 @@ export interface ProductButcherView {
     thumbnail?: string;
     userRatingAsPerc: number;
     shipRatingAsPerc: number;
+    shipSuccessText: string;
     puanData: Puan;    
     locationText: string;
     earnedPuan: number;

@@ -195,7 +195,9 @@ class Route extends router_1.ViewRouter {
             this.shopCardIndex = this.req.query.shopcarditem ? parseInt(this.req.query.shopcarditem) : -1;
             this.shopCardItem = (this.shopCardIndex >= 0 && shopcard.items) ? shopcard.items[this.shopCardIndex] : null;
             let butcher = this.shopCardItem ? yield butcher_1.default.getBySlug(this.shopCardItem.product.butcher.slug) : (this.req.query.butcher ? yield butcher_1.default.getBySlug(this.req.query.butcher) : null);
-            this.reviews = yield api.loadReviews(product.id, butcher ? (this.req.query.butcher ? butcher.id : 0) : 0);
+            this.reviews = yield api.loadReviews(product.id, (butcher && this.showOtherButchers()) ? 0 : (butcher ? butcher.id : 0));
+            // this.reviews = await api.loadReviews(product.id, butcher ? (this.req.query.butcher ? butcher.id : 0): 0);
+            //this.reviews = await api.loadReviews(product.id, 0);
             this.foods = yield api.getTarifVideos([product]);
             if (this.req.query.semt) {
                 let l3 = yield area_1.default.getBySlug(this.req.query.semt);
@@ -247,6 +249,7 @@ class Route extends router_1.ViewRouter {
                             badges: butcher.getBadgeList(),
                             userRatingAsPerc: butcher.userRatingAsPerc,
                             shipRatingAsPerc: butcher.shipRatingAsPerc,
+                            shipSuccessText: helper_1.default.number2Text(butcher.shipSuccessCount, 50),
                             name: butcher.name,
                             puanData: butcher.getPuanData(this.product.productType),
                             earnedPuan: 0.00,

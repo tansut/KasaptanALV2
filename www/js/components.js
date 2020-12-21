@@ -549,10 +549,10 @@ window.initComponents = function initComponents() {
                 if (curVal) {
                     var parts = curVal.split(':');
                     cf = parts[0];
-                    so = parts.length > 1 ? parts[1]: 'asc'
+                    cso = parts.length > 1 ? parts[1]: 'asc'
                 };
                 if (col == cf) {
-                    so = (so == 'asc' ? 'desc':'asc');
+                    so = (cso == 'asc' ? 'desc':'asc');
                 } 
 
                 return col + ':' + so;

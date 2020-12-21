@@ -16,6 +16,21 @@ class Helper {
     static distance(p1, p2) {
         return Helper._distance(p1.coordinates[0], p1.coordinates[1], p2.coordinates[0], p2.coordinates[1], 'K');
     }
+    static number2Text(n, slice) {
+        let rounded = 0;
+        for (let i = 50; i > 0; i -= 10) {
+            rounded = Math.round(Math.floor(n / i) * i);
+            if (rounded > 0)
+                break;
+        }
+        if (rounded > 0) {
+            return `${rounded}+`;
+        }
+        else if (n > 0)
+            return `${n}+`;
+        else
+            return '';
+    }
     static isSingleShopcardProduct(type) {
         return (type == product_1.ProductType.adak) ||
             (type == product_1.ProductType.kurban) ||

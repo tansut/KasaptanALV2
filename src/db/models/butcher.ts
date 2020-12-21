@@ -47,6 +47,10 @@ class Butcher extends BaseModel<Butcher> {
         return this.shipTotalCount > 0 ? Math.round((succ / this.shipTotalCount) * 100) : 0;
     }
 
+    get shipSuccessCount() {
+        return this.shipTotalCount - this.shipFailureCount;
+    }
+
     @Column({
         allowNull: false,
         defaultValue: "manual",

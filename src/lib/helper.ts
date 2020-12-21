@@ -6,7 +6,7 @@ import { AppRequest } from './http';
 import config from '../config';
 import { GeoLocation } from '../models/geo';
 import { ProductType } from '../db/models/product';
-import { min } from 'lodash';
+import { min, round } from 'lodash';
 import parsePhoneNumber from 'libphonenumber-js';
 
 export default class Helper {
@@ -30,6 +30,21 @@ export default class Helper {
 
     static distance(p1: GeoLocation, p2: GeoLocation) {
         return Helper._distance(p1.coordinates[0], p1.coordinates[1], p2.coordinates[0], p2.coordinates[1], 'K')
+    }
+
+
+    static number2Text(n: number, slice:  number) {
+        let rounded = 0;
+        for(let i=50; i>0;i-=10) {
+            rounded = Math.round(Math.floor(n/i)*i);
+            if (rounded > 0) break;
+        }
+
+        if (rounded > 0) {
+            return `${rounded}+`
+        } else if (n>0)
+            return `${n}+`
+        else return '';
     }
 
 

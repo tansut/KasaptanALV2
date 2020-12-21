@@ -227,7 +227,11 @@ export default class Route extends ViewRouter {
 
         let butcher = this.shopCardItem ? await Butcher.getBySlug(this.shopCardItem.product.butcher.slug) : (this.req.query.butcher ? await Butcher.getBySlug(this.req.query.butcher as string) : null);
 
-        this.reviews = await api.loadReviews(product.id, butcher ? (this.req.query.butcher ? butcher.id : 0): 0);
+
+
+         this.reviews = await api.loadReviews(product.id, (butcher && this.showOtherButchers()) ? 0: (butcher ? butcher.id:0));
+        // this.reviews = await api.loadReviews(product.id, butcher ? (this.req.query.butcher ? butcher.id : 0): 0);
+        //this.reviews = await api.loadReviews(product.id, 0);
 
 
         this.foods = await api.getTarifVideos([product])
@@ -293,6 +297,7 @@ export default class Route extends ViewRouter {
                         badges: butcher.getBadgeList(),
                         userRatingAsPerc: butcher.userRatingAsPerc,
                         shipRatingAsPerc: butcher.shipRatingAsPerc,
+                        shipSuccessText: Helper.number2Text(butcher.shipSuccessCount, 50),
                         name: butcher.name,
                         puanData: butcher.getPuanData(this.product.productType),
                         earnedPuan: 0.00,
