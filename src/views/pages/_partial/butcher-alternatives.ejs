@@ -11,36 +11,38 @@
         <button class="close" type="button" data-dismiss="modal" aria-label="Close"><span
             aria-hidden="true">&times;</span></button>
       </div>
+      <ul v-if="product  && (product.alternateButchers.length > 1)"  class="nav  nav-pills nav-pills-dark nav-fill  ">
+        <li class="nav-item mr-0">
+          <a class="nav-link shadow-none font-size-xs" @click="alternateSort = null" v-bind:class="{ active: alternateSort == null }">Oto Sıra</a>
+
+        </li>
+
+        <li class="nav-item mr-0">
+          <a class="nav-link shadow-none font-size-xs" @click="alternateSort = toggleSort(alternateSort, 'butcher.kgPrice', 'asc')" v-bind:class="{ active: isSorted(alternateSort, 'butcher.kgPrice') }">Fiyat</a>
+
+        </li>
+        <li class="nav-item mr-0">
+          <a class="nav-link  shadow-none font-size-xs" @click="alternateSort = toggleSort(alternateSort, 'butcher.userRatingAsPerc', 'desc') " v-bind:class="{ active: isSorted(alternateSort, 'butcher.userRatingAsPerc') }">Memnuniyet</a>
+
+        </li>
+        <li class="nav-item mr-0">
+          <a class="nav-link  shadow-none font-size-xs" @click="alternateSort = toggleSort(alternateSort, 'dispatcher.distance', 'asc')" v-bind:class="{ active: isSorted(alternateSort, 'dispatcher.distance')  }">Yakınlık</a>
+
+        </li>
+      </ul>
       <div  class="modal-body p-0">
         <div class="p-0 bg-secondary">
           
           <div class="tab-content p-0 m-0 " id="butchers-serving-tabContent">
             <% if (dispatchers.length > 0) { %>
             <div  class="tab-pane fade show active" id="serving" role="tabpanel">
-              <ul v-if="product  && (product.alternateButchers.length > 1)"  class="nav  nav-pills nav-pills-dark nav-fill  ">
-                <li class="nav-item mr-0">
-                  <a class="nav-link shadow-none font-size-xs" @click="alternateSort = null" v-bind:class="{ active: alternateSort == null }">Oto Sıra</a>
-
-                </li>
-
-                <li class="nav-item mr-0">
-                  <a class="nav-link shadow-none font-size-xs" @click="alternateSort = toggleSort(alternateSort, 'butcher.kgPrice', 'asc')" v-bind:class="{ active: isSorted(alternateSort, 'butcher.kgPrice') }">Fiyat</a>
-
-                </li>
-                <li class="nav-item mr-0">
-                  <a class="nav-link  shadow-none font-size-xs" @click="alternateSort = toggleSort(alternateSort, 'butcher.userRatingAsPerc', 'desc') " v-bind:class="{ active: isSorted(alternateSort, 'butcher.userRatingAsPerc') }">Memnuniyet</a>
-
-                </li>
-                <li class="nav-item mr-0">
-                  <a class="nav-link  shadow-none font-size-xs" @click="alternateSort = toggleSort(alternateSort, 'dispatcher.distance', 'asc')" v-bind:class="{ active: isSorted(alternateSort, 'dispatcher.distance')  }">Yakınlık</a>
-
-                </li>
-              </ul>
+            
          
 
-              <div v-if="product" class="p-2">
-                <div v-for="(alt, index) in sortedAlternates" class=" mb-3">
-                  <a class="media  align-items-start flex-grow-1" :data-butcher="alt.butcher.slug" href="#newbutcher" @click="selectNewButcher(alt.butcher)">
+
+              <div v-if="product" class=" pt-2">
+                <div v-for="(alt, index) in sortedAlternates" class="mb-3">
+                  <a class="media px-2 align-items-start flex-grow-1" :data-butcher="alt.butcher.slug" href="#newbutcher" @click="selectNewButcher(alt.butcher)">
                  
                      <img class="w-25"
                         :src="alt.butcher.thumbnail" :alt="alt.butcher.name">
@@ -48,7 +50,7 @@
                   
     
                     
-                    <div class="media-body mb-2 px-2">
+                    <div class="media-body px-2">
                       <h6 class="h6  mb-0">{{alt.butcher.name}}
     
                         
@@ -92,7 +94,7 @@
                     </div>
                   </a>
                 
-                  <div class="bg-white border p-2">
+                  <div class="bg-white border-bottom p-2 ">
                     <div v-if="alt.butcher.shipSuccessText" class="text-center text-dark font-size-xs">
                       {{alt.butcher.shipSuccessText}} sipariş
                     </div>

@@ -546,7 +546,7 @@
                         <input type="hidden" id="product-id" value="<%= product.id %>" />
 
                       
-                        <div class="">
+                        <div>
 
                        
                           <%if (view.butcher) {  %>
@@ -766,7 +766,7 @@
                       
                                 <% if (view.alternateButchers.length > alt2Show) { %>
                                  - 
-                                    <a class="text-dark font-weight-bold" href="javascript:showOtherButchers()"><span>Tümünü Göster (</span><span class="text-primary"><%=otherButcherAlternatives %></span><span>)</span></a>
+                                    <a class="text-dark font-weight-bold" href="javascript:showOtherButchers()"><span>Tümü (</span><span class="text-primary"><%=otherButcherAlternatives %></span><span>)</span></a>
                       
                                  
                                 <% } %>
@@ -798,9 +798,9 @@
                            
                              
                       
-                                <div v-if="product" class="px-2 pt-2">
-                                  <div v-for="(alt, index) in sortedAlternates.slice(0, <%=alt2Show%>)" class=" mb-3">
-                                    <a class="media  align-items-start flex-grow-1" :data-butcher="alt.butcher.slug" href="#newbutcher" @click="selectNewButcher(alt.butcher)">
+                                <div v-if="product" class=" pt-2">
+                                  <div v-for="(alt, index) in sortedAlternates.slice(0, <%=alt2Show%>)" class="mb-3">
+                                    <a class="media px-2 align-items-start flex-grow-1" :data-butcher="alt.butcher.slug" href="#newbutcher" @click="selectNewButcher(alt.butcher)">
                                    
                                        <img class="w-25"
                                           :src="alt.butcher.thumbnail" :alt="alt.butcher.name">
@@ -808,7 +808,7 @@
                                     
                       
                                       
-                                      <div class="media-body mb-2 px-2">
+                                      <div class="media-body px-2">
                                         <h6 class="h6  mb-0">{{alt.butcher.name}}
                       
                                           
@@ -852,7 +852,7 @@
                                       </div>
                                     </a>
                                   
-                                    <div class="bg-white border p-2">
+                                    <div class="bg-white border-bottom p-2 ">
                                       <div v-if="alt.butcher.shipSuccessText" class="text-center text-dark font-size-xs">
                                         {{alt.butcher.shipSuccessText}} sipariş
                                       </div>
@@ -1210,7 +1210,7 @@
                         </div>
                         <%}%>
                   </div>
-               
+        </div>
         </div>
 
              
