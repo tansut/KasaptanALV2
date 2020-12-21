@@ -736,12 +736,14 @@
                     
                       
                         <% if ( view.alternateButchers.length && controller.showOtherButchers()) { %>
-                          <div class="bg-secondary">
+                          <div id="other-butchers-panel" class="bg-secondary border-top border-left border-right">
                             <% let alt2Show = 2 %>
                       
-                            <div id="other-butchers-panel">
-                              <p class="mb-3 font-size-md border-bottom">Diğer Kasaplar 
+                           
+                            
+                              <p class="mb-0 pb-2 border-bottom pl-2 pt-2 font-size-md">Diğer Kasaplar 
                       
+
                       
                                 <% if (view.alternateButchers.length > alt2Show) { %>
                                  - 
@@ -751,12 +753,34 @@
                                 <% } %>
                       
                                 </p>
-                            </div>
+
+                                <ul class="nav  nav-pills nav-pills-dark nav-fill pb-2">
+                                  <li class="nav-item mr-0">
+                                    <a class="nav-link shadow-none font-size-xs" @click="alternateSort = null" v-bind:class="{ active: alternateSort == null }">Oto Sıra</a>
+
+                                  </li>
+
+                                  <li class="nav-item mr-0">
+                                    <a class="nav-link shadow-none font-size-xs" @click="alternateSort = toggleSort(alternateSort, 'butcher.kgPrice', 'asc')" v-bind:class="{ active: isSorted(alternateSort, 'butcher.kgPrice') }">Fiyat</a>
+
+                                  </li>
+                                  <li class="nav-item mr-0">
+                                    <a class="nav-link  shadow-none font-size-xs" @click="alternateSort = toggleSort(alternateSort, 'butcher.userRatingAsPerc', 'desc') " v-bind:class="{ active: isSorted(alternateSort, 'butcher.userRatingAsPerc') }">Memnuniyet</a>
+
+                                  </li>
+                                  <li class="nav-item mr-0">
+                                    <a class="nav-link  shadow-none font-size-xs" @click="alternateSort = toggleSort(alternateSort, 'dispatcher.distance', 'asc')" v-bind:class="{ active: isSorted(alternateSort, 'dispatcher.distance')  }">Yakınlık</a>
+
+                                  </li>
+                                </ul>
+
                            
-                              <div class="">
+                          
+                           
+                             
                       
-                                <div v-if="product">
-                                  <div v-for="(alt, index) in product.alternateButchers.slice(0, <%=alt2Show%>)" class=" border-bottom mb-3">
+                                <div v-if="product" class="pt-2">
+                                  <div v-for="(alt, index) in sortedAlternates.slice(0, <%=alt2Show%>)" class=" border-bottom mb-3">
                                     <a class="media align-items-start flex-grow-1" :data-butcher="alt.butcher.slug" href="#newbutcher" @click="selectNewButcher(alt.butcher)">
                                      
                                        <img class="w-25"
@@ -765,7 +789,7 @@
                                     
                       
                                       
-                                      <div class="media-body px-3 pb-3">
+                                      <div class="media-body mb-2 px-2">
                                         <h6 class="h6  mb-0">{{alt.butcher.name}}
                       
                                           
@@ -832,7 +856,7 @@
                       
                       
                            
-                          </div>
+                          
                         </div>
                          <% } %>
 
@@ -1159,7 +1183,7 @@
                
         </div>
 
-                </div>
+             
 
 
 
@@ -1183,6 +1207,19 @@
                     gtags.push(['butcherproduct', '<%=view.butcher.slug%>', '<%=product.slug%>']);
                     gtags.push(['butcherproductbylocation', '<%=view.butcher.slug%>/<%=product.slug%>', '<%=__req.prefAddr.display%>']);
                     gtags.push(['butcherlocationbyproduct', '<%=view.butcher.slug%>/<%=__req.prefAddr.display%>', '<%=product.slug%>']);
+
+
+                    if (req.query.butcher) {
+                      gtags.push(['butcherautoselected', '<%=view.butcher.slug%>', '<%=product.slug%>']);
+                      gtags.push(['butcherautoselectedin', '<%=view.butcher.slug%>', '<%=__req.prefAddr.display%>']);
+                      gtags.push(['butcherautoselectedinproduct', '<%=view.butcher.slug%>', '<%=product.slug%>/<%=__req.prefAddr.display%>']);
+                      gtags.push(['productautoassigned', '<%=product.slug%>', '<%=view.butcher.slug%>']);
+                    } else {
+                      gtags.push(['butchermanualselection', '<%=view.butcher.slug%>', '<%=product.slug%>']);
+                      gtags.push(['butchermanualselectionin', '<%=view.butcher.slug%>', '<%=__req.prefAddr.display%>']);
+                    }
+
+
                   <% } %>
 
 

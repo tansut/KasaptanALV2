@@ -41,21 +41,21 @@ window.initComponents = function initComponents() {
 
 
     Vue.component('money-view', {
-            template: `
+        template: `
             <span>
             {{formatCurrency(money).val}}.<small>{{formatCurrency(money).krs}}</small> TL
             <span v-if="unit">/{{unit}}</span>
             </span>            `,
-            props: {                
-                money: { type: Number },
-                unit: { type: this.String}
-            },
+        props: {
+            money: { type: Number },
+            unit: { type: this.String }
+        },
 
-            methods: {
-                formatCurrency(v) {
-                    return window.App.formatCurrency(v);
-                },
-            }
+        methods: {
+            formatCurrency(v) {
+                return window.App.formatCurrency(v);
+            },
+        }
     })
 
     Vue.component('amount-input', {
@@ -348,7 +348,7 @@ window.initComponents = function initComponents() {
         {
             el: '#alternativebutchersapp',
 
-            data: function() {
+            data: function () {
                 return {
                     product: null
                 }
@@ -367,6 +367,7 @@ window.initComponents = function initComponents() {
                 note: '',
                 newlyAddedItem: null,
                 shopCardIndex: -1,
+                alternateSort: null,
             }
         },
         mounted: function () {
@@ -379,21 +380,24 @@ window.initComponents = function initComponents() {
             })
             $('#shopcard-added-toast').on('hidden.bs.toast', function () {
                 self.newlyAddedItem = null;
-              })
+            })
         },
         methods: {
             onChange(event) {
 
             },
 
+
+
+
             selectedUnitForAlternate(butcher) {
                 var self = this;
                 if (!this.product || !this.selectedUnit) return null;
-                var f = this.product.alternateButchers.find(function(ab) {
+                var f = this.product.alternateButchers.find(function (ab) {
                     return ab.butcher.slug == butcher.slug
                 });
                 if (!f) return null;
-                var au = f.purchaseOptions.find(function(po) {
+                var au = f.purchaseOptions.find(function (po) {
                     return po.unit == self.selectedUnit.unit;
                 })
                 au = au || f.purchaseOptions[0]
@@ -416,8 +420,8 @@ window.initComponents = function initComponents() {
                 if (this.product && urlParams.has('quantity')) {
                     this.quantity = parseFloat(urlParams.get('quantity'));
                     if (this.selectedUnit) {
-                        this.quantity = this.quantity < this.selectedUnit.min ? this.selectedUnit.default: this.quantity;
-                        this.quantity = this.quantity > this.selectedUnit.max ? this.selectedUnit.default: this.quantity;
+                        this.quantity = this.quantity < this.selectedUnit.min ? this.selectedUnit.default : this.quantity;
+                        this.quantity = this.quantity > this.selectedUnit.max ? this.selectedUnit.default : this.quantity;
                     }
                 }
 
@@ -432,15 +436,15 @@ window.initComponents = function initComponents() {
 
             selectNewButcher(butcher) {
                 var self = this;
-                var butcherSlug = typeof(butcher) == 'string' ? butcher: butcher.slug;
+                var butcherSlug = typeof (butcher) == 'string' ? butcher : butcher.slug;
                 var urlParams = new URLSearchParams(window.location.search);
-                
+
                 var returnUrl = '/' + self.product.slug + '?butcher=' + butcherSlug;
                 self.selectedUnit && (returnUrl += '&selectedUnit=' + encodeURIComponent(self.selectedUnit.unit))
                 self.quantity && (returnUrl += '&quantity=' + encodeURIComponent(self.quantity))
                 self.note && (returnUrl += '&note=' + encodeURIComponent(self.note));
                 debugger;
-                urlParams.has('frame') ? (returnUrl += '&frame=' + encodeURIComponent(urlParams.get('frame'))):null;
+                urlParams.has('frame') ? (returnUrl += '&frame=' + encodeURIComponent(urlParams.get('frame'))) : null;
                 window.location.href = returnUrl + "#noteanchor";
             },
 
@@ -450,13 +454,13 @@ window.initComponents = function initComponents() {
                     if (!returnUrl) {
                         var urlParams = new URLSearchParams(window.location.search);
                         if (urlParams.has('butcher')) {
-                            returnUrl = '/' + self.product.slug + '?butcher=' + urlParams.get('butcher') + '&action=add2sc&utm_medium=' + (urlParams.has("utm_medium") ? urlParams.get("utm_medium"):'');
+                            returnUrl = '/' + self.product.slug + '?butcher=' + urlParams.get('butcher') + '&action=add2sc&utm_medium=' + (urlParams.has("utm_medium") ? urlParams.get("utm_medium") : '');
                         }
-                        else returnUrl = '/' + self.product.slug + '?action=add2sc&utm_medium=' + (urlParams.has("utm_medium") ? urlParams.get("utm_medium"):'');
+                        else returnUrl = '/' + self.product.slug + '?action=add2sc&utm_medium=' + (urlParams.has("utm_medium") ? urlParams.get("utm_medium") : '');
                         self.selectedUnit && (returnUrl += '&selectedUnit=' + encodeURIComponent(self.selectedUnit.unit))
                         self.quantity && (returnUrl += '&quantity=' + encodeURIComponent(self.quantity))
                         self.note && (returnUrl += '&note=' + encodeURIComponent(self.note))
-                        returnUrl+='#aftersetloc'
+                        returnUrl += '#aftersetloc'
                     }
                     window.location.href = "/adres-belirle/" + ul.selectedDistrict.slug + '?r=' + (encodeURIComponent(returnUrl));
                     //window.location.reload(true) // = "/" + window.App.ProductApp.product.slug + "?semt=" + ul.selectedDistrict.slug
@@ -525,14 +529,33 @@ window.initComponents = function initComponents() {
 
             },
 
-            setShopcardItem() {      
-       
+            setShopcardItem() {
+
                 let sc = window.shopcard.card.data.items[this.shopCardIndex];
                 this.quantity = sc.quantity;
                 this.note = sc.note;
-                this.selectedUnit = this.product.purchaseOptions.find(function(po) {
+                this.selectedUnit = this.product.purchaseOptions.find(function (po) {
                     return po.unit == sc.purchaseoption.unit
-                }) 
+                })
+            },
+
+            isSorted(curVal, col) {
+                curVal = curVal || '';
+                return curVal.startsWith(col)
+            },
+
+            toggleSort(curVal, col, so) {
+                var cf = '', cso = '';
+                if (curVal) {
+                    var parts = curVal.split(':');
+                    cf = parts[0];
+                    so = parts.length > 1 ? parts[1]: 'asc'
+                };
+                if (col == cf) {
+                    so = (so == 'asc' ? 'desc':'asc');
+                } 
+
+                return col + ':' + so;
             },
 
 
@@ -540,7 +563,7 @@ window.initComponents = function initComponents() {
                 if ((!event) || event.target.checkValidity()) {
                     $('#addtoscbtn').attr("disabled", true)
 
-                    var url = this.shopCardIndex >= 0 ? 'shopcard/add': 'shopcard/add';
+                    var url = this.shopCardIndex >= 0 ? 'shopcard/add' : 'shopcard/add';
 
                     let productTypeData = {};
 
@@ -556,7 +579,7 @@ window.initComponents = function initComponents() {
                         productTypeData = {
                             vekalet: $('#kurban-vekalet').val(),
                             video: $('#kurban-video').val(),
-                            teslimat: bagis ? '0': $('#kurban-teslimat').val(),
+                            teslimat: bagis ? '0' : $('#kurban-teslimat').val(),
                             kiminadina: $('#kurban-kiminadina').val(),
                             bagis: bagis,
                             bagisTarget: $('#kurban-bagis-target').val(),
@@ -582,9 +605,9 @@ window.initComponents = function initComponents() {
                         productTypeData: productTypeData,
                         note: this.note,
                         shopcardIndex: this.shopCardIndex,
-                        userSelectedButcher: urlParams.has('butcher') ? urlParams.get('butcher'): undefined
+                        userSelectedButcher: urlParams.has('butcher') ? urlParams.get('butcher') : undefined
                     }).then(result => {
-                        this.newlyAddedItem = result.items[result.items.length-1];
+                        this.newlyAddedItem = result.items[result.items.length - 1];
                         this.$nextTick(function () {
                             $('#shopcard-added-toast').toast('show')
                         })
@@ -610,7 +633,7 @@ window.initComponents = function initComponents() {
                         } else {
                             this.loadFromUrl();
                             this.selectedUnit = this.selectedUnit || ((this.product.purchaseOptions.length > 1) ? null : this.product.purchaseOptions[0]);
-                        }                         
+                        }
                     })
 
 
@@ -632,14 +655,43 @@ window.initComponents = function initComponents() {
             },
         },
         computed: {
-            price: function() {
+
+            sortedAlternates: function () {
+
+
+                var self = this;
+                function compare(a, b) {
+                    let parts = self.alternateSort.split(':');
+                    let field = parts[0];
+                    let so = parts.length > 1 ? parts[1] : 'asc';
+                    var _a = App.getProp(a, field), _b = App.getProp(b, field);
+                    if (so == 'asc') {
+                        if (_a < _b)
+                            return -1;
+                        if (_a > _b)
+                            return 1;
+                    } else {
+                        if (_a > _b)
+                            return -1;
+                        if (_a < _b)
+                            return 1;
+                    }
+                    return 0;
+                }
+                var arr = [...this.product.alternateButchers];
+                if (this.alternateSort)
+                    return arr.sort(compare);
+                else return arr;
+            },
+
+            price: function () {
                 if (this.selectedUnit && this.quantity) {
-                    var quantity = Number(this.quantity.toFixed(3)); 
+                    var quantity = Number(this.quantity.toFixed(3));
                     return this.asCurrency(this.selectedUnit.unitPrice * quantity);
                 } else return 0.00;
             },
 
-            puan: function() {
+            puan: function () {
                 var price = this.price;
                 if (price >= 0 && this.product && this.product.butcher && this.product.butcher.puanData && this.product.butcher.puanData.rate > 0) {
                     return Number((price * this.product.butcher.puanData.rate).toFixed(2))
@@ -670,12 +722,12 @@ window.initComponents = function initComponents() {
         },
         methods: {
             setShipMethod(bi, method) {
-               this.card.shipment[bi].howTo = method;
-               if (method == 'take') {
-                   this.disableShip = false;
-               } else{
-                this.disableShip = this.cannotShip;
-               }
+                this.card.shipment[bi].howTo = method;
+                if (method == 'take') {
+                    this.disableShip = false;
+                } else {
+                    this.disableShip = this.cannotShip;
+                }
             }
         },
 
