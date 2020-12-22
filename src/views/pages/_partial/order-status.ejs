@@ -1,5 +1,8 @@
 <select name="<%=name%>" id="<%=name%>">
-    <option <%=order.status == 'tedarik sürecinde' ? 'selected':'' %> value="tedarik sürecinde">tedarik sürecinde</option>
+  <option <%=order.status == 'tedarik sürecinde' ? 'selected':'' %> value="tedarik sürecinde">tedarik sürecinde</option>
+  <option <%=order.status == 'ödeme bekleniyor' ? 'selected':'' %> value="ödeme bekleniyor">ödeme bekleniyor</option>  
+
+
     <option <%=order.status == 'teslim edilecek' ? 'selected':'' %> value="teslim edilecek">teslim edilecek</option>
     <option <%=order.status == 'teslim edildi' ? 'selected':'' %> value="teslim edildi">teslim edildi</option>
     <option <%=order.status == 'iptal: müşteri' ? 'selected':'' %> value="iptal: müşteri">iptal: müşteri</option>

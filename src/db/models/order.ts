@@ -502,8 +502,7 @@ class Order extends BaseModel<Order> {
     static async fromShopcard(c: ShopCard, bi: number): Promise<Order> {
         let o = new Order();
         o.ordernum = orderid.generate();
-        o.note = c.note;
-        o.status = OrderItemStatus.supplying;
+        o.note = c.note;        
         let firstDiscount = c.getButcherDiscount(bi, firstOrderDiscount.code)
         o.isFirstButcherOrder = firstDiscount != null;
         o.discountTotal = c.getButcherDiscountTotal(bi);
@@ -551,6 +550,7 @@ class Order extends BaseModel<Order> {
         o.shipmentHowToText = c.shipment[bi].howToDesc;
         o.paymentType = c.payment[bi].type;
         o.paymentTypeText = c.payment[bi].desc;
+        o.status = o.paymentType == 'onlinepayment' ? OrderItemStatus.reqirePayment: OrderItemStatus.supplying;
         o.shipmentType = c.shipment[bi].type;
         o.shipmentTypeText = c.shipment[bi].desc;
         o.shipmentdate = c.shipment[bi].days[0] ? Helper.newDate(c.shipment[bi].days[0]): Helper.Now();

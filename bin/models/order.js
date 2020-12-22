@@ -4,6 +4,7 @@ exports.OrderSource = exports.OrderPaymentStatus = exports.OrderType = exports.D
 var OrderItemStatus;
 (function (OrderItemStatus) {
     OrderItemStatus["supplying"] = "tedarik s\u00FCrecinde";
+    OrderItemStatus["reqirePayment"] = "\u00F6deme bekleniyor";
     OrderItemStatus["shipping"] = "teslim edilecek";
     OrderItemStatus["onway"] = "paket yolda";
     OrderItemStatus["success"] = "teslim edildi";

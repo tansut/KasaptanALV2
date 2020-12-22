@@ -40,8 +40,6 @@
           <p>
             <%=order.butcherName%>
           </p>
-          <!-- <p class="font-size-sm">Birazdan e-posta adresinize de gerekli bilgileri ulaştırıyor olacağız. Çok
-            teşekkürler!</p> -->
 
             <% if (order.paymentType == 'onlinepayment') { %>
               <p class="lead font-weight-bold">
@@ -51,7 +49,7 @@
     
               <% } else { %>
 
-          <a class="btn btn-primary mt-3" rel="nofollow" href="/user/orders/<%=order.ordernum%>"><i
+          <a class="btn btn-primary mt-3" href="/user/orders/<%=order.ordernum%>"><i
               class="czi-bag"></i>&nbsp;Sipariş Takip Et</a>
 
 <%}%>

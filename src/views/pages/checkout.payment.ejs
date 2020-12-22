@@ -88,7 +88,7 @@
                         </div>   
                         <% }%>       
                         <% if (controller.allowNonOnline(bi) ) { %>
-                        <a id="btnShowOthers" class="mt-3 d-block text-muted font-size-sm" onclick="$('.non-cc').show(); $('#btnShowOthers').hide()">Diğer Ödeme Şekilleri &raquo;</a>             
+                        <!-- <a id="btnShowOthers" class="mt-3 d-block text-muted font-size-sm" onclick="$('.non-cc').show(); $('#btnShowOthers').hide()">Diğer Ödeme Şekilleri &raquo;</a>              -->
                         <% } else { %>
                             <p class="font-size-sm">
                               <span class="font-weight-bolder">Not: </span>Bu siparişi <span class="font-weight-bolder">sadece online</span> ödeyebilirsiniz. 
@@ -99,7 +99,7 @@
                   </tr>
                   <%}%>
                   <% if (controller.allowNonOnline(bi) ) { %>
-            <tr class="non-cc" style="display: none;">
+            <tr class="non-cc">
               <td>
                 <div class="custom-control custom-radio mb-4">
                   <input class="custom-control-input" type="radio" value="creditcardondoor" id="creditcardondoor<%=bi%>"
@@ -114,7 +114,7 @@
             </tr>
 
             
-            <tr class="non-cc" style="display: none;">
+            <tr class="non-cc">
               <td>
                 <div class="custom-control custom-radio mb-4">
                   <input class="custom-control-input" type="radio" id="cashondoor<%=bi%>" value="cashondoor"

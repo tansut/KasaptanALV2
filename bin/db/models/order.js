@@ -126,7 +126,6 @@ let Order = Order_1 = class Order extends basemodel_1.default {
             let o = new Order_1();
             o.ordernum = orderid.generate();
             o.note = c.note;
-            o.status = order_1.OrderItemStatus.supplying;
             let firstDiscount = c.getButcherDiscount(bi, shopcard_1.firstOrderDiscount.code);
             o.isFirstButcherOrder = firstDiscount != null;
             o.discountTotal = c.getButcherDiscountTotal(bi);
@@ -172,6 +171,7 @@ let Order = Order_1 = class Order extends basemodel_1.default {
             o.shipmentHowToText = c.shipment[bi].howToDesc;
             o.paymentType = c.payment[bi].type;
             o.paymentTypeText = c.payment[bi].desc;
+            o.status = o.paymentType == 'onlinepayment' ? order_1.OrderItemStatus.reqirePayment : order_1.OrderItemStatus.supplying;
             o.shipmentType = c.shipment[bi].type;
             o.shipmentTypeText = c.shipment[bi].desc;
             o.shipmentdate = c.shipment[bi].days[0] ? helper_1.default.newDate(c.shipment[bi].days[0]) : helper_1.default.Now();

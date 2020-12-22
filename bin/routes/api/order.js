@@ -479,6 +479,7 @@ class Route extends router_1.ApiRouter {
             let promises = [];
             o.paymentId = paymentInfo.paymentId;
             o.paymentType = "onlinepayment";
+            o.status = order_3.OrderItemStatus.supplying;
             o.paymentTypeText = payment_1.PaymentTypeDesc.onlinepayment;
             promises.push(o.save({
                 transaction: t

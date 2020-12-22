@@ -2,6 +2,7 @@ import { PuanResult } from "./puan";
 
 export enum OrderItemStatus {    
     supplying = 'tedarik sürecinde',
+    reqirePayment = 'ödeme bekleniyor',
     shipping = 'teslim edilecek',
     onway = 'paket yolda',
     success = 'teslim edildi',

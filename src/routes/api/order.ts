@@ -481,6 +481,7 @@ export default class Route extends ApiRouter {
         let promises = [];
         o.paymentId = paymentInfo.paymentId;
         o.paymentType = "onlinepayment";
+        o.status = OrderItemStatus.supplying;
         o.paymentTypeText = PaymentTypeDesc.onlinepayment;
         promises.push(o.save({
             transaction: t
