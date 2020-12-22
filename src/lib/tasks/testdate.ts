@@ -14,11 +14,13 @@ import * as moment from 'moment';
 
 
 
-export default class OrderRemainers extends BaseTask {
+ class Test extends BaseTask {
 
     get interval() {
         return "*/15 * * * *"
     }
+
+
 
     async run() {
         console.log('running OrderRemainers job', Date.now());
@@ -31,10 +33,14 @@ export default class OrderRemainers extends BaseTask {
         mesaiEnd.setHours(19);
         mesaiEnd.setMinutes(0);
 
-
         let now = Helper.Now();
+        let oneHourLater = moment(Helper.Now()).add(1, 'hour').date();
 
-        if ((now > mesaiStart) && (now < mesaiEnd)) {
+        console.log("Now", now);
+        console.log("mstart", mesaiStart);
+        console.log("mend", mesaiEnd);
+
+        if (true) {
             let api = new OrderApi();
             let orders = await Order.findAll({
                 limit: 10,
@@ -50,17 +56,23 @@ export default class OrderRemainers extends BaseTask {
             })
 
             orders = orders.filter(o=> {
+                console.log("o.creation", o.creationDate);
                 let oh = moment(o.creationDate).add(30, 'minutes').toDate();
+                console.log("oh", oh);
+                console.log("expn", oh < now);
+
                 return oh < now;
             })
-            for (let i = 0; i < orders.length; i++) {
-                let manageUrl = `${this.url}/manageorder/${orders[i].ordernum}`;
-                let text = `UYARI: Musteriniz hala cevabinizi bekliyor: ${orders[i].butcherName} siparis [${orders[i].name}] suresinde yanitlanmadi. LUTFEN SIMDI YANITLAYIN: ${manageUrl} `
-                await api.sendButcherNotifications(orders[i], text);
-                orders[i].butcherLastReminder = now;
-                orders[i].butcherLastReminderType = 'plan';
-                await  orders[i].save();
-            }
+
+
+            // for (let i = 0; i < orders.length; i++) {
+            //     let manageUrl = `${this.url}/manageorder/${orders[i].ordernum}`;
+            //     let text = `UYARI: Musteriniz hala cevabinizi bekliyor: ${orders[i].butcherName} siparis [${orders[i].name}] suresinde yanitlanmadi. LUTFEN SIMDI YANITLAYIN: ${manageUrl} `
+            //     await api.sendButcherNotifications(orders[i], text);
+            //     orders[i].butcherLastReminder = Helper.Now();
+            //     orders[i].butcherLastReminderType = 'plan';
+            //     await  orders[i].save();
+            // }
         }
 
 
@@ -68,3 +80,13 @@ export default class OrderRemainers extends BaseTask {
 
     }
 }
+
+async function init() {
+    await db.init()
+    let o = new Test();
+    await o.run();
+}
+
+
+
+init();

@@ -14,10 +14,11 @@ const order_1 = require("../../db/models/order");
 const order_2 = require("../../models/order");
 const butcher_1 = require("../../db/models/butcher");
 const sequelize_1 = require("sequelize");
+const context_1 = require("../../db/context");
 const helper_1 = require("../helper");
 const order_3 = require("../../routes/api/order");
 const moment = require("moment");
-class OrderRemainers extends basetask_1.BaseTask {
+class Test extends basetask_1.BaseTask {
     get interval() {
         return "*/15 * * * *";
     }
@@ -31,7 +32,11 @@ class OrderRemainers extends basetask_1.BaseTask {
             mesaiEnd.setHours(19);
             mesaiEnd.setMinutes(0);
             let now = helper_1.default.Now();
-            if ((now > mesaiStart) && (now < mesaiEnd)) {
+            let oneHourLater = moment(helper_1.default.Now()).add(1, 'hour').date();
+            console.log("Now", now);
+            console.log("mstart", mesaiStart);
+            console.log("mend", mesaiEnd);
+            if (true) {
                 let api = new order_3.default();
                 let orders = yield order_1.Order.findAll({
                     limit: 10,
@@ -46,20 +51,30 @@ class OrderRemainers extends basetask_1.BaseTask {
                     }
                 });
                 orders = orders.filter(o => {
+                    console.log("o.creation", o.creationDate);
                     let oh = moment(o.creationDate).add(30, 'minutes').toDate();
+                    console.log("oh", oh);
+                    console.log("expn", oh < now);
                     return oh < now;
                 });
-                for (let i = 0; i < orders.length; i++) {
-                    let manageUrl = `${this.url}/manageorder/${orders[i].ordernum}`;
-                    let text = `UYARI: Musteriniz hala cevabinizi bekliyor: ${orders[i].butcherName} siparis [${orders[i].name}] suresinde yanitlanmadi. LUTFEN SIMDI YANITLAYIN: ${manageUrl} `;
-                    yield api.sendButcherNotifications(orders[i], text);
-                    orders[i].butcherLastReminder = now;
-                    orders[i].butcherLastReminderType = 'plan';
-                    yield orders[i].save();
-                }
+                // for (let i = 0; i < orders.length; i++) {
+                //     let manageUrl = `${this.url}/manageorder/${orders[i].ordernum}`;
+                //     let text = `UYARI: Musteriniz hala cevabinizi bekliyor: ${orders[i].butcherName} siparis [${orders[i].name}] suresinde yanitlanmadi. LUTFEN SIMDI YANITLAYIN: ${manageUrl} `
+                //     await api.sendButcherNotifications(orders[i], text);
+                //     orders[i].butcherLastReminder = Helper.Now();
+                //     orders[i].butcherLastReminderType = 'plan';
+                //     await  orders[i].save();
+                // }
             }
             console.log('done OrderRemainers job', Date.now());
         });
     }
 }
-exports.default = OrderRemainers;
+function init() {
+    return __awaiter(this, void 0, void 0, function* () {
+        yield context_1.default.init();
+        let o = new Test();
+        yield o.run();
+    });
+}
+init();
