@@ -390,6 +390,17 @@ class Order extends BaseModel<Order> {
     })
     shipmentStartText: string;    
 
+
+    @Column({
+        allowNull: true
+    })
+    butcherLastReminder: Date;
+
+    @Column({
+        allowNull: true
+    })
+    butcherLastReminderType: string;    
+
    
 
     @Column({

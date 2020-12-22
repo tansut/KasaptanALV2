@@ -14,7 +14,8 @@ let appRoutes = [
     './productstats',
     './reviewstask',
     './rutins',
-    './areatask'
+    './areatask',
+    './orderremainers'
 ];
 class TaskLoader {
     static start() {

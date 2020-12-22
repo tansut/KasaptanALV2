@@ -14,6 +14,7 @@ const cron = require("node-cron");
 class BaseTask {
     constructor(config = {}) {
         this.config = config;
+        this.url = 'https://www.kasaptanal.com';
     }
     get interval() {
         return '* * * * *';

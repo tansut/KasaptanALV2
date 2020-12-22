@@ -6,7 +6,8 @@ let appRoutes = [
     './productstats',
     './reviewstask',
     './rutins',
-    './areatask'
+    './areatask',
+    './orderremainers'
 ];
 
 export default class TaskLoader {

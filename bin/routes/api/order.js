@@ -1053,19 +1053,26 @@ class Route extends router_1.ApiRouter {
             this.res.send(200);
         });
     }
+    sendButcherNotifications(order, text) {
+        return __awaiter(this, void 0, void 0, function* () {
+            let notifyMobilePhones = (order.butcher.notifyMobilePhones || "").split(',');
+            notifyMobilePhones.push('5531431988');
+            notifyMobilePhones.push('5326274151');
+            for (var p = 0; p < notifyMobilePhones.length; p++) {
+                if (notifyMobilePhones[p].trim()) {
+                    yield sms_1.Sms.send(notifyMobilePhones[p].trim(), text, false, new sitelog_1.default(this.constructorParams));
+                }
+            }
+        });
+    }
     sendPlanNotifications(order) {
         return __awaiter(this, void 0, void 0, function* () {
             let notifyMobilePhones = (order.butcher.notifyMobilePhones || "").split(',');
             notifyMobilePhones.push('5531431988');
             notifyMobilePhones.push('5326274151');
             let manageUrl = `${this.url}/manageorder/${order.ordernum}`;
-            let viewUrl = `${this.url}/user/orders/${order.ordernum}`;
-            for (var p = 0; p < notifyMobilePhones.length; p++) {
-                if (notifyMobilePhones[p].trim()) {
-                    let text = `${order.butcherName} musteriniz ${order.name} teslimat icin bilgilendirildi: ${order.shipmentStartText}. Siparis: ${manageUrl}`;
-                    sms_1.Sms.send(notifyMobilePhones[p].trim(), text, false, new sitelog_1.default(this.constructorParams));
-                }
-            }
+            let text = `${order.butcherName} musteriniz ${order.name} teslimat icin bilgilendirildi: ${order.shipmentStartText}. Siparis: ${manageUrl}`;
+            yield this.sendButcherNotifications(order, text);
             let customerText = `KasaptanAl.com siparisiniz icin ${order.butcherName} teslimat planlamasi yapti: ${order.shipmentStartText}. Kasap tel: ${order.butcher.phone}`;
             yield sms_1.Sms.send(order.phone, customerText, false, new sitelog_1.default(this.constructorParams));
             email_1.default.send(order.email, `KasaptanAl.com ${order.butcherName} siparişiniz teslimat bilgisi`, "order.planed.ejs", this.getView(order));

@@ -216,6 +216,12 @@ __decorate([
     sequelize_typescript_1.Column({
         allowNull: true
     }),
+    __metadata("design:type", Number)
+], Area.prototype, "selectionRadius", void 0);
+__decorate([
+    sequelize_typescript_1.Column({
+        allowNull: true
+    }),
     sequelize_typescript_1.ForeignKey(() => Area_1),
     __metadata("design:type", Number)
 ], Area.prototype, "parentid", void 0);

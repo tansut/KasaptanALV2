@@ -67,7 +67,7 @@ export default class Route extends ViewRouter {
     logisticsProvider: LogisticProvider;
 
     dispatcherTypes = DispatcherTypeDesc;
-
+    userArea: Area;
 
     get ProductTypeManager() {
         let params = {
@@ -171,21 +171,25 @@ export default class Route extends ViewRouter {
         })
 
 
-        let nearButchers = serving.filter(p => p.butcherArea.bestKm <= 15.0);
-        let alternateButchers = serving.filter(p => (p.butcherArea.bestKm > 15.0 && p.butcherArea.bestKm <= 20.0));
-        let farButchers = serving.filter(p => p.butcherArea.bestKm > 20.0);
+        let nearRadius = (this.userArea && this.userArea.selectionRadius) ? this.userArea.selectionRadius: 15;
+        let alternateRadius = Math.round(nearRadius * 1.5);
+
+        let nearButchers = serving.filter(p => p.butcherArea.bestKm <= nearRadius);
+        let alternateButchers = serving.filter(p => (p.butcherArea.bestKm > nearRadius && p.butcherArea.bestKm <= alternateRadius));
+        let farButchers = serving.filter(p => p.butcherArea.bestKm > alternateRadius);
 
         let defaultButchers = nearButchers;
 
-        if (defaultButchers.length < 1) {
+        if (defaultButchers.length == 0) {
             defaultButchers = defaultButchers.concat(alternateButchers);
+            if (defaultButchers.length == 0 && (farButchers.length > 0)) {
+                defaultButchers.push(farButchers[0]);
+            }
         }
 
         defaultButchers = defaultButchers.length == 0 ? serving : defaultButchers;
 
         let mybest: Dispatcher = await this.tryBestFromShopcard(serving) ||
-            // await this.tryBestFromOrders(servingL3) ||
-            // await this.tryBestFromOrders(servingL2) || 
             await this.tryBestFromOrders(serving) ||
             this.tryBestAsRandom(defaultButchers);
         if (mybest) {
@@ -195,8 +199,6 @@ export default class Route extends ViewRouter {
         return {
             best: mybest,
             serving: serving,
-            // servingL2: servingL2,
-            // servingL3: servingL3,
             takeOnly: takeOnly
         }
     }
@@ -217,7 +219,6 @@ export default class Route extends ViewRouter {
         this.product = product;
         let api = new ProductApi(this.constructorParams);
         this.shopcard = await ShopCard.createFromRequest(this.req);
-
         await product.loadResources();
 
         let shopcard = await ShopCard.createFromRequest(this.req);
@@ -255,9 +256,10 @@ export default class Route extends ViewRouter {
                 serving: [],
                 takeOnly: []
             }
-        } else
+        } else {
+            this.userArea = await Area.findByPk(this.req.prefAddr.level3Id);
             selectedButchers = await this.bestButchersForProduct(product, this.req.prefAddr, butcher);
-
+        }
         let serving = selectedButchers.serving.concat(<any>selectedButchers.takeOnly);
 
 

@@ -327,7 +327,7 @@
   <script>
 
     <% if (shopcard.items.length) { %>
-      window.App.gTag('checkout', 'view/shopcardWithItems', "", <%=shopcard.items.length %>);
+      window.App.gTag('checkout', 'view/shopcardWithItems', "<=__req.user ? 'authenticated':'anonymous'%>", <%=shopcard.items.length %>);
     <% } %>
     window.App.gTag('checkout', 'view/shopcard', "<%=__req.user ? __req.user.mphone: ''  %>", <%=shopcard.items.length %>);
     

@@ -4,6 +4,8 @@ export class BaseTask {
 
     _task: any;
 
+    url = 'https://www.kasaptanal.com';
+
     get interval() {
         return '* * * * *';
 

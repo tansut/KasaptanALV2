@@ -154,6 +154,11 @@ class Area extends BaseModel<Area> {
     @Column({
         allowNull: true
     })
+    selectionRadius: number;
+
+    @Column({
+        allowNull: true
+    })
     @ForeignKey(() => Area)
     parentid: number
 

@@ -577,6 +577,18 @@ __decorate([
     sequelize_typescript_1.Column({
         allowNull: true
     }),
+    __metadata("design:type", Date)
+], Order.prototype, "butcherLastReminder", void 0);
+__decorate([
+    sequelize_typescript_1.Column({
+        allowNull: true
+    }),
+    __metadata("design:type", String)
+], Order.prototype, "butcherLastReminderType", void 0);
+__decorate([
+    sequelize_typescript_1.Column({
+        allowNull: true
+    }),
     __metadata("design:type", String)
 ], Order.prototype, "paymentType", void 0);
 __decorate([

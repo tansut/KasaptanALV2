@@ -29,9 +29,9 @@ class SiteLogRoute extends router_1.ApiRouter {
     log(content) {
         return __awaiter(this, void 0, void 0, function* () {
             var objectC = Object.assign(Object.assign({}, content), {
-                sessionid: this.req["session"] ? this.req["session"].id : null,
-                userid: this.req.user ? this.req.user.id : null,
-                ip: this.req.header("x-forwarded-for") || this.req.connection.remoteAddress
+                sessionid: (this.req && this.req["session"]) ? this.req["session"].id : null,
+                userid: (this.req && this.req.user) ? this.req.user.id : null,
+                ip: this.req ? (this.req.header("x-forwarded-for") || this.req.connection.remoteAddress) : null
             });
             yield sitelog_1.default.create(objectC);
         });

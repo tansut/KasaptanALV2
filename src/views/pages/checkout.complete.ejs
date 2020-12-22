@@ -75,6 +75,9 @@
   <script>
     <% orders.forEach(order => { %>
       window.App.gTag('checkout', 'checkout-completed', "<%= order.ordernum %>", <%= order.total %>);
+      window.App.gTag('checkout', 'checkout-completed:city', "<%= order.areaLevel1Text %>", <%= order.total %>);
+      window.App.gTag('checkout', 'checkout-completed:district', "<%= order.areaLevel2Text %>", <%= order.total %>);
+      window.App.gTag('checkout', 'checkout-completed:semt', "<%= order.areaLevel3Text %>", <%= order.total %>);
     <% }) %>
 
     // <% if (orders.length == 1 && orders[0].paymentType == 'onlinepayment') { %>

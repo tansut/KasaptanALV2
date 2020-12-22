@@ -147,19 +147,21 @@ class Route extends router_1.ViewRouter {
                 else
                     return false;
             });
-            let nearButchers = serving.filter(p => p.butcherArea.bestKm <= 15.0);
-            let alternateButchers = serving.filter(p => (p.butcherArea.bestKm > 15.0 && p.butcherArea.bestKm <= 20.0));
-            let farButchers = serving.filter(p => p.butcherArea.bestKm > 20.0);
+            let nearRadius = (this.userArea && this.userArea.selectionRadius) ? this.userArea.selectionRadius : 15;
+            let alternateRadius = Math.round(nearRadius * 1.5);
+            let nearButchers = serving.filter(p => p.butcherArea.bestKm <= nearRadius);
+            let alternateButchers = serving.filter(p => (p.butcherArea.bestKm > nearRadius && p.butcherArea.bestKm <= alternateRadius));
+            let farButchers = serving.filter(p => p.butcherArea.bestKm > alternateRadius);
             let defaultButchers = nearButchers;
-            if (defaultButchers.length < 1) {
+            if (defaultButchers.length == 0) {
                 defaultButchers = defaultButchers.concat(alternateButchers);
+                if (defaultButchers.length == 0 && (farButchers.length > 0)) {
+                    defaultButchers.push(farButchers[0]);
+                }
             }
             defaultButchers = defaultButchers.length == 0 ? serving : defaultButchers;
             let mybest = (yield this.tryBestFromShopcard(serving)) ||
-                (
-                // await this.tryBestFromOrders(servingL3) ||
-                // await this.tryBestFromOrders(servingL2) || 
-                yield this.tryBestFromOrders(serving)) ||
+                (yield this.tryBestFromOrders(serving)) ||
                 this.tryBestAsRandom(defaultButchers);
             if (mybest) {
                 mybest = (userBest ? (serving.find(s => s.butcherid == userBest.id)) : null) || mybest;
@@ -167,8 +169,6 @@ class Route extends router_1.ViewRouter {
             return {
                 best: mybest,
                 serving: serving,
-                // servingL2: servingL2,
-                // servingL3: servingL3,
                 takeOnly: takeOnly
             };
         });
@@ -215,8 +215,10 @@ class Route extends router_1.ViewRouter {
                     takeOnly: []
                 };
             }
-            else
+            else {
+                this.userArea = yield area_1.default.findByPk(this.req.prefAddr.level3Id);
                 selectedButchers = yield this.bestButchersForProduct(product, this.req.prefAddr, butcher);
+            }
             let serving = selectedButchers.serving.concat(selectedButchers.takeOnly);
             if (selectedButchers.best && this.req.query.butcher && (selectedButchers.best.butcher.slug != this.req.query.butcher)) {
                 serving = [];

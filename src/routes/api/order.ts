@@ -1170,19 +1170,28 @@ export default class Route extends ApiRouter {
         this.res.send(200);
     }
 
+    async sendButcherNotifications(order: Order, text: string) {
+        let notifyMobilePhones = (order.butcher.notifyMobilePhones || "").split(',');
+        notifyMobilePhones.push('5531431988');
+        notifyMobilePhones.push('5326274151');
+
+        for (var p = 0; p < notifyMobilePhones.length; p++) {
+            if (notifyMobilePhones[p].trim()) {
+                await Sms.send(notifyMobilePhones[p].trim(), text, false, new SiteLogRoute(this.constructorParams))
+            }
+        }
+    }
+
     async sendPlanNotifications(order: Order) {
         let notifyMobilePhones = (order.butcher.notifyMobilePhones || "").split(',');
         notifyMobilePhones.push('5531431988');
         notifyMobilePhones.push('5326274151');
-        let manageUrl = `${this.url}/manageorder/${order.ordernum}`;
-        let viewUrl = `${this.url}/user/orders/${order.ordernum}`;
 
-        for (var p = 0; p < notifyMobilePhones.length; p++) {
-            if (notifyMobilePhones[p].trim()) {
-                let text = `${order.butcherName} musteriniz ${order.name} teslimat icin bilgilendirildi: ${order.shipmentStartText}. Siparis: ${manageUrl}`;
-                Sms.send(notifyMobilePhones[p].trim(), text, false, new SiteLogRoute(this.constructorParams))
-            }
-        }
+        let manageUrl = `${this.url}/manageorder/${order.ordernum}`;
+        let text = `${order.butcherName} musteriniz ${order.name} teslimat icin bilgilendirildi: ${order.shipmentStartText}. Siparis: ${manageUrl}`;
+
+
+        await this.sendButcherNotifications(order, text)
 
         let customerText = `KasaptanAl.com siparisiniz icin ${order.butcherName} teslimat planlamasi yapti: ${order.shipmentStartText}. Kasap tel: ${order.butcher.phone}`
         await Sms.send(order.phone, customerText, false, new SiteLogRoute(this.constructorParams))

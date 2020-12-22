@@ -13,9 +13,9 @@ export default class SiteLogRoute extends ApiRouter {
 
     async log(content: any) {
         var objectC = {...content, ...{
-            sessionid: this.req["session"] ? this.req["session"].id: null,
-            userid: this.req.user ? this.req.user.id: null,
-            ip: this.req.header("x-forwarded-for") || this.req.connection.remoteAddress
+            sessionid: (this.req && this.req["session"]) ? this.req["session"].id: null,
+            userid: (this.req && this.req.user) ? this.req.user.id: null,
+            ip: this.req ? (this.req.header("x-forwarded-for") || this.req.connection.remoteAddress): null
         }};
         await SiteLog.create(objectC)
     }
