@@ -187,6 +187,7 @@ class Route extends router_1.ViewRouter {
                 let filters = parse[1].split('=');
                 let where = {};
                 where[filters[0]] = filters[1];
+                where['status'] = "onsale";
                 this.products = yield product_1.default.findAll({
                     where: where,
                     order: ['tag1']

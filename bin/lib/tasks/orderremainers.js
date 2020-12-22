@@ -19,7 +19,7 @@ const order_3 = require("../../routes/api/order");
 const moment = require("moment");
 class OrderRemainers extends basetask_1.BaseTask {
     get interval() {
-        return "*/15 * * * *";
+        return "*/30 * * * *";
     }
     run() {
         return __awaiter(this, void 0, void 0, function* () {
@@ -29,7 +29,7 @@ class OrderRemainers extends basetask_1.BaseTask {
             let mesaiEnd = helper_1.default.Now();
             mesaiEnd.setHours(19);
             let now = helper_1.default.Now();
-            let oneHourLater = helper_1.default.Now().setTime(now.getTime() + (1 * 60 * 60 * 1000));
+            let oneHourLater = moment(helper_1.default.Now()).add(1, 'hour').date();
             if ((now > mesaiStart) && (now < mesaiEnd)) {
                 let api = new order_3.default();
                 let orders = yield order_1.Order.findAll({
@@ -45,12 +45,12 @@ class OrderRemainers extends basetask_1.BaseTask {
                     }
                 });
                 orders = orders.filter(o => {
-                    let oh = moment(o.creationDate).add(30, 'minutes').date();
-                    return oh < oneHourLater;
+                    let oh = moment(o.creationDate).add(30, 'minutes').toDate();
+                    return oh < now;
                 });
                 for (let i = 0; i < orders.length; i++) {
                     let manageUrl = `${this.url}/manageorder/${orders[i].ordernum}`;
-                    let text = `MÜŞTERİNİZ YANITNIZI BEKLİYOR: ${orders[i].butcherName} siparis [${orders[i].name}] suresinde yanitlanmadi. LUTFEN SIMDI YANITLAYIN: ${manageUrl} `;
+                    let text = `UYARI: Musteriniz hala cevabinizi bekliyor: ${orders[i].butcherName} siparis [${orders[i].name}] suresinde yanitlanmadi. LUTFEN SIMDI YANITLAYIN: ${manageUrl} `;
                     yield api.sendButcherNotifications(orders[i], text);
                     orders[i].butcherLastReminder = helper_1.default.Now();
                     orders[i].butcherLastReminderType = 'plan';

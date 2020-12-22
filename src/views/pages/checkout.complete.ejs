@@ -31,28 +31,29 @@
 
     <div class="card py-3 mt-sm-3">
       <div class="card-body text-center">
-        <h2 class="h4 pb-3">Teşekkürler!</h2>
-        <p class="font-size-sm mb-2">Siparişiniz başarıyla aldık.</p>
+        <h2 class="h4 pb-3">Siparişinizi aldık!</h2>
 
         <% orders.forEach(order=> { %>
         <div class="mt-5">
+          <% if (order.paymentType == 'onlinepayment') { %>
+            <p class="font-weight-bold">
+              Online ödemeniz ardından siparişinizi işleme alacağız.
+            </p>
+            <a target="_blank" class="btn mt-3 btn-success mr-2" href="/pay/<%=order.ordernum%>">Önline Ödeme Yap &raquo;</a>
+  
+            <% } else { %>
+
+        <a class="btn btn-primary mt-3" href="/user/orders/<%=order.ordernum%>"><i
+            class="czi-bag"></i>&nbsp;Sipariş Takip Et</a>
+
+<%}%>
+
           <span data-orderid="<%= order.ordernum %>"><%= order.ordernum %></span></p>
           <p>
             <%=order.butcherName%>
           </p>
 
-            <% if (order.paymentType == 'onlinepayment') { %>
-              <p class="lead font-weight-bold">
-                Online ödemeniz ardından siparişinizi işleme alacağız.
-              </p>
-              <a target="_blank" class="btn mt-3 btn-success mr-2" href="/pay/<%=order.ordernum%>">Önline Ödeme Yap &raquo;</a>
-    
-              <% } else { %>
 
-          <a class="btn btn-primary mt-3" href="/user/orders/<%=order.ordernum%>"><i
-              class="czi-bag"></i>&nbsp;Sipariş Takip Et</a>
-
-<%}%>
         </div>
 
         <% }) %>
@@ -76,8 +77,8 @@
     <% orders.forEach(order => { %>
       window.App.gTag('checkout', 'checkout-completed', "<%= order.ordernum %>", <%= order.total %>);
       window.App.gTag('checkout', 'checkout-completed:city', "<%= order.areaLevel1Text %>", <%= order.total %>);
-      window.App.gTag('checkout', 'checkout-completed:district', "<%= order.areaLevel2Text %>", <%= order.total %>);
-      window.App.gTag('checkout', 'checkout-completed:semt', "<%= order.areaLevel3Text %>", <%= order.total %>);
+      window.App.gTag('checkout', 'checkout-completed:district', "<%= order.areaLevel1Text %>/<%= order.areaLevel2Text %>", <%= order.total %>);
+      window.App.gTag('checkout', 'checkout-completed:semt', "<%= order.areaLevel3Text %>, <%= order.areaLevel2Text %>/<%= order.areaLevel1Text %>", <%= order.total %>);
     <% }) %>
 
     // <% if (orders.length == 1 && orders[0].paymentType == 'onlinepayment') { %>

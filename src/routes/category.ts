@@ -184,6 +184,7 @@ export default class Route extends ViewRouter {
             let filters = parse[1].split('=');
             let where = {};
             where[filters[0]] = filters[1];
+            where['status'] = "onsale";
             this.products = await Product.findAll({
                 where: where,
                 order: ['tag1']
