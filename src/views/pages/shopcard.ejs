@@ -42,11 +42,19 @@
       <div class="row">
 
         <section class="col-lg-8">
+          <% if (shopcard.items.length) { %>
+
+          <div class="bg-secondary mb-3 p-3">
+            <p class="mb-0">
+              <i class="font-weight-bold czi-icon czi-announcement mr-1"></i>
+              Güvenle devam edin, teslimat gün ve saatini birazdan belirleyebilirsiniz.
+            </p>
+          </div>
     
-          <div class="">
+         
     
-    
-            
+          <% } %>
+          <div>
     
     
 
@@ -129,13 +137,14 @@
                 </span>
               </div>
               <% } else if (!req.user) { %>
-                   <div class="mb-3 bg-secondary border p-3">
-                     <h5 class="h5">Mevcut Puanlarınızı Görüntüleyin</h5>
+                   <div class="mb-3">
+                <h6 class="h6 font-weight-bold"><i class="czi-check-circle mr-2"></i>Kullanılabilir Puanlarınız</h6>
+
 
                     <p>
-                      Önceki siparişlerinizden kazandığınız puanları görüntülemek için giriş yapın.
+                      Kazandığınız puanları görüntülemek için <a href="javascript:App.showLoginDlg('/alisveris-sepetim')">giriş yapın</a>.
+
                     </p>
-                    <button type="button" onclick="App.showLoginDlg('/alisveris-sepetim')" class="btn btn-primary"><i class="czi-user text-white"></i> Giriş Yap</button>
                     
                   </div>
               <% } %>
@@ -147,14 +156,14 @@
        
          <% if (!shopcard.items.length) { %>
       
-            <div class="text-center">
-              <a class="btn btn-lg btn-primary" href="/kasap-urunleri">Alışverişe Başla
+            <div class="text-right">
+              <a class="btn btn-sm btn-dark" href="/kasap-urunleri">Tüm Ürünler
                   </a>
     
     
             </div>
             <% } else { %>
-              <h5 class="h5">
+              <h5 class="h5 mb-0">
                 Ürünler
               </h5>
             <%- include('./_partial/shopcardlist.ejs', {

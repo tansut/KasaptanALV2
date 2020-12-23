@@ -93,10 +93,13 @@ let Dispatcher = class Dispatcher extends basemodel_1.default {
             else if (this.butcherArea.bestKm > 45.0) {
                 time = '120-180 dk';
             }
-            return `${time} teslimat`;
+            return `${time} kurye ile teslimat`;
+        }
+        else if (!this.toareaid) {
+            return "Kargo ile 2-3 gün teslimat";
         }
         else {
-            return "";
+            return "Aynı gün soğuk zincir teslimat";
             //return `${this.butcherArea.kmActive} km, 1-2 saat.`
         }
         let desc = "";
