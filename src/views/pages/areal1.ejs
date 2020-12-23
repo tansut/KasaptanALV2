@@ -37,13 +37,13 @@
         <h1 class="h3"><%= controller.address.level3Text || controller.address.level2Text || controller.address.level1Text %> Kasap</h1>
         <h2 class="h4 lead">
           <% if (controller.address.level3Id) { %>
-           <strong><%=controller.address.level3Text %> Kasapları</strong>, eve servis en yakın kasap olarak kategorize ettiğimiz bu semte servisi olan online et siparişi verebileceğiniz güvenilir kasap iş ortaklarımızdır.<br>
+           <strong><%=controller.address.level3Text %> Kasapları</strong>, eve servis en yakın kasap olarak kategorize ettiğimiz bu semte servisi olan online et siparişi verebileceğiniz güvenle tavsiye edebileceğimiz kasap iş ortaklarımızdır.<br>
             <a rel="nofollow" class="btn btn-primary mt-3" href="/adres-belirle/<%=controller.address.level3Slug%>?r=/kasap-urunleri">Bu Semtteyim</a>
           <% } else if (controller.address.level2Id) { %>
             <strong><%=controller.address.level2Text %> Kasapları</strong>, 
-            bu ilçeden online et ve et ürünleri siparişi verebileceğiniz güvenilir kasap iş ortaklarımızdır.
+            bu ilçeden online et ve et ürünleri siparişi verebileceğiniz güvenle tavsiye edebileceğimiz kasap iş ortaklarımızdır.
           <% } else if (controller.address.level1Id) { %>
-             <strong><%=controller.address.level1Text%> Kasapları</strong>, bu ilden et ve et ürünleri online sipariş verebileceğiniz <strong>Online Kasap <%=controller.address.level1Text%></strong> olarak kategorize ettiğimiz güvenilir kasap iş ortaklarımızdır.
+             <strong><%=controller.address.level1Text%> Kasapları</strong>, bu ilden et ve et ürünleri online sipariş verebileceğiniz <strong>Online Kasap <%=controller.address.level1Text%></strong> olarak kategorize ettiğimiz güvenle tavsiye edebileceğimiz kasap iş ortaklarımızdır.
           <% } %>
           </h2>
       </div>
