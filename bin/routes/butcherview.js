@@ -21,6 +21,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const router_1 = require("../lib/router");
 const butcher_1 = require("../db/models/butcher");
 const common_1 = require("../lib/common");
+const helper_1 = require("../lib/helper");
 const resource_1 = require("./resource");
 const Jimp = require('jimp');
 const productManager_1 = require("../lib/productManager");
@@ -131,8 +132,8 @@ class Route extends router_1.ViewRouter {
             }
             this.products = productManager_1.default.filterProductsByCategory(this.products, { slug: this.category.slug }, { productType: 'generic' }, { chunk: 0 });
             this.subCategories = productManager_1.default.generateSubcategories(this.category, this.products);
-            let pageTitle = butcher.pageTitle || `${butcher.name}`;
-            let pageDescription = butcher.pageDescription || `${butcher.name}, ${butcher.address} ${butcher.areaLevel1.name}/${butcher.areaLevel2.name} adresinde hizmet vermekte olup ${(butcher.phone || '').trim().slice(0, -5) + " ..."} numaralı telefon ile ulaşabilirsiniz.`;
+            let pageTitle = helper_1.default.template(butcher.pageTitle || `${butcher.name}`, butcher);
+            let pageDescription = helper_1.default.template(butcher.pageDescription || `${butcher.name}, ${butcher.address} ${butcher.areaLevel1.name}/${butcher.areaLevel2.name} adresinde hizmet vermekte olup ${(butcher.phone || '').trim().slice(0, -5) + " ..."} numaralı telefon ile ulaşabilirsiniz.`, butcher);
             let pageThumbnail = this.req.helper.imgUrl('butcher-google-photos', butcher.slug);
             if (this.req.prefAddr) {
                 let dpapi = new dispatcher_1.default(this.constructorParams);

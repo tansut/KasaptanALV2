@@ -261,7 +261,11 @@ class Butcher extends BaseModel<Butcher> {
     @Column
     keywords: string;
 
-    @Column
+    @Column({
+        type: DataType.TEXT
+    }
+        
+    )
     pageDescription: string;
 
 

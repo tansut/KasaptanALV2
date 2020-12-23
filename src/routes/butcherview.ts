@@ -175,8 +175,8 @@ export default class Route extends ViewRouter {
  
 
 
-        let pageTitle = butcher.pageTitle || `${butcher.name}` ;
-        let pageDescription = butcher.pageDescription || `${butcher.name}, ${butcher.address} ${butcher.areaLevel1.name}/${butcher.areaLevel2.name} adresinde hizmet vermekte olup ${(butcher.phone || '').trim().slice(0, -5) + " ..."} numaralı telefon ile ulaşabilirsiniz.`
+        let pageTitle = Helper.template(butcher.pageTitle || `${butcher.name}`, butcher) ;
+        let pageDescription = Helper.template(butcher.pageDescription || `${butcher.name}, ${butcher.address} ${butcher.areaLevel1.name}/${butcher.areaLevel2.name} adresinde hizmet vermekte olup ${(butcher.phone || '').trim().slice(0, -5) + " ..."} numaralı telefon ile ulaşabilirsiniz.`, butcher)
         let pageThumbnail = this.req.helper.imgUrl('butcher-google-photos', butcher.slug)
         
         if (this.req.prefAddr) {

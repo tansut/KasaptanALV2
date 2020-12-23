@@ -424,7 +424,9 @@ __decorate([
     __metadata("design:type", String)
 ], Butcher.prototype, "keywords", void 0);
 __decorate([
-    sequelize_typescript_1.Column,
+    sequelize_typescript_1.Column({
+        type: sequelize_typescript_1.DataType.TEXT
+    }),
     __metadata("design:type", String)
 ], Butcher.prototype, "pageDescription", void 0);
 __decorate([

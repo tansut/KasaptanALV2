@@ -116,6 +116,11 @@ export default class Helper {
         return res.toDate();        
     }
 
+    static template(tpl, data) {
+        return tpl.replace(/\$\(([^\)]+)?\)/g, function($1, $2) { return data[$2]; });
+    }
+      
+
 
 
     static shuffle(array) {

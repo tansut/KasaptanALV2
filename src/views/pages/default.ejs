@@ -60,74 +60,77 @@
 </div>
 
 
-    
+<div class="container mb-3">
+    <%- include('./_partial/category-products-slider', {category: 'yilbasi', limit: 4, reverse: true}); %>
+</div>    
+
+<section class="container">
+    <div class="row">
+        <div class="col-md-6 mb-3">
+            <div class="d-flex flex-column h-100 justify-content-center bg-size-cover bg-position-center rounded-lg"
+                style="background-image: url(<%=__config.staticDomain %>/resource/img/banner-bg.jpg);">
 
 
 
+                <div class="py-4 my-2 my-md-0 py-md-5 px-4 ml-md-3 text-center text-sm-left">
+                    <h4 class="h6 font-size-lg font-weight-light mb-2">Kasap Kart&trade; ile Puan Kazanın</h4>
+                    <h3 class="mb-4 h5">Tüm siparişleriniz çok daha kârlı</h3>
 
-    <div class="container mb-3">
-        <%- include('./_partial/category-products-slider', {category: 'populer-etler', limit: 8, reverse: true, img: 'img/category/premium.jpg'}); %>
+                    <a class="btn btn-primary " href="/blog/kasap-kart">Daha Fazla Bilgi</a>
+
+
+
+                </div>
+         
     </div>
 
 
-    <section class="container">
-        <div class="row">
-            <div class="col-md-6 mb-3">
-                <div class="d-flex flex-column h-100 justify-content-center bg-size-cover bg-position-center rounded-lg"
-                    style="background-image: url(<%=__config.staticDomain %>/resource/img/banner-bg.jpg);">
+</div>
 
 
+<div class="col-md-6 mb-3">
+    <div class="d-flex flex-column h-100 justify-content-center bg-size-cover bg-position-center rounded-lg"
+    style="background-image: url(<%=__config.staticDomain %>/resource/img/banner-bg.jpg);">
 
-                    <div class="py-4 my-2 my-md-0 py-md-5 px-4 ml-md-3 text-center text-sm-left">
-                        <h4 class="h6 font-size-lg font-weight-light mb-2">Kasap Kart&trade; ile Puan Kazanın</h4>
-                        <h3 class="mb-4 h5">Tüm siparişleriniz çok daha kârlı</h3>
+                <div class="py-4 my-2 my-md-0 py-md-5 px-4 ml-md-3 text-center text-sm-left">
+                    <h4 class="h6 font-size-lg font-weight-light mb-2">Siz Yemeğe Karar Verin</h4>
+                    <h3 class="mb-4 h5">En uygun eti KasaptanAl.com önersin</h3>
 
-                        <a class="btn btn-primary " href="/blog/kasap-kart">Daha Fazla Bilgi</a>
-
-
-
-                    </div>
-             
-        </div>
-
-
-    </div>
-   
-
-    <div class="col-md-6 mb-3">
-        <div class="d-flex flex-column h-100 justify-content-center bg-size-cover bg-position-center rounded-lg"
-        style="background-image: url(<%=__config.staticDomain %>/resource/img/banner-bg.jpg);">
-
-                    <div class="py-4 my-2 my-md-0 py-md-5 px-4 ml-md-3 text-center text-sm-left">
-                        <h4 class="h6 font-size-lg font-weight-light mb-2">Siz Yemeğe Karar Verin</h4>
-                        <h3 class="mb-4 h5">En uygun eti KasaptanAl.com önersin</h3>
-
-                        <a class="btn btn-primary " href="/et-yemekleri">Et Yemekleri</a>
-
-
-
-                    </div>
+                    <a class="btn btn-primary " href="/et-yemekleri">Et Yemekleri</a>
 
 
 
                 </div>
 
 
+
             </div>
 
 
-
-
         </div>
-    </section>
+
+
+
+
+    </div>
+</section>
+
+
+<div class="container mb-3">
+    <%- include('./_partial/category-products-slider', {category: 'populer-etler', limit: 8, reverse: true, img: 'img/category/premium.jpg'}); %>
+</div>
+
+
+
+
+
+
+
 
     <div class="container mb-3 ">
         <%- include('./_partial/category-products-slider', {limit: 4, category: 'bu-hafta', reverse: true, img: 'img/category/premium.jpg'}); %>
     </div>
-
-
-
-
+    
 
 
 

@@ -93,6 +93,9 @@ class Helper {
         let res = moment(d).add(d.getTimezoneOffset(), 'minutes').add(3, 'hour');
         return res.toDate();
     }
+    static template(tpl, data) {
+        return tpl.replace(/\$\(([^\)]+)?\)/g, function ($1, $2) { return data[$2]; });
+    }
     static shuffle(array) {
         var currentIndex = array.length, temporaryValue, randomIndex;
         // While there remain elements to shuffle...
