@@ -44,6 +44,9 @@ let Order = Order_1 = class Order extends basemodel_1.default {
         this.butcherComissiomAccounts = [];
         this.puanSummary = [];
     }
+    cancelable() {
+        return (this.status == order_1.OrderItemStatus.supplying) || (this.status == order_1.OrderItemStatus.reqirePayment);
+    }
     get displayAddress() {
         return `${this.address} Bina: ${this.bina}, Kat: ${this.kat}, Daire: ${this.daire}. + ${this.areaLevel3Text}, ${this.areaLevel2Text}/${this.areaLevel1Text}`;
     }
@@ -573,6 +576,32 @@ __decorate([
     }),
     __metadata("design:type", String)
 ], Order.prototype, "shipmentStartText", void 0);
+__decorate([
+    sequelize_typescript_1.Column({
+        allowNull: false,
+        defaultValue: 0
+    }),
+    __metadata("design:type", Number)
+], Order.prototype, "sentCustomerReminders", void 0);
+__decorate([
+    sequelize_typescript_1.Column({
+        allowNull: true
+    }),
+    __metadata("design:type", Date)
+], Order.prototype, "customerLastReminder", void 0);
+__decorate([
+    sequelize_typescript_1.Column({
+        allowNull: true
+    }),
+    __metadata("design:type", String)
+], Order.prototype, "customerLastReminderType", void 0);
+__decorate([
+    sequelize_typescript_1.Column({
+        allowNull: false,
+        defaultValue: 0
+    }),
+    __metadata("design:type", Number)
+], Order.prototype, "sentButcherReminders", void 0);
 __decorate([
     sequelize_typescript_1.Column({
         allowNull: true

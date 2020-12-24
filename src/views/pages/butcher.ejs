@@ -158,32 +158,44 @@
       <% } %>
 
 
-      <div class="container mb-3 row w-50 mx-auto">
-        <div class="col-sm-6">
-          <div class="font-size-sm  mb-1">Ürün Memnuniyeti</div>
-          <div class="progress rounded-0 mb-3">
-            <div class="progress-bar font-weight-medium bg-warning" role="progressbar"
-              style="width: <%=butcher.userRatingAsPerc %>%" aria-valuenow="<%=butcher.userRatingAsPerc %>"
-              aria-valuemin="0" aria-valuemax="100">
-              <%=butcher.userRatingAsPerc %>%
+      <div>
+        <% if (butcher.shipSuccessText && false) { %>
+          <div class="text-center text-dark font-size-xs">
+    
+            <%=butcher.shipSuccessText %> sipariş
+          </div>
+          <% } %>
+  
+        <div class="container mb-3 row w-50 mx-auto">
+          <div class="col-sm-6">
+            <div class="font-size-sm  mb-1">Ürün Memnuniyeti</div>
+            <div class="progress rounded-0 mb-3">
+              <div class="progress-bar font-weight-medium bg-warning" role="progressbar"
+                style="width: <%=butcher.userRatingAsPerc %>%" aria-valuenow="<%=butcher.userRatingAsPerc %>"
+                aria-valuemin="0" aria-valuemax="100">
+                <%=butcher.userRatingAsPerc %>%
+              </div>
             </div>
           </div>
-        </div>
-
-
-        <div class="col-sm-6">
-          <div class="font-size-sm  mb-1">Teslimat Başarısı</div>
-
-          <div class="progress rounded-0 mb-3">
-            <div class="progress-bar font-weight-medium bg-warning" role="progressbar"
-              style="width: <%=butcher.shipRatingAsPerc %>%" aria-valuenow="<%=butcher.shipRatingAsPerc %>"
-              aria-valuemin="0" aria-valuemax="100">
-              <%=butcher.shipRatingAsPerc %>%
+  
+  
+          <div class="col-sm-6">
+            <div class="font-size-sm  mb-1">Teslimat Başarısı</div>
+  
+            <div class="progress rounded-0 mb-3">
+              <div class="progress-bar font-weight-medium bg-warning" role="progressbar"
+                style="width: <%=butcher.shipRatingAsPerc %>%" aria-valuenow="<%=butcher.shipRatingAsPerc %>"
+                aria-valuemin="0" aria-valuemax="100">
+                <%=butcher.shipRatingAsPerc %>%
+              </div>
             </div>
           </div>
+  
         </div>
-
       </div>
+
+
+
 
       <div class="container mb-3 cz-gallery slider" style="position: relative;" data-simplebar>
         <div class="d-flex ">
@@ -211,11 +223,11 @@
         </div>
       </div>
 
-      <div class="container-fluid">
+      <div class="container">
         <div class="mb-3">
           <div class="row">
     
-            <div class="col-md-3">
+            <div class="col-md-4">
               <div class="h-100 font-size-ms text-muted">
     
     
@@ -367,7 +379,7 @@
                             <p>
                                Teslimat bilgisi almak için semtinizi seçin.
                             </p>
-                            <a class="select-area-action btn btns-m btn-primary">Semt Seç</a>
+                            <a class="select-area-action btn btn-sm btn-primary">Semt Seç</a>
                           </div>
                
     
@@ -464,7 +476,7 @@
             </div>
     
     
-            <div id="items" class="col-md-9 ">
+            <div id="items" class="col-md-8 ">
               <div id="cat-slider" class="py-2 slider">
                 <%- include('./_partial/category-slider', { categories: controller.categories, subUrl: butcher.slug + '/', selected: controller.category.slug, mode:'browse', header: false, titles: false, viewCats: ['butcher', 'reyon', 'list', 'product:dispatch=countrywide'], title: 'Tüm Ürünlerimiz', allUrl: '/kasap-urunleri' }); %>
               </div>
@@ -499,12 +511,12 @@
                   <%}%>
                 <div class="row">
                 <% sc.products.forEach((product,i) => { %>
-                  <div data-tag="<%= __helper.slugify(product.tag1) %>" class="col-md-3 col-6 ">
+                  <div data-tag="<%= __helper.slugify(product.tag1) %>" class="col-md-4 col-6 ">
                     <%- include('./_partial/product-view.ejs', { showPrice: butcher.approved && butcher.status == 'open', showPurchase: butcher.approved && butcher.status == 'open', butcher: butcher.slug, butcherProduct: butcher.products.find(p=>p.productid == product.id), product: product}) %>
                   </div>
                   <% if (controller.foods && controller.foods.length > 0 && !foodsInserted && i>controller.products.length/5) { %>
                   <% foodsInserted = true; %>
-                  <div data-tag="" class="col-md-3 col-6">
+                  <div data-tag="" class="col-md-4 col-6">
                     <%- include('./_partial/generic-item-view.ejs', { imgClass: 'rounded-lg', title: foodCategoryParams.title, href: `${foodCategoryParams.allUrl}`, src: `${ __req.helper.imgUrl('category-photos', controller.category.slug, 'thumbnail', true, 'list')}` }) %>
                   </div>
                   <%}%>

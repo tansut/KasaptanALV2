@@ -251,7 +251,7 @@ class Route extends router_1.ViewRouter {
                             badges: butcher.getBadgeList(),
                             userRatingAsPerc: butcher.userRatingAsPerc,
                             shipRatingAsPerc: butcher.shipRatingAsPerc,
-                            shipSuccessText: helper_1.default.number2Text(butcher.shipSuccessCount, 50),
+                            shipSuccessText: butcher.shipSuccessText,
                             name: butcher.name,
                             puanData: butcher.getPuanData(this.product.productType),
                             earnedPuan: 0.00,

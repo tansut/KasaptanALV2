@@ -23,6 +23,7 @@ class Route extends router_1.ViewRouter {
     constructor() {
         super(...arguments);
         this.DeliveryStatusDesc = order_2.DeliveryStatusDesc;
+        this.OrderStatus = order_2.OrderItemStatus;
         this.shouldBePaid = 0.00;
         this.earnedPuanButcher = 0.00;
         this.earnedPuanKalitte = 0.00;
@@ -96,6 +97,26 @@ class Route extends router_1.ViewRouter {
             this.usedPuans = yield accountmodel_1.default.list([account_1.Account.generateCode("musteri-harcanan-puan", [this.user.id])]);
         });
     }
+    updateOrderDetails() {
+        return __awaiter(this, void 0, void 0, function* () {
+            let api = this.api = new order_3.default(this.constructorParams);
+            this.user = yield user_1.default.findByPk(this.req.user.id);
+            let order = this.order = yield api.getOrder(this.req.params.orderid, true);
+            yield this.getOrderSummary();
+            let userMessage = '';
+            if (this.req.body.action == "cancelOrder") {
+                if (order.cancelable()) {
+                    yield api.changeStatus(order, this.OrderStatus.customerCanceled, 'Müşterinin kendisi tarafından iptal edildi', true);
+                    yield this.getOrderSummary();
+                    userMessage = 'Siparişiniz iptal edildi';
+                }
+                else {
+                    userMessage = 'Bu sipariş iptal edilemez.';
+                }
+            }
+            this.render("pages/user.order.details.ejs", Object.assign(Object.assign({ _usrmsg: { text: userMessage } }, api.getView(order)), { enableImgContextMenu: true }));
+        });
+    }
     viewOrderDetails() {
         return __awaiter(this, void 0, void 0, function* () {
             let api = this.api = new order_3.default(this.constructorParams);
@@ -165,6 +186,7 @@ class Route extends router_1.ViewRouter {
         router.get("/orders", Route.BindRequest(Route.prototype.viewOrders));
         router.get("/puans", Route.BindRequest(Route.prototype.viewPuans));
         router.get("/orders/:orderid", Route.BindRequest(Route.prototype.viewOrderDetails));
+        router.post("/orders/:orderid", Route.BindRequest(Route.prototype.updateOrderDetails));
         router.get("/orders/:orderid/email", Route.BindRequest(Route.prototype.emailOrderDetails));
         router.get("/signoff", Route.BindRequest(Route.prototype.signoff));
     }

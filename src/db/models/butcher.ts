@@ -51,6 +51,11 @@ class Butcher extends BaseModel<Butcher> {
         return this.shipTotalCount - this.shipFailureCount;
     }
 
+    get shipSuccessText() {
+        return Helper.number2Text(this.shipSuccessCount, 50)
+    }
+
+
     @Column({
         allowNull: false,
         defaultValue: "manual",

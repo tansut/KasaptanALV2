@@ -46,6 +46,13 @@ class Order extends BaseModel<Order> {
 
     puanSummary: PuanResult [] = [];
 
+    cancelable() {
+        return (this.status == OrderItemStatus.supplying) || (this.status == OrderItemStatus.reqirePayment);
+    }
+
+
+
+
     @Column({
         allowNull: false,
     })
@@ -390,6 +397,29 @@ class Order extends BaseModel<Order> {
     })
     shipmentStartText: string;    
 
+    @Column({
+        allowNull: false,
+        defaultValue: 0
+    })
+    sentCustomerReminders: number;
+
+    @Column({
+        allowNull: true
+    })
+    customerLastReminder: Date;
+
+    @Column({
+        allowNull: true
+    })
+    customerLastReminderType: string;    
+
+
+
+    @Column({
+        allowNull: false,
+        defaultValue: 0
+    })
+    sentButcherReminders: number;
 
     @Column({
         allowNull: true

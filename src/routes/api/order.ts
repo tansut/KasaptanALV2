@@ -1170,6 +1170,19 @@ export default class Route extends ApiRouter {
         this.res.send(200);
     }
 
+    async changeStatus(order: Order, newStatus: OrderItemStatus, userMsg: string, notifyButcher: boolean) {
+        order.statusDesc ? null : (order.statusDesc = '');
+        let oldStatus = order.status;
+        order.status = newStatus;
+        order.statusDesc += `\n- ${Helper.formatDate(Helper.Now(), true)}: ${oldStatus} -> ${order.status}, ${userMsg}`
+        await order.save();
+        if (notifyButcher) {
+            let manageUrl = `${this.url}/manageorder/${order.ordernum}`;
+            let text = `DURUM DEGISTI: ${order.butcherName} siparis [${order.name}]. ${oldStatus} -> ${order.status}. Not: ${userMsg}. Bilgi ${manageUrl} `
+            await this.sendButcherNotifications(order, text);
+        }
+    }
+
     async sendButcherNotifications(order: Order, text: string) {
         let notifyMobilePhones = (order.butcher.notifyMobilePhones || "").split(',');
         notifyMobilePhones.push('5531431988');
@@ -1349,7 +1362,7 @@ export default class Route extends ApiRouter {
                         Sms.send(notifyMobilePhones[p].trim(), `${order.butcherName} kurye yola cikti. Siparis[${order.name}]: ${manageUrl} `, false, new SiteLogRoute(this.constructorParams))
                     }
                 }
-                let userUrl = `${this.url}/orders/order/${order.ordernum}`;
+                let userUrl = `${this.url}/user/orders/${order.ordernum}`;
                 await Sms.send(order.phone, `Siparişiniz yola cikti. Bilgi: ${userUrl} `, false, new SiteLogRoute(this.constructorParams))
             }
 

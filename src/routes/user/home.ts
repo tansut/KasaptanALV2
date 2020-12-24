@@ -22,6 +22,7 @@ export default class Route extends ViewRouter {
     api: OrderApi;
     user: User;
     DeliveryStatusDesc = DeliveryStatusDesc;
+    OrderStatus = OrderItemStatus;
     balance: AccountModel;
     shouldBePaid = 0.00;
     puanBalanceButcher: AccountModel;
@@ -100,6 +101,29 @@ export default class Route extends ViewRouter {
         this.usedPuans = await AccountModel.list([Account.generateCode("musteri-harcanan-puan", [this.user.id])])
     }
 
+
+    
+
+    async updateOrderDetails() {
+        let api = this.api = new OrderApi(this.constructorParams);
+        this.user = await User.findByPk(this.req.user.id);
+        let order = this.order = await api.getOrder(this.req.params.orderid, true);
+        await this.getOrderSummary();
+        let userMessage = ''
+        if (this.req.body.action == "cancelOrder") {
+            if (order.cancelable()) {
+                await api.changeStatus(order, this.OrderStatus.customerCanceled, 'Müşterinin kendisi tarafından iptal edildi', true)
+     
+                await this.getOrderSummary();                
+                userMessage = 'Siparişiniz iptal edildi';
+            } else {
+                userMessage = 'Bu sipariş iptal edilemez.'
+            }
+        }
+
+        this.render("pages/user.order.details.ejs", {...{ _usrmsg: { text: userMessage } }, ...api.getView(order), ...{enableImgContextMenu: true} }   );
+    }
+
     async viewOrderDetails() {
         let api = this.api = new OrderApi(this.constructorParams);
         this.user = await User.findByPk(this.req.user.id);
@@ -164,6 +188,7 @@ export default class Route extends ViewRouter {
         router.get("/orders", Route.BindRequest(Route.prototype.viewOrders));
         router.get("/puans", Route.BindRequest(Route.prototype.viewPuans));
         router.get("/orders/:orderid", Route.BindRequest(Route.prototype.viewOrderDetails));
+        router.post("/orders/:orderid", Route.BindRequest(Route.prototype.updateOrderDetails));
         router.get("/orders/:orderid/email", Route.BindRequest(Route.prototype.emailOrderDetails));
         router.get("/signoff", Route.BindRequest(Route.prototype.signoff));
 

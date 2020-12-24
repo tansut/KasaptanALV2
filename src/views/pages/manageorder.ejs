@@ -286,6 +286,13 @@ if (orderClosed && __req.user && __req.user.hasRole('admin')) {
                           class="font-weight-bolder"><%=order.items.length%></span> kalem ürün ve <br> <span
                           class="font-weight-bolder"><%=__helper.formatDate(order.shipmentdate)%>
                           <%=order.shipmenthourText%></span> teslimat saati uygundur.</p>
+
+                          <% if (!__helper.isToday(order.shipmentdate)) { %>
+                            <p class="font-weight-bold text-danger border p-2">
+                              Not: Müşteri bugün istemiyor, teslim gününe lütfen dikkat edin.
+
+                            </p>
+                          <% } %>
                       <div class="">
     
                         <!-- <button class="btn btn-success" id="approveOrder">Evet uygun, siparişi onaylıyorum</button> -->

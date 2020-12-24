@@ -25,6 +25,7 @@ const area_1 = require("./area");
 const butcherproduct_1 = require("./butcherproduct");
 const product_1 = require("./product");
 const sequelize_1 = require("sequelize");
+const helper_1 = require("../../lib/helper");
 const resource_1 = require("./resource");
 let Butcher = Butcher_1 = class Butcher extends basemodel_1.default {
     get userRatingAsPerc() {
@@ -36,6 +37,9 @@ let Butcher = Butcher_1 = class Butcher extends basemodel_1.default {
     }
     get shipSuccessCount() {
         return this.shipTotalCount - this.shipFailureCount;
+    }
+    get shipSuccessText() {
+        return helper_1.default.number2Text(this.shipSuccessCount, 50);
     }
     get gpPlace() {
         return JSON.parse(this.getDataValue('gpplacejson').toString());

@@ -59,6 +59,7 @@ export default class OrderRemainers extends BaseTask {
                 await api.sendButcherNotifications(orders[i], text);
                 orders[i].butcherLastReminder = now;
                 orders[i].butcherLastReminderType = 'plan';
+                orders[i].sentButcherReminders++;
                 await  orders[i].save();
             }
         }

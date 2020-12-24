@@ -55,6 +55,7 @@ class OrderRemainers extends basetask_1.BaseTask {
                     yield api.sendButcherNotifications(orders[i], text);
                     orders[i].butcherLastReminder = now;
                     orders[i].butcherLastReminderType = 'plan';
+                    orders[i].sentButcherReminders++;
                     yield orders[i].save();
                 }
             }

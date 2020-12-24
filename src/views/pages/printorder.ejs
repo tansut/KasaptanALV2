@@ -42,6 +42,18 @@
 
 </head>
 
+<%
+var orderClosed = (order.status == controller.OrderStatus.success) || 
+                  (order.status == controller.OrderStatus.butcherCannotShip) || 
+                  (order.status == controller.OrderStatus.butcherCannotShip) ||
+                  (order.status == controller.OrderStatus.customerCanceled);
+
+if (orderClosed && __req.user && __req.user.hasRole('admin')) {
+  orderClosed = false;
+}
+
+%>
+<% if (!orderClosed) { %>
 <body>
     <div class="container">
 
@@ -55,7 +67,7 @@
 <ul class="list-unstyled font-size-sm">
   <li><span class="text-muted">Dağtımı yapacak:&nbsp;</span><%=order.dispatcherName%></li>
 
-  <% if (!(order.dispatcherType || "").startsWith('kasaptan')) { %>
+  <% if (!controller.hideOrderDetails) { %>
   <li><span class="text-muted">İsim:&nbsp;</span><%= order.name %></li>
   <% if(order.address) { %>
   <li><span class="text-muted">Adres:&nbsp;</span><%= order.address%>
@@ -181,5 +193,5 @@
     </script>
 
 </body>
-
+<% } %>
 </html>

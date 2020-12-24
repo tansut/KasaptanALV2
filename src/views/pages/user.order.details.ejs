@@ -12,6 +12,8 @@
 
 
 
+
+
     <div class="page-title py-2 ">
         <div class="container d-lg-flex justify-content-between py-2 py-lg-3">
             <div class="order-lg-2 mb-3 mb-lg-0 pt-lg-2">
@@ -32,39 +34,46 @@
         </div>
     </div>
 
-    <!-- Page Content-->
-    <div class="container pb-5 mb-2 mb-md-3">
-        <div class="row">
-            <%- include('./_partial/user.sidebar.ejs', {
-               page: 'orders'
-           }) %>
-            <!-- Content  -->
-            <section class="col-lg-8">
-                <!-- Toolbar-->
-                <div class="d-none d-lg-flex justify-content-between align-items-center pt-lg-3 pb-4 pb-lg-5 mb-lg-3">
-                    <h6 class="font-size-base text-light mb-0">Sipariş bilgilerim</h6><a class="btn btn-secondary btn-sm"
-                        href="/user/signoff" rel="nofollow"><i class="czi-sign-out mr-2"></i>Çıkış</a>
-                </div>
-                <% if (__req.user && (__req.user.hasRole('admin') || __req.user.hasRole('operator'))) {%>
-                    <a href="/pages/operator/order/<%=order.ordernum%>" class="btn btn-primary">Sipariş Yönetimi</a>
-                    <%}%>
-                <a id="order"></a>
-                <div class="d-flex flex-nowrap justify-content-between align-items-center border-bottom pt-1 pb-1 mb-2">
-                    <h3 class="h4 mb-0 mr-2"><%=__helper.formatDate(order.creationDate)%> tarihli siparişim</h3>
-                  </div>                
-          
-               
-            <%- include('./_partial/order.details.ejs', {
-                order: order                
-            }) %>
+    <form onsubmit="return confirm('Bu işlem siparişinizi iptal edecektir. Emin misiniz?');" method="POST">
 
+        <div class="container pb-5 mb-2 mb-md-3">
+            <div class="row">
+                <%- include('./_partial/user.sidebar.ejs', {
+                   page: 'orders'
+               }) %>
+                <!-- Content  -->
+                <section class="col-lg-8">
+                    <!-- Toolbar-->
+                    <div class="d-none d-lg-flex justify-content-between align-items-center pt-lg-3 pb-4 pb-lg-5 mb-lg-3">
+                        <h6 class="font-size-base text-light mb-0">Sipariş bilgilerim</h6><a class="btn btn-secondary btn-sm"
+                            href="/user/signoff" rel="nofollow"><i class="czi-sign-out mr-2"></i>Çıkış</a>
+                    </div>
+                    <% if (__req.user && (__req.user.hasRole('admin') || __req.user.hasRole('operator'))) {%>
+                        <a href="/pages/operator/order/<%=order.ordernum%>" class="btn btn-primary">Sipariş Yönetimi</a>
+                        <%}%>
+                    <a id="order"></a>
+                    <div class="d-flex flex-nowrap justify-content-between align-items-center border-bottom pt-1 pb-1 mb-2">
+                        <h3 class="h4 mb-0 mr-2"><%=__helper.formatDate(order.creationDate)%> tarihli siparişim</h3>
+                      </div>                
               
-            </section>
+                   
+                <%- include('./_partial/order.details.ejs', {
+                    order: order                
+                }) %>
+    
+                <div>
+                    <% if (order.cancelable()) { %>
+                        <button name="action" class="btn btn-sm btn-danger" value="cancelOrder" type="submit">Siparişimi İptal Et</button>
+                    <% } %>
+                </div>
+                  
+                </section>
+            </div>
         </div>
-    </div>
-    </section>
-    </div>
-    </div>
+        
+    </form>
+
+
 
 
     <% include ./_partial/footer %>

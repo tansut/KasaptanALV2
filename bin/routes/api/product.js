@@ -494,7 +494,7 @@ class Route extends router_1.ApiRouter {
                     enableCreditCard: butcher.enableCreditCard,
                     userRatingAsPerc: butcher.userRatingAsPerc,
                     shipRatingAsPerc: butcher.shipRatingAsPerc,
-                    shipSuccessText: helper_1.default.number2Text(butcher.shipSuccessCount, 50),
+                    shipSuccessText: butcher.shipSuccessText,
                     description: butcher.description,
                     slug: butcher.slug,
                     badges: butcher.getBadgeList(),

@@ -1053,6 +1053,20 @@ class Route extends router_1.ApiRouter {
             this.res.send(200);
         });
     }
+    changeStatus(order, newStatus, userMsg, notifyButcher) {
+        return __awaiter(this, void 0, void 0, function* () {
+            order.statusDesc ? null : (order.statusDesc = '');
+            let oldStatus = order.status;
+            order.status = newStatus;
+            order.statusDesc += `\n- ${helper_1.default.formatDate(helper_1.default.Now(), true)}: ${oldStatus} -> ${order.status}, ${userMsg}`;
+            yield order.save();
+            if (notifyButcher) {
+                let manageUrl = `${this.url}/manageorder/${order.ordernum}`;
+                let text = `DURUM DEGISTI: ${order.butcherName} siparis [${order.name}]. ${oldStatus} -> ${order.status}. Not: ${userMsg}. Bilgi ${manageUrl} `;
+                yield this.sendButcherNotifications(order, text);
+            }
+        });
+    }
     sendButcherNotifications(order, text) {
         return __awaiter(this, void 0, void 0, function* () {
             let notifyMobilePhones = (order.butcher.notifyMobilePhones || "").split(',');
@@ -1211,7 +1225,7 @@ class Route extends router_1.ApiRouter {
                             sms_1.Sms.send(notifyMobilePhones[p].trim(), `${order.butcherName} kurye yola cikti. Siparis[${order.name}]: ${manageUrl} `, false, new sitelog_1.default(this.constructorParams));
                         }
                     }
-                    let userUrl = `${this.url}/orders/order/${order.ordernum}`;
+                    let userUrl = `${this.url}/user/orders/${order.ordernum}`;
                     yield sms_1.Sms.send(order.phone, `Siparişiniz yola cikti. Bilgi: ${userUrl} `, false, new sitelog_1.default(this.constructorParams));
                 }
                 if (this.req.body.order.status == 'canceled') {

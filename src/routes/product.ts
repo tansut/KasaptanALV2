@@ -299,7 +299,7 @@ export default class Route extends ViewRouter {
                         badges: butcher.getBadgeList(),
                         userRatingAsPerc: butcher.userRatingAsPerc,
                         shipRatingAsPerc: butcher.shipRatingAsPerc,
-                        shipSuccessText: Helper.number2Text(butcher.shipSuccessCount, 50),
+                        shipSuccessText: butcher.shipSuccessText,
                         name: butcher.name,
                         puanData: butcher.getPuanData(this.product.productType),
                         earnedPuan: 0.00,
