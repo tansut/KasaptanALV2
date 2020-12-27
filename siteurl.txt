@@ -6,3 +6,4 @@
 /hikayemiz
 /kasaplar
 /et-fiyatlari
+/neden-kasaptanal
