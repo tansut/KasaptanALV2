@@ -26,6 +26,7 @@ import Payment from './models/payment';
 import AccountModel from './models/accountmodel';
 import Subcategory from './models/subcategory';
 import ButcherArea from './models/butcherarea';
+import DBCache from './models/dbcache';
 
 
 
@@ -43,7 +44,7 @@ let init = (params?: any) => {
         dialectOptions: { decimalNumbers: true }
     });
 
-    dbInstance.addModels([ButcherArea, Subcategory, Payment, AccountModel, Review, ButcherPriceHistory, PriceCategory, Redirect, WebPage, ButcherModel, Order, OrderItem, Dispatcher, User, RefreshToken, Resource, Area, SiteLog, Category, Product, ProductCategory, ButcherProduct, Content, ResourceCategory]);
+    dbInstance.addModels([DBCache, ButcherArea, Subcategory, Payment, AccountModel, Review, ButcherPriceHistory, PriceCategory, Redirect, WebPage, ButcherModel, Order, OrderItem, Dispatcher, User, RefreshToken, Resource, Area, SiteLog, Category, Product, ProductCategory, ButcherProduct, Content, ResourceCategory]);
 
     return dbInstance.sync({
         alter: true,

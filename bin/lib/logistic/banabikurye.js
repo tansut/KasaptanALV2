@@ -14,6 +14,7 @@ const axios_1 = require("axios");
 const helper_1 = require("../helper");
 const commissionHelper_1 = require("../commissionHelper");
 const dispatcher_1 = require("../../db/models/dispatcher");
+const dbcache_1 = require("../../db/models/dbcache");
 class BanabikuryeProvider extends core_1.LogisticProvider {
     constructor(config, options) {
         super(config, options);
@@ -219,6 +220,13 @@ class BanabikuryeProvider extends core_1.LogisticProvider {
             return this.optimizedSlice(result);
         });
     }
+    convertExc(exc) {
+        if (exc['response'] && exc['response']['data'] && exc['response']['data']['errors']) {
+            return new Error(exc['response']['data']['errors'].join(','));
+        }
+        else
+            return exc;
+    }
     safeResponse(method, req, distance, convert) {
         return __awaiter(this, void 0, void 0, function* () {
             let resp = null;
@@ -228,7 +236,7 @@ class BanabikuryeProvider extends core_1.LogisticProvider {
             }
             catch (e) {
                 if (!this.safeRequests)
-                    throw e;
+                    throw this.convertExc(e);
                 let fee = helper_1.default.asCurrency(10.00 + distance * 2);
                 resp = {
                     customerFee: fee,
@@ -254,7 +262,12 @@ class BanabikuryeProvider extends core_1.LogisticProvider {
                 },
                 fId: req.points[1].id,
             });
-            let resp = yield this.safeResponse("calculate-order", request, req.distance, this.fromOfferResponse.bind(this));
+            let cacheKey = req.points[0].id + '-' + req.points[1].id;
+            let resp = this.config.cache ? yield dbcache_1.default.retrieve(cacheKey, 10) : null;
+            if (!resp) {
+                resp = yield this.safeResponse("calculate-order", request, req.distance, this.fromOfferResponse.bind(this));
+                this.config.cache && (yield dbcache_1.default.put(cacheKey, resp));
+            }
             resp.orderTotal = req.orderTotal;
             resp.distance = req.distance;
             return this.calculateCustomerFee(resp);

@@ -89,6 +89,7 @@
     "@types/jquery": "^3.3.31",
     "@types/nconf": "^0.10.0",
     "@types/sequelize": "^4.28.4",
+    "async-lock": "^1.2.6",
     "browser-sync": "^2.26.7",
     "browserify": "^16.5.0",
     "del": "^5.1.0",
