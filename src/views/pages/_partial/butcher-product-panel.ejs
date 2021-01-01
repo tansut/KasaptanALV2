@@ -163,11 +163,21 @@ class="gallery-item-caption"><%= butcherVideo.title %></span></a>
                 <p class="">
                   <span class="font-weight-medium"><%=__req.prefAddr.display%></span> için teslimat <span class="font-weight-medium"><%=controller.dispatcherTypes[view.dispatcher.type]%></span> tarafından yapılmaktadır.
                 </p>
-             
+             <div class="mb-3">
               <%- include('./ship-price-slice.ejs', {                                
                 slices: view.dispatcher.priceSlice
                   }) %>
+             </div>
+           
+                  <div>
+                    <p class="border-bottom mb-1">Çalışma Günleri</p>
+                    <%- include('./workday-view', { butcher: view.butcher }) %>
+              
+                  </div>
+
             </div>
+        
+
           </div>
 
         </div>

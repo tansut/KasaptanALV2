@@ -244,6 +244,13 @@ class Route extends router_1.ViewRouter {
                     fromTo.sId = butcher.id.toString();
                     view.alternateButchers.push({
                         butcher: {
+                            shipday0: butcher.shipday0,
+                            shipday1: butcher.shipday1,
+                            shipday2: butcher.shipday2,
+                            shipday3: butcher.shipday3,
+                            shipday4: butcher.shipday4,
+                            shipday5: butcher.shipday5,
+                            shipday6: butcher.shipday6,
                             id: butcher.id,
                             description: butcher.description,
                             enableCreditCard: butcher.enableCreditCard,

@@ -36,6 +36,13 @@ export interface AlternateButchersView {
 }
 
 export interface ProductButcherView {
+    shipday0: boolean;
+    shipday1: boolean;
+    shipday2: boolean;
+    shipday3: boolean;
+    shipday4: boolean;
+    shipday5: boolean;
+    shipday6: boolean;
     slug: string;
     name: string;
     productNote: string;

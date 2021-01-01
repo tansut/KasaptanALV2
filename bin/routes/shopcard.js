@@ -379,6 +379,7 @@ class Route extends router_1.ViewRouter {
     saveshipRoute() {
         return __awaiter(this, void 0, void 0, function* () {
             this.shopcard = yield shopcard_1.ShopCard.createFromRequest(this.req);
+            yield this.loadButchers();
             let needAddress = false;
             let hasDispatcher = true;
             for (let k in this.shopcard.butchers) {
@@ -401,20 +402,26 @@ class Route extends router_1.ViewRouter {
                     this.shopcard.shipment[k].daysText = ['Bugün - ' + helper_1.default.formatDate(helper_1.default.Now())];
                     this.shopcard.shipment[k].hoursText = [this.shipmentHours[parseInt(this.req.body[`samedaytime${k}`])]];
                 }
+                let sd = helper_1.default.newDate(this.shopcard.shipment[k].days[0]);
+                let shipday = `shipday${sd.getDay()}`;
+                let canShip = this.Butchers.find(b => b.id == butcher.id)[shipday];
+                if (!canShip) {
+                    this.renderPage("pages/checkout.ship.ejs", { _usrmsg: { type: 'danger', text: `${butcher.name} maalesef seçtiğiniz teslim günü çalışmamaktadır.` } });
+                    return;
+                }
             }
             this.fillDefaultAddress();
             let offer = yield this.setDispatcher();
-            for (let o in this.shopcard.shipment) {
-                if (offer[o]) {
-                }
-                else if (this.shopcard.shipment[o].howTo == 'ship') {
-                    //hasDispatcher = false;
-                }
-            }
-            if (!hasDispatcher) {
-                this.renderPage("pages/checkout.ship.ejs", { _usrmsg: { type: 'danger', text: 'Lütfen en az sipariş tutarını gözeterek devam edin.' } });
-                return;
-            }
+            // for (let o in this.shopcard.shipment) {
+            //     if (offer[o]) {
+            //     } else if (this.shopcard.shipment[o].howTo == 'ship') {
+            //         //hasDispatcher = false;
+            //     }
+            // }
+            // if (!hasDispatcher) {
+            //     this.renderPage("pages/checkout.ship.ejs", { _usrmsg: {type:'danger', text: 'Lütfen en az sipariş tutarını gözeterek devam edin.'} });
+            //     return;
+            // }
             this.shopcard.calculateShippingCosts();
             yield this.shopcard.saveToRequest(this.req);
             //this.renderPage("pages/checkout.adres.ejs")

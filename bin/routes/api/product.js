@@ -491,6 +491,13 @@ class Route extends router_1.ApiRouter {
             view = {
                 id: product.id,
                 butcher: butcherProduct ? {
+                    shipday0: butcher.shipday0,
+                    shipday1: butcher.shipday1,
+                    shipday2: butcher.shipday2,
+                    shipday3: butcher.shipday3,
+                    shipday4: butcher.shipday4,
+                    shipday5: butcher.shipday5,
+                    shipday6: butcher.shipday6,
                     enableCreditCard: butcher.enableCreditCard,
                     userRatingAsPerc: butcher.userRatingAsPerc,
                     shipRatingAsPerc: butcher.shipRatingAsPerc,

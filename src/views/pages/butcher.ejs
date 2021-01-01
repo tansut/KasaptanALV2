@@ -114,7 +114,8 @@
         <div>
           <h1 class="h2"><%=butcher.name%></h1>
           <h2 class="h5 opacity-60">
-            <%= butcher.areaLevel3.name %>/<%= butcher.areaLevel1.name %>
+            <a target="_blank" href="https://www.google.com/maps/search/?api=1&query=<%=butcher.lat%>,<%=butcher.lng%>"><i class="mr-1 czi-icon czi-location"></i> <%= butcher.areaLevel3.name %>/<%= butcher.areaLevel1.name %></a>
+           
           </h2>
           <% if (puanData ) { %>
             <div>
@@ -156,6 +157,8 @@
           Bu kasap geçici süreyle hizmet vermemektedir.
         </div>
       <% } %>
+
+    
 
 
       <div>
@@ -352,9 +355,9 @@
                     <div class="collapse " id="dispatchArea" data-parent="#payment-method" role="tabpanel">
                       <div class="card-body ">
                         <% if ((!controller.logisticsProvider || controller.logisticsPriceSlice.length == 0) && __req.prefAddr) { %>
-                          <span>
+                          <p>
                             Kasabın semtinize hizmeti yoktur.
-                          </span>
+                          </p>
                         <% } else if (controller.logisticsProvider) { %>
                           <div class="text-center font-weight-bolder">
                             <%=controller.logisticsProvider.options.dispatcher.name%>
@@ -382,11 +385,18 @@
                             <a class="select-area-action btn btn-sm btn-primary">Semt Seç</a>
                           </div>
                
-    
+                          
     
     
     <% } %>
-    
+    <div>
+      <p class="border-bottom mb-1">Çalışma Günleri</p>
+      <%- include('./_partial/workday-view', { butcher: controller.butcher }) %>
+
+    </div>
+
+
+
     
                       </div>
                     </div>
@@ -423,6 +433,8 @@
                         <hr class="my-4">
                         <h6>İletişim</h6>
                         <p><%= butcher.address %>, <%= butcher.areaLevel2.name %>/<%= butcher.areaLevel1.name %></p>
+                        <a target="_blank" href="https://www.google.com/maps/search/?api=1&query=<%=butcher.lat%>,<%=butcher.lng%>"> <%= 'Kasap Lokasyonuna Git' %></a>
+                        
                         <% if (butcher.website) { %>
                         <a target="_blank" class="font-size-xs nav-link-style d-flex align-items-center"
                           href="<%= butcher.website %>"><i

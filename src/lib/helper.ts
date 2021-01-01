@@ -8,6 +8,7 @@ import { GeoLocation } from '../models/geo';
 import { ProductType } from '../db/models/product';
 import { min, round } from 'lodash';
 import parsePhoneNumber from 'libphonenumber-js';
+import { Shipment, ShipmentDays } from '../models/shipment';
 
 export default class Helper {
 
@@ -96,6 +97,10 @@ export default class Helper {
 
     static isTomorrow(date): boolean {
         return (this.NextDay(Helper.Now()).toDateString() === date.toDateString());
+    }
+
+    static get days() {
+        return ShipmentDays;
     }
 
     static Now() {
