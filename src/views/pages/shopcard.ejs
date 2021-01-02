@@ -77,12 +77,12 @@
                 <ul>
                   <li>
     
-                    <strong  class="font-weight-bold <%=pg.earned <= 0.00 ? 'text-danger':'text-success'%>"><%- include('./_partial/currency.ejs', {value: pg.earned}) %></strong>
-                    <span class="text-dark"><%= pg.title%></span> 
+                    <strong  class="font-weight-bold <%=pg.earned <= 0.00 ? 'text-danger':'text-success'%>"><%- include('./_partial/currency.ejs', {value: pg.earned}) %></strong>, 
+                    <span class="text-dark"><i><%= pg.title%></i> </span> 
                     <% if (pg.earned <= 0.00) {%>
                     <% showShopBtn = true%>
                     <% if (pg.earned <= 0.00) { %>
-                    <div class="text-dark font-size-sm">  
+                    <div class="text-dark">  
                         <% 
                         var butcherTotal = shopcard.getButcherTotalWithoutShipping(parseInt(pg.id));
                         var puanButcher = shopcard.butchers[pg.id];
@@ -99,7 +99,7 @@
     
                     </div>
                     <a class="font-size-sm" href="/kasap-urunleri">
-                      <i class="czi-arrow-right-circle mr-2"></i>
+                      <i class="czi-arrow-right-circle mr-1"></i>
                       Ürünlere Gözatın</a>
                     <%}%>       
     
@@ -112,7 +112,7 @@
                 <% if (controller.possiblePuanList.length > 1 && controller.mayEarnPuanTotal > 0.00) { %>
                 <span class="text-dark d-block">
                   Toplam
-                  <strong><%- include('./_partial/currency.ejs', {value: controller.mayEarnPuanTotal}) %></strong>
+                  <strong class="text-success"><%- include('./_partial/currency.ejs', {value: controller.mayEarnPuanTotal}) %></strong>
                   değerinde yeni puanı hesabınıza yüklüyoruz.
                 </span>
                 <% } else if (!__req.user) { %>
@@ -128,7 +128,7 @@
 
 <ul>
   <li>
-    <strong class="text-success"><%- include('./_partial/currency.ejs', {value: controller.usablePuanTotal}) %></strong> puanınız bu siparişinizde kullanılabilir.
+    <strong class="text-dark"><%- include('./_partial/currency.ejs', {value: controller.usablePuanTotal}) %></strong> puanınız bu siparişinizde kullanılabilir.
   </li>
 </ul>
                 <span class="text-muted font-size-sm d-block">

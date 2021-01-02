@@ -30,12 +30,20 @@ class="gallery-item-caption"><%= butcherVideo.title %></span></a>
  <% } %>
       <div class="media-body p-2">
         <div class="d-flex align-items-center justify-content-between">
-          <h4 class="h5 mb-0 mr-2"><%= view.butcher.name %> </h4>
-          <% if (view.butcher.puanData ) { %>
+          <div>
+            <h4 class="h5 mb-0 mr-2"><%= view.butcher.name %> </h4>
+          </div>
           
-            <span class="badge badge-success font-size-sm font-weight-medium">
+          <% if (view.butcher.puanData ) { %>
+          <div class="text-right">
+            <span class="d-block mb-1 badge badge-success font-size-sm font-weight-medium">
               %<%=view.butcher.puanData.rate * 100 %> Puan
             </span>
+            <span class="d-block badge badge-danger font-size-sm font-weight-medium">
+              +%<%='3'%> Puan
+            </span>
+          </div>
+        
           
            <% } %>
         </div>
@@ -144,6 +152,12 @@ class="gallery-item-caption"><%= butcherVideo.title %></span></a>
       </div>
     </div>
     
+    <div class="px-3 pt-3 m-3 bg-size-cover bg-position-center rounded-lg border shadow"
+    style="background-image: url(<%=__config.staticDomain %>/resource/img/banner-bg.jpg)">
+    <h5 class="h6 text-danger">2021'e Merhaba</h5>
+    <p class="font-size-sm "><strong>300TL ve üzeri</strong> alışveriş yapın, <strong>%3 ek puan</strong> kazanın.
+    </p>
+    </div>
     
 
 

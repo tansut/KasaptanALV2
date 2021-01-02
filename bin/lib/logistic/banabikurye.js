@@ -222,7 +222,7 @@ class BanabikuryeProvider extends core_1.LogisticProvider {
     }
     convertExc(exc) {
         if (exc['response'] && exc['response']['data'] && exc['response']['data']['errors']) {
-            return new Error(exc['response']['data']['errors'].join(','));
+            return new Error(exc['response']['data']['errors'].join(',') + JSON.stringify(exc['response']['data']));
         }
         else
             return exc;

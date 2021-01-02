@@ -548,6 +548,13 @@ class Route extends router_1.ApiRouter {
         //     name: 'ilk sipariş indirimi',
         //     rate: 0.00
         // }
+        // let kalittePuan: Puan = null;
+        let kalittePuan = {
+            minPuanForUsage: 0.00,
+            minSales: 300.00,
+            name: `2021'e merhaba puan kazancı`,
+            rate: 0.03
+        };
         if (o.butcher.enableCreditCard) {
             if (o.isFirstButcherOrder && o.orderType != 'kurban') {
                 //let firstOrderPuan = calculator.calculateCustomerPuan(firstOrder, total);
@@ -565,6 +572,17 @@ class Route extends router_1.ApiRouter {
             if (o.butcher.enablePuan) {
                 let butcherPuan = o.butcher.getPuanData(o.orderType);
                 let earnedPuanb = calculator.calculateCustomerPuan(butcherPuan, total);
+                let earnedPuanByKalitte = kalittePuan ? calculator.calculateCustomerPuan(kalittePuan, total) : 0.00;
+                if ((earnedPuanByKalitte > 0.00 || includeAvailable) && kalittePuan) {
+                    result.push({
+                        type: "kalitte",
+                        earned: earnedPuanByKalitte,
+                        id: o.butcherid.toString(),
+                        title: kalittePuan.name,
+                        desc: `${o.ordernum} nolu ${o.butcherName} sipariş Kasap Puan`,
+                        based: kalittePuan
+                    });
+                }
                 if (earnedPuanb > 0.00 || includeAvailable) {
                     if (earnedPuanb == 0) {
                         result.push({

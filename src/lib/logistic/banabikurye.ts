@@ -232,7 +232,7 @@ export default class BanabikuryeProvider extends LogisticProvider {
 
     convertExc(exc: Error) {
         if (exc['response'] && exc['response']['data'] && exc['response']['data']['errors']) {
-            return new Error(exc['response']['data']['errors'].join(','))
+            return new Error(exc['response']['data']['errors'].join(',') + JSON.stringify(exc['response']['data']))
         } else return exc;
     }
 
