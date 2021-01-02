@@ -8,213 +8,108 @@
 <body>
     <% include ./_partial/header %>
 
-<div class="bg-white container-fluid ">
-    <div class="container  mb-3">
-       
-            <div class="row">
-                <div class="col-sm-4">
-                    <a class="d-block" href="/kasap-urunleri">
-                        <img width="500" height="333"
-                            src="<%=__config.staticDomain%>/content-resimleri/kasap-kart-thumbnail.jpg"
-                            alt="Kasap Kart™">
+        <div class="bg-white container-fluid ">
+            <div class="container  mb-3">
 
-                    </a>
-                </div>
+                <div class="row">
+                    <div class="col-sm-4">
+                        <a class="d-block" href="/kasap-urunleri">
+                            <img width="500" height="333"
+                                src="<%=__config.staticDomain%>/content-resimleri/kasap-kart-thumbnail.jpg"
+                                alt="Kasap Kart™">
 
-                <div class="col-sm-8 font-weight-light font-size-lg">
-                    
+                        </a>
+                    </div>
+
+                    <div class="col-sm-8 font-weight-light font-size-lg">
+
                         <h1 class="h3 pt-3">
                             Online Kasap Alışverişi & Et Siparişi
                         </h1>
                         <p class="lead">
-                              
-                            <a class="font-weight-bolder text-dark" href="/kasaplar">Seçkin kasaplar</a>dan
-                            <a href="/kasap-urunleri" class="font-weight-bolder text-dark">doğal ve kaliteli et.</a> 
-                              
-                
-                        </p>
-                
-                        <p class="lead">
-                            
-                            <a
-                                class="font-weight-bolder text-dark" href="/blog/kasap-kart">Kasap Kart&trade;</a> kârlı online alışveriş.
+                             <i class="czi-icon czi-check-circle mr-1"></i>
+                            Şehrinizin
+                            <a class="text-dark" href="/kasaplar">en iyi kasaplar</a>ını keşfedin.
+                           
+
                         </p>
                         <p class="lead">
-                             <span class="font-weight-bolder">60-180 dakikada</span> kapınıza teslimat. 
+                            <i class="czi-icon czi-check-circle mr-1"></i>
+                            Sipariş verin, <a href="/kasap-urunleri" class="font-weight-bolder text-dark">doğal ve kaliteli et</a>
+                             anında kapınıza gelsin.
+
                         </p>
 
-                  
-                    <div class="d-flex flex-row-reverse">
-                        <a class="btn btn-primary" href="/kasap-urunleri">Alışverişe Başla</a>
-                        <a class="btn btn-dark mr-2" href="/neden-kasaptanal">Neden Biz</a>
+
+
+
+                        <p class="lead">
+                            <i class="czi-icon czi-check-circle mr-1"></i>
+                            <a class="text-dark" href="/blog/kasap-kart">Kasap Kart&trade;</a> ile
+                             puan kazanın, kârlı çıkın.
+                        </p>
                     
+
+
+                        <div class="d-flex flex-row-reverse">
+                            <a class="btn btn-primary" href="/kasap-urunleri">Alışverişe Başla</a>
+                            <a class="btn btn-dark mr-2" href="/neden-kasaptanal">Neden Biz</a>
+
+                        </div>
+
                     </div>
 
                 </div>
 
-            </div>
-
-
-       
-    </div>
-</div>
-
-
-<div class="container mb-3">
-    <%- include('./_partial/category-products-slider', {category: 'populer-etler', limit: 8, reverse: true, img: 'img/category/premium.jpg'}); %>
-</div>
-
-<section class="container">
-    <div class="row">
-        <div class="col-md-6 mb-3">
-            <div class="d-flex flex-column h-100 justify-content-center bg-size-cover bg-position-center rounded-lg"
-                style="background-image: url(<%=__config.staticDomain %>/resource/img/banner-bg.jpg);">
-
-
-
-                <div class="py-4 my-2 my-md-0 py-md-5 px-4 ml-md-3 text-center text-sm-left">
-                    <h4 class="h6 font-size-lg font-weight-light mb-2">Kasap Kart&trade; ile Puan Kazanın</h4>
-                    <h3 class="mb-4 h5">Tüm siparişleriniz çok daha kârlı</h3>
-
-                    <a class="btn btn-primary " href="/blog/kasap-kart">Daha Fazla Bilgi</a>
-
-
-
-                </div>
-         
-    </div>
-
-
-</div>
-
-
-<div class="col-md-6 mb-3">
-    <div class="d-flex flex-column h-100 justify-content-center bg-size-cover bg-position-center rounded-lg"
-    style="background-image: url(<%=__config.staticDomain %>/resource/img/banner-bg.jpg);">
-
-                <div class="py-4 my-2 my-md-0 py-md-5 px-4 ml-md-3 text-center text-sm-left">
-                    <h4 class="h6 font-size-lg font-weight-light mb-2">Siz Yemeğe Karar Verin</h4>
-                    <h3 class="mb-4 h5">En uygun eti KasaptanAl.com önersin</h3>
-
-                    <a class="btn btn-primary " href="/et-yemekleri">Et Yemekleri</a>
-
-
-
-                </div>
-
 
 
             </div>
-
-
         </div>
 
 
+        <div class="container mb-3">
+            <%- include('./_partial/category-products-slider', {category: 'populer-etler' , limit: 8, reverse: true,
+                img: 'img/category/premium.jpg' }); %>
+        </div>
 
-
-    </div>
-</section>
-
-
-
-
-
-
-
-
-
-
-
-    <div class="container mb-3 ">
-        <%- include('./_partial/category-products-slider', {limit: 4, category: 'bu-hafta', reverse: true, img: 'img/category/premium.jpg'}); %>
-    </div>
-    
+        <section class="container">
+            <div class="row">
+                <div class="col-md-6 mb-3">
+                    <div class="d-flex flex-column h-100 justify-content-center bg-size-cover bg-position-center rounded-lg"
+                        style="background-image: url(<%=__config.staticDomain %>/resource/img/banner-bg.jpg);">
 
 
 
+                        <div class="py-4 my-2 my-md-0 py-md-5 px-4 ml-md-3 text-center text-sm-left">
+                            <h4 class="h6 font-size-lg font-weight-light mb-2">Kasap Kart&trade; ile Puan Kazanın</h4>
+                            <h3 class="mb-4 h5">Tüm siparişleriniz çok daha kârlı</h3>
+
+                            <a class="btn btn-primary " href="/blog/kasap-kart">Daha Fazla Bilgi</a>
 
 
 
+                        </div>
 
-
-<% if (false) { %>
-
-    <section class="container">
-        <div class="row">
-
-            <div class="col-md-6 mb-3">
-                <div class="d-flex flex-column h-100 justify-content-center bg-size-cover bg-position-center rounded-lg"
-                    style="background-image: url(<%=__config.staticDomain %>/resource/img/banner-bg.jpg);">
-                    <div class="py-4 my-2 my-md-0 py-md-5 px-4 ml-md-3 text-center text-sm-left">
-                        <h4 class="h6 font-size-lg font-weight-light mb-2">Doğal, Taze ve Lezzetli</h4>
-                        <h3 class="mb-4 h5">Alışverişe şimdi başlayın</h3>
-
-                        <a class="btn btn-primary " href="/kasap-urunleri">Tüm Ürünler</a>
                     </div>
+
+
                 </div>
 
 
-            </div>
+                <div class="col-md-6 mb-3">
+                    <div class="d-flex flex-column h-100 justify-content-center bg-size-cover bg-position-center rounded-lg"
+                        style="background-image: url(<%=__config.staticDomain %>/resource/img/banner-bg.jpg);">
+
+                        <div class="py-4 my-2 my-md-0 py-md-5 px-4 ml-md-3 text-center text-sm-left">
+                            <h4 class="h6 font-size-lg font-weight-light mb-2">Siz Yemeğe Karar Verin</h4>
+                            <h3 class="mb-4 h5">En uygun eti KasaptanAl.com önersin</h3>
+
+                            <a class="btn btn-primary " href="/et-yemekleri">Et Yemekleri</a>
 
 
 
-            <div class="col-md-6 mb-3">
-                <div class="d-flex flex-column h-100 justify-content-center bg-size-cover bg-position-center rounded-lg"
-                    style="background-image: url(<%=__config.staticDomain %>/resource/img/banner-bg.jpg);">
-                    <div class="py-4 my-2 my-md-0 py-md-5 px-4 ml-md-3 text-center text-sm-left">
-                        <h4 class="h6 font-size-lg font-weight-light mb-2">Şehrin En İyi Kasapları</h4>
-                        <h3 class="mb-4 h5">Deneyimli kasaplarımızı keşfedin</h3>
-                        <a class="btn btn-primary " href="/kasaplar">Kasaplar</a>
-                    </div>
-                </div>
+                        </div>
 
-
-
-
-            </div>
-
-
- 
-
-
-
-
-        </div>
-    </section>
-
-<% } %>
-
-
-
-
-    <div class="container  mb-3">
-
-
-
-        <div class="bg-secondary d-flex flex-nowrap justify-content-between align-items-center">
-            <a class="d-block py-3 pl-3" href="<%=`/blog` %>">
-                <h3 class="h6 mb-0">Blog</h3>
-            </a>
-            <a class="d-none d-md-block btn btn-sm" href="<%=`/blog` %>">Tümü</a>
-        </div>
-
-        <div data-simplebar data-simplebar-auto-hide="false">
-            <div class="d-flex pb-2">
-                <% var items =  controller.blogItems %>
-                <% items.forEach((item, i) => {%>
-
-
-                <div>
-                    <div class="mr-2 item-slider product-card item-card">
-                        <a class="d-block" href="<%= `/blog/${item.slug}` %>">
-                            <img width="360" height="240" title="<%=item.title%>"
-                                src="<%=`${__config.staticDomain}/content-resimleri/${item.slug}-thumbnail.jpg` %>"
-                                alt="<%=item.title%>"></a>
-
-
-                        <h3 class="py-2 mb-0 text-center product-title font-size-sm"><a
-                                href="<%= `/blog/${item.slug}` %>"><%= item.title %></a>
-                        </h3>
 
 
                     </div>
@@ -225,175 +120,351 @@
 
 
 
-                <%})%>
-
             </div>
+        </section>
+
+
+
+
+
+
+
+
+
+
+
+        <div class="container mb-3 ">
+            <%- include('./_partial/category-products-slider', {limit: 4, category: 'bu-hafta' , reverse: true,
+                img: 'img/category/premium.jpg' }); %>
         </div>
 
-        <div class="d-xs-block border-bottom d-md-none text-center mb-3">
-            <a class="btn rounded-0 btn-sm btn-secondary" href="/blog">Tümü
-            </a>
-        </div>
 
 
 
 
-    </div>
 
 
 
-    <% if (false) { %>
 
-    <section class="container-fluid px-0 mb-3">
-        <div class="row no-gutters">
-            <div class="col-md-6"><a class="card border-0 rounded-0 text-decoration-none py-md-4 bg-faded-accent"
-                    target="_blank" href="https://www.instagram.com/kasaptanal/">
-                    <div class="card-body text-center"><i class="czi-instagram h3 mt-2 mb-4 text-accent"></i>
-                        <h3 class="h5 mb-1">Instagram'dayız</h3>
-                        <p class="text-muted font-size-sm">#kasaptanal</p>
+        <% if (false) { %>
+
+            <section class="container">
+                <div class="row">
+
+                    <div class="col-md-6 mb-3">
+                        <div class="d-flex flex-column h-100 justify-content-center bg-size-cover bg-position-center rounded-lg"
+                            style="background-image: url(<%=__config.staticDomain %>/resource/img/banner-bg.jpg);">
+                            <div class="py-4 my-2 my-md-0 py-md-5 px-4 ml-md-3 text-center text-sm-left">
+                                <h4 class="h6 font-size-lg font-weight-light mb-2">Doğal, Taze ve Lezzetli</h4>
+                                <h3 class="mb-4 h5">Alışverişe şimdi başlayın</h3>
+
+                                <a class="btn btn-primary " href="/kasap-urunleri">Tüm Ürünler</a>
+                            </div>
+                        </div>
+
+
                     </div>
-                </a></div>
 
-            <div class="col-md-6"><a class="card border-0 rounded-0 text-decoration-none py-md-4 bg-faded-primary"
-                    href="/blog">
-                    <div class="card-body text-center"><i class="czi-edit h3 mt-2 mb-4 text-primary"></i>
-                        <h3 class="h5 mb-1">Et Kültür Blog</h3>
-                        <p class="text-muted font-size-sm">Kırmızı et hakkında kısa ve öz içeriklere ulaşın.</p>
+
+
+                    <div class="col-md-6 mb-3">
+                        <div class="d-flex flex-column h-100 justify-content-center bg-size-cover bg-position-center rounded-lg"
+                            style="background-image: url(<%=__config.staticDomain %>/resource/img/banner-bg.jpg);">
+                            <div class="py-4 my-2 my-md-0 py-md-5 px-4 ml-md-3 text-center text-sm-left">
+                                <h4 class="h6 font-size-lg font-weight-light mb-2">Şehrin En İyi Kasapları</h4>
+                                <h3 class="mb-4 h5">Deneyimli kasaplarımızı keşfedin</h3>
+                                <a class="btn btn-primary " href="/kasaplar">Kasaplar</a>
+                            </div>
+                        </div>
+
+
+
+
                     </div>
-                </a></div>
-
-        </div>
-    </section>
-
-    <% } %>
-
-    <% if (__req.query.nodesc!='1') { %>
-    <div class="container mb-3">
-        <div class="collapse-container page-footer-text">
-            <div class="collapse" id="collapseSummary">
-                <h2>Şehrin En İyi kasaplarından En İyi etler</h2>
-                <p>
-                    Online, Hızlı ve Güvenli <strong><a class="text-dark no-collapse" href="/kasap-urunleri">et siparişi</strong></a> sağlıyoruz.
-                </p>
-                <p>
-                    Tüm kasaplarımız en az 10 yıllık deneyimli ve köklü <a class="no-collapse" href="/kasaplar">kasaplar</a>.
-
-                    <strong>Doğal beslenmiş kuzu ve danaları</strong> çoğunluğu kendi çiftliklerinden veya güvenilir
-                    tedarikçilerden almaktalar.
-                </p>
-                <h3>
-                    Yerel Üreticiler
-                </h3>
-                <p>
-                    Kırmızı et işini büyük hacimlerde yapmak yerine yerel, <strong>yılların verdiği deneyimle etin en
-                        iyisinden anlayan</strong> , müşteri taleplerini titizlikle yerine getiren kasap iş
-                    ortaklarımızla çalışıyoruz.
-                </p>
-                <h2>
-                    Yerel, güvenilir usta <strong>kasaplar</strong> bir arada
-                </h2>
-                <p>
-                    Kasap seçiminde oldukça titiz davranıyoruz. Sadece konusunda deneyimli, yerel ve
-                    güvenilir kasap iş ortaklarıyla çalışıyoruz.
-
-                </p>
-                <p>
-                    İş ortaklarımızın büyük çoğunluğu nesillerdir kasaplık mesleğini yapan ailelerden gelmekte. Kalan
-                    kesim ise genç, dinamik ve en kaliteli eti sağlama konusunda iddialı genç kasaplarımız.
-                </p>
-                <h3>
-                    Amacımız en kaliteli ürünleri yerel usta kasaplardan sizlere sağlamak
-                </h3>
-                <p>
-                    <a class="no-collapse" href="/ankara-kasap">Ankara</a> ve <a class="no-collapse" href="/istanbul-kasap">İstanbul</a>'daki en iyi kasaplarla çalışıyoruz. Kasaplarımızdan sipariş vermeniz ardından
-                    mutlaka müşteri memnuniyeti çerçevesinde size ulaşıyor ve yorumlarınızı alıyoruz. Tüm yorumları
-                    kasaplarımıza iletiyoruz.
-                </p>
-                <h2>
-                    Kolay kullanım ve hızlı, online, güvenilir et siparişi
-                </h2>
-                <p>
-                    Zamanınızın değerli olduğunu biliyoruz. Usta <strong><a class="no-collapse" href="/kasaplar">kasaplar</a></strong> online alışveriş ve sipariş
-                    platformu olarak web sitemizi devamlı güncelliyoruz. Sizden gelen talepler doğrultusunda
-                    ürünlerimizi düzenliyoruz.
-                </p>
-                <h3>
-                    Et yemekleri
-                </h3>
-                <p>
-                    Sitemizde pek çok et yemeği ve tarifi mevcut. Bu yemeklerde hangi etlerin kullanılabileceğini
-                    sitemiz size önerebiliyor. Aynı zamanda kişi sayısına göre miktar hesaplamasını kendisi yapabiliyor.
-                </p>
-                <h3>
-                    Kırmızı Et
-                </h3>
-                <p>Et, haftalık olarak düzenli gerçekleştirilen gıda tüketimi sırasında mutlaka yer verilmesi gereken en
-                    önemli gıdalardan birisidir. Çünkü sahip olduğu protein ve yağ miktarı ile birlikte vücudun
-                    ihtiyaçlarını karşılayan bu gıda, özellikle farklı yemekler içerisinde veya sadece <strong>kırmızı
-                        et</strong> şeklinde tüketilerek hem çocuklar hem yetişkinler için kullanılmalıdır.</p>
-                <p>İçinde bulunduğunuz mevsime uygun bir şekilde et kullanarak, taze sebzeler veya baklagiller ile
-                    tüketim gerçekleştirebileceğiniz gibi kuru sebzeler veya buzlukta muhafaza edilmiş malzemeler ile
-                    birleştirerek de yemekler hazırlayabilirsiniz. Ayrıca mangal, ızgara, kebap veya buğulama gibi
-                    birçok farklı yöntem ile birlikte hem çocuklar hem de yetişkinler için yemekler hazırlamanız
-                    mümkündür.</p>
-                <p>Bugün genel olarak incelendiğinde, <strong>kırmızı et çeşitleri</strong> öncelikle <a class="no-collapse" href="/kuzu-etleri">kuzu</a> ve <a class="no-collapse" href="/dana-etleri">dana</a> olmak
-                    üzere iki farklı hayvan üzerinden elde edilmektedir. Son yıllarda ülkemizde kısmen sığır eti tercihi
-                    de yapılmaktadır. Bu sayede etler arasında bonfile, antrikot, biftek, kaburga, marine edilmiş etler,
-                    kasaplık özel etler, köfteler veya kebaplık et tarifleri elde edilmesi mümkündür. Üstelik sistemimiz
-                    üzerinde bu et ürünlerin her biri online sipariş yöntemi ile istenilen her amaçla ve her gün temin
-                    edilebilir.</p>
-               
-                <h3><strong>Online kasap</strong> alışverişi ve <strong>hızlı, güvenilir et siparişi</strong> ile
-                    hayatınız daha
-                    kolay</h3>
-                <p>Evinizde veya işletmenizde hazırlayacağınız lezzetli yemekler için öncelikle online kasap
-                    platformumuz üzerinden
-                    <strong>kırmızı et sipariş</strong> işlemleri gerçekleştirebilirsiniz. Bu bağlamda dana veya kuzu
-                    gibi hayvanlardan elde edilen et ürünlerini de siparişleriniz içerisinde bulundurabilirsiniz.
-                    Örneğin, kış mevsiminde fasulye veya bakla gibi bir kuru gıdayı <strong>dana eti</strong> ile
-                    hazırlamanız için taze et kullanmayı tercih edebilirsiniz.</p>
-                <p>Her seferinde taze et kullanmayı seçmeniz gibi istediğiniz koşullarda <strong>kuzu eti</strong>
-                    ürünlerini toplu sipariş ederek, evinizde haftalık veya aylık kullanım da elde edebilirsiniz. Çünkü
-                    özellikle bu et ürünleri de birçok farklı tarif içerisinde yer almaktadır. Bilhassa ülkemizin Doğu
-                    bölgelerinde daha fazla kullanılan et ürünleri olarak kuzu tercih edilmektedir. Örnek olarak özel et
-                    tüketimi gerçekleştirmek açısından pirzola veya tandır için de kuzu tercihi yapılmaktadır.</p>
-                <p>Eğer sipariş işlemleri gerçekleştirmek için öncelikle hazırlayacağınız yemek tarifini belirlerseniz,
-                    bu sayede de kişi sayısına göre yeterli miktarda et ihtiyacını tespit edebilirsiniz. Sistem üzerinde
-                    online sipariş gerçekleştirerek en uygun <strong>kırmızı et fiyatları</strong> ile alışveriş
-                    sağlayabilirsiniz. Ayrıca sistem üzerinde sunulan <strong>et satın al</strong> işlemleri için
-                    bulunduğunuz bölgeyi seçerek, pratik bir şekilde yeni kasaplar keşfedebilir ve bir rehbere
-                    ulaşabilirsiniz.</p>
-
-                <h3><strong>Eve servis</strong> veya <strong>paket servis</strong> kasap siparişi güvenli ve hızlı</h3>
-                <p>
-                    KasaptanAl.com'un sağladığı en büyük faydalardan biri de <strong>paket servis</strong> veya
-                    <strong>eve servis</strong> olarak adlandırabileceğimiz et siparişini güvenle yapmanızı sağlamaktır.
-                </p>
-                <h3>Güncel <strong>2020 kırmızı et fiyatları</strong> kasaplardan gerçek zamanlı</h3>
-                <p>
-                    Et fiyatlarını kasaplar belirlemektedir. kasaptanAl.com en doğru gerçek zamanlı kırmızı et
-                    fiyatlarını öğrenmek için ideal platformdur.
-                </p>
-                <h3>Kırmızı et sosları ve marine kalitesi</h3>
-                <p>Özellikle ızgara veya mangal yapmak istediğinizde, seçeceğiniz etlerde marine önemli bir yapı
-                    oluşturmaktadır. Özel bir gıda olarak et, <strong>kırmızı et protein</strong> sayesinde sağlıklı ve
-                    özel bir seçenek oluştururken, marine bu yapının daha fazla ön plana çıkmasına yardımcı olmaktadır.
-                    Örneğin, seçilen bir dana veya kuzu pirzola ürünü marine edildikten sonra ızgarada pişirildiğinde
-                    hem çocuklar hem yetişkinler için keyifli bir tüketim imkanı sağlayacaktır.</p>
 
 
-            </div>
-            <a class="collapsed text-dark" data-toggle="collapse" href="#collapseSummary" aria-expanded="false"
-                aria-controls="collapseSummary"></a>
-        </div>
-    </div>
-    <% } %>
 
-    <% include ./_partial/footer %>
 
-    <% include ./_partial/scripts %>
 
-  <%- include('./_partial/purchase', {  }); %>
+
+
+                </div>
+            </section>
+
+            <% } %>
+
+
+
+
+                <div class="container  mb-3">
+
+
+
+                    <div class="bg-secondary d-flex flex-nowrap justify-content-between align-items-center">
+                        <a class="d-block py-3 pl-3" href="<%=`/blog` %>">
+                            <h3 class="h6 mb-0">Blog</h3>
+                        </a>
+                        <a class="d-none d-md-block btn btn-sm" href="<%=`/blog` %>">Tümü</a>
+                    </div>
+
+                    <div data-simplebar data-simplebar-auto-hide="false">
+                        <div class="d-flex pb-2">
+                            <% var items=controller.blogItems %>
+                                <% items.forEach((item, i)=> {%>
+
+
+                                    <div>
+                                        <div class="mr-2 item-slider product-card item-card">
+                                            <a class="d-block" href="<%= `/blog/${item.slug}` %>">
+                                                <img width="360" height="240" title="<%=item.title%>"
+                                                    src="<%=`${__config.staticDomain}/content-resimleri/${item.slug}-thumbnail.jpg` %>"
+                                                    alt="<%=item.title%>"></a>
+
+
+                                            <h3 class="py-2 mb-0 text-center product-title font-size-sm"><a
+                                                    href="<%= `/blog/${item.slug}` %>">
+                                                    <%= item.title %>
+                                                </a>
+                                            </h3>
+
+
+                                        </div>
+
+
+                                    </div>
+
+
+
+
+                                    <%})%>
+
+                        </div>
+                    </div>
+
+                    <div class="d-xs-block border-bottom d-md-none text-center mb-3">
+                        <a class="btn rounded-0 btn-sm btn-secondary" href="/blog">Tümü
+                        </a>
+                    </div>
+
+
+
+
+                </div>
+
+
+
+                <% if (false) { %>
+
+                    <section class="container-fluid px-0 mb-3">
+                        <div class="row no-gutters">
+                            <div class="col-md-6"><a
+                                    class="card border-0 rounded-0 text-decoration-none py-md-4 bg-faded-accent"
+                                    target="_blank" href="https://www.instagram.com/kasaptanal/">
+                                    <div class="card-body text-center"><i
+                                            class="czi-instagram h3 mt-2 mb-4 text-accent"></i>
+                                        <h3 class="h5 mb-1">Instagram'dayız</h3>
+                                        <p class="text-muted font-size-sm">#kasaptanal</p>
+                                    </div>
+                                </a></div>
+
+                            <div class="col-md-6"><a
+                                    class="card border-0 rounded-0 text-decoration-none py-md-4 bg-faded-primary"
+                                    href="/blog">
+                                    <div class="card-body text-center"><i
+                                            class="czi-edit h3 mt-2 mb-4 text-primary"></i>
+                                        <h3 class="h5 mb-1">Et Kültür Blog</h3>
+                                        <p class="text-muted font-size-sm">Kırmızı et hakkında kısa ve öz içeriklere
+                                            ulaşın.</p>
+                                    </div>
+                                </a></div>
+
+                        </div>
+                    </section>
+
+                    <% } %>
+
+                        <% if (__req.query.nodesc!='1' ) { %>
+                            <div class="container mb-3">
+                                <div class="collapse-container page-footer-text">
+                                    <div class="collapse" id="collapseSummary">
+                                        <h2>Şehrin En İyi kasaplarından En İyi etler</h2>
+                                        <p>
+                                            Online, Hızlı ve Güvenli <strong><a class="text-dark no-collapse"
+                                                    href="/kasap-urunleri">et siparişi</strong></a> sağlıyoruz.
+                                        </p>
+                                        <p>
+                                            Tüm kasaplarımız en az 10 yıllık deneyimli ve köklü <a class="no-collapse"
+                                                href="/kasaplar">kasaplar</a>.
+
+                                            <strong>Doğal beslenmiş kuzu ve danaları</strong> çoğunluğu kendi
+                                            çiftliklerinden veya güvenilir
+                                            tedarikçilerden almaktalar.
+                                        </p>
+                                        <h3>
+                                            Yerel Üreticiler
+                                        </h3>
+                                        <p>
+                                            Kırmızı et işini büyük hacimlerde yapmak yerine yerel, <strong>yılların
+                                                verdiği deneyimle etin en
+                                                iyisinden anlayan</strong> , müşteri taleplerini titizlikle yerine
+                                            getiren kasap iş
+                                            ortaklarımızla çalışıyoruz.
+                                        </p>
+                                        <h2>
+                                            Yerel, güvenilir usta <strong>kasaplar</strong> bir arada
+                                        </h2>
+                                        <p>
+                                            Kasap seçiminde oldukça titiz davranıyoruz. Sadece konusunda deneyimli,
+                                            yerel ve
+                                            güvenilir kasap iş ortaklarıyla çalışıyoruz.
+
+                                        </p>
+                                        <p>
+                                            İş ortaklarımızın büyük çoğunluğu nesillerdir kasaplık mesleğini yapan
+                                            ailelerden gelmekte. Kalan
+                                            kesim ise genç, dinamik ve en kaliteli eti sağlama konusunda iddialı genç
+                                            kasaplarımız.
+                                        </p>
+                                        <h3>
+                                            Amacımız en kaliteli ürünleri yerel usta kasaplardan sizlere sağlamak
+                                        </h3>
+                                        <p>
+                                            <a class="no-collapse" href="/ankara-kasap">Ankara</a> ve <a
+                                                class="no-collapse" href="/istanbul-kasap">İstanbul</a>'daki en iyi
+                                            kasaplarla çalışıyoruz. Kasaplarımızdan sipariş vermeniz ardından
+                                            mutlaka müşteri memnuniyeti çerçevesinde size ulaşıyor ve yorumlarınızı
+                                            alıyoruz. Tüm yorumları
+                                            kasaplarımıza iletiyoruz.
+                                        </p>
+                                        <h2>
+                                            Kolay kullanım ve hızlı, online, güvenilir et siparişi
+                                        </h2>
+                                        <p>
+                                            Zamanınızın değerli olduğunu biliyoruz. Usta <strong><a class="no-collapse"
+                                                    href="/kasaplar">kasaplar</a></strong> online alışveriş ve sipariş
+                                            platformu olarak web sitemizi devamlı güncelliyoruz. Sizden gelen talepler
+                                            doğrultusunda
+                                            ürünlerimizi düzenliyoruz.
+                                        </p>
+                                        <h3>
+                                            Et yemekleri
+                                        </h3>
+                                        <p>
+                                            Sitemizde pek çok et yemeği ve tarifi mevcut. Bu yemeklerde hangi etlerin
+                                            kullanılabileceğini
+                                            sitemiz size önerebiliyor. Aynı zamanda kişi sayısına göre miktar
+                                            hesaplamasını kendisi yapabiliyor.
+                                        </p>
+                                        <h3>
+                                            Kırmızı Et
+                                        </h3>
+                                        <p>Et, haftalık olarak düzenli gerçekleştirilen gıda tüketimi sırasında mutlaka
+                                            yer verilmesi gereken en
+                                            önemli gıdalardan birisidir. Çünkü sahip olduğu protein ve yağ miktarı ile
+                                            birlikte vücudun
+                                            ihtiyaçlarını karşılayan bu gıda, özellikle farklı yemekler içerisinde veya
+                                            sadece <strong>kırmızı
+                                                et</strong> şeklinde tüketilerek hem çocuklar hem yetişkinler için
+                                            kullanılmalıdır.</p>
+                                        <p>İçinde bulunduğunuz mevsime uygun bir şekilde et kullanarak, taze sebzeler
+                                            veya baklagiller ile
+                                            tüketim gerçekleştirebileceğiniz gibi kuru sebzeler veya buzlukta muhafaza
+                                            edilmiş malzemeler ile
+                                            birleştirerek de yemekler hazırlayabilirsiniz. Ayrıca mangal, ızgara, kebap
+                                            veya buğulama gibi
+                                            birçok farklı yöntem ile birlikte hem çocuklar hem de yetişkinler için
+                                            yemekler hazırlamanız
+                                            mümkündür.</p>
+                                        <p>Bugün genel olarak incelendiğinde, <strong>kırmızı et çeşitleri</strong>
+                                            öncelikle <a class="no-collapse" href="/kuzu-etleri">kuzu</a> ve <a
+                                                class="no-collapse" href="/dana-etleri">dana</a> olmak
+                                            üzere iki farklı hayvan üzerinden elde edilmektedir. Son yıllarda ülkemizde
+                                            kısmen sığır eti tercihi
+                                            de yapılmaktadır. Bu sayede etler arasında bonfile, antrikot, biftek,
+                                            kaburga, marine edilmiş etler,
+                                            kasaplık özel etler, köfteler veya kebaplık et tarifleri elde edilmesi
+                                            mümkündür. Üstelik sistemimiz
+                                            üzerinde bu et ürünlerin her biri online sipariş yöntemi ile istenilen her
+                                            amaçla ve her gün temin
+                                            edilebilir.</p>
+
+                                        <h3><strong>Online kasap</strong> alışverişi ve <strong>hızlı, güvenilir et
+                                                siparişi</strong> ile
+                                            hayatınız daha
+                                            kolay</h3>
+                                        <p>Evinizde veya işletmenizde hazırlayacağınız lezzetli yemekler için öncelikle
+                                            online kasap
+                                            platformumuz üzerinden
+                                            <strong>kırmızı et sipariş</strong> işlemleri gerçekleştirebilirsiniz. Bu
+                                            bağlamda dana veya kuzu
+                                            gibi hayvanlardan elde edilen et ürünlerini de siparişleriniz içerisinde
+                                            bulundurabilirsiniz.
+                                            Örneğin, kış mevsiminde fasulye veya bakla gibi bir kuru gıdayı <strong>dana
+                                                eti</strong> ile
+                                            hazırlamanız için taze et kullanmayı tercih edebilirsiniz.
+                                        </p>
+                                        <p>Her seferinde taze et kullanmayı seçmeniz gibi istediğiniz koşullarda
+                                            <strong>kuzu eti</strong>
+                                            ürünlerini toplu sipariş ederek, evinizde haftalık veya aylık kullanım da
+                                            elde edebilirsiniz. Çünkü
+                                            özellikle bu et ürünleri de birçok farklı tarif içerisinde yer almaktadır.
+                                            Bilhassa ülkemizin Doğu
+                                            bölgelerinde daha fazla kullanılan et ürünleri olarak kuzu tercih
+                                            edilmektedir. Örnek olarak özel et
+                                            tüketimi gerçekleştirmek açısından pirzola veya tandır için de kuzu tercihi
+                                            yapılmaktadır.</p>
+                                        <p>Eğer sipariş işlemleri gerçekleştirmek için öncelikle hazırlayacağınız yemek
+                                            tarifini belirlerseniz,
+                                            bu sayede de kişi sayısına göre yeterli miktarda et ihtiyacını tespit
+                                            edebilirsiniz. Sistem üzerinde
+                                            online sipariş gerçekleştirerek en uygun <strong>kırmızı et
+                                                fiyatları</strong> ile alışveriş
+                                            sağlayabilirsiniz. Ayrıca sistem üzerinde sunulan <strong>et satın
+                                                al</strong> işlemleri için
+                                            bulunduğunuz bölgeyi seçerek, pratik bir şekilde yeni kasaplar keşfedebilir
+                                            ve bir rehbere
+                                            ulaşabilirsiniz.</p>
+
+                                        <h3><strong>Eve servis</strong> veya <strong>paket servis</strong> kasap
+                                            siparişi güvenli ve hızlı</h3>
+                                        <p>
+                                            KasaptanAl.com'un sağladığı en büyük faydalardan biri de <strong>paket
+                                                servis</strong> veya
+                                            <strong>eve servis</strong> olarak adlandırabileceğimiz et siparişini
+                                            güvenle yapmanızı sağlamaktır.
+                                        </p>
+                                        <h3>Güncel <strong>2020 kırmızı et fiyatları</strong> kasaplardan gerçek zamanlı
+                                        </h3>
+                                        <p>
+                                            Et fiyatlarını kasaplar belirlemektedir. kasaptanAl.com en doğru gerçek
+                                            zamanlı kırmızı et
+                                            fiyatlarını öğrenmek için ideal platformdur.
+                                        </p>
+                                        <h3>Kırmızı et sosları ve marine kalitesi</h3>
+                                        <p>Özellikle ızgara veya mangal yapmak istediğinizde, seçeceğiniz etlerde marine
+                                            önemli bir yapı
+                                            oluşturmaktadır. Özel bir gıda olarak et, <strong>kırmızı et
+                                                protein</strong> sayesinde sağlıklı ve
+                                            özel bir seçenek oluştururken, marine bu yapının daha fazla ön plana
+                                            çıkmasına yardımcı olmaktadır.
+                                            Örneğin, seçilen bir dana veya kuzu pirzola ürünü marine edildikten sonra
+                                            ızgarada pişirildiğinde
+                                            hem çocuklar hem yetişkinler için keyifli bir tüketim imkanı sağlayacaktır.
+                                        </p>
+
+
+                                    </div>
+                                    <a class="collapsed text-dark" data-toggle="collapse" href="#collapseSummary"
+                                        aria-expanded="false" aria-controls="collapseSummary"></a>
+                                </div>
+                            </div>
+                            <% } %>
+
+                                <% include ./_partial/footer %>
+
+                                    <% include ./_partial/scripts %>
+
+                                        <%- include('./_partial/purchase', { }); %>
 
 
 

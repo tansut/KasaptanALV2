@@ -371,7 +371,7 @@ class Route extends router_1.ViewRouter {
                 else {
                     if (this.productLd && this.productLd.offers) {
                         this.startPrice = {
-                            title: 'İstediğiniz gün ve saatte kapınızda!',
+                            title: 'İstediğiniz kasaptan dakikalar içinde kapınızda!',
                             basedOn: 'global',
                             view: {
                                 price: this.productLd.offers.lowPrice, unit: this.productLd.offers.unit, unitTitle: this.productLd.offers.unit
