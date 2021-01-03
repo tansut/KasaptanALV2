@@ -249,7 +249,7 @@
                           <div v-if="product && product.nutritionView && selectedNutrition" class="card rounded-0">
   
                             <div class="card-header" role="tab">
-                              <h3 class="accordion-heading "><a href="#nutrition-info" class="collapsed" data-toggle="collapse"><i class="czi-ruler text-muted font-size-lg align-middle mt-n1 mr-2"></i>Besin Değerleri <span v-if="false" class="badge badge-dark text-sm">{{selectedNutrition.calories}} Kalori</span> <span
+                              <h3 class="accordion-heading "><a href="#nutrition-info" class="collapsed" data-toggle="collapse"><i class="czi-ruler font-size-lg align-middle mt-n1 mr-2"></i>Besin Değerleri <span class="align-middle mt-n1 badge badge-info text-sm">yeni</span> <span
                                     class="accordion-indicator"></span></a></h3>
                                     <% if (false){ %> 
                                     <div class="progress rounded-0   mb-2">
@@ -1237,7 +1237,7 @@
                               </p>
 
                               <p>
-                                Üç ana besin grubundan son olarak yağ olarak <strong><%=view.nutritionView.values[0].name %> <%=product.name%></strong> ortalama <strong><%= fat.amount %> <%= fat.unit %> </strong> yağ içermektedir.
+                                Yağ değerlerine baktığımızda <strong><%=view.nutritionView.values[0].name %> <%=product.name%></strong> ortalama <strong><%= fat.amount %> <%= fat.unit %> </strong> yağ içermektedir.
                               </p>
                               <% if (view.nutritionView.values.length > 1) { %>
                                 <% var otherUnits = view.nutritionView.values.map(p=>p.name).join(', ') %>
