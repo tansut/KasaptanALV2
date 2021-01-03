@@ -265,7 +265,7 @@
                                     <%}%>
                                  
                             </div>
-                            <div class="collapse bg-secondary" id="nutrition-info" data-parent="#nutrition-info-panel" role="tabpanel">
+                            <div class="collapse bg-secondary bg-size-cover bg-position-center" style="background-image: url(<%=__config.staticDomain %>/resource/img/ka-cover.png)" id="nutrition-info" data-parent="#nutrition-info-panel" role="tabpanel">
                               <div class="progress rounded-0">
                                 <div class="progress-bar progress-bar-striped bg-success" role="progressbar" v-bind:style="{width: getNutritionPerc('protein') + '%'}" v-bind:aria-valuenow="getNutritionPerc('protein')" aria-valuemin="0" aria-valuemax="100">{{getNutrition('protein') ? getNutrition('protein').amount + getNutrition('protein').unit: '' }}</div>
 
