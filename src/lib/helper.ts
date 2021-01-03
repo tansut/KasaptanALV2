@@ -180,6 +180,8 @@ export default class Helper {
         }
     }
 
+
+
     static formattedCurrency(n: number, symbol: string = 'TL') {
         let parts = Helper.splitCurrency(Helper.asCurrency(n));
         if (parts.krs <= 0) return numeral(parts.val).format('0,0') + symbol

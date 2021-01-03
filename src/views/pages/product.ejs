@@ -210,24 +210,42 @@
 
 
 
-                      <% if (product.featuresText) { %>
+                     
                         
-                      <% var notes = product.featuresText.split('\n') %>
-                      <div class=" mb-3  ">
-                        <ul class="list-unstyled mb-2">
-                          <%notes.forEach((note, i) => { %>
-                          <li><i class="czi-check-circle text-dark mr-1"></i><%=note%></li>
-                          <%})%>
-                        </ul>
+                    
 
-                      </div>
-
-                      <% } %>
+                     
 
                       
 
                         <div class="accordion pb-3" id="nutrition-info-panel" role="tablist">
-                         
+                          <% if (product.featuresText) { %>
+                            <div class="card rounded-0">
+                          <div class="card-header" role="tab">
+                            <h3 class="accordion-heading"><a href="#basic-info" class="collapsed" data-toggle="collapse"><i class="czi-announcement text-muted font-size-lg align-middle mt-n1 mr-2"></i><%=view.name%><span class="accordion-indicator"></span></a></h3>
+            
+                               
+                          </div>
+                          <div class="collapse" id="basic-info" data-parent="#nutrition-info-panel" role="tabpanel">
+                        
+                            <div class="px-3 pt-3 ">
+                             
+                              <% var notes = product.featuresText.split('\n') %>
+                              <div class=" mb-3  ">
+                                <ul class="list-unstyled mb-2 font-size-sm">
+                                  <%notes.forEach((note, i) => { %>
+                                  <li><i class="czi-check-circle text-success mr-2"></i><%=note%></li>
+                                  <%})%>
+                                </ul>
+        
+                              </div>
+                       
+
+                            </div>
+                          
+                          </div>
+                        </div>
+                          <% } %>
                           <div v-if="product && product.nutritionView && selectedNutrition" class="card rounded-0">
   
                             <div class="card-header" role="tab">
@@ -248,9 +266,11 @@
                             </div>
                             <div class="collapse bg-secondary" id="nutrition-info" data-parent="#nutrition-info-panel" role="tabpanel">
                               <div class="progress rounded-0">
-                                <div class="progress-bar progress-bar-striped bg-warning" role="progressbar" v-bind:style="{width: getNutritionPerc('fat') + '%'}" v-bind:aria-valuenow="getNutritionPerc('fat')" aria-valuemin="0" aria-valuemax="100">{{getNutrition('fat') ? getNutrition('fat').amount + getNutrition('fat').unit: '' }}</div>
-                                <div class="progress-bar progress-bar-striped bg-info" role="progressbar" v-bind:style="{width: getNutritionPerc('carb') + '%'}" v-bind:aria-valuenow="getNutritionPerc('carb')" aria-valuemin="0" aria-valuemax="100">{{getNutrition('carb') ? getNutrition('carb').amount + getNutrition('carb').unit: '' }}</div>
                                 <div class="progress-bar progress-bar-striped bg-success" role="progressbar" v-bind:style="{width: getNutritionPerc('protein') + '%'}" v-bind:aria-valuenow="getNutritionPerc('protein')" aria-valuemin="0" aria-valuemax="100">{{getNutrition('protein') ? getNutrition('protein').amount + getNutrition('protein').unit: '' }}</div>
+
+                                <div class="progress-bar progress-bar-striped bg-info" role="progressbar" v-bind:style="{width: getNutritionPerc('carb') + '%'}" v-bind:aria-valuenow="getNutritionPerc('carb')" aria-valuemin="0" aria-valuemax="100">{{getNutrition('carb') ? getNutrition('carb').amount + getNutrition('carb').unit: '' }}</div>
+                                <div class="progress-bar progress-bar-striped bg-warning" role="progressbar" v-bind:style="{width: getNutritionPerc('fat') + '%'}" v-bind:aria-valuenow="getNutritionPerc('fat')" aria-valuemin="0" aria-valuemax="100">{{getNutrition('fat') ? getNutrition('fat').amount + getNutrition('fat').unit: '' }}</div>
+                              
                               </div>
                               <div class="font-size-sm ">
                                
@@ -264,11 +284,12 @@
                                     <div class="font-size-xs text-muted mt-1" v-if="selectedNutrition && selectedNutrition.source" >
                                       <span>Kaynak: </span><a class="text-dark" target="_blank" :href="selectedNutrition.sourceUrl">{{selectedNutrition.source}}</a>
                                     </div>
+                                    <span class="text-dark font-size-xs" v-if="selectedNutrition.description"><i class="cz-icon  czi-announcement"></i> {{selectedNutrition.description}}</span>
                                     
                                   </div>
                                   <div>
                                     <span class="ml-2 font-size-md">
-                                      
+                                     
                                     </span>
                                   </div>
                                 </div>
@@ -282,16 +303,32 @@
                                     <div>
                                       <span class="font-weight-bold">Kalori</span> {{ selectedNutrition.calories }}
                                     </div>
-                                      <span class="font-size-sm">Günlük%</span>
+                                      <span class="font-size-xs">Günlük%</span>
                                     </div>
-                                    <div v-for="(val, index) in selectedNutrition.values" class="d-flex flex-nowrap justify-content-between align-items-center py-1 px-3">
+                                    <div v-for="(val, index) in getNutritionValues(selectedNutrition)" class="d-flex flex-nowrap justify-content-between align-items-center py-1 px-3 border-bottom">
                                       <div>
                                         <span v-bind:class=" {'text-warning': val.type == 'fat', 'text-info': val.type == 'carb', 'text-success': val.type == 'protein' , 'font-weight-bold': val.type.indexOf(':') == -1, 'ml-3': val.type.indexOf(':') > 0   } ">{{val.title}}</span> {{ val.amount }} {{ val.unit }}
 
                                       </div>
-                                      <span v-if="getDailyPerc(val.type) > 0.5" class="font-size-sm">{{getDailyPerc(val.type) + '%'}}</span>
+                                      <span v-if="getDailyPerc(val.type) > 0.5" v-bind:class="{'font-weight-bold': getDailyPerc(val.type) >= 25 && val.type != 'cholesterol'}" >{{getDailyPerc(val.type) + '%'}}</span>
                                   
                                     </div>
+                                    <div v-if="getNutritionVitamins(selectedNutrition).length > 0" class="row font-size-sm pt-2 no-gutters">
+                                      <div v-for="(val, index) in getNutritionVitamins(selectedNutrition)" class="col-6">
+                                        <div class="d-flex flex-nowrap justify-content-between align-items-center px-3 px-3 pb-2">
+                                          <span >{{val.title}}</span> 
+                                          <span v-bind:class="{'font-weight-bold':val.amount >= 25}">
+                                            {{ val.amount }}{{ val.unit }}
+
+                                          </span>
+  
+                                        </div>
+                                    
+                                      </div>
+                                    </div>
+                                  
+
+                                    
                                   </div>
 
                               </div>
@@ -322,37 +359,24 @@
                     <% if (bilgiResources.length ) { %>
 
                       <div class="mb-1">
+                        <a>
+                          <h5 class="h6 font-size-md mb-1 border-bottom">Yardımcı Videolar</h5>
+                        </a>
 
-                        <div class="d-flex flex-nowrap justify-content-between align-items-center">
-
-
-
-                          <h5 class="h6 font-size-md mb-1"></i>Yardımcı videolar</h5>
-
-
-
-
-                        </div>
-                        <div>
-                          <% bilgiResources.forEach(t=> { %>
-
-                          <div class="d-flex pb-1 align-items-center flex-nowrap justify-content-between">
-                            <a class="text-primary" href="javascript:openSlider(<%=t.id%>)"><i
-                                class="text-primary  <%= t.contentType == 'video-youtube' ? 'czi-youtube': 'czi-camera' %> mr-1"></i><%=t.title%></a>
+                      
+                        <ul class="list-unstyled font-size-sm">
+                       
+                        <% bilgiResources.forEach(t=> { %>
+                        <li>
+                          <a class="d-block" href="javascript:openSlider(<%=t.id%>)"><i class="text-primary <%= t.contentType == 'video-youtube' ? 'czi-youtube': 'czi-camera' %> mr-2"></i><%=t.title%></a>
+                        </li>
+                        <%})%>
+                      </ul>
+                      
+                    </div>
 
 
-
-
-
-                          </div>
-
-
-
-
-
-                          <%})%>
-                        </div>
-                      </div>
+             
 
 
 
@@ -363,65 +387,36 @@
                       <% if (tarifsAndFoods.length) { %>
 
                       <div class="mb-1">
-
-                        <div class="d-flex flex-nowrap justify-content-between align-items-center">
-                          <a href="#tarifVideos">
-                            <h5 class="h6 font-size-md mb-1">Bu yemekler için ideal</h5>
+                          <a>
+                            <h5 class="h6 font-size-md mb-1 border-bottom">Yemekler &amp; Tarifler</h5>
                           </a>
-                   
-                        </div>
-
-                        <div>
+                          <ul class="list-unstyled font-size-sm">
                           <% tarifsAndFoods.forEach(t=> { %>
-
-                          <div class="d-flex pb-1 align-items-center flex-nowrap justify-content-between">
-                            <a class="text-primary" href="javascript:openSlider(<%=t.id%>)"><i
-                                class="text-primary <%= t.contentType == 'video-youtube' ? 'czi-youtube': 'czi-camera' %> mr-1"></i><%=t.title%></a>
-
-
-                          
-
-
-
-                          </div>
-
-
-
-
-
+                          <li>
+                            <a class="d-block" href="javascript:openSlider(<%=t.id%>)"><i class="text-primary mr-2 <%= t.contentType == 'video-youtube' ? 'czi-youtube': 'czi-camera' %> mr-1"></i><%=t.title%></a>
+                          </li>
                           <%})%>
-                        </div>
+                        </ul>
                       </div>
-
-
-
                       <% } %>
 
                       <% if (hazirlanisResources.length) { %>
 
                         <div class="mb-1">
-                          <h5 class="h6 font-size-md mb-1">Şu şekilde hazırlayabiliriz</h5>
-                          <div class="mb-2">
-                            <% hazirlanisResources.forEach(t=> { %>
-
-                            <div class="d-flex pb-1  flex-wrap justify-content-between">
-                              <a href="javascript:openSlider(<%=t.id%>)"><i
-                                  class=" czi-youtube mr-1"></i><%=t.title%></a>
-
-                              <a title="Bu şekilde hazırlayın"
-                                href="javascript:<%= include('./_partial/addtonote.ejs', {resource: t, options: {hideProduct: true} }) %>"><span
-                                  class="color-primary"><i class=" czi-add-circle"></i></span>
-                              </a>
-
-                            </div>
+                          <a>
+                            <h5 class="h6 font-size-md mb-1 border-bottom">Şu şekilde hazırlayabiliriz</h5>
+                          </a>
+                          <ul class="list-unstyled font-size-sm">
+                          <% hazirlanisResources.forEach(t=> { %>
+                          <li>
+                            <a class="d-block" href="javascript:openSlider(<%=t.id%>)"><i class="mr-2 text-primary <%= t.contentType == 'video-youtube' ? 'czi-youtube': 'czi-camera' %> mr-1"></i><%=t.title%></a>
+                          </li>
+                          <%})%>
+                        </ul>
+                      </div>
 
 
-
-
-
-                            <%})%>
-                          </div>
-                        </div>
+             
 
 
 
@@ -769,9 +764,9 @@
                         
                       
                            
-                            <div class="mt-2 d-flex align-items-center justify-content-center">
+                            <div class="mt-3 d-flex align-items-center justify-content-center">
                               <p class="font-size-lg" v-if="selectedUnit.unit != 'kg'">Kaç <b>{{ selectedUnit.unitTitle }}</b> hazırlayalım?</p>
-                              <p class="font-size-lg" v-if="selectedUnit.unit == 'kg'"><b>Ne kadar</b> hazırlayalım?</p>
+                              <p class="font-size-md" v-if="selectedUnit.unit == 'kg'"><b>Ne kadar</b> hazırlayalım?</p>
                            
                               
                       
@@ -1223,6 +1218,57 @@
                               Ayrıca <a href="/kasaplar">kasaplar</a>ımızın <a href="/et-fiyatlari">tüm
                                 et fiyatlarını</a> da görüntülemek isteyebilirsiniz.
                             </p>
+
+
+                            <% if (view.nutritionView && view.nutritionView.values.length > 0) { %>
+                              <h3 class="border-bottom h5"><%=product.name%> Kalori &amp; Besin Değerleri</h3>
+                              <p>
+                                <strong>
+                                <%=view.nutritionView.values[0].name %> <%=product.name%></strong> ortalama <strong><%=view.nutritionView.values[0].calories %> kalori</strong> içermektedir. 
+                                  Bu değerle günlük kalori ihtiyacınızın %<%= Math.round((view.nutritionView.values[0].calories / view.nutritionView.dailyValues['calories']) * 100) %> oranına karşılık bölümünü elde edebilirsiniz.
+                              </p>
+
+                              <%
+                                var protein = view.nutritionView.values[0].values.find(p=>p.type=='protein');
+                                var fat = view.nutritionView.values[0].values.find(p=>p.type=='fat');
+                              %>
+                              <p>
+                                Kaliteli protein olarak <strong><%=view.nutritionView.values[0].name %> <%=product.name%></strong> ortalama <strong><%= protein.amount %> <%= protein.unit %> </strong> protein içermektedir.
+                              </p>
+
+                              <p>
+                                Üç ana besin grubundan son olarak yağ olarak <strong><%=view.nutritionView.values[0].name %> <%=product.name%></strong> ortalama <strong><%= fat.amount %> <%= fat.unit %> </strong> yağ içermektedir.
+                              </p>
+                              <% if (view.nutritionView.values.length > 1) { %>
+                                <% var otherUnits = view.nutritionView.values.map(p=>p.name).join(', ') %>
+                              <p>
+                                KasaptanAl.com farklı tüketim değerleri <strong><%=otherUnits%></strong> değerleri için <strong><%=product.name%> besin ve kalori değerlerini</strong> içermektedir.
+                              
+                                
+                                
+                              </p>
+                              <%}%>
+
+                              <% var vitamins = view.nutritionView.values[0].values.filter(p=>p.type.startsWith('vitamin')); %>
+
+                              <% if (vitamins.length) { %>
+                                <h4 class="border-bottom h6"><%=product.name%> Vitamin Değerleri</h3>
+                                <p>
+                                  <strong><%=view.nutritionView.values[0].name %> <%=product.name%></strong> içerdiği vitaminler ve günlük ihtiyacı karşılama oranları şu şekildedir.
+                                </p>
+                                <ul>
+                                  <% vitamins.forEach(v=>  {  %>
+                                    <li>
+                                    <%=v.title%>, <%=v.amount%><%=v.unit%> 
+                                  </li>
+                                  <%})%>
+                                </ul>
+                              <% } %>
+                              <% if (view.nutritionView.values[0].source) %>
+                              <p>
+                                Not: Besin değerlerinin elde edilmesinde kaynaklardan birisi olarak <a target="_blank" href="<%=view.nutritionView.values[0].sourceUrl%>"><%=view.nutritionView.values[0].source%></a> kullanılmıştır.
+                              </p>
+                            <% } %>
 
                           </div>
 

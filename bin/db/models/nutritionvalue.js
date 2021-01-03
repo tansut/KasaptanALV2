@@ -45,6 +45,7 @@ let NutritionValue = NutritionValue_1 = class NutritionValue extends basemodel_1
         this.calories = Math.round(ratio * based.calories);
         this.source = based.source;
         this.sourceUrl = based.sourceUrl;
+        this.description = this.description || based.description;
         this.items = [];
         based.items.forEach(i => {
             let newItem = new nutritionvalueitem_1.default(i.toJSON());
@@ -93,6 +94,7 @@ let NutritionValue = NutritionValue_1 = class NutritionValue extends basemodel_1
                     values: items[i].NutritionValues,
                     source: items[i].source,
                     sourceUrl: items[i].sourceUrl,
+                    description: items[i].description
                 };
                 result.values.push(newItem);
             }

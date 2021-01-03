@@ -540,6 +540,20 @@ window.initComponents = function initComponents() {
                 })
             },
 
+            getNutritionValues(selected) {
+                if (!this.selectedNutrition) return [];
+                return selected.values.filter(function(p) {
+                    return !p.type.startsWith('vitamin')
+                })
+            },
+
+            getNutritionVitamins(selected) {
+                if (!this.selectedNutrition) return [];
+                return selected.values.filter(function(p) {
+                    return p.type.startsWith('vitamin')
+                })
+            },
+
             getDailyPerc(nutrition) {
                 if (!this.selectedNutrition) return 0;
                 var daily = this.product.nutritionView.dailyValues[nutrition];

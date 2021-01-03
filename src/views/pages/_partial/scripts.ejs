@@ -148,6 +148,19 @@
   
     $(document).ready(function () {
 
+      $('.accordion').on('shown.bs.collapse', function (event) {
+        var title = $("h3.accordion-heading", $(event.target).parent()[0]).text();
+        if (title) {
+          window.App.gTag('accordion', 'open', title)
+        }
+      })
+      $('.accordion').on('hidden.bs.collapse', function (event) {
+        var title = $("h3.accordion-heading", $(event.target).parent()[0]).text();
+        if (title) {
+          window.App.gTag('accordion', 'collapsed', title)
+        }
+      })
+
       $('.modal').on('shown.bs.modal', function () {
         window.__saveScroll = window.scrollY || window.scrollTop || document.getElementsByTagName("html")[0].scrollTop;
         //$(window).scrollTop(0);
