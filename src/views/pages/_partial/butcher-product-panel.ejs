@@ -36,10 +36,10 @@ class="gallery-item-caption"><%= butcherVideo.title %></span></a>
           
           <% if (view.butcher.puanData ) { %>
           <div class="text-right">
-            <span class="d-block mb-1 badge badge-success font-size-sm font-weight-medium">
+            <span class="d-block mb-1 badge badge-success font-size-xs font-weight-medium">
               %<%=view.butcher.puanData.rate * 100 %> Puan
             </span>
-            <span class="d-block badge badge-danger font-size-sm font-weight-medium">
+            <span class="d-block badge badge-danger font-size-xs font-weight-medium">
               %<%='3'%> Ek Puan
             </span>
           </div>
@@ -167,8 +167,7 @@ class="gallery-item-caption"><%= butcherVideo.title %></span></a>
 
         <div class="card rounded-0">
           <div class="card-header py-0" role="tab">
-            <h3 class="h6  font-weight-normal accordion-heading px-0"><a href="#teslimat-info" class="collapsed" data-toggle="collapse"><i
-                  class="px-0 align-middle"></i>Teslimat Bilgisi<span
+            <h3 class="h6  font-weight-normal accordion-heading px-0"><a href="#teslimat-info" class="collapsed" data-toggle="collapse"><i class="czi-delivery font-size-lg align-middle mt-n1 mr-2"></i>Teslimat Bilgisi<span
                   class="accordion-indicator"></span></a></h3>
           </div>
           <div class="collapse" id="teslimat-info" data-parent="#teslimat-info-panel" role="tabpanel">
@@ -199,8 +198,7 @@ class="gallery-item-caption"><%= butcherVideo.title %></span></a>
         <div class="card rounded-0">
   
           <div class="card-header" role="tab">
-            <h3 class="h6 font-weight-normal accordion-heading px-0"><a href="#butcher-info" class="collapsed" data-toggle="collapse"><i
-                  class="px-0 align-middle"></i>Hakkında<span
+            <h3 class="h6 font-weight-normal accordion-heading px-0"><a href="#butcher-info" class="collapsed" data-toggle="collapse"><i class="czi-announcement text-muted font-size-lg align-middle mt-n1 mr-2"></i><%=view.butcher.name%><span
                   class="accordion-indicator"></span></a></h3>
           </div>
           <div class="collapse" id="butcher-info" data-parent="#teslimat-info-panel" role="tabpanel">

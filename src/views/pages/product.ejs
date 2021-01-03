@@ -220,9 +220,11 @@
 
                         <div class="accordion pb-3" id="nutrition-info-panel" role="tablist">
                           <% if (product.featuresText) { %>
+                            <% var notes = product.featuresText.split('\n') %>
+
                             <div class="card rounded-0">
                           <div class="card-header" role="tab">
-                            <h3 class="accordion-heading"><a href="#basic-info" class="collapsed" data-toggle="collapse"><i class="czi-announcement text-muted font-size-lg align-middle mt-n1 mr-2"></i><%=view.name%><span class="accordion-indicator"></span></a></h3>
+                            <h3 class="font-weight-normal accordion-heading"><a href="#basic-info" class="collapsed" data-toggle="collapse"><i class="czi-announcement text-muted font-size-lg align-middle mt-n1 mr-2"></i><%=view.name%> <span class="align-middle mt-n1 badge badge-info"></span> <span class="accordion-indicator"></span></a></h3>
             
                                
                           </div>
@@ -230,11 +232,10 @@
                         
                             <div class="px-3 pt-3 ">
                              
-                              <% var notes = product.featuresText.split('\n') %>
                               <div class=" mb-3  ">
-                                <ul class="list-unstyled mb-2 font-size-sm">
+                                <ul class="list-unstyled mb-2 font-weight-light">
                                   <%notes.forEach((note, i) => { %>
-                                  <li><i class="czi-check-circle text-success mr-2"></i><%=note%></li>
+                                  <li><i class="czi-check-circle text-success align-middle mt-n1 mr-2"></i><%=note%></li>
                                   <%})%>
                                 </ul>
         
@@ -249,7 +250,7 @@
                           <div v-if="product && product.nutritionView && selectedNutrition" class="card rounded-0">
   
                             <div class="card-header" role="tab">
-                              <h3 class="accordion-heading "><a href="#nutrition-info" class="collapsed" data-toggle="collapse"><i class="czi-ruler font-size-lg align-middle mt-n1 mr-2"></i>Besin Değerleri <span class="align-middle mt-n1 badge badge-info text-sm">yeni</span> <span
+                              <h3 class="accordion-heading font-weight-normal "><a href="#nutrition-info" class="collapsed" data-toggle="collapse"><i class="czi-ruler font-size-lg align-middle mt-n1 mr-2"></i>Besin Değerleri <span class="align-middle mt-n1 badge badge-dark">{{selectedNutrition.calories}}kal</span> <span
                                     class="accordion-indicator"></span></a></h3>
                                     <% if (false){ %> 
                                     <div class="progress rounded-0   mb-2">
@@ -341,14 +342,15 @@
                           </div>
 
                      
-
+                        <% var totalRes = bilgiResources.length + tarifsAndFoods.length + hazirlanisResources.length %>
                        
-                        <%if (bilgiResources.length || tarifsAndFoods.length || hazirlanisResources.length) { %>
+                        <%if (totalRes) { %>
+
+
                         <div class="card rounded-0">
   
                           <div class="card-header" role="tab">
-                            <h3 class="accordion-heading "><a href="#resource-info" class="collapsed" aria-expanded="false" data-toggle="collapse"><i class="czi-video text-muted font-size-lg align-middle mt-n1 mr-2"></i>Tarif &amp; Kaynaklar<span
-                                  class="accordion-indicator"></span></a></h3>
+                            <h3 class="accordion-heading font-weight-normal"><a href="#resource-info" class="collapsed" aria-expanded="false" data-toggle="collapse"><i class="czi-video text-muted font-size-lg align-middle mt-n1 mr-2"></i>Tarif &amp; Kaynaklar <span class="align-middle mt-n1 badge badge-secondary"></span>  <span class="accordion-indicator"></span></a></h3>
                           </div>
                           <div class="collapse" id="resource-info" data-parent="#nutrition-info-panel" role="tabpanel">
                             <div class="pt-3 px-3">
@@ -360,15 +362,15 @@
 
                       <div class="mb-1">
                         <a>
-                          <h5 class="h6 font-size-md mb-1 border-bottom">Yardımcı Videolar</h5>
+                          <h5 class="h6 font-weight-light  mb-1 border-bottom">Yardımcı Videolar</h5>
                         </a>
 
                       
-                        <ul class="list-unstyled font-size-sm">
+                        <ul class="list-unstyled font-weight-light">
                        
                         <% bilgiResources.forEach(t=> { %>
                         <li>
-                          <a class="d-block" href="javascript:openSlider(<%=t.id%>)"><i class="text-primary <%= t.contentType == 'video-youtube' ? 'czi-youtube': 'czi-camera' %> mr-2"></i><%=t.title%></a>
+                          <a class="d-block" href="javascript:openSlider(<%=t.id%>)"><i class="text-primary <%= t.contentType == 'video-youtube' ? 'czi-youtube': 'czi-camera' %> align-middle mt-n1 mr-2"></i><%=t.title%></a>
                         </li>
                         <%})%>
                       </ul>
@@ -388,12 +390,12 @@
 
                       <div class="mb-1">
                           <a>
-                            <h5 class="h6 font-size-md mb-1 border-bottom">Yemekler &amp; Tarifler</h5>
+                            <h5 class="h6 font-weight-light  mb-1 border-bottom">Yemekler &amp; Tarifler</h5>
                           </a>
-                          <ul class="list-unstyled font-size-sm">
+                          <ul class="list-unstyled font-weight-light">
                           <% tarifsAndFoods.forEach(t=> { %>
                           <li>
-                            <a class="d-block" href="javascript:openSlider(<%=t.id%>)"><i class="text-primary mr-2 <%= t.contentType == 'video-youtube' ? 'czi-youtube': 'czi-camera' %> mr-1"></i><%=t.title%></a>
+                            <a class="d-block" href="javascript:openSlider(<%=t.id%>)"><i class="text-primary mr-2 <%= t.contentType == 'video-youtube' ? 'czi-youtube': 'czi-camera' %> align-middle mt-n1 mr-2"></i><%=t.title%></a>
                           </li>
                           <%})%>
                         </ul>
@@ -404,12 +406,12 @@
 
                         <div class="mb-1">
                           <a>
-                            <h5 class="h6 font-size-md mb-1 border-bottom">Şu şekilde hazırlayabiliriz</h5>
+                            <h5 class="h6 font-weight-light  mb-1 border-bottom">Şu şekilde hazırlayabiliriz</h5>
                           </a>
-                          <ul class="list-unstyled font-size-sm">
+                          <ul class="list-unstyled font-weight-light">
                           <% hazirlanisResources.forEach(t=> { %>
                           <li>
-                            <a class="d-block" href="javascript:openSlider(<%=t.id%>)"><i class="mr-2 text-primary <%= t.contentType == 'video-youtube' ? 'czi-youtube': 'czi-camera' %> mr-1"></i><%=t.title%></a>
+                            <a class="d-block" href="javascript:openSlider(<%=t.id%>)"><i class="mr-2 text-primary <%= t.contentType == 'video-youtube' ? 'czi-youtube': 'czi-camera' %> align-middle mt-n1 mr-2"></i><%=t.title%></a>
                           </li>
                           <%})%>
                         </ul>
