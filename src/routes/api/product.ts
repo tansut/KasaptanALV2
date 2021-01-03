@@ -570,7 +570,7 @@ export default class Route extends ApiRouter {
             // viewUnitAmount: product.defaultAmount,
             purchaseOptions: [],
             alternateButchers: [],
-            nutritionView: []
+            nutritionView: null
         }
 
         if (loadResources) {

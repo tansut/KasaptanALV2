@@ -103,6 +103,6 @@ export interface ProductView {
     purchaseOptions: PurchaseOption[];
     //defaultUnit: number
     resources?: ResourceView[];
-    nutritionView: NutritionView[];
+    nutritionView: NutritionView;
     alternateButchers: AlternateButchersView[]
 }

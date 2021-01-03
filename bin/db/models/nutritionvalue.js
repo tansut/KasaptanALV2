@@ -66,7 +66,19 @@ let NutritionValue = NutritionValue_1 = class NutritionValue extends basemodel_1
                 ],
                 order: [['displayOrder', 'desc']]
             });
-            let result = [];
+            let result = {
+                dailyValues: {
+                    'calories': 2000,
+                    'fat': 78,
+                    'fat:saturated': 20,
+                    'cholesterol': 300,
+                    'sodium': 2300,
+                    'carb': 275,
+                    'carb:fiber': 28,
+                    'protein': 50,
+                },
+                values: []
+            };
             for (let i = 0; i < items.length; i++) {
                 if (!items[i].calories) {
                     let best = items.find(p => (p.calories > 0 && p.unit == items[i].unit));
@@ -82,7 +94,7 @@ let NutritionValue = NutritionValue_1 = class NutritionValue extends basemodel_1
                     source: items[i].source,
                     sourceUrl: items[i].sourceUrl,
                 };
-                result.push(newItem);
+                result.values.push(newItem);
             }
             return result;
         });

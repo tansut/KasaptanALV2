@@ -2,7 +2,7 @@ import { Table, Column, DataType, Model, HasMany, CreatedAt, UpdatedAt, DeletedA
 import BaseModel from "./basemodel"
 import Helper from '../../lib/helper';
 import { Json } from 'sequelize/types/lib/utils';
-import { NutritionValueTitles, NutritionView } from '../../models/common';
+import { NutritionValueTitles, NutritionValueView } from '../../models/common';
 import NutritionValue from './nutritionvalue';
 
 

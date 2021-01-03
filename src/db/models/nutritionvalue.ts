@@ -2,7 +2,7 @@ import { Table, Column, DataType, Model, HasMany, CreatedAt, UpdatedAt, DeletedA
 import BaseModel from "./basemodel"
 import Helper from '../../lib/helper';
 import { Json } from 'sequelize/types/lib/utils';
-import { NutitionValueItemView, NutritionValueTitles, NutritionValueOrders, NutritionView } from '../../models/common';
+import { NutitionValueItemView, NutritionValueTitles, NutritionValueOrders, NutritionValueView, NutritionView } from '../../models/common';
 import NutritionValueItem from './nutritionvalueitem';
 
 
@@ -101,7 +101,7 @@ class NutritionValue extends BaseModel<NutritionValue> {
         })
     }
 
-    static async  loadView(type: string, ref: number): Promise<NutritionView[]> {
+    static async loadView(type: string, ref: number): Promise<NutritionView> {
         let items = await NutritionValue.findAll({
             where: {
                 type: type,
@@ -114,7 +114,19 @@ class NutritionValue extends BaseModel<NutritionValue> {
             ],
             order: [['displayOrder', 'desc']]
         });
-        let result: NutritionView[] = [];
+        let result: NutritionView = {
+            dailyValues: {
+                'calories': 2000,
+                'fat': 78,
+                'fat:saturated': 20,
+                'cholesterol': 300,
+                'sodium': 2300,
+                'carb': 275,
+                'carb:fiber': 28,
+                'protein': 50,
+            },
+            values: []
+        };
         for(let i=0; i < items.length;i++) {
             if (!items[i].calories) {
                 let best = items.find(p=>(p.calories > 0 && p.unit == items[i].unit));
@@ -130,11 +142,11 @@ class NutritionValue extends BaseModel<NutritionValue> {
                 sourceUrl: items[i].sourceUrl,
             };
 
-            result.push(newItem)
+            result.values.push(newItem)
         }
         return result;
     }
 
-}
+} 
 
 export default NutritionValue;

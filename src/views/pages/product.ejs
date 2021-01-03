@@ -228,18 +228,30 @@
 
                         <div class="accordion pb-3" id="nutrition-info-panel" role="tablist">
                          
-                          <div v-if="product && product.nutritionView.length > 0" class="card rounded-0">
+                          <div v-if="product && product.nutritionView && selectedNutrition" class="card rounded-0">
   
                             <div class="card-header" role="tab">
                               <h3 class="accordion-heading "><a href="#nutrition-info" class="collapsed" data-toggle="collapse"><i class="czi-ruler text-muted font-size-lg align-middle mt-n1 mr-2"></i>Besin Değerleri <span v-if="false" class="badge badge-dark text-sm">{{selectedNutrition.calories}} Kalori</span> <span
                                     class="accordion-indicator"></span></a></h3>
-                                    <div class="progress rounded-0  mx-4 mb-2">
+                                    <% if (false){ %> 
+                                    <div class="progress rounded-0   mb-2">
+                                      <div class="progress-bar progress-bar-striped bg-dark" role="progressbar" v-bind:style="{width: getDailyPerc('calories') + '%'}" v-bind:aria-valuenow="getDailyPerc('calories')" aria-valuemin="0" aria-valuemax="100">{{selectedNutrition.calories}} kalori</div>
+                                    </div>
+
+                                    <div class="progress rounded-0">
                                       <div class="progress-bar progress-bar-striped bg-warning" role="progressbar" v-bind:style="{width: getNutritionPerc('fat') + '%'}" v-bind:aria-valuenow="getNutritionPerc('fat')" aria-valuemin="0" aria-valuemax="100">{{getNutrition('fat') ? getNutrition('fat').amount + getNutrition('fat').unit: '' }}</div>
                                       <div class="progress-bar progress-bar-striped bg-info" role="progressbar" v-bind:style="{width: getNutritionPerc('carb') + '%'}" v-bind:aria-valuenow="getNutritionPerc('carb')" aria-valuemin="0" aria-valuemax="100">{{getNutrition('carb') ? getNutrition('carb').amount + getNutrition('carb').unit: '' }}</div>
                                       <div class="progress-bar progress-bar-striped bg-success" role="progressbar" v-bind:style="{width: getNutritionPerc('protein') + '%'}" v-bind:aria-valuenow="getNutritionPerc('protein')" aria-valuemin="0" aria-valuemax="100">{{getNutrition('protein') ? getNutrition('protein').amount + getNutrition('protein').unit: '' }}</div>
                                     </div>
+                                    <%}%>
+                                 
                             </div>
                             <div class="collapse bg-secondary" id="nutrition-info" data-parent="#nutrition-info-panel" role="tabpanel">
+                              <div class="progress rounded-0">
+                                <div class="progress-bar progress-bar-striped bg-warning" role="progressbar" v-bind:style="{width: getNutritionPerc('fat') + '%'}" v-bind:aria-valuenow="getNutritionPerc('fat')" aria-valuemin="0" aria-valuemax="100">{{getNutrition('fat') ? getNutrition('fat').amount + getNutrition('fat').unit: '' }}</div>
+                                <div class="progress-bar progress-bar-striped bg-info" role="progressbar" v-bind:style="{width: getNutritionPerc('carb') + '%'}" v-bind:aria-valuenow="getNutritionPerc('carb')" aria-valuemin="0" aria-valuemax="100">{{getNutrition('carb') ? getNutrition('carb').amount + getNutrition('carb').unit: '' }}</div>
+                                <div class="progress-bar progress-bar-striped bg-success" role="progressbar" v-bind:style="{width: getNutritionPerc('protein') + '%'}" v-bind:aria-valuenow="getNutritionPerc('protein')" aria-valuemin="0" aria-valuemax="100">{{getNutrition('protein') ? getNutrition('protein').amount + getNutrition('protein').unit: '' }}</div>
+                              </div>
                               <div class="font-size-sm ">
                                
 
@@ -247,9 +259,9 @@
                                  
                                   <div>
                                     <select v-model="selectedNutrition" class="form-control custom-select">
-                                      <option v-for="(option, index) in product.nutritionView" v-bind:value="option">{{option.name}}</option>
+                                      <option v-for="(option, index) in product.nutritionView.values" v-bind:value="option">{{option.name}}</option>
                                     </select>
-                                    <div class="font-size-xs text-muted mt-1" v-if="selectedNutrition.source" >
+                                    <div class="font-size-xs text-muted mt-1" v-if="selectedNutrition && selectedNutrition.source" >
                                       <span>Kaynak: </span><a class="text-dark" target="_blank" :href="selectedNutrition.sourceUrl">{{selectedNutrition.source}}</a>
                                     </div>
                                     
@@ -266,15 +278,27 @@
                              
       
                                   <div class="">
-                                    <div class="border-bottom font-size-md py-2 px-3">
-                                    <span class="font-weight-bold">Kalori</span> {{ selectedNutrition.calories }}
-      
+                                    <div class="d-flex flex-nowrap justify-content-between align-items-center border-bottom font-size-md py-2 px-3">
+                                    <div>
+                                      <span class="font-weight-bold">Kalori</span> {{ selectedNutrition.calories }}
                                     </div>
-                                    <div v-for="(val, index) in selectedNutrition.values" class=" py-1 px-3">
-                                      <span v-bind:class=" {'text-warning': val.type == 'fat', 'text-info': val.type == 'carb', 'text-success': val.type == 'protein' , 'font-weight-bold': val.type.indexOf(':') == -1, 'ml-3': val.type.indexOf(':') > 0   } ">{{val.title}}</span> {{ val.amount }} {{ val.unit }}
+                                      <span class="font-size-sm">Günlük%</span>
+                                    </div>
+                                    <div v-for="(val, index) in selectedNutrition.values" class="d-flex flex-nowrap justify-content-between align-items-center py-1 px-3">
+                                      <div>
+                                        <span v-bind:class=" {'text-warning': val.type == 'fat', 'text-info': val.type == 'carb', 'text-success': val.type == 'protein' , 'font-weight-bold': val.type.indexOf(':') == -1, 'ml-3': val.type.indexOf(':') > 0   } ">{{val.title}}</span> {{ val.amount }} {{ val.unit }}
+
+                                      </div>
+                                      <span v-if="getDailyPerc(val.type) > 0.5" class="font-size-sm">{{getDailyPerc(val.type) + '%'}}</span>
+                                  
                                     </div>
                                   </div>
 
+                              </div>
+                              <div class="font-size-xs p-3">
+                                  <span>
+                                    Günlük değerler ortalama 2000 kalori üzerinden yetişkinler için hesaplanmıştır.
+                                  </span>
                               </div>
                             </div>
                           </div>
@@ -286,10 +310,10 @@
                         <div class="card rounded-0">
   
                           <div class="card-header" role="tab">
-                            <h3 class="accordion-heading "><a href="#resource-info" aria-expanded="true" data-toggle="collapse"><i class="czi-video text-muted font-size-lg align-middle mt-n1 mr-2"></i>Tarif &amp; Kaynaklar<span
+                            <h3 class="accordion-heading "><a href="#resource-info" class="collapsed" aria-expanded="false" data-toggle="collapse"><i class="czi-video text-muted font-size-lg align-middle mt-n1 mr-2"></i>Tarif &amp; Kaynaklar<span
                                   class="accordion-indicator"></span></a></h3>
                           </div>
-                          <div class="show" id="resource-info" data-parent="#nutrition-info-panel" role="tabpanel">
+                          <div class="collapse" id="resource-info" data-parent="#nutrition-info-panel" role="tabpanel">
                             <div class="pt-3 px-3">
                              
 
@@ -297,7 +321,7 @@
                              
                     <% if (bilgiResources.length ) { %>
 
-                      <div class="mb-3">
+                      <div class="mb-1">
 
                         <div class="d-flex flex-nowrap justify-content-between align-items-center">
 
@@ -338,16 +362,11 @@
 
                       <% if (tarifsAndFoods.length) { %>
 
-                      <div class="mb-3">
+                      <div class="mb-1">
 
                         <div class="d-flex flex-nowrap justify-content-between align-items-center">
                           <a href="#tarifVideos">
-
-
                             <h5 class="h6 font-size-md mb-1">Bu yemekler için ideal</h5>
-
-
-
                           </a>
                    
                         </div>
@@ -380,7 +399,7 @@
 
                       <% if (hazirlanisResources.length) { %>
 
-                        <div class="mb-3">
+                        <div class="mb-1">
                           <h5 class="h6 font-size-md mb-1">Şu şekilde hazırlayabiliriz</h5>
                           <div class="mb-2">
                             <% hazirlanisResources.forEach(t=> { %>

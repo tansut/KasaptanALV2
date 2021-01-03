@@ -540,6 +540,21 @@ window.initComponents = function initComponents() {
                 })
             },
 
+            getDailyPerc(nutrition) {
+                if (!this.selectedNutrition) return 0;
+                var daily = this.product.nutritionView.dailyValues[nutrition];
+                if (!daily) return 0;
+                var val = 0;
+                if (nutrition == 'calories') val = this.selectedNutrition.calories;
+                else {
+                    var select = this.selectedNutrition.values.find(function(f) {
+                        return f.type == nutrition
+                    });
+                    select && (val = select.amount)
+                }
+                return Math.round((val / daily) * 100)
+            },
+
             getNutritionPerc(nutrition) {
                 if (!this.selectedNutrition) return 0;
                 var fat = this.selectedNutrition.values.find(function(f) {
@@ -672,7 +687,7 @@ window.initComponents = function initComponents() {
                         }
                     })
                     if (!this.selectedNutrition && newVal.nutritionView) {
-                        this.selectedNutrition = newVal.nutritionView[0]
+                        this.selectedNutrition = newVal.nutritionView.values[0]
                     }
 
                 }

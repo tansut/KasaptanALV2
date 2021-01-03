@@ -529,7 +529,7 @@ class Route extends router_1.ApiRouter {
                 // viewUnitAmount: product.defaultAmount,
                 purchaseOptions: [],
                 alternateButchers: [],
-                nutritionView: []
+                nutritionView: null
             };
             if (loadResources) {
                 view.resources = [];

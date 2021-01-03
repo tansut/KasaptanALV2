@@ -598,7 +598,7 @@ class Product extends BaseModel<Product> {
     }
 
     resources: Resource[];
-    nutritionView: NutritionView[];
+    nutritionView: NutritionView;
 
 
     async getPriceStats() {

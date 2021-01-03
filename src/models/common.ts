@@ -50,6 +50,11 @@ export interface NutitionValueItemView {
 }
 
 export interface NutritionView {
+    dailyValues:  {[key: string]: number};
+    values: NutritionValueView [];
+}
+
+export interface NutritionValueView {
     name: string;
     amount: number;
     unit: string;
