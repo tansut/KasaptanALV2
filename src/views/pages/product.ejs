@@ -1232,13 +1232,16 @@
                                 var protein = view.nutritionView.values[0].values.find(p=>p.type=='protein');
                                 var fat = view.nutritionView.values[0].values.find(p=>p.type=='fat');
                               %>
+                              <% if (protein) { %>
                               <p>
                                 Kaliteli protein olarak <strong><%=view.nutritionView.values[0].name %> <%=product.name%></strong> ortalama <strong><%= protein.amount %> <%= protein.unit %> </strong> protein içermektedir.
                               </p>
-
+                              <% } %>
+                              <% if (fat) { %>
                               <p>
                                 Yağ değerlerine baktığımızda <strong><%=view.nutritionView.values[0].name %> <%=product.name%></strong> ortalama <strong><%= fat.amount %> <%= fat.unit %> </strong> yağ içermektedir.
                               </p>
+                              <% } %>
                               <% if (view.nutritionView.values.length > 1) { %>
                                 <% var otherUnits = view.nutritionView.values.map(p=>p.name).join(', ') %>
                               <p>
