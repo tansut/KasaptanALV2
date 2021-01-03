@@ -27,6 +27,7 @@ const butcherproduct_1 = require("./butcherproduct");
 const resource_1 = require("./resource");
 const sequelize_1 = require("sequelize");
 const common_1 = require("../../lib/common");
+const nutritionvalue_1 = require("./nutritionvalue");
 var ProductType;
 (function (ProductType) {
     ProductType["generic"] = "generic";
@@ -107,6 +108,11 @@ let Product = Product_1 = class Product extends basemodel_1.default {
                 type: sequelize_1.QueryTypes.SELECT
             });
             return res;
+        });
+    }
+    loadnutritionValues() {
+        return __awaiter(this, void 0, void 0, function* () {
+            this.nutritionView = yield nutritionvalue_1.default.loadView('product', this.id);
         });
     }
     loadResources() {

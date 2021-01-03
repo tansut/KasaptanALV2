@@ -569,13 +569,16 @@ export default class Route extends ApiRouter {
             // defaultUnit: product.defaultUnit,
             // viewUnitAmount: product.defaultAmount,
             purchaseOptions: [],
-            alternateButchers: []
+            alternateButchers: [],
+            nutritionView: []
         }
 
         if (loadResources) {
             view.resources = [];
             product.resources.forEach(r=>view.resources.push(r.asView()))
         }
+
+        view.nutritionView = product.nutritionView;
 
 
         view.purchaseOptions = this.getPurchaseOptions(product, butcherProduct); 

@@ -206,6 +206,222 @@
                         </div>
                         <% } %>
 
+
+
+
+
+                      <% if (product.featuresText) { %>
+                        
+                      <% var notes = product.featuresText.split('\n') %>
+                      <div class=" mb-3  ">
+                        <ul class="list-unstyled mb-2">
+                          <%notes.forEach((note, i) => { %>
+                          <li><i class="czi-check-circle text-dark mr-1"></i><%=note%></li>
+                          <%})%>
+                        </ul>
+
+                      </div>
+
+                      <% } %>
+
+                      
+
+                        <div class="accordion pb-3" id="nutrition-info-panel" role="tablist">
+                         
+                          <div v-if="product && product.nutritionView.length > 0" class="card rounded-0">
+  
+                            <div class="card-header" role="tab">
+                              <h3 class="accordion-heading "><a href="#nutrition-info" class="collapsed" data-toggle="collapse"><i class="czi-ruler text-muted font-size-lg align-middle mt-n1 mr-2"></i>Besin Değerleri <span v-if="false" class="badge badge-dark text-sm">{{selectedNutrition.calories}} Kalori</span> <span
+                                    class="accordion-indicator"></span></a></h3>
+                                    <div class="progress rounded-0  mx-4 mb-2">
+                                      <div class="progress-bar progress-bar-striped bg-warning" role="progressbar" v-bind:style="{width: getNutritionPerc('fat') + '%'}" v-bind:aria-valuenow="getNutritionPerc('fat')" aria-valuemin="0" aria-valuemax="100">{{getNutrition('fat') ? getNutrition('fat').amount + getNutrition('fat').unit: '' }}</div>
+                                      <div class="progress-bar progress-bar-striped bg-info" role="progressbar" v-bind:style="{width: getNutritionPerc('carb') + '%'}" v-bind:aria-valuenow="getNutritionPerc('carb')" aria-valuemin="0" aria-valuemax="100">{{getNutrition('carb') ? getNutrition('carb').amount + getNutrition('carb').unit: '' }}</div>
+                                      <div class="progress-bar progress-bar-striped bg-success" role="progressbar" v-bind:style="{width: getNutritionPerc('protein') + '%'}" v-bind:aria-valuenow="getNutritionPerc('protein')" aria-valuemin="0" aria-valuemax="100">{{getNutrition('protein') ? getNutrition('protein').amount + getNutrition('protein').unit: '' }}</div>
+                                    </div>
+                            </div>
+                            <div class="collapse bg-secondary" id="nutrition-info" data-parent="#nutrition-info-panel" role="tabpanel">
+                              <div class="font-size-sm ">
+                               
+
+                                <div class="d-flex align-items-center px-3 pt-3 pb-1 mb-1">
+                                 
+                                  <div>
+                                    <select v-model="selectedNutrition" class="form-control custom-select">
+                                      <option v-for="(option, index) in product.nutritionView" v-bind:value="option">{{option.name}}</option>
+                                    </select>
+                                    <div class="font-size-xs text-muted mt-1" v-if="selectedNutrition.source" >
+                                      <span>Kaynak: </span><a class="text-dark" target="_blank" :href="selectedNutrition.sourceUrl">{{selectedNutrition.source}}</a>
+                                    </div>
+                                    
+                                  </div>
+                                  <div>
+                                    <span class="ml-2 font-size-md">
+                                      
+                                    </span>
+                                  </div>
+                                </div>
+                               
+                               
+      
+                             
+      
+                                  <div class="">
+                                    <div class="border-bottom font-size-md py-2 px-3">
+                                    <span class="font-weight-bold">Kalori</span> {{ selectedNutrition.calories }}
+      
+                                    </div>
+                                    <div v-for="(val, index) in selectedNutrition.values" class=" py-1 px-3">
+                                      <span v-bind:class=" {'text-warning': val.type == 'fat', 'text-info': val.type == 'carb', 'text-success': val.type == 'protein' , 'font-weight-bold': val.type.indexOf(':') == -1, 'ml-3': val.type.indexOf(':') > 0   } ">{{val.title}}</span> {{ val.amount }} {{ val.unit }}
+                                    </div>
+                                  </div>
+
+                              </div>
+                            </div>
+                          </div>
+
+                     
+
+                       
+                        <%if (bilgiResources.length || tarifsAndFoods.length || hazirlanisResources.length) { %>
+                        <div class="card rounded-0">
+  
+                          <div class="card-header" role="tab">
+                            <h3 class="accordion-heading "><a href="#resource-info" aria-expanded="true" data-toggle="collapse"><i class="czi-video text-muted font-size-lg align-middle mt-n1 mr-2"></i>Tarif &amp; Kaynaklar<span
+                                  class="accordion-indicator"></span></a></h3>
+                          </div>
+                          <div class="show" id="resource-info" data-parent="#nutrition-info-panel" role="tabpanel">
+                            <div class="pt-3 px-3">
+                             
+
+                           
+                             
+                    <% if (bilgiResources.length ) { %>
+
+                      <div class="mb-3">
+
+                        <div class="d-flex flex-nowrap justify-content-between align-items-center">
+
+
+
+                          <h5 class="h6 font-size-md mb-1"></i>Yardımcı videolar</h5>
+
+
+
+
+                        </div>
+                        <div>
+                          <% bilgiResources.forEach(t=> { %>
+
+                          <div class="d-flex pb-1 align-items-center flex-nowrap justify-content-between">
+                            <a class="text-primary" href="javascript:openSlider(<%=t.id%>)"><i
+                                class="text-primary  <%= t.contentType == 'video-youtube' ? 'czi-youtube': 'czi-camera' %> mr-1"></i><%=t.title%></a>
+
+
+
+
+
+                          </div>
+
+
+
+
+
+                          <%})%>
+                        </div>
+                      </div>
+
+
+
+                      <% } %>
+
+
+
+                      <% if (tarifsAndFoods.length) { %>
+
+                      <div class="mb-3">
+
+                        <div class="d-flex flex-nowrap justify-content-between align-items-center">
+                          <a href="#tarifVideos">
+
+
+                            <h5 class="h6 font-size-md mb-1">Bu yemekler için ideal</h5>
+
+
+
+                          </a>
+                   
+                        </div>
+
+                        <div>
+                          <% tarifsAndFoods.forEach(t=> { %>
+
+                          <div class="d-flex pb-1 align-items-center flex-nowrap justify-content-between">
+                            <a class="text-primary" href="javascript:openSlider(<%=t.id%>)"><i
+                                class="text-primary <%= t.contentType == 'video-youtube' ? 'czi-youtube': 'czi-camera' %> mr-1"></i><%=t.title%></a>
+
+
+                          
+
+
+
+                          </div>
+
+
+
+
+
+                          <%})%>
+                        </div>
+                      </div>
+
+
+
+                      <% } %>
+
+                      <% if (hazirlanisResources.length) { %>
+
+                        <div class="mb-3">
+                          <h5 class="h6 font-size-md mb-1">Şu şekilde hazırlayabiliriz</h5>
+                          <div class="mb-2">
+                            <% hazirlanisResources.forEach(t=> { %>
+
+                            <div class="d-flex pb-1  flex-wrap justify-content-between">
+                              <a href="javascript:openSlider(<%=t.id%>)"><i
+                                  class=" czi-youtube mr-1"></i><%=t.title%></a>
+
+                              <a title="Bu şekilde hazırlayın"
+                                href="javascript:<%= include('./_partial/addtonote.ejs', {resource: t, options: {hideProduct: true} }) %>"><span
+                                  class="color-primary"><i class=" czi-add-circle"></i></span>
+                              </a>
+
+                            </div>
+
+
+
+
+
+                            <%})%>
+                          </div>
+                        </div>
+
+
+
+                        <% } %>
+                             
+    
+                           
+    
+                         
+
+                            </div>
+                          </div>
+                        </div>
+
+                        <%}%>
+
+                        </div>
+
+                       
                       <% if (!view.butcher) { %>
                         <% if (!__req.prefAddr) { %>
                        
@@ -393,142 +609,6 @@
                
 
 
-
-
-                      <% if (product.featuresText) { %>
-                        
-                      <% var notes = product.featuresText.split('\n') %>
-                      <div class=" border-bottom mb-3  ">
-                        <ul class="list-unstyled mb-2">
-                          <%notes.forEach((note, i) => { %>
-                          <li><i class="czi-check-circle text-primary mr-1"></i> <%=note%></li>
-                          <%})%>
-                        </ul>
-
-                      </div>
-
-                      <% } %>
-
-
-
-                      <% if (bilgiResources.length) { %>
-
-                      <div class="mb-3">
-
-                        <div class="d-flex flex-nowrap justify-content-between align-items-center">
-
-
-
-                          <h5 class="h6 mb-2 font-size-sm text-dark "></i>Yardımcı videolar</h5>
-
-
-
-
-                        </div>
-                        <div class="mb-2">
-                          <% bilgiResources.forEach(t=> { %>
-
-                          <div
-                            class="d-flex mb-2 pb-1 align-items-center flex-nowrap justify-content-between border-bottom">
-                            <a class="text-primary" href="javascript:openSlider(<%=t.id%>)"><i
-                                class="text-primary <%= t.contentType == 'video-youtube' ? 'czi-youtube': 'czi-camera' %> mr-1"></i><%=t.title%></a>
-
-
-
-
-
-                          </div>
-
-
-
-
-
-                          <%})%>
-                        </div>
-                      </div>
-
-
-
-                      <% } %>
-
-
-
-                      <% if (tarifsAndFoods.length) { %>
-
-                      <div class="mb-3">
-
-                        <div class="d-flex flex-nowrap justify-content-between align-items-center">
-                          <a href="#tarifVideos">
-
-
-                            <h5 class="h6 font-size-sm mb-2 text-dark ">Bu yemekler için ideal</h5>
-
-
-
-                          </a>
-                   
-                        </div>
-
-                        <div class="mb-2">
-                          <% tarifsAndFoods.forEach(t=> { %>
-
-                          <div class="d-flex mb-2 pb-1 align-items-center flex-nowrap justify-content-between border-bottom">
-                            <a class="text-primary" href="javascript:openSlider(<%=t.id%>)"><i
-                                class="text-primary <%= t.contentType == 'video-youtube' ? 'czi-youtube': 'czi-camera' %> mr-1"></i><%=t.title%></a>
-
-
-                            <a class="text-primary" title="Eti Bizden" data-tag="true" data-category="food"
-                              data-action="eti-bizden" data-label="<%= t.slug%>"
-                              href="javascript:<%= include('./_partial/addtonote.ejs', {resource: t, options: {hideProduct: true} }) %>"><span
-                                class="color-primary">
-                                <i class=" czi-add-circle"></i></span> </a>
-
-
-
-                          </div>
-
-
-
-
-
-                          <%})%>
-                        </div>
-                      </div>
-
-
-
-                      <% } %>
-
-                      <% if (hazirlanisResources.length) { %>
-
-                        <div class="mb-3">
-                          <h5 class="h6 mb-2">Şu şekilde hazırlayabiliriz</h5>
-                          <div class="mb-2">
-                            <% hazirlanisResources.forEach(t=> { %>
-
-                            <div class="d-flex mb-2 pb-1  flex-wrap justify-content-between border-bottom">
-                              <a href="javascript:openSlider(<%=t.id%>)"><i
-                                  class=" czi-youtube mr-1"></i><%=t.title%></a>
-
-                              <a title="Bu şekilde hazırlayın"
-                                href="javascript:<%= include('./_partial/addtonote.ejs', {resource: t, options: {hideProduct: true} }) %>"><span
-                                  class="color-primary"><i class=" czi-add-circle"></i></span>
-                              </a>
-
-                            </div>
-
-
-
-
-
-                            <%})%>
-                          </div>
-                        </div>
-
-
-
-                        <% } %>
-
                       <a id="aftersetloc"></a>
 
 
@@ -594,10 +674,11 @@
                           <%- include(`./_partial/product.${product.productType}-editor.ejs`, {man: controller.ProductTypeManager}) %>
 
                         </div>
-
-                      
-
+                    
+                          
                          
+                            
+                       
                          
                           <div class="d-flex mb-1 font-size-sm align-items-center justify-content-between ">
                             <span>
@@ -608,6 +689,8 @@
                               class="text-dark font-weight-medium"><i class="czi-calculator mr-1"></i>Miktar Hesaplayıcı</a> 
                                            
                           </div>
+
+                    
                           <div class="bg-white mb-2 pb-3 border shadow-lg">
                             <div v-if="product && product.purchaseOptions.length > 1">
                               <ul class="nav nav-pills nav-pills-dark nav-fill mb-2">
@@ -799,6 +882,8 @@
                              
                       
                                 <div v-if="product">
+
+
                                   <div v-for="(alt, index) in sortedAlternates.slice(0, <%=alt2Show%>)">
                                     <a class="media px-2 align-items-start flex-grow-1" :data-butcher="alt.butcher.slug" href="#newbutcher" @click="selectNewButcher(alt.butcher)">
                                    

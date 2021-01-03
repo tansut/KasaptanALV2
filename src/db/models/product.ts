@@ -7,6 +7,8 @@ import ButcherProduct from './butcherproduct';
 import Resource from './resource';
 import { Op, QueryTypes } from 'sequelize';
 import { AdakProductManager, KurbanProductManager, KurbanDigerProductManager } from '../../lib/common';
+import NutritionValue from './nutritionvalue';
+import { NutritionView } from '../../models/common';
 
 export enum ProductType {
     generic = 'generic',
@@ -596,6 +598,7 @@ class Product extends BaseModel<Product> {
     }
 
     resources: Resource[];
+    nutritionView: NutritionView[];
 
 
     async getPriceStats() {
@@ -618,6 +621,12 @@ class Product extends BaseModel<Product> {
         } )        
 
         return res;
+    }
+
+    
+
+    async loadnutritionValues() {
+        this.nutritionView = await NutritionValue.loadView('product', this.id);
     }
 
     async loadResources() {

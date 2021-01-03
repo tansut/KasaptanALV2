@@ -191,6 +191,7 @@ class Route extends router_1.ViewRouter {
             let api = new product_2.default(this.constructorParams);
             this.shopcard = yield shopcard_1.ShopCard.createFromRequest(this.req);
             yield product.loadResources();
+            yield product.loadnutritionValues();
             let shopcard = yield shopcard_1.ShopCard.createFromRequest(this.req);
             this.shopCardIndex = this.req.query.shopcarditem ? parseInt(this.req.query.shopcarditem) : -1;
             this.shopCardItem = (this.shopCardIndex >= 0 && shopcard.items) ? shopcard.items[this.shopCardIndex] : null;

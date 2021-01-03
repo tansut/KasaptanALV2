@@ -368,6 +368,7 @@ window.initComponents = function initComponents() {
                 newlyAddedItem: null,
                 shopCardIndex: -1,
                 alternateSort: null,
+                selectedNutrition: null
             }
         },
         mounted: function () {
@@ -539,6 +540,41 @@ window.initComponents = function initComponents() {
                 })
             },
 
+            getNutritionPerc(nutrition) {
+                if (!this.selectedNutrition) return 0;
+                var fat = this.selectedNutrition.values.find(function(f) {
+                    return f.type == 'fat'
+                });
+
+                var carb = this.selectedNutrition.values.find(function(f) {
+                    return f.type == 'carb'
+                });
+
+                var protein = this.selectedNutrition.values.find(function(f) {
+                    return f.type == 'protein'
+                });
+
+                let total = (fat ? fat.amount: 0) + (carb ? carb.amount: 0) + (protein ? protein.amount: 0);
+
+                var select = this.selectedNutrition.values.find(function(f) {
+                    return f.type == nutrition
+                });
+
+                return Math.round((select.amount / total) * 100);
+
+            },
+
+            getNutrition(nutrition) {
+                if (!this.selectedNutrition) return 0;
+                
+                var select = this.selectedNutrition.values.find(function(f) {
+                    return f.type == nutrition
+                });
+
+                return select; 
+
+            },
+
             isSorted(curVal, col) {
                 curVal = curVal || '';
                 return curVal.startsWith(col)
@@ -635,7 +671,9 @@ window.initComponents = function initComponents() {
                             this.selectedUnit = this.selectedUnit || ((this.product.purchaseOptions.length > 1) ? null : this.product.purchaseOptions[0]);
                         }
                     })
-
+                    if (!this.selectedNutrition && newVal.nutritionView) {
+                        this.selectedNutrition = newVal.nutritionView[0]
+                    }
 
                 }
             },

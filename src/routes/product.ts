@@ -221,6 +221,7 @@ export default class Route extends ViewRouter {
         let api = new ProductApi(this.constructorParams);
         this.shopcard = await ShopCard.createFromRequest(this.req);
         await product.loadResources();
+        await product.loadnutritionValues();
 
         let shopcard = await ShopCard.createFromRequest(this.req);
 

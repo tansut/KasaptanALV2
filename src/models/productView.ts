@@ -1,7 +1,7 @@
 import { Badge } from "./badge";
 import { Puan } from "./puan";
 import { PriceSlice } from "../lib/logistic/core";
-import { PriceView } from "./common";
+import { NutritionView, PriceView } from "./common";
 
 export interface PurchaseOption {
     id: number;
@@ -103,5 +103,6 @@ export interface ProductView {
     purchaseOptions: PurchaseOption[];
     //defaultUnit: number
     resources?: ResourceView[];
+    nutritionView: NutritionView[];
     alternateButchers: AlternateButchersView[]
 }

@@ -26,6 +26,8 @@ const accountmodel_1 = require("./models/accountmodel");
 const subcategory_1 = require("./models/subcategory");
 const butcherarea_1 = require("./models/butcherarea");
 const dbcache_1 = require("./models/dbcache");
+const nutritionvalue_1 = require("./models/nutritionvalue");
+const nutritionvalueitem_1 = require("./models/nutritionvalueitem");
 let dbInstance;
 let init = (params) => {
     dbInstance = new sequelize_typescript_1.Sequelize({
@@ -38,7 +40,7 @@ let init = (params) => {
         logging: false,
         dialectOptions: { decimalNumbers: true }
     });
-    dbInstance.addModels([dbcache_1.default, butcherarea_1.default, subcategory_1.default, payment_1.default, accountmodel_1.default, review_1.default, butcherpricehistory_1.default, pricecategory_1.default, redirect_1.default, webpage_1.default, butcher_1.default, order_1.Order, order_1.OrderItem, dispatcher_1.default, user_1.default, refreshToken_1.default, resource_1.default, area_1.default, sitelog_1.default, category_1.default, product_1.default, productcategory_1.default, butcherproduct_1.default, content_1.default, resourcecategory_1.default]);
+    dbInstance.addModels([dbcache_1.default, nutritionvalue_1.default, nutritionvalueitem_1.default, butcherarea_1.default, subcategory_1.default, payment_1.default, accountmodel_1.default, review_1.default, butcherpricehistory_1.default, pricecategory_1.default, redirect_1.default, webpage_1.default, butcher_1.default, order_1.Order, order_1.OrderItem, dispatcher_1.default, user_1.default, refreshToken_1.default, resource_1.default, area_1.default, sitelog_1.default, category_1.default, product_1.default, productcategory_1.default, butcherproduct_1.default, content_1.default, resourcecategory_1.default]);
     return dbInstance.sync({
         alter: true,
         logging: false
