@@ -250,7 +250,12 @@
                           <div v-if="product && product.nutritionView && selectedNutrition" class="card rounded-0">
   
                             <div class="card-header" role="tab">
-                              <h3 class="accordion-heading font-weight-normal "><a href="#nutrition-info" class="collapsed" data-toggle="collapse"><i class="czi-ruler font-size-lg align-middle mt-n1 mr-2"></i>Besin Değerleri <span class="align-middle mt-n1 badge badge-dark">{{selectedNutrition.calories}}kal</span> <span
+                              <h3 class="accordion-heading font-weight-normal "><a href="#nutrition-info" class="collapsed" data-toggle="collapse"><i class="czi-ruler font-size-lg align-middle mt-n1 mr-2"></i>Değerler 
+                                <span  v-if="false" class="align-middle mt-n1 badge badge-success">{{ getNutrition('protein') ? (getNutrition('protein').amount + getNutrition('protein').unit) + '': selectedNutrition.calories + 'kal'}}</span> 
+                                <span title="Protein" v-if="getNutrition('protein')" class="align-middle mt-n1 badge badge-success">{{ getNutrition('protein').amount}}</span>
+                                <span title="Karbonhidrat" v-if="getNutrition('carb')" class="align-middle mt-n1 badge badge-info">{{ getNutrition('carb').amount}}</span>
+                                <span title="Yağ" v-if="getNutrition('fat')" class="align-middle mt-n1 badge badge-warning">{{ getNutrition('fat').amount}}</span>
+                                <span
                                     class="accordion-indicator"></span></a></h3>
                                     <% if (false){ %> 
                                     <div class="progress rounded-0   mb-2">
@@ -267,10 +272,10 @@
                             </div>
                             <div class="collapse bg-secondary bg-size-cover bg-position-center" style="background-image: url(<%=__config.staticDomain %>/resource/img/ka-cover.png)" id="nutrition-info" data-parent="#nutrition-info-panel" role="tabpanel">
                               <div class="progress rounded-0">
-                                <div class="progress-bar progress-bar-striped bg-success" role="progressbar" v-bind:style="{width: getNutritionPerc('protein') + '%'}" v-bind:aria-valuenow="getNutritionPerc('protein')" aria-valuemin="0" aria-valuemax="100">{{getNutrition('protein') ? getNutrition('protein').amount + getNutrition('protein').unit: '' }}</div>
+                                <div class="progress-bar progress-bar-striped bg-success" role="progressbar" v-bind:style="{width: getNutritionPerc('protein') + '%'}" v-bind:aria-valuenow="getNutritionPerc('protein')" aria-valuemin="0" aria-valuemax="100">{{getNutrition('protein') ? getNutritionPerc('protein')+ '%': '' }}</div>
 
-                                <div class="progress-bar progress-bar-striped bg-info" role="progressbar" v-bind:style="{width: getNutritionPerc('carb') + '%'}" v-bind:aria-valuenow="getNutritionPerc('carb')" aria-valuemin="0" aria-valuemax="100">{{getNutrition('carb') ? getNutrition('carb').amount + getNutrition('carb').unit: '' }}</div>
-                                <div class="progress-bar progress-bar-striped bg-warning" role="progressbar" v-bind:style="{width: getNutritionPerc('fat') + '%'}" v-bind:aria-valuenow="getNutritionPerc('fat')" aria-valuemin="0" aria-valuemax="100">{{getNutrition('fat') ? getNutrition('fat').amount + getNutrition('fat').unit: '' }}</div>
+                                <div class="progress-bar progress-bar-striped bg-info" role="progressbar" v-bind:style="{width: getNutritionPerc('carb') + '%'}" v-bind:aria-valuenow="getNutritionPerc('carb')" aria-valuemin="0" aria-valuemax="100">{{getNutrition('carb') ? getNutritionPerc('carb') + '%': '' }}</div>
+                                <div class="progress-bar progress-bar-striped bg-warning" role="progressbar" v-bind:style="{width: getNutritionPerc('fat') + '%'}" v-bind:aria-valuenow="getNutritionPerc('fat')" aria-valuemin="0" aria-valuemax="100">{{getNutrition('fat') ? getNutritionPerc('fat')+ '%': '' }}</div>
                               
                               </div>
                               <div class="font-size-sm ">
@@ -299,7 +304,7 @@
       
                              
       
-                                  <div class="">
+                                  <div>
                                     <div class="d-flex flex-nowrap justify-content-between align-items-center border-bottom font-size-md py-2 px-3">
                                     <div>
                                       <span class="font-weight-bold">Kalori</span> {{ selectedNutrition.calories }}
@@ -308,7 +313,13 @@
                                     </div>
                                     <div v-for="(val, index) in getNutritionValues(selectedNutrition)" class="d-flex flex-nowrap justify-content-between align-items-center py-1 px-3 border-bottom">
                                       <div>
-                                        <span v-bind:class=" {'text-warning': val.type == 'fat', 'text-info': val.type == 'carb', 'text-success': val.type == 'protein' , 'font-weight-bold': val.type.indexOf(':') == -1, 'ml-3': val.type.indexOf(':') > 0   } ">{{val.title}}</span> {{ val.amount }} {{ val.unit }}
+                                        <span v-bind:class=" {'text-warning': val.type == 'fat', 'text-info': val.type == 'carb', 'text-success': val.type == 'protein' , 'font-weight-bold': val.type.indexOf(':') == -1, 'ml-3': val.type.indexOf(':') > 0   } ">{{val.title}}</span> 
+                                        <span v-bind:class=" {'font-size-sm badge badge-warning': val.type == 'fat', 'font-size-sm  badge badge-info': val.type == 'carb', 'font-size-sm  badge badge-success': val.type == 'protein' } ">
+                                          {{ val.amount }} {{ val.unit }}
+
+
+                                        </span> 
+                                        
 
                                       </div>
                                       <span v-if="getDailyPerc(val.type) > 0.5" v-bind:class="{'font-weight-bold': getDailyPerc(val.type) >= 25 && val.type != 'cholesterol'}" >{{getDailyPerc(val.type) + '%'}}</span>
@@ -362,11 +373,11 @@
 
                       <div class="mb-1">
                         <a>
-                          <h5 class="h6 font-weight-light  mb-1 border-bottom">Yardımcı Videolar</h5>
+                          <h5 class="h6 font-size-md mb-1 border-bottom">Yardımcı Videolar</h5>
                         </a>
 
                       
-                        <ul class="list-unstyled font-weight-light">
+                        <ul class="list-unstyled">
                        
                         <% bilgiResources.forEach(t=> { %>
                         <li>
@@ -390,9 +401,9 @@
 
                       <div class="mb-1">
                           <a>
-                            <h5 class="h6 font-weight-light  mb-1 border-bottom">Yemekler &amp; Tarifler</h5>
+                            <h5 class="h6 font-size-md mb-1 border-bottom">Yemekler &amp; Tarifler</h5>
                           </a>
-                          <ul class="list-unstyled font-weight-light">
+                          <ul class="list-unstyled">
                           <% tarifsAndFoods.forEach(t=> { %>
                           <li>
                             <a class="d-block" href="javascript:openSlider(<%=t.id%>)"><i class="text-primary mr-2 <%= t.contentType == 'video-youtube' ? 'czi-youtube': 'czi-camera' %> align-middle mt-n1 mr-2"></i><%=t.title%></a>
@@ -406,9 +417,9 @@
 
                         <div class="mb-1">
                           <a>
-                            <h5 class="h6 font-weight-light  mb-1 border-bottom">Şu şekilde hazırlayabiliriz</h5>
+                            <h5 class="h6 font-size-md  mb-1 border-bottom">Şu şekilde hazırlayabiliriz</h5>
                           </a>
-                          <ul class="list-unstyled font-weight-light">
+                          <ul class="list-unstyled">
                           <% hazirlanisResources.forEach(t=> { %>
                           <li>
                             <a class="d-block" href="javascript:openSlider(<%=t.id%>)"><i class="mr-2 text-primary <%= t.contentType == 'video-youtube' ? 'czi-youtube': 'czi-camera' %> align-middle mt-n1 mr-2"></i><%=t.title%></a>
