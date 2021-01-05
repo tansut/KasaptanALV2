@@ -41,6 +41,10 @@
                 <li class="nav-item">
                     <a class="nav-link" data-toggle="tab" href="#seo">SEO</a>
                 </li>
+
+                <li class="nav-item">
+                    <a class="nav-link" data-toggle="tab" href="#nut">Besin Değerleri</a>
+                </li>                
             </ul>
 
 
@@ -238,6 +242,80 @@
                     </form>
                   
                 </div>
+                <div id="nut" class="container-fluid tab-pane">
+                    <% var nut = controller.editingNutritionValue %>
+                    <form name="saveform" method="POST">
+                        <div class="form-group">
+                            <label>Başlık</label>
+                            <input type="text" class="form-control" name="nutname" id="nutname"
+                                value="<%=nut.name%>">
+                        </div>
+                        <div class="form-group">
+                            <label>Miktar</label>
+                            <input type="text" class="form-control" name="nutamount" id="nutamount"
+                                value="<%=nut.amount%>">
+                        </div>     
+                        <div class="form-group">
+                            <label>Birim</label>
+                            <input type="text" class="form-control" name="nutunit" id="nutunit"
+                                value="<%=nut.unit%>">
+                        </div>    
+                        <div class="form-group">
+                            <label>Kalori</label>
+                            <input type="text" class="form-control" name="nutcal" id="nutcal"
+                                value="<%=nut.calories%>">
+                        </div>   
+                        <div class="form-group">
+                            <div class="row">
+                                <div class="col">
+                                    <label>Kaynak</label>
+                                    <input type="text" class="form-control" name="nutsource" id="nutsource"
+                                        value="<%=nut.source%>">
+                                </div>
+                                <div class="col">
+                                    <label>Kaynak URL</label>
+                                    <input type="text" class="form-control" name="nutsourceUrl" id="nutsourceUrl"
+                                        value="<%=nut.sourceUrl%>">
+                                </div>
+                            </div>
+                         
+                        </div>   
+
+                        <div class="form-group">
+                            <label>Açıklama</label>
+                            <input type="text" class="form-control" name="nutdesc" id="nutdesc"
+                                value="<%=nut.description%>">
+                        </div>                                                             
+                        <% controller.nutritions().forEach(n=> {  %>
+                            <div class="form-group">
+                                <label><%=n%></label>
+                                <div class="row">
+                                    <div class="col">
+                                        <input placeholder="miktar" type="text" class="form-control" name="nutitem<%=n%>" id="nutitem<%=n%>"
+                                        value="<%=controller.getNutItemAmount(n)%>">
+                                    </div>
+                                    <div class="col">
+                                        <select class="form-control" name="nutitem<%=n%>unit" id="nutitem<%=n%>unit">
+                                            <% controller.nutritionValueUnits[n].forEach(u=> { %>
+                                            <option <%=controller.getNutItemUnit(n) == u ? 'selected':''%> value="<%=u%>"><%=u%></option>
+                                            <% }) %>
+                                        </select>
+
+                                        
+                                    
+
+                                    </div>                                    
+                                </div>
+                             
+                           
+                            </div>                              
+                        <% }) %>
+                        <div class="">
+                            <button type="submit" name="savenut" value="true" class="btn btn-primary">Kaydet</button>
+                        </div>
+                    </form>
+                  
+                </div>                
             </div>
 
 

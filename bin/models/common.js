@@ -1,6 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.NutritionValueOrders = exports.NutritionValueTitles = void 0;
+exports.NutritionValueOrders = exports.NutritionValueUnits = exports.NutritionValueTitles = void 0;
 exports.NutritionValueTitles = {
     'fat': 'Toplam yağ',
     'fat:saturated': 'Doymuş yağ',
@@ -14,7 +14,6 @@ exports.NutritionValueTitles = {
     'sodium': 'Sodyum',
     'potassium': 'Potasyum',
     'vitamin:a': 'Vitamin A',
-    'vitamin:b': 'Vitamin B',
     'vitamin:c': 'Vitamin C',
     'vitamin:d': 'Vitamin D',
     'vitamin:e': 'Vitamin E',
@@ -23,6 +22,28 @@ exports.NutritionValueTitles = {
     'vitamin:magnesium': 'Magnezyum',
     'vitamin:cobalamin': 'B12',
     'vitamin:calcium': 'Kalsiyum'
+};
+exports.NutritionValueUnits = {
+    'fat': ['gr'],
+    'fat:saturated': ['gr'],
+    'fat:polyunsaturated': ['gr'],
+    'fat:monounsaturated': ['gr'],
+    'carb': ['gr'],
+    'carb:fiber': ['gr'],
+    'carb:sugar': ['gr'],
+    'protein': ['gr'],
+    'cholesterol': ['mg'],
+    'sodium': ['mg'],
+    'potassium': ['mg'],
+    'vitamin:a': ['IU', '%'],
+    'vitamin:c': ['mg', '%'],
+    'vitamin:d': ['IU', '%'],
+    'vitamin:e': ['mg', '%'],
+    'vitamin:b6': ['mg', '%'],
+    'vitamin:iron': ['mg', '%'],
+    'vitamin:magnesium': ['mg', '%'],
+    'vitamin:cobalamin': ['µg', '%'],
+    'vitamin:calcium': ['mg', '%'],
 };
 exports.NutritionValueOrders = {
     'fat': 15,
@@ -37,7 +58,6 @@ exports.NutritionValueOrders = {
     'carb:fiber': 12,
     'protein': 0,
     'vitamin:a': 100,
-    'vitamin:b': 105,
     'vitamin:c': 106,
     'vitamin:d': 107,
     'vitamin:e': 108,

@@ -26,7 +26,14 @@ const category_1 = require("../../db/models/category");
 const productcategory_1 = require("../../db/models/productcategory");
 const redirect_1 = require("../../db/models/redirect");
 const cache_1 = require("../../lib/cache");
+const common_2 = require("../../models/common");
+const nutritionvalue_1 = require("../../db/models/nutritionvalue");
+const nutritionvalueitem_1 = require("../../db/models/nutritionvalueitem");
 class Route extends router_1.ViewRouter {
+    constructor() {
+        super(...arguments);
+        this.nutritionValueUnits = common_2.NutritionValueUnits;
+    }
     listViewRoute() {
         return __awaiter(this, void 0, void 0, function* () {
             let data = yield product_1.default.findAll({
@@ -82,6 +89,36 @@ class Route extends router_1.ViewRouter {
             subcategoryid: ""
         };
     }
+    getNutItemAmount(type) {
+        let item = this.editingNutritionValue.items.find(o => o.type == type);
+        return item ? item.amount : '';
+    }
+    getNutItemUnit(type) {
+        let item = this.editingNutritionValue.items.find(o => o.type == type);
+        return item ? item.unit : '';
+    }
+    loadNutiritionValues() {
+        return __awaiter(this, void 0, void 0, function* () {
+            let nuts = yield nutritionvalue_1.default.findAll({
+                where: {
+                    type: "product",
+                    ref: this.product.id
+                },
+                include: [
+                    {
+                        model: nutritionvalueitem_1.default
+                    }
+                ],
+                order: [['displayOrder', 'desc']]
+            });
+            if (nuts.length)
+                this.editingNutritionValue = nuts[0];
+            else {
+                this.editingNutritionValue = new nutritionvalue_1.default();
+                this.editingNutritionValue.items = [];
+            }
+        });
+    }
     editViewRoute() {
         return __awaiter(this, void 0, void 0, function* () {
             if (!this.req.params.product) {
@@ -90,12 +127,25 @@ class Route extends router_1.ViewRouter {
             let product = this.product = yield this.getProduct(this.req.params.product);
             let resources = yield this.getResources(product);
             let categories = yield this.getCategories();
+            yield this.loadNutiritionValues();
             this.res.render('pages/admin/product.edit.ejs', this.viewData({ getProductCategory: this.getProductCategory, categories: categories, images: resources, product: product }));
         });
     }
     saveSeoRoute() {
         return __awaiter(this, void 0, void 0, function* () {
         });
+    }
+    nutritions() {
+        let arr = [];
+        for (var i in common_2.NutritionValueTitles) {
+            arr.push(i);
+        }
+        let sorted = arr.sort((a, b) => {
+            let ap = common_2.NutritionValueOrders[a];
+            let bp = common_2.NutritionValueOrders[b];
+            return ap - bp;
+        });
+        return sorted;
     }
     saveRoute() {
         return __awaiter(this, void 0, void 0, function* () {
@@ -106,6 +156,7 @@ class Route extends router_1.ViewRouter {
             let resources = yield this.getResources(this.product);
             let categories = yield this.getCategories();
             let pSlug = this.product.slug;
+            yield this.loadNutiritionValues();
             if (this.req.body.save == "true") {
                 if (this.req.user.hasRole('admin')) {
                     this.product.slug = this.req.body.slug;
@@ -150,6 +201,35 @@ class Route extends router_1.ViewRouter {
                 this.product.pageTitle = this.req.body.pagetitle;
                 this.product.pageDescription = this.req.body.pagedesc;
                 yield this.product.save();
+            }
+            else if (this.req.body.savenut == "true") {
+                this.editingNutritionValue.name = this.req.body[`nutname`];
+                this.editingNutritionValue.amount = Number.parseInt(this.req.body[`nutamount`]);
+                this.editingNutritionValue.unit = this.req.body[`nutunit`];
+                this.editingNutritionValue.source = this.req.body[`nutsource`];
+                this.editingNutritionValue.sourceUrl = this.req.body[`nutsourceUrl`];
+                this.editingNutritionValue.calories = Number.parseInt(this.req.body[`nutcal`]);
+                this.editingNutritionValue.description = this.req.body[`nutdesc`];
+                this.editingNutritionValue.type = "product";
+                this.editingNutritionValue.ref = this.product.id;
+                yield this.editingNutritionValue.save();
+                yield nutritionvalueitem_1.default.destroy({
+                    where: {
+                        nutritionid: this.editingNutritionValue.id
+                    }
+                });
+                for (let i = 0; i < this.nutritions().length; i++) {
+                    let n = this.nutritions()[i];
+                    if (this.req.body[`nutitem${n}`]) {
+                        let item = new nutritionvalueitem_1.default();
+                        item.nutritionid = this.editingNutritionValue.id;
+                        item.amount = parseFloat(this.req.body[`nutitem${n}`]);
+                        item.unit = this.req.body[`nutitem${n}unit`];
+                        item.type = n;
+                        yield item.save();
+                    }
+                }
+                yield this.loadNutiritionValues();
             }
             else if (this.req.body.saveunits == "true" && this.req.user.hasRole('admin')) {
                 this.product.unit1 = this.req.body.unit1;

@@ -118,13 +118,26 @@ class NutritionValue extends BaseModel<NutritionValue> {
         let result: NutritionView = {
             dailyValues: {
                 'calories': 2000,
-                'fat': 78,
-                'fat:saturated': 20,
-                'cholesterol': 300,
-                'sodium': 2300,
-                'carb': 275,
-                'carb:fiber': 28,
-                'protein': 50,
+                'fat': { 'gr': 78},
+                'fat:saturated': { 'gr': 20},
+                'cholesterol': { 'mg': 300},
+                'sodium': { 'mg': 2300},
+                'carb': { 'gr': 275},
+                'carb:fiber': { 'gr': 28},
+                'protein': { 'gr': 50},
+                'vitamin:a': {'IU': 5000},
+                'vitamin:c': {'mg': 90},
+                'vitamin:d': {'IU': 400},
+                'vitamin:e': {'mg': 30},
+                'vitamin:b6': {'mg': 2},
+                'vitamin:iron': {'mg': 18},
+                'vitamin:magnesium': {'mg': 400},
+                'vitamin:cobalamin': {'µg': 6},
+                'vitamin:calcium': {'mg': 1000},
+
+                
+        
+                
             },
             values: []
         };

@@ -559,13 +559,18 @@ window.initComponents = function initComponents() {
                 var daily = this.product.nutritionView.dailyValues[nutrition];
                 if (!daily) return 0;
                 var val = 0;
-                if (nutrition == 'calories') val = this.selectedNutrition.calories;
+                if (nutrition == 'calories')  val = this.selectedNutrition.calories;
                 else {
                     var select = this.selectedNutrition.values.find(function(f) {
                         return f.type == nutrition
                     });
-                    select && (val = select.amount)
+                    if (!select) return 0;
+                    if (select.unit == '%') return select.amount;
+                    select && (val = select.amount);
+                    daily = daily[select.unit];
+
                 }
+                if (!daily) return 0;
                 return Math.round((val / daily) * 100)
             },
 
@@ -588,6 +593,8 @@ window.initComponents = function initComponents() {
                 var select = this.selectedNutrition.values.find(function(f) {
                     return f.type == nutrition
                 });
+
+                if (!select) return 0;
 
                 return Math.round((select.amount / total) * 100);
 

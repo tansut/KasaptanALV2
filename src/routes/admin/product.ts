@@ -13,10 +13,14 @@ import Category from '../../db/models/category';
 import ProductCategory from '../../db/models/productcategory';
 import Redirect from '../../db/models/redirect';
 import { CacheManager } from '../../lib/cache';
+import { NutritionValueTitles, NutritionValueOrders, NutritionValueUnits } from '../../models/common';
+import NutritionValue from '../../db/models/nutritionvalue';
+import NutritionValueItem from '../../db/models/nutritionvalueitem';
 
 export default class Route extends ViewRouter {
-
+    nutritionValueUnits = NutritionValueUnits;
     product: ProductModel;
+    editingNutritionValue: NutritionValue;
 
     @Auth.Anonymous()
     async listViewRoute() {
@@ -73,6 +77,37 @@ export default class Route extends ViewRouter {
             }
     }
 
+    getNutItemAmount(type: string) {
+        let item = this.editingNutritionValue.items.find(o=>o.type == type);
+        return item ? item.amount: ''
+    }
+
+    getNutItemUnit(type: string) {
+        let item = this.editingNutritionValue.items.find(o=>o.type == type);
+        return item ? item.unit: ''
+    }
+
+
+    async loadNutiritionValues() {
+        let nuts = await NutritionValue.findAll({
+            where: {
+                type: "product",
+                ref: this.product.id
+            },
+            include: [
+                {
+                    model: NutritionValueItem
+                }
+            ],
+            order: [['displayOrder', 'desc']]
+        });
+        if (nuts.length) this.editingNutritionValue = nuts[0];
+        else {
+            this.editingNutritionValue = new NutritionValue();
+            this.editingNutritionValue.items = []
+        }
+    }
+
     @Auth.Anonymous()
     async editViewRoute() {
         if (!this.req.params.product) {
@@ -81,11 +116,29 @@ export default class Route extends ViewRouter {
         let product = this.product = await this.getProduct(this.req.params.product);
         let resources = await this.getResources(product)
         let categories = await this.getCategories();
+        await this.loadNutiritionValues();
         this.res.render('pages/admin/product.edit.ejs', this.viewData({ getProductCategory: this.getProductCategory, categories: categories, images: resources, product: product }))
     }
 
     async saveSeoRoute() {
 
+    }
+
+    nutritions() {
+
+        let arr = [];
+        
+        for (var i in NutritionValueTitles) {
+            arr.push(i)            
+        }
+
+        let sorted = arr.sort((a, b) => {
+            let ap = NutritionValueOrders[a];
+            let bp = NutritionValueOrders[b];
+            return ap - bp
+        });        
+
+        return sorted;
     }
 
     @Auth.Anonymous()
@@ -99,6 +152,7 @@ export default class Route extends ViewRouter {
         let resources = await this.getResources(this.product)
         let categories = await this.getCategories();
         let pSlug = this.product.slug;
+        await this.loadNutiritionValues();
 
         if (this.req.body.save == "true") {
             if (this.req.user.hasRole('admin')) {
@@ -144,6 +198,35 @@ export default class Route extends ViewRouter {
             this.product.pageTitle = this.req.body.pagetitle;
             this.product.pageDescription = this.req.body.pagedesc;
             await this.product.save();
+        } else if (this.req.body.savenut == "true") {
+            this.editingNutritionValue.name = this.req.body[`nutname`];
+            this.editingNutritionValue.amount = Number.parseInt(this.req.body[`nutamount`]);
+            this.editingNutritionValue.unit = this.req.body[`nutunit`];
+            this.editingNutritionValue.source = this.req.body[`nutsource`];
+            this.editingNutritionValue.sourceUrl = this.req.body[`nutsourceUrl`];
+            this.editingNutritionValue.calories = Number.parseInt(this.req.body[`nutcal`]);
+            this.editingNutritionValue.description = this.req.body[`nutdesc`];
+            this.editingNutritionValue.type="product";
+            this.editingNutritionValue.ref= this.product.id;            
+            await this.editingNutritionValue.save();
+            await NutritionValueItem.destroy({
+                where: {
+                    nutritionid: this.editingNutritionValue.id
+                }
+            })
+            for(let i = 0; i < this.nutritions().length; i++) {
+                let n = this.nutritions()[i];
+                if (this.req.body[`nutitem${n}`]) {
+                    let item = new NutritionValueItem();
+                    item.nutritionid = this.editingNutritionValue.id;
+                    item.amount = parseFloat(this.req.body[`nutitem${n}`]);
+                    item.unit = this.req.body[`nutitem${n}unit`];
+                    item.type = n;
+                    await item.save();
+                }
+            }
+            
+            await this.loadNutiritionValues();
         } else if (this.req.body.saveunits == "true" && this.req.user.hasRole('admin')) {
             this.product.unit1 = this.req.body.unit1;
             this.product.unit1desc = this.req.body.unit1desc;
