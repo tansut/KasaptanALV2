@@ -266,7 +266,7 @@ export class LogisticProvider {
                 {
                     id: o.areaLevel3Id ? o.areaLevel3Id.toString(): '',
                     address: o.displayAddress,
-                    contactName: o.name,
+                    contactName: o.displayName,
                     contactPhone: o.phone,
                     lat: o.shipLocation.coordinates[0],
                     lng: o.shipLocation.coordinates[1],

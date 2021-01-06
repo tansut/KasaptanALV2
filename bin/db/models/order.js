@@ -56,6 +56,12 @@ let Order = Order_1 = class Order extends basemodel_1.default {
     set dispatcherData(value) {
         this.setDataValue('dispatcherjson', Buffer.from(JSON.stringify(value), "utf-8"));
     }
+    get displayName() {
+        let names = (this.name || '').split(' ').filter(p => p.trim());
+        if (names.length == 0)
+            return '';
+        return `${names[0]} ${names.length > 1 ? names[names.length - 1][0] + '.' : ''}`;
+    }
     get shopcard() {
         return JSON.parse(this.getDataValue('shopcardjson').toString());
     }

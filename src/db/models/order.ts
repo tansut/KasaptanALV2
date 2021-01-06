@@ -464,7 +464,11 @@ class Order extends BaseModel<Order> {
         this.setDataValue('dispatcherjson', Buffer.from(JSON.stringify(value), "utf-8"));
     }
 
-
+    get displayName() {
+        let names = (this.name || '').split(' ').filter(p=>p.trim());
+        if (names.length == 0) return '';
+        return `${names[0]} ${names.length > 1 ? names[names.length-1][0] + '.':''}`
+    }
 
 
     get shopcard(): Object {
