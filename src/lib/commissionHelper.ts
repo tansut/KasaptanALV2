@@ -60,7 +60,7 @@ export class PuanCalculator {
 
     calculateCustomerPuan(puan: Puan, totalSales: number) {
         if (Helper.asCurrency(puan.minSales) == 0.00 || (totalSales >= puan.minSales)) {
-            return Helper.asCurrency(totalSales * puan.rate)
+            return puan.rate ? Helper.asCurrency(totalSales * puan.rate): puan.fixed;
         } else return 0.00
     }
 

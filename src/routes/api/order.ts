@@ -562,9 +562,10 @@ export default class Route extends ApiRouter {
                 let kalittePuan: Puan = {
                 
             minPuanForUsage: 0.00,
-            minSales: 300.00,
+            minSales: 250.00,
             name: `2021'e merhaba puan kazancı`,
-            rate: 0.03
+            //rate: 0.03,
+            fixed: 10.00
         }
 
         if (o.butcher.enableCreditCard) {
@@ -1147,7 +1148,7 @@ export default class Route extends ApiRouter {
                 for (var p = 0; p < notifyMobilePhones.length; p++) {
                     if (notifyMobilePhones[p].trim()) {
                         let manageUrl = `${this.url}/manageorder/${order.ordernum}`;
-                        Sms.send(notifyMobilePhones[p].trim(), `${order.butcherName} yeni siparis [${order.name}]. LUTFEN SIPARISI YANITLAYIN: ${manageUrl} `, false, new SiteLogRoute(this.constructorParams))
+                        Sms.send(notifyMobilePhones[p].trim(), `${order.butcherName} yeni siparis [${order.displayName}]. LUTFEN SIPARISI YANITLAYIN: ${manageUrl} `, false, new SiteLogRoute(this.constructorParams))
                     }
                 }
             }
@@ -1202,7 +1203,7 @@ export default class Route extends ApiRouter {
         await order.save();
         if (notifyButcher) {
             let manageUrl = `${this.url}/manageorder/${order.ordernum}`;
-            let text = `DURUM DEGISTI: ${order.butcherName} siparis [${order.name}]. ${oldStatus} -> ${order.status}. Not: ${userMsg}. Bilgi ${manageUrl} `
+            let text = `DURUM DEGISTI: ${order.butcherName} siparis [${order.displayName}]. ${oldStatus} -> ${order.status}. Not: ${userMsg}. Bilgi ${manageUrl} `
             await this.sendButcherNotifications(order, text);
         }
     }
@@ -1225,7 +1226,7 @@ export default class Route extends ApiRouter {
         notifyMobilePhones.push('5326274151');
 
         let manageUrl = `${this.url}/manageorder/${order.ordernum}`;
-        let text = `${order.butcherName} musteriniz ${order.name} teslimat icin bilgilendirildi: ${order.shipmentStartText}. Siparis: ${manageUrl}`;
+        let text = `${order.butcherName} musteriniz ${order.displayName} teslimat icin bilgilendirildi: ${order.shipmentStartText}. Siparis: ${manageUrl}`;
 
 
         await this.sendButcherNotifications(order, text)
@@ -1383,7 +1384,7 @@ export default class Route extends ApiRouter {
                 for (var p = 0; p < notifyMobilePhones.length; p++) {
                     if (notifyMobilePhones[p].trim()) {
                         let manageUrl = `${this.url}/manageorder/${order.ordernum}`;
-                        Sms.send(notifyMobilePhones[p].trim(), `${order.butcherName} kurye yola cikti. Siparis[${order.name}]: ${manageUrl} `, false, new SiteLogRoute(this.constructorParams))
+                        Sms.send(notifyMobilePhones[p].trim(), `${order.butcherName} kurye yola cikti. Siparis[${order.displayName}]: ${manageUrl} `, false, new SiteLogRoute(this.constructorParams))
                     }
                 }
                 let userUrl = `${this.url}/user/orders/${order.ordernum}`;

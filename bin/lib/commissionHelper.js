@@ -45,7 +45,7 @@ exports.ComissionHelper = ComissionHelper;
 class PuanCalculator {
     calculateCustomerPuan(puan, totalSales) {
         if (helper_1.default.asCurrency(puan.minSales) == 0.00 || (totalSales >= puan.minSales)) {
-            return helper_1.default.asCurrency(totalSales * puan.rate);
+            return puan.rate ? helper_1.default.asCurrency(totalSales * puan.rate) : puan.fixed;
         }
         else
             return 0.00;

@@ -10,7 +10,7 @@
         <% } else if (!hideMinSales) { %>
           Tüm alışverişlerinizden
         <% } %>
-          <span class="font-weight-bolder">%<%=puan.rate * 100 %> puan</span>
+          <span class="font-weight-bolder"><%= puan.rate ? '%' + (puan.rate * 100): __helper.formattedCurrency(puan.fixed) %> puan</span>
          kazanın.
 
         <!-- <% if (puan.minPuanForUsage > 0.00 && !hideMinPuanForUsage) { %>

@@ -51,7 +51,7 @@ class OrderRemainers extends basetask_1.BaseTask {
                 });
                 for (let i = 0; i < orders.length; i++) {
                     let manageUrl = `${this.url}/manageorder/${orders[i].ordernum}`;
-                    let text = `UYARI: Musteriniz hala cevabinizi bekliyor: ${orders[i].butcherName} siparis [${orders[i].name}] suresinde yanitlanmadi. LUTFEN SIMDI YANITLAYIN: ${manageUrl} `;
+                    let text = `UYARI: Musteriniz hala cevabinizi bekliyor: ${orders[i].butcherName} siparis [${orders[i].displayName}] suresinde yanitlanmadi. LUTFEN SIMDI YANITLAYIN: ${manageUrl} `;
                     yield api.sendButcherNotifications(orders[i], text);
                     orders[i].butcherLastReminder = now;
                     orders[i].butcherLastReminderType = 'plan';
