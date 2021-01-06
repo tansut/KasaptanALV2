@@ -96,10 +96,10 @@ let Dispatcher = class Dispatcher extends basemodel_1.default {
             return `${time} kurye ile teslimat`;
         }
         else if (!this.toareaid) {
-            return "Kargo ile 2-3 gün teslimat";
+            return "2-3 gün kargo ile teslimat";
         }
         else {
-            return "Aynı gün soğuk zincir teslimat";
+            return "1-3 saat soğuk zincir teslimat";
             //return `${this.butcherArea.kmActive} km, 1-2 saat.`
         }
         let desc = "";

@@ -13,11 +13,11 @@ export type GeneralValueItemType = 'cholesterol' | 'sodium' | 'potassium'
 
 
 export let NutritionValueTitles = {
-    'fat': 'Toplam yağ',
+    'fat': 'Yağ',
     'fat:saturated': 'Doymuş yağ',
     'fat:polyunsaturated': 'Yarı doymuş yağ',
     'fat:monounsaturated': 'Doymamış yağ',
-    'carb': 'Toplam karbonhidrat',
+    'carb': 'Karbonhidrat',
     'carb:fiber': 'Lif',
     'carb:sugar': 'Şeker',
     'protein': 'Protein',

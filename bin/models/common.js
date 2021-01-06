@@ -2,11 +2,11 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.NutritionValueOrders = exports.NutritionValueUnits = exports.NutritionValueTitles = void 0;
 exports.NutritionValueTitles = {
-    'fat': 'Toplam yağ',
+    'fat': 'Yağ',
     'fat:saturated': 'Doymuş yağ',
     'fat:polyunsaturated': 'Yarı doymuş yağ',
     'fat:monounsaturated': 'Doymamış yağ',
-    'carb': 'Toplam karbonhidrat',
+    'carb': 'Karbonhidrat',
     'carb:fiber': 'Lif',
     'carb:sugar': 'Şeker',
     'protein': 'Protein',

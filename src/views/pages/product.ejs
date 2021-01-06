@@ -250,11 +250,12 @@
                           <div v-if="product && product.nutritionView && selectedNutrition" class="card rounded-0">
   
                             <div class="card-header" role="tab">
-                              <h3 class="accordion-heading font-weight-normal "><a href="#nutrition-info" class="collapsed" data-toggle="collapse"><i class="czi-ruler font-size-lg align-middle mt-n1 mr-2"></i>Değerler 
+                              <h3 class="accordion-heading font-weight-normal "><a href="#nutrition-info" class="collapsed" data-toggle="collapse"><i class="czi-ruler font-size-lg align-middle mt-n1 mr-2"></i>Besin Değerleri 
+                                <span class="align-middle mt-n1 badge badge-accent">yeni</span> 
                                 <span  v-if="false" class="align-middle mt-n1 badge badge-success">{{ getNutrition('protein') ? (getNutrition('protein').amount + getNutrition('protein').unit) + '': selectedNutrition.calories + 'kal'}}</span> 
-                                <span title="Protein" v-if="getNutrition('protein')" class="align-middle mt-n1 badge badge-success">{{ getNutrition('protein').amount}}</span>
-                                <span title="Karbonhidrat" v-if="getNutrition('carb')" class="align-middle mt-n1 badge badge-info">{{ getNutrition('carb').amount}}</span>
-                                <span title="Yağ" v-if="getNutrition('fat')" class="align-middle mt-n1 badge badge-warning">{{ getNutrition('fat').amount}}</span>
+                                <span v-if="false" title="Protein" v-if="getNutrition('protein')" class="align-middle mt-n1 badge badge-success">{{ getNutrition('protein').amount}}</span>
+                                <span v-if="false" title="Karbonhidrat" v-if="getNutrition('carb')" class="align-middle mt-n1 badge badge-info">{{ getNutrition('carb').amount}}</span>
+                                <span v-if="false" title="Yağ" v-if="getNutrition('fat')" class="align-middle mt-n1 badge badge-warning">{{ getNutrition('fat').amount}}</span>
                                 <span
                                     class="accordion-indicator"></span></a></h3>
                                     <% if (false){ %> 
@@ -272,10 +273,9 @@
                             </div>
                             <div class="collapse bg-secondary bg-size-cover bg-position-center" style="background-image: url(<%=__config.staticDomain %>/resource/img/ka-cover.png)" id="nutrition-info" data-parent="#nutrition-info-panel" role="tabpanel">
                               <div class="progress rounded-0">
-                                <div class="progress-bar progress-bar-striped bg-success" role="progressbar" v-bind:style="{width: getNutritionPerc('protein') + '%'}" v-bind:aria-valuenow="getNutritionPerc('protein')" aria-valuemin="0" aria-valuemax="100">{{getNutrition('protein') ? getNutritionPerc('protein')+ '%': '' }}</div>
-
-                                <div class="progress-bar progress-bar-striped bg-info" role="progressbar" v-bind:style="{width: getNutritionPerc('carb') + '%'}" v-bind:aria-valuenow="getNutritionPerc('carb')" aria-valuemin="0" aria-valuemax="100">{{getNutrition('carb') ? getNutritionPerc('carb') + '%': '' }}</div>
-                                <div class="progress-bar progress-bar-striped bg-warning" role="progressbar" v-bind:style="{width: getNutritionPerc('fat') + '%'}" v-bind:aria-valuenow="getNutritionPerc('fat')" aria-valuemin="0" aria-valuemax="100">{{getNutrition('fat') ? getNutritionPerc('fat')+ '%': '' }}</div>
+                                <div class="progress-bar progress-bar-striped bg-success" role="progressbar" v-bind:style="{width: getNutritionPerc('protein') + '%'}" v-bind:aria-valuenow="getNutritionPerc('protein')" aria-valuemin="0" aria-valuemax="100">{{getNutrition('protein') ? getNutrition('protein').amount + getNutrition('protein').unit: '' }}</div>
+                                <div class="progress-bar progress-bar-striped bg-info" role="progressbar" v-bind:style="{width: getNutritionPerc('carb') + '%'}" v-bind:aria-valuenow="getNutritionPerc('carb')" aria-valuemin="0" aria-valuemax="100">{{getNutrition('carb') ? getNutrition('carb').amount + getNutrition('carb').unit: '' }}</div>
+                                <div class="progress-bar progress-bar-striped bg-warning" role="progressbar" v-bind:style="{width: getNutritionPerc('fat') + '%'}" v-bind:aria-valuenow="getNutritionPerc('fat')" aria-valuemin="0" aria-valuemax="100">{{getNutrition('fat') ? getNutrition('fat').amount + getNutrition('fat').unit: '' }}</div>
                               
                               </div>
                               <div class="font-size-sm ">
@@ -491,7 +491,7 @@
                                 <% if (controller.startPrice.basedOn == 'global') { %>
   
                                   <div>
-                                    <span>Size hizmet veren kasaplarımızdan alışverişe başlamak için semt seçin.
+                                    <span>Alışverişe başlamak için semt seçin.
                                   </div>
     
                             
@@ -705,7 +705,7 @@
                           
                          
                             
-                       
+                        <%if (view.butcher) {  %>                       
                          
                           <div class="d-flex mb-1 font-size-sm align-items-center justify-content-between ">
                             <span>
@@ -854,7 +854,7 @@
                           </div>
                       
                         
-                     
+                          <% } %>
 
                            
 

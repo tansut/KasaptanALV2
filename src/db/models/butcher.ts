@@ -52,7 +52,7 @@ class Butcher extends BaseModel<Butcher> {
     }
 
     get shipSuccessText() {
-        return Helper.number2Text(this.shipSuccessCount, 50)
+        return this.shipSuccessCount >= 10 ? Helper.number2Text(this.shipSuccessCount, 50):''
     }
 
 

@@ -39,7 +39,7 @@ let Butcher = Butcher_1 = class Butcher extends basemodel_1.default {
         return this.shipTotalCount - this.shipFailureCount;
     }
     get shipSuccessText() {
-        return helper_1.default.number2Text(this.shipSuccessCount, 50);
+        return this.shipSuccessCount >= 10 ? helper_1.default.number2Text(this.shipSuccessCount, 50) : '';
     }
     get gpPlace() {
         return JSON.parse(this.getDataValue('gpplacejson').toString());
