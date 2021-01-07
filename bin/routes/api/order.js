@@ -892,7 +892,7 @@ class Route extends router_1.ApiRouter {
                 for (var p = 0; p < notifyMobilePhones.length; p++) {
                     if (notifyMobilePhones[p].trim()) {
                         let payUrl = `${this.url}/manageorder/${ol[i].ordernum}`;
-                        sms_1.Sms.send(notifyMobilePhones[p].trim(), `${ol[i].butcherName} yeni siparis[${ol[i].name}]: ${helper_1.default.formattedCurrency(paymentInfo.paidPrice)} online odeme yapildi. LUTFEN SIPARISI YANITLAYIN: ${payUrl} `, false, new sitelog_1.default(this.constructorParams));
+                        sms_1.Sms.send(notifyMobilePhones[p].trim(), `${ol[i].butcherName} yeni siparis[${ol[i].displayName}]: ${helper_1.default.formattedCurrency(paymentInfo.paidPrice)} online odeme yapildi. LUTFEN SIPARISI YANITLAYIN: ${payUrl} `, false, new sitelog_1.default(this.constructorParams));
                     }
                 }
                 this.sendPuanNotification(ol[i]);

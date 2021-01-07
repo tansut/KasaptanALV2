@@ -983,7 +983,7 @@ export default class Route extends ApiRouter {
             for (var p = 0; p < notifyMobilePhones.length; p++) {
                 if (notifyMobilePhones[p].trim()) {
                     let payUrl = `${this.url}/manageorder/${ol[i].ordernum}`;
-                    Sms.send(notifyMobilePhones[p].trim(), `${ol[i].butcherName} yeni siparis[${ol[i].name}]: ${Helper.formattedCurrency(paymentInfo.paidPrice)} online odeme yapildi. LUTFEN SIPARISI YANITLAYIN: ${payUrl} `, false, new SiteLogRoute(this.constructorParams))
+                    Sms.send(notifyMobilePhones[p].trim(), `${ol[i].butcherName} yeni siparis[${ol[i].displayName}]: ${Helper.formattedCurrency(paymentInfo.paidPrice)} online odeme yapildi. LUTFEN SIPARISI YANITLAYIN: ${payUrl} `, false, new SiteLogRoute(this.constructorParams))
                 }
             }
 

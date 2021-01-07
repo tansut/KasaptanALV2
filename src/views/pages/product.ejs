@@ -230,19 +230,19 @@
                           </div>
                           <div class="show bg-secondary border-top" id="basic-info" data-parent="#nutrition-info-panel" role="tabpanel">
                         
-                            <div class="px-3 pt-3 y">
+                           
                              
-                              <div class=" mb-3  ">
-                                <ul class="list-unstyled mb-2 font-weight-light">
+                            
+                                <ul class="list-unstyled mb-3 px-3 pt-3 font-weight-light">
                                   <%notes.forEach((note, i) => { %>
                                   <li><i class="czi-check-circle text-success align-middle mt-n1 mr-2"></i><%=note%></li>
                                   <%})%>
                                 </ul>
         
-                              </div>
+                             
                        
 
-                            </div>
+                            
                           
                           </div>
                         </div>
@@ -267,20 +267,20 @@
                             <h3 class="accordion-heading"><a href="#<%=__helper.slugify(r.title)%>" class="collapsed" aria-expanded="false" data-toggle="collapse"><i class="czi-video text-muted font-size-lg align-middle mt-n1 mr-2"></i><%=r.title%> <span class="align-middle mt-n1 badge badge-secondary"><%=r.arr.length%></span>  <span class="accordion-indicator"></span></a></h3>
                           </div>
                           <div class="collapse bg-secondary border-top" id="<%=__helper.slugify(r.title)%>" data-parent="#nutrition-info-panel" role="tabpanel">
-                            <div class="pt-3 px-3">
+                            
                              
-                        <ul class="list-unstyled">
+                        <ul class="list-unstyled pt-3 px-3">
                        
                         <% r.arr.forEach(t=> { %>
                         <li>
-                          <a class="d-block text-dark" href="javascript:openSlider(<%=t.id%>)"><i class="text-primary <%= t.contentType == 'video-youtube' ? 'czi-youtube': 'czi-camera' %> align-middle mt-n1 mr-2"></i><%=t.title%></a>
+                          <a class="d-block text-dark font-weight-light" href="javascript:openSlider(<%=t.id%>)"><i class="text-primary <%= t.contentType == 'video-youtube' ? 'czi-youtube': 'czi-camera' %> align-middle mt-n1 mr-2"></i><%=t.title%></a>
                         </li>
                         <%})%>
                       </ul>
                       
                    
 
-                            </div>
+                        
                           </div>
                         </div>
                       <% }) %>
