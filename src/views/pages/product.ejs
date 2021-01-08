@@ -401,15 +401,49 @@
                         <% } %>
 
                         </div>
-                        <%if (controller.shopcard.items.length == 0) { %>
-                        <div class="px-3 pt-3 mb-3 bg-size-cover bg-position-center border"
+                        <a id="aftersetloc"></a>
+
+
+
+                        <a id="noteanchor"></a>
+                        <%if (controller.shopcard.items.length >= 0) { %>
+                        <div class="px-3 rounded-lg pt-3 mb-3 bg-size-cover bg-position-center border"
                         style="background-image: url(<%=__config.staticDomain %>/resource/img/banner-bg.jpg)">
-                        <h5 class="h5 text-danger">2021'e Merhaba Kampanyası</h5>
-                        <p><strong>250TL ve üzeri</strong> alışveriş yapın, <strong class="text-dark">
-                          <%- include('./_partial/currency.ejs', {value: 10}) %>
+                        <h5 class="h5 text-primary">ONLINE SİPARİŞE ÖZEL</h5>
+                        <ul class="alist-unstyled">
+                          <% if (!__req.prefAddr || view.butcher) { %>
+                          <li>
+                           
+                            <p>
+                              <% if (view.butcher) { %>
+                              <%=view.butcher.name%> siparişlerinizden
+                              <strong>
+                                %<%=view.butcher.puanData.rate * 100 %></strong>
+                               puan kazanın, sonraki siparişinizde <strong>indirim olarak</strong> kullanın.
+                               <% } else { %>
+                                
+                                <strong>
+                                  <a class="text-dark font-weight-bold" href="/blog/kasap-kart" data-toggle="tooltip" data-placement="top" title="Tooltip on top">Kasap Kart ™</a>
+                                 
+                                </strong>
+                                 puan kazancınızı görüntülemek için lütfen <a class="text-primary" @click="selectArea(null)">semt seçin</a>.
+                                <% } %>
+                            </p>
+                          </li>
+                          <% } %>
+                          <li>
+                            
+                            <p><strong>250TL ve üzeri</strong> alışveriş yapın, ayrıca <strong class="text-dark">
+                              <%- include('./_partial/currency.ejs', {value: 10}) %>
+                        
+                            </strong> değerinde puan kazanın.
+                            </p>
+                          </li>
+                         
+
+                            
+                        </ul>
                     
-                        </strong> değerinde ek puan kazanın.
-                        </p>
                         </div>
 
                         <% } %>
@@ -602,16 +636,7 @@
                
 
 
-                      <a id="aftersetloc"></a>
-
-
-
-
-
-
-
-
-                        <a id="noteanchor"></a>
+             
 
                        
 
