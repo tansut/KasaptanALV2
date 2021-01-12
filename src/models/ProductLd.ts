@@ -39,6 +39,10 @@ export interface IAggregateRating {
     // reviewCount: number;
 }
 
+export interface ProductLdOptions {
+    thumbnail: boolean;
+}
+
 export class ProductLd implements IProductLd {
     '@context': string = 'https://schema.org/';
     '@type': string = "Product";
@@ -51,14 +55,14 @@ export class ProductLd implements IProductLd {
     identifier_exists = 'no'
     aggregateRating: IAggregateRating;
  
-    constructor(product: Product) {
+    constructor(product: Product, options: ProductLdOptions) {
         this.name = product.name;
         this.description = product.generatedDesc;
         this.image = [];
         this.sku = product.slug;
         product.resources.forEach(r=> {
             if (!r.tag1 && r.list) {
-                this.image.push(r.getFileUrl())
+                this.image.push(options.thumbnail ? r.getThumbnailFileUrl(): r.getFileUrl())
             }
         })
         this.aggregateRating = {

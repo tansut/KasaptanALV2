@@ -176,7 +176,9 @@ class Route extends router_1.ViewRouter {
                 res: this.res,
                 next: null
             });
-            api.getProductsFeedOfButcher(butcher).then(products => {
+            api.getProductsFeedOfButcher(butcher, {
+                thumbnail: this.req.query.thumbnail == "1"
+            }).then(products => {
                 try {
                     let feed = api.getProductsFeedXML(products);
                     this.res.send(feed.end({ pretty: config_1.default.nodeenv == "development" }));

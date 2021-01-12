@@ -101,9 +101,6 @@ class Route extends router_1.ViewRouter {
                 butchers = yield butcher_1.default.findAll({
                     where: where,
                     order: [["updatedon", "DESC"]],
-                    include: [{
-                            all: true
-                        }]
                 });
                 subs = yield area_1.default.sequelize.query(`select * from Areas ap where ap.level=2 and ap.parentid=:id and ( ap.id in 
                 (
@@ -177,7 +174,8 @@ class Route extends router_1.ViewRouter {
                 limit: 50,
                 order: [["id", "DESC"]],
                 include: [{
-                        all: true
+                        model: area_2.default,
+                        as: "areaLevel1"
                     }]
             });
             let subs = yield area_1.default.findAll({

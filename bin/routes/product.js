@@ -354,7 +354,9 @@ class Route extends router_1.ViewRouter {
                     order: [["displayOrder", "DESC"], ["updatedOn", "DESC"]]
                 });
             }
-            this.productLd = (product.status == "onsale") ? yield api.getProductLd(product) : null;
+            this.productLd = (product.status == "onsale") ? yield api.getProductLd(product, {
+                thumbnail: false
+            }) : null;
             if (this.productLd) {
                 if (!this.productLd.offers) {
                     this.productLd = null;

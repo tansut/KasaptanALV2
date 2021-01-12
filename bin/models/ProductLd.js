@@ -2,7 +2,7 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.ProductLd = void 0;
 class ProductLd {
-    constructor(product) {
+    constructor(product, options) {
         this['@context'] = 'https://schema.org/';
         this['@type'] = "Product";
         this.identifier_exists = 'no';
@@ -12,7 +12,7 @@ class ProductLd {
         this.sku = product.slug;
         product.resources.forEach(r => {
             if (!r.tag1 && r.list) {
-                this.image.push(r.getFileUrl());
+                this.image.push(options.thumbnail ? r.getThumbnailFileUrl() : r.getFileUrl());
             }
         });
         this.aggregateRating = {

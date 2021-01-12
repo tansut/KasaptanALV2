@@ -67,7 +67,9 @@ class ProductFeedMiddleware extends Middleware {
 
 
         
-        api.getProductsFeed().then(products=> {
+        api.getProductsFeed({
+            thumbnail: req.query.thumbnail == "1"
+        }).then(products=> {
 
             try {
                 let feed = api.getProductsFeedXML(products)

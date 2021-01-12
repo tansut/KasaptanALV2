@@ -410,7 +410,9 @@ export default class Route extends ViewRouter {
             })
         }
 
-        this.productLd = (product.status == "onsale") ? await api.getProductLd(product) : null;
+        this.productLd = (product.status == "onsale") ? await api.getProductLd(product, {
+            thumbnail: false
+        }) : null;
 
         if (this.productLd) {
             if (!this.productLd.offers) {

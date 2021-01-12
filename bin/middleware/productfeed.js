@@ -44,7 +44,9 @@ class ProductFeedMiddleware extends base_1.default {
             res: res,
             next: null
         });
-        api.getProductsFeed().then(products => {
+        api.getProductsFeed({
+            thumbnail: req.query.thumbnail == "1"
+        }).then(products => {
             try {
                 let feed = api.getProductsFeedXML(products);
                 res.send(feed.end({ pretty: config_1.default.nodeenv == "development" }));

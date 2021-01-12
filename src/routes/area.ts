@@ -100,9 +100,6 @@ export default class Route extends ViewRouter {
             butchers = await ButcherModel.findAll({
                 where: where,
                 order: [["updatedon", "DESC"]],
-                include: [{
-                    all: true
-                }]
             })
 
             subs = await AreaModel.sequelize.query(`select * from Areas ap where ap.level=2 and ap.parentid=:id and ( ap.id in 
@@ -195,7 +192,8 @@ export default class Route extends ViewRouter {
             limit: 50,
             order: [["id", "DESC"]],
             include: [{
-                all: true
+                model: Area,
+                as: "areaLevel1"
             }]
         })
 

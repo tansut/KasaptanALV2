@@ -297,7 +297,7 @@ class Route extends router_1.ApiRouter {
         });
         return feed;
     }
-    getProductsFeed() {
+    getProductsFeed(options) {
         return __awaiter(this, void 0, void 0, function* () {
             let res = [];
             let products = yield product_1.default.findAll({
@@ -307,7 +307,7 @@ class Route extends router_1.ApiRouter {
                 let p = products[i];
                 if (p.status == "onsale" && (p.productType == product_1.ProductType.generic || p.productType == product_1.ProductType.tumkuzu)) {
                     yield p.loadResources();
-                    let ld = yield this.getProductLd(p);
+                    let ld = yield this.getProductLd(p, options);
                     if (ld.offers) {
                         let feed = {
                             id: p.id.toString(),
@@ -329,7 +329,7 @@ class Route extends router_1.ApiRouter {
             return res;
         });
     }
-    getProductsFeedOfButcher(butcher) {
+    getProductsFeedOfButcher(butcher, options) {
         return __awaiter(this, void 0, void 0, function* () {
             let res = [];
             // let products = await Product.findAll({ 
@@ -340,7 +340,7 @@ class Route extends router_1.ApiRouter {
                 let p = products[i].product;
                 if (p.status == "onsale" && (p.productType == product_1.ProductType.generic || p.productType == product_1.ProductType.tumkuzu)) {
                     yield p.loadResources();
-                    let ld = new ProductLd_1.ProductLd(p);
+                    let ld = new ProductLd_1.ProductLd(p, options);
                     let feed = {
                         id: p.id.toString(),
                         availability: "in stock",
@@ -360,9 +360,9 @@ class Route extends router_1.ApiRouter {
             return res;
         });
     }
-    getProductLd(product) {
+    getProductLd(product, options) {
         return __awaiter(this, void 0, void 0, function* () {
-            let res = new ProductLd_1.ProductLd(product);
+            let res = new ProductLd_1.ProductLd(product, options);
             let prices = yield this.getPriceStats([product.id]);
             let units = ['kg', 'unit1', 'unit2', 'unit3'];
             let usedUnit = null;
@@ -400,7 +400,7 @@ class Route extends router_1.ApiRouter {
             return res;
         });
     }
-    getProductLdById(id) {
+    getProductLdById(id, options) {
         return __awaiter(this, void 0, void 0, function* () {
             let product = yield product_1.default.findOne({
                 include: [{
@@ -410,7 +410,7 @@ class Route extends router_1.ApiRouter {
             if (!product)
                 return this.res.sendStatus(404);
             yield product.loadResources();
-            return this.getProductLd(product);
+            return this.getProductLd(product, options);
         });
     }
     getProductUnits(product) {
@@ -575,7 +575,7 @@ class Route extends router_1.ApiRouter {
 __decorate([
     common_1.Auth.Anonymous(),
     __metadata("design:type", Function),
-    __metadata("design:paramtypes", [Number]),
+    __metadata("design:paramtypes", [Number, Object]),
     __metadata("design:returntype", Promise)
 ], Route.prototype, "getProductLdById", null);
 exports.default = Route;

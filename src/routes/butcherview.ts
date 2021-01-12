@@ -231,7 +231,9 @@ export default class Route extends ViewRouter {
 
 
         
-        api.getProductsFeedOfButcher(butcher).then(products=> {
+        api.getProductsFeedOfButcher(butcher, {
+            thumbnail: this.req.query.thumbnail == "1"
+        }).then(products=> {
 
             try {
                 let feed = api.getProductsFeedXML(products)

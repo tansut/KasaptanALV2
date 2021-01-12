@@ -15,7 +15,7 @@ import Resource from '../../db/models/resource';
 import ResourceCategory from '../../db/models/resourcecategory';
 import Category from '../../db/models/category';
 import { Op } from 'sequelize';
-import { ProductLd, IProductLd } from '../../models/ProductLd';
+import { ProductLd, IProductLd, ProductLdOptions } from '../../models/ProductLd';
 import DispatcherApi from './dispatcher';
 import Review from '../../db/models/review';
 
@@ -320,7 +320,7 @@ export default class Route extends ApiRouter {
         return feed;
     }
 
-    async getProductsFeed(): Promise<ProductFeedItem []> {
+    async getProductsFeed(options: ProductLdOptions): Promise<ProductFeedItem []> {
         let res: ProductFeedItem [] = [];
         let products = await Product.findAll({ 
              where: { status: "onsale" }
@@ -332,7 +332,7 @@ export default class Route extends ApiRouter {
             let p = products[i];
             if (p.status == "onsale" && (p.productType == ProductType.generic || p.productType == ProductType.tumkuzu)) {
                 await p.loadResources();
-                let ld = await this.getProductLd(p);
+                let ld = await this.getProductLd(p, options);
                 if (ld.offers) {
                     let feed: ProductFeedItem = {
                         id: p.id.toString(),
@@ -355,7 +355,7 @@ export default class Route extends ApiRouter {
        return res;
   }
 
-  async getProductsFeedOfButcher(butcher: Butcher): Promise<ProductFeedItem []> {
+  async getProductsFeedOfButcher(butcher: Butcher, options: ProductLdOptions): Promise<ProductFeedItem []> {
     let res: ProductFeedItem [] = [];
     // let products = await Product.findAll({ 
     //      where: { status: "onsale" }
@@ -368,7 +368,7 @@ export default class Route extends ApiRouter {
         let p = products[i].product;
         if (p.status == "onsale" && (p.productType == ProductType.generic || p.productType == ProductType.tumkuzu)) {
             await p.loadResources();
-            let ld = new ProductLd(p)            
+            let ld = new ProductLd(p, options)            
             
                 let feed: ProductFeedItem = {
                     id: p.id.toString(),
@@ -393,8 +393,8 @@ export default class Route extends ApiRouter {
 
 
 
-    async getProductLd(product: Product): Promise<IProductLd> {
-        let res = new ProductLd(product)
+    async getProductLd(product: Product, options: ProductLdOptions): Promise<IProductLd> {
+        let res = new ProductLd(product, options)
         let prices = await this.getPriceStats([product.id]);
         let units = ['kg', 'unit1', 'unit2', 'unit3'];
         let usedUnit = null;
@@ -437,7 +437,7 @@ export default class Route extends ApiRouter {
   }
 
     @Auth.Anonymous()
-    async getProductLdById(id: number) {
+    async getProductLdById(id: number, options: ProductLdOptions) {
         let product = await Product.findOne({
             include: [{
                 all: true 
@@ -446,7 +446,7 @@ export default class Route extends ApiRouter {
         if (!product) return this.res.sendStatus(404);
 
         await product.loadResources();
-        return this.getProductLd(product);
+        return this.getProductLd(product, options);
     }
 
 
