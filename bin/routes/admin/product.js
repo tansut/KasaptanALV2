@@ -168,6 +168,7 @@ class Route extends router_1.ViewRouter {
                     this.product.notePlaceholder = this.req.body.notePlaceholder;
                     this.product.featuresText = this.req.body.featuresText;
                     this.product.butcherNote = this.req.body.butcherNote;
+                    this.product.butcherProductNote = this.req.body.butcherProductNote;
                 }
                 this.product.mddesc = this.req.body.mddesc;
                 if (pSlug != this.product.slug) {

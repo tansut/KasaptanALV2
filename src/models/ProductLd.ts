@@ -35,6 +35,7 @@ export interface IAggregateRating {
     '@type': string;
     ratingValue: number;
     ratingCount: number;
+    bestRating: number;
     // reviewCount: number;
 }
 
@@ -63,7 +64,8 @@ export class ProductLd implements IProductLd {
         this.aggregateRating = {
             "@type": "AggregateRating",
             ratingCount: product.reviewCount,
-            ratingValue: product.ratingValue
+            ratingValue: product.ratingValue,
+            bestRating: 5
         }
         this.brand = {
             '@type': 'Thing',

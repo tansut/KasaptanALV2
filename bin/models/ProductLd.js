@@ -18,7 +18,8 @@ class ProductLd {
         this.aggregateRating = {
             "@type": "AggregateRating",
             ratingCount: product.reviewCount,
-            ratingValue: product.ratingValue
+            ratingValue: product.ratingValue,
+            bestRating: 5
         };
         this.brand = {
             '@type': 'Thing',

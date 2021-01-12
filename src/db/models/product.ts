@@ -195,6 +195,11 @@ class Product extends BaseModel<Product> {
     })
     butcherNote: string;
 
+    @Column({
+        allowNull: true,
+        type: DataType.TEXT
+    })
+    butcherProductNote: string;
 
     @Column({
         allowNull: true,

@@ -253,6 +253,13 @@ __decorate([
 __decorate([
     sequelize_typescript_1.Column({
         allowNull: true,
+        type: sequelize_typescript_1.DataType.TEXT
+    }),
+    __metadata("design:type", String)
+], Product.prototype, "butcherProductNote", void 0);
+__decorate([
+    sequelize_typescript_1.Column({
+        allowNull: true,
     }),
     __metadata("design:type", Number)
 ], Product.prototype, "displayOrder", void 0);

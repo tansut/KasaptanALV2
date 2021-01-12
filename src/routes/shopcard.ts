@@ -413,7 +413,7 @@ export default class Route extends ViewRouter {
             // this.shopcard.shipment[k].desc = ShipmentTypeDesc[this.shopcard.shipment[k].type];
             // this.shopcard.shipment[k].howToDesc = ShipmentHowToDesc[this.shopcard.shipment[k].howTo];
             this.shopcard.shipment[k].informMe = this.req.body[`informme${k}`] == 'on';
-
+            let checkShipdate = true;
             if (this.shopcard.shipment[k].type == 'plan') {
                 this.shopcard.shipment[k].days = [this.req.body[`planday${k}`]];
                 this.shopcard.shipment[k].hours = [this.req.body[`plantime${k}`]];
@@ -424,13 +424,15 @@ export default class Route extends ViewRouter {
                 this.shopcard.shipment[k].hours = [this.req.body[`samedaytime${k}`]];
                 this.shopcard.shipment[k].daysText = ['Bugün - ' + Helper.formatDate(Helper.Now())];
                 this.shopcard.shipment[k].hoursText = [this.shipmentHours[parseInt(this.req.body[`samedaytime${k}`])]];
-            }
-            let sd = Helper.newDate(this.shopcard.shipment[k].days[0])
-            let shipday = `shipday${sd.getDay()}`;
-            let canShip = this.Butchers.find(b=>b.id == butcher.id)[shipday];
-            if (!canShip) {
-                this.renderPage("pages/checkout.ship.ejs", { _usrmsg: {type:'danger', text: `${butcher.name} maalesef seçtiğiniz teslim günü çalışmamaktadır.`} });
-                return;                
+            } else checkShipdate = false;
+            if (checkShipdate) {
+                let sd = Helper.newDate(this.shopcard.shipment[k].days[0])
+                let shipday = `shipday${sd.getDay()}`;
+                let canShip = this.Butchers.find(b=>b.id == butcher.id)[shipday];
+                if (!canShip) {
+                    this.renderPage("pages/checkout.ship.ejs", { _usrmsg: {type:'danger', text: `${butcher.name} maalesef seçtiğiniz teslim günü çalışmamaktadır.`} });
+                    return;                
+                }
             }
         }
         this.fillDefaultAddress();        

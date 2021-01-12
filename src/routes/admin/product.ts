@@ -165,6 +165,8 @@ export default class Route extends ViewRouter {
                 this.product.notePlaceholder = this.req.body.notePlaceholder;
                 this.product.featuresText = this.req.body.featuresText;
                 this.product.butcherNote = this.req.body.butcherNote;
+                this.product.butcherProductNote = this.req.body.butcherProductNote;
+                
             }
             this.product.mddesc = this.req.body.mddesc;
             

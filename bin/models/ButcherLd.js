@@ -32,7 +32,8 @@ class ButcherLd {
         this.aggregateRating = {
             "@type": "AggregateRating",
             ratingCount: butcher.userRatingCount,
-            ratingValue: butcher.userRating
+            ratingValue: butcher.userRating,
+            bestRating: 5
         };
     }
 }

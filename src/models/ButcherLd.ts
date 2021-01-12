@@ -1,4 +1,5 @@
 import Butcher from "../db/models/butcher";
+import { IAggregateRating } from "./ProductLd";
 
 
 export interface IButcherLd {
@@ -15,12 +16,7 @@ export interface IButcherLd {
 
 }
 
-export interface IAggregateRating {
-    '@type': string;
-    ratingValue: number;
-    ratingCount: number;
-    // reviewCount: number;
-}
+
 
 export class ButcherLd implements IButcherLd {
     '@context': string = 'https://schema.org/';
@@ -63,7 +59,8 @@ export class ButcherLd implements IButcherLd {
         this.aggregateRating = {
             "@type": "AggregateRating",
             ratingCount: butcher.userRatingCount,
-            ratingValue: butcher.userRating
+            ratingValue: butcher.userRating,
+            bestRating: 5
         }
 
     }
