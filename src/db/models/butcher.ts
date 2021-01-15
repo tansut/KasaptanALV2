@@ -206,6 +206,9 @@ class Butcher extends BaseModel<Butcher> {
     @Column
     address: string;
 
+    @Column
+    areaLevel1Text: string;
+
     @Column({
         allowNull: true,
         type: DataType.GEOMETRY('POINT')

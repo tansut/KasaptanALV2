@@ -117,7 +117,7 @@ class="gallery-item-caption"><%= butcherVideo.title %></span></a>
 
 
 
-    <div class="bg-white mb-3 p-3 border-bottom">
+    <div class="bg-white mb-2 p-3 border-bottom">
       <% if (view.butcher.shipSuccessText) { %>
       <div class="text-center text-dark font-size-xs">
 
@@ -158,7 +158,7 @@ class="gallery-item-caption"><%= butcherVideo.title %></span></a>
 
 
     <%  if (view.dispatcher && view.dispatcher.priceSlice) { %>
-      <div class="accordion mx-3 pb-3" id="teslimat-info-panel" role="tablist">
+      <div class="accordion mx-2 pb-2" id="teslimat-info-panel" role="tablist">
 
         <div class="card rounded-0">
           <div class="card-header py-0" role="tab">
@@ -189,11 +189,35 @@ class="gallery-item-caption"><%= butcherVideo.title %></span></a>
           </div>
 
         </div>
+        <% if (__helper.canBeOrderedByPhone()) { %>
+
+          <div class="card rounded-0">
+          
+            <div class="card-header" role="tab">
+              <h3 class="h6 font-weight-normal accordion-heading px-0"><a href="#butcher-phoneorder" class="collapsed" data-toggle="collapse"><i class="czi-phone text-muted font-size-lg align-middle mt-n1 mr-2"></i>Telefon/Whatsapp Sipariş<span
+                    class="accordion-indicator"></span></a></h3>
+            </div>
+            <div class="collapse" id="butcher-phoneorder" data-parent="#teslimat-info-panel" role="tabpanel">
+              <div class="font-size-sm p-3  ">
+                <div>
+                  <div class="py-2 d-flex justify-content-center">
+                    <a class="btn  btn-sm btn-dark mr-2" target="_blank" href="tel://08503054216"><i class="czi_icon czi-phone mr-1"></i>Kasabı Ara</a>
+        
+                    <a class="btn  btn-sm btn-dark" target="_blank" href="https://wa.me/+908503054216?text=<%=view.butcher.name%> sipariş vermek istiyorum."><i class="czi_icon czi-message mr-1"></i>Whatsapp</a>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        
+        
+        
+        <% } %>
 <% if (view.butcher.description) { %>
         <div class="card rounded-0">
   
           <div class="card-header" role="tab">
-            <h3 class="h6 font-weight-normal accordion-heading px-0"><a href="#butcher-info" class="collapsed" data-toggle="collapse"><i class="czi-announcement text-muted font-size-lg align-middle mt-n1 mr-2"></i><%=view.butcher.name%><span
+            <h3 class="h6 font-weight-normal accordion-heading px-0"><a href="#butcher-info" class="collapsed" data-toggle="collapse"><i class="czi-announcement text-muted font-size-lg align-middle mt-n1 mr-2"></i>Kasabı Tanıyın<span
                   class="accordion-indicator"></span></a></h3>
           </div>
           <div class="collapse" id="butcher-info" data-parent="#teslimat-info-panel" role="tabpanel">
@@ -204,6 +228,8 @@ class="gallery-item-caption"><%= butcherVideo.title %></span></a>
         </div>
 
 <% } %>
+
+
 
       <% }  %>
 

@@ -407,42 +407,45 @@
 
                         <a id="noteanchor"></a>
                         <%if (controller.shopcard.items.length >= 0) { %>
-                        <div class="px-3 rounded-lg pt-3 mb-3 bg-size-cover bg-position-center border"
+                        <div class="rounded-lg  mb-3 bg-size-cover bg-position-center   border"
                         style="background-image: url(<%=__config.staticDomain %>/resource/img/banner-bg.jpg)">
-                        <h5 class="h5 text-primary">ONLINE SİPARİŞE ÖZEL</h5>
-                        <ul class="alist-unstyled">
-                          <% if (!__req.prefAddr || view.butcher) { %>
-                          <li>
-                           
-                            <p>
-                              <% if (view.butcher) { %>
-                              <%=view.butcher.name%> siparişlerinizden
-                              <strong>
-                                %<%=view.butcher.puanData.rate * 100 %></strong>
-                               puan kazanın, sonraki siparişinizde <strong>indirim olarak</strong> kullanın.
-                               <% } else { %>
-                                
+                        <div class="pt-3 px-3">
+                          <h5 class="h5 font-weight-bolder text-primary">ONLINE SİPARİŞE ÖZEL</h5>
+                          <ul class="alist-unstyled">
+                            <% if (!__req.prefAddr || view.butcher) { %>
+                            <li>
+                             
+                              <p>
+                                <% if (view.butcher) { %>
+                                <%=view.butcher.name%> siparişlerinizden
                                 <strong>
-                                  <a class="text-dark font-weight-bold" href="/blog/kasap-kart" data-toggle="tooltip" data-placement="top" title="Tooltip on top">Kasap Kart ™</a>
-                                 
-                                </strong>
-                                 puan kazancınızı görüntülemek için lütfen <a class="text-primary" @click="selectArea(null)">semt seçin</a>.
-                                <% } %>
-                            </p>
-                          </li>
-                          <% } %>
-                          <li>
-                            
-                            <p><strong>250TL ve üzeri</strong> alışveriş yapın, ayrıca <strong class="text-dark">
-                              <%- include('./_partial/currency.ejs', {value: 10}) %>
-                        
-                            </strong> değerinde puan kazanın.
-                            </p>
-                          </li>
-                         
-
-                            
-                        </ul>
+                                  %<%=view.butcher.puanData.rate * 100 %></strong>
+                                 puan kazanın, sonraki siparişinizde <strong>indirim olarak</strong> kullanın.
+                                 <% } else { %>
+                                  
+                                  <strong>
+                                    <a class="text-dark font-weight-bold" href="/blog/kasap-kart" data-toggle="tooltip" data-placement="top" title="Tooltip on top">Kasap Kart ™</a>
+                                   
+                                  </strong>
+                                   puan kazancınızı görüntülemek için lütfen <a class="text-primary" @click="selectArea(null)">semt seçin</a>.
+                                  <% } %>
+                              </p>
+                            </li>
+                            <% } %>
+                            <li>
+                              
+                              <p><strong>250TL ve üzeri</strong> alışveriş yapın, ayrıca <strong class="text-dark">
+                                <%- include('./_partial/currency.ejs', {value: 10}) %>
+                          
+                              </strong> değerinde puan kazanın.
+                              </p>
+                            </li>
+                           
+  
+                              
+                          </ul>
+                        </div>
+                      
                     
                         </div>
 
@@ -466,26 +469,34 @@
                             <% } %>
                           
   
-                            <p class="lead">
+                           
                               <% if (controller.startPrice) { %>
                                 <% if (controller.startPrice.basedOn == 'global') { %>
-                                  
+                                  <p class="lead font-weight-bolder">İstediğiniz gün ve saatte kapınızda!</p>
   
-                                  <%- include('./_partial/currency.ejs', {value: controller.startPrice.view.price, unit: controller.startPrice.view.unitTitle}) %><br>başlangıç fiyatlarıyla.
+                                  <p class="lead">
+                                    <%- include('./_partial/currency.ejs', {value: controller.startPrice.view.price, unit: controller.startPrice.view.unitTitle}) %><br>başlangıç fiyatlarıyla.
+
+                                  </p>
+                                  
                                 
                      
                           
   
                                 <% } else { %>
-                                  <%- include('./_partial/currency.ejs', {value: controller.startPrice.view.price, unit: controller.startPrice.view.unitTitle}) %>'
+                                  <p class="lead">
+                                  <%- include('./_partial/currency.ejs', {value: controller.startPrice.view.price, unit: controller.startPrice.view.unitTitle}) %>
                              
-  
+                                  </p>
                                   <%}%>
                                 <% } else { %>
-                                  Önce Semt Seçin
+                                  <p>
+                                    Önce Semt Seçin
+                                  </p>
+                                  
                                 <%}%>
   
-                                </p>
+                                
                             <% if (controller.startPrice) { %>
                               <div class="font-size-md mb-3">
                                 <% if (controller.startPrice.basedOn == 'global') { %>

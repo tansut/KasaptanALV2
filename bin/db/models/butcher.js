@@ -367,6 +367,10 @@ __decorate([
     __metadata("design:type", String)
 ], Butcher.prototype, "address", void 0);
 __decorate([
+    sequelize_typescript_1.Column,
+    __metadata("design:type", String)
+], Butcher.prototype, "areaLevel1Text", void 0);
+__decorate([
     sequelize_typescript_1.Column({
         allowNull: true,
         type: sequelize_typescript_1.DataType.GEOMETRY('POINT')

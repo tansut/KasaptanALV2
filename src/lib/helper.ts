@@ -226,18 +226,20 @@ export default class Helper {
             .join(' ');
     }
 
-    
+    static canBeOrderedByPhone() {
+        return true;
+    }
 
 
     static normalizePhoto(url: string, thumbnail?: string) {
         return Jimp2.read(path.resolve(url))
             .then(image => {
-                let _img = image.resize(1200, Jimp2.AUTO);
+                let _img = image.resize(1440, Jimp2.AUTO);
                 
                 return new Promise((resolve, reject) => {
                     _img.write(path.resolve(url), (err) => {
                         if (thumbnail) {
-                            let _timg =_img.clone().cover(300, 300);
+                            let _timg =image.clone().cover(360, 360);
 
                             _timg.write(path.resolve(thumbnail), (err) => {
                                 err ? reject(err) : resolve(_img);
