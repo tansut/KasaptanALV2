@@ -21,7 +21,11 @@ export type ButcherStatus = "open" | "closed";
 @Table({
     tableName: "Butchers",
     indexes: [
-        { type: 'FULLTEXT', name: 'butcher_fts', fields: ['name', 'slug', 'keywords'] }]
+        { type: 'FULLTEXT', name: 'butcher_fts', fields: ['name', 'slug', 'keywords'] },
+        {
+            name: "displayOrder_idx",
+            fields: ["displayOrder"]
+        }]
 })
 class Butcher extends BaseModel<Butcher> {
 
@@ -123,12 +127,17 @@ class Butcher extends BaseModel<Butcher> {
     gpplacejson: Buffer
 
     get gpPlace(): Object {
-        return JSON.parse((<Buffer>this.getDataValue('gpplacejson')).toString())
+        return this.getDataValue('gpplacejson') ? JSON.parse((<Buffer>this.getDataValue('gpplacejson')).toString()): null
     }
 
     set gpPlace(value: Object) {
         this.setDataValue('gpplacejson', Buffer.from(JSON.stringify(value), "utf-8"));
     }
+
+    @AllowNull(false)
+    @Default(true)
+    @Column
+    showListing: boolean;    
 
     @AllowNull(false)
     @Default(true)
@@ -371,6 +380,13 @@ class Butcher extends BaseModel<Butcher> {
         allowNull: true
     })
     iyzicoSubMerchantKey: string;
+
+    @Column({
+        allowNull: false,
+        defaultValue: 0
+    })
+    displayOrder: number;
+
 
     @Column({
         allowNull: true

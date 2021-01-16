@@ -64,20 +64,6 @@ let Dispatcher = class Dispatcher extends basemodel_1.default {
         }
         return this.provider;
     }
-    get userNote() {
-        this.provider;
-        let desc = "";
-        if (this.takeOnly) {
-            desc = "*Semtinize sadece gel-al hizmeti verebiliyoruz*";
-        }
-        else {
-            if (this.min > 0)
-                desc = `Sipariş toplamı ${helper_1.default.formattedCurrency(this.min)} ve üzeriyse adresinize gönderebiliriz`;
-            else
-                desc = 'Adresinize gönderebiliriz';
-        }
-        return desc;
-    }
     get priceInfo() {
         if (this.type == "banabikurye") {
             let time = '60-90 dk';
@@ -100,7 +86,6 @@ let Dispatcher = class Dispatcher extends basemodel_1.default {
         }
         else {
             return "1-3 saat soğuk zincir teslimat";
-            //return `${this.butcherArea.kmActive} km, 1-2 saat.`
         }
         let desc = "";
         if (this.takeOnly) {
@@ -254,6 +239,12 @@ __decorate([
     }),
     __metadata("design:type", Boolean)
 ], Dispatcher.prototype, "takeOnly", void 0);
+__decorate([
+    sequelize_typescript_1.Column({
+        allowNull: true
+    }),
+    __metadata("design:type", String)
+], Dispatcher.prototype, "userNote", void 0);
 __decorate([
     sequelize_typescript_1.Column,
     __metadata("design:type", String)

@@ -42,7 +42,7 @@ let Butcher = Butcher_1 = class Butcher extends basemodel_1.default {
         return this.shipSuccessCount >= 10 ? helper_1.default.number2Text(this.shipSuccessCount, 50) : '';
     }
     get gpPlace() {
-        return JSON.parse(this.getDataValue('gpplacejson').toString());
+        return this.getDataValue('gpplacejson') ? JSON.parse(this.getDataValue('gpplacejson').toString()) : null;
     }
     set gpPlace(value) {
         this.setDataValue('gpplacejson', Buffer.from(JSON.stringify(value), "utf-8"));
@@ -298,6 +298,12 @@ __decorate([
     sequelize_typescript_1.Default(true),
     sequelize_typescript_1.Column,
     __metadata("design:type", Boolean)
+], Butcher.prototype, "showListing", void 0);
+__decorate([
+    sequelize_typescript_1.AllowNull(false),
+    sequelize_typescript_1.Default(true),
+    sequelize_typescript_1.Column,
+    __metadata("design:type", Boolean)
 ], Butcher.prototype, "shipday0", void 0);
 __decorate([
     sequelize_typescript_1.AllowNull(false),
@@ -510,6 +516,13 @@ __decorate([
 ], Butcher.prototype, "iyzicoSubMerchantKey", void 0);
 __decorate([
     sequelize_typescript_1.Column({
+        allowNull: false,
+        defaultValue: 0
+    }),
+    __metadata("design:type", Number)
+], Butcher.prototype, "displayOrder", void 0);
+__decorate([
+    sequelize_typescript_1.Column({
         allowNull: true
     }),
     __metadata("design:type", String)
@@ -638,7 +651,11 @@ Butcher = Butcher_1 = __decorate([
     sequelize_typescript_1.Table({
         tableName: "Butchers",
         indexes: [
-            { type: 'FULLTEXT', name: 'butcher_fts', fields: ['name', 'slug', 'keywords'] }
+            { type: 'FULLTEXT', name: 'butcher_fts', fields: ['name', 'slug', 'keywords'] },
+            {
+                name: "displayOrder_idx",
+                fields: ["displayOrder"]
+            }
         ]
     })
 ], Butcher);

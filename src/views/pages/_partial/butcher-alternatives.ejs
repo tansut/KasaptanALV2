@@ -71,7 +71,7 @@
 
                         </span>
                         
-                       <span v-if="alt.dispatcher.priceInfo" >{{alt.dispatcher.priceInfo}}</span>  
+                       <span v-if="alt.dispatcher.priceInfo || alt.dispatcher.userNote" >{{ alt.dispatcher.userNote || alt.dispatcher.priceInfo}}</span>  
                       </div>
                       
                       

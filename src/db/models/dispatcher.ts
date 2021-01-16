@@ -167,6 +167,11 @@ class Dispatcher extends BaseModel<Dispatcher> {
     })
     takeOnly: boolean;
 
+    @Column({
+        allowNull: true
+    })
+    userNote: string;
+
     @Column
     areaTag: string;
 
@@ -211,20 +216,20 @@ class Dispatcher extends BaseModel<Dispatcher> {
         return this.provider;
     }
 
-    get userNote() {
-        this.provider
-        let desc = "";
+    // get userNote() {
+    //     this.provider
+    //     let desc = "";
 
-        if (this.takeOnly) {
-            desc = "*Semtinize sadece gel-al hizmeti verebiliyoruz*"         
-        } else {
-            if (this.min > 0)
-                desc = `Sipariş toplamı ${Helper.formattedCurrency(this.min)} ve üzeriyse adresinize gönderebiliriz`
-            else desc = 'Adresinize gönderebiliriz'
-        }
+    //     if (this.takeOnly) {
+    //         desc = "*Semtinize sadece gel-al hizmeti verebiliyoruz*"         
+    //     } else {
+    //         if (this.min > 0)
+    //             desc = `Sipariş toplamı ${Helper.formattedCurrency(this.min)} ve üzeriyse adresinize gönderebiliriz`
+    //         else desc = 'Adresinize gönderebiliriz'
+    //     }
 
-        return desc;
-    }
+    //     return desc;
+    // }
 
     feeOffer: number;    
 
@@ -247,7 +252,6 @@ class Dispatcher extends BaseModel<Dispatcher> {
             return "2-3 gün kargo ile teslimat";
         } else {
             return "1-3 saat soğuk zincir teslimat";
-            //return `${this.butcherArea.kmActive} km, 1-2 saat.`
         }
 
         let desc = "";

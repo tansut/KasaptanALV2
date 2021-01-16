@@ -63,7 +63,7 @@ class="gallery-item-caption"><%= butcherVideo.title %></span></a>
             </span>
             <% if (view.dispatcher && view.dispatcher.priceInfo) { %>
               <span>
-                <%= view.dispatcher.priceInfo %>
+                <%= view.dispatcher.userNote || view.dispatcher.priceInfo %>
               </span>
            <% } %>
             <% } %>
@@ -203,7 +203,7 @@ class="gallery-item-caption"><%= butcherVideo.title %></span></a>
                   <div class="py-2 d-flex justify-content-center">
                     <a class="btn  btn-sm btn-dark mr-2" target="_blank" href="tel://08503054216"><i class="czi_icon czi-phone mr-1"></i>Kasabı Ara</a>
         
-                    <a class="btn  btn-sm btn-dark" target="_blank" href="https://wa.me/+908503054216?text=<%=view.butcher.name%> sipariş vermek istiyorum."><i class="czi_icon czi-message mr-1"></i>Whatsapp</a>
+                    <a class="btn  btn-sm btn-dark" target="_blank" href="https://wa.me/+908503054216?text=<%=view.butcher.name%> ürün siparişi vermek istiyorum."><i class="czi_icon czi-message mr-1"></i>Whatsapp</a>
                   </div>
                 </div>
               </div>

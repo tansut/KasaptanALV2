@@ -186,11 +186,12 @@ export default class Route extends ViewRouter {
     async allRoute() {
         let where = (<any>{})
         where["approved"] = true;
-
+        where["showListing"] = true;
+        
         let butchers = await ButcherModel.findAll({
             where: where,
             limit: 50,
-            order: [["id", "DESC"]],
+            order: [["displayOrder", "DESC"]],
             include: [{
                 model: Area,
                 as: "areaLevel1"

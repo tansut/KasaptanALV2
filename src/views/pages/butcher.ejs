@@ -500,11 +500,23 @@
     
     
             <div id="items" class="col-md-8 ">
+
+              <% if (controller.butcher.products.length == 0) { %>
+                <h6 class="h6">
+                  Kasabımız çiçeği burnunda!
+                </h6>
+                <p>
+                  Sizlere en iyi hizmeti verebilmek için ekibimiz bu kasabımızın ürünlerinin son kontrollerini yapıyor. 
+                </p>
+                <p>
+                  Tüm ürünlerin miktar, fiyat ve birim özelliklerinin tamamlanmasını biz de sabırsızlıkla bekliyoruz.
+                </p>
+              <%}%>
               <div id="cat-slider" class="py-2 slider">
                 <%- include('./_partial/category-slider', { categories: controller.categories, subUrl: butcher.slug + '/', selected: controller.category.slug, mode:'browse', header: false, titles: false, viewCats: ['butcher', 'reyon', 'list', 'product:dispatch=countrywide'], title: 'Tüm Ürünlerimiz', allUrl: '/kasap-urunleri' }); %>
               </div>
     
-              <div>
+              
     
                 <div class="mb-3" data-simplebar>
                   <div class="d-flex pb-2">
@@ -549,7 +561,7 @@
                 <% }) %>
          
     
-          </div>
+          
     
         </div>
     

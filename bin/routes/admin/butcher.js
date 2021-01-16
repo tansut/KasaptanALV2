@@ -241,6 +241,7 @@ class Route extends router_1.ViewRouter {
                 d.enabled = this.req.body['enabled' + id.toString()] == "on" ? true : false;
                 d.takeOnly = this.req.body['takeonly' + id.toString()] == "on" ? true : false;
                 d.areaTag = this.req.body['areaTag' + id.toString()];
+                d.userNote = this.req.body['userNote' + id.toString()];
                 d.selection = sel;
                 d.logisticProviderUsage = dlogistic;
                 d.fee = fee;

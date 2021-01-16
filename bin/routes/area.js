@@ -169,10 +169,11 @@ class Route extends router_1.ViewRouter {
         return __awaiter(this, void 0, void 0, function* () {
             let where = {};
             where["approved"] = true;
+            where["showListing"] = true;
             let butchers = yield butcher_1.default.findAll({
                 where: where,
                 limit: 50,
-                order: [["id", "DESC"]],
+                order: [["displayOrder", "DESC"]],
                 include: [{
                         model: area_2.default,
                         as: "areaLevel1"
