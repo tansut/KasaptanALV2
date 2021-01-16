@@ -142,7 +142,14 @@
   
   <script>
   
-  
+  function ensureLocation(returnUrl) {
+    if (window.App.User.prefAdr) return true;
+    window.kb.selectArea(function (sender, ul) {
+          window.location.href = "/adres-belirle/" + ul.selectedDistrict.slug + '?r=' + (returnUrl || window.location.href);
+        });
+    return false
+
+  } 
   
   
   
@@ -373,7 +380,8 @@
   
   <script>
     window.App.User = {
-      isAuthenticated: false
+      isAuthenticated: false,
+      prefAdr: <%- JSON.stringify(__req.prefAddr || null) %>
     }
   </script>
   
@@ -385,7 +393,7 @@
     window.App.User = {
       isAuthenticated: <%=__req.user ? true : false %>,
   
-      prefAdr: <%- JSON.stringify(__req.prefAddr || {}) %>
+      prefAdr:  <%- JSON.stringify(__req.prefAddr || null) %>
     }
   
   </script>

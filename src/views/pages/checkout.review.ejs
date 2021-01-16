@@ -29,7 +29,7 @@
   <!-- Page Content-->
   <div class="container mb-4 ">
 
-    <form onsubmit="beforeSubmit()" class="needs-validation" method="post" novalidate action="/alisveris-sepetim/savereview">
+    <form id="reviewForm" onsubmit="return beforeSubmit()" class="needs-validation" method="post" novalidate action="/alisveris-sepetim/savereview">
       <div>
         <section>
        
@@ -355,14 +355,19 @@
            <div class="d-flex">
             <div class="w-50 pr-3"><a class="btn btn-secondary btn-block" href="/alisveris-sepetim/payment">
                Geri</a></div>
-            <div class="w-50 pl-2"><button type="submit" id="save-adres" name="save-adres"
-                class="btn btn-success btn-block">
+            <div class="w-50 pl-2">
+              <%if (true) { %>
+              <button type="submit" id="save-adres" name="save-adres" class="btn btn-success btn-block">
             
                 <%= onlineTotal > 0.00 ? 'Ödemeye Geç':'Onayla'%>
-                <% if (onlineTotal > 0.00) { %>
-                  
-                <% } %>
-              </button></div>
+
+              </button>
+
+              <% } else { %>
+
+              <% } %>
+            
+            </div>
           </div>
         </section>
         
@@ -377,8 +382,24 @@
 
 <script>
   function beforeSubmit() {
-    setTimeout(function() { $('#save-adres').text('İşlem sürüyor..'); $('#save-adres').attr('disabled', true);})
+    var auth = App.Auth.checkAuthentication('/alisveris-sepetim/review?continue=1', '<h6>Muazzam ürünler!</h6><p>Güvenlik adımını şimdi tamamlayalım.</p>')
+    if (!auth) {
+      $('#su-tel').val('<%=controller.shopcard.address.phone%>');
+      $('#su-name').val('<%=controller.shopcard.address.name%>');
+      $('#su-email').val('<%=controller.shopcard.address.email%>');
+    } else {
+      setTimeout(function() { $('#save-adres').text('İşlem sürüyor..'); $('#save-adres').attr('disabled', true);})
+    }
+    return auth;
   }
+
+  $(document).ready(function() {
+    var urlParams = new URLSearchParams(window.location.search);
+    if (urlParams.get('continue') == "1") {
+      document.getElementById("reviewForm").submit();
+    }
+  })
+  
 </script>
 
 </body>

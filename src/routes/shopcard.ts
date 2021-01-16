@@ -103,6 +103,7 @@ export default class Route extends ViewRouter {
         return Object.keys(this.Shipment.availableTimes()).length > 0;
     }
 
+    @Auth.Anonymous()
     async savecardRoute() {
         this.shopcard = await ShopCard.createFromRequest(this.req);
         this.shopcard.note = this.req.body["order-comments"] || "";
@@ -128,11 +129,11 @@ export default class Route extends ViewRouter {
         } 
     }
 
-
+    @Auth.Anonymous()
     async adresViewRoute() {
         this.shopcard = await ShopCard.createFromRequest(this.req);
         await this.setDispatcher();
-        if (!this.shopcard.address.name) {
+        if (this.req.user && !this.shopcard.address.name) {
             this.shopcard.address.name = this.req.user.name;
             this.shopcard.address.email = this.req.user.email;
             this.shopcard.address.phone = this.req.user.mphone;
@@ -325,11 +326,14 @@ export default class Route extends ViewRouter {
         return offers;
     }
 
+    @Auth.Anonymous()
     async saveadresTakeRoute() {
         this.shopcard = await ShopCard.createFromRequest(this.req);
-        this.shopcard.address.name = this.req.body.name;
-        this.shopcard.address.email = this.req.body.email;
-        this.shopcard.address.phone = this.req.body.phone;
+        if (this.req.user) {
+            this.shopcard.address.name = this.req.body.name;
+            this.shopcard.address.email = this.req.body.email;
+            this.shopcard.address.phone = this.req.body.phone;
+        }
         await this.setDispatcher();
         await this.shopcard.saveToRequest(this.req);
         await this.getOrderSummary();
@@ -337,7 +341,7 @@ export default class Route extends ViewRouter {
     }
 
 
-
+    @Auth.Anonymous()
     async saveadresRoute() {
         this.shopcard = await ShopCard.createFromRequest(this.req);
         this.shopcard.address.name = this.req.body.name;
@@ -368,7 +372,7 @@ export default class Route extends ViewRouter {
         this.renderPage("pages/checkout.payment.ejs");
     }
 
-
+    @Auth.Anonymous()
     async shipViewRoute() {
         this.shopcard = await ShopCard.createFromRequest(this.req);
         await this.setDispatcher();
@@ -379,26 +383,21 @@ export default class Route extends ViewRouter {
     }
 
     fillDefaultAddress() {
-        this.shopcard.address.name = this.req.user.name;
-        this.shopcard.address.email = this.req.user.email;
-        this.shopcard.address.phone = this.req.user.mphone;
-        this.shopcard.address.adres = this.shopcard.address.adres || this.req.user.lastAddress;
-        this.shopcard.address.bina = this.shopcard.address.bina || this.req.user.lastBina;
-        this.shopcard.address.addresstarif = this.shopcard.address.addresstarif || this.req.user.lastTarif;
-        this.shopcard.address.kat = this.shopcard.address.kat || this.req.user.lastKat;
-        this.shopcard.address.daire = this.shopcard.address.daire || this.req.user.lastDaire;
-        this.shopcard.address.geolocationType = this.shopcard.address.geolocationType || this.req.user.lastLocationType;
-        this.shopcard.address.geolocation = this.shopcard.address.geolocation || this.req.user.lastLocation;
-
-        // if (this.req.prefAddr && this.req.user.lastLevel3Id && this.req.prefAddr.level3Id != this.req.user.lastLevel3Id) {
-        //     this.shopcard.address.geolocationType = "UNKNOWN"
-        //     this.shopcard.address.geolocation = null;
-
-        // } else {
-
-        // }
+        if (this.req.user) {
+            this.shopcard.address.name = this.shopcard.address.name || this.req.user.name;
+            this.shopcard.address.email = this.shopcard.address.email || this.req.user.email;
+            this.shopcard.address.phone = this.shopcard.address.phone || this.req.user.mphone;
+            this.shopcard.address.adres = this.shopcard.address.adres || this.req.user.lastAddress;
+            this.shopcard.address.bina = this.shopcard.address.bina || this.req.user.lastBina;
+            this.shopcard.address.addresstarif = this.shopcard.address.addresstarif || this.req.user.lastTarif;
+            this.shopcard.address.kat = this.shopcard.address.kat || this.req.user.lastKat;
+            this.shopcard.address.daire = this.shopcard.address.daire || this.req.user.lastDaire;
+            this.shopcard.address.geolocationType = this.shopcard.address.geolocationType || this.req.user.lastLocationType;
+            this.shopcard.address.geolocation = this.shopcard.address.geolocation || this.req.user.lastLocation;
+        }
     }
 
+    @Auth.Anonymous()
     async saveshipRoute() {
         this.shopcard = await ShopCard.createFromRequest(this.req);
         await this.loadButchers();
@@ -467,7 +466,7 @@ export default class Route extends ViewRouter {
         });
     }
 
-
+    @Auth.Anonymous()
     async paymentViewRoute() {
         this.shopcard = await ShopCard.createFromRequest(this.req);
         await this.setDispatcher();
@@ -481,7 +480,7 @@ export default class Route extends ViewRouter {
         this.orderapi = new OrderApi(this.constructorParams)
     }
 
-
+    @Auth.Anonymous()
     async savepaymentRoute() {
         this.shopcard = await ShopCard.createFromRequest(this.req);
         for (let k in this.shopcard.butchers) {
@@ -498,7 +497,7 @@ export default class Route extends ViewRouter {
         this.renderPage("pages/checkout.review.ejs");
     }
 
-
+    @Auth.Anonymous()
     async reviewViewRoute(userMessage?: any) {
         this.shopcard = await ShopCard.createFromRequest(this.req);
         this.shopcard.arrangeButchers();
@@ -509,7 +508,7 @@ export default class Route extends ViewRouter {
         this.renderPage("pages/checkout.review.ejs", userMessage);
     }
 
-
+    @Auth.Anonymous()
     async savereviewRoute() {
         this.shopcard = await ShopCard.createFromRequest(this.req);
         await this.setDispatcher();
@@ -543,6 +542,7 @@ export default class Route extends ViewRouter {
         }
     }
 
+    @Auth.Anonymous()
     async redirectToShopcard() {
         this.res.redirect('/alisveris-sepetim');
     }
@@ -555,12 +555,12 @@ export default class Route extends ViewRouter {
         router.post("/alisveris-sepetim/saveadres", Route.BindRequest(Route.prototype.saveadresRoute));
         router.post("/alisveris-sepetim/saveadrestake", Route.BindRequest(Route.prototype.saveadresTakeRoute));
 
-        router.get("/alisveris-sepetim/savecard", Route.BindRequest(Route.prototype.redirectToShopcard));
+        router.get("/alisveris-sepetim/savecard", Route.BindRequest(Route.prototype.savecardRoute));
         router.get("/alisveris-sepetim/saveadres", Route.BindRequest(Route.prototype.redirectToShopcard));
         router.get("/alisveris-sepetim/saveadrestake", Route.BindRequest(Route.prototype.redirectToShopcard));        
         router.get("/alisveris-sepetim/saveship", Route.BindRequest(Route.prototype.redirectToShopcard));
         router.get("/alisveris-sepetim/savepayment", Route.BindRequest(Route.prototype.redirectToShopcard));
-        router.get("/alisveris-sepetim/savereview", Route.BindRequest(Route.prototype.redirectToShopcard));
+        router.get("/alisveris-sepetim/savereview", Route.BindRequest(Route.prototype.savereviewRoute));
 
 
         router.get("/alisveris-sepetim/ship", Route.BindRequest(Route.prototype.shipViewRoute));

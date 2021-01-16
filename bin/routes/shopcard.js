@@ -124,7 +124,7 @@ class Route extends router_1.ViewRouter {
         return __awaiter(this, void 0, void 0, function* () {
             this.shopcard = yield shopcard_1.ShopCard.createFromRequest(this.req);
             yield this.setDispatcher();
-            if (!this.shopcard.address.name) {
+            if (this.req.user && !this.shopcard.address.name) {
                 this.shopcard.address.name = this.req.user.name;
                 this.shopcard.address.email = this.req.user.email;
                 this.shopcard.address.phone = this.req.user.mphone;
@@ -303,9 +303,11 @@ class Route extends router_1.ViewRouter {
     saveadresTakeRoute() {
         return __awaiter(this, void 0, void 0, function* () {
             this.shopcard = yield shopcard_1.ShopCard.createFromRequest(this.req);
-            this.shopcard.address.name = this.req.body.name;
-            this.shopcard.address.email = this.req.body.email;
-            this.shopcard.address.phone = this.req.body.phone;
+            if (this.req.user) {
+                this.shopcard.address.name = this.req.body.name;
+                this.shopcard.address.email = this.req.body.email;
+                this.shopcard.address.phone = this.req.body.phone;
+            }
             yield this.setDispatcher();
             yield this.shopcard.saveToRequest(this.req);
             yield this.getOrderSummary();
@@ -360,21 +362,18 @@ class Route extends router_1.ViewRouter {
         });
     }
     fillDefaultAddress() {
-        this.shopcard.address.name = this.req.user.name;
-        this.shopcard.address.email = this.req.user.email;
-        this.shopcard.address.phone = this.req.user.mphone;
-        this.shopcard.address.adres = this.shopcard.address.adres || this.req.user.lastAddress;
-        this.shopcard.address.bina = this.shopcard.address.bina || this.req.user.lastBina;
-        this.shopcard.address.addresstarif = this.shopcard.address.addresstarif || this.req.user.lastTarif;
-        this.shopcard.address.kat = this.shopcard.address.kat || this.req.user.lastKat;
-        this.shopcard.address.daire = this.shopcard.address.daire || this.req.user.lastDaire;
-        this.shopcard.address.geolocationType = this.shopcard.address.geolocationType || this.req.user.lastLocationType;
-        this.shopcard.address.geolocation = this.shopcard.address.geolocation || this.req.user.lastLocation;
-        // if (this.req.prefAddr && this.req.user.lastLevel3Id && this.req.prefAddr.level3Id != this.req.user.lastLevel3Id) {
-        //     this.shopcard.address.geolocationType = "UNKNOWN"
-        //     this.shopcard.address.geolocation = null;
-        // } else {
-        // }
+        if (this.req.user) {
+            this.shopcard.address.name = this.shopcard.address.name || this.req.user.name;
+            this.shopcard.address.email = this.shopcard.address.email || this.req.user.email;
+            this.shopcard.address.phone = this.shopcard.address.phone || this.req.user.mphone;
+            this.shopcard.address.adres = this.shopcard.address.adres || this.req.user.lastAddress;
+            this.shopcard.address.bina = this.shopcard.address.bina || this.req.user.lastBina;
+            this.shopcard.address.addresstarif = this.shopcard.address.addresstarif || this.req.user.lastTarif;
+            this.shopcard.address.kat = this.shopcard.address.kat || this.req.user.lastKat;
+            this.shopcard.address.daire = this.shopcard.address.daire || this.req.user.lastDaire;
+            this.shopcard.address.geolocationType = this.shopcard.address.geolocationType || this.req.user.lastLocationType;
+            this.shopcard.address.geolocation = this.shopcard.address.geolocation || this.req.user.lastLocation;
+        }
     }
     saveshipRoute() {
         return __awaiter(this, void 0, void 0, function* () {
@@ -523,12 +522,12 @@ class Route extends router_1.ViewRouter {
         router.post("/alisveris-sepetim/savecard", Route.BindRequest(Route.prototype.savecardRoute));
         router.post("/alisveris-sepetim/saveadres", Route.BindRequest(Route.prototype.saveadresRoute));
         router.post("/alisveris-sepetim/saveadrestake", Route.BindRequest(Route.prototype.saveadresTakeRoute));
-        router.get("/alisveris-sepetim/savecard", Route.BindRequest(Route.prototype.redirectToShopcard));
+        router.get("/alisveris-sepetim/savecard", Route.BindRequest(Route.prototype.savecardRoute));
         router.get("/alisveris-sepetim/saveadres", Route.BindRequest(Route.prototype.redirectToShopcard));
         router.get("/alisveris-sepetim/saveadrestake", Route.BindRequest(Route.prototype.redirectToShopcard));
         router.get("/alisveris-sepetim/saveship", Route.BindRequest(Route.prototype.redirectToShopcard));
         router.get("/alisveris-sepetim/savepayment", Route.BindRequest(Route.prototype.redirectToShopcard));
-        router.get("/alisveris-sepetim/savereview", Route.BindRequest(Route.prototype.redirectToShopcard));
+        router.get("/alisveris-sepetim/savereview", Route.BindRequest(Route.prototype.savereviewRoute));
         router.get("/alisveris-sepetim/ship", Route.BindRequest(Route.prototype.shipViewRoute));
         router.post("/alisveris-sepetim/saveship", Route.BindRequest(Route.prototype.saveshipRoute));
         router.get("/alisveris-sepetim/payment", Route.BindRequest(Route.prototype.paymentViewRoute));
@@ -543,4 +542,70 @@ __decorate([
     __metadata("design:paramtypes", []),
     __metadata("design:returntype", Promise)
 ], Route.prototype, "viewRoute", null);
+__decorate([
+    common_1.Auth.Anonymous(),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", []),
+    __metadata("design:returntype", Promise)
+], Route.prototype, "savecardRoute", null);
+__decorate([
+    common_1.Auth.Anonymous(),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", []),
+    __metadata("design:returntype", Promise)
+], Route.prototype, "adresViewRoute", null);
+__decorate([
+    common_1.Auth.Anonymous(),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", []),
+    __metadata("design:returntype", Promise)
+], Route.prototype, "saveadresTakeRoute", null);
+__decorate([
+    common_1.Auth.Anonymous(),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", []),
+    __metadata("design:returntype", Promise)
+], Route.prototype, "saveadresRoute", null);
+__decorate([
+    common_1.Auth.Anonymous(),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", []),
+    __metadata("design:returntype", Promise)
+], Route.prototype, "shipViewRoute", null);
+__decorate([
+    common_1.Auth.Anonymous(),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", []),
+    __metadata("design:returntype", Promise)
+], Route.prototype, "saveshipRoute", null);
+__decorate([
+    common_1.Auth.Anonymous(),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", []),
+    __metadata("design:returntype", Promise)
+], Route.prototype, "paymentViewRoute", null);
+__decorate([
+    common_1.Auth.Anonymous(),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", []),
+    __metadata("design:returntype", Promise)
+], Route.prototype, "savepaymentRoute", null);
+__decorate([
+    common_1.Auth.Anonymous(),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [Object]),
+    __metadata("design:returntype", Promise)
+], Route.prototype, "reviewViewRoute", null);
+__decorate([
+    common_1.Auth.Anonymous(),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", []),
+    __metadata("design:returntype", Promise)
+], Route.prototype, "savereviewRoute", null);
+__decorate([
+    common_1.Auth.Anonymous(),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", []),
+    __metadata("design:returntype", Promise)
+], Route.prototype, "redirectToShopcard", null);
 exports.default = Route;

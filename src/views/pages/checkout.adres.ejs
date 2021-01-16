@@ -40,7 +40,7 @@
           <div class="row">
             <div class="col-sm-12">
               <div class="form-group">
-               
+                <label for="name">Adınız ve Soyadınız</label>
                 <input placeholder="kimin adına gönderelim" value="<%= shopcard.address.name %>" required name="name" class="form-control" type="text"
                   id="name">
               </div>
@@ -49,12 +49,14 @@
           <div class="row">
             <div class="col-sm-6">
               <div class="form-group">
-                <input placeholder="bilgilendirmeler için e-posta adresiniz" required value="<%= shopcard.address.email %>" name="email" class="form-control" type="email"
+                <label for="name">e-Posta Adresiniz</label>
+                <input placeholder="bilgilendirmeler için lütfen girin" required value="<%= shopcard.address.email %>" name="email" class="form-control" type="email"
                   id="email">
               </div>
             </div>
             <div class="col-sm-6">
               <div class="form-group">
+                <label for="name">Cep Telefonunuz</label> [<a href="#" data-toggle="tooltip" title="Güvenlik prensiplerimiz gereği sipariş verebilmek için geçerli bir cep telefon numarası gerekmektedir.">?</a>] 
                 <input value="<%= shopcard.address.phone %>" required name="phone" class="form-control iphone" type="tel"
                   id="phone">
               </div>

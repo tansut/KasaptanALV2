@@ -34,7 +34,7 @@
   var showShopBtn = true;
   
   %>
-  <form method="POST" onsubmit="return App.Auth.checkAuthentication('/alisveris-sepetim/ship', '<h6>Muazzam ürünler!</h6><p>Şimdi <b>en fazla 2 dakikada</b> alışverişinizi tamamlayın.</p>')" novalidate
+  <form method="POST" onsubmit="return ensureLocation('/alisveris-sepetim/savecard')" novalidate
     class="needs-validation" action="/alisveris-sepetim/savecard">
     <div class="container mb-3 ">
 
@@ -42,7 +42,7 @@
       <div class="row">
 
         <section class="col-lg-8">
-          <% if (shopcard.items.length) { %>
+          <% if (shopcard.items.length && false) { %>
 
           <div class="bg-secondary mb-3 p-3 border">
             <p class="mb-0">
@@ -112,7 +112,7 @@
     
     
                 <% }) %>
-                <% if (controller.possiblePuanList.length > 1 && controller.mayEarnPuanTotal > 0.00) { %>
+                <% if (false && controller.possiblePuanList.length > 1 && controller.mayEarnPuanTotal > 0.00) { %>
                 <span class="text-dark d-block">
                   Toplam
                   <strong class="text-success"><%- include('./_partial/currency.ejs', {value: controller.mayEarnPuanTotal}) %></strong>
@@ -145,7 +145,7 @@
 
 
                     <p>
-                      Kazandığınız puanları görüntülemek için <a href="javascript:App.showLoginDlg('/alisveris-sepetim')">giriş yapın</a>.
+                      Bu siparişinizde kullanabileceğiniz puanları görüntülemek için <a href="javascript:App.showLoginDlg('/alisveris-sepetim')">giriş yapın</a>.
 
                     </p>
                     
@@ -181,10 +181,10 @@
             <% if (shopcard.items.length) { %>
             <% if (showShopBtn) { %>
               <div class="text-center mb-3">
-                <p class="lead">
+                <p class="font-size-md">
                   Alacaklarınız mı var?
                 </p>
-                <a class="btn btn-primary" href="/kasap-urunleri">Alışverişe Devam</a>
+                <a class="btn btn-sm btn-dark" href="/kasap-urunleri">Alışverişe Devam</a>
 
               </div>
             <% } %>
@@ -317,7 +317,7 @@
               <% if (shopcard.items.length > 0) { %>
              <button data-tag="true" data-category="checkout" data-action="view/start"
                   data-label="<%=__req.user ? __req.user.mphone: ''  %>" data-value="<%=shopcard.items.length%>"
-                  class="btn btn-dark btn-block mt-4  " type="submit" value="true" name="checkout" id="checkout">Alışverişimi Tamamla</button> 
+                  class="btn btn-success btn-block mt-4  " type="submit" value="true" name="checkout" id="checkout">Alışverişimi Tamamla</button> 
       
       <%}%>
               

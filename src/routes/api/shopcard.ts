@@ -84,6 +84,8 @@ export default class Route extends ApiRouter {
         this.res.send(shopcard);
     }
 
+    
+    @Auth.Anonymous()
     async geocode() {
         if(!this.req.body.address)
             return this.next();

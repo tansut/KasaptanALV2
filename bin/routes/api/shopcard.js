@@ -140,4 +140,10 @@ __decorate([
     __metadata("design:paramtypes", []),
     __metadata("design:returntype", Promise)
 ], Route.prototype, "removeRoute", null);
+__decorate([
+    common_1.Auth.Anonymous(),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", []),
+    __metadata("design:returntype", Promise)
+], Route.prototype, "geocode", null);
 exports.default = Route;
