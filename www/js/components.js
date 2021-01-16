@@ -230,7 +230,8 @@ window.initComponents = function initComponents() {
                 title: '',
                 resources: null,
                 noteHeader: '',
-                selectedResource: null
+                selectedResource: null,
+
             }
 
         },
@@ -368,7 +369,9 @@ window.initComponents = function initComponents() {
                 newlyAddedItem: null,
                 shopCardIndex: -1,
                 alternateSort: null,
-                selectedNutrition: null
+                selectedNutrition: null,
+                shipDay: null,
+                shipHour: null,
             }
         },
         mounted: function () {
@@ -696,6 +699,12 @@ window.initComponents = function initComponents() {
         },
 
         watch: {
+
+            shipDay: function(newVal, oldVal) {
+                if (newVal) {
+                    this.shipHour = Object.keys(newVal.hours)[0]
+                }
+            },
             product: function (newVal, oldVal) {
                 if (newVal) {
                     this.quantity = null;
@@ -711,6 +720,12 @@ window.initComponents = function initComponents() {
                         this.selectedNutrition = newVal.nutritionView.values[0]
                     }
 
+                    if (!this.shipDay && newVal.shipmentDayHours) {
+                        this.shipDay = newVal.shipmentDayHours[0];
+                
+                        
+                    }
+                    
                 }
             },
             selectedUnit: function (newVal, oldVal) {

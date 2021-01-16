@@ -33,6 +33,7 @@ const category_1 = require("../../db/models/category");
 const sequelize_1 = require("sequelize");
 const ProductLd_1 = require("../../models/ProductLd");
 const review_1 = require("../../db/models/review");
+const shipment_1 = require("../../models/shipment");
 class Route extends router_1.ApiRouter {
     constructor() {
         super(...arguments);
@@ -511,7 +512,7 @@ class Route extends router_1.ApiRouter {
                     earnedPuan: 0.00,
                     productNote: '',
                     kgPrice: kgPrice,
-                    locationText: butcher.locationText
+                    locationText: butcher.locationText,
                 } : null,
                 butcherNote: (butcherProduct && butcherProduct.mddesc) ? butcherProduct.mddesc : '',
                 butcherLongNote: (butcherProduct && butcherProduct.longdesc) ? butcherProduct.longdesc : '',
@@ -522,6 +523,7 @@ class Route extends router_1.ApiRouter {
                 shortDesc: product.shortdesc,
                 notePlaceholder: product.notePlaceholder,
                 priceView: null,
+                shipmentDayHours: shipment_1.Shipment.getShipmentDays(),
                 // viewUnitPrice: defaultUnitPrice,
                 // viewUnit: defaultUnitText,
                 // viewUnitDesc: product[`${defaultUnitCol}desc`] || (defaultUnit == 'kg' ? 'kg' : ''),

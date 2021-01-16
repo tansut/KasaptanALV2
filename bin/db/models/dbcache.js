@@ -28,50 +28,38 @@ var lock = new AsyncLock({ timeout: 5000 });
 let DBCache = DBCache_1 = class DBCache extends basemodel_1.default {
     static retrieve(key, minutes) {
         return __awaiter(this, void 0, void 0, function* () {
-            return new Promise((resolve, reject) => {
-                lock.acquire(key, function () {
-                    DBCache_1.findOne({
-                        where: {
-                            key: key
-                        }
-                    }).then(found => {
-                        if (found) {
-                            let oh = moment(helper_1.default.Now()).add(-minutes, 'minutes').toDate();
-                            if (found.creationDate > oh)
-                                resolve(JSON.parse(found.data));
-                            else
-                                resolve(null);
-                        }
+            return lock.acquire(key, function () {
+                return DBCache_1.findOne({
+                    where: {
+                        key: key
+                    }
+                }).then(found => {
+                    if (found) {
+                        let oh = moment(helper_1.default.Now()).add(-minutes, 'minutes').toDate();
+                        if (found.creationDate > oh)
+                            return JSON.parse(found.data);
                         else
-                            resolve(null);
-                    }).catch(err => {
-                        resolve(null);
-                    });
-                }).catch(function (err) {
-                    resolve(null);
+                            return null;
+                    }
+                    else
+                        return null;
                 });
             });
         });
     }
     static put(key, val) {
         return __awaiter(this, void 0, void 0, function* () {
-            return new Promise((resolve, reject) => {
-                lock.acquire(key, function () {
-                    DBCache_1.destroy({
-                        where: {
-                            key: key
-                        }
-                    }).then(() => {
-                        let item = new DBCache_1({
-                            key: key,
-                            data: JSON.stringify(val)
-                        });
-                        item.save().then(saved => resolve(saved)).catch(err => reject(err));
-                    }).catch(err => {
-                        resolve(null);
+            return lock.acquire(key, function () {
+                return DBCache_1.destroy({
+                    where: {
+                        key: key
+                    }
+                }).then(() => {
+                    let item = new DBCache_1({
+                        key: key,
+                        data: JSON.stringify(val)
                     });
-                }).catch(function (err) {
-                    resolve(null);
+                    return item.save();
                 });
             });
         });

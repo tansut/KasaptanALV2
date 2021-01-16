@@ -87,6 +87,10 @@ export default class Helper {
         return (Helper.Now().toDateString() === date.toDateString());
     }
 
+    static Yesterday(): Date {
+        return new Date(Helper.Now().getTime() - 24 * 60 * 60 * 1000)
+    }
+
     static Tomorrow(): Date {
         return new Date(Helper.Now().getTime() + 24 * 60 * 60 * 1000)
     }
@@ -153,9 +157,9 @@ export default class Helper {
     }
 
 
-    static formatDate(date: Date, useTime: boolean = false) {
+    static formatDate(date: Date, useTime: boolean = false, useYear: boolean=true) {
         if (date) {
-        const options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
+        const options = { weekday: 'long', year:  useYear ? 'numeric': 'numeric', month: 'long', day: 'numeric' };
         return date.toLocaleDateString('tr-TR', options) + (useTime ? ` ${date.getHours()}:${date.getMinutes()}`:'');
         } else return ''
     }

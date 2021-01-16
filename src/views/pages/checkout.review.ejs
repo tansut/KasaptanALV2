@@ -353,14 +353,14 @@
 
 
            <div class="d-flex">
-            <div class="w-50 pr-3"><a class="btn btn-secondary btn-block" href="/alisveris-sepetim/payment"><i
-                  class="czi-arrow-left mr-1"></i> Geri</a></div>
+            <div class="w-50 pr-3"><a class="btn btn-secondary btn-block" href="/alisveris-sepetim/payment">
+               Geri</a></div>
             <div class="w-50 pl-2"><button type="submit" id="save-adres" name="save-adres"
-                class="btn btn-dark btn-block">
+                class="btn btn-success btn-block">
             
-                <%= onlineTotal > 0.00 ? 'Ödeme Adımı':'Onayla'%>
+                <%= onlineTotal > 0.00 ? 'Ödemeye Geç':'Onayla'%>
                 <% if (onlineTotal > 0.00) { %>
-                  <i class="czi-arrow-right  mr-1"></i> 
+                  
                 <% } %>
               </button></div>
           </div>
@@ -377,7 +377,7 @@
 
 <script>
   function beforeSubmit() {
-    setTimeout(function() { $('#save-adres').text('Siparişinizi Oluşturuyorum...'); $('#save-adres').attr('disabled', true);})
+    setTimeout(function() { $('#save-adres').text('İşlem sürüyor..'); $('#save-adres').attr('disabled', true);})
   }
 </script>
 

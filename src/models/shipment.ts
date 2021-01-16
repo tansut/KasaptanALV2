@@ -28,7 +28,7 @@ export let ShipmentDays = {
 
 
 export interface ShipmentInfo {
-    excludeDays: number[]; 
+    excludeDays: number[];
 }
 
 export type ShipmentType = "callme" | "sameday" | "tomorrow" | "weekend" | "plan";
@@ -62,6 +62,20 @@ export interface DispatcherView {
     km: number;
 }
 
+
+export interface ShipmentDayInfo {
+    hour: number;
+    text: string;
+    enabled: boolean;
+}
+
+export interface ShipmentDayHours {
+    title: string;
+    date: string,
+    hours: {[key: number]: string};
+}
+
+
 export class Shipment {
     howTo: HowToShipType = 'unset';
 
@@ -73,22 +87,44 @@ export class Shipment {
         return ShipmentTypeDesc[this.type]
     }
 
-    type: ShipmentType = "callme";    
+    type: ShipmentType = "callme";
     days: string[] = [];
-    securityCode: string='';
-    hours: number [] = []
+    securityCode: string = '';
+    hours: number[] = []
     informMe: boolean = false;
     daysText: string[] = [];
-    hoursText: string [] = []    
+    hoursText: string[] = []
     dispatcher: DispatcherView = null;
     nointeraction: boolean = false;
 
-    static  availableTimes(date: Date = Helper.Now()): Object {        
+
+    static getShipmentDays(): ShipmentDayHours[] {
+        let res: ShipmentDayHours[] = [];
+        let nextDay = Helper.Now()
+        for (let i = 0; i < 14; i++) {
+            let times = Shipment.availableTimes(nextDay);
+            if (Object.keys(times).length > 0) {
+                res.push({
+                    title:  Helper.isToday(nextDay) ? 'Bugün' : (Helper.isTomorrow(nextDay) ? 'Yarın' : Helper.formatDate(nextDay, false, false)),
+                    date: nextDay.toDateString(),
+                    hours: Shipment.availableTimes(nextDay)
+                })
+            }
+
+            nextDay = Helper.NextDay(nextDay);
+        }
+
+        return res;
+    }
+
+
+
+    static availableTimes(date: Date = Helper.Now()): {[key: number]: string} {
         var isToday = (Helper.Now().toDateString() === date.toDateString());
-        let currentHour = Helper.Now().getHours();        
+        let currentHour = Helper.Now().getHours();
         if (isToday) {
             let res = {}
-            Object.keys(ShipmentHours).forEach(k=>{
+            Object.keys(ShipmentHours).forEach(k => {
                 if (currentHour < 21) {
                     if (parseInt(k) > (currentHour * 100 + 100)) res[k] = ShipmentHours[k]
                 }
@@ -97,15 +133,16 @@ export class Shipment {
         } else return ShipmentHours;
     }
 
-    static  availableDays(date: Date = Helper.Now()): Object {        
-        
+    static availableDays(date: Date = Helper.Now()): Object {
+
         let res = {};
         let nextDay = Helper.Now()
-        for(let i = 0; i < 14; i++) {
+        for (let i = 0; i < 14; i++) {
             nextDay = Helper.NextDay(nextDay);
-            let text = i == 0 ? 'Yarın': Helper.formatDate(nextDay)
+            let text = Helper.isToday(nextDay) ? 'Bugün' :
+                (Helper.isTomorrow(nextDay) ? 'Yarın' : Helper.formatDate(nextDay))
             res[nextDay.toDateString()] = text;
         }
         return res;
-    }    
+    }
 }

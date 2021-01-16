@@ -70,6 +70,9 @@ class Helper {
     static isToday(date) {
         return (Helper.Now().toDateString() === date.toDateString());
     }
+    static Yesterday() {
+        return new Date(Helper.Now().getTime() - 24 * 60 * 60 * 1000);
+    }
     static Tomorrow() {
         return new Date(Helper.Now().getTime() + 24 * 60 * 60 * 1000);
     }
@@ -117,9 +120,9 @@ class Helper {
     static boolStr(val) {
         return val ? 'Evet' : 'Hayır';
     }
-    static formatDate(date, useTime = false) {
+    static formatDate(date, useTime = false, useYear = true) {
         if (date) {
-            const options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
+            const options = { weekday: 'long', year: useYear ? 'numeric' : 'numeric', month: 'long', day: 'numeric' };
             return date.toLocaleDateString('tr-TR', options) + (useTime ? ` ${date.getHours()}:${date.getMinutes()}` : '');
         }
         else

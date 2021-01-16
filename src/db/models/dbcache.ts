@@ -30,32 +30,24 @@ class DBCache extends BaseModel<DBCache> {
     data: string;    
 
     static async retrieve(key: string, minutes: number): Promise<any> {
-        return new Promise((resolve, reject) => {
-            lock.acquire(key, function() {
-                DBCache.findOne({
+        return lock.acquire(key, function() {
+                return DBCache.findOne({
                     where: {
                         key: key
                     }
                 }).then(found=> {
                     if (found) {
                         let oh = moment(Helper.Now()).add(-minutes, 'minutes').toDate();
-                        if (found.creationDate > oh) resolve(JSON.parse(found.data))
-                        else resolve(null);
-                    } else resolve(null)
-
-                }).catch(err=> {
-                    resolve(null)
+                        if (found.creationDate > oh) return JSON.parse(found.data)
+                        else return null;
+                    } else return null
                 })
-            }).catch(function(err) {
-                resolve(null)
-            });
-        })
+            })
     }
 
     static async put(key: string, val: any) {
-        return new Promise((resolve, reject) => {
-            lock.acquire(key, function() {
-                DBCache.destroy({
+            return lock.acquire(key, function() {
+                return DBCache.destroy({
                     where: {
                         key: key
                     }
@@ -64,14 +56,10 @@ class DBCache extends BaseModel<DBCache> {
                         key: key,
                         data: JSON.stringify(val)
                     });
-                    item.save().then(saved=>resolve(saved)).catch(err=>reject(err));
-                }).catch(err=> {
-                    resolve(null);
+                    return item.save()
                 })
-            }).catch(function(err) {
-                resolve(null)
-            });
-        })
+            })
+        
     }
 
 }

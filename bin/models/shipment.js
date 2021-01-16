@@ -48,6 +48,22 @@ class Shipment {
     get desc() {
         return exports.ShipmentTypeDesc[this.type];
     }
+    static getShipmentDays() {
+        let res = [];
+        let nextDay = helper_1.default.Now();
+        for (let i = 0; i < 14; i++) {
+            let times = Shipment.availableTimes(nextDay);
+            if (Object.keys(times).length > 0) {
+                res.push({
+                    title: helper_1.default.isToday(nextDay) ? 'Bugün' : (helper_1.default.isTomorrow(nextDay) ? 'Yarın' : helper_1.default.formatDate(nextDay, false, false)),
+                    date: nextDay.toDateString(),
+                    hours: Shipment.availableTimes(nextDay)
+                });
+            }
+            nextDay = helper_1.default.NextDay(nextDay);
+        }
+        return res;
+    }
     static availableTimes(date = helper_1.default.Now()) {
         var isToday = (helper_1.default.Now().toDateString() === date.toDateString());
         let currentHour = helper_1.default.Now().getHours();
@@ -69,7 +85,8 @@ class Shipment {
         let nextDay = helper_1.default.Now();
         for (let i = 0; i < 14; i++) {
             nextDay = helper_1.default.NextDay(nextDay);
-            let text = i == 0 ? 'Yarın' : helper_1.default.formatDate(nextDay);
+            let text = helper_1.default.isToday(nextDay) ? 'Bugün' :
+                (helper_1.default.isTomorrow(nextDay) ? 'Yarın' : helper_1.default.formatDate(nextDay));
             res[nextDay.toDateString()] = text;
         }
         return res;

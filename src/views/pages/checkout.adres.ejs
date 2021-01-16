@@ -28,7 +28,7 @@
 
   <!-- Page Content-->
   <div class="container mb-4 ">
-    <form class="needs-validation" id="adresform" onsubmit="return checkSubmit()" method="post" novalidate
+    <form class="needs-validation" id="adresform" onsubmit="return checkSubmit()" method="post" 
       action="/alisveris-sepetim/saveadres">
       <div class="row">
         <section class="col-lg-8">
@@ -40,8 +40,8 @@
           <div class="row">
             <div class="col-sm-12">
               <div class="form-group">
-                <label for="checkout-fn">Ad Soyad</label>
-                <input value="<%= shopcard.address.name %>" required name="name" class="form-control" type="text"
+               
+                <input placeholder="kimin adına gönderelim" value="<%= shopcard.address.name %>" required name="name" class="form-control" type="text"
                   id="name">
               </div>
             </div>
@@ -49,85 +49,47 @@
           <div class="row">
             <div class="col-sm-6">
               <div class="form-group">
-                <label for="checkout-email">E-posta Adresi</label>
-                <input required value="<%= shopcard.address.email %>" name="email" class="form-control" type="email"
+                <input placeholder="bilgilendirmeler için e-posta adresiniz" required value="<%= shopcard.address.email %>" name="email" class="form-control" type="email"
                   id="email">
               </div>
             </div>
             <div class="col-sm-6">
               <div class="form-group">
-                <label for="checkout-phone">Telefon</label>
                 <input value="<%= shopcard.address.phone %>" required name="phone" class="form-control iphone" type="tel"
                   id="phone">
               </div>
             </div>
           </div>
 
+
+
           <div class="row">
-            <div class="col-sm-4">
-              <div class="form-group">
-                <label for="checkout-city">Şehir</label>
-                <input class="form-control" value="<%= shopcard.address.level1Text %>" readonly type="text">
-
-              </div>
-            </div>
-
-
-            <div class="col-sm-4">
-              <div class="form-group">
-                <label for="checkout-city">İlçe</label>
-                <input class="form-control" value="<%= shopcard.address.level2Text %>" readonly type="text">
-
-              </div>
-            </div>
-
-            <div class="col-sm-4">
-              <div class="form-group">
-                <label for="checkout-city">Semt</label>
-                <input class="form-control" value="<%= shopcard.address.level3Text %>" readonly type="text">
-
-              </div>
-            </div>
-          </div>
-          <div>
-
-          </div>
-          <div class="row mb-3">
             <div class="col-sm-12">
               <div class="form-group">
-                <div class="d-flex justify-content-between">
-                  <label for="address">Adres</label>
-                  <a id="getlatlong" onclick="javascript:setGeoLocation()" class="font-size-sm"><i
-                      class="czi-location mr-1"></i>Mevcut Konumumu Kullan</a>
+                <div class="d-flex justify-content-end">
+                  <a id="getlatlong" onclick="javascript:setGeoLocation()" class="text-primary font-size-sm"><i
+                      class="czi-location mr-1"></i>Konumumu Kullan</a>
                 </div>
 
-                <textarea onchange="clearLoc()" required class="form-control" name="address"
+                <textarea placeholder="teslimat adresiniz" onchange="clearLoc()" required class="form-control" name="address"
                   id="address"><%= shopcard.address.adres %></textarea>
               </div>
             </div>
-            <div id="localaddrstart" class="col-4">
-              <label for="bina">Bina</label>
-              <input class="form-control" name="bina" id="bina" value="<%= shopcard.address.bina %>">
-            </div>
-            <div class="col-4">
-              <label for="bina">Kat</label>
-              <input class="form-control" name="kat" id="kat" value="<%= shopcard.address.kat %>">
-            </div>
-            <div class="col-4">
-              <label for="daire">Daire</label>
-              <input class="form-control" name="daire" id="daire" value="<%= shopcard.address.daire %>">
-            </div>
+
+
+
             <div class="col-sm-12">
               <div class="form-group">
 
-                <label for="addresstarif">Adres Tarifi</label>
 
-                <textarea maxlength="250" class="form-control" name="addresstarif"
+                <textarea placeholder="isteğe bağlı adres tarifi" maxlength="250" class="form-control" name="addresstarif"
                   id="addresstarif"><%= shopcard.address.addresstarif %></textarea>
               </div>
             </div>
 
           </div>
+
+
 
           <input type="hidden" name="lat" value="0" id="lat">
           <input type="hidden" name="long" value="0" id="long">
@@ -142,38 +104,29 @@
 
 
 
-          <div class="custom-control custom-checkbox">
+          <div class="custom-control custom-checkbox mb-2">
             <input class="custom-control-input" type="checkbox" checked id="savemyaddress" name="savemyaddress">
             <label class="custom-control-label" for="same-address">Adresimi kaydet, her seferinde adres
               girmeyim.</label>
           </div>
           <div id="locdone" class="alert alert-secondary text-center mt-3" style="display: none;">
-            <p class="font-size-sm">Teslimat konumu hazır hazır. <strong>Bina No, Kat ve Daire No</strong>
-              bilgilerini
+            <p class="font-size-sm"><strong>Bina ve Daire Numaranızı</strong>
               kontrol edip işleme devam edebilirsiniz.</p>
             <button onclick="showMap()" type="button" class="btn btn-sm btn-primary">Teslimat Konumu</button>
           </div>
-          <!-- Navigation (desktop)-->
-          <div class="d-none d-lg-flex pt-4 mt-3">
-            <div class="w-50 pr-3"><a class="btn btn-secondary btn-block" href="/alisveris-sepetim/ship">&laquo; Geri</a></div>
+
+
+
+          <div class="d-flex ">
+            <div class="w-50 pr-3"><a class="btn btn-secondary btn-block" href="/alisveris-sepetim/ship">Geri</a></div>
             <div class="w-50 pl-2"><button type="button" onclick="goNext()" id="setadres" name="setadres"
-                class="btn btn-dark btn-block gonext">Sonraki &raquo;</button>
+                class="btn btn-dark btn-block gonext">İleri</button>
             </div>
           </div>
         </section>
 
       </div>
-      <!-- Navigation (mobile)-->
-      <div class="row d-lg-none">
-        <div class="col-lg-8">
-          <div class="d-flex mt-3">
-            <div class="w-50 pr-3"><a class="btn btn-secondary btn-block" href="/alisveris-sepetim/ship">&laquo; Geri</a></div>
-            <div class="w-50 pl-2"><button type="button" onclick="goNext()" id="save-adres" name="save-adres"
-                class="btn btn-dark btn-block gonext">Sonraki &raquo;</button>
-            </div>
-          </div>
-        </div>
-      </div>
+
 
     </form>
   </div>
@@ -298,8 +251,8 @@
 
 
     function goNext(approve) {
-      if (!$('#address').val())
-        return alert('Lütfen adres giriniz.');
+      if (!($("#adresform")[0]).checkValidity()) 
+        return alert('Lütfen gerekli bilgileri giriniz.');
       if ((tryCount > 1) || (pageHasLoc())) {
         $('#adresform').submit();
       } else {
@@ -326,7 +279,7 @@
           alert(err.message);
         }).finally(function () {
           //$('.gonext').removeAttr("disabled");
-          $('.gonext').text("Sonraki Adım");
+          $('.gonext').text("İlerle");
         })
       }
     }

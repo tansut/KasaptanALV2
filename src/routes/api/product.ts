@@ -18,6 +18,7 @@ import { Op } from 'sequelize';
 import { ProductLd, IProductLd, ProductLdOptions } from '../../models/ProductLd';
 import DispatcherApi from './dispatcher';
 import Review from '../../db/models/review';
+import { Shipment } from '../../models/shipment';
 
 export interface ProductFeedItem {
     id: string;
@@ -552,7 +553,7 @@ export default class Route extends ApiRouter {
                 earnedPuan: 0.00,
                 productNote: '',     
                 kgPrice: kgPrice,
-                locationText: butcher.locationText
+                locationText: butcher.locationText,                
             } : null,
             butcherNote: (butcherProduct && butcherProduct.mddesc) ? butcherProduct.mddesc: '',
             butcherLongNote: (butcherProduct && butcherProduct.longdesc) ? butcherProduct.longdesc: '',
@@ -563,6 +564,7 @@ export default class Route extends ApiRouter {
             shortDesc: product.shortdesc,
             notePlaceholder: product.notePlaceholder,
             priceView: null,
+            shipmentDayHours: Shipment.getShipmentDays(),
             // viewUnitPrice: defaultUnitPrice,
             // viewUnit: defaultUnitText,
             // viewUnitDesc: product[`${defaultUnitCol}desc`] || (defaultUnit == 'kg' ? 'kg' : ''),
