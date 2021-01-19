@@ -209,9 +209,9 @@
       </div>
 
 
+    <% if (true) { %>
 
-
-      <div class="container mb-3 cz-gallery slider" style="position: relative;" data-simplebar>
+      <div class="container mb-3 cz-gallery slider <%=imageList.length > 1 ? '':'d-none'%>" style="position: relative;" data-simplebar>
         <div class="d-flex ">
           <% for(var i=0; i<imageList.length; i++) {%>
           <% var img = imageList[i] %>
@@ -236,6 +236,8 @@
           <% } %>
         </div>
       </div>
+
+    <% } %>
 
       <div class="container">
         <div class="mb-3">

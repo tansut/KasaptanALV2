@@ -38,7 +38,7 @@
           <% var butcher = controller.Butchers.find(b=>b.id == bi) %>
           <% let payment = shopcard.payment[bi]%>
           <div class=" border  mb-4">
-            <div class="bg-secondary p-3  "><a class="media align-items-center"
+            <div class="bg-secondary p-3"><a class="media align-items-center"
                 href="/<%=shopcard.butchers[bi].slug%>"><img class="rounded-circle header-img"
                   src="<%= `${__req.helper.imgUrl('butcher-google-photos', shopcard.butchers[bi].slug)}` %>"
                   alt="<%=shopcard.butchers[bi].name%>">
@@ -52,7 +52,7 @@
 
               <table class="table font-size-sm ">
                 <tbody>
-                  <%if (shopcard.butchers[bi].enableCreditCard) { %>
+                  <%if (butcher.enableCreditCard) { %>
                   <tr>
                     <td>
                       <div class="custom-control custom-radio mb-4">

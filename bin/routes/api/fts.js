@@ -27,6 +27,7 @@ const product_1 = require("../../db/models/product");
 const resource_1 = require("../../db/models/resource");
 const _ = require("lodash");
 const area_1 = require("../../db/models/area");
+const helper_1 = require("../../lib/helper");
 class SearchResult {
 }
 exports.SearchResult = SearchResult;
@@ -105,8 +106,8 @@ class Route extends router_1.ApiRouter {
     getAreas(search) {
         return __awaiter(this, void 0, void 0, function* () {
             let areas = yield user_1.default.sequelize.query("select id, level, name, slug as url, 'Lokasyon' as type, match(name, slug, keywords) against (:search IN BOOLEAN MODE) as RELEVANCE " +
-                "from Areas where level=3 and match(name, slug, keywords)  against (:search IN BOOLEAN MODE) ORDER BY level, RELEVANCE DESC LIMIT 25", {
-                replacements: { search: search },
+                "from Areas where level=3 and (match(name, slug, keywords)  against (:search IN BOOLEAN MODE) or match(name, slug, keywords)  against (:search2 IN BOOLEAN MODE)) ORDER BY level, RELEVANCE DESC LIMIT 25", {
+                replacements: { search2: helper_1.default.slugify(search), search: search },
                 type: sq.QueryTypes.SELECT,
                 mapToModel: false,
                 raw: true

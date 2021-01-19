@@ -56,7 +56,7 @@ class="gallery-item-caption"><%= butcherVideo.title %></span></a>
             <span class="d-block">
               <%=view.butcher.locationText%>
            <% if (view.dispatcher && view.dispatcher.distance && view.dispatcher.distance < 50) { %>,
-                  <%= view.dispatcher.distance.toFixed(0) %> km
+                  <%= view.dispatcher.distance < 1 ? '< 1 km': view.dispatcher.distance.toFixed(0) + ' km' %>
                
                <% } %> 
   

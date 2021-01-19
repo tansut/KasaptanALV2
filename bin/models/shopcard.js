@@ -441,9 +441,7 @@ class ShopCard {
 }
 exports.ShopCard = ShopCard;
 class ShopcardItem {
-    // public discount: number = 0.00;
     constructor(product, quantity, price, purchaseoption, note, productTypeData) {
-        this.product = product;
         this.quantity = quantity;
         this.price = price;
         this.purchaseoption = purchaseoption;
@@ -455,6 +453,19 @@ class ShopcardItem {
             throw new http_1.ValidationError('geçersiz miktar:' + product.name);
         if (!price)
             throw new http_1.ValidationError('geçersiz bedel: ' + product.name);
+        this.product = {
+            id: product.id,
+            name: product.name,
+            slug: product.slug,
+            butcher: {
+                id: product.butcher.id,
+                slug: product.butcher.slug,
+                name: product.butcher.name,
+                enableCreditCard: product.butcher.enableCreditCard
+            },
+            kgPrice: product.kgPrice,
+            productType: product.productType
+        };
     }
 }
 exports.ShopcardItem = ShopcardItem;

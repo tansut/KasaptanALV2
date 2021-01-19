@@ -8,6 +8,7 @@ import Resource from '../../db/models/resource';
 import * as _ from "lodash"
 import { PreferredAddress } from '../../db/models/user';
 import Area from '../../db/models/area';
+import Helper from '../../lib/helper';
 
 
 export class SearchResult {
@@ -100,9 +101,9 @@ export default class Route extends ApiRouter {
 
     async getAreas(search: string) {
         let areas =  await User.sequelize.query("select id, level, name, slug as url, 'Lokasyon' as type, match(name, slug, keywords) against (:search IN BOOLEAN MODE) as RELEVANCE " +
-            "from Areas where level=3 and match(name, slug, keywords)  against (:search IN BOOLEAN MODE) ORDER BY level, RELEVANCE DESC LIMIT 25",
+            "from Areas where level=3 and (match(name, slug, keywords)  against (:search IN BOOLEAN MODE) or match(name, slug, keywords)  against (:search2 IN BOOLEAN MODE)) ORDER BY level, RELEVANCE DESC LIMIT 25",
             {
-                replacements: { search: search },
+                replacements: { search2: Helper.slugify(search), search: search },
                 type: sq.QueryTypes.SELECT,
                 mapToModel: false,
                 raw: true

@@ -1,5 +1,5 @@
 import { AppRequest, ValidationError } from "../lib/http";
-import Product from "../db/models/product";
+import Product, { ProductType } from "../db/models/product";
 import { PurchaseOption, ProductView, ProductButcherView } from "./productView";
 import Helper from "../lib/helper";
 import { Shipment, ShipmentType, ShipmentTypeDesc } from "./shipment";
@@ -79,6 +79,20 @@ export interface ShopcardButcherView {
     subTotal: number;
     products: number[];
     userSelected: boolean;
+}
+
+export interface ShopcardProductView {
+    id: number;
+    name: string;
+    kgPrice: number;
+    productType: string;
+    slug: string;
+    butcher: {
+        id: number;
+        slug: string;
+        name: string;
+        enableCreditCard: boolean;
+    }
 }
 
 export class ShopCard {
@@ -530,11 +544,25 @@ export class ShopCard {
 
 export class ShopcardItem {
     // public discount: number = 0.00;
-    constructor(public product: ProductView,
+    public product: ShopcardProductView;
+    constructor(product: ProductView,
         public quantity: number, public price: number,
         public purchaseoption: PurchaseOption, public note: string, public productTypeData: Object) {
         if (!product) throw new ValidationError('geçersiz ürün');
         if (!quantity) throw new ValidationError('geçersiz miktar:' + product.name);
         if (!price) throw new ValidationError('geçersiz bedel: ' + product.name);
+        this.product = {
+            id: product.id,
+            name: product.name,
+            slug: product.slug,
+            butcher: {
+                id: product.butcher.id,
+                slug: product.butcher.slug,
+                name: product.butcher.name,
+                enableCreditCard: product.butcher.enableCreditCard
+            },
+            kgPrice: product.kgPrice,
+            productType: product.productType
+        }
     }
 }
