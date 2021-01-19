@@ -172,7 +172,7 @@ export default class Route extends ViewRouter {
         })
 
 
-        let nearRadius = (this.userArea && this.userArea.selectionRadius) ? this.userArea.selectionRadius: 15;
+        let nearRadius = (this.userArea && this.userArea.selectionRadius) ? this.userArea.selectionRadius: 12;
         let alternateRadius = Math.round(nearRadius * 1.5);
 
         let nearButchers = serving.filter(p => p.butcherArea.bestKm <= nearRadius);

@@ -53,7 +53,7 @@ export default class Route extends PaymentRouter {
 
     possiblePuanList: PuanResult[] = [];
 
-    renderPage(userMessage: string, view: string) {
+    renderPage(userMessage: string, view: string, msgType: string='success') {
         let pageInfo = {};
         if (this.shouldBePaid > 0.00) {
             let pageTitle = '', pageDescription = '';
@@ -76,7 +76,7 @@ export default class Route extends PaymentRouter {
             
         }
 
-        this.sendView(view, { ...pageInfo, ...{ _usrmsg: { text: userMessage } }, ...this.api.getView(this.order), ...{ enableImgContextMenu: true } });
+        this.sendView(view, { ...pageInfo, ...{ _usrmsg: { type: msgType, text: userMessage } }, ...this.api.getView(this.order), ...{ enableImgContextMenu: true } });
 
     }
 
@@ -155,6 +155,7 @@ export default class Route extends PaymentRouter {
 
         let userMessage = "";
         let req: PaymentRequest = null;
+        let gotError = false;
         try {
             if (this.pageHasPaymentId) {           
                 req = await this.getPaymentRequest();     
@@ -200,14 +201,15 @@ export default class Route extends PaymentRouter {
             }
         } catch (err) {
             userMessage = err.message || err.errorMessage;
-            this.paySession = await this.paymentProvider.paySession(req);
+            //this.paySession = await this.paymentProvider.paySession(req);
+            gotError = true;
             email.send('tansut@gmail.com', 'hata/payment: kasaptanAl.com', "error.ejs", {
                 text: JSON.stringify(err || {}) + '/' + userMessage + ' ' + this.order.ordernum,
                 stack: err.stack
             })            
         }
 
-        this.renderPage(userMessage, "pages/payorder.ejs");
+        this.renderPage(userMessage, "pages/payorder.ejs", gotError ? 'danger': 'success');
 
     }
 

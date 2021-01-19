@@ -44,7 +44,7 @@ class Route extends paymentrouter_1.PaymentRouter {
         this.markdown = new MarkdownIt();
         this.possiblePuanList = [];
     }
-    renderPage(userMessage, view) {
+    renderPage(userMessage, view, msgType = 'success') {
         let pageInfo = {};
         if (this.shouldBePaid > 0.00) {
             let pageTitle = '', pageDescription = '';
@@ -63,7 +63,7 @@ class Route extends paymentrouter_1.PaymentRouter {
         }
         else {
         }
-        this.sendView(view, Object.assign(Object.assign(Object.assign(Object.assign({}, pageInfo), { _usrmsg: { text: userMessage } }), this.api.getView(this.order)), { enableImgContextMenu: true }));
+        this.sendView(view, Object.assign(Object.assign(Object.assign(Object.assign({}, pageInfo), { _usrmsg: { type: msgType, text: userMessage } }), this.api.getView(this.order)), { enableImgContextMenu: true }));
     }
     getOrderSummary() {
         return __awaiter(this, void 0, void 0, function* () {
@@ -136,6 +136,7 @@ class Route extends paymentrouter_1.PaymentRouter {
             yield this.getOrderSummary();
             let userMessage = "";
             let req = null;
+            let gotError = false;
             try {
                 if (this.pageHasPaymentId) {
                     req = yield this.getPaymentRequest();
@@ -184,13 +185,14 @@ class Route extends paymentrouter_1.PaymentRouter {
             }
             catch (err) {
                 userMessage = err.message || err.errorMessage;
-                this.paySession = yield this.paymentProvider.paySession(req);
+                //this.paySession = await this.paymentProvider.paySession(req);
+                gotError = true;
                 email_1.default.send('tansut@gmail.com', 'hata/payment: kasaptanAl.com', "error.ejs", {
                     text: JSON.stringify(err || {}) + '/' + userMessage + ' ' + this.order.ordernum,
                     stack: err.stack
                 });
             }
-            this.renderPage(userMessage, "pages/payorder.ejs");
+            this.renderPage(userMessage, "pages/payorder.ejs", gotError ? 'danger' : 'success');
         });
     }
     getOrder() {

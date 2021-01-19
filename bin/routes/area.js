@@ -100,7 +100,7 @@ class Route extends router_1.ViewRouter {
                 where["approved"] = true;
                 butchers = yield butcher_1.default.findAll({
                     where: where,
-                    order: [["updatedon", "DESC"]],
+                    order: [["displayOrder", "DESC"]],
                 });
                 subs = yield area_1.default.sequelize.query(`select * from Areas ap where ap.level=2 and ap.parentid=:id and ( ap.id in 
                 (
