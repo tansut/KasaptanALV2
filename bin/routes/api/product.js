@@ -214,13 +214,15 @@ class Route extends router_1.ApiRouter {
             return resources;
         });
     }
-    getPriceStatsForUnit(productids, unit) {
+    getPriceStatsForUnit(productids, unit, butcherids = []) {
         return __awaiter(this, void 0, void 0, function* () {
             let sql = `(${productids.join(',')})`;
+            let butchers = `(${butcherids.join(',')})`;
             let q = `select ButcherProducts.productid as pid,  count(*) as count, 
         min(${unit}Price) as ${unit}min, avg(${unit}Price) as ${unit}avg, max(${unit}Price) as ${unit}max
         from ButcherProducts, Butchers 
         where 
+        ${butcherids.length > 0 ? 'Butchers.id in ' + butchers + ' and ' : ''}
         ButcherProducts.productid in ${sql} and 
         ButcherProducts.${unit}Price > 0 and
         ButcherProducts.enabled=true and 
@@ -236,35 +238,18 @@ class Route extends router_1.ApiRouter {
             return res;
         });
     }
-    getPriceStats(productids) {
+    getPriceStats(productids, butcherids = []) {
         return __awaiter(this, void 0, void 0, function* () {
             let units = ['kg', 'unit1', 'unit2', 'unit3'];
             let res = [];
+            let pids = [...productids];
             for (let i = 0; i < units.length; i++) {
-                res = yield this.getPriceStatsForUnit(productids, units[i]);
-                if (res.length > 0 && res[0][`${units[i]}min`] > 0)
+                let stats = yield this.getPriceStatsForUnit(pids, units[i], butcherids);
+                res = res.concat(stats);
+                pids = pids.filter(p => !res.find(r => r.pid == p));
+                if (pids.length == 0)
                     break;
             }
-            // let sql = `(${productids.join(',')})`
-            // let q = `select ButcherProducts.productid as pid,  count(*) as count, 
-            // min(kgPrice) as kgmin, avg(kgPrice) as kgavg, max(kgPrice) as kgmax, 
-            // min(unit1price) as unit1min, avg(unit1price) as unit1avg, max(unit1price) as unit1max,
-            // min(unit2price)  as unit2min, avg(unit2price)  as unit2avg, max(unit2price) as unit2max,
-            // min(unit3price)  as unit3min, avg(unit3price)  as unit3avg, max(unit3price) as unit3max
-            // from ButcherProducts, Butchers 
-            // where 
-            // ButcherProducts.productid in ${sql} and 
-            // (ButcherProducts.kgPrice > 0 or ButcherProducts.unit1price > 0 or ButcherProducts.unit2price or ButcherProducts.unit3price > 0) and
-            // ButcherProducts.enabled=true and 
-            // ButcherProducts.butcherid = Butchers.id 
-            // and Butchers.approved=true
-            // group by ButcherProducts.productid
-            // `
-            // let res = await Product.sequelize.query<any>(q, {
-            //     raw: true  ,
-            //     mapToModel: false,
-            //     type: sq.QueryTypes.SELECT       
-            // } )        
             return res;
         });
     }

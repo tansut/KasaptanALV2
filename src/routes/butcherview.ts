@@ -250,6 +250,29 @@ export default class Route extends ViewRouter {
     }
 
 
+    
+    @Auth.Anonymous()
+    async butcherOrderRoute() {
+        if (!this.req.params.butcher) {
+            return this.next();
+        }
+
+        let butcher = this.butcher = await ButcherModel.findOne({
+            where: {
+                slug: this.req.params.butcher
+            }
+        });
+
+        
+        if (!butcher) {
+            return this.next();
+        } 
+
+        this.req.session.prefButcher = butcher.slug;
+        await this.req.session.save();
+        this.res.redirect('/kasap-urunleri?butcher=' + butcher.slug);
+    }
+
     @Auth.Anonymous()
     async butcherPhotoRoute() {
         if (!this.req.params.butcher || !this.req.params.filename) return this.next();
@@ -283,6 +306,7 @@ export default class Route extends ViewRouter {
 
     static SetRoutes(router: express.Router) {
         router.get("/:butcher", Route.BindRequest(Route.prototype.butcherRoute));
+        router.get("/:butcher/siparis", Route.BindRequest(Route.prototype.butcherOrderRoute));
         router.get("/:butcher/feed", Route.BindRequest(Route.prototype.butcherProductFeedRoute));
         router.get("/:butcher/:category", Route.BindRequest(Route.prototype.butcherRoute));
         config.nodeenv == 'development' ? router.get("/:butcher/fotograf/:filename", Route.BindRequest(Route.prototype.butcherPhotoRoute)) : null;

@@ -1,16 +1,9 @@
 <% var zero = typeof(zero) == 'undefined'? '': zero %>
 <% var parts = __helper.formatCurrency(value) %>
 <% var unit = typeof(unit) == 'undefined' ? '': unit %>
-
-
 <% if (parts.val <= 0.00 && parts.krs <= 0.00 && zero) { %>
 <%= zero %>
 <% } else { %>
-    <%= parts.val %>.<small><%= parts.krs %></small>TL
-
-    <%= unit ? '/' + unit: '' %>
-
+<%= parts.val%><% if (parts.krs > 0) { %>.<small><%= parts.krs %></small><% } %>&#8378;
+<%= unit ? '/' + unit: '' %>
 <% } %>
-
-
-

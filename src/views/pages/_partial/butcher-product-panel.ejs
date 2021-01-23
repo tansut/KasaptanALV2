@@ -63,7 +63,12 @@ class="gallery-item-caption"><%= butcherVideo.title %></span></a>
             </span>
             <% if (view.dispatcher && view.dispatcher.priceInfo) { %>
               <span>
-                <%= view.dispatcher.userNote || view.dispatcher.priceInfo %>
+                <%= view.dispatcher.userNote || view.dispatcher.priceInfo %>.
+       
+                <% if (view.dispatcher.min > 0) { %>
+                  En az <span class="font-weight-medium"><%- include('./currency.ejs', {value: controller.logisticsProvider.options.dispatcher.min}) %></span> sipariş kabul edilmektedir.
+                <% } %>
+
               </span>
            <% } %>
             <% } %>
@@ -162,7 +167,7 @@ class="gallery-item-caption"><%= butcherVideo.title %></span></a>
 
         <div class="card rounded-0">
           <div class="card-header py-0" role="tab">
-            <h3 class="h6  font-weight-normal accordion-heading px-0"><a href="#teslimat-info" class="collapsed" data-toggle="collapse"><i class="czi-delivery text-muted font-size-lg align-middle mt-n1 mr-2"></i>Teslimat Bilgisi<span
+            <h3 class="h6   accordion-heading px-0"><a href="#teslimat-info" class="collapsed" data-toggle="collapse"><i class="czi-delivery text-muted font-size-lg align-middle mt-n1 mr-2"></i>Teslimat Bilgisi<span
                   class="accordion-indicator"></span></a></h3>
           </div>
           <div class="collapse" id="teslimat-info" data-parent="#teslimat-info-panel" role="tabpanel">
@@ -170,6 +175,12 @@ class="gallery-item-caption"><%= butcherVideo.title %></span></a>
               
                 <p class="">
                   <span class="font-weight-medium"><%=__req.prefAddr.display%></span> için teslimat <span class="font-weight-medium"><%=controller.dispatcherTypes[view.dispatcher.type]%></span> tarafından yapılmaktadır.
+                  <% if (view.dispatcher.min > 0) { %>
+                    En az <span class="font-weight-medium"><%- include('./currency.ejs', {value: controller.logisticsProvider.options.dispatcher.min}) %></span> sipariş kabul edilmektedir.
+                  <%  } else { %>
+                    En az sipariş tutarı <span class="font-weight-medium">yoktur</span>.
+                  <% } %>
+
                 </p>
              <div class="mb-3">
               <%- include('./ship-price-slice.ejs', {                                
@@ -194,7 +205,7 @@ class="gallery-item-caption"><%= butcherVideo.title %></span></a>
           <div class="card rounded-0">
           
             <div class="card-header" role="tab">
-              <h3 class="h6 font-weight-normal accordion-heading px-0"><a href="#butcher-phoneorder" class="collapsed" data-toggle="collapse"><i class="czi-phone text-muted font-size-lg align-middle mt-n1 mr-2"></i>Telefon/Whatsapp Sipariş<span
+              <h3 class="h6  accordion-heading px-0"><a href="#butcher-phoneorder" class="collapsed" data-toggle="collapse"><i class="czi-phone text-muted font-size-lg align-middle mt-n1 mr-2"></i>Telefon/Whatsapp Sipariş<span
                     class="accordion-indicator"></span></a></h3>
             </div>
             <div class="collapse" id="butcher-phoneorder" data-parent="#teslimat-info-panel" role="tabpanel">
@@ -217,7 +228,7 @@ class="gallery-item-caption"><%= butcherVideo.title %></span></a>
         <div class="card rounded-0">
   
           <div class="card-header" role="tab">
-            <h3 class="h6 font-weight-normal accordion-heading px-0"><a href="#butcher-info" class="collapsed" data-toggle="collapse"><i class="czi-announcement text-muted font-size-lg align-middle mt-n1 mr-2"></i>Kasabı Tanıyın<span
+            <h3 class="h6  accordion-heading px-0"><a href="#butcher-info" class="collapsed" data-toggle="collapse"><i class="czi-announcement text-muted font-size-lg align-middle mt-n1 mr-2"></i>Kasabı Tanıyın<span
                   class="accordion-indicator"></span></a></h3>
           </div>
           <div class="collapse" id="butcher-info" data-parent="#teslimat-info-panel" role="tabpanel">

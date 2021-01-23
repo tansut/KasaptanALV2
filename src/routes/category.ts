@@ -21,6 +21,8 @@ var MarkdownIt = require('markdown-it')
 import * as _ from "lodash";
 import SubCategory from '../db/models/subcategory';
 import { flatMap } from 'lodash';
+import DispatcherApi, { DispatcherQuery } from './api/dispatcher';
+
 
 export default class Route extends ViewRouter {
     markdown = new MarkdownIt();
@@ -31,6 +33,7 @@ export default class Route extends ViewRouter {
     foodCategory = ""
     _ = _;
     subCategories: SubCategory[] = [];
+    prices: Array<any>;
 
 
 
@@ -49,6 +52,32 @@ export default class Route extends ViewRouter {
     getFoods(category: Category) {
         return this.foodsWithCats[category.id] || [];
     }
+
+    getPriceData(product: Product) {
+        let price = this.prices.find(p=>p.pid == product.id);
+        if (!price) return null;
+        let units = ['kg', 'unit1', 'unit2', 'unit3'];
+        let usedUnit = null;
+
+        for(let i = 0; i < units.length;i++) {
+            let avgPrice = price[`${units[i]}avg`];
+            if (avgPrice > 0)  {
+                usedUnit = units[i];
+                break;
+            }
+        }
+        if (usedUnit) {
+            return {
+                offerCount: price['count'],
+                highPrice: Number(price[`${usedUnit}max`].toFixed(2)) ,
+                lowPrice: Number(price[`${usedUnit}min`].toFixed(2)),
+                priceUnit: usedUnit == 'kg' ? 'KG': product[`${usedUnit}title`],
+                priceCurrency: "TRY"
+            }
+        } else return null;
+
+    }
+
 
     generateFoodWithCats(foods: Resource[]) {
         let res = {};
@@ -204,6 +233,19 @@ export default class Route extends ViewRouter {
             } else if (this.category.tarifTitle) {
                 this.foods = await new ProductsApi(this.constructorParams).getFoodAndTarifResources(this.products, 15);
             }
+           
+            let api = new ProductsApi(this.constructorParams);
+
+
+            if (this.req.prefAddr) {
+                let dapi = new DispatcherApi(this.constructorParams);
+                let q: DispatcherQuery = {
+                    adr: this.req.prefAddr
+                }
+                let serving = await dapi.getDispatchers(q);
+                this.prices = await api.getPriceStats(this.products.map(p=>p.id), serving.map(b=>b.butcherid))
+            } else this.prices = []
+
             this.renderPage('pages/category.ejs')
         }
     }

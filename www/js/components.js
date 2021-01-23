@@ -43,9 +43,9 @@ window.initComponents = function initComponents() {
     Vue.component('money-view', {
         template: `
             <span>
-            {{formatCurrency(money).val}}.<small>{{formatCurrency(money).krs}}</small> TL
+            {{formatCurrency(money).val}}<span v-if="splitCurrency(money).krs > 0.00">.<small>{{formatCurrency(money).krs}}</small></span>&#8378;
             <span v-if="unit">/{{unit}}</span>
-            </span>            `,
+            </span>`,
         props: {
             money: { type: Number },
             unit: { type: this.String }
@@ -55,6 +55,12 @@ window.initComponents = function initComponents() {
             formatCurrency(v) {
                 return window.App.formatCurrency(v);
             },
+
+            splitCurrency(v) {
+                return window.App.splitCurrency(v);
+            }
+
+            
         }
     })
 

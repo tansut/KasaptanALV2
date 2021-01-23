@@ -185,26 +185,44 @@
 
 
   <% } else if (controller.logisticsProvider) { %>
-    <h5 class="h5">Kapınıza Teslim</h5>
-    <p>
-    <%= controller.logisticsProvider.options.dispatcher.userNote || controller.logisticsProvider.options.dispatcher.priceInfo %>
-     
-    </p>
-    
 
-    <div class="mb-3 font-size-sm">
-      <%- include('./_partial/ship-price-slice.ejs', {                                
-        slices: controller.logisticsPriceSlice
-          }) %>
+    <div class="row mb-3 text-left">
+      <div class="col-sm-6 ">
+        <h5 class="h5">Kapınıza Teslim</h5>
+        <p>
+        <%= controller.logisticsProvider.options.dispatcher.userNote || controller.logisticsProvider.options.dispatcher.priceInfo %>.
+        <% if (controller.logisticsProvider.options.dispatcher.min > 0) { %>
+          Semtinize en az <span class="font-weight-medium"><%- include('./_partial/currency.ejs', {value: controller.logisticsProvider.options.dispatcher.min}) %></span> sipariş kabul edilmektedir.
+        <%  } %>
+        </p>
+
+        <h6 class="h6">Teslimat Ücretleri</h5>
+    
+        <div class="mb-3 font-size-sm">
+          <%- include('./_partial/ship-price-slice.ejs', {                                
+            slices: controller.logisticsPriceSlice
+              }) %>
+        </div>
+      </div>
+      <div class="col-sm-6">
+        <h5 class="h5">Çalışma Günleri</h5>
+        <p>
+          <%=butcher.name%> aşağıdaki günlerde teslimat yapmaktadır:
+        </p>
+<div class="font-size-sm text-left">
+  <%- include('./_partial/workday-view', { butcher: controller.butcher }) %>
+
+</div>
+      </div>
     </div>
+
 
    
 
        
-       
        <div>
         <div class="py-2 d-flex justify-content-center">
-          <a class="btn rounded-lg btn-sm btn-success mr-2" href="/kasap-urunleri?butcher=<%=butcher.slug%>">Online Sipariş</a>
+          <a class="btn rounded-lg btn-sm btn-success mr-2" href="/<%=butcher.slug%>/siparis">Online Sipariş</a>
           <a class="btn rounded-lg btn-sm btn-dark" target="_blank" href="https://wa.me/+903122101088?text=<%=butcher.name%> <%=__req.prefAddr.display%> semtinden sipariş vermek istiyorum."><i class="czi_icon czi-message mr-1"></i>Whatsapp Sipariş</a>
       
         </div>

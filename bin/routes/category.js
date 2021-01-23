@@ -28,6 +28,7 @@ const product_2 = require("./api/product");
 const config_1 = require("../config");
 var MarkdownIt = require('markdown-it');
 const _ = require("lodash");
+const dispatcher_1 = require("./api/dispatcher");
 class Route extends router_1.ViewRouter {
     constructor() {
         super(...arguments);
@@ -50,6 +51,31 @@ class Route extends router_1.ViewRouter {
     }
     getFoods(category) {
         return this.foodsWithCats[category.id] || [];
+    }
+    getPriceData(product) {
+        let price = this.prices.find(p => p.pid == product.id);
+        if (!price)
+            return null;
+        let units = ['kg', 'unit1', 'unit2', 'unit3'];
+        let usedUnit = null;
+        for (let i = 0; i < units.length; i++) {
+            let avgPrice = price[`${units[i]}avg`];
+            if (avgPrice > 0) {
+                usedUnit = units[i];
+                break;
+            }
+        }
+        if (usedUnit) {
+            return {
+                offerCount: price['count'],
+                highPrice: Number(price[`${usedUnit}max`].toFixed(2)),
+                lowPrice: Number(price[`${usedUnit}min`].toFixed(2)),
+                priceUnit: usedUnit == 'kg' ? 'KG' : product[`${usedUnit}title`],
+                priceCurrency: "TRY"
+            };
+        }
+        else
+            return null;
     }
     generateFoodWithCats(foods) {
         let res = {};
@@ -204,6 +230,17 @@ class Route extends router_1.ViewRouter {
                 else if (this.category.tarifTitle) {
                     this.foods = yield new product_2.default(this.constructorParams).getFoodAndTarifResources(this.products, 15);
                 }
+                let api = new product_2.default(this.constructorParams);
+                if (this.req.prefAddr) {
+                    let dapi = new dispatcher_1.default(this.constructorParams);
+                    let q = {
+                        adr: this.req.prefAddr
+                    };
+                    let serving = yield dapi.getDispatchers(q);
+                    this.prices = yield api.getPriceStats(this.products.map(p => p.id), serving.map(b => b.butcherid));
+                }
+                else
+                    this.prices = [];
                 this.renderPage('pages/category.ejs');
             }
         });

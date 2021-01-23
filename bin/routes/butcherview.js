@@ -193,6 +193,24 @@ class Route extends router_1.ViewRouter {
             });
         });
     }
+    butcherOrderRoute() {
+        return __awaiter(this, void 0, void 0, function* () {
+            if (!this.req.params.butcher) {
+                return this.next();
+            }
+            let butcher = this.butcher = yield butcher_1.default.findOne({
+                where: {
+                    slug: this.req.params.butcher
+                }
+            });
+            if (!butcher) {
+                return this.next();
+            }
+            this.req.session.prefButcher = butcher.slug;
+            yield this.req.session.save();
+            this.res.redirect('/kasap-urunleri?butcher=' + butcher.slug);
+        });
+    }
     butcherPhotoRoute() {
         return __awaiter(this, void 0, void 0, function* () {
             if (!this.req.params.butcher || !this.req.params.filename)
@@ -221,6 +239,7 @@ class Route extends router_1.ViewRouter {
     }
     static SetRoutes(router) {
         router.get("/:butcher", Route.BindRequest(Route.prototype.butcherRoute));
+        router.get("/:butcher/siparis", Route.BindRequest(Route.prototype.butcherOrderRoute));
         router.get("/:butcher/feed", Route.BindRequest(Route.prototype.butcherProductFeedRoute));
         router.get("/:butcher/:category", Route.BindRequest(Route.prototype.butcherRoute));
         config_1.default.nodeenv == 'development' ? router.get("/:butcher/fotograf/:filename", Route.BindRequest(Route.prototype.butcherPhotoRoute)) : null;
@@ -238,6 +257,12 @@ __decorate([
     __metadata("design:paramtypes", []),
     __metadata("design:returntype", Promise)
 ], Route.prototype, "butcherProductFeedRoute", null);
+__decorate([
+    common_1.Auth.Anonymous(),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", []),
+    __metadata("design:returntype", Promise)
+], Route.prototype, "butcherOrderRoute", null);
 __decorate([
     common_1.Auth.Anonymous(),
     __metadata("design:type", Function),

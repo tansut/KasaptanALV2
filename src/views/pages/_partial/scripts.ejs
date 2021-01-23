@@ -102,12 +102,14 @@
         searchPost: function (res, el) {
           window.__searchResult = res;
           window.dataLayer = window.dataLayer || [];
-                      window.dataLayer.push({
+          if (el.val()) {
+            window.dataLayer.push({
                       'event': 'custom',
                       'category': 'search',
                       'action':'search/autocomplete',
                       'label': el.val()
                       });
+          }
   
           return res.map(function (p) {
             return {
@@ -127,7 +129,7 @@
       let go = window.__searchResult.find(function (result) {
         return result.id == item.id
       });
-      window.location.href = go.url;
+      window.location.href = go.url.startsWith('/') ? go.url: '/' + go.url;
     });
 
 

@@ -64,6 +64,7 @@ class Route extends router_1.ApiRouter {
                     }];
                 where[`$butcher.shipday${helper_1.default.Now().getDay()}$`] = true;
                 where['$butcher.status$'] = "open";
+                where['$butcher.approved$'] = true;
                 where['$butcher.products.productid$'] = q.product.id;
                 where['$butcher.products.enabled$'] = true;
                 let w = [{

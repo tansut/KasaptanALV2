@@ -90,18 +90,15 @@ class Route extends router_1.ViewRouter {
                 return null;
         });
     }
-    tryBestFromOrders(serving) {
-        return __awaiter(this, void 0, void 0, function* () {
-            return null;
-            let fullServing = serving.filter(s => s.selection == dispatcher_2.DispatcherSelection.full);
-            if (fullServing.length == 0)
-                fullServing = serving;
-            fullServing.forEach(s => s.lastorderitemid = (s.lastorderitemid || 0));
-            let orderedByDate = _.orderBy(fullServing, 'lastorderitemid', 'asc');
-            let orderedByKasapCard = _.orderBy(orderedByDate, 'butcher.enablePuan', 'desc');
-            return orderedByKasapCard.length ? orderedByKasapCard[0] : null;
-        });
-    }
+    // async tryBestFromOrders(serving: Dispatcher[]) {
+    //     return null;
+    //     let fullServing = serving.filter(s => s.selection == DispatcherSelection.full);
+    //     if (fullServing.length == 0) fullServing = serving;
+    //     fullServing.forEach(s => s.lastorderitemid = (s.lastorderitemid || 0));
+    //     let orderedByDate = _.orderBy(fullServing, 'lastorderitemid', 'asc');
+    //     let orderedByKasapCard = _.orderBy(orderedByDate, 'butcher.enablePuan', 'desc');
+    //     return orderedByKasapCard.length ? orderedByKasapCard[0] : null;
+    // }
     tryBestAsRandom(serving) {
         let fullServing = serving.filter(s => (s.selection == dispatcher_2.DispatcherSelection.full || s.selection == dispatcher_2.DispatcherSelection.onecikar));
         let mention = fullServing.filter(s => s.selection == dispatcher_2.DispatcherSelection.onecikar);
@@ -127,12 +124,6 @@ class Route extends router_1.ViewRouter {
             let serving = yield api.getDispatchers(q);
             let takeOnly = serving.filter(p => p.takeOnly == true);
             serving = serving.filter(p => !p.takeOnly);
-            // let servingL2 = serving.filter(p => p.toarealevel == 2 && !p.takeOnly && (servingL3.find(m => m.butcher.id == p.butcher.id) == null));
-            // let servingL1 = serving.filter(p => p.toarealevel == 1 && !p.takeOnly && (servingL2.find(m => m.butcher.id == p.butcher.id) == null) && (servingL3.find(m => m.butcher.id == p.butcher.id) == null));
-            //takeOnly = Helper.shuffle(takeOnly)
-            // servingL3 = Helper.shuffle(servingL3)
-            // servingL2 = Helper.shuffle(servingL2)
-            //serving = Helper.shuffle(serving);
             let sameGroup = [];
             _.remove(serving, (item) => {
                 if (item.butcher.parentButcher) {
@@ -161,8 +152,7 @@ class Route extends router_1.ViewRouter {
             }
             defaultButchers = defaultButchers.length == 0 ? serving : defaultButchers;
             let mybest = (yield this.tryBestFromShopcard(serving)) ||
-                (yield this.tryBestFromOrders(serving)) ||
-                this.tryBestAsRandom(defaultButchers);
+                (yield this.tryBestAsRandom(defaultButchers));
             if (mybest) {
                 mybest = (userBest ? (serving.find(s => s.butcherid == userBest.id)) : null) || mybest;
             }
@@ -195,7 +185,16 @@ class Route extends router_1.ViewRouter {
             let shopcard = yield shopcard_1.ShopCard.createFromRequest(this.req);
             this.shopCardIndex = this.req.query.shopcarditem ? parseInt(this.req.query.shopcarditem) : -1;
             this.shopCardItem = (this.shopCardIndex >= 0 && shopcard.items) ? shopcard.items[this.shopCardIndex] : null;
-            let butcher = this.shopCardItem ? yield butcher_1.default.getBySlug(this.shopCardItem.product.butcher.slug) : (this.req.query.butcher ? yield butcher_1.default.getBySlug(this.req.query.butcher) : null);
+            let butcher = null;
+            if (this.shopCardItem) {
+                butcher = yield butcher_1.default.getBySlug(this.shopCardItem.product.butcher.slug);
+            }
+            else if (this.req.query.butcher) {
+                butcher = yield butcher_1.default.getBySlug(this.req.query.butcher);
+            }
+            else if (this.req.session && this.req.session.prefButcher) {
+                butcher = yield butcher_1.default.getBySlug(this.req.session.prefButcher);
+            }
             this.reviews = yield api.loadReviews(product.id, (butcher && this.showOtherButchers()) ? 0 : (butcher ? butcher.id : 0));
             // this.reviews = await api.loadReviews(product.id, butcher ? (this.req.query.butcher ? butcher.id : 0): 0);
             //this.reviews = await api.loadReviews(product.id, 0);

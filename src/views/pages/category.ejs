@@ -6,6 +6,9 @@
 </head>
 
 <body>
+  <% if (!__req.prefAddr) { %>
+    <% include ./_partial/select-location-msg %>
+  <% } %>
   <% include ./_partial/header %>
   <link href="https://www.kasaptanal.com/<%=controller.category.slug%>" rel="canonical">
 
@@ -105,8 +108,11 @@
       <%}%>
     <div class="row">
     <% sc.products.forEach((product,i) => { %>
+
+      <% var price = controller.getPriceData(product) %>
       <div data-tag="<%= __helper.slugify(product.tag1) %>" class="col-md-3 col-6 ">
-        <%- include('./_partial/product-view.ejs', {butcher: __req.query.butcher, product: product, showPurchase: true}) %>
+        <%- include('./_partial/product-view.ejs', {product: product, showPurchase: true, butcher: __req.query.butcher, lowPrice: price ? price.lowPrice: 0.00, highPrice: price ? price.highPrice: 0.00, priceUnit: price ? price.priceUnit: ''}) %>
+
       </div>
       <% if (controller.foods && controller.foods.length > 0 && !foodsInserted && i>controller.products.length/5) { %>
       <% foodsInserted = true; %>

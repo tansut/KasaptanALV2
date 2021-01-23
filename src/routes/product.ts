@@ -110,15 +110,15 @@ export default class Route extends ViewRouter {
         } else return null;
     }
 
-    async tryBestFromOrders(serving: Dispatcher[]) {
-        return null;
-        let fullServing = serving.filter(s => s.selection == DispatcherSelection.full);
-        if (fullServing.length == 0) fullServing = serving;
-        fullServing.forEach(s => s.lastorderitemid = (s.lastorderitemid || 0));
-        let orderedByDate = _.orderBy(fullServing, 'lastorderitemid', 'asc');
-        let orderedByKasapCard = _.orderBy(orderedByDate, 'butcher.enablePuan', 'desc');
-        return orderedByKasapCard.length ? orderedByKasapCard[0] : null;
-    }
+    // async tryBestFromOrders(serving: Dispatcher[]) {
+    //     return null;
+    //     let fullServing = serving.filter(s => s.selection == DispatcherSelection.full);
+    //     if (fullServing.length == 0) fullServing = serving;
+    //     fullServing.forEach(s => s.lastorderitemid = (s.lastorderitemid || 0));
+    //     let orderedByDate = _.orderBy(fullServing, 'lastorderitemid', 'asc');
+    //     let orderedByKasapCard = _.orderBy(orderedByDate, 'butcher.enablePuan', 'desc');
+    //     return orderedByKasapCard.length ? orderedByKasapCard[0] : null;
+    // }
 
     tryBestAsRandom(serving: Dispatcher[]) {
         let fullServing = serving.filter(s => (s.selection == DispatcherSelection.full || s.selection == DispatcherSelection.onecikar));
@@ -149,15 +149,6 @@ export default class Route extends ViewRouter {
 
 
         serving = serving.filter(p => !p.takeOnly);
-        // let servingL2 = serving.filter(p => p.toarealevel == 2 && !p.takeOnly && (servingL3.find(m => m.butcher.id == p.butcher.id) == null));
-        // let servingL1 = serving.filter(p => p.toarealevel == 1 && !p.takeOnly && (servingL2.find(m => m.butcher.id == p.butcher.id) == null) && (servingL3.find(m => m.butcher.id == p.butcher.id) == null));
-
-
-        //takeOnly = Helper.shuffle(takeOnly)
-        // servingL3 = Helper.shuffle(servingL3)
-        // servingL2 = Helper.shuffle(servingL2)
-        //serving = Helper.shuffle(serving);
-
         let sameGroup: string[] = []
 
         _.remove(serving, (item) => {
@@ -191,8 +182,7 @@ export default class Route extends ViewRouter {
         defaultButchers = defaultButchers.length == 0 ? serving : defaultButchers;
 
         let mybest: Dispatcher = await this.tryBestFromShopcard(serving) ||
-            await this.tryBestFromOrders(serving) ||
-            this.tryBestAsRandom(defaultButchers);
+            await this.tryBestAsRandom(defaultButchers);
         if (mybest) {
             mybest = (userBest ? (serving.find(s => s.butcherid == userBest.id)) : null) || mybest;
         }
@@ -227,11 +217,15 @@ export default class Route extends ViewRouter {
 
         this.shopCardIndex = this.req.query.shopcarditem ? parseInt(this.req.query.shopcarditem as string) : -1;
         this.shopCardItem = (this.shopCardIndex >= 0 && shopcard.items) ? shopcard.items[this.shopCardIndex] : null;
-
-        let butcher = this.shopCardItem ? await Butcher.getBySlug(this.shopCardItem.product.butcher.slug) : (this.req.query.butcher ? await Butcher.getBySlug(this.req.query.butcher as string) : null);
-
-
-
+        let butcher: Butcher = null;
+        if (this.shopCardItem) {
+            butcher = await Butcher.getBySlug(this.shopCardItem.product.butcher.slug);
+        } else if (this.req.query.butcher) {
+            butcher = await Butcher.getBySlug(this.req.query.butcher as string)
+        } else if (this.req.session && this.req.session.prefButcher) {
+            butcher = await Butcher.getBySlug(this.req.session.prefButcher as string)
+        }
+         
          this.reviews = await api.loadReviews(product.id, (butcher && this.showOtherButchers()) ? 0: (butcher ? butcher.id:0));
         // this.reviews = await api.loadReviews(product.id, butcher ? (this.req.query.butcher ? butcher.id : 0): 0);
         //this.reviews = await api.loadReviews(product.id, 0);

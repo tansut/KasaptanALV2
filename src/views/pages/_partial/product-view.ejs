@@ -49,8 +49,12 @@
 
         <% if (lowPrice > 0.00 && highPrice > 0.00) { %>
             <div class="text-accent font-size-sm">
-                <%- include('./currency.ejs', {value: lowPrice}) %> - 
+                <% if (lowPrice != highPrice) { %>
+                <%- include('./currency.ejs', {value: lowPrice}) %>-<%- include('./currency.ejs', {value: highPrice, unit: priceUnit}) %> 
+                <% } else { %>
                 <%- include('./currency.ejs', {value: highPrice, unit: priceUnit}) %> 
+
+                <% } %>
             </div>
         <% } %>
 

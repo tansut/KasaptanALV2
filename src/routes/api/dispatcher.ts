@@ -79,6 +79,7 @@ export default class Route extends ApiRouter {
             
             where[`$butcher.shipday${Helper.Now().getDay()}$`] = true;
             where['$butcher.status$'] = "open";    
+            where['$butcher.approved$'] = true;    
             where['$butcher.products.productid$'] = q.product.id;
             where['$butcher.products.enabled$'] = true;
 

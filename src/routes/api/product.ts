@@ -19,6 +19,8 @@ import { ProductLd, IProductLd, ProductLdOptions } from '../../models/ProductLd'
 import DispatcherApi from './dispatcher';
 import Review from '../../db/models/review';
 import { Shipment } from '../../models/shipment';
+import { stat } from 'fs';
+import { pid } from 'process';
 
 export interface ProductFeedItem {
     id: string;
@@ -220,12 +222,14 @@ export default class Route extends ApiRouter {
         return resources;
     }
 
-    async getPriceStatsForUnit(productids: number [], unit: string): Promise<Array<any>> {
-        let sql = `(${productids.join(',')})`
+    async getPriceStatsForUnit(productids: number [], unit: string, butcherids: number [] = []): Promise<Array<any>> {
+        let sql = `(${productids.join(',')})`;
+        let butchers = `(${butcherids.join(',')})`;
         let q = `select ButcherProducts.productid as pid,  count(*) as count, 
         min(${unit}Price) as ${unit}min, avg(${unit}Price) as ${unit}avg, max(${unit}Price) as ${unit}max
         from ButcherProducts, Butchers 
         where 
+        ${butcherids.length > 0 ? 'Butchers.id in ' + butchers + ' and ':''}
         ButcherProducts.productid in ${sql} and 
         ButcherProducts.${unit}Price > 0 and
         ButcherProducts.enabled=true and 
@@ -244,38 +248,19 @@ export default class Route extends ApiRouter {
     }    
 
 
-    async getPriceStats(productids: number []): Promise<Array<any>> {
+    async getPriceStats(productids: number [], butcherids: number[]=[]): Promise<Array<any>> {
 
         let units = ['kg', 'unit1', 'unit2', 'unit3'];
         let res: Array<any> = [];
-
+        let pids = [...productids];
         for(let i = 0; i < units.length; i++) {
-            res = await this.getPriceStatsForUnit(productids,  units[i]);
-            if (res.length > 0 && res[0][`${units[i]}min`] > 0) break;
+            let stats = await this.getPriceStatsForUnit(pids,  units[i], butcherids);
+            res = res.concat(stats);
+            pids = pids.filter(p=>!res.find(r=>r.pid == p))
+            if (pids.length == 0) break;
         }
 
-        // let sql = `(${productids.join(',')})`
-        // let q = `select ButcherProducts.productid as pid,  count(*) as count, 
-        // min(kgPrice) as kgmin, avg(kgPrice) as kgavg, max(kgPrice) as kgmax, 
-        // min(unit1price) as unit1min, avg(unit1price) as unit1avg, max(unit1price) as unit1max,
-        // min(unit2price)  as unit2min, avg(unit2price)  as unit2avg, max(unit2price) as unit2max,
-        // min(unit3price)  as unit3min, avg(unit3price)  as unit3avg, max(unit3price) as unit3max
-        // from ButcherProducts, Butchers 
-        // where 
-        // ButcherProducts.productid in ${sql} and 
-        // (ButcherProducts.kgPrice > 0 or ButcherProducts.unit1price > 0 or ButcherProducts.unit2price or ButcherProducts.unit3price > 0) and
-        // ButcherProducts.enabled=true and 
-        // ButcherProducts.butcherid = Butchers.id 
-        // and Butchers.approved=true
-        // group by ButcherProducts.productid
-        // `
-
-        // let res = await Product.sequelize.query<any>(q, {
-        //     raw: true  ,
-        //     mapToModel: false,
-        //     type: sq.QueryTypes.SELECT       
-        // } )        
-
+       
         return res;
     }
 
