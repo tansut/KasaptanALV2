@@ -245,7 +245,7 @@
                             var cityList = [];
                             cityList.push({
                                 id: 0,
-                                name: 'Şehrinizi seçin',
+                                name: 'Şehir Seçin',
                                 slug: ''
                             })
                             cityList = cityList.concat(list)

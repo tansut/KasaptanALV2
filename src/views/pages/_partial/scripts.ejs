@@ -236,8 +236,10 @@
   
   
       $(".select-area-action").click(function () {
+        var self = this;
         window.kb.selectArea(function (sender, ul) {
-          window.location.href = "/adres-belirle/" + ul.selectedDistrict.slug + '?r=' + window.location.href;
+          var ref = $(self).data('return') ||  window.location.href;
+          window.location.href = "/adres-belirle/" + ul.selectedDistrict.slug + '?r=' + ref;
           //window.location.reload(true) // = "/" + window.App.ProductApp.product.slug + "?semt=" + ul.selectedDistrict.slug
   
         });

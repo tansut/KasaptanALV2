@@ -111,39 +111,127 @@
             class="czi-video mr-2"> </i>Yakından Tanıyın</button>
         <% } %>
 
-        <div>
-          <h1 class="h2"><%=butcher.name%></h1>
-          <h2 class="h5 opacity-60">
-            <a target="_blank" href="https://www.google.com/maps/search/?api=1&query=<%=butcher.lat%>,<%=butcher.lng%>"><i class="mr-1 czi-icon czi-location"></i> <%= butcher.areaLevel3.name %>/<%= butcher.areaLevel1.name %></a>
+        <div class=" mb-3">
+          <h1 class="h2 mb-2"><%=butcher.name%></h1>
+          <h2 class="h5 mb-2">
+            <a class="text-muted" target="_blank" href="https://www.google.com/maps/search/?api=1&query=<%=butcher.lat%>,<%=butcher.lng%>"><%= butcher.areaLevel3.name %>/<%= butcher.areaLevel1.name %></a>
            
           </h2>
           <% if (puanData ) { %>
-            <div>
-            
+            <div class="mb-3">
               <a class="mb-2 d-block" href="/blog/kasap-kart">
                 <span class="badge badge-success font-weight-medium font-size-md">
                   %<%= puanData.rate * 100 %> Puan 
                 </span>
               </a>
-              <p class="text-muted font-size-sm">
-               <a class="text-dark" href="/blog/kasap-kart">Kasap Kart&trade;</a> ile kârlı alışveriş
-              </p>
+             
              
             </div>
           
        
       
           <% } %>
-          <% if (butcher.status == 'open' && __helper.canBeOrderedByPhone()) { %>
-            <div>
-              <div class="py-2 d-flex justify-content-center">
-                <a class="btn rounded-lg btn-sm btn-dark mr-2" target="_blank" href="tel://08503054216"><i class="czi_icon czi-phone mr-1"></i>Telefonla Sipariş</a>
-                <a class="btn rounded-lg btn-sm btn-dark" target="_blank" href="https://wa.me/+908503054216?text=<%=butcher.name%> sipariş vermek istiyorum."><i class="czi_icon czi-message mr-1"></i>Whatsapp Sipariş</a>
-            
+          <div class="container row w-50 mx-auto">
+            <div class="col-sm-6">
+              <div class="font-size-sm  mb-1">Memnuniyet</div>
+              <div class="progress rounded-0 mb-3">
+                <div class="progress-bar font-weight-medium bg-warning" role="progressbar"
+                  style="width: <%=butcher.userRatingAsPerc %>%" aria-valuenow="<%=butcher.userRatingAsPerc %>"
+                  aria-valuemin="0" aria-valuemax="100">
+                  <%=butcher.userRatingAsPerc %>%
+                </div>
               </div>
             </div>
+    
+    
+            <div class="col-sm-6">
+              <div class="font-size-sm  mb-1">Teslimat Başarısı</div>
+    
+              <div class="progress rounded-0 mb-3">
+                <div class="progress-bar font-weight-medium bg-warning" role="progressbar"
+                  style="width: <%=butcher.shipRatingAsPerc %>%" aria-valuenow="<%=butcher.shipRatingAsPerc %>"
+                  aria-valuemin="0" aria-valuemax="100">
+                  <%=butcher.shipRatingAsPerc %>%
+                </div>
+              </div>
+            </div>
+          </div>
+          
+            <% if (false && controller.reviews.length > 0) { %>
+              <div class="container text-center">
+                <a href="javascript:gotoComments()"
+                class="font-size-sm text-dark font-weight-medium"><span>Yorumlar
+                  (</span><span class="text-primary"><%=controller.reviews.length %></span><span>)</span></a>
+              </div>
+  
+             <% } %>
+          
+        </div>
+<% if (butcher.status == 'open' && butcher.approved) { %>
+<div id="delivery"  class="border pt-3 px-3 bg-secondary">
+  <% if ((!controller.logisticsProvider || controller.logisticsPriceSlice.length == 0) && __req.prefAddr) { %>
+    <p>
+      
+      Kasabımız maalesef semtinize hizmet vermemektedir. 
+   
 
-          <% } %>
+    </p>
+    <p>
+      <strong><%=__req.prefAddr.display%></strong> semtine hizmet veren kasaplarımızı <a class="font-weight-bold" href="/<%=__req.prefAddr.level3Slug%>-kasap">buradan</a> görebilirsiniz.
+    </p>
+    <a href="/<%=__req.prefAddr.level3Slug%>-kasap" class="mb-3 btn btn-sm btn-primary">Diğer Kasaplar</a>
+
+    <a data-return="/<%=butcher.slug%>#delivery" class="mb-3 select-area-action btn-sm btn btn-primary">Semt Seç</a>
+
+
+  <% } else if (controller.logisticsProvider) { %>
+    <h5 class="h5">Kapınıza Teslim</h5>
+    <p>
+    <%= controller.logisticsProvider.options.dispatcher.userNote || controller.logisticsProvider.options.dispatcher.priceInfo %>
+     
+    </p>
+    
+
+    <div class="mb-3 font-size-sm">
+      <%- include('./_partial/ship-price-slice.ejs', {                                
+        slices: controller.logisticsPriceSlice
+          }) %>
+    </div>
+
+   
+
+       
+       
+       <div>
+        <div class="py-2 d-flex justify-content-center">
+          <a class="btn rounded-lg btn-sm btn-success mr-2" href="/kasap-urunleri?butcher=<%=butcher.slug%>">Online Sipariş</a>
+          <a class="btn rounded-lg btn-sm btn-dark" target="_blank" href="https://wa.me/+903122101088?text=<%=butcher.name%> <%=__req.prefAddr.display%> semtinden sipariş vermek istiyorum."><i class="czi_icon czi-message mr-1"></i>Whatsapp Sipariş</a>
+      
+        </div>
+      </div>
+
+  <% } else { %>
+    <div class="text-center mb-3">
+      <h6 class="h6">
+       Sipariş vermek için önce semtinizi seçin
+      </h6>
+    <a data-return="/<%=butcher.slug%>#delivery" class=" select-area-action btn-sm btn btn-primary">Semt Seç</a>
+
+    </div>
+
+    
+
+
+<% } %>
+
+
+
+</div>
+
+          
+<% } %>
+          
+
          
           <% if (butcher.getBadgeList().length > 0 ) { %>
           <div class="d-none butcher-badges">
@@ -160,7 +248,7 @@
           <% } %>
 
 
-        </div>
+        
       </div>
 
       <% if (butcher.status == 'closed') { %>
@@ -172,41 +260,7 @@
     
 
 
-      <div>
-        <% if (butcher.shipSuccessText && false) { %>
-          <div class="text-center text-dark font-size-xs">
-    
-            <%=butcher.shipSuccessText %> sipariş
-          </div>
-          <% } %>
-  
-        <div class="container mb-3 row w-50 mx-auto">
-          <div class="col-sm-6">
-            <div class="font-size-sm  mb-1">Memnuniyet</div>
-            <div class="progress rounded-0 mb-3">
-              <div class="progress-bar font-weight-medium bg-warning" role="progressbar"
-                style="width: <%=butcher.userRatingAsPerc %>%" aria-valuenow="<%=butcher.userRatingAsPerc %>"
-                aria-valuemin="0" aria-valuemax="100">
-                <%=butcher.userRatingAsPerc %>%
-              </div>
-            </div>
-          </div>
-  
-  
-          <div class="col-sm-6">
-            <div class="font-size-sm  mb-1">Teslimat Başarısı</div>
-  
-            <div class="progress rounded-0 mb-3">
-              <div class="progress-bar font-weight-medium bg-warning" role="progressbar"
-                style="width: <%=butcher.shipRatingAsPerc %>%" aria-valuenow="<%=butcher.shipRatingAsPerc %>"
-                aria-valuemin="0" aria-valuemax="100">
-                <%=butcher.shipRatingAsPerc %>%
-              </div>
-            </div>
-          </div>
-  
-        </div>
-      </div>
+
 
 
     <% if (true) { %>
@@ -273,7 +327,7 @@
                   <div class="card rounded-0">
                     <div class="card-header" role="tab">
                       <h3 class="accordion-heading"><a href="#revires" data-toggle="collapse"><i
-                            class="font-size-lg mr-2 mt-n1 align-middle"></i><%='Yorumlar'%><span
+                            class="font-size-lg mr-2 mt-n1 align-middle"></i><%='Yorumlar'%> <span class="align-middle mt-n1 badge badge-primary"><%=controller.reviews.length%></span> <span
                             class="accordion-indicator"><i data-feather="chevron-up"></i></span></a></h3>
                     </div>
                     <div class="collapse" id="revires" data-parent="#payment-method" role="tabpanel">

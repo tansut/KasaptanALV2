@@ -23,6 +23,17 @@
 <% if (req.query.print != '1') {  %>
 <header class="d-print-none">
 
+  <% if (!__req.prefAddr) { %>
+
+  
+    <% } else { %>
+      <div class="bg-secondary py-1 border-bottom text-center font-size-sm">
+       
+          <a class="truncate select-area-action text-dark"><i class="czi-location mt-n1 mr-2"></i><%=__req.prefAddr.display%></a>
+       
+      </div>
+    <% } %>
+
   <div class="topbar topbar-light bg-secondary d-none d-lg-block ">
     <div class="container">
       <div class="topbar-text dropdown d-none d-md-none"><a class="topbar-link dropdown-toggle" href="#"
@@ -37,9 +48,6 @@
           <li>
 
             <% if ( __req.prefAddr) { %>
-            <a class="dropdown-item select-area-action"><i class="czi-location text-muted mr-2">
-
-              </i><%= __req.prefAddr.level1Text + '/' + __req.prefAddr.level3Text %> (değiştir)</a>
 
 
             <% } else { %>
@@ -62,8 +70,6 @@
       <div class="ml-3 text-nowrap w-100 text-right">
 
         <% if ( __req.prefAddr ) { %>
-          <i class="czi-location "></i>
-        <a class="select-area-action topbar-link  d-md-inline-block" href="#"><%= __req.prefAddr.level1Text + '/' + __req.prefAddr.level3Text %></a>
 
 
         <% } else { %>
@@ -89,9 +95,9 @@
           <div class="navbar-tool-text ml-n3"></div>
         </a>
         <a class="navbar-brand d-none d-lg-block mr-3 flex-shrink-0" href="/"><img width="1080" height="419"
-            style="width: 11rem;" src="<%=__config.staticDomain %>/resource/img/logo-nav4.png" title="KasaptanAl.com"
+            style="width: 11rem;" src="<%=__config.staticDomain %>/resource/img/logo-nav5.png" title="KasaptanAl.com"
             alt="kasaptanal.com" /></a><a class="navbar-brand d-lg-none mr-2" href="/"><img width="1080" height="419"
-            style="width: 8rem;" src="<%=__config.staticDomain %>/resource/img/logo-nav4.png" title="KasaptanAl.com"
+            style="width: 8rem;" src="<%=__config.staticDomain %>/resource/img/logo-nav5.png" title="KasaptanAl.com"
             alt="kasaptanal.com" /></a>
         <div class="input-group-overlay d-none d-lg-flex mx-4">
           <div class="input-group-prepend-overlay">

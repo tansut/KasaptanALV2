@@ -120,7 +120,7 @@
 
                     <%}%>
 <div class="py-2 mb-1 <%= selected ? (selected == reyonlar[c].slug ? 'item-slider-selected': 'item-slider-unselected') : ''%>">
-    <a  class="text-center text-uppercase text-dark text-nowrap" class="d-block" onclick="return gotoCategory('<%=subUrl%>', '<%=reyonlar[c].slug%>')" href="<%= `/${subUrl}${reyonlar[c].slug}?go=1#items`%>">
+    <a  class="text-center text-uppercase text-dark text-nowrap" class="d-block" href="<%= `/${subUrl}${reyonlar[c].slug}${__req.query.butcher ? '?butcher=' + __req.query.butcher:''}#items`%>">
         <%= reyonlar[c].listTitle || reyonlar[c].name %>
 
                  
@@ -146,17 +146,3 @@
         <% } %>
 
 
-        <script>
-            function gotoCategory(sUrl, cat) {
-                var el = document.getElementById('sc');
-                var sb = SimpleBar.instances.get(el);
-                var scroll = 0;
-                if (sb) {
-                    var scel = sb.getScrollElement();
-                    scroll = scel.scrollLeft;                    
-                }
-               var l = scroll + $(event.currentTarget).offset().left;
-               location.href = '/' + sUrl + cat + '?go=1&restore=' + scroll + '#items';
-               return false;
-            }
-        </script>

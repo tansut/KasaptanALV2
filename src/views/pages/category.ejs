@@ -106,7 +106,7 @@
     <div class="row">
     <% sc.products.forEach((product,i) => { %>
       <div data-tag="<%= __helper.slugify(product.tag1) %>" class="col-md-3 col-6 ">
-        <%- include('./_partial/product-view.ejs', {product: product, showPurchase: true}) %>
+        <%- include('./_partial/product-view.ejs', {butcher: __req.query.butcher, product: product, showPurchase: true}) %>
       </div>
       <% if (controller.foods && controller.foods.length > 0 && !foodsInserted && i>controller.products.length/5) { %>
       <% foodsInserted = true; %>
