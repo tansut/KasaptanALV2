@@ -97,14 +97,19 @@ export default class ProductManager {
         let subCategories: SubCategory [] = [];
         if (category.subItemsMode == CategorySubItemsMode.subitems) {
             subCategories = category.subCategories;
-        } else if (category.subItemsMode == CategorySubItemsMode.tag1) {
-            let tags = _.uniq(products.map(p=>p.tag1));
+        } else if (category.subItemsMode == CategorySubItemsMode.tag1 || category.subItemsMode == CategorySubItemsMode.tag3) {
+            let tags = _.uniq(products.map(p=>p[category.subItemsMode]));
             let tagOrder = {
                 'kuzu eti': 10,
                 'dana eti': 8,
                 'karışık': 6,
                 'beyaz et': 4,
-                'mandıra': 2
+                'mandıra': 2,
+                'kemikli': 200,
+                'kemiksiz': 190,
+                'kuşbaşı': 180,
+                'kıyma': 170,
+                'diğer': 0
             }
 
             let i = 0;
@@ -113,8 +118,8 @@ export default class ProductManager {
                     id: i++,
                     visible: true,
                     categoryid: 0,
-                    displayOrder: tagOrder[t],
-                    title: t,
+                    displayOrder: tagOrder[t || 'diğer'],
+                    title: t || 'diğer',
                     description:'',
                     category: null
                 })
@@ -142,7 +147,7 @@ export default class ProductManager {
                 if (category.subItemsMode == CategorySubItemsMode.subitems) {
                     sc.products = products.filter(p => { return p.categories.find(pc=>pc.subcategoryid == sc.id) }) 
                 } else {
-                    sc.products = products.filter(p => { return p.tag1 == sc.title }) 
+                    sc.products = products.filter(p => { return p[category.subItemsMode] == (sc.title == 'diğer' ? null: sc.title) }) 
                 }
             }
         })

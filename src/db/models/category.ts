@@ -8,6 +8,8 @@ import SubCategory from './subcategory';
 export enum CategorySubItemsMode {
     none = 'none',
     tag1 = 'tag1',
+    tag2 = 'tag2',
+    tag3 = 'tag3',
     subitems = 'subitems',
     subitemsasslider = 'subitemsasslider',
     subitemshiddenasslider = 'subitemshiddenasslider'

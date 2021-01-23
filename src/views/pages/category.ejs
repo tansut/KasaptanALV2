@@ -86,14 +86,13 @@
         <div class="d-flex pb-2">
           <% controller.subCategories.forEach((sc, i) => { %>
           <div class="tag-toggle mr-3 mb-2" data-stag="<%=__helper.slugify(sc.title)%>">
-            <a onclick="goSubitem('<%=__helper.slugify(sc.title)%>')"
+            <a onclick="goSubitem('<%=__helper.slugify(sc.title) %>')"
               class="text-uppercase <%= controller.subCategories.length == 1 ? 'text-dark':  'text-info' %> font-size-sm text-center text-nowrap">
               <%=sc.title%>
             </a>
           </div>
           <% }) %>
         </div>
-
       </div>
 
 

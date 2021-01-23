@@ -26,7 +26,8 @@ export interface DispatcherQuery {
     product?: Product,
     useLevel1?: boolean;
     butcher?: number | Butcher,
-    orderType?: string
+    orderType?: string;
+    excludeCitywide?: boolean;
 }
 
 export default class Route extends ApiRouter {
@@ -69,7 +70,11 @@ export default class Route extends ApiRouter {
         ]
         where = await this._where(where, q.adr);
         
-        
+        if (q.excludeCitywide) {
+            where['toareaid'] = {
+                [Op.ne]: null
+            };
+        }
 
         if (q.product) {
             include[0]['include'] = [{

@@ -22,6 +22,7 @@ import * as _ from "lodash";
 import SubCategory from '../db/models/subcategory';
 import { flatMap } from 'lodash';
 import DispatcherApi, { DispatcherQuery } from './api/dispatcher';
+import { timeStamp } from 'console';
 
 
 export default class Route extends ViewRouter {
@@ -33,7 +34,7 @@ export default class Route extends ViewRouter {
     foodCategory = ""
     _ = _;
     subCategories: SubCategory[] = [];
-    prices: Array<any>;
+    prices: Array<any> = [];
 
 
 
@@ -203,7 +204,7 @@ export default class Route extends ViewRouter {
         if (!this.category) return this.next();
 
         if (this.category.type == 'resource') {
-            this.res.redirect('/et-yemekleri/' + this.category.slug, 301);
+            return this.res.redirect('/et-yemekleri/' + this.category.slug, 301);
             //await this.fillFoods(this.category.id, this.req.params.subcategory);
             //this.renderPage('pages/category-food.ejs')
         }
@@ -220,7 +221,6 @@ export default class Route extends ViewRouter {
             });
             this.subCategories = ProductManager.generateSubcategories(this.category, this.products);
 
-            this.renderPage('pages/category.ejs')
         } else {
             this.products = await ProductManager.getProductsOfCategories([this.category.id]);
 
@@ -233,21 +233,22 @@ export default class Route extends ViewRouter {
             } else if (this.category.tarifTitle) {
                 this.foods = await new ProductsApi(this.constructorParams).getFoodAndTarifResources(this.products, 15);
             }
-           
-            let api = new ProductsApi(this.constructorParams);
 
-
-            if (this.req.prefAddr) {
-                let dapi = new DispatcherApi(this.constructorParams);
-                let q: DispatcherQuery = {
-                    adr: this.req.prefAddr
-                }
-                let serving = await dapi.getDispatchers(q);
-                this.prices = await api.getPriceStats(this.products.map(p=>p.id), serving.map(b=>b.butcherid))
-            } else this.prices = []
-
-            this.renderPage('pages/category.ejs')
         }
+
+        let api = new ProductsApi(this.constructorParams);
+
+        if (this.req.prefAddr) {
+            let dapi = new DispatcherApi(this.constructorParams);
+            let q: DispatcherQuery = {
+                adr: this.req.prefAddr,
+                excludeCitywide: this.category.slug != 'tum-turkiye',
+            }
+            let serving = await dapi.getDispatchers(q);
+            this.prices = serving.length ? await api.getPriceStats(this.products.map(p=>p.id), serving.map(b=>b.butcherid)): []
+        } else this.prices = []
+        this.renderPage('pages/category.ejs')
+
     }
 
     @Auth.Anonymous()

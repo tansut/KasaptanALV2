@@ -960,7 +960,11 @@
                                             {{alt.butcher.locationText}}{{alt.dispatcher.distance && (alt.dispatcher.distance < 50) ? ', ' + alt.dispatcher.distance.toFixed(0) + 'km':''}}
 
                                           </span>
-                       <span v-if="alt.dispatcher.priceInfo || alt.dispatcher.userNote" >{{ alt.dispatcher.userNote || alt.dispatcher.priceInfo}}</span>  
+                                           <span v-if="alt.dispatcher.priceInfo || alt.dispatcher.userNote" >{{ alt.dispatcher.userNote || alt.dispatcher.priceInfo}}</span>.
+                                           
+                                             <span v-if="alt.dispatcher.min > 0.00">En az
+                                              <money-view class="font-weight-medium" :money="alt.dispatcher.min"></money-view> sipariş kabul edilmektedir.</span>
+                                          
                                           
                                         </div>
                                         

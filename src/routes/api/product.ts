@@ -222,7 +222,7 @@ export default class Route extends ApiRouter {
         return resources;
     }
 
-    async getPriceStatsForUnit(productids: number [], unit: string, butcherids: number [] = []): Promise<Array<any>> {
+    async getPriceStatsForUnit(productids: number [], unit: string, butcherids: number [] = [], options = {}): Promise<Array<any>> {
         let sql = `(${productids.join(',')})`;
         let butchers = `(${butcherids.join(',')})`;
         let q = `select ButcherProducts.productid as pid,  count(*) as count, 
@@ -248,13 +248,13 @@ export default class Route extends ApiRouter {
     }    
 
 
-    async getPriceStats(productids: number [], butcherids: number[]=[]): Promise<Array<any>> {
+    async getPriceStats(productids: number [], butcherids: number[]=[], options = {}): Promise<Array<any>> {
 
         let units = ['kg', 'unit1', 'unit2', 'unit3'];
         let res: Array<any> = [];
         let pids = [...productids];
         for(let i = 0; i < units.length; i++) {
-            let stats = await this.getPriceStatsForUnit(pids,  units[i], butcherids);
+            let stats = await this.getPriceStatsForUnit(pids,  units[i], butcherids, options = {});
             res = res.concat(stats);
             pids = pids.filter(p=>!res.find(r=>r.pid == p))
             if (pids.length == 0) break;

@@ -38,6 +38,7 @@ class Route extends router_1.ViewRouter {
         this.foodCategory = "";
         this._ = _;
         this.subCategories = [];
+        this.prices = [];
     }
     renderPage(view, viewAsTarif = false) {
         let pageTitle = viewAsTarif ? (this.category.tarifPageTitle || this.category.tarifTitle) : this.category.pageTitle;
@@ -204,7 +205,7 @@ class Route extends router_1.ViewRouter {
             if (!this.category)
                 return this.next();
             if (this.category.type == 'resource') {
-                this.res.redirect('/et-yemekleri/' + this.category.slug, 301);
+                return this.res.redirect('/et-yemekleri/' + this.category.slug, 301);
                 //await this.fillFoods(this.category.id, this.req.params.subcategory);
                 //this.renderPage('pages/category-food.ejs')
             }
@@ -219,7 +220,6 @@ class Route extends router_1.ViewRouter {
                     order: ['tag1']
                 });
                 this.subCategories = productManager_1.default.generateSubcategories(this.category, this.products);
-                this.renderPage('pages/category.ejs');
             }
             else {
                 this.products = yield productManager_1.default.getProductsOfCategories([this.category.id]);
@@ -230,19 +230,20 @@ class Route extends router_1.ViewRouter {
                 else if (this.category.tarifTitle) {
                     this.foods = yield new product_2.default(this.constructorParams).getFoodAndTarifResources(this.products, 15);
                 }
-                let api = new product_2.default(this.constructorParams);
-                if (this.req.prefAddr) {
-                    let dapi = new dispatcher_1.default(this.constructorParams);
-                    let q = {
-                        adr: this.req.prefAddr
-                    };
-                    let serving = yield dapi.getDispatchers(q);
-                    this.prices = yield api.getPriceStats(this.products.map(p => p.id), serving.map(b => b.butcherid));
-                }
-                else
-                    this.prices = [];
-                this.renderPage('pages/category.ejs');
             }
+            let api = new product_2.default(this.constructorParams);
+            if (this.req.prefAddr) {
+                let dapi = new dispatcher_1.default(this.constructorParams);
+                let q = {
+                    adr: this.req.prefAddr,
+                    excludeCitywide: this.category.slug != 'tum-turkiye',
+                };
+                let serving = yield dapi.getDispatchers(q);
+                this.prices = serving.length ? yield api.getPriceStats(this.products.map(p => p.id), serving.map(b => b.butcherid)) : [];
+            }
+            else
+                this.prices = [];
+            this.renderPage('pages/category.ejs');
         });
     }
     categoryPhotoRoute() {

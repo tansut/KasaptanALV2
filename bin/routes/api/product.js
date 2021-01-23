@@ -214,7 +214,7 @@ class Route extends router_1.ApiRouter {
             return resources;
         });
     }
-    getPriceStatsForUnit(productids, unit, butcherids = []) {
+    getPriceStatsForUnit(productids, unit, butcherids = [], options = {}) {
         return __awaiter(this, void 0, void 0, function* () {
             let sql = `(${productids.join(',')})`;
             let butchers = `(${butcherids.join(',')})`;
@@ -238,13 +238,13 @@ class Route extends router_1.ApiRouter {
             return res;
         });
     }
-    getPriceStats(productids, butcherids = []) {
+    getPriceStats(productids, butcherids = [], options = {}) {
         return __awaiter(this, void 0, void 0, function* () {
             let units = ['kg', 'unit1', 'unit2', 'unit3'];
             let res = [];
             let pids = [...productids];
             for (let i = 0; i < units.length; i++) {
-                let stats = yield this.getPriceStatsForUnit(pids, units[i], butcherids);
+                let stats = yield this.getPriceStatsForUnit(pids, units[i], butcherids, options = {});
                 res = res.concat(stats);
                 pids = pids.filter(p => !res.find(r => r.pid == p));
                 if (pids.length == 0)

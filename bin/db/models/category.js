@@ -18,6 +18,8 @@ var CategorySubItemsMode;
 (function (CategorySubItemsMode) {
     CategorySubItemsMode["none"] = "none";
     CategorySubItemsMode["tag1"] = "tag1";
+    CategorySubItemsMode["tag2"] = "tag2";
+    CategorySubItemsMode["tag3"] = "tag3";
     CategorySubItemsMode["subitems"] = "subitems";
     CategorySubItemsMode["subitemsasslider"] = "subitemsasslider";
     CategorySubItemsMode["subitemshiddenasslider"] = "subitemshiddenasslider";

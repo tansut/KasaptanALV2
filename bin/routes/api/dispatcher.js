@@ -58,6 +58,11 @@ class Route extends router_1.ApiRouter {
                 }
             ];
             where = yield this._where(where, q.adr);
+            if (q.excludeCitywide) {
+                where['toareaid'] = {
+                    [sequelize_1.Op.ne]: null
+                };
+            }
             if (q.product) {
                 include[0]['include'] = [{
                         model: butcherproduct_1.default

@@ -175,12 +175,15 @@ class="gallery-item-caption"><%= butcherVideo.title %></span></a>
               
                 <p class="">
                   <span class="font-weight-medium"><%=__req.prefAddr.display%></span> için teslimat <span class="font-weight-medium"><%=controller.dispatcherTypes[view.dispatcher.type]%></span> tarafından yapılmaktadır.
+              
+
+                </p>
+                <p>
                   <% if (view.dispatcher.min > 0) { %>
                     En az <span class="font-weight-medium"><%- include('./currency.ejs', {value: controller.logisticsProvider.options.dispatcher.min}) %></span> sipariş kabul edilmektedir.
                   <%  } else { %>
                     En az sipariş tutarı <span class="font-weight-medium">yoktur</span>.
                   <% } %>
-
                 </p>
              <div class="mb-3">
               <%- include('./ship-price-slice.ejs', {                                
