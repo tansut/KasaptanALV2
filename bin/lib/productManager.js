@@ -107,7 +107,8 @@ class ProductManager {
                 'kemiksiz': 190,
                 'kuşbaşı': 180,
                 'kıyma': 170,
-                'diğer': 0
+                'diğer': 0,
+                'popüler': 1000
             };
             let i = 0;
             tags.forEach(t => {
