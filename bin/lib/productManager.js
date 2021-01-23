@@ -107,6 +107,8 @@ class ProductManager {
                 'kemiksiz': 190,
                 'kuşbaşı': 180,
                 'kıyma': 170,
+                'köfte': 160,
+                'köfte & kebap': 150,
                 'diğer': 0,
                 'popüler': 1000
             };
