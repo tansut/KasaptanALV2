@@ -67,53 +67,6 @@
             </div>
         </div>
 
-
-        <% if (false) { %>
-
-            <section class="container">
-                <div>
-
-                    <div class="mb-3">
-                        <div class="d-flex flex-column h-100 justify-content-center bg-size-cover bg-position-center "
-                            style="background-image: url(<%=__config.staticDomain %>/resource/img/banner-bg.jpg)">
-                            <div class="py-4 my-2 my-md-0 py-md-5 px-4 ml-md-3 text-center text-sm-left">
-                                <h4 class="h6 font-size-lg font-weight-light mb-2">2021'e Merhaba</h4>
-                                <h3 class="mb-4 h5">Ocak ayı boyunca Kasap Kart™ ile %3 ek puan kazanın</h3>
-
-                                <a class="btn btn-primary " href="/kasap-urunleri">Tüm Ürünler</a>
-                            </div>
-                        </div>
-
-
-                    </div>
-
-
-                        <% if (false) { %>
-                    <div class="col-md-6 mb-3">
-                        <div class="d-flex flex-column h-100 justify-content-center bg-size-cover bg-position-center rounded-lg"
-                            style="background-image: url(<%=__config.staticDomain %>/resource/img/banner-bg.jpg);">
-                            <div class="py-4 my-2 my-md-0 py-md-5 px-4 ml-md-3 text-center text-sm-left">
-                                <h4 class="h6 font-size-lg font-weight-light mb-2">Şehrin En İyi Kasapları</h4>
-                                <h3 class="mb-4 h5">Deneyimli kasaplarımızı keşfedin</h3>
-                                <a class="btn btn-primary " href="/kasaplar">Kasaplar</a>
-                            </div>
-                        </div>
-                        <% } %>
-
-
-
-                    </div>
-
-
-
-
-
-
-
-                </div>
-            </section>
-
-            <% } %>
         <div class="container mb-3">
             <%- include('./_partial/category-products-slider', {category: 'populer-etler' , limit: 8, reverse: true,
                 img: 'img/category/premium.jpg' }); %>
@@ -178,12 +131,13 @@
 
 
 
+        <div class="container mb-3">
+        
+            <%- include('./_partial/category-slider', { header:true, title: 'Tüm Ürünler', allUrl: '/kasap-urunleri' }); %>
+      
+          </div>
 
 
-        <div class="container mb-3 ">
-            <%- include('./_partial/category-products-slider', {limit: 4, category: 'bu-hafta' , reverse: true,
-                img: 'img/category/premium.jpg' }); %>
-        </div>
 
 
 
