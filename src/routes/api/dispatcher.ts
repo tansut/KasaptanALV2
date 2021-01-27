@@ -59,7 +59,6 @@ export default class Route extends ApiRouter {
 
     async getDispatchers(q: DispatcherQuery) { 
         let where = {
-            type: 'butcher',
             enabled: true
         }
         let include = [
@@ -160,6 +159,7 @@ export default class Route extends ApiRouter {
                 continue; 
             let areaData = butcherAreaData.find(ad=>ad.butcherid == res[i].butcherid)
             let provider = res[i].setProvider(q.useLevel1, l3, q.orderType, areaData.bestKm);
+
             if (provider && !ugly[res[i].butcherid]) {
                 res[i].butcherArea = areaData;
                 ugly[res[i].butcherid] = res[i];
@@ -203,37 +203,6 @@ export default class Route extends ApiRouter {
         })
 
         return d;
-
-
-        // let where = {
-        //     type: 'butcher'
-        // }
-
-        // where = await this._where(where, address);
-
-        // let children = address.level3Id ? []: await Area.findAll({
-        //     attributes: ['id'],
-        //     where: {
-        //         parentid: address.level2Id
-        //     }
-        // }).map(a => a.id)
-        
-        // children.push(address.level3Id || address.level2Id || address.level1Id);
-        // where["toareaid"] = children;
-
-        // //where["toarealevel"] = address.level3Id ? 3 : (address.level2Id ? 2 : 1)
-        // let res = await Dispatcher.findAll({
-        //     where: where,
-        //     include: [
-        //         {
-        //             model: Butcher,
-        //             as: 'butcher'
-        //         },
-        //     ],
-        //     order: [["toarealevel", "DESC"]]
-        // })
-
-        // return res;
     }
 
     async dispatchingAvailable(address: PreferredAddress, useLevel1: boolean) {

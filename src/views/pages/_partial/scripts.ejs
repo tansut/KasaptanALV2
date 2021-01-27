@@ -65,7 +65,7 @@
                 value: item.id,
                 text:  item.text,
                 html: item.thumb ? [ 
-                    $('<img>').attr('src', item.thumb).css("height", 48).css("width", 48), ' ', 
+                    $('<img>').attr('src', item.thumb).css("height", 36).css("width", 36), ' ', 
                     item.text, 
                     //item.type ? $('<span>').text(' /' + item.type + '').addClass('text-muted'):'' 
                   ] : [
@@ -78,7 +78,7 @@
             
       resolverSettings: {
         url: '/api/v1/fts',
-        requestThrottling: 2000
+        requestThrottling: 5000
       },
       events: {
   
@@ -147,7 +147,7 @@
   function ensureLocation(returnUrl) {
     if (window.App.User.prefAdr) return true;
     window.kb.selectArea(function (sender, ul) {
-          window.location.href = "/adres-belirle/" + ul.selectedDistrict.slug + '?r=' + (returnUrl || window.location.href);
+          window.location.href = "/adres-belirle/" + ul.selectedDistrict.slug + '?lng=' + ul.lng + '&lat=' + ul.lat + '&r=' + (returnUrl || window.location.href);
         });
     return false
 
@@ -241,7 +241,7 @@
         var self = this;
         window.kb.selectArea(function (sender, ul) {
           var ref = $(self).data('return') ||  window.location.href;
-          window.location.href = "/adres-belirle/" + ul.selectedDistrict.slug + '?r=' + ref;
+          window.location.href = "/adres-belirle/" + ul.selectedDistrict.slug + '?lng=' + ul.lng + '&lat=' + ul.lat + '&r=' + ref;
           //window.location.reload(true) // = "/" + window.App.ProductApp.product.slug + "?semt=" + ul.selectedDistrict.slug
   
         });

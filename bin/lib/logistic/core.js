@@ -59,6 +59,7 @@ class LogisticProvider {
         let tobeRemoved = [], cleaned = [];
         for (var i = result.length - 1; i >= 0; i--) {
             let prev = i - 1;
+            result[i].start = Math.max(result[i].start, this.options.dispatcher.minCalculated);
             if (prev > 0) {
                 if (result[i].cost == result[prev].cost) {
                     tobeRemoved.push(prev);

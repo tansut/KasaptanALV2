@@ -29,11 +29,9 @@ export interface CustomerPriceParams {
 export interface CustomerPriceConfig {
     kmPrice?: number;
     kmMin?: number;
-    freeShip?: number;
     contrib?: number;
-    kmMax?: number;
-    minOrder?: number;
     kmMultiplier?: number;
+    minMultiplier?: number;
 }
 
 export enum VehicleType {
@@ -127,7 +125,8 @@ export interface FromTo {
 }
 
 export interface LogisticProviderOptions {
-    dispatcher: Dispatcher
+    dispatcher: Dispatcher;
+    initialDistance: number;
 }
 
 
@@ -135,6 +134,8 @@ export interface DistanceParams {
     areaOnly?: boolean;
 
 }
+
+
 
 export class LogisticProvider {
     logger: SiteLogRoute;
@@ -179,6 +180,7 @@ export class LogisticProvider {
         let tobeRemoved = [], cleaned: PriceSlice [] = []
         for(var i = result.length-1; i >=0; i--) {
             let prev = i - 1;
+            result[i].start = Math.max(result[i].start, this.options.dispatcher.minCalculated);
             if (prev > 0) {
                 if (result[i].cost == result[prev].cost) {
                     tobeRemoved.push(prev)

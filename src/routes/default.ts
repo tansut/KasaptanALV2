@@ -18,6 +18,7 @@ import { ProductCacheItem, CacheManager } from '../lib/cache';
 import { Op } from 'sequelize';
 import { SiteStatsData } from '../models/sitestat';
 import { SiteStats } from '../lib/sitestats';
+import TempLoc from '../db/models/temp_loc';
 
 let ellipsis = require('text-ellipsis');
 
@@ -90,6 +91,7 @@ export default class Route extends ViewRouter {
         this.blogItems = await this.getBlogItems();
         //this.stats = await SiteStats.get();
 
+        
 
         this.res.render("pages/default.ejs", this.viewData({
             //recentButchers: recentButchers,
@@ -103,14 +105,61 @@ export default class Route extends ViewRouter {
         let area = await Area.getBySlug(this.req.params.slug);
         if (!area) return this.next();
         if (area.level == 3) {
+            await area.ensureLocation()
             await this.req.helper.setPreferredAddress({
                 level3Id: area.id
             }, true);
-            await area.ensureLocation()
         }
         if (this.req.query.r)
             this.res.redirect(this.req.query.r as string);
         else this.res.redirect('/')
+    }
+
+    async tempares() {
+        let tl = await TempLoc.findAll({
+            where: {
+                il: ['ANKARA', 'İSTANBUL', 'İZMİR', 'BURSA', 'ESKİŞEHİR']
+            }
+        })
+
+        for(let i = 0; i < tl.length;i++) {
+            let t = tl[i];
+            t.semt = t.semt.replace("ERYAMANEVLERİ", "ERYAMAN")
+            t.semt = t.semt.replace("HASKÖY S.EVLERİ", "HASKÖY SUBAYEVLERİ")
+
+            
+
+            let slug = Helper.slugify(`${t.il}-${t.ilce}-${t.semt}`);
+            let area = await Area.findOne({
+                where: {
+                    slug: slug
+                }
+            })
+
+
+
+            if (!area) {
+                console.log(`${t.il}-${t.ilce}-${t.semt} bulunamadı`)
+            } else {
+                let na: Area = new Area();
+                na.name = Helper.capitlize(t.mahalle.replace(" MAH", ' Mahallesi'));
+                na.slug = Helper.slugify(`${area.slug}-${t.mahalle.replace(" MAH", '')}`);
+                na.parentid = area.id;
+                na.lowerName = Helper.toLower(na.name);
+                na.level = 4;
+                na.status = 'generic';
+                try {
+                    await na.save();
+                } catch(err) {
+console.log(err.message)
+                }
+               
+            }
+
+
+        }
+        
+        this.res.send('OK')
     }
 
     static SetRoutes(router: express.Router) {
@@ -122,6 +171,7 @@ export default class Route extends ViewRouter {
 
         // }
         router.get("/", Route.BindRequest(this.prototype.defaultRoute))
+        router.get("/temparea", Route.BindRequest(this.prototype.tempares))
         router.get("/adres-belirle/:slug", Route.BindRequest(this.prototype.setUserAddr))
         router.get("/hikayemiz", Route.BindToView("pages/content.kurumsal.ejs"));
         router.get("/neden-kasaptanal", Route.BindToView("pages/content.neden-kasaptanal.ejs"));

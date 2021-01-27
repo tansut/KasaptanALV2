@@ -92,6 +92,18 @@ export default class AreaTask extends BaseTask {
 
         await res;
 
+        let emptyLoc = await Area.findAll({
+            where: {
+                locationData: {
+                    [Op.eq]: null
+                },
+                level: [1,2,3]
+            },
+            limit: 1000
+        })
+
+        await emptyLoc.forEach(async l=>await l.ensureLocation())
+
         console.log('done AreaTask job', Date.now())
 
     }

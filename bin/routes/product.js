@@ -270,7 +270,7 @@ class Route extends router_1.ViewRouter {
                         dispatcher: dispatcher ? {
                             id: dispatcher.id,
                             fee: dispatcher.fee,
-                            min: dispatcher.min,
+                            minCalculated: dispatcher.minCalculated,
                             totalForFree: dispatcher.totalForFree,
                             type: dispatcher.type,
                             distance: dispatcher.butcherArea.bestKm,
@@ -295,7 +295,7 @@ class Route extends router_1.ViewRouter {
                     view.dispatcher = dispatcher ? {
                         id: dispatcher.id,
                         fee: dispatcher.fee,
-                        min: dispatcher.min,
+                        minCalculated: dispatcher.minCalculated,
                         totalForFree: dispatcher.totalForFree,
                         type: dispatcher.type,
                         priceInfo: dispatcher.priceInfo,

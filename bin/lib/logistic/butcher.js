@@ -16,10 +16,7 @@ const helper_1 = require("../helper");
 class ButcherManualLogistics extends core_1.LogisticProvider {
     constructor(config, options) {
         super(config, options);
-        if (options.dispatcher) {
-            options.dispatcher.type = "butcher";
-            options.dispatcher.name = dispatcher_1.DispatcherTypeDesc[options.dispatcher.type];
-        }
+        options.dispatcher.name = dispatcher_1.DispatcherTypeDesc[options.dispatcher.type];
     }
     static register() {
         core_1.LogisticFactory.register(ButcherManualLogistics.key, ButcherManualLogistics);
@@ -64,7 +61,7 @@ class ButcherManualLogistics extends core_1.LogisticProvider {
             if (this.options.dispatcher) {
                 if (this.options.dispatcher.fee > 0.0) {
                     arr.push({
-                        start: this.options.dispatcher.min,
+                        start: this.options.dispatcher.minCalculated,
                         end: this.options.dispatcher.totalForFree,
                         cost: this.options.dispatcher.fee
                     });
@@ -77,7 +74,7 @@ class ButcherManualLogistics extends core_1.LogisticProvider {
                 }
                 if (arr.length == 0) {
                     arr.push({
-                        start: this.options.dispatcher.min,
+                        start: this.options.dispatcher.minCalculated,
                         end: this.options.dispatcher.totalForFree,
                         cost: this.options.dispatcher.fee
                     });
@@ -92,9 +89,12 @@ ButcherManualLogistics.key = "butcher";
 class ButcherAutoLogistics extends core_1.LogisticProvider {
     constructor(config, options) {
         super(config, options);
-        this.dispatcher = options.dispatcher;
-        options.dispatcher.min = this.getCustomerFeeConfig().minOrder;
         options.dispatcher.type = "butcher/auto";
+        let opts = this.getCustomerFeeConfig();
+        this.options.dispatcher.min = this.options.dispatcher.min || 100.00;
+        if (options.initialDistance > opts.kmMin && opts.minMultiplier) {
+            this.options.dispatcher.minCalculated = helper_1.default.asCurrency(Math.ceil((this.options.dispatcher.min + (options.initialDistance - opts.kmMin) * opts.minMultiplier) / 25) * 25);
+        }
         options.dispatcher.name = dispatcher_1.DispatcherTypeDesc[options.dispatcher.type];
     }
     static register() {
@@ -103,11 +103,12 @@ class ButcherAutoLogistics extends core_1.LogisticProvider {
     getCustomerFeeConfig() {
         let butcherConfig = this.options.dispatcher.butcher.logisticSetings || {};
         let config = {
-            contrib: 0.05,
-            kmPrice: 1.30,
+            contrib: 0.06,
+            kmPrice: 2.2,
             kmMin: 5,
-            kmMultiplier: 0.4,
-            minOrder: 100.00
+            kmMultiplier: 0.5,
+            minMultiplier: 10.00
+            //minOrder: 100.00 
         };
         return butcherConfig["butcher/auto"] || config;
     }
@@ -143,23 +144,27 @@ class ButcherAutoLogistics extends core_1.LogisticProvider {
     }
     calculateCustomerFee(offer) {
         let input = this.getCustomerFeeConfig();
-        input.kmMax = input.kmMax || (this.dispatcher ? this.dispatcher.butcher.radiusAsKm : 50);
+        let kmMax = this.options.dispatcher.butcher.radiusAsKm;
         let distance = offer.distance < input.kmMin ? input.kmMin : offer.distance;
-        let orderTotal = offer.orderTotal < input.minOrder ? input.minOrder : offer.orderTotal;
-        let maxMinKmDif = input.kmMax - input.kmMin;
+        let maxMinKmDif = kmMax - input.kmMin;
         let distanceDif = distance - input.kmMin;
         let kmRatio = distanceDif / maxMinKmDif;
+        let regMin = this.options.dispatcher.min;
         let kmPrice = helper_1.default.asCurrency(input.kmPrice * (1.00 + kmRatio * input.kmMultiplier));
         let regCost = helper_1.default.asCurrency((distance - input.kmMin) * kmPrice);
         let fee = regCost;
-        if (fee >= 0 && input.kmMax && distance > input.kmMax)
+        this.options.dispatcher.min = this.options.dispatcher.min || 100.00;
+        if (distance > input.kmMin && input.minMultiplier) {
+            this.options.dispatcher.minCalculated = helper_1.default.asCurrency(Math.ceil((this.options.dispatcher.min + (distance - input.kmMin) * input.minMultiplier) / 50) * 50);
+        }
+        if (kmMax && distance > kmMax)
             fee = -1;
-        if (fee >= 0 && input.minOrder && offer.orderTotal < input.minOrder)
+        else if (this.options.dispatcher.minCalculated && offer.orderTotal < this.options.dispatcher.minCalculated)
             fee = -1;
-        if (fee <= 0 && input.freeShip && input.freeShip <= offer.orderTotal)
+        else if (this.options.dispatcher.totalForFree && this.options.dispatcher.totalForFree <= offer.orderTotal)
             fee = 0.00;
-        if (fee > 0.00) {
-            let contribDif = offer.orderTotal - input.minOrder;
+        else {
+            let contribDif = Math.max(0.00, offer.orderTotal - this.options.dispatcher.totalForFree);
             let contrib = input.contrib ? helper_1.default.asCurrency(contribDif * input.contrib) : 0.00;
             let calc = Math.max(0.00, regCost - contrib);
             fee = this.roundCustomerFee(calc);
@@ -173,20 +178,27 @@ class ButcherAutoLogistics extends core_1.LogisticProvider {
         return __awaiter(this, void 0, void 0, function* () {
             let prices = [], result = [];
             let offerRequest = this.offerRequestFromTo(ft);
-            for (let i = 0; i < 10; i++)
-                prices.push(helper_1.default.asCurrency(i * slice));
+            for (let i = 0; i < 10; i++) {
+                let price = Math.max(helper_1.default.asCurrency(this.options.dispatcher.minCalculated), helper_1.default.asCurrency(i * slice));
+                prices.indexOf(price) >= 0 ? null : prices.push(price);
+            }
             for (let i = 0; i < prices.length; i++) {
                 offerRequest.orderTotal = helper_1.default.asCurrency((2 * prices[i] + slice) / 2);
                 let offer = yield this.requestOffer(offerRequest);
                 if (offer) {
                     let item = {
                         start: prices[i],
-                        end: prices[i] + slice,
+                        end: offer.customerFee <= 0.00 ? 0.00 : prices[i] + slice,
                         cost: offer.customerFee
                     };
-                    result.push(item);
+                    let found = result.find(u => u.cost == offer.customerFee);
+                    if (!found) {
+                        if (item.end == 0.00 || item.end >= this.options.dispatcher.minCalculated)
+                            result.push(item);
+                    }
+                    else
+                        found.end = item.end;
                     if (offer.customerFee <= 0.00) {
-                        item.end = 0.00;
                         break;
                     }
                     ;

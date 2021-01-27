@@ -56,15 +56,13 @@ export class RequestHelper {
 
     async setPreferredAddress(adr: PreferredAddress, save: boolean = false) {
         if (adr && adr.level3Id) {
-            if (adr.level3Id) {
+           
                 let area = await Area.findByPk(adr.level3Id, {
                     include: [
                         { all: true }
                     ]
                 })
-
-                
-
+                await area.ensureLocation()
                 let pa = await Area.findByPk(area.parent.id, {
                     include: [
                         { all: true }
@@ -88,6 +86,9 @@ export class RequestHelper {
                 adr.level2Status = pa.status;
                 adr.level3Status = area.status;
 
+                adr.lat = adr.lat || area.location.coordinates[0];
+                adr.lng = adr.lng || area.location.coordinates[1];
+
                 adr.display = `${adr.level3Text}, ${adr.level2Text}/${adr.level1Text}`;
 
                 this.req.prefAddr = adr;
@@ -97,15 +98,20 @@ export class RequestHelper {
                         this.req.user.lastLevel1Id = adr.level1Id;
                         this.req.user.lastLevel2Id = adr.level2Id;
                         this.req.user.lastLevel3Id = adr.level3Id;
+                        this.req.user.lastLocation = {
+                            type: 'Point',
+                            coordinates: [adr.lat, adr.lng]
+                        }
+
                         await this.req.user.save();
                     } else {
                         this.req.session.prefAddr = adr;
-                        await new Promise((resolve, reject) => {
+                        await new Promise<void>((resolve, reject) => {
                             this.req.session.save(err => (err ? reject(err) : resolve()))
                         })
                     }
                 }
-            }
+            
         }
         else delete this.req.prefAddr;
     }

@@ -140,7 +140,7 @@
                 this.gpsQueryApp =
                     new Vue({
                         el: '#userlocationapp',
-                        data: { list: [], selected: null },
+                        data: { lat: 0, lng: 0, list: [], selected: null },
                         methods: {
                             locateSemt: function () {
                                 $('#semt-from-device').text("Hesaplıyorum...");
@@ -152,6 +152,8 @@
                                             lng: position.coords.longitude
                                         }).then(function (result) {
                                             self.list = result;
+                                            self.lat = position.coords.latitude;
+                                            self.lng = position.coords.longitude;
                                             if (result.length) {
 
                                             } else {
@@ -185,6 +187,8 @@
                             go(adr) {
                                 window.App.gTag('location', 'location/set', adr.display)
                                 var ul = {};
+                                ul.lat = self.lat;
+                                ul.lng = self.lng;
                                 ul.selectedDistrict = ul.selectedDistrict || {}
                                 ul.selectedDistrict.slug = adr.url;
                                 $(window).trigger('kb.selectArea.selected', [self, ul]);

@@ -19,18 +19,25 @@ export interface PreferredAddress {
     level1Id?: number;
     level2Id?: number;
     level3Id?: number;
+    level4Id?: number;
 
     level1Text?: string;
     level2Text?: string;
     level3Text?: string;
+    level4Text?: string;
 
     level1Slug?: string;
     level2Slug?: string;
     level3Slug?: string;    
+    level4Slug?: string;    
 
     level1Status?: string;
     level2Status?: string;
     level3Status?: string;
+    level4Status?: string;
+
+    lat?:number;
+    lng?:number;
 
     display?: string;
 }
@@ -175,6 +182,8 @@ export default class User extends BaseModel<User> {
         allowNull: true        
     })
     lastLevel3Id: number;       
+
+    
 
     @Column({
         allowNull: false,

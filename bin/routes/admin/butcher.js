@@ -243,7 +243,8 @@ class Route extends router_1.ViewRouter {
                 d.areaTag = this.req.body['areaTag' + id.toString()];
                 d.userNote = this.req.body['userNote' + id.toString()];
                 d.selection = sel;
-                d.logisticProviderUsage = dlogistic;
+                //d.logisticProviderUsage = dlogistic;
+                d.type = dlogistic;
                 d.fee = fee;
                 d.totalForFree = free;
                 d.min = min;
@@ -291,7 +292,8 @@ class Route extends router_1.ViewRouter {
                         coordinates: [parseFloat(this.req.body.butcherlat), parseFloat(this.req.body.butcherlng)]
                     };
                 }
-                this.butcher.logisticProviderUsage = this.req.body.logisticProviderUsage;
+                //this.butcher.logisticProviderUsage = this.req.body.logisticProviderUsage;
+                this.butcher.defaultDispatcher = this.req.body.defaultDispatcher;
                 yield this.butcher.save();
                 //return this.res.redirect(`/pages/admin/butcher/${this.butcher.slug}`)
             }

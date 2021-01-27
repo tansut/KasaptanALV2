@@ -45,7 +45,7 @@
     p.selectAddress = function (product) {
       p.closePurchaseDialog();
       window.kb.selectArea(function (sender, ul) {
-        window.location.href = "/adres-belirle/" + ul.selectedDistrict.slug + '?r=' + encodeURIComponent('/<%=`${returnUrl}?open=`%>' + product);
+        window.location.href = "/adres-belirle/" + ul.selectedDistrict.slug + '?lng=' + ul.lng + '&lat=' + ul.lat + '&r=' + encodeURIComponent('/<%=`${returnUrl}?open=`%>' + product);
       });
     }
 
@@ -114,7 +114,7 @@
           openPurchaseDialog($(e.currentTarget).data('product'))
           <% } else { %>
             window.kb.selectArea(function (sender, ul) {
-              window.location.href = "/adres-belirle/" + ul.selectedDistrict.slug + '?r=' + encodeURIComponent('/<%=`${returnUrl}?open=`%>' + $(e.currentTarget).data('product'));
+              window.location.href = "/adres-belirle/" + ul.selectedDistrict.slug + '?lng=' + ul.lng + '&lat=' + ul.lat + '&r=' + encodeURIComponent('/<%=`${returnUrl}?open=`%>' + $(e.currentTarget).data('product'));
             });
   <% } %>
 })

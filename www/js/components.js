@@ -472,7 +472,7 @@ window.initComponents = function initComponents() {
                         self.note && (returnUrl += '&note=' + encodeURIComponent(self.note))
                         returnUrl += '#aftersetloc'
                     }
-                    window.location.href = "/adres-belirle/" + ul.selectedDistrict.slug + '?r=' + (encodeURIComponent(returnUrl));
+                    window.location.href = "/adres-belirle/" + ul.selectedDistrict.slug + '?lng=' + ul.lng + '&lat=' + ul.lat + '&r=' + (encodeURIComponent(returnUrl));
                     //window.location.reload(true) // = "/" + window.App.ProductApp.product.slug + "?semt=" + ul.selectedDistrict.slug
                 }, {
                     msg: msg

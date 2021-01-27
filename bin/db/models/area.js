@@ -97,7 +97,7 @@ let Area = Area_1 = class Area extends basemodel_1.default {
                     display: this.name + '/' + parent.name
                 };
             }
-            else {
+            else if (this.level == 3) {
                 let parentOfParent, parent;
                 parentOfParent = this.parent && this.parent.parent;
                 if (parentOfParent == null) {
@@ -118,6 +118,34 @@ let Area = Area_1 = class Area extends basemodel_1.default {
                     level3Text: this.name,
                     level3Status: this.status,
                     display: this.name + ', ' + parent.name + '/' + parentOfParent.name
+                };
+            }
+            else {
+                let parentOfParent2, parentOfParent, parent;
+                parentOfParent = this.parent && this.parent.parent;
+                if (parentOfParent == null) {
+                    parent = this.parent || (yield Area_1.findByPk(this.parentid));
+                    parentOfParent = parent.parent || (yield Area_1.findByPk(parent.parentid));
+                    parentOfParent2 = parentOfParent.parent || (yield Area_1.findByPk(parentOfParent.parentid));
+                }
+                res = {
+                    level1Id: parentOfParent2.id,
+                    level1Slug: parentOfParent2.slug,
+                    level1Text: parentOfParent2.name,
+                    level1Status: parentOfParent2.status,
+                    level2Id: parentOfParent.id,
+                    level2Slug: parentOfParent.slug,
+                    level2Text: parentOfParent.name,
+                    level2Status: parentOfParent.status,
+                    level3Id: parent.id,
+                    level3Slug: parent.slug,
+                    level3Text: parent.name,
+                    level3Status: parent.status,
+                    level4Id: this.id,
+                    level4Slug: this.slug,
+                    level4Text: this.name,
+                    level4Status: this.status,
+                    display: this.name + ', ' + parent.name + ', ' + parentOfParent.name + '/' + parentOfParent2.name
                 };
             }
             return res;
@@ -171,7 +199,9 @@ __decorate([
     __metadata("design:type", String)
 ], Area.prototype, "name", void 0);
 __decorate([
-    sequelize_typescript_1.Column,
+    sequelize_typescript_1.Column({
+        type: sequelize_typescript_1.DataType.TEXT
+    }),
     __metadata("design:type", String)
 ], Area.prototype, "keywords", void 0);
 __decorate([
@@ -208,6 +238,12 @@ __decorate([
 ], Area.prototype, "lowerName", void 0);
 __decorate([
     sequelize_typescript_1.Column({
+        allowNull: true
+    }),
+    __metadata("design:type", String)
+], Area.prototype, "display", void 0);
+__decorate([
+    sequelize_typescript_1.Column({
         allowNull: false
     }),
     __metadata("design:type", Number)
@@ -238,7 +274,7 @@ Area = Area_1 = __decorate([
             },
             {
                 name: "slug_level_idx",
-                fields: ["slug", "level"],
+                fields: ["slug"],
                 unique: true
             },
             { type: 'FULLTEXT', name: 'area_fts', fields: ['name', 'slug', 'keywords'] }]

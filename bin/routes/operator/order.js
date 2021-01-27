@@ -142,7 +142,8 @@ class Route extends router_1.ViewRouter {
                                 model: butcher_1.default,
                                 as: 'butcher',
                             }]
-                    })
+                    }),
+                    initialDistance: 0
                 });
                 provider.safeRequests = false;
                 let request = provider.offerFromOrder(this.order);
@@ -161,7 +162,8 @@ class Route extends router_1.ViewRouter {
                                 model: butcher_1.default,
                                 as: 'butcher',
                             }]
-                    })
+                    }),
+                    initialDistance: 0
                 });
                 provider.safeRequests = false;
                 let request = provider.orderFromOrder(this.order);

@@ -1,34 +1,27 @@
 
-
-    <div class="mb-2">
-        <div class="d-flex justify-content-end text-muted  font-size-sm">
-            <div id="userlocationapp" class="mb-1">
-                <a v-if="!list || list.length == 0" id="semt-from-device"  @click="locateSemt()">
+    <div class="mb-3">
+            <div  id="userlocationapp" class="mb-3 d-flex justify-content-center">
+                <a class="btn btn-primary" v-if="!list || list.length == 0" id="semt-from-device"  @click="locateSemt()">
                     <i class="czi-location"></i>
-                    Konumumu Kullan</a>
+                     Konumumu Kullan</a>
                     <div v-if="list && list.length > 0">
                       
                         <div v-for="(addr, index) in list" class="mb-2">
-                              <a @click="go(addr)">{{addr.display}}</a>
+                              <a class="btn btn-sm btn-secondary d-block" @click="go(addr)">{{addr.display}}</a>
               
                           </div>                
                     </div>
             </div>
 
-       
-     
-        </div>
-        <div class="">
-          
             <input title="seçim" data-none-selected-text="seçim yapın" , data-search="area" id="page-searchbox"
                 class="form-control searchBox-semt prepended-form-control" data-noresults-text="Maalesef bulamadık. Listeden seçim yapabilirsiniz."
-                autocomplete="off" type="text" placeholder="semtinizi arayın">
-        </div>
+                autocomplete="off" type="search" placeholder="veya semtinizi arayın">
+       
  
        
     </div>
-    <div class="mb-2">
-        <a onclick="$('#select-areafrom-list').toggle();">veya listeden seçin &raquo;</a>
+    <div class="mb-2 text-right">
+        <a onclick="$('#select-areafrom-list').toggle();">Listeden Seç &raquo;</a>
     </div>
     <div id="select-areafrom-list" style="display: none;" class="">
         <div class="row ">

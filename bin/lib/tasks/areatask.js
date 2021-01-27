@@ -76,6 +76,16 @@ class AreaTask extends basetask_1.BaseTask {
                 return Promise.all(result);
             });
             yield res;
+            let emptyLoc = yield area_1.default.findAll({
+                where: {
+                    locationData: {
+                        [sequelize_1.Op.eq]: null
+                    },
+                    level: [1, 2, 3]
+                },
+                limit: 1000
+            });
+            yield emptyLoc.forEach((l) => __awaiter(this, void 0, void 0, function* () { return yield l.ensureLocation(); }));
             console.log('done AreaTask job', Date.now());
         });
     }

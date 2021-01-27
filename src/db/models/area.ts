@@ -25,11 +25,11 @@ export interface AreaLevels {
     },
     {
         name: "slug_level_idx",
-        fields: ["slug", "level"],
+        fields: ["slug"],
         unique: true
     },
-    
-        { type: 'FULLTEXT', name: 'area_fts', fields: ['name', 'slug', 'keywords'] }]
+
+    { type: 'FULLTEXT', name: 'area_fts', fields: ['name', 'slug', 'keywords'] }]
 })
 class Area extends BaseModel<Area> {
     static async NormalizeNames() {
@@ -62,7 +62,7 @@ class Area extends BaseModel<Area> {
         allowNull: true,
         type: DataType.GEOMETRY('POINT')
     })
-    southwest: GeoLocation;  
+    southwest: GeoLocation;
 
     @Column
     placeid: string;
@@ -74,7 +74,7 @@ class Area extends BaseModel<Area> {
         allowNull: true,
         type: DataType.TEXT
     })
-    locationData: string;    
+    locationData: string;
 
 
     static async getBySlug(slug: string) {
@@ -101,11 +101,11 @@ class Area extends BaseModel<Area> {
                     await this.save();
                 }
 
-            } catch(err) {
+            } catch (err) {
                 email.send('tansut@gmail.com', 'hata/ensurelocation', "error.ejs", {
                     text: err.message,
                     stack: err.stack
-                })               
+                })
             }
 
         }
@@ -116,7 +116,9 @@ class Area extends BaseModel<Area> {
     })
     name: string;
 
-    @Column
+    @Column({
+        type: DataType.TEXT
+    })
     keywords: string;
 
     @Column({
@@ -129,7 +131,7 @@ class Area extends BaseModel<Area> {
         allowNull: false,
         defaultValue: 'generic'
     })
-    status: string;    
+    status: string;
 
     @Column({
         allowNull: true,
@@ -145,6 +147,12 @@ class Area extends BaseModel<Area> {
         allowNull: false,
     })
     lowerName: string;
+
+    @Column({
+        allowNull: true
+    })
+    display: string;
+
 
     @Column({
         allowNull: false
@@ -167,7 +175,7 @@ class Area extends BaseModel<Area> {
 
     async getPreferredAddress() {
         let res: PreferredAddress;
-        if (this.level == 1)  {
+        if (this.level == 1) {
             res = {
                 level1Id: this.id,
                 level1Slug: this.slug,
@@ -189,8 +197,8 @@ class Area extends BaseModel<Area> {
                 level2Status: this.status,
                 display: this.name + '/' + parent.name
             }
-        } else {
-            let parentOfParent, parent: Area;            
+        } else if (this.level == 3) {
+            let parentOfParent, parent: Area;
             parentOfParent = this.parent && this.parent.parent;
             if (parentOfParent == null) {
                 parent = this.parent || await Area.findByPk(this.parentid);
@@ -209,11 +217,44 @@ class Area extends BaseModel<Area> {
 
                 level3Id: this.id,
                 level3Slug: this.slug,
-                level3Text: this.name           ,
-                level3Status: this.status          ,
-                
-                display: this.name + ', ' + parent.name + '/' + parentOfParent.name 
-            }            
+                level3Text: this.name,
+                level3Status: this.status,
+
+                display: this.name + ', ' + parent.name + '/' + parentOfParent.name
+            }
+        } else {
+            let parentOfParent2, parentOfParent, parent: Area;
+            parentOfParent = this.parent && this.parent.parent;
+            if (parentOfParent == null) {
+                parent = this.parent || await Area.findByPk(this.parentid);
+                parentOfParent = parent.parent || await Area.findByPk(parent.parentid);
+                parentOfParent2 = parentOfParent.parent || await Area.findByPk(parentOfParent.parentid);
+
+            }
+            res = {
+
+                level1Id: parentOfParent2.id,
+                level1Slug: parentOfParent2.slug,
+                level1Text: parentOfParent2.name,
+                level1Status: parentOfParent2.status,
+
+                level2Id: parentOfParent.id,
+                level2Slug: parentOfParent.slug,
+                level2Text: parentOfParent.name,
+                level2Status: parentOfParent.status,
+
+                level3Id: parent.id,
+                level3Slug: parent.slug,
+                level3Text: parent.name,
+                level3Status: parent.status,
+
+                level4Id: this.id,
+                level4Slug: this.slug,
+                level4Text: this.name,
+                level4Status: this.status,
+
+                display: this.name + ', ' + parent.name + ', ' + parentOfParent.name + '/' + parentOfParent2.name
+            }
         }
 
         return res;
@@ -224,7 +265,7 @@ class Area extends BaseModel<Area> {
     //         where: {
     //             level: 1
     //         },
-            
+
     //         raw: true
     //     }).then(data => {
     //         for (let i = 0; i < data.length; i++) {

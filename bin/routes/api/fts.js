@@ -67,7 +67,7 @@ class Route extends router_1.ApiRouter {
                 type: sq.QueryTypes.SELECT,
                 mapToModel: false,
                 raw: true
-            }).map((p, i) => {
+            }).map((p, i) => __awaiter(this, void 0, void 0, function* () {
                 let px = p;
                 return {
                     id: 'c' + i,
@@ -77,7 +77,7 @@ class Route extends router_1.ApiRouter {
                     score: px.RELEVANCE,
                     thumb: this.req.helper.imgUrl('category-photos', px.url)
                 };
-            });
+            }));
             return cats;
         });
     }
@@ -106,7 +106,7 @@ class Route extends router_1.ApiRouter {
     getAreas(search) {
         return __awaiter(this, void 0, void 0, function* () {
             let areas = yield user_1.default.sequelize.query("select id, level, name, slug as url, 'Lokasyon' as type, match(name, slug, keywords) against (:search IN BOOLEAN MODE) as RELEVANCE " +
-                "from Areas where level=3 and (match(name, slug, keywords)  against (:search IN BOOLEAN MODE) or match(name, slug, keywords)  against (:search2 IN BOOLEAN MODE)) ORDER BY level, RELEVANCE DESC LIMIT 25", {
+                "from Areas where level>=3  and (match(name, slug, keywords)  against (:search IN BOOLEAN MODE) or match(name, slug, keywords)  against (:search2 IN BOOLEAN MODE)) ORDER BY level, RELEVANCE DESC LIMIT 25", {
                 replacements: { search2: helper_1.default.slugify(search), search: search },
                 type: sq.QueryTypes.SELECT,
                 mapToModel: false,
@@ -117,14 +117,22 @@ class Route extends router_1.ApiRouter {
                     id: px.id,
                     name: px.name + (px.level > 1 ? ` [${px.url}]` : ''),
                     url: px.url,
+                    level: px.level,
                     type: px.type,
                     score: px.RELEVANCE
                 };
             });
+            let temp = areas;
             for (let i = 0; i < areas.length; i++) {
                 let area = areas[i];
                 let addr = yield area_1.default.findByPk(area.id);
                 let pref = yield addr.getPreferredAddress();
+                area.name = pref.display;
+                if (area.level == 4) {
+                    area.level = 3;
+                    area.id = pref.level3Id;
+                    area.url = pref.level3Slug;
+                }
                 area['display'] = pref.display;
                 area['l1'] = {
                     name: pref.level1Text,
@@ -134,8 +142,10 @@ class Route extends router_1.ApiRouter {
                         name: pref.level2Text,
                         slug: pref.level2Slug
                     };
+                if (!temp.find(t => t.url == area.url))
+                    temp.push(area);
             }
-            return areas;
+            return temp;
         });
     }
     getButchers(search) {

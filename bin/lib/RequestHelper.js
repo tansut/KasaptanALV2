@@ -58,44 +58,49 @@ class RequestHelper {
     setPreferredAddress(adr, save = false) {
         return __awaiter(this, void 0, void 0, function* () {
             if (adr && adr.level3Id) {
-                if (adr.level3Id) {
-                    let area = yield area_1.default.findByPk(adr.level3Id, {
-                        include: [
-                            { all: true }
-                        ]
-                    });
-                    let pa = yield area_1.default.findByPk(area.parent.id, {
-                        include: [
-                            { all: true }
-                        ]
-                    });
-                    adr.level1Id = pa.parent.id;
-                    adr.level2Id = pa.id;
-                    adr.level3Id = area.id;
-                    adr.level1Text = pa.parent.name;
-                    adr.level2Text = pa.name;
-                    adr.level3Text = area.name;
-                    adr.level1Slug = pa.parent.slug;
-                    adr.level2Slug = pa.slug;
-                    adr.level3Slug = area.slug;
-                    adr.level1Status = pa.parent.status;
-                    adr.level2Status = pa.status;
-                    adr.level3Status = area.status;
-                    adr.display = `${adr.level3Text}, ${adr.level2Text}/${adr.level1Text}`;
-                    this.req.prefAddr = adr;
-                    if (save) {
-                        if (this.req.user) {
-                            this.req.user.lastLevel1Id = adr.level1Id;
-                            this.req.user.lastLevel2Id = adr.level2Id;
-                            this.req.user.lastLevel3Id = adr.level3Id;
-                            yield this.req.user.save();
-                        }
-                        else {
-                            this.req.session.prefAddr = adr;
-                            yield new Promise((resolve, reject) => {
-                                this.req.session.save(err => (err ? reject(err) : resolve()));
-                            });
-                        }
+                let area = yield area_1.default.findByPk(adr.level3Id, {
+                    include: [
+                        { all: true }
+                    ]
+                });
+                yield area.ensureLocation();
+                let pa = yield area_1.default.findByPk(area.parent.id, {
+                    include: [
+                        { all: true }
+                    ]
+                });
+                adr.level1Id = pa.parent.id;
+                adr.level2Id = pa.id;
+                adr.level3Id = area.id;
+                adr.level1Text = pa.parent.name;
+                adr.level2Text = pa.name;
+                adr.level3Text = area.name;
+                adr.level1Slug = pa.parent.slug;
+                adr.level2Slug = pa.slug;
+                adr.level3Slug = area.slug;
+                adr.level1Status = pa.parent.status;
+                adr.level2Status = pa.status;
+                adr.level3Status = area.status;
+                adr.lat = adr.lat || area.location.coordinates[0];
+                adr.lng = adr.lng || area.location.coordinates[1];
+                adr.display = `${adr.level3Text}, ${adr.level2Text}/${adr.level1Text}`;
+                this.req.prefAddr = adr;
+                if (save) {
+                    if (this.req.user) {
+                        this.req.user.lastLevel1Id = adr.level1Id;
+                        this.req.user.lastLevel2Id = adr.level2Id;
+                        this.req.user.lastLevel3Id = adr.level3Id;
+                        this.req.user.lastLocation = {
+                            type: 'Point',
+                            coordinates: [adr.lat, adr.lng]
+                        };
+                        yield this.req.user.save();
+                    }
+                    else {
+                        this.req.session.prefAddr = adr;
+                        yield new Promise((resolve, reject) => {
+                            this.req.session.save(err => (err ? reject(err) : resolve()));
+                        });
                     }
                 }
             }

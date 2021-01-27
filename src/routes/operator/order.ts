@@ -185,7 +185,8 @@ export default class Route extends ViewRouter {
                         model: Butcher,
                         as: 'butcher',
                     }]
-                })
+                }),
+                initialDistance: 0
             });
             provider.safeRequests = false;
             let request = provider.offerFromOrder(this.order);
@@ -204,7 +205,8 @@ export default class Route extends ViewRouter {
                         model: Butcher,
                         as: 'butcher',
                     }]
-                })
+                }),
+                initialDistance: 0
             });
             provider.safeRequests = false;
             let request = provider.orderFromOrder(this.order);

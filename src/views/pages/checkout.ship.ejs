@@ -54,7 +54,7 @@
             <% let shipment = shopcard.shipment[bi]%>
 
             <%
-             var cannotShip = !shipment.dispatcher || ((shipment.dispatcher.min > shipment.subTotal)) || ((shipment.dispatcher.takeOnly));    
+             var cannotShip = !shipment.dispatcher || ((shipment.dispatcher.minCalculated > shipment.subTotal)) || ((shipment.dispatcher.takeOnly));    
              var countrywide =  shipment.dispatcher && shipment.dispatcher.toAreaLevel == 0;       
             %>
             <div class="border mb-4">
@@ -133,7 +133,7 @@
                
                  </div> 
 
-              <% } else if (shipment.dispatcher && (shipment.dispatcher.min > shopcard.butchers[bi].subTotal)) { %>
+              <% } else if (shipment.dispatcher && (shipment.dispatcher.minCalculated > shopcard.butchers[bi].subTotal)) { %>
 
                 <script>
                   cannotShip = true;
@@ -144,7 +144,7 @@
                   <p class="text-primary font-weight-bold">Bir miktar daha ürün alın</p>
                   <p>
                  
-                  <%=shipment.dispatcher.name%>, <%- include('./_partial/currency.ejs', {value: shipment.dispatcher.min}) %> ve üzeri siparişleri bu bölgeye teslim etmekte.
+                  <%=shipment.dispatcher.name%>, <%- include('./_partial/currency.ejs', {value: shipment.dispatcher.minCalculated}) %> ve üzeri siparişleri bu bölgeye teslim etmekte.
                   Alışveriş toplamınız <%- include('./_partial/currency.ejs', {value: shopcard.butchers[bi].subTotal}) %> olarak gözüküyor.
                 </p>  
                 <div>

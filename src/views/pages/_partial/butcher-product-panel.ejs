@@ -65,8 +65,8 @@ class="gallery-item-caption"><%= butcherVideo.title %></span></a>
               <span>
                 <%= view.dispatcher.userNote || view.dispatcher.priceInfo %>.
        
-                <% if (view.dispatcher.min > 0) { %>
-                  En az <span class="font-weight-medium"><%- include('./currency.ejs', {value: controller.logisticsProvider.options.dispatcher.min}) %></span> sipariş kabul edilmektedir.
+                <% if (view.dispatcher.minCalculated > 0) { %>
+                  En az <span class="font-weight-medium"><%- include('./currency.ejs', {value: controller.logisticsProvider.options.dispatcher.minCalculated}) %></span> sipariş kabul edilmektedir.
                 <% } %>
 
               </span>
@@ -179,8 +179,8 @@ class="gallery-item-caption"><%= butcherVideo.title %></span></a>
 
                 </p>
                 <p>
-                  <% if (view.dispatcher.min > 0) { %>
-                    En az <span class="font-weight-medium"><%- include('./currency.ejs', {value: controller.logisticsProvider.options.dispatcher.min}) %></span> sipariş kabul edilmektedir.
+                  <% if (view.dispatcher.minCalculated > 0) { %>
+                    En az <span class="font-weight-medium"><%- include('./currency.ejs', {value: controller.logisticsProvider.options.dispatcher.minCalculated}) %></span> sipariş kabul edilmektedir.
                   <%  } else { %>
                     En az sipariş tutarı <span class="font-weight-medium">yoktur</span>.
                   <% } %>

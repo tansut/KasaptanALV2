@@ -265,7 +265,7 @@ export default class Route extends ViewRouter {
                         fee: provider.options.dispatcher.fee,
                         totalForFree: provider.options.dispatcher.totalForFree,
                         type: provider.options.dispatcher.type,
-                        min: provider.options.dispatcher.min,
+                        min: provider.options.dispatcher.minCalculated,
                         takeOnly: provider.options.dispatcher.takeOnly,
                         km: 0,
                         //location: provider.options.dispatcher.butcher ? <any>provider.options.dispatcher.butcher.location : null,
@@ -307,7 +307,7 @@ export default class Route extends ViewRouter {
                     } 
 
                     
-                    if (provider.options.dispatcher.min > this.shopcard.butchers[o].subTotal) {
+                    if (provider.options.dispatcher.minCalculated > this.shopcard.butchers[o].subTotal) {
                         this.shopcard.shipment[o].howTo = 'ship';
                     }
                     else if (provider.options.dispatcher.takeOnly) {

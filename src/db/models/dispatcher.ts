@@ -17,7 +17,13 @@ export enum DispatcherSelection {
 }
 
 
-export type DispatcherType = "butcher" | "butcher/auto" | "banabikurye" | "kasaptanal/car"
+export let DispatcherSelectionWeigts: {[key: string]: number} = {
+    'tam': 0,
+    'sadece liste': -1,
+    'one cikar': 1
+}
+
+export type DispatcherType = "default"| "butcher" | "butcher/auto" | "banabikurye" | "banabikurye/car"
 
 
 
@@ -25,7 +31,7 @@ export let DispatcherTypeDesc = {
     "butcher": "Kasap",
     "butcher/auto": "Kasap",
     "banabikurye": "Hızlı Kurye Sistemi",
-    "kasaptanal/car": "Soğuk Zincir Araç Kurye Sistemi",
+    "banabikurye/car": "Hızlı Araç Kurye Sistemi"
 }
 
 export type ExternalLogisticProviderUsage = "none" | "default" | "select" | "force" | "auto" | "disabled"
@@ -104,6 +110,18 @@ class Dispatcher extends BaseModel<Dispatcher> {
         type: DataType.DECIMAL(13, 2)
     })
     min: number;
+
+    _minCalculated: number;
+
+    get minCalculated(): number {
+        if (!this._minCalculated) {
+            return this.min;
+        } else return this._minCalculated
+    }
+
+    set minCalculated(val: number) {
+        this._minCalculated = val;
+    }
 
     @Column({
         allowNull: false,
@@ -184,7 +202,7 @@ class Dispatcher extends BaseModel<Dispatcher> {
             let forceL1 = dispath.butcher.dispatchArea == "citywide" || dispath.butcher.dispatchArea == "radius";
             if (dispath.butcher.dispatchArea == "radius") {
                 let distance = distance2Butcher || Helper.distance(dispath.butcher.location, l3.location);
-                butcherAvail = dispath.butcher.radiusAsKm >= distance
+                butcherAvail = dispath.butcher.radiusAsKm >= distance;
             } else butcherAvail = forceL1;
             if (butcherAvail && dispath.areaTag) {
                 butcherAvail = dispath.areaTag == l3.dispatchTag;
@@ -193,24 +211,19 @@ class Dispatcher extends BaseModel<Dispatcher> {
 
 
         if (butcherAvail) {
-            let usage = dispath.logisticProviderUsage == "default" ? dispath.butcher.logisticProviderUsage : dispath.logisticProviderUsage;
             let providerKey = "butcher";
-
-            
-
              if (Helper.isSingleShopcardProduct(productType)) {
 
              } else {
-                if (usage != "none" && dispath.butcher.logisticProviderUsage != "disabled" && dispath.butcher.logisticProvider) {
-                    providerKey = dispath.butcher.logisticProvider
+                if (dispath.type == "default") {
+                    providerKey = dispath.type = dispath.butcher.defaultDispatcher
                 } else {
-                    providerKey = dispath.butcher.defaultDispatcher;
+                    providerKey = dispath.type;
                 }
             }
-            
-
             this.provider = LogisticFactory.getInstance(providerKey, {
                 dispatcher: dispath,
+                initialDistance: distance2Butcher
             })
         } 
         return this.provider;

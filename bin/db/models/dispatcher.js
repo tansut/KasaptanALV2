@@ -9,7 +9,7 @@ var __metadata = (this && this.__metadata) || function (k, v) {
     if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.DispatcherTypeDesc = exports.DispatcherSelection = void 0;
+exports.DispatcherTypeDesc = exports.DispatcherSelectionWeigts = exports.DispatcherSelection = void 0;
 const sequelize_typescript_1 = require("sequelize-typescript");
 const basemodel_1 = require("./basemodel");
 const helper_1 = require("../../lib/helper");
@@ -23,13 +23,28 @@ var DispatcherSelection;
     DispatcherSelection["listOnly"] = "sadece liste";
     DispatcherSelection["onecikar"] = "one cikar";
 })(DispatcherSelection = exports.DispatcherSelection || (exports.DispatcherSelection = {}));
+exports.DispatcherSelectionWeigts = {
+    'tam': 0,
+    'sadece liste': -1,
+    'one cikar': 1
+};
 exports.DispatcherTypeDesc = {
     "butcher": "Kasap",
     "butcher/auto": "Kasap",
     "banabikurye": "Hızlı Kurye Sistemi",
-    "kasaptanal/car": "Soğuk Zincir Araç Kurye Sistemi",
+    "banabikurye/car": "Hızlı Araç Kurye Sistemi"
 };
 let Dispatcher = class Dispatcher extends basemodel_1.default {
+    get minCalculated() {
+        if (!this._minCalculated) {
+            return this.min;
+        }
+        else
+            return this._minCalculated;
+    }
+    set minCalculated(val) {
+        this._minCalculated = val;
+    }
     setProvider(useLevel1, l3, productType, distance2Butcher) {
         let dispath = this;
         let butcherAvail = dispath.toarealevel == 0 || (dispath.toarealevel > 1) || useLevel1;
@@ -46,20 +61,20 @@ let Dispatcher = class Dispatcher extends basemodel_1.default {
             }
         }
         if (butcherAvail) {
-            let usage = dispath.logisticProviderUsage == "default" ? dispath.butcher.logisticProviderUsage : dispath.logisticProviderUsage;
             let providerKey = "butcher";
             if (helper_1.default.isSingleShopcardProduct(productType)) {
             }
             else {
-                if (usage != "none" && dispath.butcher.logisticProviderUsage != "disabled" && dispath.butcher.logisticProvider) {
-                    providerKey = dispath.butcher.logisticProvider;
+                if (dispath.type == "default") {
+                    providerKey = dispath.type = dispath.butcher.defaultDispatcher;
                 }
                 else {
-                    providerKey = dispath.butcher.defaultDispatcher;
+                    providerKey = dispath.type;
                 }
             }
             this.provider = core_1.LogisticFactory.getInstance(providerKey, {
                 dispatcher: dispath,
+                initialDistance: distance2Butcher
             });
         }
         return this.provider;

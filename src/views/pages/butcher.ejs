@@ -191,8 +191,8 @@
         <h5 class="h5">Kapınıza Teslim</h5>
         <p>
         <%= controller.logisticsProvider.options.dispatcher.userNote || controller.logisticsProvider.options.dispatcher.priceInfo %>.
-        <% if (controller.logisticsProvider.options.dispatcher.min > 0) { %>
-          Semtinize en az <span class="font-weight-medium"><%- include('./_partial/currency.ejs', {value: controller.logisticsProvider.options.dispatcher.min}) %></span> sipariş kabul edilmektedir.
+        <% if (controller.logisticsProvider.options.dispatcher.minCalculated > 0) { %>
+          Semtinize en az <span class="font-weight-medium"><%- include('./_partial/currency.ejs', {value: controller.logisticsProvider.options.dispatcher.minCalculated}) %></span> sipariş kabul edilmektedir.
         <%  } %>
         </p>
 
@@ -203,6 +203,15 @@
             slices: controller.logisticsPriceSlice
               }) %>
         </div>
+
+        
+
+        <p class="font-size-sm">
+           <a data-return="/<%=butcher.slug%>#delivery" class="text-primary select-area-action"><%=__req.prefAddr.display%></a> için kasabın tahmini uzaklığı <%= controller.distance.toFixed(1) %> km.
+        </p>
+
+     
+
       </div>
       <div class="col-sm-6">
         <h5 class="h5">Çalışma Günleri</h5>

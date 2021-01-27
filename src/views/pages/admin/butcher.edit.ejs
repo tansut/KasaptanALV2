@@ -127,7 +127,8 @@
                                     <input type="text" class="form-control" name="butcherlng" id="butcherlng"
                                         value="<%= butcher.lng %>">                                        
                                 </div>
-                                <div class="form-group">
+
+                                <div class="d-none form-group">
                                     <label for="logisticProviderUsage">Dış Lojistik Kullanımı</label>
                                     <select id="logisticProviderUsage" name="logisticProviderUsage">
                                         <option <%= butcher.logisticProviderUsage == 'none'? 'selected':'' %> value="none">Kullanma</option>                                    
@@ -138,6 +139,14 @@
                                     </select>                                    
                                 </div>
                        
+                                <div class="form-group">
+                                    <label for="logisticProviderUsage">Varsayılan Dağıtıcı</label>
+                                    <select id="defaultDispatcher" name="defaultDispatcher">
+                                        <option <%= butcher.defaultDispatcher == 'butcher'? 'selected':'' %> value="butcher">Kasap</option>                                    
+                                        <option <%= butcher.defaultDispatcher == 'butcher/auto'? 'selected':'' %> value="butcher/auto">Kasap/Otomatik</option>      
+                                        <option <%= butcher.defaultDispatcher == 'banabikurye'? 'selected':'' %> value="banabikurye">Banabikurye</option>                                                                                   
+                                    </select>                                    
+                                </div>
 
 
                             </div>
@@ -391,6 +400,9 @@
                                                 üstü ücretsiz
                                             </th>
                                             <th>
+                                                Dağıtıcı
+                                            </th>
+                                            <th>
                                                 gel al sadece
                                             </th>
                                             <th>
@@ -414,6 +426,7 @@
                                                     <input type="text" name="free<%=d.id%>" value="<%=d.totalForFree%>">
 
                                                 </td>
+                                              
                                                 <td>
                                                     <input type="text" name="areaTag<%=d.id%>" value="<%=d.areaTag%>">
 
@@ -428,13 +441,10 @@
                                                 </td>
                                                 <td>
                                                     <select name="dlogistic<%=d.id%>">
-                                                        <option <%= d.logisticProviderUsage == 'none'? 'selected':'' %> value="none">Kullanma</option>
-                                                        <option <%= d.logisticProviderUsage == 'auto'? 'selected':'' %> value="auto">Otomatik</option>                                    
-                     
-
-                                                        <option <%= d.logisticProviderUsage == 'default'? 'selected':'' %> value="default">Kasap Tanımına Bak</option>
-                                                        <option <%= d.logisticProviderUsage == 'select'? 'selected':'' %> value="select">Kullanıcı Seçimi</option>
-                                                        <option <%= d.logisticProviderUsage == 'force'? 'selected':'' %> value="force">Sadece Kurye</option>
+                                                        <option <%= d.type == 'default'? 'selected':'' %> value="default">Varsayılan Kasap Tanımı</option>
+                                                        <option <%= d.type == 'butcher'? 'selected':'' %> value="butcher">Kasap</option>
+                                                        <option <%= d.type == 'butcher/auto'? 'selected':'' %> value="butcher/auto">Kasap/Otomatik</option>                                    
+                                                        <option <%= d.type == 'banabikurye'? 'selected':'' %> value="banabikurye">Banabikurye</option>
                                                     </select>
                                                 </td>                                                
 

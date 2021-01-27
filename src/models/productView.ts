@@ -64,7 +64,7 @@ export interface ProductButcherView {
 export interface ProductDispatcherView {
     type: string;
     id: number;
-    min: number;
+    minCalculated: number;
     fee: number;
     totalForFree: number;
     priceInfo: string;

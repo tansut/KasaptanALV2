@@ -18,7 +18,7 @@ import ProductApi from './api/product';
 import DispatcherApi, { DispatcherQuery } from './api/dispatcher';
 import Area from '../db/models/area';
 import ButcherProduct from '../db/models/butcherproduct';
-import Dispatcher, { DispatcherSelection, DispatcherTypeDesc } from '../db/models/dispatcher';
+import Dispatcher, { DispatcherSelection, DispatcherSelectionWeigts, DispatcherTypeDesc } from '../db/models/dispatcher';
 import { PreferredAddress } from '../db/models/user';
 var MarkdownIt = require('markdown-it')
 import * as _ from "lodash";
@@ -161,6 +161,10 @@ export default class Route extends ViewRouter {
                 }
             } else return false;
         })
+
+
+
+        
 
 
         let nearRadius = (this.userArea && this.userArea.selectionRadius) ? this.userArea.selectionRadius: 12;
@@ -314,7 +318,7 @@ export default class Route extends ViewRouter {
                     dispatcher: dispatcher ? {
                         id: dispatcher.id,
                         fee: dispatcher.fee,
-                        min: dispatcher.min,
+                        minCalculated: dispatcher.minCalculated,
                         totalForFree: dispatcher.totalForFree,
                         type: dispatcher.type,
                         distance: dispatcher.butcherArea.bestKm,
@@ -338,7 +342,7 @@ export default class Route extends ViewRouter {
                 view.dispatcher = dispatcher ? {
                     id: dispatcher.id,
                     fee: dispatcher.fee,
-                    min: dispatcher.min,
+                    minCalculated: dispatcher.minCalculated,
                     totalForFree: dispatcher.totalForFree,
                     type: dispatcher.type,
                     priceInfo: dispatcher.priceInfo,

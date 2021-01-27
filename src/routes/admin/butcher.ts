@@ -268,7 +268,9 @@ export default class Route  extends ViewRouter {
 
             
             d.selection = sel;
-            d.logisticProviderUsage = dlogistic;
+            //d.logisticProviderUsage = dlogistic;
+            d.type = dlogistic;
+            
             d.fee = fee;
             d.totalForFree = free;
             d.min = min;
@@ -319,7 +321,8 @@ export default class Route  extends ViewRouter {
                     coordinates: [parseFloat(this.req.body.butcherlat), parseFloat(this.req.body.butcherlng)]
             }
             }
-            this.butcher.logisticProviderUsage = this.req.body.logisticProviderUsage;
+            //this.butcher.logisticProviderUsage = this.req.body.logisticProviderUsage;
+            this.butcher.defaultDispatcher = this.req.body.defaultDispatcher;
             await this.butcher.save();
 
             //return this.res.redirect(`/pages/admin/butcher/${this.butcher.slug}`)

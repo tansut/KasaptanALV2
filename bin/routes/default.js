@@ -20,8 +20,10 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 Object.defineProperty(exports, "__esModule", { value: true });
 const router_1 = require("../lib/router");
 const common_1 = require("../lib/common");
+const helper_1 = require("../lib/helper");
 const area_1 = require("../db/models/area");
 const product_1 = require("./api/product");
+const temp_loc_1 = require("../db/models/temp_loc");
 let ellipsis = require('text-ellipsis');
 class Route extends router_1.ViewRouter {
     constructor() {
@@ -96,15 +98,54 @@ class Route extends router_1.ViewRouter {
             if (!area)
                 return this.next();
             if (area.level == 3) {
+                yield area.ensureLocation();
                 yield this.req.helper.setPreferredAddress({
                     level3Id: area.id
                 }, true);
-                yield area.ensureLocation();
             }
             if (this.req.query.r)
                 this.res.redirect(this.req.query.r);
             else
                 this.res.redirect('/');
+        });
+    }
+    tempares() {
+        return __awaiter(this, void 0, void 0, function* () {
+            let tl = yield temp_loc_1.default.findAll({
+                where: {
+                    il: ['ANKARA', 'İSTANBUL', 'İZMİR', 'BURSA', 'ESKİŞEHİR']
+                }
+            });
+            for (let i = 0; i < tl.length; i++) {
+                let t = tl[i];
+                t.semt = t.semt.replace("ERYAMANEVLERİ", "ERYAMAN");
+                t.semt = t.semt.replace("HASKÖY S.EVLERİ", "HASKÖY SUBAYEVLERİ");
+                let slug = helper_1.default.slugify(`${t.il}-${t.ilce}-${t.semt}`);
+                let area = yield area_1.default.findOne({
+                    where: {
+                        slug: slug
+                    }
+                });
+                if (!area) {
+                    console.log(`${t.il}-${t.ilce}-${t.semt} bulunamadı`);
+                }
+                else {
+                    let na = new area_1.default();
+                    na.name = helper_1.default.capitlize(t.mahalle.replace(" MAH", ' Mahallesi'));
+                    na.slug = helper_1.default.slugify(`${area.slug}-${t.mahalle.replace(" MAH", '')}`);
+                    na.parentid = area.id;
+                    na.lowerName = helper_1.default.toLower(na.name);
+                    na.level = 4;
+                    na.status = 'generic';
+                    try {
+                        yield na.save();
+                    }
+                    catch (err) {
+                        console.log(err.message);
+                    }
+                }
+            }
+            this.res.send('OK');
         });
     }
     static SetRoutes(router) {
@@ -115,6 +156,7 @@ class Route extends router_1.ViewRouter {
         // else {
         // }
         router.get("/", Route.BindRequest(this.prototype.defaultRoute));
+        router.get("/temparea", Route.BindRequest(this.prototype.tempares));
         router.get("/adres-belirle/:slug", Route.BindRequest(this.prototype.setUserAddr));
         router.get("/hikayemiz", Route.BindToView("pages/content.kurumsal.ejs"));
         router.get("/neden-kasaptanal", Route.BindToView("pages/content.neden-kasaptanal.ejs"));

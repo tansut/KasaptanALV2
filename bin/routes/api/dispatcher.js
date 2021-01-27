@@ -48,7 +48,6 @@ class Route extends router_1.ApiRouter {
     getDispatchers(q) {
         return __awaiter(this, void 0, void 0, function* () {
             let where = {
-                type: 'butcher',
                 enabled: true
             };
             let include = [
@@ -174,30 +173,6 @@ class Route extends router_1.ApiRouter {
                 adr: address
             });
             return d;
-            // let where = {
-            //     type: 'butcher'
-            // }
-            // where = await this._where(where, address);
-            // let children = address.level3Id ? []: await Area.findAll({
-            //     attributes: ['id'],
-            //     where: {
-            //         parentid: address.level2Id
-            //     }
-            // }).map(a => a.id)
-            // children.push(address.level3Id || address.level2Id || address.level1Id);
-            // where["toareaid"] = children;
-            // //where["toarealevel"] = address.level3Id ? 3 : (address.level2Id ? 2 : 1)
-            // let res = await Dispatcher.findAll({
-            //     where: where,
-            //     include: [
-            //         {
-            //             model: Butcher,
-            //             as: 'butcher'
-            //         },
-            //     ],
-            //     order: [["toarealevel", "DESC"]]
-            // })
-            // return res;
         });
     }
     dispatchingAvailable(address, useLevel1) {

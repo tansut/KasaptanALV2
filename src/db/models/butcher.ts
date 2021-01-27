@@ -244,11 +244,13 @@ class Butcher extends BaseModel<Butcher> {
     })
     logisticProviderUsage: ExternalLogisticProviderUsage;
 
+
     @Column({
         allowNull: false,
         defaultValue: "butcher"
     })
     defaultDispatcher: DispatcherType;
+
 
     @Column
     logisticProvider: string;

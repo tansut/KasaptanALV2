@@ -1294,7 +1294,8 @@ export default class Route extends ApiRouter {
                         model: Butcher,
                         as: 'butcher',
                     }]
-                })
+                }),
+                initialDistance: 0
             });
             provider.safeRequests = false;
             await provider.cancelOrder(order.deliveryOrderId);
@@ -1328,7 +1329,8 @@ export default class Route extends ApiRouter {
                         model: Butcher,
                         as: 'butcher',
                     }]
-                })
+                }),
+                initialDistance: 0
             });
             provider.safeRequests = false;
             order.shipmentStartText = Helper.formatDate(order.shipmentstart, true) + ' kasap çıkış olarak kurye planlandı';
