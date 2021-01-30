@@ -109,7 +109,7 @@ export class ButcherAutoLogistics extends LogisticProvider {
             //minOrder: 100.00 
         }
 
-        return butcherConfig["butcher/auto"] || config;
+        return {...config, ...(butcherConfig["butcher/auto"] || {})};
     }
 
     async requestOffer(req: OfferRequest): Promise<OfferResponse> {

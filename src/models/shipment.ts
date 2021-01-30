@@ -55,6 +55,7 @@ export interface DispatcherView {
     feeOffer: number,
     totalForFree: number
     min: number;
+    minCalculated: number;
     takeOnly: boolean;
     toAreaLevel: number;
     longDesc: string;

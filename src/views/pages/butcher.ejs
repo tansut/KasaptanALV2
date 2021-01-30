@@ -64,7 +64,7 @@
 
 
     <% if (__req.user && __req.user.hasRole('admin')) {%>
-    <a target="_blank" class=" btn btn-dark btn-sm" href="/pages/admin/butcher/<%=butcher.slug%>">Düzenle</a>
+    <a target="_blank" class=" btn btn-dark btn-sm" href="/pages/admin/butcher/<%=butcher.slug%>">Düzenle <%=butcher.id%></a>
     <%}%>
 
     <% if (__req.user && (__req.user.hasRole('admin') || __req.user.hasRole('butcher'))) {%>

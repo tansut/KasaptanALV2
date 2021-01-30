@@ -243,7 +243,8 @@ class Route extends router_1.ViewRouter {
                             fee: provider.options.dispatcher.fee,
                             totalForFree: provider.options.dispatcher.totalForFree,
                             type: provider.options.dispatcher.type,
-                            min: provider.options.dispatcher.minCalculated,
+                            min: provider.options.dispatcher.min,
+                            minCalculated: provider.options.dispatcher.minCalculated,
                             takeOnly: provider.options.dispatcher.takeOnly,
                             km: 0,
                         };

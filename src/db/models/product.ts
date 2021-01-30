@@ -9,6 +9,7 @@ import { Op, QueryTypes } from 'sequelize';
 import { AdakProductManager, KurbanProductManager, KurbanDigerProductManager } from '../../lib/common';
 import NutritionValue from './nutritionvalue';
 import { NutritionView } from '../../models/common';
+import { ButcherProperty } from '../../routes/api/product';
 
 export enum ProductType {
     generic = 'generic',
@@ -52,6 +53,18 @@ class Product extends BaseModel<Product> {
 
     @Column
     keywords: string;    
+
+    @Column({})
+    butcherweightsjson: string
+
+    get butcherWeights(): {[key in ButcherProperty]: number} {
+        return this.butcherweightsjson ? JSON.parse(this.getDataValue('butcherweightsjson')) : null
+    }
+
+    set butcherWeights(value: {[key in ButcherProperty]: number}) {
+        this.setDataValue('butcherweightsjson', JSON.stringify(value));
+    }
+
 
     @Column({
         type: DataType.TEXT

@@ -48,6 +48,12 @@ exports.ProductSelectionWeigts = {
     'one cikar': 1
 };
 let Product = Product_1 = class Product extends basemodel_1.default {
+    get butcherWeights() {
+        return this.butcherweightsjson ? JSON.parse(this.getDataValue('butcherweightsjson')) : null;
+    }
+    set butcherWeights(value) {
+        this.setDataValue('butcherweightsjson', JSON.stringify(value));
+    }
     get asAdak() {
         let obj = this.producttypedata || {};
         return Object.assign(new common_1.AdakProductManager(), obj);
@@ -150,6 +156,10 @@ __decorate([
     sequelize_typescript_1.Column,
     __metadata("design:type", String)
 ], Product.prototype, "keywords", void 0);
+__decorate([
+    sequelize_typescript_1.Column({}),
+    __metadata("design:type", String)
+], Product.prototype, "butcherweightsjson", void 0);
 __decorate([
     sequelize_typescript_1.Column({
         type: sequelize_typescript_1.DataType.TEXT

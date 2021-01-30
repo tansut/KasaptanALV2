@@ -106,7 +106,7 @@ class Route extends router_1.ApiRouter {
     getAreas(search) {
         return __awaiter(this, void 0, void 0, function* () {
             let areas = yield user_1.default.sequelize.query("select id, level, name, slug as url, 'Lokasyon' as type, match(name, slug, keywords) against (:search IN BOOLEAN MODE) as RELEVANCE " +
-                "from Areas where level>=3  and (match(name, slug, keywords)  against (:search IN BOOLEAN MODE) or match(name, slug, keywords)  against (:search2 IN BOOLEAN MODE)) ORDER BY status, level, RELEVANCE DESC LIMIT 25", {
+                "from Areas where level>=3  and (match(name, slug, keywords)  against (:search IN BOOLEAN MODE) or match(name, slug, keywords)  against (:search2 IN BOOLEAN MODE)) ORDER BY status, level desc, RELEVANCE DESC LIMIT 25", {
                 replacements: { search2: helper_1.default.slugify(search), search: search },
                 type: sq.QueryTypes.SELECT,
                 mapToModel: false,

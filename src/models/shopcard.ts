@@ -395,10 +395,10 @@ export class ShopCard {
             return this;
         } else if (req.session) {
             req.session.shopcard = this;
-            return new Promise((resolve, reject) => {
+            return new Promise<any>((resolve, reject) => {
                 req.session.save((err) => err ? reject(err) : resolve())
             })
-            return this;
+            
         }
     }
 

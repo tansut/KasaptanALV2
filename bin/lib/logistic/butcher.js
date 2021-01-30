@@ -112,7 +112,7 @@ class ButcherAutoLogistics extends core_1.LogisticProvider {
             minMultiplier: 10.00
             //minOrder: 100.00 
         };
-        return butcherConfig["butcher/auto"] || config;
+        return Object.assign(Object.assign({}, config), (butcherConfig["butcher/auto"] || {}));
     }
     requestOffer(req) {
         return __awaiter(this, void 0, void 0, function* () {
