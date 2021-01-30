@@ -14,7 +14,7 @@ import * as fs from "fs"
 import moment = require('moment');
 import Category from '../db/models/category';
 import Butcher from '../db/models/butcher';
-import ProductApi from './api/product';
+import ProductApi, { ButcherProperty } from './api/product';
 import DispatcherApi, { DispatcherQuery } from './api/dispatcher';
 import Area from '../db/models/area';
 import ButcherProduct from '../db/models/butcherproduct';
@@ -34,6 +34,8 @@ import { PuanCalculator } from '../lib/commissionHelper';
 import { LogisticProvider, PriceSlice, FromTo } from '../lib/logistic/core';
 
 import { PriceView } from '../models/common';
+import { pbkdf2 } from 'crypto';
+import { off } from 'process';
 
 interface ButcherSelection {
     best: Dispatcher,
@@ -63,7 +65,7 @@ export default class Route extends ViewRouter {
     shopCardItem: ShopcardItem = null;
     dispatchingAvailable: boolean = true;
     selectedButcher: Butcher;
-
+    api: ProductApi;
     productTypeManager: ProductTypeManager = null;
     logisticsProvider: LogisticProvider;
 
@@ -120,21 +122,131 @@ export default class Route extends ViewRouter {
     //     return orderedByKasapCard.length ? orderedByKasapCard[0] : null;
     // }
 
-    tryBestAsRandom(serving: Dispatcher[]) {
-        let fullServing = serving.filter(s => (s.selection == DispatcherSelection.full || s.selection == DispatcherSelection.onecikar));
-        let mention = fullServing.filter(s => s.selection == DispatcherSelection.onecikar);
-        let finalList = mention.length > 0 ? mention: fullServing;
-        if (finalList.length == 0) finalList = serving;
-        finalList = Helper.shuffle(finalList)
-        let res = (finalList.length > 0 ? finalList[0] : null);
-        return res;
+    async findBestButcher(serving: Dispatcher[], product: Product, adr: PreferredAddress): Promise<Dispatcher[]> {
+
+
+
+        //let minDistance = Math.min.apply(Math, serving.map(s=>s.butcherArea.bestKm));
+        let maxDistance = Math.max.apply(Math, serving.map(s=>s.butcherArea.bestKm));
+
+        //let minPuan = Math.min.apply(Math, serving.map(s=>s.butcher.customerPuanRate));
+        //let maxPuan = Math.max.apply(Math, serving.map(s=>s.butcher.customerPuanRate));
+
+        //let minRate = Math.min.apply(Math, serving.map(s=>s.butcher.totalRatingAsPerc));
+        //let maxRate = Math.max.apply(Math, serving.map(s=>s.butcher.totalRatingAsPerc));
+
+        let minShipTotal = Math.min.apply(Math, serving.map(s=>s.butcher.shipTotalCount));
+        let maxShipTotal = Math.max.apply(Math, serving.map(s=>s.butcher.shipTotalCount));
+
+        let minPrice = Math.min.apply(Math, serving.map(s=> {
+            let bp = s.butcher.products.find(p=>p.productid == product.id);
+            bp.product = product;
+            return bp.priceView.price;
+        }));
+
+        let maxPrice = Math.max.apply(Math, serving.map(s=> {
+            let bp = s.butcher.products.find(p=>p.productid == product.id);
+            bp.product = product;
+            return bp.priceView.price;
+        }));      
+        let weights = await this.api.getButcherPropertyWeights();
+
+        let l1 = this.userArea.getLevel(1);
+        let l2 = this.userArea.getLevel(2);
+        let l3 = this.userArea.getLevel(3);
+
+        let orderSize = l3.butcherWeightOrder || l2.butcherWeightOrder || l1.butcherWeightOrder || 150.00;
+
+        let customerFees: {[key: number]: number} = {}, minFee = Number.MAX_SAFE_INTEGER, maxFee = Number.MIN_SAFE_INTEGER;
+        
+        for(let i = 0; i < serving.length;i ++) {
+            let fromTo: FromTo = {
+                start: serving[i].butcher.location,
+                sId: serving[i].id.toString(),
+                finish: this.userArea.location,
+                fId: this.userArea.id.toString()
+            }
+            let offerRequest = serving[i].provider.offerRequestFromTo(fromTo);
+            offerRequest.orderTotal = orderSize;
+            let offer = await serving[i].provider.requestOffer(offerRequest);
+            if (offer) {
+                serving[i].provider.calculateCustomerFee(offer);
+                customerFees[serving[i].butcher.id] = offer.customerFee;
+                minFee = Math.min(minFee, offer.customerFee);
+                maxFee = Math.max(maxFee, offer.customerFee);
+            }
+        }
+
+        // let offerRequest = this.offerRequestFromTo(ft);
+        // let offer = await this.requestOffer(offerRequest);
+
+        // for (let i = 1; i < 10; i++)
+        //     prices.push(Helper.asCurrency(i * slice))
+
+        // for (let i = 0; i < prices.length; i++) {
+        //     offer.orderTotal = Helper.asCurrency((2 * prices[i] + slice) / 2);
+        //     this.calculateCustomerFee(offer);
+
+
+        let limits: {[key in ButcherProperty]: number []} = {
+            'distance': [0, maxDistance],
+            'kasapkart': [0.00, 0.10],
+            'productPrice': [minPrice, maxPrice],
+            'shipmentPrice': [minFee, maxFee],
+            'rating': [80, 100],
+            'shipTotal': [0, maxShipTotal],
+            'butcherSelection': [-1,1],
+            'productSelection': [-1,1]
+        }
+
+
+
+        weights = l1.butcherWeights ? {...weights, ...l1.butcherWeights}: weights; 
+        weights = l2.butcherWeights ? {...weights, ...l2.butcherWeights}: weights; 
+        weights = l3.butcherWeights ? {...weights, ...l3.butcherWeights}: weights; 
+
+        for(let i = 0; i < serving.length;i ++) {
+            serving[i].butcher.calculatedRate = await this.api.calculateButcherRate(serving[i].butcher, product, serving[i], limits, typeof customerFees[serving[i].butcher.id] == 'undefined' ? maxFee: customerFees[serving[i].butcher.id], weights)
+        }
+
+        let weightSorted = _.orderBy(serving, 'butcher.calculatedRate', 'desc');
+
+        return weightSorted;
+
+        // let nearRadius = (this.userArea && this.userArea.selectionRadius) ? this.userArea.selectionRadius: 12;
+        // let alternateRadius = Math.round(nearRadius * 1.5);
+
+        // let nearButchers = serving.filter(p => p.butcherArea.bestKm <= nearRadius);
+        // let alternateButchers = serving.filter(p => (p.butcherArea.bestKm > nearRadius && p.butcherArea.bestKm <= alternateRadius));
+        // let farButchers = serving.filter(p => p.butcherArea.bestKm > alternateRadius);
+
+        // let defaultButchers = nearButchers;
+
+        // if (defaultButchers.length == 0) {
+        //     defaultButchers = defaultButchers.concat(alternateButchers);
+        //     if (defaultButchers.length == 0 && (farButchers.length > 0)) {
+        //         defaultButchers.push(farButchers[0]);
+        //     }
+        // }
+
+        // defaultButchers = defaultButchers.length == 0 ? serving : defaultButchers;
+
+
+        // let fullServing = serving.filter(s => (s.selection == DispatcherSelection.full || s.selection == DispatcherSelection.onecikar));
+        // let mention = fullServing.filter(s => s.selection == DispatcherSelection.onecikar);
+        // let finalList = mention.length > 0 ? mention: fullServing;
+        // if (finalList.length == 0) finalList = serving;
+        // finalList = Helper.shuffle(finalList)
+        // let res = (finalList.length > 0 ? finalList[0] : null);
+        // return res;
     }
 
     useL1(product: Product) {
         return (product.productType == ProductType.kurban)
     }
 
-    async bestButchersForProduct(product: Product, adr: PreferredAddress, userBest: Butcher): Promise<ButcherSelection> {
+
+    async locateButchersForProduct(product: Product, adr: PreferredAddress, userBest: Butcher): Promise<ButcherSelection> {
         let api = new DispatcherApi(this.constructorParams);
 
         let q: DispatcherQuery = {
@@ -162,38 +274,15 @@ export default class Route extends ViewRouter {
             } else return false;
         })
 
-
-
+        let weighedServing = await this.findBestButcher(serving, product, adr);
+        let mybest: Dispatcher = await this.tryBestFromShopcard(weighedServing) || weighedServing[0];
         
-
-
-        let nearRadius = (this.userArea && this.userArea.selectionRadius) ? this.userArea.selectionRadius: 12;
-        let alternateRadius = Math.round(nearRadius * 1.5);
-
-        let nearButchers = serving.filter(p => p.butcherArea.bestKm <= nearRadius);
-        let alternateButchers = serving.filter(p => (p.butcherArea.bestKm > nearRadius && p.butcherArea.bestKm <= alternateRadius));
-        let farButchers = serving.filter(p => p.butcherArea.bestKm > alternateRadius);
-
-        let defaultButchers = nearButchers;
-
-        if (defaultButchers.length == 0) {
-            defaultButchers = defaultButchers.concat(alternateButchers);
-            if (defaultButchers.length == 0 && (farButchers.length > 0)) {
-                defaultButchers.push(farButchers[0]);
-            }
-        }
-
-        defaultButchers = defaultButchers.length == 0 ? serving : defaultButchers;
-
-        let mybest: Dispatcher = await this.tryBestFromShopcard(serving) ||
-            await this.tryBestAsRandom(defaultButchers);
         if (mybest) {
-            mybest = (userBest ? (serving.find(s => s.butcherid == userBest.id)) : null) || mybest;
+            mybest = (userBest ? (weighedServing.find(s => s.butcherid == userBest.id)) : null) || mybest;
         }
-
         return {
             best: mybest,
-            serving: serving,
+            serving: weighedServing,
             takeOnly: takeOnly
         }
     }
@@ -212,7 +301,7 @@ export default class Route extends ViewRouter {
         });
         if (!product) return this.next();
         this.product = product;
-        let api = new ProductApi(this.constructorParams);
+        this.api = new ProductApi(this.constructorParams);
         this.shopcard = await ShopCard.createFromRequest(this.req);
         await product.loadResources();
         await product.loadnutritionValues();
@@ -230,12 +319,12 @@ export default class Route extends ViewRouter {
             butcher = await Butcher.getBySlug(this.req.session.prefButcher as string)
         }
          
-         this.reviews = await api.loadReviews(product.id, (butcher && this.showOtherButchers()) ? 0: (butcher ? butcher.id:0));
+         this.reviews = await this.api.loadReviews(product.id, (butcher && this.showOtherButchers()) ? 0: (butcher ? butcher.id:0));
         // this.reviews = await api.loadReviews(product.id, butcher ? (this.req.query.butcher ? butcher.id : 0): 0);
         //this.reviews = await api.loadReviews(product.id, 0);
 
 
-        this.foods = await api.getTarifVideos([product])
+        this.foods = await this.api.getTarifVideos([product])
         if (this.req.query.semt) {
             let l3 = await Area.getBySlug(this.req.query.semt as string);
             if (l3 && l3.level == 3) {
@@ -258,7 +347,8 @@ export default class Route extends ViewRouter {
             }
         } else {
             this.userArea = await Area.findByPk(this.req.prefAddr.level3Id);
-            selectedButchers = await this.bestButchersForProduct(product, this.req.prefAddr, butcher);
+            await this.userArea.getPreferredAddress();
+            selectedButchers = await this.locateButchersForProduct(product, this.req.prefAddr, butcher);
         }
         let serving = selectedButchers.serving.concat(<any>selectedButchers.takeOnly);
 
@@ -268,7 +358,7 @@ export default class Route extends ViewRouter {
             selectedButchers.best = null;
         }
 
-        let view = await api.getProductView(product, selectedButchers.best ? selectedButchers.best.butcher : null, null, true)
+        let view = await this.api.getProductView(product, selectedButchers.best ? selectedButchers.best.butcher : null, null, true)
 
         let fromTo: FromTo;
 
@@ -327,7 +417,7 @@ export default class Route extends ViewRouter {
                         userNote: dispatcher.userNote,
                         takeOnly: dispatcher.takeOnly
                     } : null,
-                    purchaseOptions: api.getPurchaseOptions(product, bp).map(po => {
+                    purchaseOptions: this.api.getPurchaseOptions(product, bp).map(po => {
                         return {
                             unit: po.unit,
                             unitTitle: po.unitTitle,
@@ -408,7 +498,7 @@ export default class Route extends ViewRouter {
             })
         }
 
-        this.productLd = (product.status == "onsale") ? await api.getProductLd(product, {
+        this.productLd = (product.status == "onsale") ? await this.api.getProductLd(product, {
             thumbnail: false
         }) : null;
 
@@ -420,7 +510,7 @@ export default class Route extends ViewRouter {
 
         if (!this.req.prefAddr) {
             if (butcher && butcher.slug == this.req.query.butcher) {
-                let pview = await api.getProductView(product, butcher);
+                let pview = await this.api.getProductView(product, butcher);
                 this.startPrice = {
                     title: butcher.name,
                     basedOn: 'butcher',

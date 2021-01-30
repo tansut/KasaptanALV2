@@ -51,6 +51,16 @@ class Butcher extends BaseModel<Butcher> {
         return this.shipTotalCount > 0 ? Math.round((succ / this.shipTotalCount) * 100) : 0;
     }
 
+    get totalRatingAsPerc() {
+        return Math.round((this.userRatingAsPerc + this.shipRatingAsPerc) / 2)
+    }    
+
+    get weightRatingAsPerc() {
+        if (this.shipSuccessCount < 5)
+            return 100;
+        return this.totalRatingAsPerc;
+    } 
+
     get shipSuccessCount() {
         return this.shipTotalCount - this.shipFailureCount;
     }
@@ -58,6 +68,9 @@ class Butcher extends BaseModel<Butcher> {
     get shipSuccessText() {
         return this.shipSuccessCount >= 10 ? Helper.number2Text(this.shipSuccessCount, 50):''
     }
+
+
+    calculatedRate: number;
 
 
     @Column({

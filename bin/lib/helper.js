@@ -178,6 +178,9 @@ class Helper {
     static canBeOrderedByPhone() {
         return true;
     }
+    static mapValues(value, x1, y1, x2 = 0, y2 = 100) {
+        return (value - x1) * (y2 - x2) / (y1 - x1) + x2;
+    }
     static normalizePhoto(url, thumbnail) {
         return Jimp2.read(path.resolve(url))
             .then(image => {

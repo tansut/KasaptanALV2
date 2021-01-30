@@ -26,6 +26,15 @@ export enum ProductType {
 
 export type ProductStatus = "onsale" | "archieved" 
 
+export type ProductSelection = 'tam' | 'sadece liste' | 'one cikar';
+
+export let ProductSelectionWeigts: {[key in ProductSelection]: number} = {
+    'tam': 0,
+    'sadece liste': -1,
+    'one cikar': 1
+}
+
+
 @Table({
     tableName: "Products",
     indexes: [{

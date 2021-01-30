@@ -150,6 +150,13 @@ __decorate([
 __decorate([
     sequelize_typescript_1.Column({
         allowNull: false,
+        defaultValue: 'tam'
+    }),
+    __metadata("design:type", String)
+], ButcherProduct.prototype, "selection", void 0);
+__decorate([
+    sequelize_typescript_1.Column({
+        allowNull: false,
         defaultValue: 0,
         type: sequelize_typescript_1.DataType.DECIMAL(8, 3)
     }),

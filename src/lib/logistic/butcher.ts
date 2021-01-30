@@ -17,6 +17,8 @@ export class ButcherManualLogistics extends LogisticProvider {
 
 
     async requestOffer(req: OfferRequest): Promise<OfferResponse> {
+        if (req.orderTotal < this.options.dispatcher.minCalculated)
+            return null;
         req.distance  = await this.distance({
             start: {
                 type: 'Point',

@@ -23,6 +23,8 @@ class ButcherManualLogistics extends core_1.LogisticProvider {
     }
     requestOffer(req) {
         return __awaiter(this, void 0, void 0, function* () {
+            if (req.orderTotal < this.options.dispatcher.minCalculated)
+                return null;
             req.distance = yield this.distance({
                 start: {
                     type: 'Point',

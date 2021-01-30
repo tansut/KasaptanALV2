@@ -45,6 +45,16 @@ let Area = Area_1 = class Area extends basemodel_1.default {
             });
         });
     }
+    getLevel(level) {
+        if (this.level == level)
+            return this;
+        else if (level == this.level - 1)
+            return this.parent;
+        else if (level == this.level - 2)
+            return this.parent.parent;
+        else if (level == this.level - 3)
+            return this.parent.parent.parent;
+    }
     ensureLocation() {
         return __awaiter(this, void 0, void 0, function* () {
             if (!this.locationData) {
@@ -71,6 +81,12 @@ let Area = Area_1 = class Area extends basemodel_1.default {
             }
         });
     }
+    get butcherWeights() {
+        return this.butcherweightsjson ? JSON.parse(this.getDataValue('butcherweightsjson')) : null;
+    }
+    set butcherWeights(value) {
+        this.setDataValue('butcherweightsjson', JSON.stringify(value));
+    }
     getPreferredAddress() {
         return __awaiter(this, void 0, void 0, function* () {
             let res;
@@ -84,7 +100,7 @@ let Area = Area_1 = class Area extends basemodel_1.default {
                 };
             }
             else if (this.level == 2) {
-                let parent = this.parent || (yield Area_1.findByPk(this.parentid));
+                let parent = this.parent || (this.parent = yield Area_1.findByPk(this.parentid));
                 res = {
                     level1Id: parent.id,
                     level1Slug: parent.slug,
@@ -101,8 +117,8 @@ let Area = Area_1 = class Area extends basemodel_1.default {
                 let parentOfParent, parent;
                 parentOfParent = this.parent && this.parent.parent;
                 if (parentOfParent == null) {
-                    parent = this.parent || (yield Area_1.findByPk(this.parentid));
-                    parentOfParent = parent.parent || (yield Area_1.findByPk(parent.parentid));
+                    parent = this.parent || (this.parent = yield Area_1.findByPk(this.parentid));
+                    parentOfParent = parent.parent || (parent.parent = yield Area_1.findByPk(parent.parentid));
                 }
                 res = {
                     level1Id: parentOfParent.id,
@@ -254,6 +270,18 @@ __decorate([
     }),
     __metadata("design:type", Number)
 ], Area.prototype, "selectionRadius", void 0);
+__decorate([
+    sequelize_typescript_1.Column({
+        allowNull: false,
+        type: sequelize_typescript_1.DataType.DECIMAL(13, 2),
+        defaultValue: 0.00
+    }),
+    __metadata("design:type", Number)
+], Area.prototype, "butcherWeightOrder", void 0);
+__decorate([
+    sequelize_typescript_1.Column({}),
+    __metadata("design:type", String)
+], Area.prototype, "butcherweightsjson", void 0);
 __decorate([
     sequelize_typescript_1.Column({
         allowNull: true

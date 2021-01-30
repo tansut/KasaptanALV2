@@ -1,7 +1,7 @@
 import { Table, Column, DataType, Model, HasMany, CreatedAt, UpdatedAt, DeletedAt, Unique, Default, AllowNull, ForeignKey, BelongsTo } from 'sequelize-typescript';
 import BaseModel from "./basemodel"
 import Helper from '../../lib/helper';
-import Product from './product';
+import Product, { ProductSelection } from './product';
 import Category from './category';
 import Butcher from './butcher';
 import ProductCategory from './productcategory';
@@ -136,6 +136,13 @@ class ButcherProduct extends BaseModel<ButcherProduct> {
         type: DataType.DECIMAL(13, 2)        
     })
     kgPrice: number;     
+
+
+    @Column({
+        allowNull: false,
+        defaultValue: 'tam'
+    })
+    selection: ProductSelection;
 
 
     @Column({

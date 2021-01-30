@@ -188,7 +188,6 @@ export default class Helper {
     }
 
 
-
     static formattedCurrency(n: number, symbol: string = 'TL') {
         let parts = Helper.splitCurrency(Helper.asCurrency(n));
         if (parts.krs <= 0) return numeral(parts.val).format('0,0') + symbol
@@ -236,6 +235,10 @@ export default class Helper {
     static canBeOrderedByPhone() {
         return true;
     }
+
+    static mapValues(value: number, x1, y1, x2=0, y2=100) {
+        return (value - x1) * (y2 - x2) / (y1 - x1) + x2;
+    } 
 
 
     static normalizePhoto(url: string, thumbnail?: string) {

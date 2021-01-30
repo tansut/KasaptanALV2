@@ -34,10 +34,56 @@ const sequelize_1 = require("sequelize");
 const ProductLd_1 = require("../../models/ProductLd");
 const review_1 = require("../../db/models/review");
 const shipment_1 = require("../../models/shipment");
+const path = require("path");
+const dispatcher_1 = require("../../db/models/dispatcher");
+const fs = require('fs');
+let ButcherPropertyWeigts = {
+    'distance': -0.80,
+    'kasapkart': 0.60,
+    'productPrice': 0.00,
+    'shipmentPrice': 0.00,
+    'rating': 0.40,
+    'shipTotal': 0.00,
+    'butcherSelection': 1.00,
+    'productSelection': 1.00
+};
 class Route extends router_1.ApiRouter {
     constructor() {
         super(...arguments);
         this.markdown = new MarkdownIt();
+    }
+    getButcherPropertyWeights() {
+        return __awaiter(this, void 0, void 0, function* () {
+            let rawdata = yield fs.readFileSync(path.join(__dirname, "../../../butcherweights.json"));
+            return JSON.parse(rawdata);
+        });
+    }
+    calculateButcherRate(butcher, product, dispatcher, limits, customerFee, weights) {
+        return __awaiter(this, void 0, void 0, function* () {
+            let bp = butcher.products.find(p => p.productid == product.id);
+            let butcherweights = {
+                'distance': dispatcher.butcherArea.bestKm,
+                'kasapkart': butcher.customerPuanRate,
+                'productPrice': bp.priceView.price,
+                'rating': butcher.weightRatingAsPerc,
+                'shipmentPrice': customerFee,
+                'shipTotal': butcher.shipTotalCount,
+                'butcherSelection': dispatcher_1.DispatcherSelectionWeigts[dispatcher.selection],
+                'productSelection': product_1.ProductSelectionWeigts[bp.selection]
+            };
+            let puan = 0.00;
+            console.log('*', butcher.name, '*');
+            for (let k in butcherweights) {
+                let lim = limits[k];
+                let propPuan = helper_1.default.mapValues(butcherweights[k], lim[0], lim[1]);
+                propPuan = Number.isNaN(propPuan) ? 0 : propPuan * weights[k];
+                console.log(k, propPuan.toFixed(2), '[', lim[0], lim[1], ']:', butcherweights[k]);
+                puan += propPuan;
+            }
+            console.log(butcher.name, ':', puan.toFixed(2));
+            console.log('------------------');
+            return puan;
+        });
     }
     getFoodResources(products4, limit, catids, options = {}) {
         return __awaiter(this, void 0, void 0, function* () {

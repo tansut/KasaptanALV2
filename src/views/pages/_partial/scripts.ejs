@@ -78,27 +78,47 @@
             
       resolverSettings: {
         url: '/api/v1/fts',
-        requestThrottling: 5000
+        requestThrottling: 1000
       },
       events: {
   
         search: function (qry, callback,el) {
+          var self = this;
+          if (self.jqXHR != null) {
+            self.jqXHR.abort();
+            console.log('aborted',qry)
+          }
 
+          if (self.requestTID) {
+            window.clearTimeout(this.requestTID);
+            console.log('clear',qry)
+          }
+
+
+
+          self.requestTID = window.setTimeout(function() {
                 $('.notsearching').addClass('d-none');
                 $('.searching').removeClass('d-none');
-                $.ajax(
+                console.log('start',qry)
+
+                self.jqXHR = $.ajax(
                   '/api/v1/fts',
                   {
                     data: { t: $(el).data('search'), c: $(el).data('category'), 'q': qry}
                   }
                 ).done(function (res) {
+                  console.log('done',qry)
                   $('.searching').addClass('d-none');
-                $('.notsearching').removeClass('d-none');
+                  $('.notsearching').removeClass('d-none');
                   callback(res);
-                  
-                });
-              },
-              
+                }).always(function() {
+                  self.jqXHR = null;
+                  $('.searching').addClass('d-none');
+                  $('.notsearching').removeClass('d-none');
+                });            
+            }, 500);
+      },
+      
         searchPost: function (res, el) {
           window.__searchResult = res;
           window.dataLayer = window.dataLayer || [];
@@ -124,6 +144,18 @@
   
       }
     });
+
+    
+
+    $('.searchBox').keypress(function(event){
+      var keycode = (event.keyCode ? event.keyCode : event.which);
+      if(keycode == '13') {
+        window.__searchResult = window.__searchResult || [];
+        go = window.__searchResult[0];
+        go && (window.location.href = go.url.startsWith('/') ? go.url: '/' + go.url);
+      }
+    });
+
   
     $('.searchBox').on('autocomplete.select', function (evt, item) {
       let go = window.__searchResult.find(function (result) {

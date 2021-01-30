@@ -101,7 +101,6 @@ class LogisticProvider {
         return req;
     }
     calculateCustomerFee(offer) {
-        offer.customerFee = offer.totalFee;
     }
     priceSlice(ft, slice = 100.00, options = {}) {
         return __awaiter(this, void 0, void 0, function* () {

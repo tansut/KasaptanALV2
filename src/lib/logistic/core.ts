@@ -225,7 +225,7 @@ export class LogisticProvider {
     }
 
     calculateCustomerFee(offer: OfferResponse | OrderResponse) {
-        offer.customerFee = offer.totalFee;
+        
     }
 
 

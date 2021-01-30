@@ -19,7 +19,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 };
 var Product_1;
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.ProductDispatch = exports.ProductType = void 0;
+exports.ProductSelectionWeigts = exports.ProductDispatch = exports.ProductType = void 0;
 const sequelize_typescript_1 = require("sequelize-typescript");
 const basemodel_1 = require("./basemodel");
 const productcategory_1 = require("./productcategory");
@@ -42,6 +42,11 @@ var ProductDispatch;
     ProductDispatch["citywide"] = "citywide";
     ProductDispatch["countrywide"] = "countrywide";
 })(ProductDispatch = exports.ProductDispatch || (exports.ProductDispatch = {}));
+exports.ProductSelectionWeigts = {
+    'tam': 0,
+    'sadece liste': -1,
+    'one cikar': 1
+};
 let Product = Product_1 = class Product extends basemodel_1.default {
     get asAdak() {
         let obj = this.producttypedata || {};

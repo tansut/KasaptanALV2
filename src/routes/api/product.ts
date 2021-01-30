@@ -2,7 +2,7 @@ import { Auth } from '../../lib/common';
 import { ApiRouter } from '../../lib/router';
 import * as express from "express";
 import { ProductView } from '../../models/productView';
-import Product, { ProductType } from '../../db/models/product';
+import Product, { ProductSelectionWeigts, ProductType } from '../../db/models/product';
 import Butcher from '../../db/models/butcher';
 import ButcherProduct from '../../db/models/butcherproduct';
 import Helper from '../../lib/helper';
@@ -19,8 +19,9 @@ import { ProductLd, IProductLd, ProductLdOptions } from '../../models/ProductLd'
 import DispatcherApi from './dispatcher';
 import Review from '../../db/models/review';
 import { Shipment } from '../../models/shipment';
-import { stat } from 'fs';
-import { pid } from 'process';
+import * as path from "path"
+import Dispatcher, { DispatcherSelectionWeigts } from '../../db/models/dispatcher';
+const fs = require('fs');
 
 export interface ProductFeedItem {
     id: string;
@@ -36,8 +37,54 @@ export interface ProductFeedItem {
     mpn: string;
 }
 
+export type ButcherProperty = 'distance' |  'rating' | 'kasapkart' | 'productPrice' | 'shipmentPrice' | 'shipTotal' | 'butcherSelection' | 'productSelection';
+
+let ButcherPropertyWeigts: {[key in ButcherProperty]: number} = {
+    'distance': -0.80,
+    'kasapkart': 0.60,
+    'productPrice': 0.00,
+    'shipmentPrice': 0.00,
+    'rating': 0.40,
+    'shipTotal': 0.00,
+    'butcherSelection': 1.00,
+    'productSelection': 1.00
+}
+
 export default class Route extends ApiRouter {
     markdown = new MarkdownIt();
+
+    async getButcherPropertyWeights(): Promise<{[key in ButcherProperty]: number}> {
+        let rawdata = await fs.readFileSync(path.join(__dirname, "../../../butcherweights.json"));
+        return JSON.parse(rawdata);
+    }
+
+
+    async calculateButcherRate(butcher: Butcher, product: Product, dispatcher: Dispatcher, limits: {[key in ButcherProperty]: number []}, customerFee: number, weights: {[key in ButcherProperty]: number}) {
+        let bp = butcher.products.find(p=>p.productid == product.id);
+        let butcherweights: {[key in ButcherProperty]: number} = {
+            'distance': dispatcher.butcherArea.bestKm,
+            'kasapkart': butcher.customerPuanRate,
+            'productPrice': bp.priceView.price,
+            'rating': butcher.weightRatingAsPerc,
+            'shipmentPrice': customerFee,
+            'shipTotal': butcher.shipTotalCount,
+            'butcherSelection': DispatcherSelectionWeigts[dispatcher.selection],
+            'productSelection': ProductSelectionWeigts[bp.selection]
+        }
+        let puan = 0.00;
+        
+        console.log('*', butcher.name, '*')
+        for(let k in butcherweights) {
+            let lim = limits[k];
+            let propPuan = Helper.mapValues(butcherweights[k], lim[0], lim[1]);
+            propPuan =Number.isNaN(propPuan) ? 0: propPuan*weights[k];
+            console.log(k, propPuan.toFixed(2), '[', lim[0], lim[1], ']:', butcherweights[k]);
+            puan+=propPuan
+        }
+        console.log(butcher.name, ':', puan.toFixed(2));
+        console.log('------------------')
+        return puan;
+    }
 
     async getFoodResources(products4?: Product[], limit?: number, catids?: number[], options = {}) {
         return this.getResources({

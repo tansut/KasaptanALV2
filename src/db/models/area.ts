@@ -6,6 +6,7 @@ import { GeoLocation } from '../../models/geo';
 import { Google } from '../../lib/google';
 import { add } from 'lodash';
 import email from '../../lib/email';
+import { ButcherProperty } from '../../routes/api/product';
 
 interface AreaDict {
     [key: number]: Area;
@@ -83,6 +84,13 @@ class Area extends BaseModel<Area> {
                 slug: slug
             }
         })
+    }
+
+    getLevel(level: number) {
+        if (this.level == level) return this;
+        else if (level == this.level-1) return this.parent;
+        else if (level == this.level-2) return this.parent.parent;
+        else if (level == this.level-3) return this.parent.parent.parent;
     }
 
     async ensureLocation() {
@@ -165,6 +173,28 @@ class Area extends BaseModel<Area> {
     selectionRadius: number;
 
     @Column({
+        allowNull: false,
+        type: DataType.DECIMAL(13, 2),
+        defaultValue: 0.00
+    })
+    butcherWeightOrder: number;
+
+    @Column({})
+    butcherweightsjson: string
+
+    get butcherWeights(): {[key in ButcherProperty]: number} {
+        return this.butcherweightsjson ? JSON.parse(this.getDataValue('butcherweightsjson')) : null
+    }
+
+    set butcherWeights(value: {[key in ButcherProperty]: number}) {
+        this.setDataValue('butcherweightsjson', JSON.stringify(value));
+    }
+
+
+
+    //{[key in ButcherProperty]: number}
+
+    @Column({
         allowNull: true
     })
     @ForeignKey(() => Area)
@@ -184,7 +214,7 @@ class Area extends BaseModel<Area> {
                 level1Status: this.status
             }
         } else if (this.level == 2) {
-            let parent = this.parent || await Area.findByPk(this.parentid);
+            let parent = this.parent || (this.parent  = await Area.findByPk(this.parentid));
             res = {
                 level1Id: parent.id,
                 level1Slug: parent.slug,
@@ -201,8 +231,8 @@ class Area extends BaseModel<Area> {
             let parentOfParent, parent: Area;
             parentOfParent = this.parent && this.parent.parent;
             if (parentOfParent == null) {
-                parent = this.parent || await Area.findByPk(this.parentid);
-                parentOfParent = parent.parent || await Area.findByPk(parent.parentid);
+                parent = this.parent || (this.parent =  await Area.findByPk(this.parentid));
+                parentOfParent = parent.parent || (parent.parent = await Area.findByPk(parent.parentid));
             }
             res = {
                 level1Id: parentOfParent.id,
