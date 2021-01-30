@@ -206,6 +206,7 @@ export default class Route extends ViewRouter {
         weights = l3.butcherWeights ? {...weights, ...l3.butcherWeights}: weights; 
 
         for(let i = 0; i < serving.length;i ++) {
+            
             serving[i].butcher.calculatedRate = await this.api.calculateButcherRate(serving[i].butcher, product, serving[i], limits, typeof customerFees[serving[i].butcher.id] == 'undefined' ? maxFee: customerFees[serving[i].butcher.id], weights)
         }
 

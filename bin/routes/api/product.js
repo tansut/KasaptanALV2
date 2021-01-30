@@ -61,6 +61,10 @@ class Route extends router_1.ApiRouter {
     calculateButcherRate(butcher, product, dispatcher, limits, customerFee, weights) {
         return __awaiter(this, void 0, void 0, function* () {
             let bp = butcher.products.find(p => p.productid == product.id);
+            let butcherWeight = dispatcher_1.DispatcherSelectionWeigts[dispatcher.selection];
+            if (butcherWeight == 0 && butcher.selectionRadiusAsKm > 0) {
+                butcherWeight = dispatcher.butcherArea.bestKm <= butcher.selectionRadiusAsKm ? 1 : butcherWeight;
+            }
             let butcherweights = {
                 'distance': dispatcher.butcherArea.bestKm,
                 'kasapkart': butcher.customerPuanRate,
@@ -68,20 +72,20 @@ class Route extends router_1.ApiRouter {
                 'rating': butcher.weightRatingAsPerc,
                 'shipmentPrice': customerFee,
                 'shipTotal': butcher.shipTotalCount,
-                'butcherSelection': dispatcher_1.DispatcherSelectionWeigts[dispatcher.selection],
+                'butcherSelection': butcherWeight,
                 'productSelection': product_1.ProductSelectionWeigts[bp.selection]
             };
             let puan = 0.00;
-            console.log('*', butcher.name, '*');
+            //console.log('*', butcher.name, '*')
             for (let k in butcherweights) {
                 let lim = limits[k];
                 let propPuan = helper_1.default.mapValues(butcherweights[k], lim[0], lim[1]);
                 propPuan = Number.isNaN(propPuan) ? 0 : propPuan * weights[k];
-                console.log(k, propPuan.toFixed(2), '[', lim[0], lim[1], ']:', butcherweights[k]);
+                //console.log(k, propPuan.toFixed(2), '[', lim[0], lim[1], ']:', butcherweights[k]);
                 puan += propPuan;
             }
-            console.log(butcher.name, ':', puan.toFixed(2));
-            console.log('------------------');
+            //console.log(butcher.name, ':', puan.toFixed(2));
+            //console.log('------------------')
             return puan;
         });
     }

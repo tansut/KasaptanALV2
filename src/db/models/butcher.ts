@@ -99,6 +99,13 @@ class Butcher extends BaseModel<Butcher> {
     @Column({
         allowNull: false,
         defaultValue: 0,
+        type: DataType.INTEGER
+    })
+    selectionRadiusAsKm: number;
+
+    @Column({
+        allowNull: false,
+        defaultValue: 0,
         type: DataType.DECIMAL(5, 2)
     })
     userRating: number;

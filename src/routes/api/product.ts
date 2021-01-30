@@ -61,6 +61,10 @@ export default class Route extends ApiRouter {
 
     async calculateButcherRate(butcher: Butcher, product: Product, dispatcher: Dispatcher, limits: {[key in ButcherProperty]: number []}, customerFee: number, weights: {[key in ButcherProperty]: number}) {
         let bp = butcher.products.find(p=>p.productid == product.id);
+        let butcherWeight = DispatcherSelectionWeigts[dispatcher.selection];
+        if (butcherWeight == 0 && butcher.selectionRadiusAsKm > 0) {
+            butcherWeight = dispatcher.butcherArea.bestKm <= butcher.selectionRadiusAsKm ? 1: butcherWeight;
+        }
         let butcherweights: {[key in ButcherProperty]: number} = {
             'distance': dispatcher.butcherArea.bestKm,
             'kasapkart': butcher.customerPuanRate,
@@ -68,21 +72,21 @@ export default class Route extends ApiRouter {
             'rating': butcher.weightRatingAsPerc,
             'shipmentPrice': customerFee,
             'shipTotal': butcher.shipTotalCount,
-            'butcherSelection': DispatcherSelectionWeigts[dispatcher.selection],
+            'butcherSelection': butcherWeight,
             'productSelection': ProductSelectionWeigts[bp.selection]
         }
         let puan = 0.00;
         
-        console.log('*', butcher.name, '*')
+        //console.log('*', butcher.name, '*')
         for(let k in butcherweights) {
             let lim = limits[k];
             let propPuan = Helper.mapValues(butcherweights[k], lim[0], lim[1]);
             propPuan =Number.isNaN(propPuan) ? 0: propPuan*weights[k];
-            console.log(k, propPuan.toFixed(2), '[', lim[0], lim[1], ']:', butcherweights[k]);
+            //console.log(k, propPuan.toFixed(2), '[', lim[0], lim[1], ']:', butcherweights[k]);
             puan+=propPuan
         }
-        console.log(butcher.name, ':', puan.toFixed(2));
-        console.log('------------------')
+        //console.log(butcher.name, ':', puan.toFixed(2));
+        //console.log('------------------')
         return puan;
     }
 
