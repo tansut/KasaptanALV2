@@ -102,8 +102,11 @@ export default class AreaTask extends BaseTask {
             limit: 1000
         })
 
-        let sql = `update areas t1
-inner join areas t2 on t1.parentid = t2.id
+
+        await emptyLoc.forEach(async l=>await l.ensureLocation());
+        
+        let sql = `update Areas t1
+inner join Areas t2 on t1.parentid = t2.id
 set t1.dispatchTag = t2.dispatchTag,  t1.status = t2.status
 where t1.level=4`;
 
@@ -112,7 +115,7 @@ where t1.level=4`;
         });
 
 
-        await emptyLoc.forEach(async l=>await l.ensureLocation());
+        
 
         console.log('done AreaTask job', Date.now())
 
