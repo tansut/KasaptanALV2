@@ -48,7 +48,8 @@ let Order = Order_1 = class Order extends basemodel_1.default {
         return (this.status == order_1.OrderItemStatus.supplying) || (this.status == order_1.OrderItemStatus.reqirePayment);
     }
     get displayAddress() {
-        return `${this.address} Bina: ${this.bina}, Kat: ${this.kat}, Daire: ${this.daire}. + ${this.areaLevel3Text}, ${this.areaLevel2Text}/${this.areaLevel1Text}`;
+        //return `${this.address} Bina: ${this.bina}, Kat: ${this.kat}, Daire: ${this.daire}. + ${this.areaLevel3Text}, ${this.areaLevel2Text}/${this.areaLevel1Text}`
+        return `${this.address}. ${this.areaLevel4Text ? this.areaLevel4Text + ',' : ''} ${this.areaLevel3Text}, ${this.areaLevel2Text}/${this.areaLevel1Text}`;
     }
     get dispatcherData() {
         return JSON.parse(this.getDataValue('dispatcherjson').toString());
@@ -143,8 +144,10 @@ let Order = Order_1 = class Order extends basemodel_1.default {
             o.total = c.getButcherTotal(bi);
             o.areaLevel1Id = c.address.level1Id;
             o.areaLevel3Id = c.address.level3Id;
+            o.areaLevel4Id = c.address.level4Id;
             o.areaLevel1Text = c.address.level1Text;
             o.areaLevel3Text = c.address.level3Text;
+            o.areaLevel4Text = c.address.level4Text;
             o.email = c.address.email;
             o.address = c.address.adres;
             o.bina = c.address.bina;
@@ -315,6 +318,12 @@ __decorate([
 ], Order.prototype, "areaLevel3Id", void 0);
 __decorate([
     sequelize_typescript_1.Column({
+        allowNull: true
+    }),
+    __metadata("design:type", Number)
+], Order.prototype, "areaLevel4Id", void 0);
+__decorate([
+    sequelize_typescript_1.Column({
         allowNull: false,
         defaultValue: true
     }),
@@ -368,6 +377,12 @@ __decorate([
     }),
     __metadata("design:type", String)
 ], Order.prototype, "areaLevel3Text", void 0);
+__decorate([
+    sequelize_typescript_1.Column({
+        allowNull: true
+    }),
+    __metadata("design:type", String)
+], Order.prototype, "areaLevel4Text", void 0);
 __decorate([
     sequelize_typescript_1.Column({
         allowNull: true

@@ -258,7 +258,7 @@ class BanabikuryeProvider extends core_1.LogisticProvider {
                 fId: req.points[1].id,
             });
             let cacheKey = req.points[0].id + '-' + req.points[1].id;
-            let resp = this.config.cache ? yield dbcache_1.default.retrieve(cacheKey, 10) : null;
+            let resp = this.config.cache ? yield dbcache_1.default.retrieve(cacheKey, 15) : null;
             if (!resp) {
                 resp = yield this.safeResponse("calculate-order", request, req.distance, this.fromOfferResponse.bind(this));
                 this.config.cache && (yield dbcache_1.default.put(cacheKey, resp));

@@ -46,7 +46,7 @@ class Route extends router_1.ApiRouter {
                     }
                     catch (err) {
                         email_1.default.send('tansut@gmail.com', 'hata/ensureDistances', "error.ejs", {
-                            text: err.message,
+                            text: err.message + butchers[i].name + ' ' + area.slug,
                             stack: err.stack
                         });
                     }

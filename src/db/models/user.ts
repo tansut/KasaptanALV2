@@ -183,7 +183,10 @@ export default class User extends BaseModel<User> {
     })
     lastLevel3Id: number;       
 
-    
+    @Column({
+        allowNull: true        
+    })
+    lastLevel4Id: number;          
 
     @Column({
         allowNull: false,

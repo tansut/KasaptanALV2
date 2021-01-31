@@ -204,8 +204,7 @@ if (orderClosed && __req.user && __req.user.hasRole('admin')) {
                       <%=order.shipmenthourText%>
                     </span></li>
                 <% if (!controller.hideOrderDetails) { %>
-                <li><span class="text-muted">Adres:&nbsp;</span><%=order.address%>/ Bina: <%=order.bina%>,Kat:
-                  <%=order.kat%>,Daire: <%=order.daire%></li>
+                <li><span class="text-muted">Adres:&nbsp;</span><%=order.displayAddress%></li>
 
                 <% if (order.adresTarif) { %>
                 <li><span class="text-muted">Adres Tarifi:&nbsp;</span><%=order.adresTarif%></li>

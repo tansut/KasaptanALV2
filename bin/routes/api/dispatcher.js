@@ -42,6 +42,11 @@ class Route extends router_1.ApiRouter {
                     toareaid: address.level3Id
                 });
             }
+            if (address && address.level4Id) {
+                where[sequelize_1.Op.or].push({
+                    toareaid: address.level4Id
+                });
+            }
             return where;
         });
     }
@@ -130,7 +135,7 @@ class Route extends router_1.ApiRouter {
                 order: [["toarealevel", "DESC"]],
             });
             let ugly = {}, result = [];
-            let l3 = yield area_1.default.findByPk(q.adr.level3Id || q.adr.level2Id);
+            let l3 = yield area_1.default.findByPk(q.adr.level4Id || q.adr.level3Id || q.adr.level2Id);
             let areaApi = new area_2.default(this.constructorParams);
             let butcherAreaData = yield areaApi.ensureDistances(res.map(s => s.butcher), l3);
             for (let i = 0; i < res.length; i++) {

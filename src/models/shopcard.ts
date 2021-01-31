@@ -15,6 +15,7 @@ export interface ShopcardAdres {
     level1Id: number;
     level2Id: number;
     level3Id: number;
+    level4Id: number;
     saveaddress: boolean;
     adres: string;
     bina: string;
@@ -24,6 +25,7 @@ export interface ShopcardAdres {
     level1Text: string;
     level2Text: string;
     level3Text: string;
+    level4Text: string;
     location?: GeoLocation;
     accuracy?: number;
 
@@ -92,6 +94,7 @@ export interface ShopcardProductView {
         slug: string;
         name: string;
         enableCreditCard: boolean;
+        userSelected: boolean;
     }
 }
 
@@ -104,6 +107,7 @@ export class ShopCard {
         level1Id: 0,
         level2Id: 0,
         level3Id: 0,
+        level4Id: 0,
         saveaddress: true,
         adres: '',
         addresstarif:'',
@@ -113,6 +117,7 @@ export class ShopCard {
         level1Text: '',
         level2Text: '',
         level3Text: '',
+        level4Text: '',
         location: null,
         geolocation: null,
         geolocationType: "UNKNOWN"
@@ -278,6 +283,7 @@ export class ShopCard {
                 butchers[bi] = item.product.butcher;
                 butchers[bi].products = [i];
                 butchers[bi].subTotal = item.price;
+                butchers[bi].userSelected = this.butchers[bi] ? this.butchers[bi].userSelected: false
             } else {
                 butchers[bi].products.push(i);
                 butchers[bi].subTotal += item.price;
@@ -525,6 +531,9 @@ export class ShopCard {
 
             result.address.level3Id = req.prefAddr.level3Id;
             result.address.level3Text = req.prefAddr.level3Text;
+
+            result.address.level4Id = req.prefAddr.level4Id;
+            result.address.level4Text = req.prefAddr.level4Text;
         }
 
         let butcherids = Object.keys(result.butchers || {})
@@ -559,7 +568,8 @@ export class ShopcardItem {
                 id: product.butcher.id,
                 slug: product.butcher.slug,
                 name: product.butcher.name,
-                enableCreditCard: product.butcher.enableCreditCard
+                enableCreditCard: product.butcher.enableCreditCard,
+                userSelected: false
             },
             kgPrice: product.kgPrice,
             productType: product.productType

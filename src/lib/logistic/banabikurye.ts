@@ -273,7 +273,7 @@ export default class BanabikuryeProvider extends LogisticProvider {
 
 
 
-        let resp: OfferResponse = this.config.cache ? await DBCache.retrieve(cacheKey, 10): null;
+        let resp: OfferResponse = this.config.cache ? await DBCache.retrieve(cacheKey, 15): null;
         if (!resp) {
             resp = await this.safeResponse<OfferResponse>("calculate-order",request, req.distance, this.fromOfferResponse.bind(this));
             this.config.cache && await DBCache.put(cacheKey, resp)

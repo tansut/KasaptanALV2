@@ -49,6 +49,7 @@ class ShopCard {
             level1Id: 0,
             level2Id: 0,
             level3Id: 0,
+            level4Id: 0,
             saveaddress: true,
             adres: '',
             addresstarif: '',
@@ -58,6 +59,7 @@ class ShopCard {
             level1Text: '',
             level2Text: '',
             level3Text: '',
+            level4Text: '',
             location: null,
             geolocation: null,
             geolocationType: "UNKNOWN"
@@ -243,6 +245,7 @@ class ShopCard {
                 butchers[bi] = item.product.butcher;
                 butchers[bi].products = [i];
                 butchers[bi].subTotal = item.price;
+                butchers[bi].userSelected = this.butchers[bi] ? this.butchers[bi].userSelected : false;
             }
             else {
                 butchers[bi].products.push(i);
@@ -423,6 +426,8 @@ class ShopCard {
                 result.address.level2Text = req.prefAddr.level2Text;
                 result.address.level3Id = req.prefAddr.level3Id;
                 result.address.level3Text = req.prefAddr.level3Text;
+                result.address.level4Id = req.prefAddr.level4Id;
+                result.address.level4Text = req.prefAddr.level4Text;
             }
             let butcherids = Object.keys(result.butchers || {});
             let firstOrder = !req.user ? null : yield order_1.Order.findOne({
@@ -460,7 +465,8 @@ class ShopcardItem {
                 id: product.butcher.id,
                 slug: product.butcher.slug,
                 name: product.butcher.name,
-                enableCreditCard: product.butcher.enableCreditCard
+                enableCreditCard: product.butcher.enableCreditCard,
+                userSelected: false
             },
             kgPrice: product.kgPrice,
             productType: product.productType

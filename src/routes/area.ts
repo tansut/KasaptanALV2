@@ -26,13 +26,24 @@ export default class Route extends ViewRouter {
             var adr: PreferredAddress = {
                 level1Id: null,
                 level2Id: null,
-                level3Id: null
+                level3Id: null,
+                level4Id: null
             };
+            await area.loadRelatedAreas();
             switch (area.level) {
                 case 3: {
-                    adr.level1Id = area.parent.parentid;
-                    adr.level2Id = area.parentid;
-                    adr.level3Id = area.id;
+                    adr.level1Id = area.getLevel(1).id;
+                    adr.level2Id = area.getLevel(2).id;
+                    adr.level3Id = area.getLevel(3).id;
+                    await this.req.helper.setPreferredAddress(adr, true);
+                    break;
+                }
+
+                case 4: {
+                    adr.level1Id = area.getLevel(1).id;
+                    adr.level2Id = area.getLevel(2).id;
+                    adr.level3Id = area.getLevel(3).id;
+                    adr.level4Id = area.getLevel(4).id;
                     await this.req.helper.setPreferredAddress(adr, true);
                     break;
                 }

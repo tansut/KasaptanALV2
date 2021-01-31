@@ -124,11 +124,11 @@ export default class Route extends ApiRouter {
             let addr = await Area.findByPk(area.id);
             let pref = await addr.getPreferredAddress();
             area.name = pref.display;
-            if (area.level == 4) {
-                area.level = 3;
-                area.id = pref.level3Id;
-                area.url = pref.level3Slug;
-            }
+            // if (area.level == 4) {
+            //     area.level = 3;
+            //     area.id = pref.level3Id;
+            //     area.url = pref.level3Slug;
+            // }
             area['display'] = pref.display
             area['l1'] = {
                 name: pref.level1Text,

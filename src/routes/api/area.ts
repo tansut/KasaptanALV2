@@ -37,7 +37,7 @@ export default class Route extends ApiRouter {
                     list.push(await this.create(butchers[i], area));
                 } catch(err){
                     email.send('tansut@gmail.com', 'hata/ensureDistances', "error.ejs", {
-                        text: err.message,
+                        text: err.message + butchers[i].name + ' ' + area.slug,
                         stack: err.stack
                     });                     
                 }                           

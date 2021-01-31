@@ -201,6 +201,12 @@ __decorate([
 ], User.prototype, "lastLevel3Id", void 0);
 __decorate([
     sequelize_typescript_1.Column({
+        allowNull: true
+    }),
+    __metadata("design:type", Number)
+], User.prototype, "lastLevel4Id", void 0);
+__decorate([
+    sequelize_typescript_1.Column({
         allowNull: false,
         defaultValue: false
     }),

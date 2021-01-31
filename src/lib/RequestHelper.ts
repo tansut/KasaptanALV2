@@ -55,41 +55,48 @@ export class RequestHelper {
     }
 
     async setPreferredAddress(adr: PreferredAddress, save: boolean = false) {
-        if (adr && adr.level3Id) {
+        if (adr && (adr.level3Id || adr.level4Id)) {
            
-                let area = await Area.findByPk(adr.level3Id, {
+                let area = await Area.findByPk(adr.level4Id || adr.level3Id, {
                     include: [
                         { all: true }
                     ]
                 })
+                await area.loadRelatedAreas();
                 await area.ensureLocation()
-                let pa = await Area.findByPk(area.parent.id, {
-                    include: [
-                        { all: true }
-                    ]
-                });
+                let l1 = area.getLevel(1);
+                let l2 = area.getLevel(2);
+                let l3 = area.getLevel(3);
+                let l4 = area.getLevel(4);
 
-                adr.level1Id = pa.parent.id;
-                adr.level2Id = pa.id;
-                adr.level3Id = area.id;
-                
+                adr.level1Id = l1.id;
+                adr.level2Id = l2.id;
+                adr.level3Id = l3.id;
+                adr.level4Id = l4 ? l4.id: undefined;
 
-                adr.level1Text = pa.parent.name;
-                adr.level2Text = pa.name;
-                adr.level3Text = area.name;
+                adr.level1Text = l1.name;
+                adr.level2Text = l2.name;
+                adr.level3Text = l3.name;
+                adr.level4Text = l4 ? l4.name: undefined;
 
-                adr.level1Slug = pa.parent.slug;
-                adr.level2Slug = pa.slug;
-                adr.level3Slug = area.slug;
 
-                adr.level1Status = pa.parent.status;
-                adr.level2Status = pa.status;
-                adr.level3Status = area.status;
+                adr.level1Slug = l1.slug;
+                adr.level2Slug = l2.slug;
+                adr.level3Slug = l3.slug;
+                adr.level4Slug = l4 ? l4.slug: undefined;
 
-                adr.lat = adr.lat || area.location.coordinates[0];
-                adr.lng = adr.lng || area.location.coordinates[1];
 
-                adr.display = `${adr.level3Text}, ${adr.level2Text}/${adr.level1Text}`;
+                adr.level1Status = l1.status;
+                adr.level2Status = l2.status;
+                adr.level3Status = l3.status;
+                adr.level4Status = l4 ? l4.status: undefined;
+
+                adr.lat = adr.lat || area.location ? area.location.coordinates[0]: undefined;
+                adr.lng = adr.lng || area.location ? area.location.coordinates[1]: undefined;
+
+
+                adr.display = l4 ? `${adr.level4Text}, ${adr.level2Text}/${adr.level1Text}`:  
+                `${adr.level3Text}, ${adr.level2Text}/${adr.level1Text}`;
 
                 this.req.prefAddr = adr;
 
@@ -98,6 +105,7 @@ export class RequestHelper {
                         this.req.user.lastLevel1Id = adr.level1Id;
                         this.req.user.lastLevel2Id = adr.level2Id;
                         this.req.user.lastLevel3Id = adr.level3Id;
+                        this.req.user.lastLevel4Id = adr.level4Id;
                         this.req.user.lastLocation = {
                             type: 'Point',
                             coordinates: [adr.lat, adr.lng]
@@ -129,18 +137,21 @@ export class RequestHelper {
             req.user.lastLevel1Id = req.session.prefAddr.level1Id;
             req.user.lastLevel2Id = req.session.prefAddr.level2Id;
             req.user.lastLevel3Id = req.session.prefAddr.level3Id;
+            req.user.lastLevel4Id = req.session.prefAddr.level4Id;
             req.session.prefAddr = null;
             await req.user.save();
         }
         var adr: PreferredAddress = {
             level1Id: null,
             level2Id: null,
-            level3Id: null
+            level3Id: null,
+            level4Id: null,
         };
         if (req.user) {
             adr.level1Id = req.user.lastLevel1Id;
             adr.level2Id = req.user.lastLevel2Id;
             adr.level3Id = req.user.lastLevel3Id;
+            adr.level4Id = req.user.lastLevel4Id;
         } else if (req.session.prefAddr) {
             adr = req.session.prefAddr
         }

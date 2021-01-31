@@ -36,6 +36,7 @@ const review_1 = require("../../db/models/review");
 const shipment_1 = require("../../models/shipment");
 const path = require("path");
 const dispatcher_1 = require("../../db/models/dispatcher");
+const config_1 = require("../../config");
 const fs = require('fs');
 let ButcherPropertyWeigts = {
     'distance': -0.80,
@@ -76,16 +77,16 @@ class Route extends router_1.ApiRouter {
                 'productSelection': product_1.ProductSelectionWeigts[bp.selection]
             };
             let puan = 0.00;
-            //console.log('*', butcher.name, '*')
+            config_1.default.nodeenv == "development" && console.log('*', butcher.name, '*');
             for (let k in butcherweights) {
                 let lim = limits[k];
                 let propPuan = helper_1.default.mapValues(butcherweights[k], lim[0], lim[1]);
                 propPuan = Number.isNaN(propPuan) ? 0 : propPuan * weights[k];
-                //console.log(k, propPuan.toFixed(2), '[', lim[0], lim[1], ']:', butcherweights[k]);
+                config_1.default.nodeenv == "development" && console.log(k, propPuan.toFixed(2), '[', lim[0], lim[1], ']:', butcherweights[k]);
                 puan += propPuan;
             }
-            //console.log(butcher.name, ':', puan.toFixed(2));
-            //console.log('------------------')
+            config_1.default.nodeenv == "development" && console.log(butcher.name, ':', puan.toFixed(2));
+            config_1.default.nodeenv == "development" && console.log('------------------');
             return puan;
         });
     }

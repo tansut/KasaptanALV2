@@ -158,6 +158,11 @@ class Order extends BaseModel<Order> {
     areaLevel3Id: number;
 
     @Column({
+        allowNull: true
+    })
+    areaLevel4Id: number;
+
+    @Column({
         allowNull: false,
         defaultValue: true
     })
@@ -169,7 +174,8 @@ class Order extends BaseModel<Order> {
     address: string;
 
     get displayAddress() {
-        return `${this.address} Bina: ${this.bina}, Kat: ${this.kat}, Daire: ${this.daire}. + ${this.areaLevel3Text}, ${this.areaLevel2Text}/${this.areaLevel1Text}`
+        //return `${this.address} Bina: ${this.bina}, Kat: ${this.kat}, Daire: ${this.daire}. + ${this.areaLevel3Text}, ${this.areaLevel2Text}/${this.areaLevel1Text}`
+        return `${this.address}. ${this.areaLevel4Text ? this.areaLevel4Text + ',':''} ${this.areaLevel3Text}, ${this.areaLevel2Text}/${this.areaLevel1Text}`
     }
 
     @Column({
@@ -206,6 +212,11 @@ class Order extends BaseModel<Order> {
         allowNull: true
     })
     areaLevel3Text: string;
+
+    @Column({
+        allowNull: true
+    })
+    areaLevel4Text: string;
 
 
     @Column({
@@ -556,8 +567,10 @@ class Order extends BaseModel<Order> {
         o.total = c.getButcherTotal(bi);        
         o.areaLevel1Id = c.address.level1Id;
         o.areaLevel3Id = c.address.level3Id;
+        o.areaLevel4Id = c.address.level4Id;
         o.areaLevel1Text = c.address.level1Text;
         o.areaLevel3Text = c.address.level3Text;
+        o.areaLevel4Text = c.address.level4Text;
         o.email = c.address.email;
         o.address = c.address.adres;
         o.bina = c.address.bina;

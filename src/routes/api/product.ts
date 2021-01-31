@@ -21,6 +21,7 @@ import Review from '../../db/models/review';
 import { Shipment } from '../../models/shipment';
 import * as path from "path"
 import Dispatcher, { DispatcherSelectionWeigts } from '../../db/models/dispatcher';
+import config from '../../config';
 const fs = require('fs');
 
 export interface ProductFeedItem {
@@ -76,17 +77,17 @@ export default class Route extends ApiRouter {
             'productSelection': ProductSelectionWeigts[bp.selection]
         }
         let puan = 0.00;
-        
-        //console.log('*', butcher.name, '*')
+
+        config.nodeenv == "development" && console.log('*', butcher.name, '*')
         for(let k in butcherweights) {
             let lim = limits[k];
             let propPuan = Helper.mapValues(butcherweights[k], lim[0], lim[1]);
             propPuan =Number.isNaN(propPuan) ? 0: propPuan*weights[k];
-            //console.log(k, propPuan.toFixed(2), '[', lim[0], lim[1], ']:', butcherweights[k]);
+            config.nodeenv == "development" && console.log(k, propPuan.toFixed(2), '[', lim[0], lim[1], ']:', butcherweights[k]);
             puan+=propPuan
         }
-        //console.log(butcher.name, ':', puan.toFixed(2));
-        //console.log('------------------')
+        config.nodeenv == "development" && console.log(butcher.name, ':', puan.toFixed(2));
+        config.nodeenv == "development" && console.log('------------------')
         return puan;
     }
 

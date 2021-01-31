@@ -97,12 +97,22 @@ export default class AreaTask extends BaseTask {
                 locationData: {
                     [Op.eq]: null
                 },
-                level: [1,2,3]
+                level: [1,2,3,4]
             },
             limit: 1000
         })
 
-        await emptyLoc.forEach(async l=>await l.ensureLocation())
+        let sql = `update areas t1
+inner join areas t2 on t1.parentid = t2.id
+set t1.dispatchTag = t2.dispatchTag,  t1.status = t2.status
+where t1.level=4`;
+
+        await Area.sequelize.query(sql, {
+            type: sq.QueryTypes.BULKUPDATE,
+        });
+
+
+        await emptyLoc.forEach(async l=>await l.ensureLocation());
 
         console.log('done AreaTask job', Date.now())
 

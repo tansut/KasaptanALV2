@@ -52,6 +52,11 @@ export default class Route extends ApiRouter {
                 toareaid: address.level3Id
             })
         }
+        if (address && address.level4Id) {
+            where[Op.or].push({
+                toareaid: address.level4Id
+            })
+        }
         return where
     }
 
@@ -151,7 +156,7 @@ export default class Route extends ApiRouter {
 
         let ugly = {}, result: Dispatcher [] = [];
      
-        let l3 = await Area.findByPk(q.adr.level3Id || q.adr.level2Id);
+        let l3 = await Area.findByPk(q.adr.level4Id || q.adr.level3Id || q.adr.level2Id);
         let areaApi = new AreaApi(this.constructorParams);
         let butcherAreaData = await areaApi.ensureDistances(res.map(s=>s.butcher), l3);
         for (let i = 0; i < res.length; i++) {         
