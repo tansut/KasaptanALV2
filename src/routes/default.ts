@@ -104,13 +104,7 @@ export default class Route extends ViewRouter {
     async setUserAddr() {
         let area = await Area.getBySlug(this.req.params.slug);
         if (!area) return this.next();
-        if (area.level == 3 || area.level == 4) {
-            await area.ensureLocation()
-            await this.req.helper.setPreferredAddress({
-                level3Id: area.level == 3 ? area.id: undefined,
-                level4Id: area.level == 4 ? area.id: undefined
-            }, true);
-        }
+        await this.req.helper.setPreferredAddressByArea(area, true);
         if (this.req.query.r)
             this.res.redirect(this.req.query.r as string);
         else this.res.redirect('/')

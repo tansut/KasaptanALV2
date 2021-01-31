@@ -1,5 +1,5 @@
 import { AppRequest } from "./http";
-import { PreferredAddress } from "../db/models/user";
+import { PreferredAddress, PreferredAddressQuery } from "../db/models/user";
 import Area from "../db/models/area";
 import * as express from 'express';
 import { reject, resolve } from "bluebird";
@@ -54,74 +54,44 @@ export class RequestHelper {
         return this.req.__resources[type] || [];
     }
 
-    async setPreferredAddress(adr: PreferredAddress, save: boolean = false) {
-        if (adr && (adr.level3Id || adr.level4Id)) {
-           
-                let area = await Area.findByPk(adr.level4Id || adr.level3Id, {
-                    include: [
-                        { all: true }
-                    ]
-                })
-                await area.loadRelatedAreas();
-                await area.ensureLocation()
-                let l1 = area.getLevel(1);
-                let l2 = area.getLevel(2);
-                let l3 = area.getLevel(3);
-                let l4 = area.getLevel(4);
-
-                adr.level1Id = l1.id;
-                adr.level2Id = l2.id;
-                adr.level3Id = l3.id;
-                adr.level4Id = l4 ? l4.id: undefined;
-
-                adr.level1Text = l1.name;
-                adr.level2Text = l2.name;
-                adr.level3Text = l3.name;
-                adr.level4Text = l4 ? l4.name: undefined;
-
-
-                adr.level1Slug = l1.slug;
-                adr.level2Slug = l2.slug;
-                adr.level3Slug = l3.slug;
-                adr.level4Slug = l4 ? l4.slug: undefined;
-
-
-                adr.level1Status = l1.status;
-                adr.level2Status = l2.status;
-                adr.level3Status = l3.status;
-                adr.level4Status = l4 ? l4.status: undefined;
-
-                adr.lat = adr.lat || area.location ? area.location.coordinates[0]: undefined;
-                adr.lng = adr.lng || area.location ? area.location.coordinates[1]: undefined;
-
-
-                adr.display = l4 ? `${adr.level4Text}, ${adr.level2Text}/${adr.level1Text}`:  
-                `${adr.level3Text}, ${adr.level2Text}/${adr.level1Text}`;
-
-                this.req.prefAddr = adr;
-
-                if (save) {
-                    if (this.req.user) {
-                        this.req.user.lastLevel1Id = adr.level1Id;
-                        this.req.user.lastLevel2Id = adr.level2Id;
-                        this.req.user.lastLevel3Id = adr.level3Id;
-                        this.req.user.lastLevel4Id = adr.level4Id;
-                        this.req.user.lastLocation = {
-                            type: 'Point',
-                            coordinates: [adr.lat, adr.lng]
-                        }
-
-                        await this.req.user.save();
-                    } else {
-                        this.req.session.prefAddr = adr;
-                        await new Promise<void>((resolve, reject) => {
-                            this.req.session.save(err => (err ? reject(err) : resolve()))
-                        })
-                    }
+    async setPreferredAddressByArea(area: Area, save: boolean = true) {
+        let adr = await area.getPreferredAddress();
+        this.req.prefAddr = adr;
+        if (save) {
+            if (this.req.user) {
+                this.req.user.lastLevel1Id = adr.level1Id;
+                this.req.user.lastLevel2Id = adr.level2Id;
+                this.req.user.lastLevel3Id = adr.level3Id;
+                this.req.user.lastLevel4Id = adr.level4Id;
+                this.req.user.lastLocation = {
+                    type: 'Point',
+                    coordinates: [adr.lat, adr.lng]
                 }
-            
+                await this.req.user.save();
+            } else {
+                this.req.session.prefAddr = { 
+                    level1Id: adr.level1Id,
+                    level2Id: adr.level2Id,
+                    level3Id: adr.level3Id,
+                    level4Id: adr.level4Id
+                };
+                await new Promise<void>((resolve, reject) => {
+                    this.req.session.save(err => (err ? reject(err) : resolve()))
+                })
+            }
+        } else {
+            delete this.req.prefAddr;
         }
-        else delete this.req.prefAddr;
+    }
+
+    async setPreferredAddress(adr: PreferredAddressQuery, save: boolean = true) {
+        let area = await Area.findByPk(adr.level4Id || adr.level3Id, {
+            include: [
+                { all: true }
+            ]
+        })
+        
+        area && await this.setPreferredAddressByArea(area, save);
     }
 
     static use(app: express.Application) {
@@ -133,6 +103,8 @@ export class RequestHelper {
 
     async fillPreferredAddress() {
         let req = this.req, list = [];
+        if (!req.user && !req.session.prefAddr) return;
+        if (this.req.prefAddr) return;
         if (req.user && req.session.prefAddr != null) {
             req.user.lastLevel1Id = req.session.prefAddr.level1Id;
             req.user.lastLevel2Id = req.session.prefAddr.level2Id;
@@ -141,7 +113,7 @@ export class RequestHelper {
             req.session.prefAddr = null;
             await req.user.save();
         }
-        var adr: PreferredAddress = {
+        var adr: PreferredAddressQuery = {
             level1Id: null,
             level2Id: null,
             level3Id: null,

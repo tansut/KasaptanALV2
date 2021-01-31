@@ -119,17 +119,17 @@ class Route extends router_1.ViewRouter {
                 return bp.priceView.price;
             }));
             let weights = yield this.api.getButcherPropertyWeights();
-            let l1 = this.userArea.getLevel(1);
-            let l2 = this.userArea.getLevel(2);
-            let l3 = this.userArea.getLevel(3);
+            let l1 = adr.based.getLevel(1);
+            let l2 = adr.based.getLevel(2);
+            let l3 = adr.based.getLevel(3);
             let orderSize = l3.butcherWeightOrder || l2.butcherWeightOrder || l1.butcherWeightOrder || 150.00;
             let customerFees = {}, minFee = Number.MAX_SAFE_INTEGER, maxFee = Number.MIN_SAFE_INTEGER;
             for (let i = 0; i < serving.length; i++) {
                 let fromTo = {
                     start: serving[i].butcher.location,
                     sId: serving[i].id.toString(),
-                    finish: this.userArea.location,
-                    fId: this.userArea.id.toString()
+                    finish: adr.based.location,
+                    fId: adr.based.id.toString()
                 };
                 let offerRequest = serving[i].provider.offerRequestFromTo(fromTo);
                 offerRequest.orderTotal = orderSize;
@@ -267,12 +267,8 @@ class Route extends router_1.ViewRouter {
             //this.reviews = await api.loadReviews(product.id, 0);
             this.foods = yield this.api.getTarifVideos([product]);
             if (this.req.query.semt) {
-                let l3 = yield area_1.default.getBySlug(this.req.query.semt);
-                if (l3 && l3.level == 3) {
-                    yield this.req.helper.setPreferredAddress({
-                        level3Id: l3.id
-                    }, true);
-                }
+                let area = yield area_1.default.getBySlug(this.req.query.semt);
+                yield this.req.helper.setPreferredAddressByArea(area, true);
             }
             let selectedButchers;
             if (!this.req.prefAddr) {
@@ -283,8 +279,6 @@ class Route extends router_1.ViewRouter {
                 };
             }
             else {
-                this.userArea = yield area_1.default.findByPk(this.req.prefAddr.level3Id);
-                yield this.userArea.getPreferredAddress();
                 selectedButchers = yield this.locateButchersForProduct(product, this.req.prefAddr, butcher);
             }
             let serving = selectedButchers.serving.concat(selectedButchers.takeOnly);
@@ -295,11 +289,10 @@ class Route extends router_1.ViewRouter {
             let view = yield this.api.getProductView(product, selectedButchers.best ? selectedButchers.best.butcher : null, null, true);
             let fromTo;
             if (this.req.prefAddr) {
-                let l3 = yield area_1.default.findByPk(this.req.prefAddr.level3Id);
                 fromTo = {
                     start: null,
-                    finish: l3.location,
-                    fId: l3.id.toString()
+                    finish: this.req.prefAddr.based.location,
+                    fId: this.req.prefAddr.based.id.toString()
                 };
             }
             for (let i = 0; i < serving.length; i++) {
@@ -459,7 +452,7 @@ class Route extends router_1.ViewRouter {
                 pageDescription: product.generatedDesc,
                 product: product, view: view,
                 __hidesupportMessage: false,
-                __supportMessage: `${`Merhaba, kasaptanal.com üzerinden size ulaşıyorum. ${product.name} ile ilgili whatsapp üzerinden yardımcı olabilir misiniz?`}`
+                __supportMessage: `${`Merhaba, kasaptanal.com üzerinden ${this.req.prefAddr ? '' + this.req.prefAddr.display + '' : ''} size ulaşıyorum.  ${product.name} (${this.url}/${product.slug}) ile ilgili whatsapp üzerinden yardımcı olabilir misiniz?`}`
             }));
         });
     }

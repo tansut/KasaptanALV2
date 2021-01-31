@@ -275,7 +275,6 @@
           var ref = $(self).data('return') ||  window.location.href;
           window.location.href = "/adres-belirle/" + ul.selectedDistrict.slug + '?lng=' + ul.lng + '&lat=' + ul.lat + '&r=' + ref;
           //window.location.reload(true) // = "/" + window.App.ProductApp.product.slug + "?semt=" + ul.selectedDistrict.slug
-  
         });
       })
   
@@ -289,15 +288,27 @@
         window.App.showSignupDlg(null, true);
       })
   
-  
-      $(window).scroll(function () {
-        if (($(document).scrollTop() >= $(document).height() / 4) && !userGuide.autoPopuped) {
-          userGuide.autoPopuped = true;
-          window.App.setCookie("guidewindow", "1", 30);
-          window.App.showSignupDlg(null, true);
-          
+      // $(window).scroll(function () {
+      //   if (($(document).scrollTop() >= $(document).height() / 4) && !userGuide.autoPopuped) {
+      //     userGuide.autoPopuped = true;
+      //     window.App.setCookie("guidewindow", "1", 30);
+      //     window.App.showSignupDlg(null, true);
+      //   }
+      // });
+
+      <%  if (!__req.prefAddr) { %>
+        $(window).scroll(function () {
+          debugger
+        if (($(document).scrollTop() >= $(document).height() / 4) && !window.kb.autoPopuped) {
+          window.kb.autoPopuped = true;
+          window.App.setCookie("semtwindowdisplayed", "1", 30);
+          window.kb.selectArea(function (sender, ul) {
+            var ref = window.location.href;
+            window.location.href = "/adres-belirle/" + ul.selectedDistrict.slug + '?lng=' + ul.lng + '&lat=' + ul.lat + '&r=' + ref;
+          }, {msg: ''});
         }
       });
+      <% } %>
   
       $("[data-simplebar]").animate({ opacity: 1 }, 50, function () {});
 
@@ -312,6 +323,8 @@
   
     $(document).ready(function () {
       var scroll = 0; 
+
+      window.kb.autoPopuped = window.App.getCookie("semtwindowdisplayed")
   
       if (window.lgData && window.lgData.lg0) {
         $(window.lgData.lg0.el).on('onBeforeOpen.lg',function(event){
@@ -408,6 +421,7 @@
       size: '3.2rem',
       
     });
+
 
     <% } %>
   

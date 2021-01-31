@@ -31,30 +31,7 @@ class Route extends router_1.ViewRouter {
     checkSave(area) {
         return __awaiter(this, void 0, void 0, function* () {
             if (this.req.query.save) {
-                var adr = {
-                    level1Id: null,
-                    level2Id: null,
-                    level3Id: null,
-                    level4Id: null
-                };
-                yield area.loadRelatedAreas();
-                switch (area.level) {
-                    case 3: {
-                        adr.level1Id = area.getLevel(1).id;
-                        adr.level2Id = area.getLevel(2).id;
-                        adr.level3Id = area.getLevel(3).id;
-                        yield this.req.helper.setPreferredAddress(adr, true);
-                        break;
-                    }
-                    case 4: {
-                        adr.level1Id = area.getLevel(1).id;
-                        adr.level2Id = area.getLevel(2).id;
-                        adr.level3Id = area.getLevel(3).id;
-                        adr.level4Id = area.getLevel(4).id;
-                        yield this.req.helper.setPreferredAddress(adr, true);
-                        break;
-                    }
-                }
+                yield this.req.helper.setPreferredAddressByArea(area, true);
             }
         });
     }

@@ -70,7 +70,6 @@ export default class Route extends ViewRouter {
     logisticsProvider: LogisticProvider;
 
     dispatcherTypes = DispatcherTypeDesc;
-    userArea: Area;
 
     get ProductTypeManager() {
         let params = {
@@ -151,9 +150,9 @@ export default class Route extends ViewRouter {
         }));      
         let weights = await this.api.getButcherPropertyWeights();
 
-        let l1 = this.userArea.getLevel(1);
-        let l2 = this.userArea.getLevel(2);
-        let l3 = this.userArea.getLevel(3);
+        let l1 = adr.based.getLevel(1);
+        let l2 = adr.based.getLevel(2);
+        let l3 = adr.based.getLevel(3);
 
         let orderSize = l3.butcherWeightOrder || l2.butcherWeightOrder || l1.butcherWeightOrder || 150.00;
 
@@ -163,8 +162,8 @@ export default class Route extends ViewRouter {
             let fromTo: FromTo = {
                 start: serving[i].butcher.location,
                 sId: serving[i].id.toString(),
-                finish: this.userArea.location,
-                fId: this.userArea.id.toString()
+                finish: adr.based.location,
+                fId: adr.based.id.toString()
             }
             let offerRequest = serving[i].provider.offerRequestFromTo(fromTo);
             offerRequest.orderTotal = orderSize;
@@ -329,12 +328,8 @@ export default class Route extends ViewRouter {
 
         this.foods = await this.api.getTarifVideos([product])
         if (this.req.query.semt) {
-            let l3 = await Area.getBySlug(this.req.query.semt as string);
-            if (l3 && l3.level == 3) {
-                await this.req.helper.setPreferredAddress({
-                    level3Id: l3.id
-                }, true)
-            }
+            let area = await Area.getBySlug(this.req.query.semt as string);
+            await this.req.helper.setPreferredAddressByArea(area, true)
         }
 
 
@@ -349,12 +344,9 @@ export default class Route extends ViewRouter {
                 takeOnly: []
             }
         } else {
-            this.userArea = await Area.findByPk(this.req.prefAddr.level3Id);
-            await this.userArea.getPreferredAddress();
             selectedButchers = await this.locateButchersForProduct(product, this.req.prefAddr, butcher);
         }
         let serving = selectedButchers.serving.concat(<any>selectedButchers.takeOnly);
-
 
         if (selectedButchers.best && this.req.query.butcher && (selectedButchers.best.butcher.slug != this.req.query.butcher)) {
             serving = [];
@@ -366,11 +358,10 @@ export default class Route extends ViewRouter {
         let fromTo: FromTo;
 
         if (this.req.prefAddr) {
-            let l3 = await Area.findByPk(this.req.prefAddr.level3Id)
             fromTo = {
                 start: null,
-                finish: l3.location,
-                fId: l3.id.toString()
+                finish: this.req.prefAddr.based.location,
+                fId: this.req.prefAddr.based.id.toString()
             }
         }
 
@@ -547,7 +538,7 @@ export default class Route extends ViewRouter {
             pageDescription: product.generatedDesc,
             product: product, view: view,
             __hidesupportMessage: false,
-            __supportMessage: `${`Merhaba, kasaptanal.com üzerinden size ulaşıyorum. ${product.name} ile ilgili whatsapp üzerinden yardımcı olabilir misiniz?`}`
+            __supportMessage: `${`Merhaba, kasaptanal.com üzerinden ${this.req.prefAddr ? '' + this.req.prefAddr.display +'':'' } size ulaşıyorum.  ${product.name} (${this.url}/${product.slug}) ile ilgili whatsapp üzerinden yardımcı olabilir misiniz?`}`
         }))
 
     }

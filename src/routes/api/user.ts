@@ -123,7 +123,7 @@ export default class UserRoute extends ApiRouter {
         
         select id, name, slug, GLength(LineStringFromWKB(LineString(
             location, 
-            GeomFromText('POINT(:lat :lng)')))) AS distance from Areas  where level=3 and location is not null ORDER BY distance ASC LIMIT 5
+            GeomFromText('POINT(:lat :lng)')))) AS distance from Areas where (level=3 or level=4) and (location is not null) ORDER BY distance ASC LIMIT 5
         `,            {
                 replacements: { 
                      lat: parseFloat(this.req.body.lat as string), 
@@ -135,11 +135,12 @@ export default class UserRoute extends ApiRouter {
             }
             )
             for(let i = 0; i < result.length;i++) {
+                if (!result[i]['distance']) continue;
                 let area = await Area.findByPk(result[i]['id']);
                 let addr = await area.getPreferredAddress();
                 result[i] = {
                     display: addr.display,
-                    url: addr.level3Slug,
+                    url: result[i]['slug'],
                     distance: result[i]['distance']
                 }
             }

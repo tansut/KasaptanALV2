@@ -55,63 +55,47 @@ class RequestHelper {
     getResourcesOfType(type) {
         return this.req.__resources[type] || [];
     }
-    setPreferredAddress(adr, save = false) {
+    setPreferredAddressByArea(area, save = true) {
         return __awaiter(this, void 0, void 0, function* () {
-            if (adr && (adr.level3Id || adr.level4Id)) {
-                let area = yield area_1.default.findByPk(adr.level4Id || adr.level3Id, {
-                    include: [
-                        { all: true }
-                    ]
-                });
-                yield area.loadRelatedAreas();
-                yield area.ensureLocation();
-                let l1 = area.getLevel(1);
-                let l2 = area.getLevel(2);
-                let l3 = area.getLevel(3);
-                let l4 = area.getLevel(4);
-                adr.level1Id = l1.id;
-                adr.level2Id = l2.id;
-                adr.level3Id = l3.id;
-                adr.level4Id = l4 ? l4.id : undefined;
-                adr.level1Text = l1.name;
-                adr.level2Text = l2.name;
-                adr.level3Text = l3.name;
-                adr.level4Text = l4 ? l4.name : undefined;
-                adr.level1Slug = l1.slug;
-                adr.level2Slug = l2.slug;
-                adr.level3Slug = l3.slug;
-                adr.level4Slug = l4 ? l4.slug : undefined;
-                adr.level1Status = l1.status;
-                adr.level2Status = l2.status;
-                adr.level3Status = l3.status;
-                adr.level4Status = l4 ? l4.status : undefined;
-                adr.lat = adr.lat || area.location ? area.location.coordinates[0] : undefined;
-                adr.lng = adr.lng || area.location ? area.location.coordinates[1] : undefined;
-                adr.display = l4 ? `${adr.level4Text}, ${adr.level2Text}/${adr.level1Text}` :
-                    `${adr.level3Text}, ${adr.level2Text}/${adr.level1Text}`;
-                this.req.prefAddr = adr;
-                if (save) {
-                    if (this.req.user) {
-                        this.req.user.lastLevel1Id = adr.level1Id;
-                        this.req.user.lastLevel2Id = adr.level2Id;
-                        this.req.user.lastLevel3Id = adr.level3Id;
-                        this.req.user.lastLevel4Id = adr.level4Id;
-                        this.req.user.lastLocation = {
-                            type: 'Point',
-                            coordinates: [adr.lat, adr.lng]
-                        };
-                        yield this.req.user.save();
-                    }
-                    else {
-                        this.req.session.prefAddr = adr;
-                        yield new Promise((resolve, reject) => {
-                            this.req.session.save(err => (err ? reject(err) : resolve()));
-                        });
-                    }
+            let adr = yield area.getPreferredAddress();
+            this.req.prefAddr = adr;
+            if (save) {
+                if (this.req.user) {
+                    this.req.user.lastLevel1Id = adr.level1Id;
+                    this.req.user.lastLevel2Id = adr.level2Id;
+                    this.req.user.lastLevel3Id = adr.level3Id;
+                    this.req.user.lastLevel4Id = adr.level4Id;
+                    this.req.user.lastLocation = {
+                        type: 'Point',
+                        coordinates: [adr.lat, adr.lng]
+                    };
+                    yield this.req.user.save();
+                }
+                else {
+                    this.req.session.prefAddr = {
+                        level1Id: adr.level1Id,
+                        level2Id: adr.level2Id,
+                        level3Id: adr.level3Id,
+                        level4Id: adr.level4Id
+                    };
+                    yield new Promise((resolve, reject) => {
+                        this.req.session.save(err => (err ? reject(err) : resolve()));
+                    });
                 }
             }
-            else
+            else {
                 delete this.req.prefAddr;
+            }
+        });
+    }
+    setPreferredAddress(adr, save = true) {
+        return __awaiter(this, void 0, void 0, function* () {
+            let area = yield area_1.default.findByPk(adr.level4Id || adr.level3Id, {
+                include: [
+                    { all: true }
+                ]
+            });
+            area && (yield this.setPreferredAddressByArea(area, save));
         });
     }
     static use(app) {
@@ -123,6 +107,10 @@ class RequestHelper {
     fillPreferredAddress() {
         return __awaiter(this, void 0, void 0, function* () {
             let req = this.req, list = [];
+            if (!req.user && !req.session.prefAddr)
+                return;
+            if (this.req.prefAddr)
+                return;
             if (req.user && req.session.prefAddr != null) {
                 req.user.lastLevel1Id = req.session.prefAddr.level1Id;
                 req.user.lastLevel2Id = req.session.prefAddr.level2Id;

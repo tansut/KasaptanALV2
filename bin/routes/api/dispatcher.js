@@ -12,12 +12,11 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const router_1 = require("../../lib/router");
 const product_1 = require("../../db/models/product");
 const butcher_1 = require("../../db/models/butcher");
-const area_1 = require("../../db/models/area");
 const dispatcher_1 = require("../../db/models/dispatcher");
 const butcherproduct_1 = require("../../db/models/butcherproduct");
 const sequelize_1 = require("sequelize");
 const helper_1 = require("../../lib/helper");
-const area_2 = require("./area");
+const area_1 = require("./area");
 const _ = require("lodash");
 class Route extends router_1.ApiRouter {
     _where(where, address) {
@@ -135,14 +134,13 @@ class Route extends router_1.ApiRouter {
                 order: [["toarealevel", "DESC"]],
             });
             let ugly = {}, result = [];
-            let l3 = yield area_1.default.findByPk(q.adr.level4Id || q.adr.level3Id || q.adr.level2Id);
-            let areaApi = new area_2.default(this.constructorParams);
-            let butcherAreaData = yield areaApi.ensureDistances(res.map(s => s.butcher), l3);
+            let areaApi = new area_1.default(this.constructorParams);
+            let butcherAreaData = yield areaApi.ensureDistances(res.map(s => s.butcher), q.adr.based);
             for (let i = 0; i < res.length; i++) {
                 if (q.product && res[i].toarealevel == 0 && q.product.dispatch != product_1.ProductDispatch.countrywide)
                     continue;
                 let areaData = butcherAreaData.find(ad => ad.butcherid == res[i].butcherid);
-                let provider = res[i].setProvider(q.useLevel1, l3, q.orderType, areaData.bestKm);
+                let provider = res[i].setProvider(q.useLevel1, q.adr.based, q.orderType, areaData.bestKm);
                 if (provider && !ugly[res[i].butcherid]) {
                     res[i].butcherArea = areaData;
                     ugly[res[i].butcherid] = res[i];

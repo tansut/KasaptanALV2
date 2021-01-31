@@ -1,8 +1,8 @@
 (function (window) {
     window.kb = window.kb || {}
 
-
-
+    
+    
 
     window.kb.userlocation = function () {
         var self =
@@ -299,7 +299,10 @@
             var ul = window.kb.userlocation();
             self.areainited = true;
             ul.init(options, function () {
-                $('#exploreAreaMsg').html(options.msg || '')
+                if (options.msg) {
+                    $('#exploreAreaMsg').show();
+                    $('#exploreAreaMsg').html(options.msg || '')
+                }
                 $('#areaModal').modal();
                 $("#exploreAreaButton").click(function () {
                     window.App.gTag('location', 'location/set', ul.selectedCity.name + '/' + ul.selectedIlce.name + '/' + ul.selectedDistrict.name)

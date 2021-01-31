@@ -239,15 +239,11 @@ export default class Route extends ViewRouter {
             }
 
             let area = await Area.findByPk(this.shopcard.address.level4Id || this.shopcard.address.level3Id);
+
             if (this.shopcard.shipment[o].howTo == 'ship') {
 
                 let q: DispatcherQuery = {
-                    adr: {
-                        level1Id: this.shopcard.address.level1Id,
-                        level2Id: this.shopcard.address.level2Id,
-                        level3Id: this.shopcard.address.level3Id,
-                        level4Id: this.shopcard.address.level4Id,
-                    },
+                    adr: await area.getPreferredAddress(),
                     useLevel1: order.orderType == 'kurban',
                     butcher: parseInt(o),
                     orderType: order.orderType

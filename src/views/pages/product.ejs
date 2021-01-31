@@ -2,6 +2,7 @@
 <html lang="tr-TR" prefix="og: http://ogp.me/ns#">
 
 <head>
+
   <% include ./_partial/head %>
   <% if (controller.productLd) { %>
   <script type="application/ld+json">
@@ -22,7 +23,10 @@
 <body>
 
   <%if (__req.query.frame != '1') { %> 
-  <% include ./_partial/header %>
+    <% if (!__req.prefAddr) { %>
+      
+    <% } %>
+    <% include ./_partial/header %>
   <%}%>
 
   <%- include('./_partial/product-weight-calc.ejs', {    product: product}) %>
@@ -306,9 +310,9 @@
   
                           </div>
   
-                          <div class="p-3 bg-white border text-center">
-                            <p class="font-weight-bold">
-                              Alışverişe başlamak için lütfen semtinizi seçin.
+                          <div class="font-size-md p-3 bg-dark border text-center">
+                            <p class="text-light">
+                              Kasaplar ve ürün fiyatları için lütfen önce teslimat bölgenizi seçin.
                             </p>
                             <button @click="selectArea(null)" type="button" class="btn btn-primary"><i
                                 class="czi-location font-size-lg mr-2"></i>Semtinizi Seçin</button>

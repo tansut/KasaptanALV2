@@ -156,14 +156,13 @@ export default class Route extends ApiRouter {
 
         let ugly = {}, result: Dispatcher [] = [];
      
-        let l3 = await Area.findByPk(q.adr.level4Id || q.adr.level3Id || q.adr.level2Id);
         let areaApi = new AreaApi(this.constructorParams);
-        let butcherAreaData = await areaApi.ensureDistances(res.map(s=>s.butcher), l3);
+        let butcherAreaData = await areaApi.ensureDistances(res.map(s=>s.butcher), q.adr.based);
         for (let i = 0; i < res.length; i++) {         
             if (q.product && res[i].toarealevel == 0 && q.product.dispatch != ProductDispatch.countrywide)
                 continue; 
             let areaData = butcherAreaData.find(ad=>ad.butcherid == res[i].butcherid)
-            let provider = res[i].setProvider(q.useLevel1, l3, q.orderType, areaData.bestKm);
+            let provider = res[i].setProvider(q.useLevel1, q.adr.based, q.orderType, areaData.bestKm);
 
             if (provider && !ugly[res[i].butcherid]) {
                 res[i].butcherArea = areaData;

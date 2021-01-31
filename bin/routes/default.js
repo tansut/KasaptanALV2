@@ -97,13 +97,7 @@ class Route extends router_1.ViewRouter {
             let area = yield area_1.default.getBySlug(this.req.params.slug);
             if (!area)
                 return this.next();
-            if (area.level == 3 || area.level == 4) {
-                yield area.ensureLocation();
-                yield this.req.helper.setPreferredAddress({
-                    level3Id: area.level == 3 ? area.id : undefined,
-                    level4Id: area.level == 4 ? area.id : undefined
-                }, true);
-            }
+            yield this.req.helper.setPreferredAddressByArea(area, true);
             if (this.req.query.r)
                 this.res.redirect(this.req.query.r);
             else

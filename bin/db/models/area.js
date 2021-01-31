@@ -113,12 +113,18 @@ let Area = Area_1 = class Area extends basemodel_1.default {
     }
     getPreferredAddress() {
         return __awaiter(this, void 0, void 0, function* () {
-            let adr = {};
+            let adr = {
+                based: this
+            };
             yield this.loadRelatedAreas();
             let l1 = this.getLevel(1);
             let l2 = this.getLevel(2);
             let l3 = this.getLevel(3);
             let l4 = this.getLevel(4);
+            adr.level1 = l1;
+            adr.level2 = l2;
+            adr.level3 = l3;
+            adr.level4 = l4;
             adr.level1Id = l1 ? l1.id : undefined;
             adr.level2Id = l2 ? l2.id : undefined;
             adr.level3Id = l3 ? l3.id : undefined;

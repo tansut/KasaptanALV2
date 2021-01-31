@@ -9,13 +9,29 @@ import validator from 'validator';
 import { GeoLocation, LocationType } from '../../models/geo';
 import AccountModel from './accountmodel';
 import { Account } from '../../models/account';
+import Area from './area';
 
 
 export enum UserRole {
 
 }
 
+export interface PreferredAddressQuery {
+    level1Id?: number;
+    level2Id?: number;
+    level3Id?: number;
+    level4Id?: number;
+}
+
 export interface PreferredAddress {
+
+    level1?: Area;
+    level2?: Area;
+    level3?: Area;
+    level4?: Area;
+
+    based: Area;
+
     level1Id?: number;
     level2Id?: number;
     level3Id?: number;

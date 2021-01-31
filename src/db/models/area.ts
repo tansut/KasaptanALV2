@@ -224,13 +224,20 @@ class Area extends BaseModel<Area> {
         }
     }
 
-    async getPreferredAddress() {
-        let adr: PreferredAddress = {};
+    async getPreferredAddress(): Promise<PreferredAddress> {
+        let adr: PreferredAddress = {
+            based: this
+        };
         await this.loadRelatedAreas();
         let l1 = this.getLevel(1);
         let l2 = this.getLevel(2);
         let l3 = this.getLevel(3);
         let l4 = this.getLevel(4);
+
+        adr.level1 = l1;
+        adr.level2 = l2;
+        adr.level3 = l3;
+        adr.level4 = l4;
 
         adr.level1Id = l1 ? l1.id: undefined;
         adr.level2Id = l2 ? l2.id: undefined;

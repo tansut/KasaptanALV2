@@ -222,12 +222,7 @@ class Route extends router_1.ViewRouter {
                 let area = yield area_1.default.findByPk(this.shopcard.address.level4Id || this.shopcard.address.level3Id);
                 if (this.shopcard.shipment[o].howTo == 'ship') {
                     let q = {
-                        adr: {
-                            level1Id: this.shopcard.address.level1Id,
-                            level2Id: this.shopcard.address.level2Id,
-                            level3Id: this.shopcard.address.level3Id,
-                            level4Id: this.shopcard.address.level4Id,
-                        },
+                        adr: yield area.getPreferredAddress(),
                         useLevel1: order.orderType == 'kurban',
                         butcher: parseInt(o),
                         orderType: order.orderType
