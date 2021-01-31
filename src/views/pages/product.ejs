@@ -739,12 +739,12 @@
                             </span>
                            
                                <a v-if="selectedUnit && selectedUnit.perPerson" @click="showCalculator(selectedUnit)"
-                              class="text-dark font-weight-medium"><i class="czi-calculator mr-1"></i>Miktar Hesaplayıcı</a> 
+                              class="text-dark"><i class="czi-calculator mr-1"></i>Miktar Hesaplayıcı</a> 
                                            
                           </div>
 
                     
-                          <div class="bg-white mb-2 pb-3 border shadow-lg">
+                          <div class="bg-white mb-2 pb-3 border shadow-lg rounded-lg">
                             <div v-if="product && product.purchaseOptions.length > 1">
                               <ul class="nav nav-pills nav-pills-dark nav-fill mb-2">
                                 <li v-for="(option, index) in product.purchaseOptions" class="nav-item h-100">

@@ -80,11 +80,11 @@ export class RequestHelper {
                 })
             }
         } else {
-            delete this.req.prefAddr;
+            //delete this.req.prefAddr;
         }
     }
 
-    async setPreferredAddress(adr: PreferredAddressQuery, save: boolean = true) {
+    async setPreferredAddress(adr: PreferredAddressQuery, save: boolean = false) {
         let area = await Area.findByPk(adr.level4Id || adr.level3Id, {
             include: [
                 { all: true }
@@ -127,6 +127,7 @@ export class RequestHelper {
         } else if (req.session.prefAddr) {
             adr = req.session.prefAddr
         }
-        await this.setPreferredAddress(adr)
+        await this.setPreferredAddress(adr);
+        
     }
 }

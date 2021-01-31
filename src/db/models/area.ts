@@ -239,30 +239,30 @@ class Area extends BaseModel<Area> {
         adr.level3 = l3;
         adr.level4 = l4;
 
-        adr.level1Id = l1 ? l1.id: undefined;
-        adr.level2Id = l2 ? l2.id: undefined;
-        adr.level3Id = l3 ? l3.id: undefined;
-        adr.level4Id = l4 ? l4.id: undefined;
+        adr.level1Id = l1 ? l1.id: null;
+        adr.level2Id = l2 ? l2.id: null;
+        adr.level3Id = l3 ? l3.id: null;
+        adr.level4Id = l4 ? l4.id: null;
 
         adr.level1Text = l1.name;
-        adr.level2Text = l2 ? l2.name: undefined;
-        adr.level3Text = l3 ? l3.name: undefined;
-        adr.level4Text = l4 ? l4.name: undefined;
+        adr.level2Text = l2 ? l2.name: null;
+        adr.level3Text = l3 ? l3.name: null;
+        adr.level4Text = l4 ? l4.name: null;
 
 
-        adr.level1Slug = l1 ? l1.slug: undefined;
-        adr.level2Slug = l2 ? l2.slug: undefined;
-        adr.level3Slug = l3 ? l3.slug: undefined;        
-        adr.level4Slug = l4 ? l4.slug: undefined;
+        adr.level1Slug = l1 ? l1.slug: null;
+        adr.level2Slug = l2 ? l2.slug: null;
+        adr.level3Slug = l3 ? l3.slug: null;        
+        adr.level4Slug = l4 ? l4.slug: null;
 
 
-        adr.level1Status = l1 ? l1.status: undefined;
-        adr.level2Status = l2 ? l2.status: undefined;
-        adr.level3Status = l3 ? l3.status: undefined;
-        adr.level4Status = l4 ? l4.status: undefined;
+        adr.level1Status = l1 ? l1.status: null;
+        adr.level2Status = l2 ? l2.status: null;
+        adr.level3Status = l3 ? l3.status: null;
+        adr.level4Status = l4 ? l4.status: null;
 
-        adr.lat = adr.lat || this.location ? this.location.coordinates[0]: undefined;
-        adr.lng = adr.lng || this.location ? this.location.coordinates[1]: undefined;
+        adr.lat = adr.lat || this.location ? this.location.coordinates[0]: null;
+        adr.lng = adr.lng || this.location ? this.location.coordinates[1]: null;
 
         if (l4) {
             adr.display = `${adr.level4Text}, ${adr.level2Text}/${adr.level1Text}`

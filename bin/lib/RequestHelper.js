@@ -84,11 +84,11 @@ class RequestHelper {
                 }
             }
             else {
-                delete this.req.prefAddr;
+                //delete this.req.prefAddr;
             }
         });
     }
-    setPreferredAddress(adr, save = true) {
+    setPreferredAddress(adr, save = false) {
         return __awaiter(this, void 0, void 0, function* () {
             let area = yield area_1.default.findByPk(adr.level4Id || adr.level3Id, {
                 include: [
