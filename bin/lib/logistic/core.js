@@ -136,7 +136,7 @@ class LogisticProvider {
                     id: o.butcher.id.toString(),
                     orderId: o.ordernum,
                     start: o.shipmentstart,
-                    note: "Kasaba uğrayıp müşteri paketini alın"
+                    note: "Arayıp onay almanıza gerek yok, *kasap sizi bekliyor*, müşteri paketini alıp götürebilirsiniz. Teşekkürler."
                 },
                 {
                     id: o.areaLevel3Id ? o.areaLevel3Id.toString() : '',
@@ -146,11 +146,11 @@ class LogisticProvider {
                     lat: o.shipLocation.coordinates[0],
                     lng: o.shipLocation.coordinates[1],
                     orderId: o.ordernum,
-                    note: o.adresTarif,
                     apartment: `Bina: ${o.bina}`,
                     floor: `Kat: ${o.kat}`,
                     entrance: `Daire: ${o.daire}`,
                     finish: finish,
+                    note: "Ayrıca onaya gerek yok, *müşteriyi gerekmedikçe aramayın* ve *kapısına kadar çıkarın paketi*. Müşteri sistemden otomatik bilgilendiriliyor. Teşekkürler." + o.adresTarif
                 }
             ]
         };

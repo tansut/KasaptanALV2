@@ -1429,6 +1429,7 @@
                 <% include ./_partial/scripts %>
 
                 <script>
+                  gtags.push(['productview', '<%=product.slug%>', '']);
                   <% if (__req.prefAddr) {  %>
                     gtags.push(['productview', '<%=product.slug%>', '<%=__req.prefAddr.display%>']);
                     gtags.push(['locationproduct', '<%=__req.prefAddr.display%>', '<%=product.slug%>']);
@@ -1441,6 +1442,7 @@
                     gtags.push(['butcherweight', '<%=view.butcher.name%>', '<%=product.slug%>', <%=view.butcher.calculatedRate%>]);
                     gtags.push(['butcherweight', '<%=view.butcher.name%>', '<%=__req.prefAddr.display%>', <%=view.butcher.calculatedRate%>]);
                     
+                
                     <% view.alternateButchers.forEach(a=> { %>
                       gtags.push(['butcherweight', '<%=a.butcher.name%>', '<%=product.slug%>', <%=a.butcher.calculatedRate%>]);
                       gtags.push(['butcherweight', '<%=a.butcher.name%>', '<%=__req.prefAddr.display%>', <%=a.butcher.calculatedRate%>]);
@@ -1450,10 +1452,17 @@
                     <% if (!req.query.butcher) { %>
                       gtags.push(['butcherautoselected', '<%=view.butcher.slug%>', '<%=product.slug%>']);
                       gtags.push(['butcherautoselected', '<%=view.butcher.slug%>', '<%=__req.prefAddr.display%>']);
+                      gtags.push(['butcherautoselected', '<%=view.butcher.slug%>', '<%=product.slug%>/<%=__req.prefAddr.display%>']);
+                      gtags.push(['butcherautoselected', '<%=view.butcher.slug%>', '<%=__req.prefAddr.display%>/<%=product.slug%>']);
+
                       gtags.push(['productautoassigned', '<%=product.slug%>', '<%=view.butcher.slug%>']);                      
+                      gtags.push(['productautoassigned', '<%=product.slug%>', '<%=view.butcher.slug%>/<%=__req.prefAddr.display%>']);                      
                     <% } else { %>
                       gtags.push(['butchermanualselection', '<%=view.butcher.slug%>', '<%=product.slug%>']);
                       gtags.push(['butchermanualselection', '<%=view.butcher.slug%>', '<%=__req.prefAddr.display%>']);
+                      gtags.push(['butchermanualselection', '<%=view.butcher.slug%>', '<%=product.slug%>/<%=__req.prefAddr.display%>']);
+                      gtags.push(['butchermanualselection', '<%=view.butcher.slug%>', '<%=__req.prefAddr.display%>/<%=product.slug%>']);
+
                     <% } %>
 
 
