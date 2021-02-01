@@ -115,7 +115,19 @@ where t1.level=4`;
         });
 
 
-        
+        let emptyDisplay = await Area.findAll({
+            where: {
+                display: {
+                    [Op.eq]: null
+                }
+            }            
+        })        
+
+        await emptyDisplay.forEach(async p=> {
+            await p.loadRelatedAreas();
+            p.display = p.getDisplay();
+            await p.save();
+        })
 
         console.log('done AreaTask job', Date.now())
 

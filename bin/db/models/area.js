@@ -57,6 +57,24 @@ let Area = Area_1 = class Area extends basemodel_1.default {
         else
             return null;
     }
+    getDisplay() {
+        let l1 = this.getLevel(1);
+        let l2 = this.getLevel(2);
+        let l3 = this.getLevel(3);
+        let l4 = this.getLevel(4);
+        if (l4) {
+            return `${l4.name}, ${l2.name}/${l1.name}`;
+        }
+        else if (l3) {
+            return `${l3.name}, ${l2.name}/${l1.name}`;
+        }
+        else if (l2) {
+            return `${l2.name}/${l1.name}`;
+        }
+        else if (l1) {
+            return `${l1.name}`;
+        }
+    }
     ensureLocation() {
         return __awaiter(this, void 0, void 0, function* () {
             if (!this.locationData) {
@@ -143,18 +161,7 @@ let Area = Area_1 = class Area extends basemodel_1.default {
             adr.level4Status = l4 ? l4.status : null;
             adr.lat = adr.lat || this.location ? this.location.coordinates[0] : null;
             adr.lng = adr.lng || this.location ? this.location.coordinates[1] : null;
-            if (l4) {
-                adr.display = `${adr.level4Text}, ${adr.level2Text}/${adr.level1Text}`;
-            }
-            else if (l3) {
-                adr.display = `${adr.level3Text}, ${adr.level2Text}/${adr.level1Text}`;
-            }
-            else if (l2) {
-                adr.display = `${adr.level2Text}/${adr.level1Text}`;
-            }
-            else if (l1) {
-                adr.display = `${adr.level1Text}`;
-            }
+            adr.display = this.display || this.getDisplay();
             return adr;
             // if (this.level == 1) {
             //     res = {
@@ -367,7 +374,7 @@ Area = Area_1 = __decorate([
                 fields: ["slug"],
                 unique: true
             },
-            { type: 'FULLTEXT', name: 'area_fts', fields: ['name', 'slug', 'keywords'] }]
+            { type: 'FULLTEXT', name: 'area_fts', fields: ['name', 'slug', 'keywords', 'display'] }]
     })
 ], Area);
 exports.default = Area;

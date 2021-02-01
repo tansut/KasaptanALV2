@@ -693,7 +693,7 @@
 
 
                            
-                            <a class="text-dark mb-2 font-weight-medium" href="javascript:App.scrollToAnchor('#other-butchers-panel')"><span>Diğer Kasaplar (</span><span class="text-primary"><%=otherButcherAlternatives %></span><span>)</span></a>
+                           
           
                           </div>
 <% } %>
@@ -706,7 +706,7 @@
                          
                             <%- include('./_partial/butcher-product-panel.ejs', { butcherVideo: butcherVideo }) %>
 
-                         
+                          
                         </div>
                           <%}%>
                   
@@ -734,9 +734,7 @@
                         <%if (view.butcher) {  %>                       
                          
                           <div class="d-flex mb-1 font-size-sm align-items-center justify-content-between ">
-                            <span class="text-dark font-weight-medium">
-                             
-                            </span>
+                          
                            
                                <a v-if="selectedUnit && selectedUnit.perPerson" @click="showCalculator(selectedUnit)"
                               class="text-dark"><i class="czi-calculator mr-1"></i>Miktar Hesaplayıcı</a> 
@@ -1440,17 +1438,23 @@
                     gtags.push(['butcherproduct', '<%=view.butcher.slug%>', '<%=product.slug%>']);
                     gtags.push(['butcherproductbylocation', '<%=view.butcher.slug%>/<%=product.slug%>', '<%=__req.prefAddr.display%>']);
                     gtags.push(['butcherlocationbyproduct', '<%=view.butcher.slug%>/<%=__req.prefAddr.display%>', '<%=product.slug%>']);
+                    gtags.push(['butcherweight', '<%=view.butcher.name%>', '<%=product.slug%>', <%=view.butcher.calculatedRate%>]);
+                    gtags.push(['butcherweight', '<%=view.butcher.name%>', '<%=__req.prefAddr.display%>', <%=view.butcher.calculatedRate%>]);
+                    
+                    <% view.alternateButchers.forEach(a=> { %>
+                      gtags.push(['butcherweight', '<%=a.butcher.name%>', '<%=product.slug%>', <%=a.butcher.calculatedRate%>]);
+                      gtags.push(['butcherweight', '<%=a.butcher.name%>', '<%=__req.prefAddr.display%>', <%=a.butcher.calculatedRate%>]);
+                                          
+                    <% }) %>
 
-
-                    if (req.query.butcher) {
+                    <% if (!req.query.butcher) { %>
                       gtags.push(['butcherautoselected', '<%=view.butcher.slug%>', '<%=product.slug%>']);
-                      gtags.push(['butcherautoselectedin', '<%=view.butcher.slug%>', '<%=__req.prefAddr.display%>']);
-                      gtags.push(['butcherautoselectedinproduct', '<%=view.butcher.slug%>', '<%=product.slug%>/<%=__req.prefAddr.display%>']);
-                      gtags.push(['productautoassigned', '<%=product.slug%>', '<%=view.butcher.slug%>']);
-                    } else {
+                      gtags.push(['butcherautoselected', '<%=view.butcher.slug%>', '<%=__req.prefAddr.display%>']);
+                      gtags.push(['productautoassigned', '<%=product.slug%>', '<%=view.butcher.slug%>']);                      
+                    <% } else { %>
                       gtags.push(['butchermanualselection', '<%=view.butcher.slug%>', '<%=product.slug%>']);
-                      gtags.push(['butchermanualselectionin', '<%=view.butcher.slug%>', '<%=__req.prefAddr.display%>']);
-                    }
+                      gtags.push(['butchermanualselection', '<%=view.butcher.slug%>', '<%=__req.prefAddr.display%>']);
+                    <% } %>
 
 
                   <% } %>
@@ -1551,7 +1555,7 @@
                     setBody();
                     for(var i=0;i<gtags.length;i++) {
                       var tag = gtags[i];
-                      window.App.gTag(tag[0], tag[1], tag[2]);
+                      window.App.gTag(tag[0], tag[1], tag[2], tag[3] || undefined);
                     }
                   })
 

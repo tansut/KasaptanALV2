@@ -548,6 +548,7 @@ class Route extends router_1.ApiRouter {
                     earnedPuan: 0.00,
                     productNote: '',
                     kgPrice: kgPrice,
+                    calculatedRate: butcher.calculatedRate,
                     locationText: butcher.locationText,
                 } : null,
                 butcherNote: (butcherProduct && butcherProduct.mddesc) ? butcherProduct.mddesc : '',

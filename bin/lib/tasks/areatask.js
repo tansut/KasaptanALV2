@@ -93,6 +93,18 @@ where t1.level=4`;
             yield area_1.default.sequelize.query(sql, {
                 type: sq.QueryTypes.BULKUPDATE,
             });
+            let emptyDisplay = yield area_1.default.findAll({
+                where: {
+                    display: {
+                        [sequelize_1.Op.eq]: null
+                    }
+                }
+            });
+            yield emptyDisplay.forEach((p) => __awaiter(this, void 0, void 0, function* () {
+                yield p.loadRelatedAreas();
+                p.display = p.getDisplay();
+                yield p.save();
+            }));
             console.log('done AreaTask job', Date.now());
         });
     }

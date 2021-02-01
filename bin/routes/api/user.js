@@ -118,7 +118,7 @@ class UserRoute extends router_1.ApiRouter {
         return __awaiter(this, void 0, void 0, function* () {
             let result = yield area_1.default.sequelize.query(`
         
-        select id, name, slug, GLength(LineStringFromWKB(LineString(
+        select id, name, slug as url, display, GLength(LineStringFromWKB(LineString(
             location, 
             GeomFromText('POINT(:lat :lng)')))) AS distance from Areas where (level=3 or level=4) and (location is not null) ORDER BY distance ASC LIMIT 5
         `, {
@@ -130,17 +130,15 @@ class UserRoute extends router_1.ApiRouter {
                 mapToModel: false,
                 raw: true
             });
-            for (let i = 0; i < result.length; i++) {
-                if (!result[i]['distance'])
-                    continue;
-                let area = yield area_1.default.findByPk(result[i]['id']);
-                let addr = yield area.getPreferredAddress();
-                result[i] = {
-                    display: addr.display,
-                    url: result[i]['slug'],
-                    distance: result[i]['distance']
-                };
-            }
+            // for(let i = 0; i < result.length;i++) {               
+            //     let area = await Area.findByPk(result[i]['id']);
+            //     let addr = await area.getPreferredAddress();
+            //     result[i] = {
+            //         display: addr.display,
+            //         url: result[i]['slug'],
+            //         distance: result[i]['distance']
+            //     }
+            // }
             this.res.send(result);
         });
     }

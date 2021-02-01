@@ -323,6 +323,7 @@ class Route extends router_1.ViewRouter {
                             name: butcher.name,
                             puanData: butcher.getPuanData(this.product.productType),
                             earnedPuan: 0.00,
+                            calculatedRate: butcher.calculatedRate,
                             kgPrice: bp ? bp.kgPrice : 0,
                             locationText: butcher.locationText,
                             productNote: bp ? (bp.mddesc ? this.markdown.render(bp.mddesc) : "") : "",
@@ -350,6 +351,7 @@ class Route extends router_1.ViewRouter {
                     });
                 }
                 else if (view.butcher && view.butcher.id == s.butcher.id) {
+                    view.butcher.calculatedRate = butcher.calculatedRate;
                     fromTo.start = s.butcher.location;
                     fromTo.sId = s.butcher.id.toString();
                     this.logisticsProvider = dispatcher ? dispatcher.provider : null;

@@ -26,7 +26,6 @@ const user_1 = require("../../db/models/user");
 const product_1 = require("../../db/models/product");
 const resource_1 = require("../../db/models/resource");
 const _ = require("lodash");
-const area_1 = require("../../db/models/area");
 const helper_1 = require("../../lib/helper");
 class SearchResult {
 }
@@ -105,8 +104,8 @@ class Route extends router_1.ApiRouter {
     }
     getAreas(search) {
         return __awaiter(this, void 0, void 0, function* () {
-            let areas = yield user_1.default.sequelize.query("select id, level, name, slug as url, 'Lokasyon' as type, match(name, slug, keywords) against (:search IN BOOLEAN MODE) as RELEVANCE " +
-                "from Areas where level>=3  and (match(name, slug, keywords)  against (:search IN BOOLEAN MODE) or match(name, slug, keywords)  against (:search2 IN BOOLEAN MODE)) ORDER BY status, level desc, RELEVANCE DESC LIMIT 25", {
+            let areas = yield user_1.default.sequelize.query("select id, level, name, slug as url, 'Lokasyon' as type, display, match(name, slug, keywords, display) against (:search IN BOOLEAN MODE) as RELEVANCE " +
+                "from Areas where level>=3  and (match(name, slug, keywords, display)  against (:search IN BOOLEAN MODE) or match(name, slug, keywords, display)  against (:search2 IN BOOLEAN MODE)) ORDER BY status, level desc, RELEVANCE DESC LIMIT 25", {
                 replacements: { search2: helper_1.default.slugify(search), search: search },
                 type: sq.QueryTypes.SELECT,
                 mapToModel: false,
@@ -115,7 +114,8 @@ class Route extends router_1.ApiRouter {
                 let px = p;
                 return {
                     id: px.id,
-                    name: px.name + (px.level > 1 ? ` [${px.url}]` : ''),
+                    name: px.display,
+                    display: px.display,
                     url: px.url,
                     level: px.level,
                     type: px.type,
@@ -123,28 +123,6 @@ class Route extends router_1.ApiRouter {
                 };
             });
             let temp = areas;
-            for (let i = 0; i < areas.length; i++) {
-                let area = areas[i];
-                let addr = yield area_1.default.findByPk(area.id);
-                let pref = yield addr.getPreferredAddress();
-                area.name = pref.display;
-                // if (area.level == 4) {
-                //     area.level = 3;
-                //     area.id = pref.level3Id;
-                //     area.url = pref.level3Slug;
-                // }
-                area['display'] = pref.display;
-                area['l1'] = {
-                    name: pref.level1Text,
-                    slug: pref.level1Slug
-                },
-                    area['l2'] = {
-                        name: pref.level2Text,
-                        slug: pref.level2Slug
-                    };
-                if (!temp.find(t => t.url == area.url))
-                    temp.push(area);
-            }
             return temp;
         });
     }
