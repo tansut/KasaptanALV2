@@ -21,29 +21,44 @@ import email from '../../lib/email';
 
 export default class Route extends ApiRouter {
 
-    async ensureDistances(butchers: Butcher [], area: Area) {    
+    async ensureDistances(butchers: Butcher[], area: Area) {
         await area.ensureLocation();
-        let list = await ButcherArea.findAll({
-            where: {
-                areaid: area.id,
-                butcherid:butchers.map(p=>p.id)
-            } 
-        });
-        if (list.length == butchers.length) return list;
-        for(let i = 0; i < butchers.length;i++) {
-            let found = list.find(o=>o.butcherid == butchers[i].id);
-            if (!found) {     
-                try {
-                    list.push(await this.create(butchers[i], area));
-                } catch(err){
-                    email.send('tansut@gmail.com', 'hata/ensureDistances', "error.ejs", {
-                        text: err.message + butchers[i].name + ' ' + area.slug,
-                        stack: err.stack
-                    });                     
-                }                           
-            }
-        }   
-        return list;     
+        let list: ButcherArea[] = []
+        for (let i = 0; i < butchers.length; i++) {
+            let area = await this.ensureDistance(butchers[i], this.req.prefAddr.based); 
+            list.push(area)
+        }
+
+        return list;
+
+        // let list = await ButcherArea.findAll({
+        //     where: {
+        //         areaid: area.id,
+        //         butcherid: butchers.map(p => p.id)
+        //     }
+        // });
+
+
+        // if (list.length == butchers.length) return list;
+        // for (let i = 0; i < butchers.length; i++) {
+        //     let found = list.find(o => o.butcherid == butchers[i].id);
+        //     if (!found) {
+        //         try {
+        //             list.push(await this.create(butchers[i], area));
+        //         } catch (err) {
+        //             if (err.original && err.original.code == 'ER_DUP_ENTRY') {
+
+        //             } else {
+        //                 email.send('tansut@gmail.com', 'hata/ensureDistances', "error.ejs", {
+        //                     text: err.message + butchers[i].name + ' ' + area.slug,
+        //                     stack: err.stack
+        //                 });
+        //             }
+                  
+        //         }
+        //     }
+        // }
+        //return list;
     }
 
     async create(butcher: Butcher, area: Area) {
@@ -65,24 +80,29 @@ export default class Route extends ApiRouter {
             where: {
                 areaid: area.id,
                 butcherid: butcher.id
-            } 
+            }
         })
         if (!existing) {
             try {
                 existing = await this.create(butcher, area)
-            } catch(err) {
-                email.send('tansut@gmail.com', 'hata/ensureDistance', "error.ejs", {
-                    text: err.message,
-                    stack: err.stack
-                });   
-                return null;  
-                // return {
-                //     val: Helper.distance(butcher.location, area.location) * 1.5,
-                //     max: Helper.distance(butcher.location, area.location) * 2,
-                //     min: Helper.distance(butcher.location, area.location),
-                // }               
+            } catch (err) {
+                if (err.original && err.original.code == 'ER_DUP_ENTRY') {
+                    existing = await ButcherArea.findOne({
+                        where: {
+                            areaid: area.id,
+                            butcherid: butcher.id
+                        }
+                    })
+                }
+                else {
+                    email.send('tansut@gmail.com', 'hata/ensureDistance', "error.ejs", {
+                        text: err.message,
+                        stack: err.stack
+                    });
+                    return null;
+                }
             }
-        }  
+        }
         return existing;
     }
 
@@ -110,7 +130,7 @@ export default class Route extends ApiRouter {
             let where = <any>{};
             this.req.query.level ? (where["level"] = parseInt(this.req.query.level as string)) : where["level"] = 1;
             this.req.params.parentid ? (where["parentid"] = this.req.params.parentid) : null;
-            if (where["level"] == 1) { 
+            if (where["level"] == 1) {
                 //where["status"] = "active"
             }
             //where['status'] = 'generic';

@@ -188,11 +188,10 @@ export default class Route extends ViewRouter {
             })
             this.logisticsProvider = dispatchers.length ? dispatchers[0].provider: null;
             if (this.logisticsProvider) {                
-                let l3 = await Area.findByPk(this.req.prefAddr.level3Id);
-                let areaInfo = await new AreaApi(this.constructorParams).ensureDistance(butcher, l3);                
+                let areaInfo = await new AreaApi(this.constructorParams).ensureDistance(butcher, this.req.prefAddr.based);                
                 let fromTo: FromTo = {                    
                     start: this.butcher.location,
-                    finish: l3.location,
+                    finish: this.req.prefAddr.based.location,
                     fId: this.req.prefAddr.level3Id.toString(),
                     sId: this.butcher.id.toString()
                 }

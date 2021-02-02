@@ -25,7 +25,6 @@ const helper_1 = require("../lib/helper");
 const resource_1 = require("./resource");
 const Jimp = require('jimp');
 const productManager_1 = require("../lib/productManager");
-const area_1 = require("../db/models/area");
 const productcategory_1 = require("../db/models/productcategory");
 var MarkdownIt = require('markdown-it');
 const _ = require("lodash");
@@ -34,7 +33,7 @@ const review_1 = require("../db/models/review");
 const sq = require("sequelize");
 const dispatcher_1 = require("./api/dispatcher");
 const product_1 = require("./api/product");
-const area_2 = require("./api/area");
+const area_1 = require("./api/area");
 const ButcherLd_1 = require("../models/ButcherLd");
 class Route extends router_1.ViewRouter {
     constructor() {
@@ -144,11 +143,10 @@ class Route extends router_1.ViewRouter {
                 });
                 this.logisticsProvider = dispatchers.length ? dispatchers[0].provider : null;
                 if (this.logisticsProvider) {
-                    let l3 = yield area_1.default.findByPk(this.req.prefAddr.level3Id);
-                    let areaInfo = yield new area_2.default(this.constructorParams).ensureDistance(butcher, l3);
+                    let areaInfo = yield new area_1.default(this.constructorParams).ensureDistance(butcher, this.req.prefAddr.based);
                     let fromTo = {
                         start: this.butcher.location,
-                        finish: l3.location,
+                        finish: this.req.prefAddr.based.location,
                         fId: this.req.prefAddr.level3Id.toString(),
                         sId: this.butcher.id.toString()
                     };

@@ -30,29 +30,36 @@ class Route extends router_1.ApiRouter {
     ensureDistances(butchers, area) {
         return __awaiter(this, void 0, void 0, function* () {
             yield area.ensureLocation();
-            let list = yield butcherarea_1.default.findAll({
-                where: {
-                    areaid: area.id,
-                    butcherid: butchers.map(p => p.id)
-                }
-            });
-            if (list.length == butchers.length)
-                return list;
+            let list = [];
             for (let i = 0; i < butchers.length; i++) {
-                let found = list.find(o => o.butcherid == butchers[i].id);
-                if (!found) {
-                    try {
-                        list.push(yield this.create(butchers[i], area));
-                    }
-                    catch (err) {
-                        email_1.default.send('tansut@gmail.com', 'hata/ensureDistances', "error.ejs", {
-                            text: err.message + butchers[i].name + ' ' + area.slug,
-                            stack: err.stack
-                        });
-                    }
-                }
+                let area = yield this.ensureDistance(butchers[i], this.req.prefAddr.based);
+                list.push(area);
             }
             return list;
+            // let list = await ButcherArea.findAll({
+            //     where: {
+            //         areaid: area.id,
+            //         butcherid: butchers.map(p => p.id)
+            //     }
+            // });
+            // if (list.length == butchers.length) return list;
+            // for (let i = 0; i < butchers.length; i++) {
+            //     let found = list.find(o => o.butcherid == butchers[i].id);
+            //     if (!found) {
+            //         try {
+            //             list.push(await this.create(butchers[i], area));
+            //         } catch (err) {
+            //             if (err.original && err.original.code == 'ER_DUP_ENTRY') {
+            //             } else {
+            //                 email.send('tansut@gmail.com', 'hata/ensureDistances', "error.ejs", {
+            //                     text: err.message + butchers[i].name + ' ' + area.slug,
+            //                     stack: err.stack
+            //                 });
+            //             }
+            //         }
+            //     }
+            // }
+            //return list;
         });
     }
     create(butcher, area) {
@@ -83,16 +90,21 @@ class Route extends router_1.ApiRouter {
                     existing = yield this.create(butcher, area);
                 }
                 catch (err) {
-                    email_1.default.send('tansut@gmail.com', 'hata/ensureDistance', "error.ejs", {
-                        text: err.message,
-                        stack: err.stack
-                    });
-                    return null;
-                    // return {
-                    //     val: Helper.distance(butcher.location, area.location) * 1.5,
-                    //     max: Helper.distance(butcher.location, area.location) * 2,
-                    //     min: Helper.distance(butcher.location, area.location),
-                    // }               
+                    if (err.original && err.original.code == 'ER_DUP_ENTRY') {
+                        existing = yield butcherarea_1.default.findOne({
+                            where: {
+                                areaid: area.id,
+                                butcherid: butcher.id
+                            }
+                        });
+                    }
+                    else {
+                        email_1.default.send('tansut@gmail.com', 'hata/ensureDistance', "error.ejs", {
+                            text: err.message,
+                            stack: err.stack
+                        });
+                        return null;
+                    }
                 }
             }
             return existing;
