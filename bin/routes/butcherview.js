@@ -147,7 +147,7 @@ class Route extends router_1.ViewRouter {
                     let fromTo = {
                         start: this.butcher.location,
                         finish: this.req.prefAddr.based.location,
-                        fId: this.req.prefAddr.level3Id.toString(),
+                        fId: this.req.prefAddr.based.id.toString(),
                         sId: this.butcher.id.toString()
                     };
                     this.logisticsPriceSlice = yield this.logisticsProvider.priceSlice(fromTo);

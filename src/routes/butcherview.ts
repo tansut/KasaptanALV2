@@ -192,7 +192,7 @@ export default class Route extends ViewRouter {
                 let fromTo: FromTo = {                    
                     start: this.butcher.location,
                     finish: this.req.prefAddr.based.location,
-                    fId: this.req.prefAddr.level3Id.toString(),
+                    fId: this.req.prefAddr.based.id.toString(),
                     sId: this.butcher.id.toString()
                 }
                 this.logisticsPriceSlice = await this.logisticsProvider.priceSlice(fromTo);

@@ -21,11 +21,11 @@ import email from '../../lib/email';
 
 export default class Route extends ApiRouter {
 
-    async ensureDistances(butchers: Butcher[], area: Area) {
-        await area.ensureLocation();
+    async ensureDistances(butchers: Butcher[], based: Area) {
+        await based.ensureLocation();
         let list: ButcherArea[] = []
         for (let i = 0; i < butchers.length; i++) {
-            let area = await this.ensureDistance(butchers[i], this.req.prefAddr.based); 
+            let area = await this.ensureDistance(butchers[i], based); 
             list.push(area)
         }
 

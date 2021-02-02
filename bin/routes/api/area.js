@@ -27,12 +27,12 @@ const butcherarea_1 = require("../../db/models/butcherarea");
 const google_1 = require("../../lib/google");
 const email_1 = require("../../lib/email");
 class Route extends router_1.ApiRouter {
-    ensureDistances(butchers, area) {
+    ensureDistances(butchers, based) {
         return __awaiter(this, void 0, void 0, function* () {
-            yield area.ensureLocation();
+            yield based.ensureLocation();
             let list = [];
             for (let i = 0; i < butchers.length; i++) {
-                let area = yield this.ensureDistance(butchers[i], this.req.prefAddr.based);
+                let area = yield this.ensureDistance(butchers[i], based);
                 list.push(area);
             }
             return list;
