@@ -77,13 +77,17 @@
               
                       </div>
                       
-                      
+                      <div class="mb-2 text-right">
+                                          
                         <money-view v-if="!alt.butcher.kgPrice && selectedUnitForAlternate(alt.butcher)" :unit="selectedUnitForAlternate(alt.butcher).unitTitle" 
                         
-                        class="font-size-md text-dark" :money="selectedUnitForAlternate(alt.butcher).unitPrice"></money-view>
+                        class="  border p-2 text-dark bg-white font-size-md" :money="selectedUnitForAlternate(alt.butcher).unitPrice"></money-view>
                         <money-view v-else unit="Kg" 
                         
-                        class="font-size-md text-dark" :money="alt.butcher.kgPrice"></money-view>
+                        class=" border p-2 text-dark bg-white font-size-md" :money="alt.butcher.kgPrice"></money-view>
+                      </div>
+
+
           
                      
                        

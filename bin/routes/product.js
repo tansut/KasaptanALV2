@@ -41,6 +41,7 @@ const commissionHelper_1 = require("../lib/commissionHelper");
 class Route extends router_1.ViewRouter {
     constructor() {
         super(...arguments);
+        this.forceSemt = true;
         this.butcherProducts = [];
         this.markdown = new MarkdownIt();
         this.foods = [];
@@ -446,6 +447,7 @@ class Route extends router_1.ViewRouter {
                 }
             }
             this.dispatchingAvailable = this.req.prefAddr && (view.butcher != null || (yield new dispatcher_1.default(this.constructorParams).dispatchingAvailable(this.req.prefAddr, this.useL1(this.product))));
+            this.semtReturn = "/" + this.product.slug + '#aftersetloc';
             this.res.render('pages/product', this.viewData({
                 butcherProducts: this.butcherProducts.map(p => p.product), butchers: selectedButchers,
                 pageTitle: product.name + ' Siparişi ve Fiyatları',

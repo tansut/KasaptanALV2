@@ -7,7 +7,7 @@
 
 <body>
   <% if (!__req.prefAddr) { %>
-    <% include ./_partial/select-location-msg %>
+    <!-- <% include ./_partial/select-location-msg %> -->
   <% } %>
   <% include ./_partial/header %>
   <link href="https://www.kasaptanal.com/<%=controller.category.slug%>" rel="canonical">
@@ -148,8 +148,9 @@
 
 
   </div>
-
-
+<script>
+  gtags.push(['categoryview', '<%=controller.category.type%>', '<%=controller.category.slug%>']);
+</script>
 
 
 

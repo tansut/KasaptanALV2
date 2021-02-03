@@ -88,8 +88,10 @@ class="gallery-item-caption"><%= butcherVideo.title %></span></a>
 
           <% } %>
 
+            <div class="mb-2 text-right">
+              <money-view class="font-weight-bold  border p-2 text-dark bg-white font-size-md" :unit="product.kgPrice ? 'Kg': selectedUnit.unitTitle"  :money="product.kgPrice || selectedUnit.unitPrice"></money-view>
 
-          <money-view class="text-dark font-size-md" :unit="product.kgPrice ? 'Kg': selectedUnit.unitTitle"  :money="product.kgPrice || selectedUnit.unitPrice"></money-view>
+            </div>
 
        
           
@@ -268,11 +270,12 @@ class="gallery-item-caption"><%= butcherVideo.title %></span></a>
 
 
 </div>
-
-<div class="text-right mb-2 px-2">
-  <a class="btn btn-sm border btn-secondary text-dark   font-weight-medium" href="javascript:App.scrollToAnchor('#other-butchers-panel')"><span>Diğer Kasaplar (</span><span class="text-primary"><%=otherButcherAlternatives %></span><span>)</span></a>
+<%if (otherButcherAlternatives && (controller.showOtherButchers())) {%>
+<div class="text-center mb-2 px-2">
+  <a class="btn btn-sm border bg-white text-dark   font-weight-medium" href="javascript:App.scrollToAnchor('#other-butchers-panel')"><span>Diğer Kasaplar (</span><span class="text-primary"><%=otherButcherAlternatives %></span><span>)</span></a>
 
 </div>
+<% } %>
     
   </div>
 

@@ -33,6 +33,7 @@ class Route extends router_1.ViewRouter {
     constructor() {
         super(...arguments);
         this.markdown = new MarkdownIt();
+        this.forceSemt = false;
         this.foods = [];
         this.foodsWithCats = {};
         this.foodCategory = "";
@@ -243,6 +244,7 @@ class Route extends router_1.ViewRouter {
             }
             else
                 this.prices = [];
+            this.forceSemt = true;
             this.renderPage('pages/category.ejs');
         });
     }

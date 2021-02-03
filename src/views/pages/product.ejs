@@ -10,9 +10,7 @@
   </script>
 
   <% } %>
-  <script>
-    var gtags = [];
-  </script>
+
   
   <% if (Object.keys(__req.query).length != 0 ) {%>
   <meta name="robots" content="noindex,follow">
@@ -266,7 +264,7 @@
                                 <% if (controller.startPrice.basedOn == 'global') { %>
 
   
-                                  <p class="lead">
+                                  <p class="lead bg-white p-2 border">
                                     <strong>
                                       <%- include('./_partial/currency.ejs', {value: controller.startPrice.view.price, unit: controller.startPrice.view.unitTitle}) %>
                                     </strong>
@@ -971,13 +969,17 @@
                                           
                                         </div>
                                         
-                                        
+                                        <div class="mb-2 text-right">
+                                          
                                           <money-view v-if="!alt.butcher.kgPrice && selectedUnitForAlternate(alt.butcher)" :unit="selectedUnitForAlternate(alt.butcher).unitTitle" 
                                           
-                                          class="font-size-md text-dark" :money="selectedUnitForAlternate(alt.butcher).unitPrice"></money-view>
+                                          class=" border p-2 text-dark bg-white font-size-md" :money="selectedUnitForAlternate(alt.butcher).unitPrice"></money-view>
                                           <money-view v-else unit="Kg" 
                                           
-                                          class="font-size-md text-dark" :money="alt.butcher.kgPrice"></money-view>
+                                          class=" border p-2 text-dark bg-white font-size-md" :money="alt.butcher.kgPrice"></money-view>
+                                        </div>
+
+
                             
                                        
                                          
@@ -1562,10 +1564,7 @@
 
                   $(document).ready(function() {
                     setBody();
-                    for(var i=0;i<gtags.length;i++) {
-                      var tag = gtags[i];
-                      window.App.gTag(tag[0], tag[1], tag[2], tag[3] || undefined);
-                    }
+
                   })
 
                   <% if (!view.butcher && __req.prefAddr) {%>

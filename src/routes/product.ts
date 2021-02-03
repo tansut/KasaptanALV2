@@ -52,6 +52,8 @@ interface StartPrice {
 }
 
 export default class Route extends ViewRouter {
+    forceSemt= true;
+    semtReturn: string;
     startPrice: StartPrice;
     shopcard: ShopCard;
     butcherProducts: ButcherProduct[] = [];
@@ -529,12 +531,12 @@ export default class Route extends ViewRouter {
 
 
         this.dispatchingAvailable = this.req.prefAddr && (view.butcher != null || await new DispatcherApi(this.constructorParams).dispatchingAvailable(this.req.prefAddr, this.useL1(this.product)));
-
+        this.semtReturn = "/" + this.product.slug + '#aftersetloc';
         this.res.render('pages/product', this.viewData({
             butcherProducts: this.butcherProducts.map(p => p.product), butchers: selectedButchers,
             pageTitle: product.name + ' Siparişi ve Fiyatları',
             // pageDescription: product.pageDescription + ' ', 
-
+           
 
             pageThumbnail: this.req.helper.imgUrl('product-photos', product.slug),
             pageDescription: product.generatedDesc,
