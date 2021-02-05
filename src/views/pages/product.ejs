@@ -1431,10 +1431,12 @@
                 <% include ./_partial/scripts %>
 
                 <script>
-                  gtags.push(['productview', '<%=product.slug%>', '']);
+                  
                   <% if (__req.prefAddr) {  %>
                     gtags.push(['productview', '<%=product.slug%>', '<%=__req.prefAddr.display%>']);
                     gtags.push(['locationproduct', '<%=__req.prefAddr.display%>', '<%=product.slug%>']);
+                  <% } else { %>
+                    gtags.push(['productview', '<%=product.slug%>', '']);
                   <% } %>
                   <% if (view.butcher && __req.prefAddr) {  %>
                     gtags.push(['butcherlocation', '<%=view.butcher.slug%>', '<%=__req.prefAddr.display%>']);

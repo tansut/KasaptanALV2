@@ -124,39 +124,39 @@ class AuthorizationTokenController {
         return decryptedData;
     }
 
-    // decryptRefreshToken(refreshTokenData: string) {
-    //     var refreshTokenUnDecrypted = <IRefreshTokenData>this.decryptGeneric(refreshTokenData);
-    //     var userCall = UserModel.findById(refreshTokenUnDecrypted.userId);
-    //     var tokenCall = RefreshTokenModel.findById(refreshTokenUnDecrypted.tokenId);
+    decryptRefreshToken(refreshTokenData: string) {
+        var refreshTokenUnDecrypted = <IRefreshTokenData>this.decryptGeneric(refreshTokenData);
+        var userCall = User.findByPk(refreshTokenUnDecrypted.userId);
+        var tokenCall = RefreshToken.findByPk(refreshTokenUnDecrypted.tokenId);
 
-    //     return new Promise((resolve, reject) => {
-    //         Promise.all<any>([userCall, tokenCall]).then((retrieveData: any) => {
-    //             var user = retrieveData[0];
-    //             var token = retrieveData[1];
-    //             if (!token || !user) {
-    //                 reject("Refresh token is invalid or used already");
-    //                 return;
-    //             }
-    //             try {
-    //                 var userAccessToken = <IAccessTokenData>this.decrypt(refreshTokenUnDecrypted.access_token.tokenData, token.tag, user.ivCode);
-    //                 if (userAccessToken.userId == token.userId) {
-    //                     RefreshTokenModel.remove(token).then(() => {
-    //                         resolve(user);
-    //                     }).catch((err) => {
-    //                         reject(err);
-    //                     });
-    //                 } else {
-    //                     reject("Refresh Token Is Modified From Outside Environment.");
-    //                 }
-    //             } catch (e) {
-    //                 reject("Token does not match");
-    //             }
+        return new Promise((resolve, reject) => {
+            Promise.all<any>([userCall, tokenCall]).then((retrieveData: any) => {
+                var user = retrieveData[0];
+                var token = retrieveData[1];
+                if (!token || !user) {
+                    reject("Refresh token is invalid or used already");
+                    return;
+                }
+                try {
+                    var userAccessToken = <IAccessTokenData>this.decrypt(refreshTokenUnDecrypted.access_token.tokenData, token.tag, user.ivCode);
+                    if (userAccessToken.userId == token.userId) {
+                        RefreshToken.destroy({where: {token:token}}).then(() => {
+                            resolve(user);
+                        }).catch((err) => {
+                            reject(err);
+                        });
+                    } else {
+                        reject("Refresh Token Is Modified From Outside Environment.");
+                    }
+                } catch (e) {
+                    reject("Token does not match");
+                }
 
-    //         }).catch((err) => {
-    //             reject(err);
-    //         });
-    //     });
-    // }
+            }).catch((err) => {
+                reject(err);
+            });
+        });
+    }
 }
 
 

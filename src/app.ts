@@ -231,7 +231,7 @@ class KasaptanAlApp {
 
         Tasks.start();
 
-        return new Promise((resolve, reject) => {
+        return new Promise<void>((resolve, reject) => {
             server.listen(config.port, () => {
                 resolve();
             });

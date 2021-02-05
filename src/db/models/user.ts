@@ -237,6 +237,7 @@ export default class User extends BaseModel<User> {
 
 
 
+
     generateAccessToken(): authorization.IAccessTokenData {
         var tokenData = <authorization.IAccessTokenData>{
             userId: this["id"],

@@ -5,7 +5,9 @@ import * as http from '../lib/http';
 import User from '../db/models/user';
 import UserApi from '../routes/api/user';
 import * as authCntroller from '../lib/authorizationToken';
-// const RememberMeStrategy = require("passport-remember-me").
+import RefreshToken from "../db/models/refreshToken";
+import Helper from "../lib/helper";
+const RememberMeStrategy = require("passport-remember-me").Strategy
 
 var passport = require('passport')
     , LocalStrategy = require('passport-local').Strategy;
@@ -13,6 +15,17 @@ var passport = require('passport')
 export var auth: AuthMiddleware;
 
 class AuthMiddleware extends Middleware {
+
+    private validateAccessToken(accessToken: authCntroller.IAccessTokenData) {
+        return new Promise((resolve, reject) => {
+            if (moment(accessToken.expiration_time).utc().isSameOrAfter(moment().utc())) {
+                return User.findByPk(accessToken.userId).then((user) => {
+                    return user ? resolve(user) : Promise.reject(new http.NotFoundError("invalid user"));
+                })
+            } else reject(new http.PermissionError(JSON.stringify({ message: 'Token Expired', PermissionErrorType: 'tokenExpire' })));
+        });
+    }
+
 
     private tryLoadUser(req: http.AppRequest, res: express.Response, next: Function) {
 
@@ -39,16 +52,6 @@ class AuthMiddleware extends Middleware {
         }
     }
 
-    private validateAccessToken(accessToken: authCntroller.IAccessTokenData) {
-        return new Promise((resolve, reject) => {
-            //accessToken.expiration_time = moment().add('minute', -30).toDate()
-            if (moment(accessToken.expiration_time).utc().isSameOrAfter(moment().utc())) {
-                return User.findByPk(accessToken.userId).then((user) => {
-                    return user ? resolve(user) : reject(new http.NotFoundError("invalid user"));
-                })
-            } else reject(new http.PermissionError(JSON.stringify({ message: 'Token Expired', PermissionErrorType: 'tokenExpire' })));
-        });
-    }
 
     public force(req: http.AppRequest, res: express.Response, next: Function, roles?: Array<string>) {
         if (!req.user)
@@ -60,7 +63,7 @@ class AuthMiddleware extends Middleware {
         super(app);
         app.use(passport.initialize());
         app.use(passport.session());
-        // app.use(passport.authenticate('remember-me'));
+        app.use(passport.authenticate('remember-me'));
 
         passport.serializeUser(function (user, done) {
             done(null, user.id);
@@ -76,12 +79,14 @@ class AuthMiddleware extends Middleware {
             }).catch(done);
         });
 
+
+
         passport.use(new LocalStrategy({
             passReqToCallback: true,
             usernameField: 'email',
             passwordField: 'password'
         },
-            function (req, username, password, done) {
+            function (req, username, password, done) {                
                 User.retrieveByEMailOrPhone(username).then(user => {
                     if (!user) {
                         return done(null, false, { message: 'Incorrect user.' });
@@ -90,21 +95,49 @@ class AuthMiddleware extends Middleware {
                         return done(null, false, { message: 'Incorrect user.' });
                     }
                     return done(null, user, { s: true });
-                    // user.loadPuanView().then(p=>{
-                        
-                    // }).catch(err=>{
-                    //     return done(null, false, { message: 'Unknown error' });
-                    // })
                 });
             }
         ));
 
-
+        passport.use(new RememberMeStrategy(
+            function(token, done) {
+              RefreshToken.consume(token).then((result)=> {
+                if (!result) { return done(null, false); }
+                return done(null, result.user);
+              }).catch((err) => done(err))
+            },
+            function(user, done) {
+              var token = Helper.generateToken(64);
+              let rt = new RefreshToken({
+                  token: token,
+                  userId: user.id
+              })
+              rt.save().then((rt) => done(null, token)).catch(err=>done(err))
+            }
+          ));
 
         app.post('/api/v1/authenticate',
-            passport.authenticate('local', { failureFlash: true, successRedirect: "/api/v1/status", successFlash: true })
-        );
-        //app.use(this.tryLoadUser.bind(this));
+            passport.authenticate('local', { successFlash: false, failureFlash: false }),
+            
+            function(req: http.AppRequest, res, next) {
+                // issue a remember me cookie if the option was checked
+                if (!req.body.remember_me) { 
+                     res.clearCookie('remember_me');
+                   return res.end() 
+                }
+            
+                var token = Helper.generateToken(64);
+                let rt = new RefreshToken({
+                    userId: req.user.id,
+                    token: token
+                })
+                rt.save().then(rt => {
+                    res.cookie('remember_me', token, { path: '/', httpOnly: true, maxAge: 2*604800000 }); // 7 days
+                    res.end()                    
+                }).catch(err=> {
+                    return next(err)
+                })
+              })                
     }
 }
 

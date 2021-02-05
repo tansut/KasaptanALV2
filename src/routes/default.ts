@@ -60,20 +60,18 @@ export default class Route extends ViewRouter {
 
     @Auth.Anonymous()
     async defaultRoute() {
-        // let recentButchers: ButcherModel[] = CacheManager.dataCache.get("recent-butchers");
-        // if (!recentButchers) {
-        //     recentButchers = await ButcherModel.findAll({
-        //         order: [["updatedon", "DESC"]],
-        //         limit: 10,
-        //         include: [
-        //             { all: true }
-        //         ],
-        //         where: {
-        //             approved: true
-        //         }
-        //     });
-        //     CacheManager.dataCache.set("recent-butchers", recentButchers.map(b => b.get({ plain: true })));
-        // }
+        let recentButchers: ButcherModel[] = CacheManager.dataCache.get("recent-butchers");
+        if (!recentButchers) {
+            recentButchers = await ButcherModel.findAll({
+                order: [["displayOrder", "DESC"]],
+                limit: 10,
+                where: {
+                    approved: true,
+                    showListing: true
+                }
+            });
+            CacheManager.dataCache.set("recent-butchers", recentButchers.map(b => b.get({ plain: true })));
+        }
 
         // this.foods = await new ProductsApi(this.constructorParams).getResources({
         //     type: ['product-videos', 'product-photos'],
@@ -94,7 +92,7 @@ export default class Route extends ViewRouter {
         
 
         this.res.render("pages/default.ejs", this.viewData({
-            //recentButchers: recentButchers,
+            recentButchers: recentButchers,
             ellipsis: ellipsis
         }));
 

@@ -7,6 +7,7 @@ const moment = require("moment");
 const product_1 = require("../db/models/product");
 const libphonenumber_js_1 = require("libphonenumber-js");
 const shipment_1 = require("../models/shipment");
+const crypto = require("crypto");
 class Helper {
     static nvl(val, def = 0) {
         return parseInt(val) == NaN ? def : parseInt(val);
@@ -202,6 +203,11 @@ class Helper {
             //     this.res.send(new Buffer(buff))
             // })  
         });
+    }
+    static generateToken(size) {
+        const buffer = Buffer.alloc(size);
+        crypto.randomFillSync(buffer);
+        return buffer.toString('base64');
     }
     static slugify(string) {
         const a = 'ıàáâäæãåāăąçćčđďèéêëēėęěğǵḧîïíīįìłḿñńǹňôöòóœøōõṕŕřßśšşșťțûüùúūǘůűųẃẍÿýžźż·/_,:;';

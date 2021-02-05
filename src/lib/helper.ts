@@ -9,6 +9,7 @@ import { ProductType } from '../db/models/product';
 import { min, round } from 'lodash';
 import parsePhoneNumber from 'libphonenumber-js';
 import { Shipment, ShipmentDays } from '../models/shipment';
+import * as crypto from 'crypto';
 
 export default class Helper {
 
@@ -264,6 +265,13 @@ export default class Helper {
                 //     this.res.send(new Buffer(buff))
                 // })  
             })
+    }
+
+
+    static generateToken(size: number) {
+        const buffer = Buffer.alloc(size);
+        crypto.randomFillSync(buffer);
+        return buffer.toString('base64');
     }
 
     static slugify(string) {

@@ -19,10 +19,12 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 const router_1 = require("../lib/router");
+const butcher_1 = require("../db/models/butcher");
 const common_1 = require("../lib/common");
 const helper_1 = require("../lib/helper");
 const area_1 = require("../db/models/area");
 const product_1 = require("./api/product");
+const cache_1 = require("../lib/cache");
 const temp_loc_1 = require("../db/models/temp_loc");
 let ellipsis = require('text-ellipsis');
 class Route extends router_1.ViewRouter {
@@ -59,20 +61,18 @@ class Route extends router_1.ViewRouter {
     }
     defaultRoute() {
         return __awaiter(this, void 0, void 0, function* () {
-            // let recentButchers: ButcherModel[] = CacheManager.dataCache.get("recent-butchers");
-            // if (!recentButchers) {
-            //     recentButchers = await ButcherModel.findAll({
-            //         order: [["updatedon", "DESC"]],
-            //         limit: 10,
-            //         include: [
-            //             { all: true }
-            //         ],
-            //         where: {
-            //             approved: true
-            //         }
-            //     });
-            //     CacheManager.dataCache.set("recent-butchers", recentButchers.map(b => b.get({ plain: true })));
-            // }
+            let recentButchers = cache_1.CacheManager.dataCache.get("recent-butchers");
+            if (!recentButchers) {
+                recentButchers = yield butcher_1.default.findAll({
+                    order: [["displayOrder", "DESC"]],
+                    limit: 10,
+                    where: {
+                        approved: true,
+                        showListing: true
+                    }
+                });
+                cache_1.CacheManager.dataCache.set("recent-butchers", recentButchers.map(b => b.get({ plain: true })));
+            }
             // this.foods = await new ProductsApi(this.constructorParams).getResources({
             //     type: ['product-videos', 'product-photos'],
             //     list: true,
@@ -87,7 +87,7 @@ class Route extends router_1.ViewRouter {
             this.blogItems = yield this.getBlogItems();
             //this.stats = await SiteStats.get();
             this.res.render("pages/default.ejs", this.viewData({
-                //recentButchers: recentButchers,
+                recentButchers: recentButchers,
                 ellipsis: ellipsis
             }));
         });

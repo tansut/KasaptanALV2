@@ -15,4 +15,4 @@ export BLUEBIRD_W_FORGOTTEN_RETURN=0
 #export STATICDOMAIN=https://static.kasaptanal.com
 export STATICDOMAIN=/static
 #export PUBLICDIR=/wwwpublic/kasapburada/
-export PAYMENTPROVIDER=paratika
+export PAYMENTPROVIDER=iyzico

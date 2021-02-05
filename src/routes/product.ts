@@ -14,7 +14,7 @@ import * as fs from "fs"
 import moment = require('moment');
 import Category from '../db/models/category';
 import Butcher from '../db/models/butcher';
-import ProductApi, { ButcherProperty } from './api/product';
+import ProductApi, { ButcherProperty, ButcherSelection, StartPrice } from './api/product';
 import DispatcherApi, { DispatcherQuery } from './api/dispatcher';
 import Area from '../db/models/area';
 import ButcherProduct from '../db/models/butcherproduct';
@@ -37,19 +37,7 @@ import { PriceView } from '../models/common';
 import { pbkdf2 } from 'crypto';
 import { off } from 'process';
 
-interface ButcherSelection {
-    best: Dispatcher,
-    serving: Dispatcher[]
-    // servingL2: Dispatcher[]
-    // servingL3: Dispatcher[]
-    takeOnly: Dispatcher[]
-}
 
-interface StartPrice {
-    view: PriceView;
-    basedOn: 'butcher' | 'global';
-    title: string;
-}
 
 export default class Route extends ViewRouter {
     forceSemt= true;
@@ -103,193 +91,12 @@ export default class Route extends ViewRouter {
         return show;
     }
 
-    async tryBestFromShopcard(serving: Dispatcher[], others: Dispatcher[] = []) {
-        let shopcard = this.shopcard;
-        let scButcher = (shopcard.items && shopcard.items.length) ? shopcard.items[0].product.butcher.id : null;
-        if (scButcher) {
-            let inServing = serving.find(p => p.butcherid == scButcher);
-            let inOther = others.find(p => p.butcherid == scButcher);
-            return inServing || inOther
-        } else return null;
-    }
-
-    // async tryBestFromOrders(serving: Dispatcher[]) {
-    //     return null;
-    //     let fullServing = serving.filter(s => s.selection == DispatcherSelection.full);
-    //     if (fullServing.length == 0) fullServing = serving;
-    //     fullServing.forEach(s => s.lastorderitemid = (s.lastorderitemid || 0));
-    //     let orderedByDate = _.orderBy(fullServing, 'lastorderitemid', 'asc');
-    //     let orderedByKasapCard = _.orderBy(orderedByDate, 'butcher.enablePuan', 'desc');
-    //     return orderedByKasapCard.length ? orderedByKasapCard[0] : null;
-    // }
-
-    async findBestButcher(serving: Dispatcher[], product: Product, adr: PreferredAddress): Promise<Dispatcher[]> {
+    
 
 
 
-        //let minDistance = Math.min.apply(Math, serving.map(s=>s.butcherArea.bestKm));
-        let maxDistance = Math.max.apply(Math, serving.map(s=>s.butcherArea.bestKm));
-
-        //let minPuan = Math.min.apply(Math, serving.map(s=>s.butcher.customerPuanRate));
-        //let maxPuan = Math.max.apply(Math, serving.map(s=>s.butcher.customerPuanRate));
-
-        //let minRate = Math.min.apply(Math, serving.map(s=>s.butcher.totalRatingAsPerc));
-        //let maxRate = Math.max.apply(Math, serving.map(s=>s.butcher.totalRatingAsPerc));
-
-        let minShipTotal = Math.min.apply(Math, serving.map(s=>s.butcher.shipTotalCount));
-        let maxShipTotal = Math.max.apply(Math, serving.map(s=>s.butcher.shipTotalCount));
-
-        let minPrice = Math.min.apply(Math, serving.map(s=> {
-            let bp = s.butcher.products.find(p=>p.productid == product.id);
-            bp.product = product;
-            return bp.priceView.price;
-        }));
-
-        let maxPrice = Math.max.apply(Math, serving.map(s=> {
-            let bp = s.butcher.products.find(p=>p.productid == product.id);
-            bp.product = product;
-            return bp.priceView.price;
-        }));      
-        let weights = await this.api.getButcherPropertyWeights();
-
-        let l1 = adr.based.getLevel(1);
-        let l2 = adr.based.getLevel(2);
-        let l3 = adr.based.getLevel(3);
-
-        let orderSize = l3.butcherWeightOrder || l2.butcherWeightOrder || l1.butcherWeightOrder || 150.00;
-
-        let customerFees: {[key: number]: number} = {}, minFee = Number.MAX_SAFE_INTEGER, maxFee = Number.MIN_SAFE_INTEGER;
-        
-        for(let i = 0; i < serving.length;i ++) {
-            let fromTo: FromTo = {
-                start: serving[i].butcher.location,
-                sId: serving[i].id.toString(),
-                finish: adr.based.location,
-                fId: adr.based.id.toString()
-            }
-            let offerRequest = serving[i].provider.offerRequestFromTo(fromTo);
-            offerRequest.orderTotal = orderSize;
-            let offer = await serving[i].provider.requestOffer(offerRequest);
-            if (offer) {
-                serving[i].provider.calculateCustomerFee(offer);
-                customerFees[serving[i].butcher.id] = offer.customerFee;
-                minFee = Math.min(minFee, offer.customerFee);
-                maxFee = Math.max(maxFee, offer.customerFee);
-            }
-        }
-
-        // let offerRequest = this.offerRequestFromTo(ft);
-        // let offer = await this.requestOffer(offerRequest);
-
-        // for (let i = 1; i < 10; i++)
-        //     prices.push(Helper.asCurrency(i * slice))
-
-        // for (let i = 0; i < prices.length; i++) {
-        //     offer.orderTotal = Helper.asCurrency((2 * prices[i] + slice) / 2);
-        //     this.calculateCustomerFee(offer);
 
 
-        let limits: {[key in ButcherProperty]: number []} = {
-            'distance': [0, maxDistance],
-            'kasapkart': [0.00, 0.10],
-            'productPrice': [minPrice, maxPrice],
-            'shipmentPrice': [minFee, maxFee],
-            'rating': [80, 100],
-            'shipTotal': [0, maxShipTotal],
-            'butcherSelection': [-1,1],
-            'productSelection': [-1,1]
-        }
-
-
-
-        weights = l1.butcherWeights ? {...weights, ...l1.butcherWeights}: weights; 
-        weights = l2.butcherWeights ? {...weights, ...l2.butcherWeights}: weights; 
-        weights = l3.butcherWeights ? {...weights, ...l3.butcherWeights}: weights; 
-
-        weights = product.butcherWeights ? {...weights, ...product.butcherWeights}: weights; 
-
-        for(let i = 0; i < serving.length;i ++) {
-            
-            serving[i].butcher.calculatedRate = await this.api.calculateButcherRate(serving[i].butcher, product, serving[i], limits, typeof customerFees[serving[i].butcher.id] == 'undefined' ? maxFee: customerFees[serving[i].butcher.id], weights)
-        }
-
-        let weightSorted = _.orderBy(serving, 'butcher.calculatedRate', 'desc');
-
-        return weightSorted;
-
-        // let nearRadius = (this.userArea && this.userArea.selectionRadius) ? this.userArea.selectionRadius: 12;
-        // let alternateRadius = Math.round(nearRadius * 1.5);
-
-        // let nearButchers = serving.filter(p => p.butcherArea.bestKm <= nearRadius);
-        // let alternateButchers = serving.filter(p => (p.butcherArea.bestKm > nearRadius && p.butcherArea.bestKm <= alternateRadius));
-        // let farButchers = serving.filter(p => p.butcherArea.bestKm > alternateRadius);
-
-        // let defaultButchers = nearButchers;
-
-        // if (defaultButchers.length == 0) {
-        //     defaultButchers = defaultButchers.concat(alternateButchers);
-        //     if (defaultButchers.length == 0 && (farButchers.length > 0)) {
-        //         defaultButchers.push(farButchers[0]);
-        //     }
-        // }
-
-        // defaultButchers = defaultButchers.length == 0 ? serving : defaultButchers;
-
-
-        // let fullServing = serving.filter(s => (s.selection == DispatcherSelection.full || s.selection == DispatcherSelection.onecikar));
-        // let mention = fullServing.filter(s => s.selection == DispatcherSelection.onecikar);
-        // let finalList = mention.length > 0 ? mention: fullServing;
-        // if (finalList.length == 0) finalList = serving;
-        // finalList = Helper.shuffle(finalList)
-        // let res = (finalList.length > 0 ? finalList[0] : null);
-        // return res;
-    }
-
-    useL1(product: Product) {
-        return (product.productType == ProductType.kurban)
-    }
-
-
-    async locateButchersForProduct(product: Product, adr: PreferredAddress, userBest: Butcher): Promise<ButcherSelection> {
-        let api = new DispatcherApi(this.constructorParams);
-
-        let q: DispatcherQuery = {
-            adr: adr,
-            product: product,
-            useLevel1: this.useL1(product),
-            orderType: product.productType
-        }
-
-        let serving = await api.getDispatchers(q);
-        let takeOnly = serving.filter(p => p.takeOnly == true);
-
-
-        serving = serving.filter(p => !p.takeOnly);
-        let sameGroup: string[] = []
-
-        _.remove(serving, (item) => {
-            if (item.butcher.parentButcher) {
-                if (sameGroup.find(g => g == item.butcher.parentButcher)) {
-                    return true;
-                } else {
-                    sameGroup.push(item.butcher.parentButcher);
-                    return false;
-                }
-            } else return false;
-        })
-
-        let weighedServing = await this.findBestButcher(serving, product, adr);
-        let mybest: Dispatcher = await this.tryBestFromShopcard(weighedServing) || weighedServing[0];
-        
-        if (mybest) {
-            mybest = (userBest ? (weighedServing.find(s => s.butcherid == userBest.id)) : null) || mybest;
-        }
-        return {
-            best: mybest,
-            serving: weighedServing,
-            takeOnly: takeOnly
-        }
-    }
 
     @Auth.Anonymous()
     async productRoute() {
@@ -306,15 +113,14 @@ export default class Route extends ViewRouter {
         if (!product) return this.next();
         this.product = product;
         this.api = new ProductApi(this.constructorParams);
-        this.shopcard = await ShopCard.createFromRequest(this.req);
+        let shopcard = this.shopcard = await ShopCard.createFromRequest(this.req);
         await product.loadResources();
-        await product.loadnutritionValues();
-
-        let shopcard = await ShopCard.createFromRequest(this.req);
+        await product.loadnutritionValues();        
 
         this.shopCardIndex = this.req.query.shopcarditem ? parseInt(this.req.query.shopcarditem as string) : -1;
         this.shopCardItem = (this.shopCardIndex >= 0 && shopcard.items) ? shopcard.items[this.shopCardIndex] : null;
         let butcher: Butcher = null;
+
         if (this.shopCardItem) {
             butcher = await Butcher.getBySlug(this.shopCardItem.product.butcher.slug);
         } else if (this.req.query.butcher) {
@@ -346,7 +152,7 @@ export default class Route extends ViewRouter {
                 takeOnly: []
             }
         } else {
-            selectedButchers = await this.locateButchersForProduct(product, this.req.prefAddr, butcher);
+            selectedButchers = await this.api.locateButchersForProduct(product, this.req.prefAddr, butcher, shopcard);
         }
         let serving = selectedButchers.serving.concat(<any>selectedButchers.takeOnly);
 
@@ -530,7 +336,7 @@ export default class Route extends ViewRouter {
 
 
 
-        this.dispatchingAvailable = this.req.prefAddr && (view.butcher != null || await new DispatcherApi(this.constructorParams).dispatchingAvailable(this.req.prefAddr, this.useL1(this.product)));
+        this.dispatchingAvailable = this.req.prefAddr && (view.butcher != null || await new DispatcherApi(this.constructorParams).dispatchingAvailable(this.req.prefAddr, this.api.useL1(this.product)));
         this.semtReturn = "/" + this.product.slug + '#aftersetloc';
         this.res.render('pages/product', this.viewData({
             butcherProducts: this.butcherProducts.map(p => p.product), butchers: selectedButchers,

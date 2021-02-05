@@ -16,12 +16,17 @@ import ResourceCategory from '../../db/models/resourcecategory';
 import Category from '../../db/models/category';
 import { Op } from 'sequelize';
 import { ProductLd, IProductLd, ProductLdOptions } from '../../models/ProductLd';
-import DispatcherApi from './dispatcher';
+import DispatcherApi, { DispatcherQuery } from './dispatcher';
 import Review from '../../db/models/review';
 import { Shipment } from '../../models/shipment';
 import * as path from "path"
 import Dispatcher, { DispatcherSelectionWeigts } from '../../db/models/dispatcher';
 import config from '../../config';
+import { FromTo } from '../../lib/logistic/core';
+import { PreferredAddress } from '../../db/models/user';
+import { ShopCard } from '../../models/shopcard';
+import { OrderButcherSelection } from '../../db/models/order';
+import { PriceView } from '../../models/common';
 const fs = require('fs');
 
 export interface ProductFeedItem {
@@ -36,6 +41,20 @@ export interface ProductFeedItem {
     gtin: string;
     brand: string;
     mpn: string;
+}
+
+export interface ButcherSelection {
+    best: Dispatcher,
+    serving: Dispatcher[]
+    // servingL2: Dispatcher[]
+    // servingL3: Dispatcher[]
+    takeOnly: Dispatcher[]
+}
+
+export interface StartPrice {
+    view: PriceView;
+    basedOn: 'butcher' | 'global';
+    title: string;
 }
 
 export type ButcherProperty = 'distance' |  'rating' | 'kasapkart' | 'productPrice' | 'shipmentPrice' | 'shipTotal' | 'butcherSelection' | 'productSelection';
@@ -356,6 +375,158 @@ export default class Route extends ApiRouter {
 
 
         return feed;
+    }
+
+
+    async tryBestFromShopcard(shopcard: ShopCard, serving: Dispatcher[], others: Dispatcher[] = []) {       
+        let scButcher = (shopcard.items && shopcard.items.length) ? shopcard.items[0].product.butcher.id : null;
+        if (scButcher) {
+            let inServing = serving.find(p => p.butcherid == scButcher);
+            let inOther = others.find(p => p.butcherid == scButcher);
+            return inServing || inOther
+        } else return null;
+    }
+
+    useL1(product: Product) {
+        return (product.productType == ProductType.kurban)
+    }
+    
+    async locateButchersForProduct(product: Product, adr: PreferredAddress, userBest: Butcher, shopcard: ShopCard): Promise<ButcherSelection> {
+        let api = new DispatcherApi(this.constructorParams);
+
+        let q: DispatcherQuery = {
+            adr: adr,
+            product: product,
+            useLevel1: this.useL1(product),
+            orderType: product.productType
+        }
+
+        let serving = await api.getDispatchers(q);
+        let takeOnly = serving.filter(p => p.takeOnly == true);
+
+
+        serving = serving.filter(p => !p.takeOnly);
+        let sameGroup: string[] = []
+
+        _.remove(serving, (item) => {
+            if (item.butcher.parentButcher) {
+                if (sameGroup.find(g => g == item.butcher.parentButcher)) {
+                    return true;
+                } else {
+                    sameGroup.push(item.butcher.parentButcher);
+                    return false;
+                }
+            } else return false;
+        })
+
+        let weighedServing = await this.findBestButcher(serving, product, adr);
+        let mybest: Dispatcher = await this.tryBestFromShopcard(shopcard, weighedServing) || weighedServing[0];
+        
+        if (mybest) {
+            mybest = (userBest ? (weighedServing.find(s => s.butcherid == userBest.id)) : null) || mybest;
+        }
+        return {
+            best: mybest,
+            serving: weighedServing,
+            takeOnly: takeOnly
+        }
+    }
+
+    async findBestButcher(serving: Dispatcher[], product: Product, adr: PreferredAddress): Promise<Dispatcher[]> {
+
+
+
+        //let minDistance = Math.min.apply(Math, serving.map(s=>s.butcherArea.bestKm));
+        let maxDistance = Math.max.apply(Math, serving.map(s=>s.butcherArea.bestKm));
+
+        //let minPuan = Math.min.apply(Math, serving.map(s=>s.butcher.customerPuanRate));
+        //let maxPuan = Math.max.apply(Math, serving.map(s=>s.butcher.customerPuanRate));
+
+        //let minRate = Math.min.apply(Math, serving.map(s=>s.butcher.totalRatingAsPerc));
+        //let maxRate = Math.max.apply(Math, serving.map(s=>s.butcher.totalRatingAsPerc));
+
+        let minShipTotal = Math.min.apply(Math, serving.map(s=>s.butcher.shipTotalCount));
+        let maxShipTotal = Math.max.apply(Math, serving.map(s=>s.butcher.shipTotalCount));
+
+        let minPrice = Math.min.apply(Math, serving.map(s=> {
+            let bp = s.butcher.products.find(p=>p.productid == product.id);
+            bp.product = product;
+            return bp.priceView.price;
+        }));
+
+        let maxPrice = Math.max.apply(Math, serving.map(s=> {
+            let bp = s.butcher.products.find(p=>p.productid == product.id);
+            bp.product = product;
+            return bp.priceView.price;
+        }));      
+        let weights = await this.getButcherPropertyWeights();
+
+        let l1 = adr.based.getLevel(1);
+        let l2 = adr.based.getLevel(2);
+        let l3 = adr.based.getLevel(3);
+
+        let orderSize = l3.butcherWeightOrder || l2.butcherWeightOrder || l1.butcherWeightOrder || 150.00;
+
+        let customerFees: {[key: number]: number} = {}, minFee = Number.MAX_SAFE_INTEGER, maxFee = Number.MIN_SAFE_INTEGER;
+        
+        // for(let i = 0; i < serving.length;i ++) {
+        //     let fromTo: FromTo = {
+        //         start: serving[i].butcher.location,
+        //         sId: serving[i].id.toString(),
+        //         finish: adr.based.location,
+        //         fId: adr.based.id.toString()
+        //     }
+        //     let offerRequest = serving[i].provider.offerRequestFromTo(fromTo);
+        //     offerRequest.orderTotal = orderSize;
+        //     let offer = await serving[i].provider.requestOffer(offerRequest);
+        //     if (offer) {
+        //         serving[i].provider.calculateCustomerFee(offer);
+        //         customerFees[serving[i].butcher.id] = offer.customerFee;
+        //         minFee = Math.min(minFee, offer.customerFee);
+        //         maxFee = Math.max(maxFee, offer.customerFee);
+        //     }
+        // }
+
+        // let offerRequest = this.offerRequestFromTo(ft);
+        // let offer = await this.requestOffer(offerRequest);
+
+        // for (let i = 1; i < 10; i++)
+        //     prices.push(Helper.asCurrency(i * slice))
+
+        // for (let i = 0; i < prices.length; i++) {
+        //     offer.orderTotal = Helper.asCurrency((2 * prices[i] + slice) / 2);
+        //     this.calculateCustomerFee(offer);
+
+
+        let limits: {[key in ButcherProperty]: number []} = {
+            'distance': [0, maxDistance],
+            'kasapkart': [0.00, 0.10],
+            'productPrice': [minPrice, maxPrice],
+            'shipmentPrice': [minFee, maxFee],
+            'rating': [80, 100],
+            'shipTotal': [0, maxShipTotal],
+            'butcherSelection': [-1,1],
+            'productSelection': [-1,1]
+        }
+
+
+
+        weights = l1.butcherWeights ? {...weights, ...l1.butcherWeights}: weights; 
+        weights = l2.butcherWeights ? {...weights, ...l2.butcherWeights}: weights; 
+        weights = l3.butcherWeights ? {...weights, ...l3.butcherWeights}: weights; 
+
+        weights = product.butcherWeights ? {...weights, ...product.butcherWeights}: weights; 
+
+        for(let i = 0; i < serving.length;i ++) {
+            
+            serving[i].butcher.calculatedRate = await this.calculateButcherRate(serving[i].butcher, product, serving[i], limits, typeof customerFees[serving[i].butcher.id] == 'undefined' ? maxFee: customerFees[serving[i].butcher.id], weights)
+        }
+
+        let weightSorted = _.orderBy(serving, 'butcher.calculatedRate', 'desc');
+
+        return weightSorted;
+
+      
     }
 
     async getProductsFeed(options: ProductLdOptions): Promise<ProductFeedItem []> {

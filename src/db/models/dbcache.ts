@@ -30,7 +30,7 @@ class DBCache extends BaseModel<DBCache> {
     data: string;    
 
     static async retrieve(key: string, minutes: number): Promise<any> {
-        return lock.acquire(key, function() {
+        //return lock.acquire(key, function() {
                 return DBCache.findOne({
                     where: {
                         key: key
@@ -42,7 +42,7 @@ class DBCache extends BaseModel<DBCache> {
                         else return null;
                     } else return null
                 })
-            })
+            //})
     }
 
     static async put(key: string, val: any) {

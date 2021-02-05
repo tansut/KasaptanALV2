@@ -293,18 +293,13 @@ export default class UserRoute extends ApiRouter {
         return UserModel.retrieveByEMailOrPhone(email)
     }
 
-    private createTokens(user: UserModel): Promise<any> {
-        var accessToken = user.generateAccessToken();
-        var accessTokenEncrypted = authorization.default.encryptAccessToken(accessToken);
-        return authorization.default.encryptRefreshToken(user.id, accessToken).then((encryptedRefreshToken: string) => {
-            return { accessToken: accessTokenEncrypted, refreshToken: encryptedRefreshToken };
-        });
-    }
+
 
     signOff() {
 
         this.req.session.shopcard = this.req.user.shopcard;
-        (<any>this.req).logout();
+        (<any>this.res).clearCookie('remember_me');
+        (<any>this.req).logout();        
     }
 
     setAccessToken(accessToken: authorization.IEncryptedAccessTokenData) {
@@ -313,14 +308,13 @@ export default class UserRoute extends ApiRouter {
         });
     }
 
-    login({ email, password, req }) {
+    login({ email, password, req, remember_me }): Promise<UserModel> {
         return new Promise((resolve, reject) => {
           passport.authenticate('local', (err, user) => {
             if (err) { reject(err); }
             if (!user) { reject('Invalid credentials.'); }
-      
             req.login(user, () => resolve(user));
-          })({ body: { email, password } });
+          })({ body: { email, password, remember_me } });
         });
       }
 
@@ -338,10 +332,20 @@ export default class UserRoute extends ApiRouter {
             return this.login({
                 email: email,
                 password: password,
-                req: this.req
+                req: this.req,
+                remember_me: true,
             }).then(user=>{
-                this.res.sendStatus(200);
-                return user;
+                var token = Helper.generateToken(64);
+                let rt = new RefreshToken({
+                    userId: user.id,
+                    token: token
+                })
+                return rt.save().then(rt => {
+                    this.res.cookie('remember_me', token, { path: '/', httpOnly: true, maxAge: 2*604800000 }); // 7 days
+                    this.res.sendStatus(200);
+                    return user;
+                })
+
             }).catch(err=>this.res.sendStatus(401))
 
             // return this.createTokens(user).then((generatedTokens: GeneratedTokenData) => {

@@ -28,23 +28,23 @@ var lock = new AsyncLock({ timeout: 5000 });
 let DBCache = DBCache_1 = class DBCache extends basemodel_1.default {
     static retrieve(key, minutes) {
         return __awaiter(this, void 0, void 0, function* () {
-            return lock.acquire(key, function () {
-                return DBCache_1.findOne({
-                    where: {
-                        key: key
-                    }
-                }).then(found => {
-                    if (found) {
-                        let oh = moment(helper_1.default.Now()).add(-minutes, 'minutes').toDate();
-                        if (found.creationDate > oh)
-                            return JSON.parse(found.data);
-                        else
-                            return null;
-                    }
+            //return lock.acquire(key, function() {
+            return DBCache_1.findOne({
+                where: {
+                    key: key
+                }
+            }).then(found => {
+                if (found) {
+                    let oh = moment(helper_1.default.Now()).add(-minutes, 'minutes').toDate();
+                    if (found.creationDate > oh)
+                        return JSON.parse(found.data);
                     else
                         return null;
-                });
+                }
+                else
+                    return null;
             });
+            //})
         });
     }
     static put(key, val) {

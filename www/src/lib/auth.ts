@@ -99,14 +99,14 @@ export class Auth {
             event.preventDefault();
             let email = $('#si-email').val();
             let password = $('#si-password').val();
-            let rememberme = $('#si-remember').val();
+            let rememberme = $('#si-remember').prop('checked')
             App.gTag('signin', 'try', email);
             $('#signin-btn').attr("disabled", "true");
             try {
                 let result = await Backend.post('authenticate', {
                     password: password,
                     email: email,
-                    remember_me: rememberme == "on"
+                    remember_me: rememberme 
                 })
                 App.gTag('signin', 'success', email);
                 var urlParams = new URLSearchParams(window.location.search);

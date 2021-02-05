@@ -32,10 +32,11 @@ const resourcecategory_1 = require("../../db/models/resourcecategory");
 const category_1 = require("../../db/models/category");
 const sequelize_1 = require("sequelize");
 const ProductLd_1 = require("../../models/ProductLd");
+const dispatcher_1 = require("./dispatcher");
 const review_1 = require("../../db/models/review");
 const shipment_1 = require("../../models/shipment");
 const path = require("path");
-const dispatcher_1 = require("../../db/models/dispatcher");
+const dispatcher_2 = require("../../db/models/dispatcher");
 const config_1 = require("../../config");
 const fs = require('fs');
 let ButcherPropertyWeigts = {
@@ -62,7 +63,7 @@ class Route extends router_1.ApiRouter {
     calculateButcherRate(butcher, product, dispatcher, limits, customerFee, weights) {
         return __awaiter(this, void 0, void 0, function* () {
             let bp = butcher.products.find(p => p.productid == product.id);
-            let butcherWeight = dispatcher_1.DispatcherSelectionWeigts[dispatcher.selection];
+            let butcherWeight = dispatcher_2.DispatcherSelectionWeigts[dispatcher.selection];
             if (butcherWeight == 0 && butcher.selectionRadiusAsKm > 0) {
                 butcherWeight = dispatcher.butcherArea.bestKm <= butcher.selectionRadiusAsKm ? 1 : butcherWeight;
             }
@@ -333,6 +334,130 @@ class Route extends router_1.ApiRouter {
             });
         });
         return feed;
+    }
+    tryBestFromShopcard(shopcard, serving, others = []) {
+        return __awaiter(this, void 0, void 0, function* () {
+            let scButcher = (shopcard.items && shopcard.items.length) ? shopcard.items[0].product.butcher.id : null;
+            if (scButcher) {
+                let inServing = serving.find(p => p.butcherid == scButcher);
+                let inOther = others.find(p => p.butcherid == scButcher);
+                return inServing || inOther;
+            }
+            else
+                return null;
+        });
+    }
+    useL1(product) {
+        return (product.productType == product_1.ProductType.kurban);
+    }
+    locateButchersForProduct(product, adr, userBest, shopcard) {
+        return __awaiter(this, void 0, void 0, function* () {
+            let api = new dispatcher_1.default(this.constructorParams);
+            let q = {
+                adr: adr,
+                product: product,
+                useLevel1: this.useL1(product),
+                orderType: product.productType
+            };
+            let serving = yield api.getDispatchers(q);
+            let takeOnly = serving.filter(p => p.takeOnly == true);
+            serving = serving.filter(p => !p.takeOnly);
+            let sameGroup = [];
+            _.remove(serving, (item) => {
+                if (item.butcher.parentButcher) {
+                    if (sameGroup.find(g => g == item.butcher.parentButcher)) {
+                        return true;
+                    }
+                    else {
+                        sameGroup.push(item.butcher.parentButcher);
+                        return false;
+                    }
+                }
+                else
+                    return false;
+            });
+            let weighedServing = yield this.findBestButcher(serving, product, adr);
+            let mybest = (yield this.tryBestFromShopcard(shopcard, weighedServing)) || weighedServing[0];
+            if (mybest) {
+                mybest = (userBest ? (weighedServing.find(s => s.butcherid == userBest.id)) : null) || mybest;
+            }
+            return {
+                best: mybest,
+                serving: weighedServing,
+                takeOnly: takeOnly
+            };
+        });
+    }
+    findBestButcher(serving, product, adr) {
+        return __awaiter(this, void 0, void 0, function* () {
+            //let minDistance = Math.min.apply(Math, serving.map(s=>s.butcherArea.bestKm));
+            let maxDistance = Math.max.apply(Math, serving.map(s => s.butcherArea.bestKm));
+            //let minPuan = Math.min.apply(Math, serving.map(s=>s.butcher.customerPuanRate));
+            //let maxPuan = Math.max.apply(Math, serving.map(s=>s.butcher.customerPuanRate));
+            //let minRate = Math.min.apply(Math, serving.map(s=>s.butcher.totalRatingAsPerc));
+            //let maxRate = Math.max.apply(Math, serving.map(s=>s.butcher.totalRatingAsPerc));
+            let minShipTotal = Math.min.apply(Math, serving.map(s => s.butcher.shipTotalCount));
+            let maxShipTotal = Math.max.apply(Math, serving.map(s => s.butcher.shipTotalCount));
+            let minPrice = Math.min.apply(Math, serving.map(s => {
+                let bp = s.butcher.products.find(p => p.productid == product.id);
+                bp.product = product;
+                return bp.priceView.price;
+            }));
+            let maxPrice = Math.max.apply(Math, serving.map(s => {
+                let bp = s.butcher.products.find(p => p.productid == product.id);
+                bp.product = product;
+                return bp.priceView.price;
+            }));
+            let weights = yield this.getButcherPropertyWeights();
+            let l1 = adr.based.getLevel(1);
+            let l2 = adr.based.getLevel(2);
+            let l3 = adr.based.getLevel(3);
+            let orderSize = l3.butcherWeightOrder || l2.butcherWeightOrder || l1.butcherWeightOrder || 150.00;
+            let customerFees = {}, minFee = Number.MAX_SAFE_INTEGER, maxFee = Number.MIN_SAFE_INTEGER;
+            // for(let i = 0; i < serving.length;i ++) {
+            //     let fromTo: FromTo = {
+            //         start: serving[i].butcher.location,
+            //         sId: serving[i].id.toString(),
+            //         finish: adr.based.location,
+            //         fId: adr.based.id.toString()
+            //     }
+            //     let offerRequest = serving[i].provider.offerRequestFromTo(fromTo);
+            //     offerRequest.orderTotal = orderSize;
+            //     let offer = await serving[i].provider.requestOffer(offerRequest);
+            //     if (offer) {
+            //         serving[i].provider.calculateCustomerFee(offer);
+            //         customerFees[serving[i].butcher.id] = offer.customerFee;
+            //         minFee = Math.min(minFee, offer.customerFee);
+            //         maxFee = Math.max(maxFee, offer.customerFee);
+            //     }
+            // }
+            // let offerRequest = this.offerRequestFromTo(ft);
+            // let offer = await this.requestOffer(offerRequest);
+            // for (let i = 1; i < 10; i++)
+            //     prices.push(Helper.asCurrency(i * slice))
+            // for (let i = 0; i < prices.length; i++) {
+            //     offer.orderTotal = Helper.asCurrency((2 * prices[i] + slice) / 2);
+            //     this.calculateCustomerFee(offer);
+            let limits = {
+                'distance': [0, maxDistance],
+                'kasapkart': [0.00, 0.10],
+                'productPrice': [minPrice, maxPrice],
+                'shipmentPrice': [minFee, maxFee],
+                'rating': [80, 100],
+                'shipTotal': [0, maxShipTotal],
+                'butcherSelection': [-1, 1],
+                'productSelection': [-1, 1]
+            };
+            weights = l1.butcherWeights ? Object.assign(Object.assign({}, weights), l1.butcherWeights) : weights;
+            weights = l2.butcherWeights ? Object.assign(Object.assign({}, weights), l2.butcherWeights) : weights;
+            weights = l3.butcherWeights ? Object.assign(Object.assign({}, weights), l3.butcherWeights) : weights;
+            weights = product.butcherWeights ? Object.assign(Object.assign({}, weights), product.butcherWeights) : weights;
+            for (let i = 0; i < serving.length; i++) {
+                serving[i].butcher.calculatedRate = yield this.calculateButcherRate(serving[i].butcher, product, serving[i], limits, typeof customerFees[serving[i].butcher.id] == 'undefined' ? maxFee : customerFees[serving[i].butcher.id], weights);
+            }
+            let weightSorted = _.orderBy(serving, 'butcher.calculatedRate', 'desc');
+            return weightSorted;
+        });
     }
     getProductsFeed(options) {
         return __awaiter(this, void 0, void 0, function* () {

@@ -18,6 +18,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
+const refreshToken_1 = require("../../db/models/refreshToken");
 const router_1 = require("../../lib/router");
 const user_1 = require("../../db/models/user");
 const config_1 = require("../../config");
@@ -25,8 +26,6 @@ const http = require("../../lib/http");
 const bcrypt = require("bcryptjs");
 const moment = require("moment");
 const crypto = require("crypto");
-//import emailmanager from '../../lib/email';
-const authorization = require("../../lib/authorizationToken");
 const common_1 = require("../../lib/common");
 const helper_1 = require("../../lib/helper");
 const sms_1 = require("../../lib/sms");
@@ -286,15 +285,9 @@ class UserRoute extends router_1.ApiRouter {
     retrieveByEMailOrPhone(email) {
         return user_1.default.retrieveByEMailOrPhone(email);
     }
-    createTokens(user) {
-        var accessToken = user.generateAccessToken();
-        var accessTokenEncrypted = authorization.default.encryptAccessToken(accessToken);
-        return authorization.default.encryptRefreshToken(user.id, accessToken).then((encryptedRefreshToken) => {
-            return { accessToken: accessTokenEncrypted, refreshToken: encryptedRefreshToken };
-        });
-    }
     signOff() {
         this.req.session.shopcard = this.req.user.shopcard;
+        this.res.clearCookie('remember_me');
         this.req.logout();
     }
     setAccessToken(accessToken) {
@@ -302,7 +295,7 @@ class UserRoute extends router_1.ApiRouter {
             maxAge: 0.5 * 60 * 60 * 1000
         });
     }
-    login({ email, password, req }) {
+    login({ email, password, req, remember_me }) {
         return new Promise((resolve, reject) => {
             passport.authenticate('local', (err, user) => {
                 if (err) {
@@ -312,7 +305,7 @@ class UserRoute extends router_1.ApiRouter {
                     reject('Invalid credentials.');
                 }
                 req.login(user, () => resolve(user));
-            })({ body: { email, password } });
+            })({ body: { email, password, remember_me } });
         });
     }
     authenticateRoute() {
@@ -329,10 +322,19 @@ class UserRoute extends router_1.ApiRouter {
                 return this.login({
                     email: email,
                     password: password,
-                    req: this.req
+                    req: this.req,
+                    remember_me: true,
                 }).then(user => {
-                    this.res.sendStatus(200);
-                    return user;
+                    var token = helper_1.default.generateToken(64);
+                    let rt = new refreshToken_1.default({
+                        userId: user.id,
+                        token: token
+                    });
+                    return rt.save().then(rt => {
+                        this.res.cookie('remember_me', token, { path: '/', httpOnly: true, maxAge: 2 * 604800000 }); // 7 days
+                        this.res.sendStatus(200);
+                        return user;
+                    });
                 }).catch(err => this.res.sendStatus(401));
                 // return this.createTokens(user).then((generatedTokens: GeneratedTokenData) => {
                 //     this.setAccessToken(generatedTokens.accessToken);

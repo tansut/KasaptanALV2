@@ -6,9 +6,22 @@ const base_1 = require("./base");
 const http = require("../lib/http");
 const user_1 = require("../db/models/user");
 const authCntroller = require("../lib/authorizationToken");
-// const RememberMeStrategy = require("passport-remember-me").
+const refreshToken_1 = require("../db/models/refreshToken");
+const helper_1 = require("../lib/helper");
+const RememberMeStrategy = require("passport-remember-me").Strategy;
 var passport = require('passport'), LocalStrategy = require('passport-local').Strategy;
 class AuthMiddleware extends base_1.default {
+    validateAccessToken(accessToken) {
+        return new Promise((resolve, reject) => {
+            if (moment(accessToken.expiration_time).utc().isSameOrAfter(moment().utc())) {
+                return user_1.default.findByPk(accessToken.userId).then((user) => {
+                    return user ? resolve(user) : Promise.reject(new http.NotFoundError("invalid user"));
+                });
+            }
+            else
+                reject(new http.PermissionError(JSON.stringify({ message: 'Token Expired', PermissionErrorType: 'tokenExpire' })));
+        });
+    }
     tryLoadUser(req, res, next) {
         var authHeader = req.cookies ? req.cookies["auth"] : null;
         if (!authHeader) {
@@ -31,18 +44,6 @@ class AuthMiddleware extends base_1.default {
             next();
         }
     }
-    validateAccessToken(accessToken) {
-        return new Promise((resolve, reject) => {
-            //accessToken.expiration_time = moment().add('minute', -30).toDate()
-            if (moment(accessToken.expiration_time).utc().isSameOrAfter(moment().utc())) {
-                return user_1.default.findByPk(accessToken.userId).then((user) => {
-                    return user ? resolve(user) : reject(new http.NotFoundError("invalid user"));
-                });
-            }
-            else
-                reject(new http.PermissionError(JSON.stringify({ message: 'Token Expired', PermissionErrorType: 'tokenExpire' })));
-        });
-    }
     force(req, res, next, roles) {
         if (!req.user)
             next(new http.PermissionError());
@@ -53,7 +54,7 @@ class AuthMiddleware extends base_1.default {
         super(app);
         app.use(passport.initialize());
         app.use(passport.session());
-        // app.use(passport.authenticate('remember-me'));
+        app.use(passport.authenticate('remember-me'));
         passport.serializeUser(function (user, done) {
             done(null, user.id);
         });
@@ -81,14 +82,41 @@ class AuthMiddleware extends base_1.default {
                     return done(null, false, { message: 'Incorrect user.' });
                 }
                 return done(null, user, { s: true });
-                // user.loadPuanView().then(p=>{
-                // }).catch(err=>{
-                //     return done(null, false, { message: 'Unknown error' });
-                // })
             });
         }));
-        app.post('/api/v1/authenticate', passport.authenticate('local', { failureFlash: true, successRedirect: "/api/v1/status", successFlash: true }));
-        //app.use(this.tryLoadUser.bind(this));
+        passport.use(new RememberMeStrategy(function (token, done) {
+            refreshToken_1.default.consume(token).then((result) => {
+                if (!result) {
+                    return done(null, false);
+                }
+                return done(null, result.user);
+            }).catch((err) => done(err));
+        }, function (user, done) {
+            var token = helper_1.default.generateToken(64);
+            let rt = new refreshToken_1.default({
+                token: token,
+                userId: user.id
+            });
+            rt.save().then((rt) => done(null, token)).catch(err => done(err));
+        }));
+        app.post('/api/v1/authenticate', passport.authenticate('local', { successFlash: false, failureFlash: false }), function (req, res, next) {
+            // issue a remember me cookie if the option was checked
+            if (!req.body.remember_me) {
+                res.clearCookie('remember_me');
+                return res.end();
+            }
+            var token = helper_1.default.generateToken(64);
+            let rt = new refreshToken_1.default({
+                userId: req.user.id,
+                token: token
+            });
+            rt.save().then(rt => {
+                res.cookie('remember_me', token, { path: '/', httpOnly: true, maxAge: 2 * 604800000 }); // 7 days
+                res.end();
+            }).catch(err => {
+                return next(err);
+            });
+        });
     }
 }
 exports.default = (app) => exports.auth = new AuthMiddleware(app);

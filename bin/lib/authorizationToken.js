@@ -11,37 +11,6 @@ class AuthorizationTokenController {
         this.cipherAlgorithm = 'aes-256-gcm';
         this.genericTokenKey = '3zTvzr3p67vC61kmd54rIYu1545x4TlY';
         this.genericTokenIV = '60ih0h6vcoEa';
-        // decryptRefreshToken(refreshTokenData: string) {
-        //     var refreshTokenUnDecrypted = <IRefreshTokenData>this.decryptGeneric(refreshTokenData);
-        //     var userCall = UserModel.findById(refreshTokenUnDecrypted.userId);
-        //     var tokenCall = RefreshTokenModel.findById(refreshTokenUnDecrypted.tokenId);
-        //     return new Promise((resolve, reject) => {
-        //         Promise.all<any>([userCall, tokenCall]).then((retrieveData: any) => {
-        //             var user = retrieveData[0];
-        //             var token = retrieveData[1];
-        //             if (!token || !user) {
-        //                 reject("Refresh token is invalid or used already");
-        //                 return;
-        //             }
-        //             try {
-        //                 var userAccessToken = <IAccessTokenData>this.decrypt(refreshTokenUnDecrypted.access_token.tokenData, token.tag, user.ivCode);
-        //                 if (userAccessToken.userId == token.userId) {
-        //                     RefreshTokenModel.remove(token).then(() => {
-        //                         resolve(user);
-        //                     }).catch((err) => {
-        //                         reject(err);
-        //                     });
-        //                 } else {
-        //                     reject("Refresh Token Is Modified From Outside Environment.");
-        //                 }
-        //             } catch (e) {
-        //                 reject("Token does not match");
-        //             }
-        //         }).catch((err) => {
-        //             reject(err);
-        //         });
-        //     });
-        // }
     }
     convertUtfStringToBuffer(input) {
         return Buffer.from(input, 'utf8');
@@ -113,6 +82,39 @@ class AuthorizationTokenController {
     decryptAccessToken(accessTokenData) {
         var decryptedData = this.decryptGeneric(accessTokenData);
         return decryptedData;
+    }
+    decryptRefreshToken(refreshTokenData) {
+        var refreshTokenUnDecrypted = this.decryptGeneric(refreshTokenData);
+        var userCall = user_1.default.findByPk(refreshTokenUnDecrypted.userId);
+        var tokenCall = refreshToken_1.default.findByPk(refreshTokenUnDecrypted.tokenId);
+        return new Promise((resolve, reject) => {
+            Promise.all([userCall, tokenCall]).then((retrieveData) => {
+                var user = retrieveData[0];
+                var token = retrieveData[1];
+                if (!token || !user) {
+                    reject("Refresh token is invalid or used already");
+                    return;
+                }
+                try {
+                    var userAccessToken = this.decrypt(refreshTokenUnDecrypted.access_token.tokenData, token.tag, user.ivCode);
+                    if (userAccessToken.userId == token.userId) {
+                        refreshToken_1.default.destroy({ where: { token: token } }).then(() => {
+                            resolve(user);
+                        }).catch((err) => {
+                            reject(err);
+                        });
+                    }
+                    else {
+                        reject("Refresh Token Is Modified From Outside Environment.");
+                    }
+                }
+                catch (e) {
+                    reject("Token does not match");
+                }
+            }).catch((err) => {
+                reject(err);
+            });
+        });
     }
 }
 /*
