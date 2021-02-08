@@ -89,6 +89,14 @@ class Butcher extends BaseModel<Butcher> {
     @Column
     locationText: string;
 
+    @AllowNull(true)
+    @Column
+    btnText: string;
+
+    @AllowNull(true)
+    @Column
+    btnUrl: string;
+
     @Column({
         allowNull: false,
         defaultValue: 50,

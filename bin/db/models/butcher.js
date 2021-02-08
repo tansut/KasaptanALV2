@@ -243,6 +243,16 @@ __decorate([
     __metadata("design:type", String)
 ], Butcher.prototype, "locationText", void 0);
 __decorate([
+    sequelize_typescript_1.AllowNull(true),
+    sequelize_typescript_1.Column,
+    __metadata("design:type", String)
+], Butcher.prototype, "btnText", void 0);
+__decorate([
+    sequelize_typescript_1.AllowNull(true),
+    sequelize_typescript_1.Column,
+    __metadata("design:type", String)
+], Butcher.prototype, "btnUrl", void 0);
+__decorate([
     sequelize_typescript_1.Column({
         allowNull: false,
         defaultValue: 50,

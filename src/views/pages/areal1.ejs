@@ -38,7 +38,7 @@
         <h2 class="h4 lead">
           <% if (controller.address.level3Id) { %>
            <strong><%=controller.address.level3Text %> Kasapları</strong>, eve servis en yakın kasap olarak kategorize ettiğimiz bu semte servisi olan online et siparişi verebileceğiniz güvenle tavsiye edebileceğimiz kasap iş ortaklarımızdır.<br>
-           <% if (__req.prefAddr && __req.prefAddr.level3Id != controller.address.level3Id) { %>
+           <% if (!__req.prefAddr || (__req.prefAddr && __req.prefAddr.level3Id != controller.address.level3Id)) { %>
             <a rel="nofollow" class="btn btn-primary mt-3" href="/adres-belirle/<%=controller.address.level3Slug%>?r=/kasap-urunleri">Bu Semtteyim</a>
             <% } %>
           <% } else if (controller.address.level2Id) { %>

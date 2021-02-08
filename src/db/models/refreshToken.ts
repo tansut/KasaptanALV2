@@ -54,6 +54,6 @@ export default class RefreshToken extends BaseModel<RefreshToken> {
             }
         })
 
-        return result.isValid() ? result: null;
+        return (result && result.isValid()) ? result: null;
     }
 }

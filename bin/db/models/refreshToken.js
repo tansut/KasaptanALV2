@@ -46,7 +46,7 @@ let RefreshToken = RefreshToken_1 = class RefreshToken extends basemodel_1.defau
                         token: token
                     }
                 });
-            return result.isValid() ? result : null;
+            return (result && result.isValid()) ? result : null;
         });
     }
 };

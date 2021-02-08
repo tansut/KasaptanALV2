@@ -156,6 +156,13 @@
               </div>
             </div>
           </div>
+
+          <% if (butcher.btnText && butcher.btnUrl) { %>
+            <div class="text-center">
+              <a class="btn btn-warning rounded-lg shadow" href="<%= butcher.btnUrl %>"><%=butcher.btnText%></a>
+
+            </div>
+          <% } %>
           
             <% if (false && controller.reviews.length > 0) { %>
               <div class="container text-center">
