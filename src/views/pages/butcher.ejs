@@ -131,6 +131,8 @@
        
       
           <% } %>
+
+          <% if (butcher.shipRatingAsPerc > 0 && butcher.userRatingAsPerc > 0) { %>
           <div class="container row w-50 mx-auto">
             <div class="col-sm-6">
               <div class="font-size-sm  mb-1">Memnuniyet</div>
@@ -156,6 +158,7 @@
               </div>
             </div>
           </div>
+          <% } %>
 
           <% if (butcher.btnText && butcher.btnUrl) { %>
             <div class="text-center">

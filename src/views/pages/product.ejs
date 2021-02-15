@@ -1433,13 +1433,19 @@
                 <script>
                   
                   <% if (__req.prefAddr) {  %>
+                    gtags.push(['productview', '<%=product.slug%>', 'locationset']);
                     gtags.push(['productview', '<%=product.slug%>', '<%=__req.prefAddr.display%>']);
+                    gtags.push(['productview', '<%=product.slug%>', '<%=__req.prefAddr.level1Text%>']);
+                    gtags.push(['productview', '<%=product.slug%>', '<%=__req.prefAddr.level1Text%>/<%=__req.prefAddr.level2Text%>']);
                     gtags.push(['locationproduct', '<%=__req.prefAddr.display%>', '<%=product.slug%>']);
                   <% } else { %>
-                    gtags.push(['productview', '<%=product.slug%>', '']);
+                    gtags.push(['productview', '<%=product.slug%>', 'nolocation']);
                   <% } %>
                   <% if (view.butcher && __req.prefAddr) {  %>
                     gtags.push(['butcherlocation', '<%=view.butcher.slug%>', '<%=__req.prefAddr.display%>']);
+                    gtags.push(['butcherlocation', '<%=view.butcher.slug%>', '<%=__req.prefAddr.level1Text%>']);
+                    gtags.push(['butcherlocation', '<%=view.butcher.slug%>', '<%=__req.prefAddr.level1Text%>/<%=__req.prefAddr.level2Text%>']);
+
                     gtags.push(['butcherproduct', '<%=view.butcher.slug%>', '<%=product.slug%>']);
                     gtags.push(['butcherproductbylocation', '<%=view.butcher.slug%>/<%=product.slug%>', '<%=__req.prefAddr.display%>']);
                     gtags.push(['butcherlocationbyproduct', '<%=view.butcher.slug%>/<%=__req.prefAddr.display%>', '<%=product.slug%>']);
