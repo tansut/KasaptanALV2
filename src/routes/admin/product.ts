@@ -49,7 +49,7 @@ export default class Route extends ViewRouter {
     async getCategories() {
         return await Category.findAll({
             where: {
-                type: ['reyon', 'list', 'home', 'butcher']
+                type: ['reyon' , 'list', 'home', 'butcher']
             }
         })
     }
