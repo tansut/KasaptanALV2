@@ -2,9 +2,9 @@
 <% var limit = typeof(limit) == 'undefined' ? 8: limit %>
 <% var products = controller.filterProductsByCategory(cat, limit) %>
 
-<div class="bg-secondary d-flex flex-nowrap justify-content-between align-items-center">
-    <a class="d-block py-3 pl-3" href="<%=`/${cat.slug}` %>">
-        <h3 class="h6 mb-0"><%= typeof(title) != 'undefined' ? title: cat.name %></h3>
+<div class="d-flex flex-nowrap justify-content-between align-items-center">
+    <a class="d-block py-3 " href="<%=`/${cat.slug}` %>">
+        <h3 class="h6 text-uppercase mb-0"><%= typeof(title) != 'undefined' ? title: cat.name %></h3>
     </a>
     <a class="d-none d-md-block btn btn-sm" href="<%=`/${cat.slug}` %>">Tümü &raquo;</a>    
 </div>

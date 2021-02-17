@@ -162,7 +162,7 @@ export default class Route extends ViewRouter {
         });
 
         if (!this.req.params.category && this.categories.length) {
-            this.category = this.categories[0];
+            this.category = this.butcher.defaultCategoryId ? this.categories.find(p=>p.id == this.butcher.defaultCategoryId): this.categories[0];
         } else if (this.req.params.category)
             this.category = this.req.__categories.find(p=>p.slug == this.req.params.category);
         if (!this.category) {

@@ -88,6 +88,11 @@ class Butcher extends BaseModel<Butcher> {
     priceDisplay: PriceDisplay;
 
     @Column({
+        allowNull: true        
+    })
+    defaultCategoryId: number;    
+
+    @Column({
         allowNull: false,
         defaultValue: "open",
     })
