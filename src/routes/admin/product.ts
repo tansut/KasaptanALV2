@@ -54,6 +54,9 @@ export default class Route extends ViewRouter {
         })
     }
 
+
+
+    
     async getProduct(slug: string) {
         return await ProductModel.findOne({
             include: [{
