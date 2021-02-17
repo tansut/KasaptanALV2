@@ -18,6 +18,8 @@ export type DispatchArea = "manual" | "citywide" | "radius";
 
 export type ButcherStatus = "open" | "closed";
 
+export type PriceDisplay = 'show' | 'hide';
+
 @Table({
     tableName: "Butchers",
     indexes: [
@@ -78,6 +80,12 @@ class Butcher extends BaseModel<Butcher> {
         defaultValue: "manual",
     })
     dispatchArea: DispatchArea;
+
+    @Column({
+        allowNull: false,
+        defaultValue: "show",
+    })
+    priceDisplay: PriceDisplay;
 
     @Column({
         allowNull: false,

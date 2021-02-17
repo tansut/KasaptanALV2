@@ -185,7 +185,7 @@ class Route extends router_1.ApiRouter {
             let res = yield order_1.Order.findAll({
                 where: where,
                 order: [['ID', 'DESC']],
-                limit: 300,
+                limit: 500,
                 include: [{
                         model: butcher_1.default
                     }, {

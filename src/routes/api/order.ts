@@ -173,7 +173,7 @@ export default class Route extends ApiRouter {
         let res = await Order.findAll({
             where: where,
             order: [['ID', 'DESC']],
-            limit: 300,
+            limit: 500,
             include: [{
                 model: Butcher
             }, {

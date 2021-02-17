@@ -233,6 +233,13 @@ __decorate([
 __decorate([
     sequelize_typescript_1.Column({
         allowNull: false,
+        defaultValue: "show",
+    }),
+    __metadata("design:type", String)
+], Butcher.prototype, "priceDisplay", void 0);
+__decorate([
+    sequelize_typescript_1.Column({
+        allowNull: false,
         defaultValue: "open",
     }),
     __metadata("design:type", String)
