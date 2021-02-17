@@ -61,7 +61,7 @@ class Route extends router_1.ViewRouter {
         return __awaiter(this, void 0, void 0, function* () {
             return yield category_1.default.findAll({
                 where: {
-                    type: ['reyon', 'list', 'home']
+                    type: ['reyon', 'list', 'home', 'butcher']
                 }
             });
         });
