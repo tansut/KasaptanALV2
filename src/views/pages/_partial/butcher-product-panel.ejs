@@ -169,7 +169,7 @@ class="gallery-item-caption"><%= butcherVideo.title %></span></a>
 
         <div class="card rounded-0">
           <div class="card-header py-0" role="tab">
-            <h3 class="h6   accordion-heading px-0"><a href="#teslimat-info" class="collapsed" data-toggle="collapse"><i class="czi-delivery text-muted font-size-lg align-middle mt-n1 mr-2"></i>Teslimat Bilgisi<span
+            <h3 class="h6 font-weight-normal  accordion-heading px-0"><a href="#teslimat-info" class="collapsed" data-toggle="collapse"><i class="czi-delivery text-muted font-size-lg align-middle mt-n1 mr-2"></i>Teslimat Bilgisi<span
                   class="accordion-indicator"></span></a></h3>
           </div>
           <div class="collapse" id="teslimat-info" data-parent="#teslimat-info-panel" role="tabpanel">
@@ -205,12 +205,62 @@ class="gallery-item-caption"><%= butcherVideo.title %></span></a>
           </div>
 
         </div>
+
+        <% if (view.butcher.puanData) { %>
+          <div class="card rounded-0">
+      
+            <div class="card-header" role="tab">
+              <h3 class="h6 font-weight-normal  accordion-heading px-0"><a href="#butcher-kart" class="collapsed" data-toggle="collapse"><i class="czi-card text-muted font-size-lg align-middle mt-n1 mr-2"></i>Kasap Kart&trade; Puan<span
+                    class="accordion-indicator"></span></a></h3>
+            </div>
+            <div class="collapse" id="butcher-kart" data-parent="#teslimat-info-panel" role="tabpanel">
+              <div class="font-size-sm p-3  ">
+
+                <p class=" font-weight-bolder">ONLINE SİPARİŞE ÖZEL</p>
+                <ul class="mb-0">
+                 
+                  <li>
+                   
+                    <p>
+                     
+                      <%=view.butcher.name%> siparişlerinizden
+                      <strong>
+                        %<%=view.butcher.puanData.rate * 100 %></strong>
+                       puan kazanın, sonraki siparişinizde <strong>indirim olarak</strong> kullanın.
+                    
+                    </p>
+                  </li>
+                  
+                  <li>
+                    
+                    <p class="mb-0"><strong>250TL ve üzeri</strong> alışveriş yapın, ayrıca <strong class="text-dark">
+                      <%- include('./currency.ejs', {value: 10}) %>
+                
+                    </strong> değerinde puan kazanın.
+                    </p>
+                  </li>
+                 
+
+                    
+                </ul>
+
+
+    
+              </div>
+            </div>
+          </div>
+    
+    
+    
+    
+        <% } %>   
+
         <% if (__helper.canBeOrderedByPhone()) { %>
 
           <div class="card rounded-0">
           
             <div class="card-header" role="tab">
-              <h3 class="h6  accordion-heading px-0"><a href="#butcher-phoneorder" class="collapsed" data-toggle="collapse"><i class="czi-phone text-muted font-size-lg align-middle mt-n1 mr-2"></i>Telefon/Whatsapp Sipariş<span
+              <h3 class="h6 font-weight-normal  accordion-heading px-0"><a href="#butcher-phoneorder" class="collapsed" data-toggle="collapse"><i class="czi-phone text-muted font-size-lg align-middle mt-n1 mr-2"></i>Whatsapp Sipariş<span
                     class="accordion-indicator"></span></a></h3>
             </div>
             <div class="collapse" id="butcher-phoneorder" data-parent="#teslimat-info-panel" role="tabpanel">
@@ -233,7 +283,7 @@ class="gallery-item-caption"><%= butcherVideo.title %></span></a>
         <div class="card rounded-0">
   
           <div class="card-header" role="tab">
-            <h3 class="h6  accordion-heading px-0"><a href="#butcher-info" class="collapsed" data-toggle="collapse"><i class="czi-announcement text-muted font-size-lg align-middle mt-n1 mr-2"></i>Kasabı Tanıyın<span
+            <h3 class="h6 font-weight-normal  accordion-heading px-0"><a href="#butcher-info" class="collapsed" data-toggle="collapse"><i class="czi-announcement text-muted font-size-lg align-middle mt-n1 mr-2"></i>Kasabı Tanıyın<span
                   class="accordion-indicator"></span></a></h3>
           </div>
           <div class="collapse" id="butcher-info" data-parent="#teslimat-info-panel" role="tabpanel">
@@ -249,16 +299,7 @@ class="gallery-item-caption"><%= butcherVideo.title %></span></a>
 
       <% }  %>
 
-    <% if (view.butcher.puanData && false) { %>
-      <div class="px-3 mb-3">
-        <h5 class="h6  border-bottom">Kasap Kart&trade;</h5>
-        <div class="font-size-sm text-muted">
-          <%- include('./puan-data-view.ejs', {puan: view.butcher.puanData, hideMinPuanForUsage: true}) %> 
-      
-        </div>
-      </div>
-
-    <% } %>    
+  
   
 
 
@@ -272,7 +313,7 @@ class="gallery-item-caption"><%= butcherVideo.title %></span></a>
 </div>
 <%if (otherButcherAlternatives && (controller.showOtherButchers())) {%>
 <div class="text-center mb-2 px-2">
-  <a class="btn btn-sm border bg-white text-dark   font-weight-medium" href="javascript:App.scrollToAnchor('#other-butchers-panel')"><span>Diğer Kasaplar (</span><span class="text-primary"><%=otherButcherAlternatives %></span><span>)</span></a>
+  <a class="btn btn-sm border bg-white text-dark text-uppercase  font-weight-bold" href="javascript:showOtherButchers()"><span>Diğer Kasaplar (</span><span class="text-primary"><%=otherButcherAlternatives %></span><span>)</span></a>
 
 </div>
 <% } %>

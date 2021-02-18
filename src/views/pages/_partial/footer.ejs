@@ -4,7 +4,7 @@
 
 
 
-<footer class="app-d-none bg-primary-darker pt-3 pt-4 d-print-none ">
+<footer class="app-d-none bg-secondary pt-3 pt-4 d-print-none ">
 
     <% if (false) { %>
     <div class="mb-3">
@@ -17,15 +17,15 @@
     <% if (!controller.hide4Sebep) { %>
     <div class="container">
 
-        <h3 class="h4 mb-0 text-center text-light mb-grid-gutter">KasaptanAl.com'u kullanmak için 4 sebep</h3>
+        <h3 class="h4 mb-0 text-center  mb-grid-gutter">KasaptanAl.com'u kullanmak için 4 sebep</h3>
 
         <div class="row pb-3">
             <div class="col-md-3 col-sm-6 mb-4">
                 <div class="media"><i class="czi-check
                 text-primary" style="font-size: 2.25rem;"></i>
                     <div class="media-body pl-3">
-                        <h6 class="font-size-base text-light mb-1">Kaliteli Et</h6>
-                        <p class="mb-0 font-size-ms text-light opacity-50">Yerel kasaplardan %100 doğal, %100 helal
+                        <h6 class="font-size-base  mb-1">Kaliteli Et</h6>
+                        <p class="mb-0 font-size-ms ">Yerel kasaplardan %100 doğal, %100 helal
                             yerli kesim et sağlıyoruz.
                         </p>
                     </div>
@@ -34,8 +34,8 @@
             <div class="col-md-3 col-sm-6 mb-4">
                 <div class="media"><i class="czi-card text-primary" style="font-size: 2.25rem;"></i>
                     <div class="media-body pl-3">
-                        <h6 class="font-size-base text-light mb-1">Kasap Kart&trade;</h6>
-                        <p class="mb-0 font-size-ms text-light opacity-50">Kasap Kart&trade; ile düzenli kasap
+                        <h6 class="font-size-base  mb-1">Kasap Kart&trade;</h6>
+                        <p class="mb-0 font-size-ms  ">Kasap Kart&trade; ile düzenli kasap
                             alışverişlerinizden puan kazandırıyoruz.</p>
                     </div>
                 </div>
@@ -43,8 +43,8 @@
             <div class="col-md-3 col-sm-6 mb-4">
                 <div class="media"><i class="czi-lable text-primary" style="font-size: 2.25rem;"></i>
                     <div class="media-body pl-3">
-                        <h6 class="font-size-base text-light mb-1">Fiyat Avantajı</h6>
-                        <p class="mb-0 font-size-ms text-light opacity-50">Farklı kasap alternatifleri sunarak fiyat
+                        <h6 class="font-size-base  mb-1">Fiyat Avantajı</h6>
+                        <p class="mb-0 font-size-ms  ">Farklı kasap alternatifleri sunarak fiyat
                             avantajı sunuyoruz.</p>
                     </div>
                 </div>
@@ -52,8 +52,8 @@
             <div class="col-md-3 col-sm-6 mb-4">
                 <div class="media"><i class="czi-delivery text-primary" style="font-size: 2.25rem;"></i>
                     <div class="media-body pl-3">
-                        <h6 class="font-size-base text-light mb-1">Hızlı Teslimat</h6>
-                        <p class="mb-0 font-size-ms text-light opacity-50">Siparişlerinizi kapınıza kadar aynı gün
+                        <h6 class="font-size-base  mb-1">Hızlı Teslimat</h6>
+                        <p class="mb-0 font-size-ms  ">Siparişlerinizi kapınıza kadar aynı gün
                             istediğiniz zaman getiriyoruz.
                         </p>
                     </div>
@@ -61,8 +61,8 @@
             </div>
         </div>
 
-        <div class="widget widget-links widget-light">
-            <p class="text-center text-light">                
+        <div class="widget widget-links widget-dark">
+            <p class="text-center text-dark">                
                 <a class="btn btn-primary" href="/neden-kasaptanal">Neden Biz</a>
             </p>
         </div>
@@ -91,8 +91,8 @@
 
         <div class="row pb-2">
             <div class="col-md-4 col-sm-6">
-                <div class="widget widget-links widget-light pb-2 mb-4">
-                    <h3 class="widget-title text-light">Ürünler</h3>
+                <div class="widget widget-links widget-dark pb-2 mb-4">
+                    <h3 class="widget-title text-dark">Ürünler</h3>
                     <ul class="widget-list">
                         <% var viewCats = ['reyon', 'list'] %>
                         <% viewCats.forEach(cat => { %>
@@ -108,8 +108,8 @@
 
                     </ul>
                 </div>
-                <div class="widget widget-links widget-light pb-2 mb-4">
-                    <h3 class="widget-title text-light">Et Yemekleri</h3>
+                <div class="widget widget-links widget-dark pb-2 mb-4">
+                    <h3 class="widget-title text-dark">Et Yemekleri</h3>
                     <ul class="widget-list">
                         <% var viewCats = ['resource'] %>
                         <% viewCats.forEach(cat => { %>
@@ -132,8 +132,8 @@
 
 
             <div class="col-md-4 col-sm-6">
-                <div class="widget widget-links widget-light pb-2 mb-4">
-                    <h3 class="widget-title text-light">Et Fiyatları</h3>
+                <div class="widget widget-links widget-dark pb-2 mb-4">
+                    <h3 class="widget-title text-dark">Et Fiyatları</h3>
                     <ul class="widget-list">
                         <% controller.req.__pricecategories.forEach(pc=> {  %>
                         <li class="widget-list-item"><a class="widget-list-link" href="/<%=pc.slug%>"><%=pc.name%></a>
@@ -144,15 +144,15 @@
                         </li>
                     </ul>
                 </div>
-                <div class="widget widget-links widget-light pb-2 mb-4 mr-4">
-                    <h3 class="widget-title text-light">Online Kasaplar</h3>
+                <div class="widget widget-links widget-dark pb-2 mb-4 mr-4">
+                    <h3 class="widget-title text-dark">Online Kasaplar</h3>
                     <% var cityChunks = _.chunk(__butcherCities, 12) %>
                     <div class="row">
                         <% cityChunks.forEach((chunk, j) => { %>
                         <div class="col">
                             <ul class="widget-list">
                                 <% for(var i=0; i<chunk.length; i++) {%>
-                                <% if (chunk[i].name == 'Ankara' || chunk[i].name == 'Istanbul' || chunk[i].name == 'Izmir' || chunk[i].name == 'Eskişehir') {%>
+                                <% if (chunk[i].name == 'Ankara' || chunk[i].name == 'Istanbul' || chunk[i].name == 'Izmir' || chunk[i].name == 'Eskişehir' || chunk[i].name == 'Tekirdağ') {%>
                                 <li class="widget-list-item"><a class="widget-list-link"
                                         href="<%= `/${chunk[i].slug}-kasap` %>"><%= chunk[i].name %></a></li>
                                 <%}%>
@@ -174,8 +174,8 @@
                     </div>
 
 
-                    <div class="widget widget-links widget-light pb-2 mb-4">
-                        <h3 class="widget-title text-light">Hakkımızda</h3>
+                    <div class="widget widget-links widget-dark pb-2 mb-4">
+                        <h3 class="widget-title text-dark">Hakkımızda</h3>
                         <ul class="widget-list">
                             <li class="widget-list-item"><a class="widget-list-link" href="/hikayemiz">Hikayemiz</a>
                             </li>
@@ -201,13 +201,13 @@
                     </div>
                 </div>
                 <div class="col-md-4">
-                    <div class="widget widget-links widget-light pb-2 mb-4">
-                        <h3 class="widget-title text-light pb-1">İyi Et Rehberi</h3>
+                    <div class="widget widget-links widget-dark pb-2 mb-4">
+                        <h3 class="widget-title text-dark pb-1">İyi Et Rehberi</h3>
                         <a class="get-userguide-action widget-list-link" href="#">Ücretsiz İndirin</a>
                         
                     </div>
-                    <div class="widget widget-links widget-light pb-2 mb-4">
-                        <h3 class="widget-title text-light">Kullanıcı İşlemleri</h3>
+                    <div class="widget widget-links widget-dark pb-2 mb-4">
+                        <h3 class="widget-title text-dark">Kullanıcı İşlemleri</h3>
                         <ul class="widget-list">
                             <li class="widget-list-item"><a class="widget-list-link" href="/user" rel="nofollow">Hesabım</a></li>
                             <li class="widget-list-item"><a class="widget-list-link" rel="nofollow" href="/user/orders">Siparişlerim</a></li>
@@ -217,8 +217,8 @@
                         </ul>
                     </div>
 
-                    <div class="widget widget-links widget-light pb-2 mb-4">
-                        <h3 class="widget-title text-light">Blog</h3>
+                    <div class="widget widget-links widget-dark pb-2 mb-4">
+                        <h3 class="widget-title text-dark">Blog</h3>
                         <ul class="widget-list">
                             <li class="widget-list-item"><a class="widget-list-link" href="/blog/onlinekasap">Online
                                     Kasap Nedir?</a></li>
@@ -238,7 +238,7 @@
                 </div>
             </div>
         </div>
-        <div class="pt-4 bg-primary-darkest font-size-xs">
+        <div class="pt-4 bg-dark font-size-xs">
 
             <div class="container ">
 

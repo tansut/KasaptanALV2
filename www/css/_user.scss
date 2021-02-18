@@ -237,6 +237,11 @@ img{
   width: 2.875rem;
 }
 
+.widget-list-link {
+  font-size: .775rem;
+  color: #696b6d;
+}
+
 .video-overlay {
   position:absolute;
   width: 100%;
@@ -312,12 +317,9 @@ img{
 
   }
   
-  // . {
-  //   .card-body {
-  //     padding: 0.6rem !important;
-  //   } 
-  // }
-
+  .item-slider-all {
+    width: 4rem !important;
+  }
   .header-img {
     width: 3rem;
   }
