@@ -42,7 +42,7 @@ class Route extends router_1.ViewRouter {
         return __awaiter(this, void 0, void 0, function* () {
             let total = parseFloat(this.req.body.salesTotal) || totalSales;
             let ratePerc = ratePercParam || parseFloat(this.req.body.rate);
-            let calc = new commissionHelper_1.ComissionHelper(ratePerc / 100, 0);
+            let calc = new commissionHelper_1.ComissionHelper(ratePerc / 100, 0, 0.18);
             this.feeResult = calc.calculateButcherComission(total);
             this.renderPage();
         });

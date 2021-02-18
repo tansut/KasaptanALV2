@@ -450,6 +450,14 @@ class Butcher extends BaseModel<Butcher> {
 
     @Column({
         allowNull: false,
+        type: DataType.DECIMAL(10, 2),
+        defaultValue: 0.18
+    })
+    vatRate: number;
+
+
+    @Column({
+        allowNull: false,
         type: DataType.DECIMAL(13, 2),
         defaultValue: 0.00
     })

@@ -14,17 +14,17 @@ const helper_1 = require("./helper");
 const accountmodel_1 = require("../db/models/accountmodel");
 const account_1 = require("../models/account");
 class ComissionHelper {
-    constructor(rate, fee, butcherBankRate = 0.012) {
+    constructor(rate, fee, vatRate) {
         this.rate = rate;
         this.fee = fee;
-        this.butcherBankRate = butcherBankRate;
+        this.vatRate = vatRate;
     }
     calculateButcherComission(totalSales, puan = null) {
         //let product = Helper.asCurrency(totalSales / 1.08);
         let product = helper_1.default.asCurrency(totalSales);
         let productVat = helper_1.default.asCurrency(totalSales - product);
         let kalitteFee = helper_1.default.asCurrency(product * this.rate + this.fee);
-        let kalitteVat = helper_1.default.asCurrency(kalitteFee * 0.18);
+        let kalitteVat = helper_1.default.asCurrency(kalitteFee * this.vatRate);
         return {
             inputRate: this.rate,
             inputTotal: totalSales,
@@ -33,10 +33,10 @@ class ComissionHelper {
             productVat: productVat,
             kalitteFee: kalitteFee,
             kalitteVat: kalitteVat,
-            butcherBankFeeAdvantage: helper_1.default.asCurrency(totalSales * this.butcherBankRate),
+            butcherBankFeeAdvantage: helper_1.default.asCurrency(totalSales * 0.016),
             butcherTaxAdvantage: helper_1.default.asCurrency(kalitteFee * 0.22),
             butcherVatAdvantage: helper_1.default.asCurrency(kalitteVat),
-            butcherNetCost: helper_1.default.asCurrency(kalitteFee - kalitteFee * 0.22 - helper_1.default.asCurrency(totalSales * this.butcherBankRate)),
+            butcherNetCost: helper_1.default.asCurrency(kalitteFee - kalitteFee * 0.22 - helper_1.default.asCurrency(totalSales * 0.016)),
             butcherToCustomer: puan ? new PuanCalculator().calculateCustomerPuan(puan, totalSales) : 0.00
         };
     }

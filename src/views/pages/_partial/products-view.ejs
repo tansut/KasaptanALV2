@@ -1,5 +1,4 @@
 <% var butcher = typeof(butcher) != 'undefined' ? butcher: null %>
-
 <% if (typeof (viewMode) == 'undefined' || viewMode == 'tab') { %>
 <div class="row">
     <% if (typeof(products) != 'undefined') {  %>
@@ -20,19 +19,42 @@
 </div>
 <%} else { %>
 
-<div class="cz-carousel">
+    <div data-simplebar data-simplebar-auto-hide="false">
+        <div class="d-flex pb-2">
+            <% var items= products %>
+            <% for (var j=0; j < items.length;j++) { %>
+                
+                     
+                    <div class="mb-2">
+                        <div class="mr-2 item-slider">
+                            <%- include('./product-view.ejs', {butcher: butcher, product: items[j]}); %>
+                        </div>
+                    </div>
+                    <%}%>
 
-    <div class="cz-carousel-inner" data-carousel-options=' { "autoHeight" : true, "nav" : false, "items" :
-                2.2, "gutter" : 15, "autoplay" : false, "responsive" : {"0":{"items":2.2},"500":{"items":3.3, "gutter"
-                : 18},"768":{"items":3.3, "gutter" : 20}, "1100" :{"gutter": 24}}}''>
-                <% for(var j=0; j< products.length; j++) {%>
                     <div>
-                        <%- include('./product-view.ejs', {butcher: butcher, product: products[j]}); %>
+                        <div class="h-100">
+                            <div class="item-slider item-slider-all">
+                              <a class="d-block h-100" href="/kasaplar">
+                                <div class="d-flex h-100 justify-content-end">
+                                  <img width="500" height="500" alt="Tümünü Göster" class="w-auto align-self-center" src="<%=__config.staticDomain %>/resource/img/view-all.png">
+                                </div>
+            
+                              </a>
+                         
+            
+                           
+            
+                            </div>
+            
+                        </div>
                     </div>
 
-
-                <% } %>
-            </div>
         </div>
+    </div>
+
+
+
+
 
 <% } %>

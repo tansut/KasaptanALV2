@@ -531,7 +531,7 @@ class Route extends router_1.ApiRouter {
                 this.fillEarnedPuanAccounts(o, productPrice);
                 let rate = o.getButcherRate("butcher");
                 let fee = o.getButcherFee("butcher");
-                let calc = new commissionHelper_1.ComissionHelper(rate, fee);
+                let calc = new commissionHelper_1.ComissionHelper(rate, fee, o.butcher.vatRate);
                 let totalFee = calc.calculateButcherComission(productPrice + butcherShip);
                 let max = helper_1.default.asCurrency(totalFee.kalitteFee * 0.80);
                 return Math.min(user.usablePuans, max);
@@ -647,7 +647,7 @@ class Route extends router_1.ApiRouter {
     getComissionAccounts(o, total, kasaptanAlShip, usablePuan) {
         let result = new account_1.AccountingOperation(`${o.ordernum} nolu ${o.butcherName} kasap komisyon hesabı`, o.ordernum);
         let butcherFee = o.getButcherComission(total, usablePuan);
-        let earnedPuan = o.getPuanTotal(total);
+        let earnedPuan = o.getPuanTotal();
         if (butcherFee)
             result.accounts.push(new account_1.Account("kasaplardan-kesilen-komisyonlar", [100, o.butcherid, o.ordernum], `${o.ordernum} nolu satış kasaptanal.com komisyonu`).inc(butcherFee));
         if (earnedPuan > 0.00) {

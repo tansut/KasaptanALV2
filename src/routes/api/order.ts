@@ -532,7 +532,7 @@ export default class Route extends ApiRouter {
 
             let rate = o.getButcherRate("butcher");
             let fee = o.getButcherFee("butcher");
-            let calc = new ComissionHelper(rate, fee);
+            let calc = new ComissionHelper(rate, fee, o.butcher.vatRate);
             let totalFee = calc.calculateButcherComission(productPrice + butcherShip);
             let max = Helper.asCurrency(totalFee.kalitteFee * 0.80);
 
@@ -675,7 +675,7 @@ export default class Route extends ApiRouter {
         let result: AccountingOperation = new AccountingOperation(`${o.ordernum} nolu ${o.butcherName} kasap komisyon hesabı`, o.ordernum);
 
         let butcherFee = o.getButcherComission(total, usablePuan);
-        let earnedPuan = o.getPuanTotal(total);
+        let earnedPuan = o.getPuanTotal();
 
         if (butcherFee)
             result.accounts.push(new Account("kasaplardan-kesilen-komisyonlar", [100, o.butcherid, o.ordernum], `${o.ordernum} nolu satış kasaptanal.com komisyonu`).inc(butcherFee))

@@ -101,7 +101,7 @@ export default class Route extends ViewRouter {
             this.mayEarnPuanTotal = Helper.asCurrency(this.mayEarnPuanTotal)
         }
 
-        let calc = new ComissionHelper(this.order.getButcherRate(), this.order.getButcherFee());
+        let calc = new ComissionHelper(this.order.getButcherRate(), this.order.getButcherFee(), this.order.butcher.vatRate);
         this.butcherFee = calc.calculateButcherComission(this.productTotal + this.teslimatButcher);
 
         let kalitteByButcherPuanAccounts = this.order.kalitteByButcherPuanAccounts.find(p => p.code == 'total')

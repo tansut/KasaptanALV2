@@ -46,7 +46,7 @@ export default class Route extends ViewRouter {
         
             let total =  parseFloat(this.req.body.salesTotal) || totalSales;
             let ratePerc = ratePercParam || parseFloat(this.req.body.rate);
-            let calc = new ComissionHelper(ratePerc / 100, 0);
+            let calc = new ComissionHelper(ratePerc / 100, 0, 0.18);
             this.feeResult = calc.calculateButcherComission(total);
         
         this.renderPage();

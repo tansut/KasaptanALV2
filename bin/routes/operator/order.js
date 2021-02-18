@@ -72,7 +72,7 @@ class Route extends router_1.ViewRouter {
                 this.possiblePuanList.forEach(pg => this.mayEarnPuanTotal += pg.earned);
                 this.mayEarnPuanTotal = helper_1.default.asCurrency(this.mayEarnPuanTotal);
             }
-            let calc = new commissionHelper_1.ComissionHelper(this.order.getButcherRate(), this.order.getButcherFee());
+            let calc = new commissionHelper_1.ComissionHelper(this.order.getButcherRate(), this.order.getButcherFee(), this.order.butcher.vatRate);
             this.butcherFee = calc.calculateButcherComission(this.productTotal + this.teslimatButcher);
             let kalitteByButcherPuanAccounts = this.order.kalitteByButcherPuanAccounts.find(p => p.code == 'total');
             let butcherToCustomer = helper_1.default.asCurrency((kalitteByButcherPuanAccounts.alacak - kalitteByButcherPuanAccounts.borc) + (this.puanBalanceButcher.alacak - this.puanBalanceButcher.borc));

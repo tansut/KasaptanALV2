@@ -1,19 +1,28 @@
 <% var cat = __categories[__categories.findIndex(p=>p.slug == category)] %>
 <% var limit = typeof(limit) == 'undefined' ? 8: limit %>
 <% var products = controller.filterProductsByCategory(cat, limit) %>
+<% var viewMode = typeof(viewMode) == 'undefined' ? 'tab': viewMode %>
 
-<div class="d-flex flex-nowrap justify-content-between align-items-center">
+<% if (viewMode == 'tab') { %>
+    <div class="d-flex flex-nowrap justify-content-between align-items-center">
+        <a class="d-block py-3 " href="<%=`/${cat.slug}` %>">
+            <h3 class="h6 text-uppercase mb-0"><%= typeof(title) != 'undefined' ? title: cat.name %></h3>
+        </a>
+        <a class="d-none d-md-block btn btn-sm" href="<%=`/${cat.slug}` %>">Tümü &raquo;</a>    
+    </div>
+<% } else { %>
     <a class="d-block py-3 " href="<%=`/${cat.slug}` %>">
         <h3 class="h6 text-uppercase mb-0"><%= typeof(title) != 'undefined' ? title: cat.name %></h3>
     </a>
-    <a class="d-none d-md-block btn btn-sm" href="<%=`/${cat.slug}` %>">Tümü &raquo;</a>    
-</div>
+<% } %>
+
+
 
 <% if (cat.slug == 'kurban') { %>
     <div class="text-dark text-center"
     style="background-image: url(<%=__config.staticDomain %>/resource/img/islam-bg.jpeg);background-repeat: repeat">
 
-    <%- include('./products-view', {viewId: "", viewMode:'tab', products: products}); %>
+    <%- include('./products-view', {viewId: "", viewMode: viewMode, products: products}); %>
 
     <div class="py-3">
 
@@ -27,10 +36,12 @@
     
     
     <%} else { %>
-        <%- include('./products-view', {showPurchase: true, viewId: "", viewMode:'tab', products: products}); %>
+        <%- include('./products-view', {showPurchase: true, viewId: "", viewMode:viewMode, products: products}); %>
+        <% if (viewMode == 'tab') { %>
         <div class="d-xs-block border-bottom d-md-none text-center mb-3">
             <a class="btn rounded-0 btn-sm btn-secondary" href="/<%=cat.slug%>">Tümü &raquo;
             </a>
         </div>
+        <% } %>
     <% } %>
 

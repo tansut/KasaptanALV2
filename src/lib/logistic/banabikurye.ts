@@ -25,36 +25,6 @@ export default class BanabikuryeProvider extends LogisticProvider {
     config: BanabikuryeConfig;
     name = DispatcherTypeDesc["kasaptanal/motokurye"];
 
-    // getCustomerFeeConfig(): CustomerPriceConfig {
-    //     let config: CustomerPriceConfig = {
-    //         contribitionRatio: 0.04,
-    //         freeShipPerKM: 25,
-    //         pricePerKM: 1.5,
-    //         priceStartsAt: 5,
-    //         maxDistance: 20,
-    //         minOrder: 100,
-    //     }
-    //     return config;
-    // }
-
-    // calculateFeeForCustomer(params: CustomerPriceParams): OfferResponse {
-    //     if (!params.regularPrice)
-    //         params.regularPrice = this.lastOffer.totalFee;
-    //     return super.calculateFeeForCustomer(params)
-    // }
-
-    // calculateCostForCustomer(shipment: Shipment, o: Order) {
-    //     if (o.dispatcherFee > 0.00) {
-    //         let dispatcherFee = Helper.asCurrency(o.dispatcherFee / 1.18);
-    //         let calc = new ComissionHelper(o.getButcherRate(), o.getButcherFee());
-    //         let commission = calc.calculateButcherComission(o.subTotal);    
-    //         let contribute = Helper.asCurrency(commission.kalitteFee * 0.4);
-    //         let calculated = Helper.asCurrency(Math.max(0.00, dispatcherFee - contribute));
-    //         let calculatedVat = Helper.asCurrency(calculated * 0.18)
-    //         let totalShip = Helper.asCurrency(Math.round(calculated + calculatedVat));
-    //         return totalShip > 0.00 ? Math.max(5.00, totalShip): 0.00;
-    //     } else return 0.00;
-    // }
 
 
     calculateCustomerFee(offer: OfferResponse | OrderResponse): OfferResponse | OrderResponse {
@@ -62,8 +32,8 @@ export default class BanabikuryeProvider extends LogisticProvider {
         let customerFee = offer.totalFee;
         if (regularFee > 0.00 && offer.orderTotal > 0.00) {
             let dispatcherFee = Helper.asCurrency(regularFee / 1.18);
-            let calcRegular = new ComissionHelper(this.options.dispatcher.butcher.commissionRate, this.options.dispatcher.butcher.commissionFee);
-            let calc = new ComissionHelper(this.options.dispatcher.butcher.noshipCommissionRate, this.options.dispatcher.butcher.noshipCommissionFee);
+            let calcRegular = new ComissionHelper(this.options.dispatcher.butcher.commissionRate, this.options.dispatcher.butcher.commissionFee, this.options.dispatcher.butcher.vatRate);
+            let calc = new ComissionHelper(this.options.dispatcher.butcher.noshipCommissionRate, this.options.dispatcher.butcher.noshipCommissionFee, this.options.dispatcher.butcher.vatRate);
             let commissionRegular = calcRegular.calculateButcherComission(offer.orderTotal);
             let commission = calc.calculateButcherComission(offer.orderTotal);
             let diff = commission.kalitteFee - commissionRegular.kalitteFee;

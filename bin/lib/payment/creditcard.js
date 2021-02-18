@@ -56,7 +56,7 @@ class CreditcardPaymentProvider {
     }
     getMerchantMoney(o, shouldBePaid, productPrice, shipOfButcher, shipOfKasaptanAl, puanUsage) {
         let merchantPrice = o.getButcherComission(productPrice + shipOfButcher, puanUsage);
-        let puan = o.getPuanTotal(productPrice);
+        let puan = o.getPuanTotal();
         return helper_1.default.asCurrency(shouldBePaid - merchantPrice - puan - shipOfKasaptanAl);
     }
     requestFromOrder(ol, debts = {} = {}) {

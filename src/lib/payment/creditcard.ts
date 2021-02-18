@@ -199,7 +199,7 @@ export class CreditcardPaymentProvider {
 
     getMerchantMoney(o: Order, shouldBePaid: number, productPrice, shipOfButcher, shipOfKasaptanAl, puanUsage) {        
         let merchantPrice = o.getButcherComission(productPrice + shipOfButcher, puanUsage);    
-        let puan = o.getPuanTotal(productPrice);
+        let puan = o.getPuanTotal();
         return Helper.asCurrency(shouldBePaid - merchantPrice - puan - shipOfKasaptanAl)
     }
 

@@ -105,7 +105,7 @@ let Order = Order_1 = class Order extends basemodel_1.default {
         else
             return this.butcher.payCommissionFee;
     }
-    getPuanTotal(shouldBePaid) {
+    getPuanTotal() {
         let result = 0.00;
         if (this.orderSource == order_1.OrderSource.kasaptanal) {
             let butcherPuanEarned = this.butcherPuanAccounts.find(p => p.code == 'total');
@@ -114,15 +114,15 @@ let Order = Order_1 = class Order extends basemodel_1.default {
             let butcherPuan = helper_1.default.asCurrency(butcherPuanEarned.alacak - butcherPuanEarned.borc);
             let kalitteByButcherPuan = helper_1.default.asCurrency(kalitteByButcherEarned.alacak - kalitteByButcherEarned.borc);
             let totalPuanByButcher = helper_1.default.asCurrency(butcherPuan + kalitteByButcherPuan);
-            let totalPuanByButcherIncVat = helper_1.default.asCurrency(totalPuanByButcher * 1.18);
-            result = helper_1.default.asCurrency(totalPuanByButcherIncVat);
+            let totalPuanByButcherVat = helper_1.default.asCurrency(totalPuanByButcher * this.butcher.vatRate);
+            result = helper_1.default.asCurrency(totalPuanByButcher + totalPuanByButcherVat);
         }
         return result;
     }
     getButcherComission(shouldBePaid, usablePuan) {
         let rate = this.getButcherRate();
         let fee = this.getButcherFee();
-        let calc = new commissionHelper_1.ComissionHelper(rate, fee);
+        let calc = new commissionHelper_1.ComissionHelper(rate, fee, this.butcher.vatRate);
         let totalFee = calc.calculateButcherComission(shouldBePaid);
         if (usablePuan) {
             let newFee = Math.max(0.00, helper_1.default.asCurrency(totalFee.kalitteFee + totalFee.kalitteVat - usablePuan));

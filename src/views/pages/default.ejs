@@ -8,69 +8,75 @@
 <body>
     <% include ./_partial/header %>
 
-        <div class="bg-white container-fluid ">
-            <div class="container  mb-3">
+    
 
-                <div class="row no-gutters bg-size-cover bg-position-center" style="background-image: url(<%=__config.staticDomain %>/resource/img/banner-bg.jpg)">
-                    <div class="col-sm-4">
-                        <a class="d-block" href="/kasap-urunleri">
-                            <img width="500" height="333"
-                                src="<%=__config.staticDomain%>/content-resimleri/kasap-kart-thumbnail.jpg"
-                                alt="Kasap Kart™">
+    <div class="bg-white container-fluid ">
+        <div class="container  mb-3">
 
-                        </a>
+            <div class="row no-gutters bg-size-cover bg-position-center" style="background-image: url(<%=__config.staticDomain %>/resource/img/banner-bg.jpg)">
+                <div class="col-sm-4">
+                    <a class="d-block" href="/kasap-urunleri">
+                        <img width="500" height="333"
+                            src="<%=__config.staticDomain%>/content-resimleri/kasap-kart-thumbnail.jpg"
+                            alt="Kasap Kart™">
+
+                    </a>
+                </div>
+
+                <div class="col-sm-8 font-weight-light font-size-lg">
+                    <div class="px-3 pt-2">
+                        <h1 class="h4">
+                            Online Kasap Alışverişi & Et Siparişi
+                        </h1>
+                        <p class=" mb-2">
+                             <i class="czi-icon czi-arrow-right-circle mr-1"></i>
+                            
+                            <a class="font-weight-bolder text-dark" href="/kasaplar">Şehrinizin en iyi kasaplar</a>ı bir arada.
+                           
+
+                        </p>
+                        <p class=" mb-2">
+                            <i class="czi-icon czi-arrow-right-circle mr-1"></i>
+                            İstediğiniz kasabı seçin, <a href="/kasap-urunleri" class="font-weight-bolder text-dark">en iyi et</a> kapınıza gelsin.
+
+                        </p>
+
+
+
+
+                        <p class=" mb-3">
+                            <i class="czi-icon czi-arrow-right-circle mr-1"></i>
+                            <a class="text-dark font-weight-bolder" href="/blog/kasap-kart">Kasap Kart&trade;</a> ile
+                             puan kazanın, kârlı çıkın.
+                        </p>
+                    
                     </div>
-
-                    <div class="col-sm-8 font-weight-light font-size-lg">
-                        <div class="px-3 pt-2">
-                            <h1 class="h4">
-                                Online Kasap Alışverişi & Et Siparişi
-                            </h1>
-                            <p class=" mb-2">
-                                 <i class="czi-icon czi-arrow-right-circle mr-1"></i>
-                                
-                                <a class="font-weight-bolder text-dark" href="/kasaplar">Şehrinizin en iyi kasaplar</a>ı bir arada.
-                               
-    
-                            </p>
-                            <p class=" mb-2">
-                                <i class="czi-icon czi-arrow-right-circle mr-1"></i>
-                                İstediğiniz kasabı seçin, <a href="/kasap-urunleri" class="font-weight-bolder text-dark">en iyi et</a> kapınıza gelsin.
-    
-                            </p>
-    
-    
-    
-    
-                            <p class=" mb-3">
-                                <i class="czi-icon czi-arrow-right-circle mr-1"></i>
-                                <a class="text-dark font-weight-bolder" href="/blog/kasap-kart">Kasap Kart&trade;</a> ile
-                                 puan kazanın, kârlı çıkın.
-                            </p>
-                        
-                        </div>
-                       
+                   
 
 
-                        <div class="d-flex flex-row-reverse">
-                            <% if (__req.prefAddr) { %>
-                                <a class="btn btn-primary" href="/kasap-urunleri">Alışverişe Başla</a>
-                            <% } else { %>
-                                <a data-return="/kasap-urunleri" class="select-area-action btn btn-primary">Semtinizi Seçin</a>
+                    <div class="d-flex flex-row-reverse">
+                        <% if (__req.prefAddr) { %>
+                            <a class="btn btn-primary" href="/kasap-urunleri">Alışverişe Başla</a>
+                        <% } else { %>
+                            <a data-return="/kasap-urunleri" class="select-area-action btn btn-primary">Semtinizi Seçin</a>
 
-                            <% } %>
-                            <a class="btn btn-dark mr-2" href="/neden-kasaptanal">Neden Biz</a>
-
-                        </div>
+                        <% } %>
+                        <a class="btn btn-dark mr-2" href="/neden-kasaptanal">Neden Biz</a>
 
                     </div>
 
                 </div>
 
-
-
             </div>
+
+
+
         </div>
+    </div>
+
+
+
+
 
 
 
@@ -81,64 +87,66 @@
       
           </div>
 
-
-        <div class="container mb-3">
-            <%- include('./_partial/category-products-slider', {category: 'populer-etler' , limit: 8, reverse: true,
-                img: 'img/category/premium.jpg' }); %>
+          <div class="container mb-3">
+            <%- include('./_partial/category-products-slider', {category: 'populer-etler' , viewMode: 'tab', limit: 8}); %>
         </div>
 
-        <div class="container mb-3">
-                <a class="d-block py-3" href="/kasaplar">
-                    <h3 class="h6 text-uppercase mb-0">Kasaplar</h3>
-                </a>
-            <div data-simplebar data-simplebar-auto-hide="false">
-                <div class="d-flex pb-2">
-                    <% var items= recentButchers %>
-                        <% items.forEach((item, i)=> {%>
-                            <div class="mb-2">
-                                <div class="mr-2 item-slider  item-slider-sm">
-                                    <div class="card h-100 text-center pb-0  ">
-                                        <a class="d-block" href="<%= `/${item.slug}` %>">
-                                            <img class="card-img-top" width="500" height="500"  title="<%=item.title%>" 
-                                                src="<%= `${__req.helper.imgUrl('butcher-google-photos', item.slug)}` %>"
-                                                alt="<%=item.name%>"></a>
-                                            <div class="card-body d-flex flex-column">
-                                                    <h5 class="mb-auto pb-2 text-center font-size-sm"><a class="text-dark"
-                                                        href="<%= `/${item.slug}` %>">
-                                                        <%= item.name %>
-                                                    </a>
-                                                </h5>
-                                                <h6 class="font-size-sm mb-0 text-muted"> <%= item.areaLevel1Text %></h6>
-                                            </div>
-                                    </div>
-                                </div>
-                            </div>
-                            <%})%>
 
-                            <div>
-                                <div class="h-100">
-                                    <div class="item-slider item-slider-sm-all">
-                                      <a class="d-block h-100" href="/kasaplar">
-                                        <div class="d-flex h-100 justify-content-end">
-                                          <img width="500" height="500" alt="Tümünü Göster" class="w-auto align-self-center" src="<%=__config.staticDomain %>/resource/img/view-all.png">
+
+        <div class="container mb-3">
+            <a class="d-block py-3" href="/kasaplar">
+                <h3 class="h6 text-uppercase mb-0">Kasaplar</h3>
+            </a>
+        <div data-simplebar data-simplebar-auto-hide="false">
+            <div class="d-flex pb-2">
+                <% var items= recentButchers %>
+                    <% items.forEach((item, i)=> {%>
+                        <div class="mb-2">
+                            <div class="mr-2 item-slider item-slider-sm">
+                                <div class="card h-100 text-center pb-0  ">
+                                    <a class="d-block" href="<%= `/${item.slug}` %>">
+                                        <img class="card-img-top" width="500" height="500"  title="<%=item.title%>" 
+                                            src="<%= `${__req.helper.imgUrl('butcher-google-photos', item.slug)}` %>"
+                                            alt="<%=item.name%>"></a>
+                                        <div class="card-body d-flex flex-column">
+                                                <h5 class="mb-auto pb-2 text-center font-size-sm"><a class="text-dark"
+                                                    href="<%= `/${item.slug}` %>">
+                                                    <%= item.name %>
+                                                </a>
+                                            </h5>
+                                            <h6 class="font-size-sm mb-0 text-muted"> <%= item.areaLevel1Text %></h6>
                                         </div>
-                    
-                                      </a>
-                                 
-                    
-                                   
-                    
-                                    </div>
-                    
                                 </div>
                             </div>
+                        </div>
+                        <%})%>
 
-                </div>
+                        <div>
+                            <div class="h-100">
+                                <div class="item-slider item-slider-sm-all">
+                                  <a class="d-block h-100" href="/kasaplar">
+                                    <div class="d-flex h-100 justify-content-end">
+                                      <img width="500" height="500" alt="Tümünü Göster" class="w-auto align-self-center" src="<%=__config.staticDomain %>/resource/img/view-all.png">
+                                    </div>
+                
+                                  </a>
+                             
+                
+                               
+                
+                                </div>
+                
+                            </div>
+                        </div>
+
             </div>
-
-
-
         </div>
+
+
+
+    </div>
+
+ 
 
         <section class="container">
             <div class="row">
@@ -210,6 +218,10 @@
 
 
 
+
+
+
+
         <div class="container mb-3">
             <a class="d-block py-3" href="/blog">
                 <h3 class="h6 text-uppercase mb-0">Blog</h3>
@@ -218,22 +230,34 @@
             <div class="d-flex pb-2">
                 <% var items=controller.blogItems %>
                     <% items.forEach((item, i)=> {%>
-                        <div class="mb-2">
-                            <div class="mr-2 item-slider">
-                                <div class="card border-0 rounded-0 bg-primary h-100 text-center pb-0">
-                                    <a class="d-block" href="<%= `/blog/${item.slug}` %>">
-                                        <img width="500" height="333"  title="<%=item.title%>" 
-                                            src="<%=`${__config.staticDomain}/content-resimleri/${item.slug}-thumbnail.jpg` %>"
-                                            alt="<%=item.name%>"></a>
-                                        <div class="card-body">
-                                                <h5 class="text-center mb-0 font-size-sm"><a class="text-white"
-                                                    href="<%= `/blog/${item.slug}` %>">
-                                                    <%= item.title %>
-                                                </a>
-                                            </h5>
-                                           
+                        <div>
+                            <div class="mr-2">
+                               <div style="width: 21rem;height: 14rem;"  class="border bg-dark">
+
+                                <div class="card border-0 bg-dark text-white">
+                                    <img width="500" height="333" src="<%=`${__config.staticDomain}/content-resimleri/${item.slug}-thumbnail.jpg` %>" alt="<%=item.title%>">
+                                    <div class="card-img-overlay d-flex flex-column">
+                                        <div style="opacity: 0.8;" class="mb-auto">
+                                            <a href="/blog/<%=item.slug%>">
+                                            <h5 class="card-title bg-primary p-2 text-white"><%=item.title%></h5>
+                                            </a>
                                         </div>
-                                </div>
+
+                                        <div>
+                                            <a href="/blog/<%=item.slug%>" class="shadow-lg btn btn-primary rounded-lg">&raquo; </a>
+
+                                        </div>
+
+                                    </div>
+                                  </div>
+
+
+                         
+
+                               
+
+
+                               </div>
                             </div>
                         </div>
                         <%})%>

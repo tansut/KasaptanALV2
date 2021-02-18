@@ -7,7 +7,9 @@
 <% var highPrice = typeof(highPrice) == 'undefined' ? 0.00: highPrice %>
 <% var priceUnit = typeof(priceUnit) == 'undefined' ? '': priceUnit %>
 
-<div class="card rounded-0 product-card h-100 ">
+
+
+<div class="card h-100 product-card text-center pb-0">
     <% if (badge && typeof(hideBadge) == 'undefined') { %>
     <span class="badge badge-danger badge-shadow d-print-none"><%=badge%></span>
 
@@ -15,8 +17,6 @@
     <% if (product.badge == 'video' && typeof(hideBadge) == 'undefined') { %>
     <button class="btn-wishlist  d-print-none" type="button" data-toggle="tooltip" data-placement="left" title=""
         data-original-title="Zengin içerik"><i class="czi-video"></i></button>
-
-
 
     <% } %>
     <% if (showPurchase) { %>
@@ -30,8 +30,8 @@
          src="<%= `${__req.helper.imgUrl('product-photos', product.slug)}` %>" class="lazyload"
             alt="<%= product.name  %>"></a>
             <% if (typeof(hideName) == 'undefined') { %>
-    <div class="card-body card-block d-flex flex-column text-center">
-        <h3 class="product-title font-size-md mb-1"><a
+    <div class="card-body card-block d-flex flex-column">
+        <h3 class="mb-auto pb-2 text-center font-size-sm"><a class="text-dark"
                 href="/<%= product.slug%><%=(butcher ? `?butcher=${butcher}`:'') %>"><%= product.name  %></a>
         </h3>
 

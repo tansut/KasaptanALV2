@@ -154,61 +154,6 @@ class Route extends router_1.ViewRouter {
         }
         return allow;
     }
-    // calculateCostForCustomer(shipment: Shipment, o: Order) {
-    //     if (o.dispatcherFee > 0.00) {
-    //         let dispatcherFee = Helper.asCurrency(o.dispatcherFee / 1.18);
-    //         let calc = new ComissionHelper(o.getButcherRate(), o.getButcherFee());
-    //         let commission = calc.calculateButcherComission(o.subTotal);    
-    //         let contribute = Helper.asCurrency(commission.kalitteFee * 0.4);
-    //         let calculated = Helper.asCurrency(Math.max(0.00, dispatcherFee - contribute));
-    //         let calculatedVat = Helper.asCurrency(calculated * 0.18)
-    //         let totalShip = Helper.asCurrency(Math.round(calculated + calculatedVat));
-    //         return totalShip > 0.00 ? Math.max(5.00, totalShip): 0.00;
-    //     } else return 0.00;
-    // }
-    // async setDispatcher_old() {
-    //     let api = new Dispatcher(this.constructorParams);
-    //     let orders = await this.orderapi.getFromShopcard(this.shopcard);
-    //     var self = this;
-    //     for (let o in this.shopcard.shipment) {
-    //         if (true) {
-    //             let order = orders.find(oo => oo.butcherid == parseInt(o))
-    //             let dispatch = await api.bestDispatcher(parseInt(o), {
-    //                 level1Id: this.shopcard.address.level1Id,
-    //                 level2Id: this.shopcard.address.level2Id,
-    //                 level3Id: this.shopcard.address.level3Id
-    //             }, order);
-    //             if (dispatch && !dispatch.takeOnly) {
-    //                 this.shopcard.shipment[o].dispatcher = {
-    //                     id: dispatch.id,
-    //                     feeOffer: dispatch.feeOffer,
-    //                     name: dispatch.name,
-    //                     fee: dispatch.fee,
-    //                     totalForFree: dispatch.totalForFree,
-    //                     type: dispatch.type,
-    //                     min: dispatch.min,
-    //                     takeOnly: dispatch.takeOnly,
-    //                     location: dispatch.butcher ? <any>dispatch.butcher.location : null,
-    //                     // calculateCostForCustomer: function(shipment) {
-    //                     //     return self.calculateCostForCustomer(shipment, order)
-    //                     // }
-    //                 }
-    //                 if (dispatch.min > this.shopcard.butchers[o].subTotal) {
-    //                     this.shopcard.shipment[o].howTo = 'ship';
-    //                 }
-    //                 else if (dispatch.takeOnly) {
-    //                     this.shopcard.shipment[o].howTo = 'take';
-    //                 }
-    //                 else if (this.shopcard.shipment[o].howTo == 'unset') {
-    //                     this.shopcard.shipment[o].howTo = 'ship'
-    //                 }
-    //             } else {
-    //                 this.shopcard.shipment[o].dispatcher = null;
-    //                 this.shopcard.shipment[o].howTo = 'take'
-    //             }
-    //         }
-    //     }
-    // }
     setDispatcher() {
         return __awaiter(this, void 0, void 0, function* () {
             let api = new dispatcher_1.default(this.constructorParams);
