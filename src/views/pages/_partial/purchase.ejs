@@ -129,7 +129,12 @@
         var selected = $("#cat-item-<%=controller.category ? controller.category.slug: ''%>").offset();
         $(".category-slider-item a").click(function (e) {
             if (!scel.__progress) {
-              e.currentTarget.innerHTML = '<span class="spinner-border text-primary spinner-border-sm"></span>' + e.currentTarget.innerHTML
+              var orj = e.currentTarget.innerHTML;
+              e.currentTarget.innerHTML = '<span class="spinner-border text-primary spinner-border-sm"></span>' + orj;
+              setTimeout(function() {
+                e.currentTarget.innerHTML = orj;
+                scel.__progress = false;
+              }, 1000);
               scel.__progress = true;
             }  
         })

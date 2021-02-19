@@ -27,23 +27,27 @@
         <% viewCats.forEach(cat => { %>
         <% var reyonlar = (categories.filter(p=>p.type == cat && p.status == 'active')) %>
         <% for(var c=0; c< reyonlar.length; c++) {%>
-        <div class="<%=titles ? 'mr-2': 'mr-0'%>">
+        <div class="mb-2 <%=titles ? 'mr-2': 'mr-0'%>">
             <div id="<%=idprefix || 'cats' %><%=reyonlar[c].slug%>"
                 class="item-slider item-slider-sm <%= selected ? (selected == reyonlar[c].slug ? 'item-slider-selected': 'item-slider-unselected') : ''%>">
                 <%subUrl = reyonlar[c].type == 'resource' ? 'et-yemekleri/':'' %>
-                <div class="card product-card pb-0  ">
-  
-                    <a href="<%= `/${subUrl}${reyonlar[c].slug}${urlParams ? '?' + urlParams:''}`%>"><img width="500" height="500"
-                        class="lazyload" src="<%=`${__req.helper.imgUrl('category-photos', reyonlar[c].slug, 'thumbnail', true, 'list')}`%>"
+
+                <div class="card rounded-0 shadow-lg h-100 text-center pb-0  ">
+                    <a class="d-block" href="<%= `/${subUrl}${reyonlar[c].slug}${urlParams ? '?' + urlParams:''}`%>">
+                        <img  width="500" height="500"  title="<%=reyonlar[c].name%>" 
+                            src="<%=`${__req.helper.imgUrl('category-photos', reyonlar[c].slug, 'thumbnail', true, 'list')}`%>"
                             alt="<%=reyonlar[c].name%>"></a>
-                    <% if (titles) {%>
-                    <div class="card-body pb-0 mb-0 text-center">
-                        <h3 class="product-title mb-0 font-size-md"><a
-                                href="<%= `/${subUrl}${reyonlar[c].slug}`%>"><%= reyonlar[c].listTitle || reyonlar[c].name %></a>
-                        </h3>
-                    </div>
-                    <% } %>
+                        <div class="card-body d-flex flex-column">
+                                <h5 class="mb-auto  text-center font-size-sm"><a class="text-dark"
+                                    href="<%= `/${subUrl}${reyonlar[c].slug}`%>">
+                                    <%= reyonlar[c].listTitle || reyonlar[c].name %>
+                                </a>
+                            </h5>
+                            
+                        </div>
                 </div>
+
+            
             </div>
         </div>
         <%}%>

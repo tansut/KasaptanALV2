@@ -8,71 +8,29 @@
 <body>
     <% include ./_partial/header %>
 
-    
+    <div class="container mt-3">
+        <div data-simplebar data-simplebar-auto-hide="false">
+            <div class="d-flex pb-2">
+                <% var items= ['home','cuneytasan', 'premium', 'ciger','besindeger'] %>
+                    <% items.forEach((item, i)=> {%>
 
-    <div class="bg-white app-d-none container-fluid ">
-        <div class="container  mb-3">
+                        <div class="mb-2">
+                            <div style="width: 21rem; height: 100%;" class="mr-2">
+                                <%- include('./_partial/home-slider-' + item, {  }); %>
+                            </div>
+                        </div>
 
-            <div class="row no-gutters bg-size-cover bg-position-center" style="background-image: url(<%=__config.staticDomain %>/resource/img/banner-bg.jpg)">
-                <div class="col-sm-4">
-                    <a class="d-block" href="/kasap-urunleri">
-                        <img width="500" height="333"
-                            src="<%=__config.staticDomain%>/content-resimleri/kasap-kart-thumbnail.jpg"
-                            alt="Kasap Kart™">
-
-                    </a>
-                </div>
-
-                <div class="col-sm-8 font-weight-light font-size-lg">
-                    <div class="px-3 pt-2">
-                        <h1 class="h4">
-                            Online Kasap Alışverişi & Et Siparişi
-                        </h1>
-                        <p class=" mb-2">
-                             <i class="czi-icon czi-arrow-right-circle mr-1"></i>
-                            
-                            <a class="font-weight-bolder text-dark" href="/kasaplar">Şehrinizin en iyi kasaplar</a>ı bir arada.
-                           
-
-                        </p>
-                        <p class=" mb-2">
-                            <i class="czi-icon czi-arrow-right-circle mr-1"></i>
-                            İstediğiniz kasabı seçin, <a href="/kasap-urunleri" class="font-weight-bolder text-dark">en iyi et</a> kapınıza gelsin.
-
-                        </p>
-
-
-
-
-                        <p class=" mb-3">
-                            <i class="czi-icon czi-arrow-right-circle mr-1"></i>
-                            <a class="text-dark font-weight-bolder" href="/blog/kasap-kart">Kasap Kart&trade;</a> ile
-                             puan kazanın, kârlı çıkın.
-                        </p>
                     
-                    </div>
-                   
-
-
-                    <div class="d-flex flex-row-reverse">
-                        <% if (__req.prefAddr) { %>
-                            <a class="btn btn-primary" href="/kasap-urunleri">Alışverişe Başla</a>
-                        <% } else { %>
-                            <a data-return="/kasap-urunleri" class="select-area-action btn btn-primary">Semtinizi Seçin</a>
-
-                        <% } %>
-                        <a class="btn btn-dark mr-2" href="/neden-kasaptanal">Neden Biz</a>
-
-                    </div>
-
-                </div>
-
+                        <%})%>
+    
+    
             </div>
-
-
-
         </div>
+
     </div>
+
+
+
 
 
 
@@ -83,7 +41,7 @@
 
         <div class="container mb-3">
         
-            <%- include('./_partial/category-slider', { header:true, title: 'Ürünler', allUrl: '/kasap-urunleri' }); %>
+            <%- include('./_partial/category-slider', { header:true, title: 'Kategoriler', allUrl: '/kasap-urunleri' }); %>
       
           </div>
 
@@ -91,7 +49,10 @@
             <%- include('./_partial/category-products-slider', {category: 'populer-etler' , viewMode: 'tab', limit: 8}); %>
         </div>
 
-
+        <div class="container mb-3">
+            <%- include('./_partial/category-slider', { viewCats: ['resource'], title: 'Et Yemekleri', allUrl: '/et-yemekleri' }); %>
+          
+          </div>
 
         <div class="container mb-3">
             <a class="d-block py-3" href="/kasaplar">
@@ -148,56 +109,6 @@
 
  
 
-        <section class="container">
-            <div class="row">
-                <div class="col-md-6 mb-3">
-                    <div class="d-flex flex-column h-100 justify-content-center bg-size-cover bg-position-center rounded-lg"
-                        style="background-image: url(<%=__config.staticDomain %>/resource/img/banner-bg.jpg);">
-
-
-
-                        <div class="py-4 my-2 my-md-0 py-md-5 px-4 ml-md-3 text-center text-sm-left">
-                            <h4 class="h6 font-size-lg font-weight-light mb-2">Kasap Kart&trade; ile Puan Kazanın</h4>
-                            <h3 class="mb-4 h5">Tüm siparişleriniz çok daha kârlı</h3>
-
-                            <a class="btn btn-primary " href="/blog/kasap-kart">Daha Fazla Bilgi</a>
-
-
-
-                        </div>
-
-                    </div>
-
-
-                </div>
-
-
-                <div class="col-md-6 mb-3">
-                    <div class="d-flex flex-column h-100 justify-content-center bg-size-cover bg-position-center rounded-lg"
-                        style="background-image: url(<%=__config.staticDomain %>/resource/img/banner-bg.jpg);">
-
-                        <div class="py-4 my-2 my-md-0 py-md-5 px-4 ml-md-3 text-center text-sm-left">
-                            <h4 class="h6 font-size-lg font-weight-light mb-2">Siz Yemeğe Karar Verin</h4>
-                            <h3 class="mb-4 h5">En uygun eti KasaptanAl.com önersin</h3>
-
-                            <a class="btn btn-primary " href="/et-yemekleri">Et Yemekleri</a>
-
-
-
-                        </div>
-
-
-
-                    </div>
-
-
-                </div>
-
-
-
-
-            </div>
-        </section>
 
 
 
@@ -232,21 +143,20 @@
                     <% items.forEach((item, i)=> {%>
                         <div>
                             <div class="mr-2">
-                               <div style="width: 21rem;height: 14rem;"  class="border bg-dark">
+                               <div style="width: 16rem;height: 100%"  class="border bg-dark">
 
                                 <div class="card border-0 bg-dark text-white">
-                                    <img width="500" height="333" src="<%=`${__config.staticDomain}/content-resimleri/${item.slug}-thumbnail.jpg` %>" alt="<%=item.title%>">
-                                    <div class="card-img-overlay d-flex flex-column">
-                                        <div style="opacity: 0.8;" class="mb-auto">
+                                    <a class="d-block" href="/blog/<%=item.slug%>">
+                                        <img width="500" height="333" src="<%=`${__config.staticDomain}/content-resimleri/${item.slug}-thumbnail.jpg` %>" alt="<%=item.title%>">
+                                    </a>
+                                    <div class="card-img-overlay d-flex flex-column-reverse">
+                                        <div style="opacity: 0.9;" class="">
                                             <a href="/blog/<%=item.slug%>">
-                                            <h5 class="card-title bg-primary p-2 text-white"><%=item.title%></h5>
+                                            <h5 class="card-title font-size-md font-weight-light bg-primary p-1 text-white"><%=item.title%></h5>
                                             </a>
                                         </div>
 
-                                        <div>
-                                            <a href="/blog/<%=item.slug%>" class="shadow-lg btn btn-primary rounded-lg">&raquo; </a>
-
-                                        </div>
+                         
 
                                     </div>
                                   </div>
