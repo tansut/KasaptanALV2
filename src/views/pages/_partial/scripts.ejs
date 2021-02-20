@@ -27,9 +27,20 @@
   <script>
 
 
+  <% if (controller.platform == 'app' && controller.appUI) { %>
+    <% if (controller.appUI.title) { %>
+      setTimeout(function() {
+        window.location.href='gonative://navigationTitles/setCurrent?title=<%= encodeURIComponent(controller.appUI.title) %>';
+      }); 
+    <% } %>
 
+    <% if (typeof(controller.appUI.tabIndex) != 'undefined') { %>
+      setTimeout(function() {
+        window.location.href = 'gonative://tabs/select/<%=controller.appUI.tabIndex%>';
+      }); 
+    <% } %>
 
-
+  <% } %>
 
 
   <% if (__req.prefAddr) { %>

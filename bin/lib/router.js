@@ -29,6 +29,7 @@ const category_1 = require("../db/models/category");
 const product_1 = require("../db/models/product");
 let ellipsis = require('text-ellipsis');
 var MarkdownIt = require('markdown-it');
+const common_2 = require("../models/common");
 var ResponseStatus;
 (function (ResponseStatus) {
     ResponseStatus[ResponseStatus["success"] = 0] = "success";
@@ -44,6 +45,14 @@ class BaseRouter {
             this.next = reqParams.next;
         }
         this.constructorParams = reqParams;
+    }
+    get platform() {
+        let agent = this.req.headers['user-agent'] || '';
+        if (agent.indexOf('gonative') > -1) {
+            return common_2.Platform.app;
+        }
+        else
+            return common_2.Platform.web;
     }
     get Markdown() {
         this._markdown = this._markdown || new MarkdownIt();
@@ -118,6 +127,9 @@ class ViewRouter extends BaseRouter {
         if (this.req && this.req["session"] && this.req["session"].areal1 != null) {
             this.selectedArea = this.req["session"].areal1;
         }
+        this.appUI = {
+            title: 'KasaptanAl'
+        };
     }
     createCategoryMenu() {
         return __awaiter(this, void 0, void 0, function* () {

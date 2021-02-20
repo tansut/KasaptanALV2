@@ -1,6 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.NutritionValueOrders = exports.NutritionValueUnits = exports.NutritionValueTitles = void 0;
+exports.Platform = exports.NutritionValueOrders = exports.NutritionValueUnits = exports.NutritionValueTitles = void 0;
 exports.NutritionValueTitles = {
     'fat': 'Yağ',
     'fat:saturated': 'Doymuş yağ',
@@ -67,3 +67,8 @@ exports.NutritionValueOrders = {
     'vitamin:cobalamin': 112,
     'vitamin:calcium': 113
 };
+var Platform;
+(function (Platform) {
+    Platform["web"] = "web";
+    Platform["app"] = "app";
+})(Platform = exports.Platform || (exports.Platform = {}));

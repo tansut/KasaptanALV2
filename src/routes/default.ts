@@ -96,7 +96,7 @@ export default class Route extends ViewRouter {
         //this.stats = await SiteStats.get();
 
         
-
+        this.appUI.tabIndex = 0;
         this.res.render("pages/default.ejs", this.viewData({
             recentButchers: recentButchers,
             ellipsis: ellipsis

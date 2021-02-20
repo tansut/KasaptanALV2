@@ -106,3 +106,14 @@ export interface NutritionValueView {
     sourceUrl: string;
     values: NutitionValueItemView [];
 }
+
+
+export enum Platform {
+    web='web',
+    app='app'
+}
+
+export interface AppUI {
+    tabIndex?: number
+    title?: string;
+}

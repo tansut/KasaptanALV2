@@ -88,6 +88,8 @@ class Route extends router_1.ViewRouter {
             this.shopcard = yield shopcard_1.ShopCard.createFromRequest(this.req);
             yield this.setDispatcher();
             yield this.getOrderSummary();
+            this.appUI.title = 'Sepetim';
+            this.appUI.tabIndex = 2;
             this.renderPage(`pages/shopcard.ejs`);
         });
     }

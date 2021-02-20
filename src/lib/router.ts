@@ -19,6 +19,7 @@ import { PreferredAddress } from '../db/models/user';
 var MarkdownIt = require('markdown-it')
 
 import * as fs from "fs"
+import { AppUI, Platform } from '../models/common';
 
 export enum ResponseStatus {
     success = 0,
@@ -47,6 +48,14 @@ export default class BaseRouter {
     protected res: express.Response;
     protected next: Function;
     private _markdown = null;
+
+
+    get platform(): Platform {
+        let agent = this.req.headers['user-agent'] || '';
+        if (agent.indexOf('gonative') > -1) {
+            return Platform.app
+        } else return Platform.web
+    }
 
     protected constructorParams: any;
 
@@ -110,7 +119,7 @@ export default class BaseRouter {
     }
 
     validateOwnership(ownerOfResource: string) {
-        return new Promise((resolve, reject) => {
+        return new Promise<void>((resolve, reject) => {
             var user = this.req.user;
             var id = user.id.toString() || user.id;
             var ownerId = ownerOfResource.toString() || ownerOfResource;
@@ -123,7 +132,7 @@ export default class BaseRouter {
     }
 
     sendFile(file: string, fromRoot: boolean = true) {
-        return new Promise((resolve, reject) => {
+        return new Promise<void>((resolve, reject) => {
             let fpath = fromRoot ? path.resolve(path.join(config.projectDir, file)) : file;
 
             this.res.sendFile(fpath, (err) => { err ? reject(err) : resolve(); });
@@ -158,11 +167,15 @@ export class ViewRouter extends BaseRouter {
 
     selectedArea: any;
     categoryData: CategoryMenuData;
+    appUI: AppUI;
 
     constructor(reqParams?: IRequestParams) {
         super(reqParams);
         if (this.req && this.req["session"] && this.req["session"].areal1 != null) {
             this.selectedArea = this.req["session"].areal1
+        }
+        this.appUI = {
+            title: 'KasaptanAl'
         }
     }
 

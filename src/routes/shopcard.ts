@@ -94,6 +94,9 @@ export default class Route extends ViewRouter {
         this.shopcard = await ShopCard.createFromRequest(this.req);
         await this.setDispatcher();
         await this.getOrderSummary();
+        this.appUI.title = 'Sepetim';
+        this.appUI.tabIndex = 2;
+
         this.renderPage(`pages/shopcard.ejs`)
 
     }

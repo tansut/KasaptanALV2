@@ -90,6 +90,7 @@ class Route extends router_1.ViewRouter {
             //this.foods = CacheManager.dataCache.get("recent-foods");
             this.blogItems = yield this.getBlogItems();
             //this.stats = await SiteStats.get();
+            this.appUI.tabIndex = 0;
             this.res.render("pages/default.ejs", this.viewData({
                 recentButchers: recentButchers,
                 ellipsis: ellipsis
