@@ -59,10 +59,18 @@ class Route extends router_1.ViewRouter {
         data['user'] = this.user;
         this.res.render(view, this.viewData(data));
     }
+    viewUserHome() {
+        return __awaiter(this, void 0, void 0, function* () {
+            this.user = yield user_1.default.findByPk(this.req.user.id);
+            this.appUI.title = "Hesabım";
+            this.render("pages/user.home.ejs");
+        });
+    }
     viewProfile() {
         return __awaiter(this, void 0, void 0, function* () {
             this.user = yield user_1.default.findByPk(this.req.user.id);
-            this.render("pages/user.home.ejs");
+            this.appUI.title = "Profilim";
+            this.render("pages/user.profile.ejs");
         });
     }
     viewOrders() {
@@ -77,6 +85,7 @@ class Route extends router_1.ViewRouter {
                         all: true
                     }]
             });
+            this.appUI.title = "Siparişlerim";
             this.render("pages/user.orders.ejs", {
                 orders: orders
             });
@@ -104,6 +113,7 @@ class Route extends router_1.ViewRouter {
             let order = this.order = yield api.getOrder(this.req.params.orderid, true);
             yield this.getOrderSummary();
             let userMessage = '';
+            this.appUI.title = "Sipariş Bilgileri";
             if (this.req.body.action == "cancelOrder") {
                 if (order.cancelable()) {
                     yield api.changeStatus(order, this.OrderStatus.customerCanceled, 'Müşterinin kendisi tarafından iptal edildi', true);
@@ -123,6 +133,7 @@ class Route extends router_1.ViewRouter {
             this.user = yield user_1.default.findByPk(this.req.user.id);
             let order = this.order = yield api.getOrder(this.req.params.orderid, true);
             yield this.getOrderSummary();
+            this.appUI.title = "Sipariş Bilgileri";
             this.render("pages/user.order.details.ejs", Object.assign(Object.assign({}, api.getView(order)), { enableImgContextMenu: true }));
         });
     }
@@ -131,18 +142,21 @@ class Route extends router_1.ViewRouter {
             this.user = yield user_1.default.findByPk(this.req.user.id);
             this.user.name = this.req.body.name;
             yield this.user.save();
-            this.render("pages/user.home.ejs");
+            this.appUI.title = "Profilim";
+            this.render("pages/user.profile.ejs");
         });
     }
     viewPassword() {
         return __awaiter(this, void 0, void 0, function* () {
             this.user = yield user_1.default.findByPk(this.req.user.id);
+            this.appUI.title = "Şifre İşlemleri";
             this.render("pages/user.password.ejs");
         });
     }
     savePassword() {
         return __awaiter(this, void 0, void 0, function* () {
             this.user = yield user_1.default.findByPk(this.req.user.id);
+            this.appUI.title = "Şifre İşlemleri";
             if (this.user.verifyPassword(this.req.body.oldpass)) {
                 this.user.setPassword(this.req.body.newpass);
                 yield this.user.save();
@@ -167,6 +181,7 @@ class Route extends router_1.ViewRouter {
         return __awaiter(this, void 0, void 0, function* () {
             this.user = yield user_1.default.findByPk(this.req.user.id);
             yield this.getUserSummary();
+            this.appUI.title = "Puanlarım";
             this.render("pages/user.puans.ejs");
         });
     }
@@ -178,7 +193,7 @@ class Route extends router_1.ViewRouter {
         });
     }
     static SetRoutes(router) {
-        router.get("/", Route.BindRequest(Route.prototype.viewProfile));
+        router.get("/", Route.BindRequest(Route.prototype.viewUserHome));
         router.get("/profile", Route.BindRequest(Route.prototype.viewProfile));
         router.get("/password", Route.BindRequest(Route.prototype.viewPassword));
         router.post("/password", Route.BindRequest(Route.prototype.savePassword));

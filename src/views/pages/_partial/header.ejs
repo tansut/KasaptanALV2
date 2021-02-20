@@ -24,6 +24,10 @@
   var gtags = [];
 </script>
 
+<style>
+
+</style>
+
 
 
 <% if (req.query.print != '1') {  %>
@@ -63,7 +67,7 @@
   <div>
     <div class="navbar navbar-expand-lg navbar-light">
       <div class="container">
-        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarCollapse3"><span
+        <button class="navbar-toggler app-d-none" type="button" data-toggle="collapse" data-target="#navbarCollapse3"><span
             class="navbar-toggler-icon"></span></button><a class="navbar-tool navbar-stuck-toggler ml-1 mr-2" href="#">
           <div class="navbar-tool-icon-box"><i class="navbar-tool-icon czi-menu"></i></div>
           <div class="navbar-tool-text ml-n3"></div>
@@ -71,7 +75,7 @@
         <a class="navbar-brand d-none d-lg-block mr-3 flex-shrink-0" href="/"><img width="1080" height="419"
             style="width: 11rem;" src="<%=__config.staticDomain %>/resource/img/logo-nav5.png" title="KasaptanAl.com"
             alt="kasaptanal.com" /></a><a class="navbar-brand d-lg-none mr-2" href="/"><img width="1080" height="419"
-            style="width: 8rem;" src="<%=__config.staticDomain %>/resource/img/logo-nav5.png" title="KasaptanAl.com"
+            style="width: 8rem;" src="<%=__config.staticDomain %>/resource/img/logo-nav3.png" title="KasaptanAl.com"
             alt="kasaptanal.com" /></a>
         <div class="input-group-overlay d-none d-lg-flex mx-4">
           <div class="input-group-prepend-overlay">
@@ -158,7 +162,7 @@
           </li>
             <%if (__req.user) { %>
            
-              <li class="pl-4 d-lg-none nav-item"><a class="nav-link" href="/user" rel="nofollow"><i class="czi-user mr-2"></i>Profilim
+              <li class="pl-4 d-lg-none nav-item"><a class="nav-link" href="/user/profile" rel="nofollow"><i class="czi-user mr-2"></i>Profilim
                 </a>
               </li>
 

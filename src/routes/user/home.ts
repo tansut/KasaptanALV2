@@ -64,9 +64,18 @@ export default class Route extends ViewRouter {
         this.res.render(view, this.viewData(data))
     }
 
+    
+
+    async viewUserHome() {
+        this.user = await User.findByPk(this.req.user.id);
+        this.appUI.title = "Hesabım";
+        this.render("pages/user.home.ejs");
+    }
+
     async viewProfile() {
         this.user = await User.findByPk(this.req.user.id);
-        this.render("pages/user.home.ejs");
+        this.appUI.title = "Profilim";
+        this.render("pages/user.profile.ejs");
     }
 
     async viewOrders() {
@@ -80,6 +89,7 @@ export default class Route extends ViewRouter {
                 all: true
             }]
         })
+        this.appUI.title = "Siparişlerim";
         this.render("pages/user.orders.ejs", {
             orders: orders
         });
@@ -110,6 +120,7 @@ export default class Route extends ViewRouter {
         let order = this.order = await api.getOrder(this.req.params.orderid, true);
         await this.getOrderSummary();
         let userMessage = ''
+        this.appUI.title = "Sipariş Bilgileri";
         if (this.req.body.action == "cancelOrder") {
             if (order.cancelable()) {
                 await api.changeStatus(order, this.OrderStatus.customerCanceled, 'Müşterinin kendisi tarafından iptal edildi', true)
@@ -129,6 +140,7 @@ export default class Route extends ViewRouter {
         this.user = await User.findByPk(this.req.user.id);
         let order = this.order = await api.getOrder(this.req.params.orderid, true);
         await this.getOrderSummary();
+        this.appUI.title = "Sipariş Bilgileri";
         this.render("pages/user.order.details.ejs", {...api.getView(order), ...{enableImgContextMenu: true} }   );
     }
 
@@ -136,16 +148,20 @@ export default class Route extends ViewRouter {
         this.user = await User.findByPk(this.req.user.id);
         this.user.name = this.req.body.name;
         await this.user.save();
-        this.render("pages/user.home.ejs")
+        this.appUI.title = "Profilim";
+        this.render("pages/user.profile.ejs")
     }
 
     async viewPassword() {
         this.user = await User.findByPk(this.req.user.id);
+        this.appUI.title = "Şifre İşlemleri";
         this.render("pages/user.password.ejs");
     }
 
     async savePassword() {
         this.user = await User.findByPk(this.req.user.id);
+        this.appUI.title = "Şifre İşlemleri";
+
         if (this.user.verifyPassword(this.req.body.oldpass)) {
             this.user.setPassword(this.req.body.newpass);
             await this.user.save();
@@ -169,6 +185,7 @@ export default class Route extends ViewRouter {
     async viewPuans() {
         this.user = await User.findByPk(this.req.user.id);
         await this.getUserSummary();
+        this.appUI.title = "Puanlarım";
         this.render("pages/user.puans.ejs");
     }
 
@@ -180,7 +197,7 @@ export default class Route extends ViewRouter {
     }
 
     static SetRoutes(router: express.Router) {
-        router.get("/", Route.BindRequest(Route.prototype.viewProfile));
+        router.get("/", Route.BindRequest(Route.prototype.viewUserHome));
         router.get("/profile", Route.BindRequest(Route.prototype.viewProfile));
         router.get("/password", Route.BindRequest(Route.prototype.viewPassword));
         router.post("/password", Route.BindRequest(Route.prototype.savePassword));

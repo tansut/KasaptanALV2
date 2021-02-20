@@ -245,6 +245,7 @@ class Route extends router_1.ViewRouter {
             else
                 this.prices = [];
             this.forceSemt = true;
+            this.appUI.title = 'Ürünler';
             this.renderPage('pages/category.ejs');
         });
     }

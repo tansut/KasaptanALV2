@@ -249,8 +249,7 @@ export default class Route extends ViewRouter {
             this.prices = serving.length ? await api.getPriceStats(this.products.map(p=>p.id), serving.map(b=>b.butcherid)): []
         } else this.prices = []
         this.forceSemt = true;
-
-
+        this.appUI.title = 'Ürünler';
         this.renderPage('pages/category.ejs')
 
     }

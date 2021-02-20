@@ -29,7 +29,21 @@
 
     </div>
 
+    <% if (controller.platform == 'app') { %>
+        <!-- <input type="text" id="appHref">
+        <button type="button" onclick="testapphref()">send</button>
 
+        <script>
+            function testapphref() {
+                try {
+                    alert(document.querySelector('#appHref').value)
+                window.location.href = document.querySelector('#appHref').value;
+        } catch(e) {
+        alert(e.message)
+      }
+            }
+        </script> -->
+    <% } %>
 
 
     <% if (__req.user && controller.lastOrders.length) { %>
