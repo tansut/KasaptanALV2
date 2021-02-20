@@ -157,6 +157,12 @@ class KasaptanAlApp {
             res.sendFile(path.join(__dirname, '../public/robots.txt'));
         });
 
+        this.app.use('/apple-app-site-association', function (req, res, next) {
+            res.sendFile(path.join(__dirname, '../apple-app-site-association.json'));
+        });
+
+        
+
         if (config.nodeenv == 'development') {
             this.app.use('/static/resource', express.static(path.join(__dirname, '../public')));            
             this.app.use('/static', express.static(path.join(__dirname, '../public')));            

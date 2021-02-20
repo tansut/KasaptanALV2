@@ -194,6 +194,14 @@ a:hover {
     overflow-y: auto;
   }
 
+  .modal-dialog-scrollable {
+    max-height: none;
+
+    .modal-content {
+      max-height: none;
+    }
+  }
+
 }
 
 @each $breakpoint in map-keys($grid-breakpoints) {

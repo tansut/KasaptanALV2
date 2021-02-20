@@ -30,7 +30,7 @@ var appUrls = [];
 
   <% if (controller.platform == 'app' && controller.appUI) { %>
     <% if (controller.appUI.title) { %>
-      appUrls.push('gonative://navigationTitles/setCurrent?title=<%= encodeURIComponent(controller.appUI.title) %>')
+      //appUrls.push('gonative://navigationTitles/setCurrent?title=<%= encodeURIComponent(controller.appUI.title) %>')
     <% } %>
 
     <% if (typeof(controller.appUI.tabIndex) != 'undefined') { %>
@@ -44,7 +44,7 @@ var appUrls = [];
       var json = JSON.stringify({urls: appUrls});
       setTimeout(function () {
         try {
-        //window.location.href = 'gonative://nativebridge/multi?data=' + encodeURIComponent(json);
+        window.location.href = 'gonative://nativebridge/multi?data=' + encodeURIComponent(json);
       } catch(e) {
         alert(e.message)
       }
