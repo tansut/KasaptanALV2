@@ -26,11 +26,12 @@ const area_1 = require("../db/models/area");
 const product_1 = require("./api/product");
 const cache_1 = require("../lib/cache");
 const temp_loc_1 = require("../db/models/temp_loc");
+const order_1 = require("./api/order");
 let ellipsis = require('text-ellipsis');
 class Route extends router_1.ViewRouter {
     constructor() {
         super(...arguments);
-        //tarifs: Resource[];
+        this.lastOrders = [];
         this.hide4Sebep = false;
         this.foodsTitle = "Et Yemekleri";
     }
@@ -72,6 +73,9 @@ class Route extends router_1.ViewRouter {
                     }
                 });
                 cache_1.CacheManager.dataCache.set("recent-butchers", recentButchers.map(b => b.get({ plain: true })));
+            }
+            if (this.req.user) {
+                this.lastOrders = yield new order_1.default(this.constructorParams).lastOrders(this.req.user.id, 9);
             }
             // this.foods = await new ProductsApi(this.constructorParams).getResources({
             //     type: ['product-videos', 'product-photos'],

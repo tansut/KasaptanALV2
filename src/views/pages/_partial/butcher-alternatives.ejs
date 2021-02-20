@@ -14,7 +14,7 @@
       </div>
 
       <div  class="modal-body p-0">
-        <div class="p-0 bg-secondary">
+        <div class="p-0 ">
           <ul v-if="product  && (product.alternateButchers.length > 1)"  class="nav  nav-pills nav-pills-dark nav-fill  mb-2">
             <li class="nav-item mr-0">
               <a class="nav-link shadow-none font-size-xs" @click="alternateSort = null" v-bind:class="{ active: alternateSort == null }">Oto Sıra</a>
@@ -42,7 +42,7 @@
 
 
               <div v-if="product">
-                <div v-for="(alt, index) in sortedAlternates">
+                <div class="mb-2 border-bottom" v-for="(alt, index) in sortedAlternates">
                   <a class="media px-2 align-items-start flex-grow-1" :data-butcher="alt.butcher.slug" href="#newbutcher" @click="selectNewButcher(alt.butcher)">
                  
                      <img class="w-25 align-self-start"
@@ -107,8 +107,8 @@
                     </div>
                   </a>
                 
-                  <div class="bg-white border-bottom p-2 mb-2">
-                    <div v-if="alt.butcher.shipSuccessText" class="text-center text-dark font-size-xs">
+                  <div class="border-bottom px-2 mb-2">
+                    <div v-if="false && alt.butcher.shipSuccessText" class="text-center text-dark font-size-xs">
                       {{alt.butcher.shipSuccessText}} sipariş
                     </div>
                     <div class="d-flex w-100">

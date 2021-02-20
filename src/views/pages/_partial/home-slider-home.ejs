@@ -1,4 +1,4 @@
-<div class="card shadow rounded-0 h-100 text-center pb-0  ">
+<div class="card bg-secondary shadow rounded-0 h-100 text-center pb-0  ">
     <a class="d-block" href="/kasap-urunleri">
         <img  width="500" height="333"  title="" 
             src="<%=__config.staticDomain%>/content-resimleri/kasap-kart-thumbnail.jpg"
@@ -9,15 +9,10 @@
             </h1>
 
                 
-            <p class="card-text">Şehrin en iyi kasaplarından şimdi sipariş verin, anında kapınıza gelsin.</p>
+            <p class="card-text">Şehrinizin en iyi kasaplarından şimdi sipariş verin, anında kapınıza gelsin.</p>
             <div class="d-flex justify-content-center">
-                <% if (__req.prefAddr) { %>
-                    <a class="btn btn-primary mr-2" href="/kasap-urunleri">Alışverişe Başla</a>
-                <% } else { %>
-                    <a data-return="/kasap-urunleri" class="mr-2 select-area-action btn btn-primary">Semtinizi Seçin</a>
-
-                <% } %>
-                <a class="btn btn-outline-dark" href="/neden-kasaptanal">Neden Biz</a>
+               
+                <a class="btn btn-outline-primary" href="/neden-kasaptanal">Neden KasaptanAl.com</a>
 
             </div>
 

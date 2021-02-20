@@ -287,6 +287,18 @@ export default class Route extends ApiRouter {
         }
     }
 
+    async lastOrders(userId: number, limit: number = 8) {
+        return Order.findAll({
+            where: {
+                userId: userId
+            },
+            include: [{
+                model: Butcher
+            }],
+            limit: limit,
+            order: [['id', 'desc']]
+        })
+    }
 
     async completeOrderItemStatus(oi: OrderItem, newStatus: OrderItemStatus) {
         let res = db.getContext().transaction((t: Transaction) => {
@@ -562,10 +574,10 @@ export default class Route extends ApiRouter {
                 let kalittePuan: Puan = {
                 
             minPuanForUsage: 0.00,
-            minSales: 250.00,
-            name: `2021'e merhaba puan kazancı`,
+            minSales: 400.00,
+            name: `KasaptanAl.com puan kazancı`,
             //rate: 0.03,
-            fixed: 10.00
+            fixed: 15.00
         }
 
         if (o.butcher.enableCreditCard) {

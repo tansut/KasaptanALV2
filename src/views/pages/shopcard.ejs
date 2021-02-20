@@ -158,13 +158,10 @@
         
        
          <% if (!shopcard.items.length) { %>
+          <p>
+            Sepetiniz henüz dolu değil. Muhteşem KasaptanAl.com ürünleriyle doldurmaya şimdi başlayın.
+          </p>
       
-            <div class="text-right">
-              <a class="btn btn-sm btn-dark" href="/kasap-urunleri">Tüm Ürünler
-                  </a>
-    
-    
-            </div>
             <% } else { %>
               <h5 class="h5 mb-0">
                 Ürünler
@@ -317,7 +314,7 @@
               <% if (shopcard.items.length > 0) { %>
              <button data-tag="true" data-category="checkout" data-action="view/start"
                   data-label="<%=__req.user ? __req.user.mphone: ''  %>" data-value="<%=shopcard.items.length%>"
-                  class="btn btn-success btn-block mt-4  " type="submit" value="true" name="checkout" id="checkout">Alışverişimi Tamamla</button> 
+                  class="btn btn-primary btn-block mt-4  " type="submit" value="true" name="checkout" id="checkout">Alışverişimi Tamamla</button> 
       
       <%}%>
               
@@ -327,7 +324,15 @@
       </aside>
       </div>
 
+      <% if (!shopcard.items.length) { %>
+      
+        <div class=" mb-3">
+      
+          <%- include('./_partial/category-slider', { header:true, title: 'Kategoriler', allUrl: '/kasap-urunleri' }); %>
+    
+        </div>
 
+        <% } %>
       
     </div>
   </form>

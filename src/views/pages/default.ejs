@@ -11,7 +11,7 @@
     <div class="container mt-3">
         <div data-simplebar data-simplebar-auto-hide="false">
             <div class="d-flex pb-2">
-                <% var items= ['home','cuneytasan', 'premium', 'ciger','besindeger'] %>
+                <% var items= ['kampanya', 'home', 'basaran', 'cuneytasan', 'premium', 'ciger','besindeger'] %>
                     <% items.forEach((item, i)=> {%>
 
                         <div class="mb-2">
@@ -32,7 +32,69 @@
 
 
 
+    <% if (__req.user && controller.lastOrders.length) { %>
 
+        <div class="container mb-3">
+            <a class="d-block py-3" href="/user/orders">
+                <h3 class="h6 text-uppercase mb-0">Siparişlerim</h3>
+            </a>
+        <div data-simplebar data-simplebar-auto-hide="false">
+            <div class="d-flex pb-2">
+                <% var items= controller.lastOrders %>
+                    <% for(var i = 0; i < items.length; i++) { %>
+                    <% var item = items[i] %>
+                        <% if (i < 8) { %>
+                        <div class="mb-2">
+                            <div class="mr-2 item-slider item-slider-sm">
+                                <div class="card h-100 text-center pb-0  ">
+                                    <a class="d-block" href="<%= `/user/orders/${item.ordernum}` %>">
+                                        <img class="card-img-top" width="500" height="500"  title="<%=item.butcher.name%>" 
+                                            src="<%= `${__req.helper.imgUrl('butcher-google-photos', item.butcher.slug)}` %>"
+                                            alt="<%=item.butcher.name%>"></a>
+                                        <div class="card-body d-flex flex-column">
+                                                <h5 class="mb-auto pb-2 text-center font-size-sm"><a class="text-dark"
+                                                    href="<%= `/user/orders/${item.ordernum}` %>">
+                                                    <%= item.butcher.name %>
+                                                </a>
+                                            </h5>
+                                            <h6 class="font-size-sm text-muted"><%=item.status%></h6>
+                                            <a class="btn btn-sm btn-outline-primary" href="<%= `/user/orders/${item.ordernum}` %>"> <i class="d-none czi-icon czi-loading"></i> Görüntüle</a>
+                                        </div>
+                                </div>
+                            </div>
+                        </div>
+                        <% } else { %>
+                                <div>
+                                    <div class="h-100">
+                                        <div class="item-slider item-slider-sm-all">
+                                          <a class="d-block h-100" href="/user/orders">
+                                            <div class="d-flex h-100 justify-content-end">
+                                              <img width="500" height="500" alt="Tümünü Göster" class="w-auto align-self-center" src="<%=__config.staticDomain %>/resource/img/view-all.png">
+                                            </div>
+                        
+                                          </a>
+                                     
+                        
+                                       
+                        
+                                        </div>
+                        
+                                    </div>
+                                </div>
+        
+                                <% break %>
+                        <% } %>
+                        <% } %>
+                        
+  
+
+            </div>
+        </div>
+
+
+
+    </div>
+    <% } %>
 
 
 

@@ -19,12 +19,14 @@ import { Op } from 'sequelize';
 import { SiteStatsData } from '../models/sitestat';
 import { SiteStats } from '../lib/sitestats';
 import TempLoc from '../db/models/temp_loc';
+import { Order } from '../db/models/order';
+import OrderApi from './api/order'
 
 let ellipsis = require('text-ellipsis');
 
 export default class Route extends ViewRouter {
 
-    //tarifs: Resource[];
+    lastOrders: Order[] = [];
     hide4Sebep = false;
     foods: Resource[];
     blogItems: Content[];
@@ -71,6 +73,10 @@ export default class Route extends ViewRouter {
                 }
             });
             CacheManager.dataCache.set("recent-butchers", recentButchers.map(b => b.get({ plain: true })));
+        }
+
+        if (this.req.user) {
+            this.lastOrders = await new OrderApi(this.constructorParams).lastOrders(this.req.user.id, 9)
         }
 
         // this.foods = await new ProductsApi(this.constructorParams).getResources({

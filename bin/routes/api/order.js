@@ -299,6 +299,20 @@ class Route extends router_1.ApiRouter {
             }
         });
     }
+    lastOrders(userId, limit = 8) {
+        return __awaiter(this, void 0, void 0, function* () {
+            return order_1.Order.findAll({
+                where: {
+                    userId: userId
+                },
+                include: [{
+                        model: butcher_1.default
+                    }],
+                limit: limit,
+                order: [['id', 'desc']]
+            });
+        });
+    }
     completeOrderItemStatus(oi, newStatus) {
         return __awaiter(this, void 0, void 0, function* () {
             let res = context_1.default.getContext().transaction((t) => {
@@ -551,10 +565,10 @@ class Route extends router_1.ApiRouter {
         // let kalittePuan: Puan = null;
         let kalittePuan = {
             minPuanForUsage: 0.00,
-            minSales: 250.00,
-            name: `2021'e merhaba puan kazancı`,
+            minSales: 400.00,
+            name: `KasaptanAl.com puan kazancı`,
             //rate: 0.03,
-            fixed: 10.00
+            fixed: 15.00
         };
         if (o.butcher.enableCreditCard) {
             if (o.isFirstButcherOrder && o.orderType != 'kurban') {

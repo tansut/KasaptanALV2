@@ -23,7 +23,7 @@ src="<%= `${butcherVideo.thumbnailFileUrl}` %>" alt="<%= `${view.butcher.name}` 
 class="gallery-item-caption"><%= butcherVideo.title %></span></a>
 <a class="media align-items-start flex-grow-1" href="/<%=view.butcher.slug%>">
 <%} else { %>
-  <a target="_blank" class="media align-items-center flex-grow-1" target="_blank" href="/<%=view.butcher.slug%>">
+  <a target="_blank" class="media align-self-start flex-grow-1" target="_blank" href="/<%=view.butcher.slug%>">
     
     <img class="w-25 gallery-item"
     src="<%= `${__req.helper.imgUrl('butcher-google-photos', view.butcher.slug)}` %>" alt="<%=view.butcher.name%>">
@@ -40,7 +40,7 @@ class="gallery-item-caption"><%= butcherVideo.title %></span></a>
               %<%=view.butcher.puanData.rate * 100 %> Puan
             </span>
             <span class="d-block badge badge-danger font-size-xs font-weight-medium">
-              <%='+10TL'%> Puan
+              <%='+15TL'%> Puan
             </span>
           </div>
         
@@ -124,8 +124,8 @@ class="gallery-item-caption"><%= butcherVideo.title %></span></a>
 
 
 
-    <div class="bg-white mb-2 p-3 border-bottom">
-      <% if (view.butcher.shipSuccessText) { %>
+    <div class="mb-2 px-2">
+      <% if (view.butcher.shipSuccessText && false) { %>
       <div class="text-center text-dark font-size-xs">
 
         <%=view.butcher.shipSuccessText %> sipariş
@@ -233,8 +233,8 @@ class="gallery-item-caption"><%= butcherVideo.title %></span></a>
                   
                   <li>
                     
-                    <p class="mb-0"><strong>250TL ve üzeri</strong> alışveriş yapın, ayrıca <strong class="text-dark">
-                      <%- include('./currency.ejs', {value: 10}) %>
+                    <p class="mb-0"><strong>400TL ve üzeri</strong> alışveriş yapın, ayrıca <strong class="text-dark">
+                      <%- include('./currency.ejs', {value: 15}) %>
                 
                     </strong> değerinde puan kazanın.
                     </p>

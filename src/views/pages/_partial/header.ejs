@@ -36,7 +36,7 @@
  
     <% } %>
 
-  <div class="topbar topbar-light d-lg-block d-none bg-secondary border-bottom ">
+  <div class="topbar topbar-light d-lg-block d-none bg-secondary  ">
     <div class="container pl-3">
   
       <div class="topbar-text text-nowrap d-none d-md-inline-block"><a class="topbar-link" target="_blank" href="https://wa.me/+908503054216">Destek</a></div>
@@ -48,7 +48,7 @@
 
         <% } else { %>
         <a class="select-area-action topbar-link d-md-inline-block" href="#"><i
-            class="czi-location text-muted"></i>Semtinizi Seçin</a>
+            class="czi-location text-muted"></i>Teslimat Bölgesi Seçin</a>
 
 
 
@@ -60,7 +60,7 @@
     </div>
   </div>
 
-  <div class="bg-secondary">
+  <div>
     <div class="navbar navbar-expand-lg navbar-light">
       <div class="container">
         <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarCollapse3"><span
@@ -120,9 +120,9 @@
         </div>
       </div>
     </div>
-    <div class="navbar navbar-expand-lg navbar-light navbar-stuck-menu mt-n2 pt-0 pb-2">
+    <div class="navbar navbar-expand-lg navbar-light navbar-stuck-menu mt-n2 pt-0 pb-0">
       <div class="container px-0">
-        <div class="input-group-overlay d-lg-none my-3">
+        <div class="input-group-overlay d-lg-none">
           <div class="input-group-prepend-overlay">
 
             <span class="input-group-text">
@@ -134,7 +134,7 @@
             autocomplete="off" type="search" placeholder="<%=searchHint%>">
         </div>
 
-        <div class="collapse navbar-collapse" id="navbarCollapse3">
+        <div class="collapse navbar-collapse pt-3 pt-lg-0 " id="navbarCollapse3">
 
           <ul class="navbar-nav">
             <li class="nav-item">
@@ -153,9 +153,12 @@
 
 
             </li>
-
+            <li class="d-lg-none nav-item"><a href="javascript:window.App.showSignupDlg()" data-label=""
+              class="nav-link">Kullanıcı İşlemleri</a>
+          </li>
             <%if (__req.user) { %>
-              <li class="d-lg-none nav-item"><a class="nav-link" href="/user" rel="nofollow"><i class="czi-user mr-2"></i>Profilim
+           
+              <li class="pl-4 d-lg-none nav-item"><a class="nav-link" href="/user" rel="nofollow"><i class="czi-user mr-2"></i>Profilim
                 </a>
               </li>
 
@@ -182,9 +185,7 @@
         </li>
 
             <%} else {%>
-              <li class="d-lg-none nav-item"><a href="javascript:window.App.showSignupDlg()" data-label=""
-                class="nav-link">Kullanıcı İşlemleri</a>
-            </li>
+             
 
             <li class="pl-4 d-lg-none nav-item"><a href="javascript:window.App.showSignupDlg()" data-label=""
                 class="nav-link">Yeni Kayıt</a>
