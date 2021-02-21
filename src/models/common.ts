@@ -107,6 +107,15 @@ export interface NutritionValueView {
     values: NutitionValueItemView [];
 }
 
+export interface AppNavData {
+    active: boolean;
+    levels: AppNavLevel[]
+}
+
+export interface AppNavLevel {
+    regex: string;
+    level: number
+}
 
 export enum Platform {
     web='web',

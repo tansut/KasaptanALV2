@@ -18,7 +18,8 @@ import WebPage from "../db/models/webpage";
 import Redirect from "../db/models/redirect";
 import PriceCategory from "../db/models/pricecategory";
 import SubCategory from "../db/models/subcategory";
-
+import { AppNavData, AppNavLevel } from "../models/common";
+const fs = require('fs');
 
 let cache: Cache;
 
@@ -68,7 +69,7 @@ export class CacheManager {
 
     static use(app: express.Application) {
         app.use((req: AppRequest, res, next) => {          
-            CacheManager.generateDataCache().then(p => {
+            CacheManager.generateDataCache(req).then(p => {
                 res.locals.__categories = p.categories;
                 req.__categories = p.categories;
                 req.__pricecategories = p.pricecategories;
@@ -118,6 +119,51 @@ export class CacheManager {
         }
         return result
     }
+
+
+    
+    static async fillAppNav(url): Promise<AppNavData> {    
+        url = 'https://www.kasaptanal.com';
+        //url = 'http://172.20.10.3:3000'
+        let data: AppNavData =  this.dataCache.get("app-nav-data");
+        if (!data) {
+            let rawdata = fs.readFileSync(path.join(config.projectDir, `app-nav-levels.json`));
+            let result = <AppNavLevel[]>JSON.parse(rawdata);
+            for(var i=0; i < result.length; i++) {
+                result[i].regex = result[i].regex.replace('{root}', url)
+            }
+            let categories = <Category[]>this.dataCache.get("categories")
+            for(var i = 0; i < categories.length;i++) {
+                result.push({
+                    regex: `${url}/${categories[i].slug}?`,
+                    level: 2
+                })
+            }
+            let prods = <any>this.dataCache.get("products")
+            for (var o in prods) {
+                result.push({
+                    regex: `${url}/${prods[o].slug}?`,
+                    level: 3
+                })
+            }
+
+            let butchers = await Butcher.findAll();
+            for(var i = 0; i < butchers.length;i++) {
+                result.push({
+                    regex: `${url}/${butchers[i].slug}?`,
+                    level: 2
+                })
+            }
+
+            data = {
+                active: true,
+                levels: result
+            };
+            this.dataCache.set("app-nav-data", data);
+        }
+        return data;
+    }
+    
 
     static async fillRedirects() {        
         let result:  { [key: string]: RedirectCacheItem }  = this.dataCache.get("redirects");
@@ -307,7 +353,7 @@ export class CacheManager {
         return butchers;
     }
 
-    static async generateDataCache() {
+    static async generateDataCache(req: AppRequest) {
         let categories = await this.fillCategories();
         let pricecategories = await this.fillPriceCategories(categories);
         let products = <any>await this.fillProducts();
@@ -318,6 +364,8 @@ export class CacheManager {
         let recentBlogs = <any>await this.fillRecentBlogs();
         let webPages = <any>await this.fillWebPages();
         let redirects = <any>await this.fillRedirects();
+        let appNavs = <any>await this.fillAppNav(Helper.getUrl(req));
+
         let categoryProducts = <any>await this.fillProductsByCategory(categories);
         return {
             categories: categories,
@@ -330,7 +378,8 @@ export class CacheManager {
             categoryProducts: categoryProducts,
             butchers: butchers,
             webPages: webPages,
-            redirects: redirects
+            redirects: redirects,
+            appNavs: appNavs
         }
     }
 

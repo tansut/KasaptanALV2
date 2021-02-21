@@ -26,6 +26,7 @@ const webpage_1 = require("../db/models/webpage");
 const redirect_1 = require("../db/models/redirect");
 const pricecategory_1 = require("../db/models/pricecategory");
 const subcategory_1 = require("../db/models/subcategory");
+const fs = require('fs');
 let cache;
 class CacheManager {
     static clear() {
@@ -33,7 +34,7 @@ class CacheManager {
     }
     static use(app) {
         app.use((req, res, next) => {
-            CacheManager.generateDataCache().then(p => {
+            CacheManager.generateDataCache(req).then(p => {
                 res.locals.__categories = p.categories;
                 req.__categories = p.categories;
                 req.__pricecategories = p.pricecategories;
@@ -82,6 +83,47 @@ class CacheManager {
                 this.dataCache.set("recent-blogs", result);
             }
             return result;
+        });
+    }
+    static fillAppNav(url) {
+        return __awaiter(this, void 0, void 0, function* () {
+            url = 'https://www.kasaptanal.com';
+            //url = 'http://172.20.10.3:3000'
+            let data = this.dataCache.get("app-nav-data");
+            if (!data) {
+                let rawdata = fs.readFileSync(path.join(config_1.default.projectDir, `app-nav-levels.json`));
+                let result = JSON.parse(rawdata);
+                for (var i = 0; i < result.length; i++) {
+                    result[i].regex = result[i].regex.replace('{root}', url);
+                }
+                let categories = this.dataCache.get("categories");
+                for (var i = 0; i < categories.length; i++) {
+                    result.push({
+                        regex: `${url}/${categories[i].slug}?`,
+                        level: 2
+                    });
+                }
+                let prods = this.dataCache.get("products");
+                for (var o in prods) {
+                    result.push({
+                        regex: `${url}/${prods[o].slug}?`,
+                        level: 3
+                    });
+                }
+                let butchers = yield butcher_1.default.findAll();
+                for (var i = 0; i < butchers.length; i++) {
+                    result.push({
+                        regex: `${url}/${butchers[i].slug}?`,
+                        level: 2
+                    });
+                }
+                data = {
+                    active: true,
+                    levels: result
+                };
+                this.dataCache.set("app-nav-data", data);
+            }
+            return data;
         });
     }
     static fillRedirects() {
@@ -276,7 +318,7 @@ class CacheManager {
             return butchers;
         });
     }
-    static generateDataCache() {
+    static generateDataCache(req) {
         return __awaiter(this, void 0, void 0, function* () {
             let categories = yield this.fillCategories();
             let pricecategories = yield this.fillPriceCategories(categories);
@@ -288,6 +330,7 @@ class CacheManager {
             let recentBlogs = yield this.fillRecentBlogs();
             let webPages = yield this.fillWebPages();
             let redirects = yield this.fillRedirects();
+            let appNavs = yield this.fillAppNav(helper_1.default.getUrl(req));
             let categoryProducts = yield this.fillProductsByCategory(categories);
             return {
                 categories: categories,
@@ -300,7 +343,8 @@ class CacheManager {
                 categoryProducts: categoryProducts,
                 butchers: butchers,
                 webPages: webPages,
-                redirects: redirects
+                redirects: redirects,
+                appNavs: appNavs
             };
         });
     }

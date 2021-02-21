@@ -29,7 +29,10 @@ const category_1 = require("../db/models/category");
 const product_1 = require("../db/models/product");
 let ellipsis = require('text-ellipsis');
 var MarkdownIt = require('markdown-it');
+const fs = require('fs');
 const common_2 = require("../models/common");
+const cache_1 = require("./cache");
+const helper_1 = require("./helper");
 var ResponseStatus;
 (function (ResponseStatus) {
     ResponseStatus[ResponseStatus["success"] = 0] = "success";
@@ -59,9 +62,7 @@ class BaseRouter {
         return this._markdown;
     }
     get url() {
-        let proto = this.req.header("x-forwarded-proto") || this.req.protocol;
-        let host = config_1.default.nodeenv == "development" ? this.req.get('Host') : 'www.kasaptanal.com';
-        return proto + '://' + host;
+        return helper_1.default.getUrl(this.req);
     }
     forceAuthenticate(req, res, next) {
         return auth_1.auth.force(req, res, next);
@@ -122,6 +123,17 @@ class ApiRouter extends BaseRouter {
 }
 exports.ApiRouter = ApiRouter;
 class ViewRouter extends BaseRouter {
+    // let recentButchers: ButcherModel[] = CacheManager.dataCache.get("recent-butchers");
+    // if (!recentButchers) {
+    //     recentButchers = await ButcherModel.findAll({
+    //         order: [["displayOrder", "DESC"]],
+    //         limit: 10,
+    //         where: {
+    //             approved: true,
+    //             showListing: true
+    //         }
+    //     });
+    //     CacheManager.dataCache.set("recent-butchers", recentButchers.map(b => b.get({ plain: true })));
     constructor(reqParams) {
         super(reqParams);
         if (this.req && this.req["session"] && this.req["session"].areal1 != null) {
@@ -130,6 +142,7 @@ class ViewRouter extends BaseRouter {
         this.appUI = {
             title: 'KasaptanAl'
         };
+        this.appNavData = cache_1.CacheManager.dataCache.get('app-nav-data');
     }
     createCategoryMenu() {
         return __awaiter(this, void 0, void 0, function* () {

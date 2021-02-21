@@ -4,11 +4,17 @@ const Jimp2 = require("jimp");
 const path = require("path");
 const numeral = require("numeral");
 const moment = require("moment");
+const config_1 = require("../config");
 const product_1 = require("../db/models/product");
 const libphonenumber_js_1 = require("libphonenumber-js");
 const shipment_1 = require("../models/shipment");
 const crypto = require("crypto");
 class Helper {
+    static getUrl(req) {
+        let proto = req.header("x-forwarded-proto") || req.protocol;
+        let host = config_1.default.nodeenv == "development" ? req.get('Host') : 'www.kasaptanal.com';
+        return proto + '://' + host;
+    }
     static nvl(val, def = 0) {
         return parseInt(val) == NaN ? def : parseInt(val);
     }

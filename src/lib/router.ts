@@ -17,9 +17,11 @@ import { where } from 'sequelize';
 let ellipsis = require('text-ellipsis');
 import { PreferredAddress } from '../db/models/user';
 var MarkdownIt = require('markdown-it')
+const fs = require('fs');
 
-import * as fs from "fs"
-import { AppUI, Platform } from '../models/common';
+import { AppNavLevel, AppNavData, AppUI, Platform } from '../models/common';
+import { CacheManager } from './cache';
+import Helper from './helper';
 
 export enum ResponseStatus {
     success = 0,
@@ -65,9 +67,8 @@ export default class BaseRouter {
     }
 
     get url() {
-        let proto = this.req.header("x-forwarded-proto") || this.req.protocol;
-        let host = config.nodeenv == "development" ? this.req.get('Host'): 'www.kasaptanal.com';
-        return proto + '://' + host;              
+        return Helper.getUrl(this.req);
+                
     }
 
     forceAuthenticate(req, res, next) {
@@ -77,8 +78,6 @@ export default class BaseRouter {
     get publicDir() {
         return (config.publicDir == '') ? "public/" : config.publicDir
     }
-
-    
 
     protected static BindRequest(method: string | Function, methodParams?: any) {
 
@@ -168,6 +167,22 @@ export class ViewRouter extends BaseRouter {
     selectedArea: any;
     categoryData: CategoryMenuData;
     appUI: AppUI;
+    appNavData: AppNavData;
+
+    
+
+    // let recentButchers: ButcherModel[] = CacheManager.dataCache.get("recent-butchers");
+    // if (!recentButchers) {
+    //     recentButchers = await ButcherModel.findAll({
+    //         order: [["displayOrder", "DESC"]],
+    //         limit: 10,
+    //         where: {
+    //             approved: true,
+    //             showListing: true
+    //         }
+    //     });
+    //     CacheManager.dataCache.set("recent-butchers", recentButchers.map(b => b.get({ plain: true })));
+
 
     constructor(reqParams?: IRequestParams) {
         super(reqParams);
@@ -177,6 +192,7 @@ export class ViewRouter extends BaseRouter {
         this.appUI = {
             title: 'KasaptanAl'
         }
+        this.appNavData = CacheManager.dataCache.get('app-nav-data');
     }
 
     async createCategoryMenu() {

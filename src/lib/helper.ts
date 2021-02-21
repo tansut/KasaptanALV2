@@ -21,6 +21,12 @@ export default class Helper {
         name: 'Tarifler'
     }]
 
+    static getUrl(req) {
+        let proto = req.header("x-forwarded-proto") || req.protocol;
+        let host = config.nodeenv == "development" ? req.get('Host'): 'www.kasaptanal.com';
+        return proto + '://' + host;      
+    }
+
     static nvl(val, def = 0) {
         return parseInt(val) == NaN ? def: parseInt(val);
     }
