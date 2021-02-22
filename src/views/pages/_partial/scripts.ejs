@@ -40,13 +40,8 @@ var appUrls = [];
     <% } %>
 
     var appNavData = <%-JSON.stringify(controller.appNavData) %>
-    var cmd = "gonative://navigationLevels/set?persist=true&data=" + encodeURIComponent(JSON.stringify(appNavData))
+    var cmd = "gonative://navigationLevels/set?persist=false&data=" + encodeURIComponent(JSON.stringify(appNavData))
     appUrls.push(cmd)
-    //alert(JSON.stringify(appNavData))
-
-// setTimeout(function() {
-//   window.location.href = cmd
-// }, 100)
 
 
   <% } %>
