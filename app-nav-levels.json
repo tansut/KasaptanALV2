@@ -17,11 +17,11 @@
       },
       {
         "regex": "{root}/user",
-        "level": 2
+        "level": 1
       },
       {
         "regex": "{root}/user/.+",
-        "level": 3
+        "level": 2
       },
       {
         "regex": "{root}/alisveris-sepetim/?",
