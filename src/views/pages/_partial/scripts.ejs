@@ -26,41 +26,7 @@
   
   <script>
 
-var appUrls = [];
-
-
-
-  <% if (controller.platform == 'app' && controller.appUI) { %>
-    <% if (controller.appUI.title) { %>
-      //appUrls.push('gonative://navigationTitles/setCurrent?title=<%= encodeURIComponent(controller.appUI.title) %>')
-    <% } %>
-
-    <% if (typeof(controller.appUI.tabIndex) != 'undefined') { %>
-      appUrls.push('gonative://tabs/select/<%=controller.appUI.tabIndex%>')
-    <% } %>
-
-    var appNavData = <%-JSON.stringify(controller.appNavData) %>
-    var cmd = "gonative://navigationLevels/set?persist=false&data=" + encodeURIComponent(JSON.stringify(appNavData))
-    appUrls.push(cmd)
-
-
-  <% } %>
-
-  <% if (controller.platform == 'app') { %>
-    if (appUrls.length) {
-      var json = JSON.stringify({urls: appUrls});
-      setTimeout(function () {
-        try {
-        window.location.href = 'gonative://nativebridge/multi?data=' + encodeURIComponent(json);
-        
-      } catch(e) {
-        alert(e.message)
-      }
-      });
-      
-    }
-  <% } %>   
-
+ 
 
   <% if (__req.prefAddr) { %>
       window.__useraddr = <%- JSON.stringify(__req.prefAddr) %>
@@ -400,6 +366,43 @@ var appUrls = [];
         });
   
       }
+
+      var appUrls = [];
+
+
+
+  <% if (controller.platform == 'app' && controller.appUI) { %>
+    <% if (controller.appUI.title) { %>
+      //appUrls.push('gonative://navigationTitles/setCurrent?title=<%= encodeURIComponent(controller.appUI.title) %>')
+    <% } %>
+
+    <% if (typeof(controller.appUI.tabIndex) != 'undefined') { %>
+      appUrls.push('gonative://tabs/select/<%=controller.appUI.tabIndex%>')
+    <% } %>
+
+    var appNavData = <%-JSON.stringify(controller.appNavData) %>
+    var cmd = "gonative://navigationLevels/set?persist=false&data=" + encodeURIComponent(JSON.stringify(appNavData))
+    appUrls.push(cmd)
+
+
+  <% } %>
+
+  <% if (controller.platform == 'app') { %>
+    if (appUrls.length) {
+      var json = JSON.stringify({urls: appUrls});
+      setTimeout(function () {
+        try {
+        window.location.href = 'gonative://nativebridge/multi?data=' + encodeURIComponent(json);
+        
+      } catch(e) {
+        alert(e.message)
+      }
+      },100);
+      
+    }
+  <% } %>   
+
+
   
       $(window).on('show.bs.modal', function(e) { 
         scroll = $(window).scrollTop();
@@ -476,7 +479,7 @@ var appUrls = [];
   <script>
     <% if (typeof(__supportMessage) == "undefined" || !__hidesupportMessage) { %>
   $('#__whatsup').floatingWhatsApp({
-      phone: '908503054216',
+      phone: '903122101088',
       popupMessage: 'Nasıl yardımcı olabilirim ?',
       showPopup: false,
       showOnIE: false,

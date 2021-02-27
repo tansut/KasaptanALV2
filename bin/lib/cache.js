@@ -87,8 +87,9 @@ class CacheManager {
     }
     static fillAppNav(url) {
         return __awaiter(this, void 0, void 0, function* () {
+            url = 'http:.*\\';
+            url = 'http://192.168.1.61:3000';
             url = 'https://www.kasaptanal.com';
-            //url = 'http://172.20.10.3:3000'
             let data = this.dataCache.get("app-nav-data");
             if (!data) {
                 let rawdata = fs.readFileSync(path.join(config_1.default.projectDir, `app-nav-levels.json`));
@@ -110,13 +111,13 @@ class CacheManager {
                         level: 3
                     });
                 }
-                let butchers = yield butcher_1.default.findAll();
-                for (var i = 0; i < butchers.length; i++) {
-                    result.push({
-                        regex: `${url}/${butchers[i].slug}?`,
-                        level: 2
-                    });
-                }
+                // let butchers = await Butcher.findAll();
+                // for(var i = 0; i < butchers.length;i++) {
+                //     result.push({
+                //         regex: `${url}/${butchers[i].slug}?`,
+                //         level: 2
+                //     })
+                // }
                 data = {
                     active: true,
                     levels: result

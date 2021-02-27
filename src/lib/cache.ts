@@ -123,8 +123,9 @@ export class CacheManager {
 
     
     static async fillAppNav(url): Promise<AppNavData> {    
-        url = 'https://www.kasaptanal.com';
-        //url = 'http://172.20.10.3:3000'
+        url = 'http:.*\\';
+        url = 'http://192.168.1.61:3000'
+        url = 'https://www.kasaptanal.com'
         let data: AppNavData =  this.dataCache.get("app-nav-data");
         if (!data) {
             let rawdata = fs.readFileSync(path.join(config.projectDir, `app-nav-levels.json`));
@@ -147,13 +148,13 @@ export class CacheManager {
                 })
             }
 
-            let butchers = await Butcher.findAll();
-            for(var i = 0; i < butchers.length;i++) {
-                result.push({
-                    regex: `${url}/${butchers[i].slug}?`,
-                    level: 2
-                })
-            }
+            // let butchers = await Butcher.findAll();
+            // for(var i = 0; i < butchers.length;i++) {
+            //     result.push({
+            //         regex: `${url}/${butchers[i].slug}?`,
+            //         level: 2
+            //     })
+            // }
 
             data = {
                 active: true,
