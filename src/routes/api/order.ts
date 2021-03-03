@@ -574,7 +574,7 @@ export default class Route extends ApiRouter {
                 let kalittePuan: Puan = {
                 
             minPuanForUsage: 0.00,
-            minSales: 400.00,
+            minSales: 500.00,
             name: `KasaptanAl.com puan kazancı`,
             //rate: 0.03,
             fixed: 15.00

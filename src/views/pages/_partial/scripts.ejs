@@ -26,7 +26,10 @@
   
   <script>
 
- 
+
+    window.App.platform = '<%=controller.platform%>'
+
+
 
   <% if (__req.prefAddr) { %>
       window.__useraddr = <%- JSON.stringify(__req.prefAddr) %>
@@ -184,6 +187,9 @@
   
   
     $(document).ready(function () {
+
+
+      App.platform == 'app' && $('a.app_blank').attr('target','_blank');
 
       $('.accordion').on('shown.bs.collapse', function (event) {
         var title = $("h3.accordion-heading", $(event.target).parent()[0]).text();
@@ -384,6 +390,8 @@
     var cmd = "gonative://navigationLevels/set?persist=false&data=" + encodeURIComponent(JSON.stringify(appNavData))
     appUrls.push(cmd)
 
+   
+
 
   <% } %>
 
@@ -504,7 +512,7 @@
     }
   </script>
   
-  
+
   
   <% } else { %>
   

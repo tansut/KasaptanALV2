@@ -141,7 +141,7 @@
                         <div class="mb-2">
                             <div class="mr-2 item-slider item-slider-sm">
                                 <div class="card h-100 text-center pb-0  ">
-                                    <a class="d-block" href="<%= `/${item.slug}` %>">
+                                    <a class="d-block app_blank" href="<%= `/${item.slug}` %>">
                                         <img class="card-img-top" width="500" height="500"  title="<%=item.title%>" 
                                             src="<%= `${__req.helper.imgUrl('butcher-google-photos', item.slug)}` %>"
                                             alt="<%=item.name%>"></a>
@@ -161,7 +161,7 @@
                         <div>
                             <div class="h-100">
                                 <div class="item-slider item-slider-sm-all">
-                                  <a class="d-block h-100" href="/kasaplar">
+                                  <a class="d-block h-100 app_blank" href="/kasaplar">
                                     <div class="d-flex h-100 justify-content-end">
                                       <img width="500" height="500" alt="Tümünü Göster" class="w-auto align-self-center" src="<%=__config.staticDomain %>/resource/img/view-all.png">
                                     </div>

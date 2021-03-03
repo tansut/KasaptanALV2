@@ -99,10 +99,10 @@
                 </div>
                 <% } %>
 
-                <div class="table-responsive " data-simplebar>
+                <div class="table-responsive" data-simplebar>
                   <div class="d-flex">
 
-                    <% for(var c=0; c< alternativeimages.length; c++) {%>
+                    <% for(var c=0; c < alternativeimages.length; c++) { %>
                     <div class="mr-2">
 
                       <div class="item-slider item-slider-sm">
@@ -1536,21 +1536,29 @@
                   function goBack() {
                     <%if (__req.query.frame != '1') { %>
                     
-                    var toBack;
-                    if (document.referrer.indexOf(location.protocol + "//" + location.host) === 0) {
-                      var current = location.protocol + "//" + location.host + location.pathname;                      
-                      if (document.referrer.indexOf(current) === 0) {
+                    var toBack = true;
+
+                    var current = location.protocol + "//" + location.host + location.pathname;                    
+                    if (document.referrer.indexOf('/alisveris-sepetim') >= 0) {
                         toBack = false;
+                    } else {
+                      if (App.platform == 'web') {
+                        if (document.referrer.indexOf(location.protocol + "//" + location.host) === 0) {                                            
+                            if (document.referrer.indexOf(current) === 0) {
+                              toBack = false;
+                            }                            
+                        } 
                       }
-                      else if (document.referrer.indexOf('/alisveris-sepetim') >= 0) {
-                        toBack = false;
-                      } else toBack = true;
-                    } else toBack = false;
+                    } 
+
+                    
                     if (toBack) {
-                      window.history.go(-1);
+                      App.platform == 'web' ? window.history.go(-1): window.close();
                       return false;
                     }
-                    else window.location.href = "/kasap-urunleri"
+                    else {                     
+                      window.location.href = "/kasap-urunleri";
+                    }
                     <% } else { %>
                     window.parent.purchase.closePurchaseDialog()
                     <% } %>
