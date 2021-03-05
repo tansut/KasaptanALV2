@@ -97,6 +97,11 @@ class Route extends router_1.ViewRouter {
             }));
         });
     }
+    testsubmit() {
+        return __awaiter(this, void 0, void 0, function* () {
+            this.res.redirect('/');
+        });
+    }
     setUserAddr() {
         return __awaiter(this, void 0, void 0, function* () {
             let area = yield area_1.default.getBySlug(this.req.params.slug);
@@ -157,6 +162,8 @@ class Route extends router_1.ViewRouter {
         // }
         router.get("/", Route.BindRequest(this.prototype.defaultRoute));
         router.get("/temparea", Route.BindRequest(this.prototype.tempares));
+        router.get("/testsubmit", Route.BindToView("pages/test-submit.ejs"));
+        router.post("/testsubmit", Route.BindRequest(this.prototype.testsubmit));
         router.get("/adres-belirle/:slug", Route.BindRequest(this.prototype.setUserAddr));
         router.get("/hikayemiz", Route.BindToView("pages/content.kurumsal.ejs"));
         router.get("/neden-kasaptanal", Route.BindToView("pages/content.neden-kasaptanal.ejs"));
@@ -181,6 +188,12 @@ __decorate([
     __metadata("design:paramtypes", []),
     __metadata("design:returntype", Promise)
 ], Route.prototype, "defaultRoute", null);
+__decorate([
+    common_1.Auth.Anonymous(),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", []),
+    __metadata("design:returntype", Promise)
+], Route.prototype, "testsubmit", null);
 __decorate([
     common_1.Auth.Anonymous(),
     __metadata("design:type", Function),

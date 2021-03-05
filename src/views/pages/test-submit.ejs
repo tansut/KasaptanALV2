@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="tr-TR" prefix="og: http://ogp.me/ns#">
+
+<head>
+  <% include ./_partial/head %>
+</head>
+
+<body>
+  <% include ./_partial/header %>
+
+
+
+
+ 
+
+  <!-- Page Content-->
+  <div class="container mb-4 ">
+
+    <form id="reviewForm" onsubmit="return beforeSubmit()" class="needs-validation" method="post" novalidate action="/testsubmit">
+      <button type="submit" id="save-adres" name="save-adres" class="btn btn-success btn-block">
+            
+        USER SUBMIT
+
+      </button>
+
+      <button onclick="initSubmit()" type="button" id="test-adres" name="test-adres" class="btn btn-success btn-block">
+            
+        JS SUBMIT ON CLICK
+
+      </button>
+
+      <a class="btn btn-success btn-block " href="/testsubmit?continue=1">Submit on ready</a>
+
+
+  </form>
+  </div>
+
+  <% include ./_partial/footer %>
+  <% include ./_partial/scripts %>
+
+<script>
+  function beforeSubmit() {
+
+    return true;
+  }
+
+  function initSubmit() {
+    setTimeout(function() { 
+
+
+  $('#save-adres').text('submitting..'); 
+$('#save-adres').attr('disabled', true);
+document.getElementById("reviewForm").submit()
+
+})
+  }
+
+  $(document).ready(function() {
+    var urlParams = new URLSearchParams(window.location.search);
+    if (urlParams.get('continue') == "1") {
+      initSubmit()
+    }
+  })
+
+
+  
+</script>
+
+</body>
+
+</html>

@@ -105,6 +105,11 @@ export default class Route extends ViewRouter {
     }
 
     @Auth.Anonymous()
+    async testsubmit() {
+        this.res.redirect('/')
+    }
+
+    @Auth.Anonymous()
     async setUserAddr() {
         let area = await Area.getBySlug(this.req.params.slug);
         if (!area) return this.next();
@@ -167,10 +172,14 @@ console.log(err.message)
         //     router.get("/", Route.BindToView("pages/offline.ejs"))
         // }
         // else {
-
+            
         // }
         router.get("/", Route.BindRequest(this.prototype.defaultRoute))
         router.get("/temparea", Route.BindRequest(this.prototype.tempares))
+
+        router.get("/testsubmit", Route.BindToView("pages/test-submit.ejs"))
+        router.post("/testsubmit", Route.BindRequest(this.prototype.testsubmit))
+
         router.get("/adres-belirle/:slug", Route.BindRequest(this.prototype.setUserAddr))
         router.get("/hikayemiz", Route.BindToView("pages/content.kurumsal.ejs"));
         router.get("/neden-kasaptanal", Route.BindToView("pages/content.neden-kasaptanal.ejs"));
