@@ -7,6 +7,9 @@
 <% subUrl = typeof(subUrl) == 'undefined' ? '': subUrl %>
 <% categories = typeof(categories) == 'undefined' ? __categories: categories %>
 <% viewCats = typeof(viewCats) == 'undefined' ? ['reyon', 'list', 'product:dispatch=countrywide']: viewCats %>
+<% linkCss = typeof(linkCss) == 'undefined' ? '': linkCss %>
+
+
 
 
 
@@ -35,12 +38,12 @@
                 <div class="card rounded-0 border-0 shadow-lg h-100 text-center pb-0  ">
                     <a 
 
-                    class="d-block" href="<%= `/${subUrl}${reyonlar[c].slug}${urlParams ? '?' + urlParams:''}`%>">
+                    class="d-block <%=linkCss%>" href="<%= `/${subUrl}${reyonlar[c].slug}${urlParams ? '?' + urlParams:''}`%>">
                         <img  width="500" height="500"  title="<%=reyonlar[c].name%>" 
                             src="<%=`${__req.helper.imgUrl('category-photos', reyonlar[c].slug, 'thumbnail', true, 'list')}`%>"
                             alt="<%=reyonlar[c].name%>"></a>
                         <div class="card-body d-flex flex-column">
-                                <h5 class="mb-auto  text-center font-size-sm"><a class="text-dark"
+                                <h5 class="mb-auto  text-center font-size-sm"><a class="text-dark <%=linkCss%>"
                                     href="<%= `/${subUrl}${reyonlar[c].slug}`%>">
                                     <%= reyonlar[c].listTitle || reyonlar[c].name %>
                                 </a>
@@ -126,7 +129,7 @@
 
                     <%}%>
 <div class="py-2 mb-1 <%= selected ? (selected == reyonlar[c].slug ? 'item-slider-selected': 'item-slider-unselected') : ''%>">
-    <a  class="text-center text-uppercase text-dark text-nowrap" class="d-block" href="<%= `/${subUrl}${reyonlar[c].slug}${__req.query.butcher ? '?butcher=' + __req.query.butcher:''}#items`%>">
+    <a  class="  text-center text-uppercase text-dark text-nowrap d-block"  href="<%= `/${subUrl}${reyonlar[c].slug}${__req.query.butcher ? '?butcher=' + __req.query.butcher:''}#items`%>">
         <%= reyonlar[c].listTitle || reyonlar[c].name %>
 
                  

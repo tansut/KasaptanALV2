@@ -17,7 +17,7 @@
           <div class="row p-3">
             <div class="col-6 col-md-6" v-for="item in list">
               <div class="card rounded-0 product-card  h-100 ">
-                <a class="d-block overflow-hidden" :href="item.link"><img width="500" height="500" class="rounded-0" alt="" class="lazyload" :src="item.src"
+                <a target="<%=controller.platform == 'app' ? '_blank':''%>" class="d-block overflow-hidden  rounded-0 lazyload" :href="item.link"><img width="500" height="500"  alt=""  :src="item.src"
                     :alt="item.name"></a>
                 <div class="card-body card-block d-flex flex-column text-center">
                   <h3 v-if="item && item.name" class="product-title font-size-md mb-1"><a :href="item.link">{{item.name}}</a>

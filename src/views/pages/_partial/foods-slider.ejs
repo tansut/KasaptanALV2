@@ -19,7 +19,7 @@
 <div>
 
   <div class="d-flex flex-nowrap justify-content-between align-items-center">
-    <a class="d-block py-3" href="<%=allUrl%>">
+    <a class="d-block py-3 app_blank" href="<%=allUrl%>">
         <h3 class="h6 text-uppercase mb-0"><%= typeof(title) != 'undefined' ? title: 'Et Yemek Tarifleri' %></h3>
     </a>
     <a class="d-none d-md-block btn btn-sm" href="<%=targetUrl%>">Tümü &raquo;</a>
@@ -76,7 +76,7 @@
               <div class="mr-2 ">
                   <div class="item-slider item-slider-sm">
                     
-                    <%- include(`./resource-item.ejs`, {resource: foods[i], subUrl: subUrl  }) %>
+                    <%- include(`./resource-item.ejs`, { css: 'app_blank', resource: foods[i], subUrl: subUrl  }) %>
                
 
                  
@@ -88,7 +88,7 @@
               <%} else { %>
                   <div class="mr-2 ">
                     <div class="item-slider item-slider-sm-all">
-                      <a class="d-block h-100" href="<%=targetUrl%>">
+                      <a class="d-block app_blank h-100" href="<%=targetUrl%>">
                         <div class="d-flex h-100 justify-content-end">
                           <img width="500" height="500"  alt="Tümünü Göster"  class="w-auto h-50 align-self-center lazyload" src="<%=__config.staticDomain %>/resource/img/view-all.png" alt="Tamamını Göster">
                         </div>

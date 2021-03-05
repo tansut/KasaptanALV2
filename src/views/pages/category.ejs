@@ -118,7 +118,7 @@
       <% if (controller.foods && controller.foods.length > 0 && !foodsInserted && i>controller.products.length/5) { %>
       <% foodsInserted = true; %>
       <div data-tag="" class="col-md-3 col-6">
-        <%- include('./_partial/generic-item-view.ejs', { badge: 'Yemeklere Gözatın', imgClass: 'rounded-lg', title: foodCategoryParams.title, href: `${foodCategoryParams.allUrl}`, src: `${ __req.helper.imgUrl('category-photos', controller.category.slug, 'thumbnail', true, 'food')}` }) %>
+        <%- include('./_partial/generic-item-view.ejs', { linkCss: 'app_blank', badge: 'Yemeklere Gözatın', imgClass: 'rounded-lg', title: foodCategoryParams.title, href: `${foodCategoryParams.allUrl}`, src: `${ __req.helper.imgUrl('category-photos', controller.category.slug, 'thumbnail', true, 'food')}` }) %>
       </div>
       <%}%>
     <%  }) %>

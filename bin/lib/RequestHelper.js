@@ -13,8 +13,9 @@ exports.RequestHelper = void 0;
 const area_1 = require("../db/models/area");
 const config_1 = require("../config");
 class RequestHelper {
-    constructor(req) {
+    constructor(req, res) {
         this.req = req;
+        this.res = res;
     }
     _generateUrl(resource, thumbnail, defaultPath) {
         let pathprefix = resource ? resource.folder : "";
@@ -78,6 +79,7 @@ class RequestHelper {
                         level3Id: adr.level3Id,
                         level4Id: adr.level4Id
                     };
+                    this.res.cookie('prefAddr', JSON.stringify(this.req.session.prefAddr), { maxAge: 60 * 24 * 60 * 60 * 1000, httpOnly: false });
                     yield new Promise((resolve, reject) => {
                         this.req.session.save(err => (err ? reject(err) : resolve()));
                     });
@@ -100,13 +102,23 @@ class RequestHelper {
     }
     static use(app) {
         app.use((req, res, next) => {
-            req.helper = new RequestHelper(req);
+            req.helper = new RequestHelper(req, res);
             req.helper.fillPreferredAddress().then(r => next()).catch(next);
         });
     }
     fillPreferredAddress() {
         return __awaiter(this, void 0, void 0, function* () {
             let req = this.req, list = [];
+            var adr = {
+                level1Id: null,
+                level2Id: null,
+                level3Id: null,
+                level4Id: null,
+            };
+            if (req.cookies['prefAddr']) {
+                adr = JSON.parse(req.cookies['prefAddr']);
+                req.session.prefAddr = adr;
+            }
             if (!req.user && !req.session.prefAddr)
                 return;
             if (this.req.prefAddr)
@@ -119,12 +131,6 @@ class RequestHelper {
                 req.session.prefAddr = null;
                 yield req.user.save();
             }
-            var adr = {
-                level1Id: null,
-                level2Id: null,
-                level3Id: null,
-                level4Id: null,
-            };
             if (req.user) {
                 adr.level1Id = req.user.lastLevel1Id;
                 adr.level2Id = req.user.lastLevel2Id;

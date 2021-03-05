@@ -8,6 +8,10 @@
         "level": 1
       },
       {
+        "regex": "{root}/et-yemekleri/?",
+        "level": 2
+      },
+      {
         "regex": "{root}/blog",
         "level": 2
       },

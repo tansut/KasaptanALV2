@@ -299,7 +299,7 @@
 
       %>
 
-      <% if (!hideMember && (!forceSemt || (forceSemt && __req.prefAddr))) { %>
+      <% if (!hideMember && controller.platform == 'web' && (!forceSemt || (forceSemt && __req.prefAddr))) { %>
   
       $(window).scroll(function () {
         if (($(document).scrollTop() >= $(document).height() / 4) && !userGuide.autoPopuped) {
@@ -322,7 +322,7 @@
           window.kb.selectArea(function (sender, ul) {
             var ref = '<%= semtReturn %>' || window.location.href;
             window.location.href = "/adres-belirle/" + ul.selectedDistrict.slug + '?lng=' + ul.lng + '&lat=' + ul.lat + '&r=' + ref;
-          }, {msg: ''});
+          }, {showWarning: true});
         }
       });
       <% } %>
@@ -436,7 +436,7 @@
                 var self = this;
                  setTimeout(function () {
                   $("button.close", self).show();
-                }, 15000);
+                }, 10000);
               <% } %>
        })
   
@@ -485,7 +485,7 @@
   </script>
   
   <script>
-    <% if (typeof(__supportMessage) == "undefined" || !__hidesupportMessage) { %>
+    <% if (controller.platform == 'web' && (typeof(__supportMessage) == "undefined" || !__hidesupportMessage)) { %>
   $('#__whatsup').floatingWhatsApp({
       phone: '903122101088',
       popupMessage: 'Nasıl yardımcı olabilirim ?',

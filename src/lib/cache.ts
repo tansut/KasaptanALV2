@@ -123,9 +123,7 @@ export class CacheManager {
 
     
     static async fillAppNav(url): Promise<AppNavData> {    
-        url = 'http:.*\\';
-        url = 'http://192.168.1.38:3000'
-        //url = 'https://www.kasaptanal.com'
+        url = (config.nodeenv == 'production') ? 'https://www.kasaptanal.com': 'http://192.168.2.236:3000'        
         let data: AppNavData =  this.dataCache.get("app-nav-data");
         if (!data) {
             let rawdata = fs.readFileSync(path.join(config.projectDir, `app-nav-levels.json`));

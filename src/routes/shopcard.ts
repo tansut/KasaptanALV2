@@ -453,6 +453,20 @@ export default class Route extends ViewRouter {
         this.renderPage("pages/checkout.review.ejs", userMessage);
     }
 
+
+    async completeViewRoute() {
+        let ordernums = (<string>this.req.query.orders).split(',');
+        let orders = await Order.findAll({
+            where: {
+                ordernum: ordernums
+            }
+        })
+        this.res.render("pages/checkout.complete.ejs", this.viewData({
+            orders: orders,
+
+        }));
+    }
+
     @Auth.Anonymous()
     async savereviewRoute() {
         this.shopcard = await ShopCard.createFromRequest(this.req);
@@ -474,10 +488,9 @@ export default class Route extends ViewRouter {
             // }
             // else 
 
-            this.res.render("pages/checkout.complete.ejs", this.viewData({
-                orders: orders,
+            this.res.redirect('/alisveris-sepetim/complete?orders=' + orders.map(o=>o.ordernum).join(','))
+            
 
-            }));
         } catch (err) {
             email.send('tansut@gmail.com', 'hata/CreateOrder: kasaptanAl.com', "error.ejs", {
                 text: err + '/' + err.message,
@@ -513,6 +526,7 @@ export default class Route extends ViewRouter {
         router.get("/alisveris-sepetim/payment", Route.BindRequest(Route.prototype.paymentViewRoute));
         router.post("/alisveris-sepetim/savepayment", Route.BindRequest(Route.prototype.savepaymentRoute));
         router.get("/alisveris-sepetim/review", Route.BindRequest(Route.prototype.reviewViewRoute));
+        router.get("/alisveris-sepetim/complete", Route.BindRequest(Route.prototype.completeViewRoute));
         router.post("/alisveris-sepetim/savereview", Route.BindRequest(Route.prototype.savereviewRoute));
 
 

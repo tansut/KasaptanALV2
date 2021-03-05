@@ -27,8 +27,9 @@ const area_1 = require("../db/models/area");
 const shopcard_1 = require("../models/shopcard");
 const shipment_1 = require("../models/shipment");
 const payment_1 = require("../models/payment");
+const order_1 = require("../db/models/order");
 const dispatcher_1 = require("./api/dispatcher");
-const order_1 = require("./api/order");
+const order_2 = require("./api/order");
 let ellipsis = require('text-ellipsis');
 var MarkdownIt = require('markdown-it');
 const commissionHelper_1 = require("../lib/commissionHelper");
@@ -49,7 +50,7 @@ class Route extends router_1.ViewRouter {
         this.possiblePuanList = [];
         this.destinationMatrix = {};
         this.puanCalculator = new commissionHelper_1.PuanCalculator();
-        this.orderapi = new order_1.default(this.constructorParams);
+        this.orderapi = new order_2.default(this.constructorParams);
     }
     getOrderSummary() {
         return __awaiter(this, void 0, void 0, function* () {
@@ -423,13 +424,26 @@ class Route extends router_1.ViewRouter {
             this.renderPage("pages/checkout.review.ejs", userMessage);
         });
     }
+    completeViewRoute() {
+        return __awaiter(this, void 0, void 0, function* () {
+            let ordernums = this.req.query.orders.split(',');
+            let orders = yield order_1.Order.findAll({
+                where: {
+                    ordernum: ordernums
+                }
+            });
+            this.res.render("pages/checkout.complete.ejs", this.viewData({
+                orders: orders,
+            }));
+        });
+    }
     savereviewRoute() {
         return __awaiter(this, void 0, void 0, function* () {
             this.shopcard = yield shopcard_1.ShopCard.createFromRequest(this.req);
             yield this.setDispatcher();
             this.shopcard.calculateShippingCosts();
             try {
-                let api = new order_1.default(this.constructorParams);
+                let api = new order_2.default(this.constructorParams);
                 let orders = yield api.create(this.shopcard);
                 if (this.req.body.usepuan == "true") {
                     for (var i = 0; i < orders.length; i++) {
@@ -442,9 +456,7 @@ class Route extends router_1.ViewRouter {
                 //     this.res.redirect(`/user/orders/${orders[0].ordernum}?new=1`)
                 // }
                 // else 
-                this.res.render("pages/checkout.complete.ejs", this.viewData({
-                    orders: orders,
-                }));
+                this.res.redirect('/alisveris-sepetim/complete?orders=' + orders.map(o => o.ordernum).join(','));
             }
             catch (err) {
                 email_1.default.send('tansut@gmail.com', 'hata/CreateOrder: kasaptanAl.com', "error.ejs", {
@@ -477,6 +489,7 @@ class Route extends router_1.ViewRouter {
         router.get("/alisveris-sepetim/payment", Route.BindRequest(Route.prototype.paymentViewRoute));
         router.post("/alisveris-sepetim/savepayment", Route.BindRequest(Route.prototype.savepaymentRoute));
         router.get("/alisveris-sepetim/review", Route.BindRequest(Route.prototype.reviewViewRoute));
+        router.get("/alisveris-sepetim/complete", Route.BindRequest(Route.prototype.completeViewRoute));
         router.post("/alisveris-sepetim/savereview", Route.BindRequest(Route.prototype.savereviewRoute));
     }
 }

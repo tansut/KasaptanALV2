@@ -1542,18 +1542,26 @@
                     if (document.referrer.indexOf('/alisveris-sepetim') >= 0) {
                         toBack = false;
                     } else {
-                      if (App.platform == 'web') {
+                      
                         if (document.referrer.indexOf(location.protocol + "//" + location.host) === 0) {                                            
                             if (document.referrer.indexOf(current) === 0) {
                               toBack = false;
                             }                            
-                        } 
-                      }
+                        } else toBack=false 
+                      
                     } 
 
                     
                     if (toBack) {
-                      App.platform == 'web' ? window.history.go(-1): window.close();
+                      if (App.platform == 'web') {
+                        window.history.go(-1)
+                      } else {
+                        
+                          window.close()
+                        
+                          window.history.go(-1)
+                        
+                      }
                       return false;
                     }
                     else {                     

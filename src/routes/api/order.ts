@@ -1085,6 +1085,7 @@ export default class Route extends ApiRouter {
 
         for (var bi in butchers) {
             let order = await Order.fromShopcard(card, <any>bi);
+            order.platform = this.platform;
             order.ordergroupnum = groupid;
             order.butcherid = parseInt(bi);
             order.butcher = await Butcher.findByPk(order.butcherid);

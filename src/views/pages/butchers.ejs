@@ -50,14 +50,14 @@
             
           
              
-            <a href="<%= `/${butchers[i].slug}` %>">
+            <a href="<%= `/${butchers[i].slug}` %>" class="app_blank">
               <img width="500" height="500" src="<%= `${__req.helper.imgUrl('butcher-google-photos', butchers[i].slug)}` %>"
                   class="card-img-top" alt="<%= `/${butchers[i].name}` %>">
           </a>
 
             <div class="card-body text-center ">
               <h5 class="card-title">
-                <a href="<%= `/${butchers[i].slug}` %>" class="text-dark font-size-md">
+                <a href="<%= `/${butchers[i].slug}` %>" class="text-dark font-size-md app_blank">
                   <%= butchers[i].name %>
                 </a>
 
@@ -79,7 +79,7 @@
   <div class="container-fluid text-center pb-4 bg-light">
     <% for(var i=0; i<subs.length; i++) {%>
 
-    <a href="<%= `/${subs[i].slug}-kasap` %>" class="btn btn-sm btn-secondary mx-2 my-2"><%= subs[i].name %></a>
+    <a href="<%= `/${subs[i].slug}-kasap` %>" class="app_blank btn btn-sm btn-secondary mx-2 my-2"><%= subs[i].name %></a>
 
 
     <% } %>

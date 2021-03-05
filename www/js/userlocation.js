@@ -292,7 +292,7 @@
         options.defaultCity = window.__useraddr ? window.__useraddr.level1Id : undefined;
         options.defaultIlce = window.__useraddr ? window.__useraddr.level2Id : undefined;
         options.defaultDistrict = window.__useraddr ? window.__useraddr.level3Id : undefined;
-
+        options.showWarning = options.showWarning || false;
 
         this.done = done;
         if (!self.areainited) {
@@ -302,6 +302,11 @@
                 if (options.msg) {
                     $('#exploreAreaMsg').show();
                     $('#exploreAreaMsg').html(options.msg || '')
+                } else if (options.showWarning) {
+                    $('#exploreAreaMsg').show();
+                    $('#exploreAreaMsg').html('Kasaplar ve ürün fiyatları için lütfen semtinizi seçin')                    
+                } else {
+                    $('#exploreAreaMsg').hide();
                 }
                 $('#areaModal').modal();
                 $("#exploreAreaButton").click(function () {

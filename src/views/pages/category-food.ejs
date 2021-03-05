@@ -60,7 +60,7 @@
         <div class="row cz-gallery">
           <% controller.foods.forEach((resource,i) => {%>
           <div class="col-md-2 col-6 mb-3">
-            <%- include(`./_partial/resource-item.ejs`, {resource: resource, subUrl: 'ile-yapin'  }) %>
+            <%- include(`./_partial/resource-item.ejs`, {css: 'app_blank', resource: resource, subUrl: 'ile-yapin'  }) %>
   
           </div>
           <% }) %>

@@ -11,20 +11,7 @@
 
 
 
-  <div class="page-title-overlap page-title ">
-    <div class="container d-lg-flex justify-content-between py-2 py-lg-3">
-      <div class="order-lg-2 mb-3 mb-lg-0 pt-lg-2">
-        <nav aria-label="breadcrumb" class="d-none">
-          <ol class="breadcrumb breadcrumb-dark flex-lg-nowrap justify-content-center justify-content-lg-star">
-            <li class="breadcrumb-item"><a class="text-nowrap" href="/"><i class="czi-home"></i></a></li>
-          </ol>
-        </nav>
-      </div>
-      <div class="order-lg-1 pr-lg-4 text-center text-lg-left">
-        <h1 class="h3 text-light mb-0">Gözden Geçirin</h1>
-      </div>
-    </div>
-  </div>
+ 
 
   <!-- Page Content-->
   <div class="container mb-4 ">
@@ -352,7 +339,7 @@
   <% } %>
 
 
-           <div class="d-flex">
+           <div id="footerbtns" class="d-flex">
             <div class="w-50 pr-3"><a class="btn btn-secondary btn-block" href="/alisveris-sepetim/payment">
                Geri</a></div>
             <div class="w-50 pl-2">
@@ -382,7 +369,7 @@
 
 <script>
   function beforeSubmit() {
-    var auth = App.Auth.checkAuthentication('/alisveris-sepetim/review?continue=1', '<h6>Muazzam ürünler!</h6><p>Güvenlik adımını şimdi tamamlayalım.</p>')
+    var auth = App.Auth.checkAuthentication('/alisveris-sepetim/review?continue=1#footerbtns', '<h6>Muazzam ürünler!</h6><p>Güvenlik adımını şimdi tamamlayalım.</p>')
     if (!auth) {
       $('#su-tel').val('<%=controller.shopcard.address.phone%>');
       $('#su-name').val('<%=controller.shopcard.address.name%>');
@@ -396,7 +383,16 @@
   $(document).ready(function() {
     var urlParams = new URLSearchParams(window.location.search);
     if (urlParams.get('continue') == "1") {
-      document.getElementById("reviewForm").submit();
+      setTimeout(function() { 
+
+        <% if (controller.platform == 'app') { %>
+          $('#save-adres').text('ONAYLA'); 
+        <% } else { %>
+          $('#save-adres').text('İşlem sürüyor..'); 
+        $('#save-adres').attr('disabled', true);
+        document.getElementById("reviewForm").submit()
+        <% } %>
+      })
     }
   })
   

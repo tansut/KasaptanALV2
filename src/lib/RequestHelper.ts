@@ -8,7 +8,7 @@ import config from "../config";
 
 export class RequestHelper {
 
-    constructor(public req: AppRequest) {
+    constructor(public req: AppRequest, public res: express.Response) {
 
     }
 
@@ -75,6 +75,7 @@ export class RequestHelper {
                     level3Id: adr.level3Id,
                     level4Id: adr.level4Id
                 };
+                this.res.cookie('prefAddr', JSON.stringify(this.req.session.prefAddr), { maxAge: 60 * 24 * 60 * 60 * 1000, httpOnly: false});
                 await new Promise<void>((resolve, reject) => {
                     this.req.session.save(err => (err ? reject(err) : resolve()))
                 })
@@ -96,13 +97,25 @@ export class RequestHelper {
 
     static use(app: express.Application) {
         app.use((req: AppRequest, res, next) => {
-            req.helper = new RequestHelper(req);
+            req.helper = new RequestHelper(req, res);
             req.helper.fillPreferredAddress().then(r => next()).catch(next)
         })
     }
 
     async fillPreferredAddress() {
         let req = this.req, list = [];
+        var adr: PreferredAddressQuery = {
+            level1Id: null,
+            level2Id: null,
+            level3Id: null,
+            level4Id: null,
+        };
+
+        if (req.cookies['prefAddr']) {
+            adr = JSON.parse(req.cookies['prefAddr']);
+            req.session.prefAddr = adr;
+        }
+        
         if (!req.user && !req.session.prefAddr) return;
         if (this.req.prefAddr) return;
         if (req.user && req.session.prefAddr != null) {
@@ -113,12 +126,7 @@ export class RequestHelper {
             req.session.prefAddr = null;
             await req.user.save();
         }
-        var adr: PreferredAddressQuery = {
-            level1Id: null,
-            level2Id: null,
-            level3Id: null,
-            level4Id: null,
-        };
+
         if (req.user) {
             adr.level1Id = req.user.lastLevel1Id;
             adr.level2Id = req.user.lastLevel2Id;

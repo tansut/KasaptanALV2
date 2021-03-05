@@ -87,9 +87,7 @@ class CacheManager {
     }
     static fillAppNav(url) {
         return __awaiter(this, void 0, void 0, function* () {
-            url = 'http:.*\\';
-            url = 'http://192.168.1.38:3000';
-            //url = 'https://www.kasaptanal.com'
+            url = (config_1.default.nodeenv == 'production') ? 'https://www.kasaptanal.com' : 'http://192.168.2.236:3000';
             let data = this.dataCache.get("app-nav-data");
             if (!data) {
                 let rawdata = fs.readFileSync(path.join(config_1.default.projectDir, `app-nav-levels.json`));

@@ -3,7 +3,7 @@
 var mode = resource.tag1.includes('tarif')  ? 'tarif': 'food';
 var targetUrl = (mode == 'tarif' ? '/et-yemekleri': '/et-yemekleri');
 var resourceUrl = targetUrl + '/' + (resource.slug || resource.id)  + (mode=='tarif' ? '':'')
-
+var css = typeof(css) == 'undefined' ? '': css
 %>
 <div class="card h-100 shadow-sm pb-0 product-card rounded-0">
 
@@ -20,14 +20,14 @@ var resourceUrl = targetUrl + '/' + (resource.slug || resource.id)  + (mode=='ta
         <% } else { %> src="<%= `${resource.thumbnailFileUrl}` %>" <% } %> alt="<%= resource.title  %>">
     </a>
     <div class="card-body text-center">
-      <h3 class="product-title font-size-md"><a
+      <h3 class="product-title font-size-md"><a class="<%=css%>"
           href="<%= `${resourceUrl}`  %>"><%= resource.title  %></a>
       </h3>
       <!-- <p class="text-muted font-size-sm">(<%=resource.product.name%>)</p> -->
     </div>
     <div class="px-2 py-2">
       <a data-category="food" data-tag="true" data-action="eti-bizden" data-label="<%=resource.slug%>" href="<%- include(`./addtonotelink.ejs`, {resource: resource, subUrl: subUrl, auto: false  }) %>"
-        class="btn btn-sm btn-block  btn-primary font-size-xs"><i class=" czi-thumb-up mr-1">
+        class="<%=css%> btn btn-sm btn-block  btn-primary font-size-xs"><i class=" czi-thumb-up mr-1">
         </i>Eti Bizden</a>
      
     </div>
