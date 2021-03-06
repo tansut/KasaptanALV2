@@ -190,6 +190,10 @@
 
 
       App.platform == 'app' && $('a.app_blank').attr('target','_blank');
+      if (App.mobileOs == "ios") {
+        $("#iosAppPromote").show()
+        
+      }
 
       $('.accordion').on('shown.bs.collapse', function (event) {
         var title = $("h3.accordion-heading", $(event.target).parent()[0]).text();

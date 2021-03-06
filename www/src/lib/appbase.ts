@@ -1,4 +1,23 @@
 export default class AppBase {
+
+    static get mobileOs(): "win" | "android" | "ios" | "unknown" {
+        var userAgent = navigator.userAgent || navigator.vendor || window['opera'];
+      
+          if (/windows phone/i.test(userAgent)) {
+              return "win";
+          }
+      
+          if (/android/i.test(userAgent)) {
+              return "android";
+          }
+      
+          if (/iPad|iPhone|iPod/.test(userAgent) && !window.MSStream) {
+              return "ios";
+          }
+      
+          return "unknown";
+      }
+
     public static RunConfig = {
         
     }    

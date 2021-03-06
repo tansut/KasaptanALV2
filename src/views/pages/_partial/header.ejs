@@ -126,7 +126,7 @@
     </div>
     <div class="navbar navbar-expand-lg navbar-light navbar-stuck-menu mt-n2 pt-0 pb-0">
       <div class="container px-0">
-        <div class="input-group-overlay d-lg-none">
+        <div class="input-group-overlay d-lg-none mb-3">
           <div class="input-group-prepend-overlay">
 
             <span class="input-group-text">
@@ -137,7 +137,24 @@
           <input class="form-control searchBox prepended-form-control" data-noresults-text="Maalesef bulamadık."
             autocomplete="off" type="search" placeholder="<%=searchHint%>">
         </div>
+        <% if (controller.platform == 'web') { %>
+        <div style="display: none;" id="iosAppPromote" class="w-100   mb-3  bg-secondary rounded d-lg-none">
+          <a href="https://itunes.apple.com/WebObjects/MZStore.woa/wa/viewSoftware?id=1554059709" class="d-flex p-2 text-dark align-items-center">
+            <img width="720" height="720" class="mr-2"
+            style="width: 2.5rem; height: 2.5rem;" src="<%=__config.staticDomain %>/resource/img/applogo.png" title="KasaptanAl.com"
+            alt="Uygulamayı indir" /> <div>
+              <p class="d-block mb-0 font-size-sm">
+                Uygulamayı İndir
+              </p>
+              
+              <span class="text-muted font-size-xs">Çok daha hızlı ve pratik</span>
+            </div> 
+            
+          </a>
 
+          
+        </div>
+        <% } %>
         <div class="collapse navbar-collapse pt-3 pt-lg-0 " id="navbarCollapse3">
 
           <ul class="navbar-nav">

@@ -8,10 +8,10 @@
 <body>
     <% include ./_partial/header %>
 
-    <div class="container mt-3">
+    <div class="container">
         <div data-simplebar data-simplebar-auto-hide="false">
             <div class="d-flex pb-2">
-                <% var items= ['kampanya', 'home', 'basaran', 'cuneytasan', 'premium', 'ciger','besindeger'] %>
+                <% var items= ['kampanya', 'home', 'cuneytasan', 'premium', 'ciger','besindeger'] %>
                     <% items.forEach((item, i)=> {%>
 
                         <div class="mb-2">
@@ -29,21 +29,6 @@
 
     </div>
 
-    <% if (controller.platform == 'app') { %>
-        <!-- <input type="text" id="appHref">
-        <button type="button" onclick="testapphref()">send</button>
-
-        <script>
-            function testapphref() {
-                try {
-                    alert(document.querySelector('#appHref').value)
-                window.location.href = document.querySelector('#appHref').value;
-        } catch(e) {
-        alert(e.message)
-      }
-            }
-        </script> -->
-    <% } %>
 
 
     <% if (__req.user && controller.lastOrders.length) { %>

@@ -45,23 +45,19 @@
   }
 
   function initSubmit() {
-    setTimeout(function() { 
-
-
-  $('#save-adres').text('submitting..'); 
-$('#save-adres').attr('disabled', true);
-document.getElementById("reviewForm").submit()
-
-})
-  }
-
-  $(document).ready(function() {
-    var urlParams = new URLSearchParams(window.location.search);
-    if (urlParams.get('continue') == "1") {
-      initSubmit()
-    }
-  })
-
+     setTimeout(function() {
+     $('#save-adres').text('submitting..');
+     $('#save-adres').attr('disabled', true);
+    $('#reviewForm').submit();
+     },100);
+}
+ 
+$(document).ready(function() {
+     var urlParams = new URLSearchParams(window.location.search);
+     if (urlParams.get('continue') === "1") {
+         initSubmit();
+     }
+});
 
   
 </script>
