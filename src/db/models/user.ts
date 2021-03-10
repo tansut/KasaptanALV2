@@ -236,7 +236,9 @@ export default class User extends BaseModel<User> {
     }
 
 
-
+    hasSavedLocation() {
+        return (this.lastLevel1Id && this.lastLevel2Id && this.lastLevel3Id);
+    }
 
     generateAccessToken(): authorization.IAccessTokenData {
         var tokenData = <authorization.IAccessTokenData>{

@@ -10,6 +10,7 @@ import { min, round } from 'lodash';
 import parsePhoneNumber from 'libphonenumber-js';
 import { Shipment, ShipmentDays } from '../models/shipment';
 import * as crypto from 'crypto';
+import { PreferredAddress } from '../db/models/user';
 
 export default class Helper {
 
@@ -20,6 +21,16 @@ export default class Helper {
         slug: 'tarifler',
         name: 'Tarifler'
     }]
+
+
+    static serializePrefAddr(adr: PreferredAddress) {
+        return {
+            level1Id: adr.level1Id,
+            level2Id: adr.level2Id,
+            level3Id: adr.level3Id,
+            level4Id: adr.level4Id
+        }
+    }
 
     static getUrl(req) {
         let proto = req.header("x-forwarded-proto") || req.protocol;

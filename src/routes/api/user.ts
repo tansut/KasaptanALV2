@@ -295,11 +295,19 @@ export default class UserRoute extends ApiRouter {
 
 
 
-    signOff() {
+    async signOff() {
+        return new Promise<void>((resolve, reject) => {
+            (<any>this.res).clearCookie('remember_me');
+            (<any>this.res).clearCookie('prefAddr');
+            (<any>this.req).logout();  
+            this.req.session.destroy((err) => {
+                resolve()
+              })            
+        })
 
-        this.req.session.shopcard = this.req.user.shopcard;
-        (<any>this.res).clearCookie('remember_me');
-        (<any>this.req).logout();        
+
+        //this.req.session.shopcard = this.req.user.shopcard;
+      
     }
 
     setAccessToken(accessToken: authorization.IEncryptedAccessTokenData) {

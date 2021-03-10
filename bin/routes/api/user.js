@@ -286,9 +286,17 @@ class UserRoute extends router_1.ApiRouter {
         return user_1.default.retrieveByEMailOrPhone(email);
     }
     signOff() {
-        this.req.session.shopcard = this.req.user.shopcard;
-        this.res.clearCookie('remember_me');
-        this.req.logout();
+        return __awaiter(this, void 0, void 0, function* () {
+            return new Promise((resolve, reject) => {
+                this.res.clearCookie('remember_me');
+                this.res.clearCookie('prefAddr');
+                this.req.logout();
+                this.req.session.destroy((err) => {
+                    resolve();
+                });
+            });
+            //this.req.session.shopcard = this.req.user.shopcard;
+        });
     }
     setAccessToken(accessToken) {
         this.res.cookie("auth", accessToken, {

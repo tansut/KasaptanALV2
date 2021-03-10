@@ -181,7 +181,7 @@ class Order extends BaseModel<Order> {
 
     get displayAddress() {
         //return `${this.address} Bina: ${this.bina}, Kat: ${this.kat}, Daire: ${this.daire}. + ${this.areaLevel3Text}, ${this.areaLevel2Text}/${this.areaLevel1Text}`
-        return `${this.address}. ${this.areaLevel4Text ? this.areaLevel4Text + ',':''} ${this.areaLevel3Text}, ${this.areaLevel2Text}/${this.areaLevel1Text}`
+        return `${this.address} Bina: ${this.bina}, Kat: ${this.kat}, Daire: ${this.daire}. ${this.areaLevel4Text ? this.areaLevel4Text + ',':''} ${this.areaLevel3Text}, ${this.areaLevel2Text}/${this.areaLevel1Text}`
     }
 
     @Column({

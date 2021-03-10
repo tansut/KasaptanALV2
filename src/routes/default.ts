@@ -114,9 +114,11 @@ export default class Route extends ViewRouter {
         let area = await Area.getBySlug(this.req.params.slug);
         if (!area) return this.next();
         await this.req.helper.setPreferredAddressByArea(area, true);
-        if (this.req.query.r)
-            this.res.redirect(this.req.query.r as string);
-        else this.res.redirect('/')
+        
+        //this.res.send('ok')
+                 if (this.req.query.r)
+             this.res.redirect(this.req.query.r as string);
+         else this.res.redirect('/')
     }
 
     async tempares() {

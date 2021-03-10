@@ -10,6 +10,14 @@ const libphonenumber_js_1 = require("libphonenumber-js");
 const shipment_1 = require("../models/shipment");
 const crypto = require("crypto");
 class Helper {
+    static serializePrefAddr(adr) {
+        return {
+            level1Id: adr.level1Id,
+            level2Id: adr.level2Id,
+            level3Id: adr.level3Id,
+            level4Id: adr.level4Id
+        };
+    }
     static getUrl(req) {
         let proto = req.header("x-forwarded-proto") || req.protocol;
         let host = config_1.default.nodeenv == "development" ? req.get('Host') : 'www.kasaptanal.com';

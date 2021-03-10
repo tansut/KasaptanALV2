@@ -1349,7 +1349,7 @@
                                   <div class="media-body pl-3">
                                     <h6 class="font-size-sm mb-0"><%=r.displayUser%></h6>
                                    
-                                      <a href="/<%=r.areaSlug%>-kasap" class="font-size-ms"><%=r.level3Text%></a>
+                                      <a href="/<%=r.areaSlug%>-kasap" class="font-size-ms app_blank"><%=r.level3Text%></a>
 
                                    
                                   </div>
@@ -1361,7 +1361,7 @@
                                     <%=r.itemDate.toLocaleDateString('tr-TR', dateops)%> tarihli
                                     
               
-                                    <a href="/<%=r.ref2slug%>"><%=r.ref2Text%></a>
+                                    <a class="app_blank" href="/<%=r.ref2slug%>"><%=r.ref2Text%></a>
 
                                   
                                     siparişi
@@ -1382,8 +1382,8 @@
 
                               <% r.settings.products.forEach(p => { %>
 
-                              <a class="mr-2 font-size-xs " href="/<%=p.slug%>"><i
-                                  class="mr-1 czi-check-circle"></i><%=p.name%></a>
+                              <a class="mr-2 app_blank font-size-xs " href="/<%=p.slug%>"><i
+                                  class="mr-1  czi-check-circle"></i><%=p.name%></a>
 
 
 

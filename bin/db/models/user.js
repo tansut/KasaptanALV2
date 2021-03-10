@@ -87,6 +87,9 @@ let User = User_1 = class User extends basemodel_1.default {
     set shopcard(value) {
         this.setDataValue('shopcardjson', Buffer.from(JSON.stringify(value), "utf-8"));
     }
+    hasSavedLocation() {
+        return (this.lastLevel1Id && this.lastLevel2Id && this.lastLevel3Id);
+    }
     generateAccessToken() {
         var tokenData = {
             userId: this["id"],

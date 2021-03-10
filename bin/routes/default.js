@@ -108,6 +108,7 @@ class Route extends router_1.ViewRouter {
             if (!area)
                 return this.next();
             yield this.req.helper.setPreferredAddressByArea(area, true);
+            //this.res.send('ok')
             if (this.req.query.r)
                 this.res.redirect(this.req.query.r);
             else

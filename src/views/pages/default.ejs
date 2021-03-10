@@ -46,7 +46,7 @@
                         <div class="mb-2">
                             <div class="mr-2 item-slider item-slider-sm">
                                 <div class="card h-100 text-center pb-0  ">
-                                    <a class="d-block" href="<%= `/user/orders/${item.ordernum}` %>">
+                                    <a class="d-block app_blank" href="<%= `/user/orders/${item.ordernum}` %>">
                                         <img class="card-img-top" width="500" height="500"  title="<%=item.butcher.name%>" 
                                             src="<%= `${__req.helper.imgUrl('butcher-google-photos', item.butcher.slug)}` %>"
                                             alt="<%=item.butcher.name%>"></a>
@@ -57,7 +57,7 @@
                                                 </a>
                                             </h5>
                                             <h6 class="font-size-sm text-muted"><%=item.status%></h6>
-                                            <a class="btn btn-sm btn-outline-primary" href="<%= `/user/orders/${item.ordernum}` %>"> <i class="d-none czi-icon czi-loading"></i> Görüntüle</a>
+                                            <a class="app_blank btn btn-sm btn-outline-primary" href="<%= `/user/orders/${item.ordernum}` %>"> <i class="d-none czi-icon czi-loading"></i> Görüntüle</a>
                                         </div>
                                 </div>
                             </div>
@@ -204,31 +204,33 @@
                     <% items.forEach((item, i)=> {%>
                         <div>
                             <div class="mr-2">
-                               <div style="width: 16rem;height: 100%"  class="border bg-dark">
-
+                                <a style="width: 16rem;height: 100%" class="d-block" href="/blog/<%=item.slug%>">
+                               
+                               
                                 <div class="card border-0 bg-dark text-white">
-                                    <a class="d-block" href="/blog/<%=item.slug%>">
+                                    
                                         <img width="500" height="333" src="<%=`${__config.staticDomain}/content-resimleri/${item.slug}-thumbnail.jpg` %>" alt="<%=item.title%>">
-                                    </a>
+                                   
                                     <div class="card-img-overlay d-flex flex-column-reverse">
                                         <div style="opacity: 0.9;" class="">
-                                            <a href="/blog/<%=item.slug%>">
+                                          
                                             <h5 class="card-title font-size-md font-weight-light bg-primary p-1 text-white"><%=item.title%></h5>
-                                            </a>
+                                            
                                         </div>
 
                          
 
                                     </div>
                                   </div>
-
+                                
 
                          
 
                                
 
 
-                               </div>
+                              
+                            </a>
                             </div>
                         </div>
                         <%})%>
@@ -446,7 +448,7 @@
                                             <strong>eve servis</strong> olarak adlandırabileceğimiz et siparişini
                                             güvenle yapmanızı sağlamaktır.
                                         </p>
-                                        <h3>Güncel <strong>2020 kırmızı et fiyatları</strong> kasaplardan gerçek zamanlı
+                                        <h3>Güncel <strong>2021 kırmızı et fiyatları</strong> kasaplardan gerçek zamanlı
                                         </h3>
                                         <p>
                                             Et fiyatlarını kasaplar belirlemektedir. kasaptanAl.com en doğru gerçek

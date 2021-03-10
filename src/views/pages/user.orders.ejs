@@ -35,9 +35,13 @@
     <!-- Page Content-->
     <div class="container pb-5 mb-2 mb-md-3">
         <div class="row">
-            <%- include('./_partial/user.sidebar.ejs', {
+            <div class="col-lg-4 pt-4 pt-lg-0 d-md-block d-none">
+
+                     <%- include('./_partial/user.sidebar.ejs', {
                page: 'orders'
            }) %>
+            </div>
+       
             <!-- Content  -->
             <section class="col-lg-8">
                 <!-- Toolbar-->
@@ -60,8 +64,8 @@
                         <tbody>
                             <% orders.forEach(p=> { %>
                             <tr>
-                                <td class="py-3"><a class="btn btn-sm btn-dark" rel="nofollow"
-                                        href="/user/orders/<%=p.ordernum%>#order"><%=p.ordernum%></a></td>
+                                <td class="py-3"><a class="app_blank btn btn-sm btn-dark" rel="nofollow"
+                                        href="/user/orders/<%=p.ordernum%>"><%=p.ordernum%></a></td>
                                 <td class="py-3"><%=__helper.formatDate(p.creationDate) %></td>
                                 <td class="py-3"><span class="badge badge-info m-0"><%=p.status%></span></td>
                                 <!-- <td class="py-3">

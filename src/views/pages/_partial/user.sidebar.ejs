@@ -1,5 +1,5 @@
 <!-- Sidebar-->
-<aside class="col-lg-4 pt-4 pt-lg-0 d-md-block d-none">
+<aside>
     <div class="cz-sidebar-static rounded-lg box-shadow-lg px-0 pb-0 mb-5 mb-lg-0">
         <div class="px-4 mb-4">
             <div class="media align-items-center">
@@ -16,25 +16,28 @@
         </div>
         <ul class="list-unstyled mb-0">
             <li class="border-bottom mb-0"><a
-                    class="nav-link-style d-flex align-items-center px-4 py-3 <%= page=='profile'?'active':'' %>"
+                    class="nav-link-style app_blank d-flex align-items-center px-4 py-3 <%= page=='profile'?'active':'' %>"
                     href="/user/profile" rel="nofollow"><i class="czi-user opacity-60 mr-2"></i>Profilim</a>
             </li>
 
             <li class="mb-0 border-bottom"><a rel="nofollow"
-                class="nav-link-style d-flex align-items-center px-4 py-3 <%= page=='orders'?'active':'' %>"
+                class="app_blank nav-link-style d-flex align-items-center px-4 py-3 <%= page=='orders'?'active':'' %>"
                 href="/user/orders"><i class="czi-bag opacity-60 mr-2"></i>Siparişlerim</a>
         </li>  
         <li class="mb-0 border-bottom"><a
-            class="nav-link-style d-flex align-items-center px-4 py-3 <%= page=='puans'?'active':'' %>"
+            class="app_blank nav-link-style d-flex align-items-center px-4 py-3 <%= page=='puans'?'active':'' %>"
             href="/user/puans"><i class="czi-card opacity-60 mr-2"></i>Puanlarım</a>
     </li>          
-        <li class="mb-0 "><a
-            class="nav-link-style d-flex align-items-center px-4 py-3 <%= page=='password'?'active':'' %>"
+        <li class="mb-0 border-bottom "><a
+            class="app_blank nav-link-style d-flex align-items-center px-4 py-3 <%= page=='password'?'active':'' %>"
             href="/user/password"><i class="czi-key opacity-60 mr-2"></i>Şifre
             İşlemleri</a>
     </li>          
 
-            <li class="d-lg-none border-top mb-0"><a class="nav-link-style d-flex align-items-center px-4 py-3"
+    <li class="mb-0"><a class="select-area-action nav-link-style d-flex align-items-center px-4 py-3"><i class="czi-location opacity-60 mr-2"></i>Teslimat Bölgesi</a></li>
+
+
+            <li class="border-top mb-0"><a class="nav-link-style d-flex align-items-center px-4 py-3"
                     href="/user/signoff" rel="nofollow"><i class="czi-sign-out opacity-60 mr-2"></i>Çıkış</a></li>
         </ul>
     </div>

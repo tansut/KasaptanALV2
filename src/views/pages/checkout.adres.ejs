@@ -303,7 +303,7 @@
       $('#getlatlong').attr('disabled', "true");
       $('#getlatlong').text("Hesaplıyorum...");
       window.App.GetGeoLocation().then(function (position) {
-        if (position.coords.accuracy < 1000) {
+        if (position.coords.accuracy < 10000) {
           App.Backend.post('shopcard/reversegeocode', {
             lat: position.coords.latitude,
             lng: position.coords.longitude
@@ -317,7 +317,7 @@
               $('#accuracy').val(position.coords.accuracy);
               $('#getlatlong').text("Başarıyla Aldık");
             } else
-              alert('Konumunuzdan adrese maalesef ullaşamadık, teslimat adresini yazmanız yeterli.');
+              alert('Konumunuzdan adrese maalesef ullaşamadık, teslimat adresini yazmanız .');
           }).catch(function (err) {
             alert('Konumunuzu maalesef alamadık, teslimat adresini yazmanız yeterli.');
             $('#getlatlong').text("Tekrar Deneyin");

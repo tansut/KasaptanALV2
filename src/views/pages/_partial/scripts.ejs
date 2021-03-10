@@ -512,7 +512,7 @@
   <script>
     window.App.User = {
       isAuthenticated: false,
-      prefAdr: <%- JSON.stringify(__req.prefAddr || null) %>
+      prefAdr: <%- JSON.stringify(__req.prefAddr ? __helper.serializePrefAddr(__req.prefAddr) : null) %>
     }
   </script>
   
@@ -524,7 +524,8 @@
     window.App.User = {
       isAuthenticated: <%=__req.user ? true : false %>,
   
-      prefAdr:  <%- JSON.stringify(__req.prefAddr || null) %>
+      prefAdr: <%- JSON.stringify(__req.prefAddr ? __helper.serializePrefAddr(__req.prefAddr) : null) %>
+
     }
   
   </script>

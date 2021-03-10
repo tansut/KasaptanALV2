@@ -192,7 +192,7 @@ export default class Route extends ViewRouter {
 
     async signoff() {
         let userRoute = new UserRoute(this.constructorParams);
-        userRoute.signOff();
+        await userRoute.signOff();
         this.res.redirect("/");
     }
 

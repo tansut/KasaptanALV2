@@ -12,6 +12,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.RequestHelper = void 0;
 const area_1 = require("../db/models/area");
 const config_1 = require("../config");
+const helper_1 = require("./helper");
 class RequestHelper {
     constructor(req, res) {
         this.req = req;
@@ -72,21 +73,7 @@ class RequestHelper {
                     };
                     yield this.req.user.save();
                 }
-                else {
-                    this.req.session.prefAddr = {
-                        level1Id: adr.level1Id,
-                        level2Id: adr.level2Id,
-                        level3Id: adr.level3Id,
-                        level4Id: adr.level4Id
-                    };
-                    this.res.cookie('prefAddr', JSON.stringify(this.req.session.prefAddr), { maxAge: 60 * 24 * 60 * 60 * 1000, httpOnly: false });
-                    yield new Promise((resolve, reject) => {
-                        this.req.session.save(err => (err ? reject(err) : resolve()));
-                    });
-                }
-            }
-            else {
-                //delete this.req.prefAddr;
+                this.res.cookie('prefAddr', JSON.stringify(helper_1.default.serializePrefAddr(adr)), { maxAge: 60 * 24 * 60 * 60 * 1000, httpOnly: false });
             }
         });
     }
@@ -109,38 +96,41 @@ class RequestHelper {
     fillPreferredAddress() {
         return __awaiter(this, void 0, void 0, function* () {
             let req = this.req, list = [];
-            var adr = {
-                level1Id: null,
-                level2Id: null,
-                level3Id: null,
-                level4Id: null,
-            };
+            var adr = null;
             if (req.cookies['prefAddr']) {
                 adr = JSON.parse(req.cookies['prefAddr']);
-                req.session.prefAddr = adr;
             }
-            if (!req.user && !req.session.prefAddr)
+            if (!req.user && !adr)
                 return;
-            if (this.req.prefAddr)
-                return;
-            if (req.user && req.session.prefAddr != null) {
-                req.user.lastLevel1Id = req.session.prefAddr.level1Id;
-                req.user.lastLevel2Id = req.session.prefAddr.level2Id;
-                req.user.lastLevel3Id = req.session.prefAddr.level3Id;
-                req.user.lastLevel4Id = req.session.prefAddr.level4Id;
-                req.session.prefAddr = null;
+            if (req.user && !req.user.hasSavedLocation() && adr != null) {
+                req.user.lastLevel1Id = adr.level1Id;
+                req.user.lastLevel2Id = adr.level2Id;
+                req.user.lastLevel3Id = adr.level3Id;
+                req.user.lastLevel4Id = adr.level4Id;
                 yield req.user.save();
             }
-            if (req.user) {
-                adr.level1Id = req.user.lastLevel1Id;
-                adr.level2Id = req.user.lastLevel2Id;
-                adr.level3Id = req.user.lastLevel3Id;
-                adr.level4Id = req.user.lastLevel4Id;
+            if (req.user && req.user.hasSavedLocation()) {
+                if (adr) {
+                    if ((req.user.lastLevel1Id != adr.level1Id) ||
+                        (req.user.lastLevel2Id != adr.level2Id) ||
+                        (req.user.lastLevel3Id != adr.level3Id) ||
+                        (req.user.lastLevel4Id != adr.level4Id)) {
+                        req.user.lastLevel1Id = adr.level1Id;
+                        req.user.lastLevel2Id = adr.level2Id;
+                        req.user.lastLevel3Id = adr.level3Id;
+                        req.user.lastLevel4Id = adr.level4Id;
+                        yield req.user.save();
+                    }
+                }
+                else {
+                    adr = {};
+                    adr.level1Id = req.user.lastLevel1Id;
+                    adr.level2Id = req.user.lastLevel2Id;
+                    adr.level3Id = req.user.lastLevel3Id;
+                    adr.level4Id = req.user.lastLevel4Id;
+                }
             }
-            else if (req.session.prefAddr) {
-                adr = req.session.prefAddr;
-            }
-            yield this.setPreferredAddress(adr);
+            adr && (yield this.setPreferredAddress(adr));
         });
     }
 }

@@ -148,7 +148,8 @@
                                 $('#semt-from-device').text("Hesaplıyorum...");
                                 var self = this;
                                 window.App.GetGeoLocation().then(function (position) {
-                                    if (position.coords.accuracy < 1000) {
+                                    
+                                    if (position.coords.accuracy < 6000) {
                                         App.Backend.post('user/findsemt', {
                                             lat: position.coords.latitude,
                                             lng: position.coords.longitude

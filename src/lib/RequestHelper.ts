@@ -5,6 +5,7 @@ import * as express from 'express';
 import { reject, resolve } from "bluebird";
 import { ResourceCacheItem } from "./cache";
 import config from "../config";
+import Helper from "./helper";
 
 export class RequestHelper {
 
@@ -68,21 +69,10 @@ export class RequestHelper {
                     coordinates: [adr.lat, adr.lng]
                 }
                 await this.req.user.save();
-            } else {
-                this.req.session.prefAddr = { 
-                    level1Id: adr.level1Id,
-                    level2Id: adr.level2Id,
-                    level3Id: adr.level3Id,
-                    level4Id: adr.level4Id
-                };
-                this.res.cookie('prefAddr', JSON.stringify(this.req.session.prefAddr), { maxAge: 60 * 24 * 60 * 60 * 1000, httpOnly: false});
-                await new Promise<void>((resolve, reject) => {
-                    this.req.session.save(err => (err ? reject(err) : resolve()))
-                })
-            }
-        } else {
-            //delete this.req.prefAddr;
-        }
+            } 
+            this.res.cookie('prefAddr', JSON.stringify(Helper.serializePrefAddr(adr)), { maxAge: 60 * 24 * 60 * 60 * 1000, httpOnly: false});
+
+        } 
     }
 
     async setPreferredAddress(adr: PreferredAddressQuery, save: boolean = false) {
@@ -104,38 +94,44 @@ export class RequestHelper {
 
     async fillPreferredAddress() {
         let req = this.req, list = [];
-        var adr: PreferredAddressQuery = {
-            level1Id: null,
-            level2Id: null,
-            level3Id: null,
-            level4Id: null,
-        };
+
+        var adr: PreferredAddressQuery = null;
 
         if (req.cookies['prefAddr']) {
             adr = JSON.parse(req.cookies['prefAddr']);
-            req.session.prefAddr = adr;
         }
         
-        if (!req.user && !req.session.prefAddr) return;
-        if (this.req.prefAddr) return;
-        if (req.user && req.session.prefAddr != null) {
-            req.user.lastLevel1Id = req.session.prefAddr.level1Id;
-            req.user.lastLevel2Id = req.session.prefAddr.level2Id;
-            req.user.lastLevel3Id = req.session.prefAddr.level3Id;
-            req.user.lastLevel4Id = req.session.prefAddr.level4Id;
-            req.session.prefAddr = null;
+        if (!req.user && !adr) return;
+
+        if (req.user && !req.user.hasSavedLocation() && adr != null)  {
+            req.user.lastLevel1Id = adr.level1Id; 
+            req.user.lastLevel2Id = adr.level2Id;
+            req.user.lastLevel3Id = adr.level3Id;
+            req.user.lastLevel4Id = adr.level4Id;
             await req.user.save();
         }
 
-        if (req.user) {
-            adr.level1Id = req.user.lastLevel1Id;
-            adr.level2Id = req.user.lastLevel2Id;
-            adr.level3Id = req.user.lastLevel3Id;
-            adr.level4Id = req.user.lastLevel4Id;
-        } else if (req.session.prefAddr) {
-            adr = req.session.prefAddr
-        }
-        await this.setPreferredAddress(adr);
-        
+        if (req.user && req.user.hasSavedLocation()) {
+            if (adr) {
+                if ((req.user.lastLevel1Id != adr.level1Id) ||
+                (req.user.lastLevel2Id != adr.level2Id) ||
+                (req.user.lastLevel3Id != adr.level3Id) ||
+                (req.user.lastLevel4Id != adr.level4Id)) {
+                    req.user.lastLevel1Id = adr.level1Id;
+                    req.user.lastLevel2Id = adr.level2Id;
+                    req.user.lastLevel3Id = adr.level3Id;
+                    req.user.lastLevel4Id = adr.level4Id;
+                    await req.user.save()
+                }
+            } else {
+                adr = {}                
+                adr.level1Id = req.user.lastLevel1Id;
+                adr.level2Id = req.user.lastLevel2Id;
+                adr.level3Id = req.user.lastLevel3Id;
+                adr.level4Id = req.user.lastLevel4Id;
+            }            
+        } 
+
+        adr && await this.setPreferredAddress(adr);        
     }
 }

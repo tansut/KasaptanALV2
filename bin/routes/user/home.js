@@ -188,7 +188,7 @@ class Route extends router_1.ViewRouter {
     signoff() {
         return __awaiter(this, void 0, void 0, function* () {
             let userRoute = new user_2.default(this.constructorParams);
-            userRoute.signOff();
+            yield userRoute.signOff();
             this.res.redirect("/");
         });
     }

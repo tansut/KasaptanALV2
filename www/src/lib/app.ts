@@ -42,7 +42,7 @@ export class App extends AppBase {
                     resolve(position)
                 }, function(err) {
                     reject(err)
-                }, {maximumAge:60000, timeout:10000, enableHighAccuracy: false});
+                }, { timeout: 5000, maximumAge: 0, enableHighAccuracy: true});
             })
         } else Promise.reject('not supported')
     }
