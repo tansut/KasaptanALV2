@@ -246,7 +246,7 @@ class Route extends router_1.ViewRouter {
                 this.prices = [];
             this.forceSemt = true;
             this.appUI.title = 'Ürünler';
-            this.appUI.tabIndex = 1;
+            //this.appUI.tabIndex = 1;
             this.renderPage('pages/category.ejs');
         });
     }
