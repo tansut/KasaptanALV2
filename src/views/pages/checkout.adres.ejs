@@ -177,7 +177,7 @@
         </div>
         <div class="modal-body p-0">
           <div class="h-100 d-flex flex-column">
-            <div id="mapdesc" class="p-2 text-muted font-size-sm bg-secondary text-center font-weight-bold">
+            <div id="mapdesc" class="p-2 mb-2 text-muted font-size-sm bg-secondary text-center font-weight-bold">
               <p class="mb-1">
                 Haritayı sürükleyerek tam teslimat konumunu belirleyin.
               </p>
@@ -370,6 +370,16 @@
         done();
       },
 
+       handleLocationError: function(browserHasGeolocation, infoWindow, pos) {
+          infoWindow.setPosition(pos);
+          infoWindow.setContent(
+            browserHasGeolocation
+              ? "Komum alınamadı."
+              : "Desteklenmiyor"
+          );
+          infoWindow.open(map);
+      },
+
       init: function (lat, lng) {
         this._clat = lat;
         this._clng = lng;
@@ -401,14 +411,46 @@
             content: "Teslimat Konumu"
           });
 
+          const locationButton = document.createElement("button");
+        locationButton.textContent = "MEVCUT KONUMUM";
+        locationButton.classList.add("custom-map-control-button");
+        this._map.controls[google.maps.ControlPosition.TOP_CENTER].push(locationButton);
+        var self = this;
+        locationButton.addEventListener("click", function() {
+          // Try HTML5 geolocation.
+          locationButton.textContent = 'Alınıyor...'
+          if (navigator.geolocation) {
+            navigator.geolocation.getCurrentPosition(
+              (position) => {
+                const pos = {
+                  lat: position.coords.latitude,
+                  lng: position.coords.longitude,
+                };
+                self._infowindow.setPosition(pos);
+                //this._infowindow.setContent("Konumunuz ");
+                //this._infowindow.open(this._map);
+                self._map.setCenter(pos);
+                locationButton.textContent = "MEVCUT KONUMUM";
+              },
+              function() {
+                locationButton.textContent = "MEVCUT KONUMUM";
+                self.handleLocationError(true, self._infowindow, self._map.getCenter());
+              }
+            );
+          } else {
+            locationButton.textContent = "MEVCUT KONUMUM";
+            self.handleLocationError(false, self._infowindo, self._map.getCenter());
+          }
+        });
+
+
         }
         this._map.setCenter(new google.maps.LatLng(this._clat, this._clng))
         this._marker.setPosition(new google.maps.LatLng(this._clat, this._clng))    
-        //this._infowindow.open(this._map, this._marker);
 
-        // setTimeout(function() {
-        //   self._infowindow.close()
-        // }, 5000);
+
+
+
 
         $('#set-address-modal').modal({
           backdrop: 'static',

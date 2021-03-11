@@ -90,11 +90,18 @@
 
         var iframe = document.createElement('iframe');
 
-        iframe.onload = function () { 
+        $(iframe).on('load', function() {
           $('#purchasemodal-loading').hide(); 
           iframe.classList.remove('d-none');           
-          div.removeClass('d-none');           
-        };
+          div.removeClass('d-none');    
+        })
+
+
+        // iframe.onload = function () { 
+        //   $('#purchasemodal-loading').hide(); 
+        //   iframe.classList.remove('d-none');           
+        //   div.removeClass('d-none');           
+        // };
         iframe.width = "100%";
         iframe.height = "100%";
         iframe.style.border ="none";

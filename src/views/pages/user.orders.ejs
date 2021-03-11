@@ -64,7 +64,7 @@
                         <tbody>
                             <% orders.forEach(p=> { %>
                             <tr>
-                                <td class="py-3"><a class=" btn btn-sm btn-dark" rel="nofollow"
+                                <td class="py-3"><a class="app_blank btn btn-sm btn-dark" rel="nofollow"
                                         href="/user/orders/<%=p.ordernum%>"><%=p.ordernum%></a></td>
                                 <td class="py-3"><%=__helper.formatDate(p.creationDate) %></td>
                                 <td class="py-3"><span class="badge badge-info m-0"><%=p.status%></span></td>

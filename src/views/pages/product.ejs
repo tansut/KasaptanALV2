@@ -800,14 +800,14 @@
                       
                            
                             <div class="mt-3 d-flex align-items-center justify-content-center">
-                              <p class="font-size-lg" v-if="selectedUnit.unit != 'kg'">Kaç <b>{{ selectedUnit.unitTitle }}</b> hazırlayalım?</p>
-                              <p class="font-size-lg" v-if="selectedUnit.unit == 'kg'"><b>Ne kadar</b> hazırlayalım?</p>
+                              <p class="font-size-lg" v-if="selectedUnit && (selectedUnit.unit != 'kg')">Kaç <b>{{ selectedUnit.unitTitle }}</b> hazırlayalım?</p>
+                              <p class="font-size-lg" v-if="selectedUnit && (selectedUnit.unit == 'kg')"><b>Ne kadar</b> hazırlayalım?</p>
                            
                               
                       
                             </div>
 
-                          <amount-input class="mb-2 font-size-md" :def="quantity || selectedUnit.default" :min="selectedUnit.min"
+                          <amount-input v-if="selectedUnit" class="mb-2 font-size-md" :def="quantity || selectedUnit.default" :min="selectedUnit.min"
                           :max="selectedUnit.max" :step="selectedUnit.step" v-model="quantity"
                           :unit="selectedUnit.unitTitle" >
                       
@@ -905,25 +905,7 @@
                       
                                 </p>
 
-                                <ul v-if="product  && (product.alternateButchers.length > 1)" class="nav nav-pills nav-pills-dark nav-fill mb-2">
-                                  <li class="nav-item mr-0">
-                                    <a class="nav-link shadow-none font-size-xs" @click="alternateSort = null" v-bind:class="{ active: alternateSort == null }">Oto Sıra</a>
-
-                                  </li>
-
-                                  <li class="nav-item mr-0">
-                                    <a class="nav-link shadow-none font-size-xs" @click="alternateSort = toggleSort(alternateSort, 'butcher.kgPrice', 'asc')" v-bind:class="{ active: isSorted(alternateSort, 'butcher.kgPrice') }">Fiyat</a>
-
-                                  </li>
-                                  <li class="nav-item mr-0">
-                                    <a class="nav-link  shadow-none font-size-xs" @click="alternateSort = toggleSort(alternateSort, 'butcher.userRatingAsPerc', 'desc') " v-bind:class="{ active: isSorted(alternateSort, 'butcher.userRatingAsPerc') }">Memnuniyet</a>
-
-                                  </li>
-                                  <li class="nav-item mr-0">
-                                    <a class="nav-link  shadow-none font-size-xs" @click="alternateSort = toggleSort(alternateSort, 'dispatcher.distance', 'asc')" v-bind:class="{ active: isSorted(alternateSort, 'dispatcher.distance')  }">Yakınlık</a>
-
-                                  </li>
-                                </ul>
+                          
 
                            
                           
