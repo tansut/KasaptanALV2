@@ -49,7 +49,7 @@ module.exports = function (shipit) {
         var self = this
             , script1 = `${shipit.releasePath}/bin/kasaptanal.js --node-args="--icu-data-dir=${shipit.releasePath}/node_modules/full-icu"`
             , script2 = `${shipit.releasePath}/bin/kasaptanaltasks.js --node-args="--icu-data-dir=${shipit.releasePath}/node_modules/full-icu"`
-            , startScript = 'nvm use v14.16.0 && source /home/ec2-user/{env} && pm2 start {script1} && pm2 start {script2}'
+            , startScript = 'nvm use v14.16.0 && source /home/ec2-user/{env} && /home/ec2-user/runkasap2.sh && pm2 start {script2}'
             , stopScript = 'nvm use v14.16.0 && pm2 stop kasaptanal && pm2 delete kasaptanal && pm2 stop kasaptanaltasks && pm2 delete kasaptanaltasks'
             , env = this.options.environment
             , envFile = (env === 'production') ? 'production.kasaptanal.env' : 'production.kasaptanal.env'
