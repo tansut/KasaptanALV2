@@ -215,10 +215,8 @@ class KasaptanAlApp {
             });
             yield new Promise((resolve, reject) => {
                 server.listen(config_1.default.port, () => {
-                    index_5.default.start().then(() => {
-                        resolve();
-                        process.send && process.send("ready");
-                    }).catch((err) => reject(err));
+                    resolve();
+                    process.send && process.send("ready");
                 });
             });
         });

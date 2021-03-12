@@ -47,9 +47,10 @@ module.exports = function (shipit) {
 
     shipit.blTask('restart', async function () {
         var self = this
-            , script = `${shipit.releasePath}/bin/kasaptanal.js --node-args="--icu-data-dir=${shipit.releasePath}/node_modules/full-icu"`
-            , startScript = 'nvm use v14.16.0 && source /home/ec2-user/{env} && pm2 start {script}'
-            , stopScript = 'nvm use v14.16.0 && pm2 stop kasaptanal && pm2 delete kasaptanal'
+            , script1 = `${shipit.releasePath}/bin/kasaptanal.js --node-args="--icu-data-dir=${shipit.releasePath}/node_modules/full-icu"`
+            , script2 = `${shipit.releasePath}/bin/kasaptanaltasks.js --node-args="--icu-data-dir=${shipit.releasePath}/node_modules/full-icu"`
+            , startScript = 'nvm use v14.16.0 && source /home/ec2-user/{env} && pm2 start {script1} && pm2 start {script2}'
+            , stopScript = 'nvm use v14.16.0 && pm2 stop kasaptanal && pm2 delete kasaptanal && pm2 stop kasaptanaltasks && pm2 delete kasaptanaltasks'
             , env = this.options.environment
             , envFile = (env === 'production') ? 'production.kasaptanal.env' : 'production.kasaptanal.env'
 
@@ -69,7 +70,8 @@ module.exports = function (shipit) {
         startScript = startScript.replace(/\{log\}/gi, '/var/log/nodejs/' + pkg.name + '.' + moment().format('YYYY-MM-DD') + '.log');
         startScript = startScript.replace(/\{outlog\}/gi, '/var/log/nodejs/' + pkg.name + '.out.' + moment().format('YYYY-MM-DD') + '.log');
         startScript = startScript.replace(/\{errorlog\}/gi, '/var/log/nodejs/' + pkg.name + '.error.' + moment().format('YYYY-MM-DD') + '.log');
-        startScript = startScript.replace(/\{script\}/gi, script);
+        startScript = startScript.replace(/\{script1\}/gi, script1);
+        startScript = startScript.replace(/\{script2\}/gi, script2);
         startScript = startScript.replace(/\{env\}/gi, envFile);
 
         await shipit.remote(startScript);

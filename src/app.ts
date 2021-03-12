@@ -44,6 +44,8 @@ bluebird.config({
     warnings: false
 });
 
+
+
 class KasaptanAlApp {
     app: express.Application;
     apiRouter: express.Router;
@@ -267,11 +269,8 @@ class KasaptanAlApp {
 
         await new Promise<void>((resolve, reject) => {
             server.listen(config.port, () => {
-                Tasks.start().then(()=> {
-                    resolve();
-                    process.send && process.send("ready")
-                }).catch((err) => reject(err))
-
+                resolve();
+                process.send && process.send("ready")
             });
         });
 
