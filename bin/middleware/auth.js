@@ -5,7 +5,6 @@ const moment = require("moment");
 const base_1 = require("./base");
 const http = require("../lib/http");
 const user_1 = require("../db/models/user");
-const authCntroller = require("../lib/authorizationToken");
 const refreshToken_1 = require("../db/models/refreshToken");
 const helper_1 = require("../lib/helper");
 const RememberMeStrategy = require("passport-remember-me").Strategy;
@@ -22,28 +21,28 @@ class AuthMiddleware extends base_1.default {
                 reject(new http.PermissionError(JSON.stringify({ message: 'Token Expired', PermissionErrorType: 'tokenExpire' })));
         });
     }
-    tryLoadUser(req, res, next) {
-        var authHeader = req.cookies ? req.cookies["auth"] : null;
-        if (!authHeader) {
-            return next();
-        }
-        try {
-            var accessToken = authCntroller.default.decryptAccessToken(authHeader);
-            this.validateAccessToken(accessToken).then((user) => {
-                req.user = user;
-                return next();
-            }).catch((err) => {
-                let perr = err instanceof http.PermissionError;
-                if (perr) {
-                    debugger;
-                }
-                next();
-            });
-        }
-        catch (e) {
-            next();
-        }
-    }
+    // private tryLoadUser(req: http.AppRequest, res: express.Response, next: Function) {
+    //     var authHeader = req.cookies ? req.cookies["auth"] : null;
+    //     if (!authHeader) {
+    //         return next();
+    //     }
+    //     try {
+    //         var accessToken = authCntroller.default.decryptAccessToken(authHeader);
+    //         this.validateAccessToken(accessToken).then((user) => {
+    //             req.user = <any>user;
+    //             return next();
+    //         }).catch((err) => {
+    //             let perr = err instanceof http.PermissionError;
+    //             if (perr) {
+    //                 debugger;
+    //             }
+    //             next()
+    //         }
+    //         );
+    //     } catch (e) {
+    //         next();
+    //     }
+    // }
     force(req, res, next, roles) {
         if (!req.user)
             next(new http.PermissionError());

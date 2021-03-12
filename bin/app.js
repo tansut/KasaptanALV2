@@ -46,6 +46,25 @@ bluebird.config({
 });
 class KasaptanAlApp {
     constructor() {
+        this.connections = [];
+    }
+    shutDown() {
+        return __awaiter(this, void 0, void 0, function* () {
+            console.log('Received kill signal, shutting down gracefully');
+            this.server.close(function (err) {
+                index_5.default.stop().finally(() => {
+                    context_1.default.getContext().close().finally(() => {
+                        process.exit(err ? 1 : 0);
+                    });
+                });
+            });
+            setTimeout(() => {
+                console.error('Could not close connections in time, forcefully shutting down');
+                process.exit(1);
+            }, 10000);
+            this.connections.forEach(curr => curr.end());
+            setTimeout(() => this.connections.forEach(curr => curr.destroy()), 5000);
+        });
     }
     shopcard() {
         return __awaiter(this, void 0, void 0, function* () {
@@ -181,17 +200,25 @@ class KasaptanAlApp {
             index_3.default.use(this.viewsRouter);
             user_1.default.use(this.userRouter);
             error_1.default(this.app);
-            const server = http.createServer(this.app);
+            const server = this.server = http.createServer(this.app);
             server.once('error', (err) => {
                 if (err.code === 'EADDRINUSE') {
                     console.log(err);
                     process.exit(2);
                 }
             });
-            index_5.default.start();
-            return new Promise((resolve, reject) => {
+            process.on('SIGTERM', this.shutDown.bind(this));
+            process.on('SIGINT', this.shutDown.bind(this));
+            server.on('connection', connection => {
+                this.connections.push(connection);
+                connection.on('close', () => this.connections = this.connections.filter(curr => curr !== connection));
+            });
+            yield new Promise((resolve, reject) => {
                 server.listen(config_1.default.port, () => {
-                    resolve();
+                    index_5.default.start().then(() => {
+                        resolve();
+                        process.send && process.send("ready");
+                    }).catch((err) => reject(err));
                 });
             });
         });

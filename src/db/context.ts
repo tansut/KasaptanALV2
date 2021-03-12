@@ -47,6 +47,8 @@ let init = (params?: any) => {
         dialectOptions: { decimalNumbers: true }
     });
 
+    
+
     dbInstance.addModels([TempLoc, DBCache, NutritionValue, NutritionValueItem, ButcherArea, Subcategory, Payment, AccountModel, Review, ButcherPriceHistory, PriceCategory, Redirect, WebPage, ButcherModel, Order, OrderItem, Dispatcher, User, RefreshToken, Resource, Area, SiteLog, Category, Product, ProductCategory, ButcherProduct, Content, ResourceCategory]);
 
     return dbInstance.sync({

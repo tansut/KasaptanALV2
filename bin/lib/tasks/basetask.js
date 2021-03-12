@@ -37,18 +37,20 @@ class BaseTask {
     init() {
         return __awaiter(this, void 0, void 0, function* () {
             console.log('Running@' + this.interval);
-            this._internalRun().finally(() => {
+            yield this._internalRun().finally(() => {
                 this._task = cron.schedule(this.interval, () => __awaiter(this, void 0, void 0, function* () {
-                    this._internalRun();
+                    yield this._internalRun();
                 }));
             });
         });
     }
     stop() {
-        if (this._task) {
-            console.log('task destroyed');
-            this._task.destroy();
-        }
+        return __awaiter(this, void 0, void 0, function* () {
+            if (this._task) {
+                console.log('task destroyed');
+                this._task.destroy();
+            }
+        });
     }
 }
 exports.BaseTask = BaseTask;

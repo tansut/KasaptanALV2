@@ -55,7 +55,28 @@ class KasaptanAlApp {
     butcherPagesRouter: express.Router;
     operatorPagesRouter: express.Router;
     sitemap: any;
+    server: http.Server;
+    connections = [];
 
+    async shutDown() {
+        console.log('Received kill signal, shutting down gracefully');
+
+        this.server.close(function(err) {
+              Tasks.stop().finally(() => {
+                db.getContext().close().finally(()=> {
+                    process.exit(err ? 1 : 0);
+                  })
+              })
+            });
+    
+        setTimeout(() => {
+            console.error('Could not close connections in time, forcefully shutting down');
+            process.exit(1);
+        }, 10000);
+    
+        this.connections.forEach(curr => curr.end());
+        setTimeout(() => this.connections.forEach(curr => curr.destroy()), 5000);
+    }
 
     async shopcard() {
 
@@ -224,7 +245,7 @@ class KasaptanAlApp {
 
         ErrorMiddleware(this.app);
 
-        const server = http.createServer(this.app);
+        const server = this.server = http.createServer(this.app);
 
         server.once('error', (err: any) => {
             if (err.code === 'EADDRINUSE') {
@@ -234,15 +255,27 @@ class KasaptanAlApp {
         });
 
   
+        process.on('SIGTERM', this.shutDown.bind(this));
+        process.on('SIGINT', this.shutDown.bind(this));
 
-        Tasks.start();
 
-        return new Promise<void>((resolve, reject) => {
+        server.on('connection', connection => {
+            this.connections.push(connection);
+            connection.on('close', () => this.connections = this.connections.filter(curr => curr !== connection));
+        });
+
+
+        await new Promise<void>((resolve, reject) => {
             server.listen(config.port, () => {
-                resolve();
+                Tasks.start().then(()=> {
+                    resolve();
+                    process.send && process.send("ready")
+                }).catch((err) => reject(err))
+
             });
         });
 
+        
 
     }
 }

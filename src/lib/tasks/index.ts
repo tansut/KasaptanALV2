@@ -14,23 +14,28 @@ let appRoutes = [
 export default class TaskLoader {
 
     static tasks: BaseTask[] = []
+
+    static async stop() {
+        TaskLoader.tasks.forEach(t => {
+            t.stop();
+        })
+    }
+
     static async start() {
 
-        process.on('exit', (code) => {
-            console.log(`About to exit with code: ${code}`);
-            TaskLoader.tasks.forEach(t=> {
-                t.stop();
-            })            
-        });  
+        // process.on('exit', (code) => {
+        //     console.log(`About to exit with code: ${code}`);
+
+        // });  
 
 
         var routings = [];
         appRoutes.forEach((file) => {
             var type = require(file).default;
             let instance: BaseTask = new type();
-            TaskLoader.tasks.push(instance);            
+            TaskLoader.tasks.push(instance);
         });
-        TaskLoader.tasks.forEach(async t=> {
+        await TaskLoader.tasks.forEach(async t => {
             t.init();
         })
         return routings;

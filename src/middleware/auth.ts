@@ -27,30 +27,30 @@ class AuthMiddleware extends Middleware {
     }
 
 
-    private tryLoadUser(req: http.AppRequest, res: express.Response, next: Function) {
+    // private tryLoadUser(req: http.AppRequest, res: express.Response, next: Function) {
 
-        var authHeader = req.cookies ? req.cookies["auth"] : null;
-        if (!authHeader) {
-            return next();
-        }
-        try {
-            var accessToken = authCntroller.default.decryptAccessToken(authHeader);
-            this.validateAccessToken(accessToken).then((user) => {
-                req.user = <any>user;
+    //     var authHeader = req.cookies ? req.cookies["auth"] : null;
+    //     if (!authHeader) {
+    //         return next();
+    //     }
+    //     try {
+    //         var accessToken = authCntroller.default.decryptAccessToken(authHeader);
+    //         this.validateAccessToken(accessToken).then((user) => {
+    //             req.user = <any>user;
 
-                return next();
-            }).catch((err) => {
-                let perr = err instanceof http.PermissionError;
-                if (perr) {
-                    debugger;
-                }
-                next()
-            }
-            );
-        } catch (e) {
-            next();
-        }
-    }
+    //             return next();
+    //         }).catch((err) => {
+    //             let perr = err instanceof http.PermissionError;
+    //             if (perr) {
+    //                 debugger;
+    //             }
+    //             next()
+    //         }
+    //         );
+    //     } catch (e) {
+    //         next();
+    //     }
+    // }
 
 
     public force(req: http.AppRequest, res: express.Response, next: Function, roles?: Array<string>) {

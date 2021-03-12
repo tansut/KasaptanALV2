@@ -19,21 +19,25 @@ let appRoutes = [
     './ordercustomerremainers'
 ];
 class TaskLoader {
+    static stop() {
+        return __awaiter(this, void 0, void 0, function* () {
+            TaskLoader.tasks.forEach(t => {
+                t.stop();
+            });
+        });
+    }
     static start() {
         return __awaiter(this, void 0, void 0, function* () {
-            process.on('exit', (code) => {
-                console.log(`About to exit with code: ${code}`);
-                TaskLoader.tasks.forEach(t => {
-                    t.stop();
-                });
-            });
+            // process.on('exit', (code) => {
+            //     console.log(`About to exit with code: ${code}`);
+            // });  
             var routings = [];
             appRoutes.forEach((file) => {
                 var type = require(file).default;
                 let instance = new type();
                 TaskLoader.tasks.push(instance);
             });
-            TaskLoader.tasks.forEach((t) => __awaiter(this, void 0, void 0, function* () {
+            yield TaskLoader.tasks.forEach((t) => __awaiter(this, void 0, void 0, function* () {
                 t.init();
             }));
             return routings;

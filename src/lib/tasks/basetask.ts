@@ -26,14 +26,14 @@ export class BaseTask {
 
     async init() {
         console.log('Running@' + this.interval);        
-        this._internalRun().finally(()=> {
-            this._task = cron.schedule(this.interval, async () =>  {
-                this._internalRun();
+        await this._internalRun().finally(()=> {
+            this._task =  cron.schedule(this.interval, async () =>  {
+                await this._internalRun();
             });
         })
     }
 
-    stop() {
+    async stop() {
         if (this._task) {
             console.log('task destroyed')
             this._task.destroy();

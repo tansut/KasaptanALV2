@@ -10,7 +10,7 @@
     "url": "git@bitbucket.org:kalitte/kasaptanal.git"
   },
   "engines": {
-    "node": "12.18.1"
+    "node": "14.16.0"
   },
   "scripts": {
     "start": "export TZ='Europe/Istanbul';node --icu-data-dir=./node_modules/full-icu ./bin/kasaptanal",
