@@ -31,7 +31,7 @@ module.exports = function (shipit) {
 
         }
 
-        await shipit.remote("nvm use v12.18.1" + "; export NODE_OPTIONS=--max-old-space-size=4096; cd " + shipit.releasePath + "; npm install --force; npm prune");
+        await shipit.remote("nvm use v14.16.0" + "; export NODE_OPTIONS=--max-old-space-size=4096; cd " + shipit.releasePath + "; npm install --force; npm prune");
 
 
 
@@ -40,7 +40,7 @@ module.exports = function (shipit) {
 
     shipit.blTask('aws', async function () {
 
-        await shipit.remote("nvm use v12.18.1; cd " + shipit.releasePath + "; ./node_modules/gulp/bin/gulp.js aws.deploy");
+        await shipit.remote("nvm use v14.16.0; cd " + shipit.releasePath + "; ./node_modules/gulp/bin/gulp.js aws.deploy");
 
     });    
 
@@ -48,8 +48,8 @@ module.exports = function (shipit) {
     shipit.blTask('restart', async function () {
         var self = this
             , script = `${shipit.releasePath}/bin/kasaptanal.js --node-args="--icu-data-dir=${shipit.releasePath}/node_modules/full-icu"`
-            , startScript = 'nvm use v12.18.1 && source /home/ec2-user/{env} && pm2 start {script}'
-            , stopScript = 'nvm use v12.18.1 && pm2 stop kasaptanal && pm2 delete kasaptanal'
+            , startScript = 'nvm use v14.16.0 && source /home/ec2-user/{env} && pm2 start {script}'
+            , stopScript = 'nvm use v14.16.0 && pm2 stop kasaptanal && pm2 delete kasaptanal'
             , env = this.options.environment
             , envFile = (env === 'production') ? 'production.kasaptanal.env' : 'production.kasaptanal.env'
 
