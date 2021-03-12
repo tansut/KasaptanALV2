@@ -112,13 +112,14 @@
         <% } %>
 
         <div class=" mb-3">
-          <h1 class="h2 mb-2"><%=butcher.name%></h1>
-          <h2 class="h5 mb-2">
+          <h1 class="h2 mb-0"><%=butcher.name%></h1>
+          <h2 class="h5 mb-3">
             <a class="text-muted" target="_blank" href="https://www.google.com/maps/search/?api=1&query=<%=butcher.lat%>,<%=butcher.lng%>"><%= butcher.areaLevel3.name %>/<%= butcher.areaLevel1.name %></a>
            
           </h2>
           <% if (puanData ) { %>
             <div class="mb-3">
+              <h5 class="h5 mb-1">ONLINE SİPARİŞE ÖZEL</h5>
               <a class="mb-2 d-block" href="/blog/kasap-kart">
                 <span class="badge badge-success font-weight-medium font-size-md">
                   %<%= puanData.rate * 100 %> Puan 

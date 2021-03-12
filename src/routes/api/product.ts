@@ -500,7 +500,7 @@ export default class Route extends ApiRouter {
 
         let limits: {[key in ButcherProperty]: number []} = {
             'distance': [0, maxDistance],
-            'kasapkart': [0.00, 0.10],
+            'kasapkart': [0.00, 0.15],
             'productPrice': [minPrice, maxPrice],
             'shipmentPrice': [minFee, maxFee],
             'rating': [80, 100],

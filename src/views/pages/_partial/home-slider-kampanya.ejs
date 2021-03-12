@@ -4,21 +4,20 @@
             src="<%=`${__config.staticDomain}/content-resimleri/onlinekasap-thumbnail.jpg` %>"
             alt=""></a>
         <div class="card-body d-flex flex-column">
-            <h2 class="h4 mb-auto pb-2 text-center">
+            <h2 class="h6 pb-3 mb-auto text-center">
                 Firesiz fiyatlar ve puan kazancı bir arada 
             </h2>
 
                 
-            <p class="card-text">Firesiz tezgâh fiyatlarıyla alışveriş yaparken Kasap Kart™ ile puan kazanın.</p>
 
             <div class="d-flex justify-content-center">
                 <% if (__req.prefAddr) { %>
-                    <a class="btn btn-primary mr-2" href="/kasap-urunleri">Alışverişe Başla</a>
+                    <a class="btn btn-sm btn-primary mr-2" href="/kasap-urunleri">Alışverişe Başla</a>
                 <% } else { %>
-                    <a data-return="/kasap-urunleri" class="mr-2 select-area-action btn btn-primary">Semtinizi Seçin</a>
+                    <a data-return="/kasap-urunleri" class="mr-2 btn-sm select-area-action btn btn-primary">Semtinizi Seçin</a>
 
                 <% } %>
-                    <a class="btn btn-outline-dark mr-2" href="/blog/kasap-kart">Kasap Kart™</a>
+                    <a class="btn btn-sm btn-outline-dark mr-2" href="/blog/kasap-kart">Kasap Kart™</a>
 
 
             </div>

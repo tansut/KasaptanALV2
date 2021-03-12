@@ -90,18 +90,32 @@
 
         var iframe = document.createElement('iframe');
 
+
+        
         $(iframe).on('load', function() {
+          iframe._loaded = true;
           $('#purchasemodal-loading').hide(); 
           iframe.classList.remove('d-none');           
           div.removeClass('d-none');    
         })
 
 
-        // iframe.onload = function () { 
-        //   $('#purchasemodal-loading').hide(); 
-        //   iframe.classList.remove('d-none');           
-        //   div.removeClass('d-none');           
-        // };
+        <% if (controller.platform == "app") { %>
+        if ( App.mobileOs == "android") {
+
+          setTimeout(function() {
+            if (!iframe._loaded) {
+              $('#purchasemodal-loading').hide(); 
+              iframe.classList.remove('d-none');           
+              div.removeClass('d-none');  
+            }
+          }, 1000);
+
+        }
+
+        <% } %>
+
+
         iframe.width = "100%";
         iframe.height = "100%";
         iframe.style.border ="none";

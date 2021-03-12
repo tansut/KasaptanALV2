@@ -8,6 +8,7 @@
 <body>
     <% include ./_partial/header %>
 
+    <% if (true) { %>
     <div class="container">
         <div data-simplebar data-simplebar-auto-hide="false">
             <div class="d-flex pb-2">
@@ -15,7 +16,7 @@
                     <% items.forEach((item, i)=> {%>
 
                         <div class="mb-2">
-                            <div style="width: 21rem; height: 100%;" class="mr-2">
+                            <div style="width: 17rem; height: 100%;" class="mr-2">
                                 <%- include('./_partial/home-slider-' + item, {  }); %>
                             </div>
                         </div>
@@ -29,6 +30,7 @@
 
     </div>
 
+    <% } %>
 
 
     <% if (__req.user && controller.lastOrders.length) { %>
