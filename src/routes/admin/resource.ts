@@ -1,6 +1,5 @@
 import { ApiRouter, ViewRouter } from '../../lib/router';
 import * as express from "express";
-import * as maps from "@google/maps"
 import ButcherModel from '../../db/models/butcher';
 import moment = require('moment');
 import { Auth } from '../../lib/common';
@@ -85,7 +84,7 @@ export default class Route extends ViewRouter {
         let resources = await this.getResources();
 
 
-        return new Promise((resolve, reject) => {
+        return new Promise<void>((resolve, reject) => {
 
             let fileprefix = this.req.query.fileprefix || "";
             let filedest = Helper.ResourcePaths[this.req.params.type];

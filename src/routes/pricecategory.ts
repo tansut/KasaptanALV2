@@ -1,6 +1,5 @@
 import { ApiRouter, ViewRouter } from '../lib/router';
 import * as express from "express";
-import * as maps from "@google/maps"
 import ButcherModel from '../db/models/butcher';
 import moment = require('moment');
 import { Auth } from '../lib/common';

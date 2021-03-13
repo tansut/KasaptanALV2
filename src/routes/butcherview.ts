@@ -1,6 +1,5 @@
 import { ApiRouter, ViewRouter } from '../lib/router';
 import * as express from "express";
-import * as maps from "@google/maps"
 import ButcherModel from '../db/models/butcher';
 import { Auth } from '../lib/common';
 import Helper from '../lib/helper';

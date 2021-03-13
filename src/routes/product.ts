@@ -1,6 +1,5 @@
 import { ApiRouter, ViewRouter } from '../lib/router';
 import * as express from "express";
-import * as maps from "@google/maps"
 import ProductModel, { ProductType } from '../db/models/product';
 import { Auth, ProductTypeManager, ProductTypeFactory } from '../lib/common';
 import Helper from '../lib/helper';

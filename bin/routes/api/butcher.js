@@ -11,7 +11,6 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 Object.defineProperty(exports, "__esModule", { value: true });
 const common_1 = require("../../lib/common");
 const router_1 = require("../../lib/router");
-const maps = require("@google/maps");
 const butcher_1 = require("../../db/models/butcher");
 const moment = require("moment");
 const http_1 = require("../../lib/http");
@@ -221,10 +220,11 @@ class Route extends router_1.ApiRouter {
         });
     }
     getGoogleClient() {
-        return maps.createClient({
-            key: 'AIzaSyBFqn2GNAhwbJnpga-3S3xQGBc0EcdAgH8',
-            Promise: Promise
-        });
+        return {};
+        // return maps.createClient({
+        //     key: 'AIzaSyBFqn2GNAhwbJnpga-3S3xQGBc0EcdAgH8',
+        //     Promise: Promise
+        // });
     }
     // static managecitydata() {
     //     return Area.findAll({

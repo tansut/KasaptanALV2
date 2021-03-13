@@ -1,7 +1,7 @@
 import { Auth } from '../../lib/common';
 import { ApiRouter } from '../../lib/router';
 import * as express from "express";
-import * as maps from "@google/maps"
+import * as maps from "@googlemaps/google-maps-services-js"
 import ButcherModel from '../../db/models/butcher';
 import moment = require('moment');
 import { ValidationError } from '../../lib/http';
@@ -29,6 +29,7 @@ export default class Route extends ApiRouter {
     @Auth.Anonymous()
     googleSyncRoute() {
         const placeid = this.req.body.place_id;
+        
         if (!placeid)
             throw new ValidationError("")
         return this.googleSync(placeid).then((data) => this.res.send({ id: data.id, slug: data.slug }));
@@ -46,7 +47,7 @@ export default class Route extends ApiRouter {
         })
     }
 
-    getGoogleAreas(place: maps.PlaceDetailsResult) {
+    getGoogleAreas(place: any) {
         let result = {};
         for (let i = 0; i < place.address_components.length; i++) {
             let adres = place.address_components[i];
@@ -78,7 +79,7 @@ export default class Route extends ApiRouter {
         return result;
     }
 
-    generateAddress(area1: Area, area2: Area, area3: Area, place: maps.PlaceDetailsResult, model: ButcherModel) {
+    generateAddress(area1: Area, area2: Area, area3: Area, place: any, model: ButcherModel) {
         let areas = this.getGoogleAreas(place);
         let result = areas["level4"] ? areas["level4"].short_name + ", " : "";
 
@@ -108,7 +109,7 @@ export default class Route extends ApiRouter {
         model.address = Helper.capitlize(model.address)
     }
 
-    getBestArea(place: maps.PlaceDetailsResult, model: ButcherModel) {
+    getBestArea(place: any, model: ButcherModel) {
 
         let areas = this.getGoogleAreas(place);
 
@@ -174,7 +175,7 @@ export default class Route extends ApiRouter {
     }
 
 
-    googleToButcher(place: maps.PlaceDetailsResult, model: ButcherModel) {
+    googleToButcher(place: any, model: ButcherModel) {
         model.name = place.name;
         model.gpid = place.place_id;
         place.website && (model.website = place.website);
@@ -253,10 +254,11 @@ export default class Route extends ApiRouter {
     }
 
     getGoogleClient() {
-        return maps.createClient({
-            key: 'AIzaSyBFqn2GNAhwbJnpga-3S3xQGBc0EcdAgH8',
-            Promise: Promise
-        });
+        return <any>{};
+        // return maps.createClient({
+        //     key: 'AIzaSyBFqn2GNAhwbJnpga-3S3xQGBc0EcdAgH8',
+        //     Promise: Promise
+        // });
     }
 
     // static managecitydata() {
@@ -360,7 +362,7 @@ export default class Route extends ApiRouter {
 
 
     syncGooglePhotos(model: ButcherModel) {
-        let gg = <maps.PlaceDetailsResult>model.gpPlace;
+        let gg = <any>model.gpPlace;
         let photos = gg.photos || [];
         let client = this.getGoogleClient();
         let promiseList = [];
