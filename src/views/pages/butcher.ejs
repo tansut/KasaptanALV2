@@ -118,13 +118,19 @@
            
           </h2>
           <% if (puanData ) { %>
-            <div class="mb-3">
-              <h5 class="h5 mb-1">ONLINE SİPARİŞE ÖZEL</h5>
-              <a class="mb-2 d-block" href="/blog/kasap-kart">
-                <span class="badge badge-success font-weight-medium font-size-md">
-                  %<%= puanData.rate * 100 %> Puan 
-                </span>
-              </a>
+            <div class="d-flex justify-content-center mb-3">
+              <div class="bg-secondary p-3  rounded-lg border ">
+                <h5 class="h6 mb-2">ONLINE SİPARİŞE ÖZEL</h5>
+                <a class="mb-2 d-block" href="/blog/kasap-kart">
+                  <span class="badge badge-success font-weight-medium font-size-md">
+                    %<%= puanData.rate * 100 %> Puan Kazancı
+                  </span>
+                </a>
+                <div class=" text-center text-muted font-size-sm">
+                  Puanlarınızı sonraki alışverişlerinizde <strong>indirim olarak </strong>kullanabilirsiniz. 
+                </div>
+              </div>
+            
              
              
             </div>
@@ -642,7 +648,7 @@
                 <% sc.products.forEach((product,i) => { %>
                   <div data-tag="<%= __helper.slugify(product.tag1) %>" class="col-md-4 col-6 ">
                     <% var showPrice = butcher.approved && (butcher.status == 'open') && (butcher.priceDisplay == 'show') %>
-                    <%- include('./_partial/product-view.ejs', { showPrice: showPrice , showPurchase: showPrice, butcher: butcher.slug, butcherProduct: butcher.products.find(p=>p.productid == product.id), product: product}) %>
+                    <%- include('./_partial/product-view.ejs', { link2Location: !(showPrice && controller.logisticsProvider),  showPrice: showPrice , showPurchase: showPrice && controller.logisticsProvider, butcher: butcher.slug, butcherProduct: butcher.products.find(p=>p.productid == product.id), product: product}) %>
                   </div>
                   <% if (controller.foods && controller.foods.length > 0 && !foodsInserted && i>controller.products.length/5) { %>
                   <% foodsInserted = true; %>

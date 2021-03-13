@@ -281,6 +281,7 @@
           var ref = $(self).data('return') ||  window.location.href;
           window.location.href = "/adres-belirle/" + ul.selectedDistrict.slug + '?lng=' + ul.lng + '&lat=' + ul.lat + '&r=' + ref;
         });
+        return false;
       })
   
       $(".explore-area-action").click(function () {

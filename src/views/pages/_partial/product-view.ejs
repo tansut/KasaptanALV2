@@ -6,6 +6,7 @@
 <% var lowPrice = typeof(lowPrice) == 'undefined' ? 0.00: lowPrice %>
 <% var highPrice = typeof(highPrice) == 'undefined' ? 0.00: highPrice %>
 <% var priceUnit = typeof(priceUnit) == 'undefined' ? '': priceUnit %>
+<% var link2Location = typeof(link2Location) == 'undefined' ? false: link2Location %>
 
 
 
@@ -28,13 +29,21 @@
     
     <a 
 
-    class="d-block overflow-hidden app_blank" href="/<%=product.slug%><%=(butcher ? `?butcher=${butcher}&utm_medium=Butcher`:'') %>"><img width="500" height="500"
+    class="<%= link2Location ? 'select-area-action':'' %> d-block overflow-hidden app_blank"
+   
+     href="/<%=product.slug%><%=(butcher ? `?butcher=${butcher}&utm_medium=Butcher`:'') %>"
+     
+    >
+     <img width="500" height="500"
          src="<%= `${__req.helper.imgUrl('product-photos', product.slug)}` %>" class="lazyload"
-            alt="<%= product.name  %>"></a>
+            alt="<%= product.name  %>">
+        
+        
+        </a>
             <% if (typeof(hideName) == 'undefined') { %>
     <div class="card-body card-block d-flex flex-column">
-        <h3 class="mb-auto pb-2 text-center font-size-sm"><a class="text-dark"
-                href="/<%= product.slug%><%=(butcher ? `?butcher=${butcher}`:'') %>"><%= product.name  %></a>
+        <h3 class="mb-auto pb-2 text-center font-size-sm"><a class="text-dark <%= link2Location ? 'select-area-action':'' %>"
+                href="/<%= product.slug%><%=(butcher ? `?butcher=${butcher}&utm_medium=Butcher`:'') %>"><%= product.name  %></a>
         </h3>
 
         <% if (typeof(butcherProduct) != 'undefined' && butcherProduct && showPrice) { %>
