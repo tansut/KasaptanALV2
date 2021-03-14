@@ -120,13 +120,7 @@
                                 </div>
 
 
-                                <div class="form-group">
-                                    <label>Lat & Long [<a href="https://www.google.com/maps/search/?api=1&query=<%=butcher.lat%>,<%=butcher.lng%>">Git</a>]</label>
-                                    <input type="text" class="form-control" name="butcherlat" id="butcherlat"
-                                        value="<%= butcher.lat %>">
-                                    <input type="text" class="form-control" name="butcherlng" id="butcherlng"
-                                        value="<%= butcher.lng %>">                                        
-                                </div>
+                      
 
                                 <div class="d-none form-group">
                                     <label for="logisticProviderUsage">Dış Lojistik Kullanımı</label>
@@ -190,6 +184,18 @@
                                 </div>
 
                                 <div class="form-group">
+                                    <label>page title</label>
+                                    <input type="text" class="form-control" name="butcherpagetitle" id="butcherpagetitle"
+                                        value="<%= butcher.pageTitle %>">
+                                </div>
+                                <div class="form-group">
+                                    <label>page desc</label>
+
+                                    <textarea rows="10" class="form-control" name="butcherpagedesc"
+                                        id="butcherpagedesc"><%= butcher.pageDescription %></textarea>
+                                </div>                                
+
+                                <div class="form-group">
                                     <label>Keywords</label>
                                     <textarea rows="5" class="form-control" name="keywords"
                                         id="keywords"><%= butcher.keywords %></textarea>
@@ -207,6 +213,7 @@
 
                         </div>
                         <button type="submit" name="save" value="true" class="btn btn-primary">Kaydet</button>
+                        <button type="submit" name="savecopy" value="true" class="btn btn-primary">Kopyala</button>
                         <button type="submit" name="saveAsSubMerchant" value="true" class="btn btn-primary">Kredi Kartı Entegrasyonu</button>
                     </form>
                 </div>

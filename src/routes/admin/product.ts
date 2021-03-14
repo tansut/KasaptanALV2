@@ -15,6 +15,7 @@ import { CacheManager } from '../../lib/cache';
 import { NutritionValueTitles, NutritionValueOrders, NutritionValueUnits } from '../../models/common';
 import NutritionValue from '../../db/models/nutritionvalue';
 import NutritionValueItem from '../../db/models/nutritionvalueitem';
+import Product from '../../db/models/product';
 
 export default class Route extends ViewRouter {
     nutritionValueUnits = NutritionValueUnits;
@@ -155,6 +156,25 @@ export default class Route extends ViewRouter {
         let categories = await this.getCategories();
         let pSlug = this.product.slug;
         await this.loadNutiritionValues();
+
+        if (this.req.body.copyproduct == "true") {
+            let newprod = new Product();
+            newprod.slug =  this.product.slug + '-kopya';
+            newprod.name = "Giriniz";
+            newprod.tag1 = this.req.body.tag1;
+            newprod.tag2 = this.req.body.tag2;
+            newprod.tag3 = this.req.body.tag3;
+            newprod.keywords = this.req.body.keywords;
+            newprod.shortdesc = this.req.body.description;
+            newprod.notePlaceholder = this.req.body.notePlaceholder;
+            newprod.featuresText = this.req.body.featuresText;
+            newprod.butcherNote = this.req.body.butcherNote;
+            newprod.butcherProductNote = this.req.body.butcherProductNote;         
+            newprod.mddesc = this.req.body.mddesc;    
+            await newprod.save();
+            return this.res.redirect("/pages/admin/product/" + newprod.slug)           
+        }
+
 
         if (this.req.body.save == "true") {
             if (this.req.user.hasRole('admin')) {

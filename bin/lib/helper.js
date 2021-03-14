@@ -137,7 +137,7 @@ class Helper {
     }
     static formatDate(date, useTime = false, useYear = true) {
         if (date) {
-            const options = { weekday: 'long', year: useYear ? 'numeric' : 'numeric', month: 'long', day: 'numeric' };
+            const options = { weekday: "long", year: useYear ? 'numeric' : 'numeric', month: 'long', day: 'numeric' };
             return date.toLocaleDateString('tr-TR', options) + (useTime ? ` ${date.getHours()}:${date.getMinutes()}` : '');
         }
         else

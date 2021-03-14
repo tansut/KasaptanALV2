@@ -180,7 +180,7 @@ export default class Helper {
 
     static formatDate(date: Date, useTime: boolean = false, useYear: boolean=true) {
         if (date) {
-        const options = { weekday: 'long', year:  useYear ? 'numeric': 'numeric', month: 'long', day: 'numeric' };
+        const options: Intl.DateTimeFormatOptions = { weekday: "long", year:  useYear ? 'numeric': 'numeric', month: 'long', day: 'numeric' };
         return date.toLocaleDateString('tr-TR', options) + (useTime ? ` ${date.getHours()}:${date.getMinutes()}`:'');
         } else return ''
     }

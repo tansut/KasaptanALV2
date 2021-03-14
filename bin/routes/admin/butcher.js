@@ -28,6 +28,7 @@ const butcherproduct_1 = require("../../db/models/butcherproduct");
 const dispatcher_1 = require("../../db/models/dispatcher");
 const creditcard_1 = require("../../lib/payment/creditcard");
 const sitelog_1 = require("../api/sitelog");
+const butcher_2 = require("../../db/models/butcher");
 class Route extends router_1.ViewRouter {
     constructor() {
         super(...arguments);
@@ -262,6 +263,14 @@ class Route extends router_1.ViewRouter {
             this.butcher = yield this.getButcher();
             let resources = yield this.getResources(this.butcher);
             this.products = yield this.getProducts();
+            if (this.req.body.savecopy == "true") {
+                let newItem = new butcher_2.default(this.butcher.toJSON());
+                newItem.setDataValue("id", undefined);
+                newItem.slug = this.butcher.slug + '-kopya';
+                newItem.name = 'giriniz';
+                yield newItem.save();
+                return this.res.redirect("/pages/admin//butcher/" + newItem.slug);
+            }
             if (this.req.body.saveAsSubMerchant) {
                 let logger = new sitelog_1.default(this.constructorParams);
                 let payment = creditcard_1.CreditcardPaymentFactory.getInstance();
@@ -286,16 +295,16 @@ class Route extends router_1.ViewRouter {
                 this.butcher.facebook = this.req.body.butcherfacebook;
                 this.butcher.description = this.req.body.butcherdesc;
                 this.butcher.keywords = this.req.body.keywords;
+                this.butcher.pageDescription = this.req.body.butcherpagedesc;
+                this.butcher.pageTitle = this.req.body.butcherpagetitle;
                 if (this.req.body.butcherlat && this.req.body.butcherlng) {
                     this.butcher.location = {
                         type: 'Point',
                         coordinates: [parseFloat(this.req.body.butcherlat), parseFloat(this.req.body.butcherlng)]
                     };
                 }
-                //this.butcher.logisticProviderUsage = this.req.body.logisticProviderUsage;
                 this.butcher.defaultDispatcher = this.req.body.defaultDispatcher;
                 yield this.butcher.save();
-                //return this.res.redirect(`/pages/admin/butcher/${this.butcher.slug}`)
             }
             else if (this.req.body.updateproduct == "true") {
                 let productid = parseInt(this.req.body.productid);

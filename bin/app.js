@@ -86,7 +86,7 @@ class KasaptanAlApp {
     }
     bootstrap() {
         return __awaiter(this, void 0, void 0, function* () {
-            let dbinstance = yield context_1.default.init();
+            let dbinstance = yield context_1.default.init(false);
             this.app = express();
             this.app.use(compression());
             this.app.use(fileUpload());

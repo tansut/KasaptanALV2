@@ -106,7 +106,7 @@ class KasaptanAlApp {
 
     async bootstrap() {
 
-        let dbinstance = await db.init();        
+        let dbinstance = await db.init(false);        
         this.app = express();
         this.app.use(compression())
         this.app.use(fileUpload())

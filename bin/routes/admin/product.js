@@ -29,6 +29,7 @@ const cache_1 = require("../../lib/cache");
 const common_2 = require("../../models/common");
 const nutritionvalue_1 = require("../../db/models/nutritionvalue");
 const nutritionvalueitem_1 = require("../../db/models/nutritionvalueitem");
+const product_2 = require("../../db/models/product");
 class Route extends router_1.ViewRouter {
     constructor() {
         super(...arguments);
@@ -157,6 +158,23 @@ class Route extends router_1.ViewRouter {
             let categories = yield this.getCategories();
             let pSlug = this.product.slug;
             yield this.loadNutiritionValues();
+            if (this.req.body.copyproduct == "true") {
+                let newprod = new product_2.default();
+                newprod.slug = this.product.slug + '-kopya';
+                newprod.name = "Giriniz";
+                newprod.tag1 = this.req.body.tag1;
+                newprod.tag2 = this.req.body.tag2;
+                newprod.tag3 = this.req.body.tag3;
+                newprod.keywords = this.req.body.keywords;
+                newprod.shortdesc = this.req.body.description;
+                newprod.notePlaceholder = this.req.body.notePlaceholder;
+                newprod.featuresText = this.req.body.featuresText;
+                newprod.butcherNote = this.req.body.butcherNote;
+                newprod.butcherProductNote = this.req.body.butcherProductNote;
+                newprod.mddesc = this.req.body.mddesc;
+                yield newprod.save();
+                return this.res.redirect("/pages/admin/product/" + newprod.slug);
+            }
             if (this.req.body.save == "true") {
                 if (this.req.user.hasRole('admin')) {
                     this.product.slug = this.req.body.slug;

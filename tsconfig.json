@@ -3,6 +3,7 @@
         "typeRoots": [
             "types"
         ],
+        "incremental": false,
         "jsx": "react",
         "watch": true,
         "target": "es6",

@@ -16,6 +16,7 @@ import Dispatcher from '../../db/models/dispatcher';
 import IyziPayment from '../../lib/payment/iyzico';
 import { CreditcardPaymentFactory } from '../../lib/payment/creditcard';
 import SiteLogRoute from '../api/sitelog';
+import Butcher from '../../db/models/butcher';
 
 export default class Route  extends ViewRouter {
 
@@ -290,6 +291,17 @@ export default class Route  extends ViewRouter {
         let resources = await this.getResources(this.butcher);
         this.products = await this.getProducts();
 
+        if (this.req.body.savecopy == "true") {
+            let newItem = new Butcher(this.butcher.toJSON());
+            newItem.setDataValue("id", undefined);
+            newItem.slug = this.butcher.slug + '-kopya';
+            newItem.name = 'giriniz';
+
+            await newItem.save();
+            return this.res.redirect("/pages/admin//butcher/" + newItem.slug)
+
+        }
+
         if (this.req.body.saveAsSubMerchant) {
             let logger = new SiteLogRoute(this.constructorParams);
             let payment = CreditcardPaymentFactory.getInstance();
@@ -314,17 +326,17 @@ export default class Route  extends ViewRouter {
             this.butcher.facebook = this.req.body.butcherfacebook;
             this.butcher.description = this.req.body.butcherdesc;
             this.butcher.keywords = this.req.body.keywords;
+            this.butcher.pageDescription = this.req.body.butcherpagedesc;
+            this.butcher.pageTitle = this.req.body.butcherpagetitle;
             if (this.req.body.butcherlat && this.req.body.butcherlng) {
                 this.butcher.location = {                                
                     type: 'Point',
                     coordinates: [parseFloat(this.req.body.butcherlat), parseFloat(this.req.body.butcherlng)]
             }
             }
-            //this.butcher.logisticProviderUsage = this.req.body.logisticProviderUsage;
             this.butcher.defaultDispatcher = this.req.body.defaultDispatcher;
             await this.butcher.save();
-
-            //return this.res.redirect(`/pages/admin/butcher/${this.butcher.slug}`)
+            
         }
 
         else if (this.req.body.updateproduct == "true") {
