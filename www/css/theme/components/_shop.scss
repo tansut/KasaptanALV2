@@ -1,6 +1,5 @@
 .product-card {
-  padding-bottom: $card-spacer-y;
-  border: 0;
+
 
   .product-card-actions,
   .badge {
@@ -17,14 +16,14 @@
   }
 
   .card-body {
-    position: relative;
-    background-color: $card-bg;
-    z-index: 2;
+    // position: relative;
+    // background-color: $card-bg;
+    // z-index: 2;
   }
 
 
   @include media-breakpoint-up(sm) {
-    padding-bottom: 0;
+    // padding-bottom: 0;
   }
 
 }

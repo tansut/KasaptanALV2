@@ -11,12 +11,12 @@
     <% if (true) { %>
     <div class="container mb-3">
         <div data-simplebar data-simplebar-auto-hide="false">
-            <div class="d-flex">
+            <div class="d-flex pb-2">
                 <% var items= ['kampanya', 'home', 'cuneytasan', 'premium', 'ciger','besindeger'] %>
                     <% items.forEach((item, i)=> {%>
 
                         <div class="mb-2">
-                            <div style="width: 17rem; height: 100%;" class="border-right ">
+                            <div style="width: 17rem; height: 100%;" class="shadow mr-2 ">
                                 <%- include('./_partial/home-slider-' + item, {  }); %>
                             </div>
                         </div>
@@ -118,8 +118,8 @@
           </div>
 
         <div class="container mb-3">
-            <a class="d-block py-3 app_blank" href="/kasaplar">
-                <h3 class="h6 text-uppercase mb-0">Kasaplar</h3>
+            <a class="d-block app_blank" href="/kasaplar">
+                <h3 class="h6 text-uppercase">Kasaplar</h3>
             </a>
         <div data-simplebar data-simplebar-auto-hide="false">
             <div class="d-flex pb-2">
@@ -197,8 +197,8 @@
 
 
         <div class="container mb-3">
-            <a class="d-block py-3" href="/blog">
-                <h3 class="h6 text-uppercase mb-0">Blog</h3>
+            <a class="d-block" href="/blog">
+                <h3 class="h6 text-uppercase">Blog</h3>
             </a>
         <div data-simplebar data-simplebar-auto-hide="false">
             <div class="d-flex pb-2">

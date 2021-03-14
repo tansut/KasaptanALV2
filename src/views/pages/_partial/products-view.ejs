@@ -1,9 +1,9 @@
 <% var butcher = typeof(butcher) != 'undefined' ? butcher: null %>
 <% if (typeof (viewMode) == 'undefined' || viewMode == 'tab') { %>
-<div class="row">
+<div class="row ">
     <% if (typeof(products) != 'undefined') {  %>
     <% for(var j=0; j< products.length; j++) {%>
-    <div class="col-md-3 col-6  py-2">
+    <div class="col-md-3 col-6 py-2">
         
         <%- include('./product-view.ejs', {product: products[j]}) %>
     </div>

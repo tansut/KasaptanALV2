@@ -10,7 +10,7 @@
 
 
 
-<div class="card p-0 h-100 mb-3 rounded-0 product-card shadow-lg  text-center">
+<div class="card p-0 h-100 mb-3 border rounded-0   product-card shadow  text-center">
     <% if (badge && typeof(hideBadge) == 'undefined') { %>
     <span class="badge badge-danger badge-shadow d-print-none"><%=badge%></span>
 
@@ -22,7 +22,7 @@
     <% } %>
     <% if (showPurchase) { %>
   
-        <button data-product="<%=product.slug%>" class="opacity-1 btn-wishlist btn-primary  d-print-none" type="button" title="Hızlı Satın Al"><i class="czi-add-circle"></i></button>
+        <button data-product="<%=product.slug%>" style="opacity:0.80" class=" btn-wishlist mr-1 mt-1 rounded-circle btn-primary  d-print-none" type="button" title="Hızlı Satın Al"><i class="czi-icon czi-cart"></i></button>
 
 <% } %>
 
@@ -33,7 +33,7 @@
      
     >
      <img width="500" height="500"
-         src="<%= `${__req.helper.imgUrl('product-photos', product.slug)}` %>" class="lazyload"
+         src="<%= `${__req.helper.imgUrl('product-photos', product.slug)}` %>" class="lazyload "
             alt="<%= product.name  %>">
         
         
