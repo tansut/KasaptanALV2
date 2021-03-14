@@ -35,15 +35,13 @@
                 class="item-slider item-slider-sm <%= selected ? (selected == reyonlar[c].slug ? 'item-slider-selected': 'item-slider-unselected') : ''%>">
                 <%subUrl = reyonlar[c].type == 'resource' ? 'et-yemekleri/':'' %>
 
-                <div class="card rounded-0 border-0 shadow-lg h-100 text-center pb-0  ">
-                    <a 
-
-                    class="d-block <%=linkCss%>" href="<%= `/${subUrl}${reyonlar[c].slug}${urlParams ? '?' + urlParams:''}`%>">
-                        <img  width="500" height="500"  title="<%=reyonlar[c].name%>" 
+                <div class="card shadow h-100 text-center pb-0  ">
+                    <a class="d-block <%=linkCss%>" href="<%= `/${subUrl}${reyonlar[c].slug}${urlParams ? '?' + urlParams:''}`%>">
+                        <img class="card-img-top"  width="500" height="500"  title="<%=reyonlar[c].name%>" 
                             src="<%=`${__req.helper.imgUrl('category-photos', reyonlar[c].slug, 'thumbnail', true, 'list')}`%>"
                             alt="<%=reyonlar[c].name%>"></a>
-                        <div class="card-body d-flex flex-column">
-                                <h5 class="mb-auto  text-center font-size-sm"><a class="text-dark <%=linkCss%>"
+                        <div class="p-2 card-body d-flex flex-column align-items-center">
+                                <h5 class="m-auto text-center font-size-sm"><a class="text-dark <%=linkCss%>"
                                     href="<%= `/${subUrl}${reyonlar[c].slug}`%>">
                                     <%= reyonlar[c].listTitle || reyonlar[c].name %>
                                 </a>

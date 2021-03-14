@@ -159,19 +159,10 @@ class Route extends router_1.ViewRouter {
             let pSlug = this.product.slug;
             yield this.loadNutiritionValues();
             if (this.req.body.copyproduct == "true") {
-                let newprod = new product_2.default();
-                newprod.slug = this.product.slug + '-kopya';
-                newprod.name = "Giriniz";
-                newprod.tag1 = this.req.body.tag1;
-                newprod.tag2 = this.req.body.tag2;
-                newprod.tag3 = this.req.body.tag3;
-                newprod.keywords = this.req.body.keywords;
-                newprod.shortdesc = this.req.body.description;
-                newprod.notePlaceholder = this.req.body.notePlaceholder;
-                newprod.featuresText = this.req.body.featuresText;
-                newprod.butcherNote = this.req.body.butcherNote;
-                newprod.butcherProductNote = this.req.body.butcherProductNote;
-                newprod.mddesc = this.req.body.mddesc;
+                var json = this.product.toJSON();
+                delete json['id'];
+                let newprod = new product_2.default(json);
+                newprod.slug = pSlug + '-kopya';
                 yield newprod.save();
                 return this.res.redirect("/pages/admin/product/" + newprod.slug);
             }

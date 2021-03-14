@@ -292,8 +292,9 @@ export default class Route  extends ViewRouter {
         this.products = await this.getProducts();
 
         if (this.req.body.savecopy == "true") {
-            let newItem = new Butcher(this.butcher.toJSON());
-            newItem.setDataValue("id", undefined);
+            var json = this.butcher.toJSON();
+            delete json['id'];
+            let newItem = new Butcher(json);
             newItem.slug = this.butcher.slug + '-kopya';
             newItem.name = 'giriniz';
 

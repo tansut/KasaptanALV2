@@ -264,8 +264,9 @@ class Route extends router_1.ViewRouter {
             let resources = yield this.getResources(this.butcher);
             this.products = yield this.getProducts();
             if (this.req.body.savecopy == "true") {
-                let newItem = new butcher_2.default(this.butcher.toJSON());
-                newItem.setDataValue("id", undefined);
+                var json = this.butcher.toJSON();
+                delete json['id'];
+                let newItem = new butcher_2.default(json);
                 newItem.slug = this.butcher.slug + '-kopya';
                 newItem.name = 'giriniz';
                 yield newItem.save();

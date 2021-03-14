@@ -27,9 +27,7 @@
 <% } %>
 
     
-    <a 
-
-    class="<%= link2Location ? 'select-area-action':'' %> d-block overflow-hidden app_blank"
+    <a class="<%= link2Location ? 'select-area-action':'' %> d-block overflow-hidden app_blank"
    
      href="/<%=product.slug%><%=(butcher ? `?butcher=${butcher}&utm_medium=Butcher`:'') %>"
      
@@ -41,7 +39,7 @@
         
         </a>
             <% if (typeof(hideName) == 'undefined') { %>
-    <div class="card-body card-block d-flex flex-column">
+    <div class="card-body mb-1 card-block d-flex flex-column">
         <h3 class="mb-auto pb-2 text-center font-size-sm"><a class="text-dark <%= link2Location ? 'select-area-action':'' %>"
                 href="/<%= product.slug%><%=(butcher ? `?butcher=${butcher}&utm_medium=Butcher`:'') %>"><%= product.name  %></a>
         </h3>
