@@ -111,13 +111,13 @@
     <% sc.products.forEach((product,i) => { %>
 
       <% var price = controller.getPriceData(product) %>
-      <div data-tag="<%= __helper.slugify(product.tag1) %>" class="col-md-3 col-6 ">
+      <div data-tag="<%= __helper.slugify(product.tag1) %>" class="col-md-3 col-6 py-2">
         <%- include('./_partial/product-view.ejs', {product: product, showPurchase: true, butcher: __req.query.butcher, lowPrice: price ? price.lowPrice: 0.00, highPrice: price ? price.highPrice: 0.00, priceUnit: price ? price.priceUnit: ''}) %>
 
       </div>
       <% if (controller.foods && controller.foods.length > 0 && !foodsInserted && i>controller.products.length/5) { %>
       <% foodsInserted = true; %>
-      <div data-tag="" class="col-md-3 col-6">
+      <div data-tag="" class="col-md-3 col-6 py-2">
         <%- include('./_partial/generic-item-view.ejs', { linkCss: 'app_blank', badge: 'Yemeklere Gözatın', imgClass: 'rounded-lg', title: foodCategoryParams.title, href: `${foodCategoryParams.allUrl}`, src: `${ __req.helper.imgUrl('category-photos', controller.category.slug, 'thumbnail', true, 'food')}` }) %>
       </div>
       <%}%>

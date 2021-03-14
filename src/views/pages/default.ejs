@@ -9,14 +9,14 @@
     <% include ./_partial/header %>
 
     <% if (true) { %>
-    <div class="container">
+    <div class="container mb-3">
         <div data-simplebar data-simplebar-auto-hide="false">
-            <div class="d-flex pb-2">
+            <div class="d-flex">
                 <% var items= ['kampanya', 'home', 'cuneytasan', 'premium', 'ciger','besindeger'] %>
                     <% items.forEach((item, i)=> {%>
 
                         <div class="mb-2">
-                            <div style="width: 17rem; height: 100%;" class="mr-2">
+                            <div style="width: 17rem; height: 100%;" class="border-right ">
                                 <%- include('./_partial/home-slider-' + item, {  }); %>
                             </div>
                         </div>

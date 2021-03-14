@@ -646,13 +646,13 @@
                   <%}%>
                 <div class="row">
                 <% sc.products.forEach((product,i) => { %>
-                  <div data-tag="<%= __helper.slugify(product.tag1) %>" class="col-md-4 col-6 ">
+                  <div data-tag="<%= __helper.slugify(product.tag1) %>" class="col-md-4 col-6 py-2">
                     <% var showPrice = butcher.approved && (butcher.status == 'open') && (butcher.priceDisplay == 'show') %>
                     <%- include('./_partial/product-view.ejs', { link2Location: !(showPrice && controller.logisticsProvider),  showPrice: showPrice , showPurchase: showPrice && controller.logisticsProvider, butcher: butcher.slug, butcherProduct: butcher.products.find(p=>p.productid == product.id), product: product}) %>
                   </div>
                   <% if (controller.foods && controller.foods.length > 0 && !foodsInserted && i>controller.products.length/5) { %>
                   <% foodsInserted = true; %>
-                  <div data-tag="" class="col-md-4 col-6">
+                  <div data-tag="" class="col-md-4 col-6 py-2">
                     <%- include('./_partial/generic-item-view.ejs', { imgClass: 'rounded-lg', title: foodCategoryParams.title, href: `${foodCategoryParams.allUrl}`, src: `${ __req.helper.imgUrl('category-photos', controller.category.slug, 'thumbnail', true, 'list')}` }) %>
                   </div>
                   <%}%>

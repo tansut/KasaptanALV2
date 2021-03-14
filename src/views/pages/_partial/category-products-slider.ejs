@@ -5,8 +5,8 @@
 
 <% if (viewMode == 'tab') { %>
     <div class="d-flex flex-nowrap justify-content-between align-items-center">
-        <a class="d-block py-3 " href="<%=`/${cat.slug}` %>">
-            <h3 class="h6 text-uppercase mb-0"><%= typeof(title) != 'undefined' ? title: cat.name %></h3>
+        <a class="d-block" href="<%=`/${cat.slug}` %>">
+            <h3 class="h6 text-uppercase mb-1"><%= typeof(title) != 'undefined' ? title: cat.name %></h3>
         </a>
         <a class="d-none d-md-block btn btn-sm" href="<%=`/${cat.slug}` %>">Tümü &raquo;</a>    
     </div>
@@ -38,7 +38,7 @@
     <%} else { %>
         <%- include('./products-view', {showPurchase: true, viewId: "", viewMode:viewMode, products: products}); %>
         <% if (viewMode == 'tab') { %>
-        <div class="d-xs-block border-bottom d-md-none text-center mb-3">
+        <div class="d-xs-block border-bottom d-md-none text-center mt-3 mb-3">
             <a class="btn rounded-0 btn-sm btn-secondary" href="/<%=cat.slug%>">Tümü &raquo;
             </a>
         </div>

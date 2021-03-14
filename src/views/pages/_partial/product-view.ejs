@@ -10,7 +10,7 @@
 
 
 
-<div class="card h-100 product-card text-center pb-0">
+<div class="card p-0 h-100 mb-3 rounded-0 product-card shadow-lg  text-center">
     <% if (badge && typeof(hideBadge) == 'undefined') { %>
     <span class="badge badge-danger badge-shadow d-print-none"><%=badge%></span>
 
@@ -39,8 +39,8 @@
         
         </a>
             <% if (typeof(hideName) == 'undefined') { %>
-    <div class="card-body mb-1 card-block d-flex flex-column">
-        <h3 class="mb-auto pb-2 text-center font-size-sm"><a class="text-dark <%= link2Location ? 'select-area-action':'' %>"
+    <div class="card-body p-2 d-flex flex-column align-items-center">
+        <h3 class="m-auto p-0   font-size-sm"><a class="text-dark <%= link2Location ? 'select-area-action':'' %>"
                 href="/<%= product.slug%><%=(butcher ? `?butcher=${butcher}&utm_medium=Butcher`:'') %>"><%= product.name  %></a>
         </h3>
 

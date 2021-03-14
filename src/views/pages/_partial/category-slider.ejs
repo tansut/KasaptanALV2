@@ -15,8 +15,8 @@
 
 <% if (header) { %>
 <div class="d-flex flex-nowrap justify-content-between align-items-center">
-    <a class="d-block py-3" href="<%=allUrl%>">
-        <h3 class="text-uppercase h6 mb-0"><%=title%></h3>
+    <a class="d-block" href="<%=allUrl%>">
+        <h3 class="text-uppercase h6 mb-1"><%=title%></h3>
     </a>
     <a class="d-none d-md-block btn btn-sm" href="<%=allUrl%>">Tümü &raquo;</a>
 </div>
@@ -41,7 +41,7 @@
                             src="<%=`${__req.helper.imgUrl('category-photos', reyonlar[c].slug, 'thumbnail', true, 'list')}`%>"
                             alt="<%=reyonlar[c].name%>"></a>
                         <div class="p-2 card-body d-flex flex-column align-items-center">
-                                <h5 class="m-auto text-center font-size-sm"><a class="text-dark <%=linkCss%>"
+                                <h5 class="m-auto  font-size-sm"><a class="text-dark <%=linkCss%>"
                                     href="<%= `/${subUrl}${reyonlar[c].slug}`%>">
                                     <%= reyonlar[c].listTitle || reyonlar[c].name %>
                                 </a>
