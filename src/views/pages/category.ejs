@@ -71,18 +71,18 @@
             Kurban İbadeti, süreç yönetimimiz ve kalite standartlarımız hakkında detaylı bilgi alın.
           </p>
           <p>
-            <a class="btn btn-dark" href="/blog/kurban-ibadeti" role="button">Detaylı Bilgi &raquo;</a></p>
+            <a class="btn btn-dark" target="_blank" href="/blog/kurban-ibadeti" role="button">Detaylı Bilgi &raquo;</a></p>
         </div>
 
       </div>
       <% } %>
-      <%if (controller.category.slug != 'kurban' || __req.query.go) { %>
+      <%if (controller.category.slug != 'kurbanxx' || __req.query.go) { %>
       <div id="cat-slider">
         <%- include('./_partial/category-slider', { subUrl: '',  selected: controller.category.slug, mode:'browse', header: false, titles: false, title: 'Kategoriler', allUrl: '/kasap-urunleri' }); %>
       </div>
       <% } %>
 
-      <div class="mb-3" data-simplebar>
+      <div class="mt-1" data-simplebar>
         <div class="d-flex pb-2">
           <% controller.subCategories.forEach((sc, i) => { %>
           <div class="tag-toggle mr-3 mb-2" data-stag="<%=__helper.slugify(sc.title)%>">
@@ -95,12 +95,12 @@
         </div>
       </div>
 
-<div class="mb-3">
+<div class="mb-0">
 
 
       <% controller.subCategories.forEach((sc, i) => { %>
       <%if (sc.visible && sc.products.length > 0) { %>
-      <div data-tag="" id="<%= __helper.slugify(sc.title) %>" class="mb-3 border-bottom">
+      <div data-tag="" id="<%= __helper.slugify(sc.title) %>" class="mb-1 border-bottom">
         <h4 class="h6 mb-2 text-capitalize"><%= sc.title %></h4>
         <span class="font-weight-light">
           <%-controller.markdown.render(sc.description || '')%>
@@ -128,9 +128,7 @@
 
   </div>
 
-    <div class="mb-3">
-      <%- include('./_partial/category-slider', { urlParams: 'go=1#items', mode:'list', title: 'Kategoriler', allUrl: '/kasap-urunleri' }); %>
-    </div>
+
 
  
     <% if (controller.category.mddesc) { %>

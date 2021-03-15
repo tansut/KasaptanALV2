@@ -7,7 +7,8 @@
 <% subUrl = typeof(subUrl) == 'undefined' ? '': subUrl %>
 <% categories = typeof(categories) == 'undefined' ? __categories: categories %>
 <% viewCats = typeof(viewCats) == 'undefined' ? ['reyon', 'list', 'product:dispatch=countrywide']: viewCats %>
-<% linkCss = typeof(linkCss) == 'undefined' ? '': linkCss %>
+<% var linkCss = typeof(linkCss) == 'undefined' ? '': linkCss %>
+<% var hideIcon = typeof(hideIcon) == 'undefined' ? false: true %>
 
 
 
@@ -35,7 +36,7 @@
                 class="item-slider item-slider-sm <%= selected ? (selected == reyonlar[c].slug ? 'item-slider-selected': 'item-slider-unselected') : ''%>">
                 <%subUrl = reyonlar[c].type == 'resource' ? 'et-yemekleri/':'' %>
 
-                <div class="card shadow h-100 text-center pb-0  ">
+                <div class="card  shadow h-100 text-center pb-0  ">
                     <a class="d-block <%=linkCss%>" href="<%= `/${subUrl}${reyonlar[c].slug}${urlParams ? '?' + urlParams:''}`%>">
                         <img class="card-img-top"  width="500" height="500"  title="<%=reyonlar[c].name%>" 
                             src="<%=`${__req.helper.imgUrl('category-photos', reyonlar[c].slug, 'thumbnail', true, 'list')}`%>"
@@ -108,46 +109,47 @@
             </a>
         </div> -->
         <%} else { %>
-        <div id="sc" data-simplebar>
-            <div class="pt-6 d-flex">
-                <% var allAdded = false; %>
+        <div id="sc" data-simplebar >
+            <div class="pb-2  d-flex <%=titles ? 'pb-2': 'pb-0'%>">
                 <% viewCats.forEach(cat => { %>
                 <% var reyonlar = (categories.filter(p=>p.type == cat && p.status == 'active')) %>
-
                 <% for(var c=0; c< reyonlar.length; c++) {%>
+                <div id="cat-item-<%=reyonlar[c].slug%>" class="mb-2 mr-1 <%=titles ? 'mr-2': 'mr-0'%>">
+                    <% var isselected = (selected == reyonlar[c].slug ? true: false) %>
+                    <div style="width: 6rem;"
+                        class="item-slider category-slider-item  <%= isselected ?  'item-slider-selected': 'item-slider-unselected' %>">
+        
+                        <div class="card  <%= isselected ? 'bg-secondary border-0':'border-0' %>  rounded-0  h-100 text-center pb-0  ">
+                            <% if (!hideIcon) { %>
+                            <a data-cat="<%=reyonlar[c].slug%>" class=" d-block <%=linkCss%>" href="<%= `/${subUrl}${reyonlar[c].slug}${__req.query.butcher ? '?butcher=' + __req.query.butcher:''}#items`%>">
 
-
-                <div id="cat-item-<%=reyonlar[c].slug%>"
-                    class="category-slider-item mr-4   ">
-                    <%subUrl = reyonlar[c].type == 'resource' ? 'et-yemekleri/': subUrl %>
-
-
-                    <%if (!allAdded) { %>
-                    <%allAdded=true%>
-
-                    <%}%>
-<div class="py-2 mb-1 <%= selected ? (selected == reyonlar[c].slug ? 'item-slider-selected': 'item-slider-unselected') : ''%>">
-    <a  class="  text-center text-uppercase text-dark text-nowrap d-block"  href="<%= `/${subUrl}${reyonlar[c].slug}${__req.query.butcher ? '?butcher=' + __req.query.butcher:''}#items`%>">
-        <%= reyonlar[c].listTitle || reyonlar[c].name %>
-
-                 
-    </a>
-</div>
-
-
-                 
-                       
-
-
-
+                                
+                                <img  class=" rounded-circle" width="500" height="500"  title="<%=reyonlar[c].name%>" 
+                                    src="<%=`${__req.helper.imgUrl('category-photos', reyonlar[c].slug, 'thumbnail', true, 'list')}`%>"
+                                    alt="<%=reyonlar[c].name%>">
+                                
+                                </a>
+                                <% } %>
+                                <a data-cat="<%=reyonlar[c].slug%>" href="<%= `/${subUrl}${reyonlar[c].slug}${__req.query.butcher ? '?butcher=' + __req.query.butcher:''}#items`%>" class="p-2 card-body d-flex flex-column align-items-center">
+                                        <h5 class="m-auto p-0 m-0 font-weight-normal  font-size-sm"><span  class="text-link<%=reyonlar[c].slug%> <%= isselected ? 'text-dark font-weight-bold': 'text-dark'%> <%=linkCss%>"
+                                            >
+                                            <%= reyonlar[c].listTitle || reyonlar[c].name %>
+                                        </span>
+                                    </h5>
+                                    
+                                </a>
+                        </div>
+        
+                    
+                    </div>
                 </div>
-
-
-
-
                 <%}%>
-        <%})%>
+                <%})%>
             </div>
+
+         
+            
+
         </div>
 
         <% } %>
