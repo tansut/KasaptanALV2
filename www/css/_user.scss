@@ -214,6 +214,12 @@ a:hover {
   }
 }
 
+@media (max-width: 767px) {
+  .simplebar-track.simplebar-horizontal {
+  display: none;
+}
+}
+
 .btn {
   border-radius: 0rem;
 }

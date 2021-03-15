@@ -8,10 +8,12 @@
 <body>
     <% include ./_partial/header %>
 
+
+
     <% if (true) { %>
     <div class="container mb-3">
         <div data-simplebar data-simplebar-auto-hide="false">
-            <div class="d-flex pb-2">
+            <div class="d-flex pb-md-2">
                 <% var items= ['kampanya', 'home', 'cuneytasan', 'premium', 'ciger','besindeger'] %>
                     <% items.forEach((item, i)=> {%>
 
@@ -122,7 +124,7 @@
                 <h3 class="h6 text-uppercase">Kasaplar</h3>
             </a>
         <div data-simplebar data-simplebar-auto-hide="false">
-            <div class="d-flex pb-2">
+            <div class="d-flex pb-md-2">
                 <% var items= recentButchers %>
                     <% items.forEach((item, i)=> {%>
                         <div class="mb-2">
@@ -201,7 +203,7 @@
                 <h3 class="h6 text-uppercase">Blog</h3>
             </a>
         <div data-simplebar data-simplebar-auto-hide="false">
-            <div class="d-flex pb-2">
+            <div class="d-flex pb-md-2">
                 <% var items=controller.blogItems %>
                     <% items.forEach((item, i)=> {%>
                         <div>

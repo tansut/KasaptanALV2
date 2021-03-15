@@ -22,6 +22,7 @@ import SubCategory from '../db/models/subcategory';
 import { flatMap } from 'lodash';
 import DispatcherApi, { DispatcherQuery } from './api/dispatcher';
 import { timeStamp } from 'console';
+import { ShopCard, ShopcardItem } from '../models/shopcard';
 
 
 export default class Route extends ViewRouter {
@@ -35,7 +36,7 @@ export default class Route extends ViewRouter {
     _ = _;
     subCategories: SubCategory[] = [];
     prices: Array<any> = [];
-
+    shopcard: ShopCard;
 
 
 
@@ -245,6 +246,13 @@ export default class Route extends ViewRouter {
                 excludeCitywide: this.category.slug != 'tum-turkiye',
             }
             let serving = await dapi.getDispatchers(q);
+            //this.shopcard = await ShopCard.createFromRequest(this.req);
+            // let scButcher = (shopcard.items && shopcard.items.length) ? shopcard.items[0].product.butcher.id : null;
+            // let servings = serving;
+            // if (scButcher) {
+            //     serving = serving.filter(p=>p.butcherid == scButcher);
+            //     serving = serving.length == 0 ? servings: serving;
+            // }
             this.prices = serving.length ? await api.getPriceStats(this.products.map(p=>p.id), serving.map(b=>b.butcherid)): []
         } else this.prices = []
         this.forceSemt = true;

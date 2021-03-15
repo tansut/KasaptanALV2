@@ -5,7 +5,7 @@
   <% include ./_partial/head %>
 </head>
 
-<body>
+<body style="<%= __req.query.transition == '1' ? 'opacity: 0':'' %>">
   <% if (!__req.prefAddr) { %>
     <!-- <% include ./_partial/select-location-msg %> -->
   <% } %>
@@ -95,7 +95,10 @@
         </div>
       </div>
 
-<div class="mb-0">
+
+      <div class="category-container-top"></div>
+
+<div style="<%= controller.platform == 'app' ? 'overflow-x: hidden; overflow-y: auto;':''%>"  class="mb-0 category-container">
 
 
       <% controller.subCategories.forEach((sc, i) => { %>
@@ -107,7 +110,7 @@
         </span>
       </div>
       <%}%>
-    <div class="row">
+    <div class="row mb-3">
     <% sc.products.forEach((product,i) => { %>
 
       <% var price = controller.getPriceData(product) %>

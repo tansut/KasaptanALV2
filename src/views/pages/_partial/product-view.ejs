@@ -22,7 +22,7 @@
     <% } %>
     <% if (showPurchase) { %>
   
-        <button data-product="<%=product.slug%>" style="opacity:0.80" class=" btn-wishlist mr-1 mt-1 rounded-circle btn-primary  d-print-none" type="button" title="Hızlı Satın Al"><i class="czi-icon czi-cart"></i></button>
+        <button data-product="<%=product.slug%>" style="opacity:0.90" class=" btn-wishlist mr-1 mt-1 rounded-circle btn-primary  d-print-none" type="button" title="Hızlı Satın Al"><i class="czi-icon czi-add"></i></button>
 
 <% } %>
 
@@ -63,6 +63,14 @@
                 <% } %>
             </div>
         <% } %>
+
+        <% if (false) { %>
+  <div class="mt-2 mb-2">
+    <button data-product="<%=product.slug%>" style="opacity: 0.85;" class=" btn-secondary border btn btn-sm text-primary  d-print-none" type="button" title="Hızlı Satın Al"><i class="czi-icon czi-cart mr-1"></i>Satın Al</button>
+
+  </div>
+    
+    <% } %>
 
     </div>
 

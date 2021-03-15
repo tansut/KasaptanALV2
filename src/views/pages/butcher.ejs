@@ -21,7 +21,7 @@
   <% } %>
 </head>
 
-<body>
+<body style="<%= __req.query.transition == '1' ? 'opacity: 0':'' %>">
   <% include ./_partial/header %>
   <% if(butcher.videoInstagramStr){ %>
   <div class="modal" id="videomodal" tabindex="-1" role="dialog">
@@ -613,7 +613,7 @@
                 </p>
               <%}%>
               <div id="cat-slider" class="py-2 slider">
-                <%- include('./_partial/category-slider', {  hideIcon: true, categories: controller.categories, subUrl: butcher.slug + '/', selected: controller.category.slug, mode:'browse', header: false, titles: false, viewCats: ['butcher', 'reyon', 'list', 'product:dispatch=countrywide'], title: 'Kategoriler', allUrl: '/kasap-urunleri' }); %>
+                <%- include('./_partial/category-slider', {   categories: controller.categories, subUrl: butcher.slug + '/', selected: controller.category.slug, mode:'browse', header: false, titles: false, viewCats: ['butcher', 'reyon', 'list', 'product:dispatch=countrywide'], title: 'Kategoriler', allUrl: '/kasap-urunleri' }); %>
               </div>
     
               
@@ -623,7 +623,7 @@
                     <% controller.subCategories.forEach((sc, i) => { %>
                     <% if (sc.products.length > 0) { %>
                     <div class="tag-toggle mr-3 mb-2" data-stag="<%=__helper.slugify(sc.title)%>">
-                      <a onclick="goSubitem('<%=__helper.slugify(sc.title)%>')"
+                      <a onclick="goSubitem('<%=__helper.slugify(sc.title)%>', true)"
                         class="text-uppercase <%= controller.subCategories.length == 1 ? 'text-dark':  'text-info' %> font-size-sm text-center text-nowrap">
                         <%=sc.title%>
                       </a>
@@ -644,7 +644,7 @@
                     </span>
                   </div>
                   <%}%>
-                <div class="row">
+                <div class="row mb-3">
                 <% sc.products.forEach((product,i) => { %>
                   <div data-tag="<%= __helper.slugify(product.tag1) %>" class="col-md-4 col-6 py-2">
                     <% var showPrice = butcher.approved && (butcher.status == 'open') && (butcher.priceDisplay == 'show') %>

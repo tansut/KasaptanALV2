@@ -55,8 +55,21 @@
 
 
 
-    function goSubitem(tag) {
-      App.scrollToAnchor('#' + tag)
+    function goSubitem(tag, usePage) {
+
+      <% if (controller.platform == 'app') { %>
+        if (!usePage) {
+          var t = $(".category-container").scrollTop()
+
+var scrollOffset = $('#' + tag).offset().top - $(".category-container-top").offset().top + t;
+$(".category-container").animate({scrollTop:scrollOffset}, 500);
+        } else App.scrollToAnchor('#' + tag)
+
+
+      <% } else { %>
+        App.scrollToAnchor('#' + tag)
+      <% } %>
+
     }
 
     function setBody() {
@@ -68,8 +81,11 @@
 
     $(document).ready(function () {
 
-
-      
+      <% if (controller.platform == 'app') {  %>
+      $(".category-container").css({
+        height: ($( window ).height() - $(".category-container-top").offset().top) + 'px'
+      })
+      <% } %>
 
 
       $("#purchasemodal").on('hide.bs.modal', function () {

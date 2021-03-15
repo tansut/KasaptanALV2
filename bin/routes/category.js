@@ -240,6 +240,13 @@ class Route extends router_1.ViewRouter {
                     excludeCitywide: this.category.slug != 'tum-turkiye',
                 };
                 let serving = yield dapi.getDispatchers(q);
+                //this.shopcard = await ShopCard.createFromRequest(this.req);
+                // let scButcher = (shopcard.items && shopcard.items.length) ? shopcard.items[0].product.butcher.id : null;
+                // let servings = serving;
+                // if (scButcher) {
+                //     serving = serving.filter(p=>p.butcherid == scButcher);
+                //     serving = serving.length == 0 ? servings: serving;
+                // }
                 this.prices = serving.length ? yield api.getPriceStats(this.products.map(p => p.id), serving.map(b => b.butcherid)) : [];
             }
             else

@@ -345,6 +345,12 @@
   
     $(document).ready(function () {
 
+      <% if (__req.query.transition == '1') { %>
+        $("body").css({
+          opacity: 1
+        });
+      <% } %>
+
       for(var i=0;i<gtags.length;i++) {
           var tag = gtags[i];
           window.App.gTag(tag[0], tag[1], tag[2], tag[3] || undefined);

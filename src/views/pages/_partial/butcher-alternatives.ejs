@@ -3,7 +3,7 @@
   
 %>
 
-<div  class="modal" role="dialog" aria-labelledby="butcher-alternatives-label"  id="butcher-alternatives">
+<div  class="modal " role="dialog" aria-labelledby="butcher-alternatives-label"  id="butcher-alternatives">
   <div class="modal-dialog modal-dialog-scrollable ">
     <div class="modal-content">
       <div class="modal-header text-center">
@@ -48,9 +48,16 @@
                 <div class="mb-2 border-bottom" v-for="(alt, index) in sortedAlternates">
                   <a class="media px-2 align-items-start flex-grow-1" :data-butcher="alt.butcher.slug" href="#newbutcher" @click="selectNewButcher(alt.butcher)">
                  
-                     <img class="w-25 align-self-start"
-                        :src="alt.butcher.thumbnail" :alt="alt.butcher.name">
+                    <div class="text-center w-25">
+                      <img class="d-block mb-1  align-self-start"
+                      :src="alt.butcher.thumbnail" :alt="alt.butcher.name">
+                      <span class="d-block rounded btn btn-sm btn-secondary font-size-xs">
+                        Seç
+                      </span>
+                    </div>
+               
     
+                      
                   
     
                     
@@ -59,11 +66,14 @@
 
                       <div class="d-flex align-items-center justify-content-between">
                         <h6 class="h6 mb-0 mr-2">{{alt.butcher.name}}</h6>
-                       
-                          <span v-if="alt.butcher.puanData" class="badge badge-success font-weight-medium">
+                        <div class="text-right">
+                          <span v-if="alt.butcher.puanData" class="d-block mb-1 badge badge-success font-weight-medium">
                             %{{alt.butcher.puanData.rate * 100 }}  Puan
                           </span>
-                        
+                          <span class="d-block badge badge-danger font-size-xs font-weight-medium">
+                            <%='+15TL'%> Puan
+                          </span>
+                        </div>
                       </div>
 
                       
