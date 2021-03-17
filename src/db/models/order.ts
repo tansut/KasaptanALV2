@@ -76,7 +76,7 @@ class Order extends BaseModel<Order> {
     platform: string;
 
     @Column({
-        allowNull: false,
+        allowNull: true,
         defaultValue: ''
     })
     appPlatform: string;    

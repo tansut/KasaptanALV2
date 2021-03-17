@@ -222,7 +222,7 @@ __decorate([
 ], Order.prototype, "platform", void 0);
 __decorate([
     sequelize_typescript_1.Column({
-        allowNull: false,
+        allowNull: true,
         defaultValue: ''
     }),
     __metadata("design:type", String)
