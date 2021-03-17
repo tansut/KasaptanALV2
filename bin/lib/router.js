@@ -57,6 +57,14 @@ class BaseRouter {
         else
             return common_2.Platform.web;
     }
+    get appPlatform() {
+        let agent = this.req.headers['user-agent'] || '';
+        if (agent.toLowerCase().indexOf('android') > -1) {
+            return common_2.AppPlatform.android;
+        }
+        else
+            return common_2.AppPlatform.ios;
+    }
     get Markdown() {
         this._markdown = this._markdown || new MarkdownIt();
         return this._markdown;

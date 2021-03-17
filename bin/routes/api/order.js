@@ -976,6 +976,7 @@ class Route extends router_1.ApiRouter {
             for (var bi in butchers) {
                 let order = yield order_1.Order.fromShopcard(card, bi);
                 order.platform = this.platform;
+                order.appPlatform = this.appPlatform;
                 order.ordergroupnum = groupid;
                 order.butcherid = parseInt(bi);
                 order.butcher = yield butcher_1.default.findByPk(order.butcherid);

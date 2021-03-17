@@ -9,7 +9,7 @@
   </script>
 </head>
 
-<body style="<%= __req.query.transition == '1' ? 'opacity: 0':'' %>">
+<body style="<%= (__req.query.transition == '1' && controller.appPlatform != 'android') ? 'opacity: 0':'' %>">
   <% if (!__req.prefAddr) { %>
     <!-- <% include ./_partial/select-location-msg %> -->
   <% } %>

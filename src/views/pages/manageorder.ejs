@@ -81,7 +81,7 @@ if (orderClosed && __req.user && __req.user.hasRole('admin')) {
         <h3  class="h4 border-bottom">Sipariş</h3>
         <ul class="list-unstyled font-size-sm">
           <li><span class="text-muted">Sipariş Durumu:&nbsp;</span> <strong><%= order.status %></strong> </li>
-          <li><span class="text-muted">Buradan geldi:&nbsp;</span> <strong><%= order.platform %></strong> </li>
+          <li><span class="text-muted">Buradan geldi:&nbsp;</span> <strong><%= order.platform %>/<%= order.appPlatform %></strong> </li>
           <% if (!orderClosed) { %>
           <li><span class="text-muted">Müşteri:&nbsp;</span><%= order.displayName %></li>    
           <% } %>

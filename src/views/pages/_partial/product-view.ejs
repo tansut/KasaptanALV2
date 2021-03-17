@@ -20,7 +20,7 @@
         data-original-title="Zengin içerik"><i class="czi-video"></i></button>
 
     <% } %>
-    <% if (showPurchase) { %>
+    <% if (false) { %>
   
         <button data-product="<%=product.slug%>" style="opacity:0.90" class=" btn-wishlist mr-1 mt-1 rounded-circle btn-primary  d-print-none" type="button" title="Hızlı Satın Al"><i class="czi-icon czi-add"></i></button>
 
@@ -29,9 +29,7 @@
     
     <a class="<%= link2Location ? 'select-area-action':'' %> d-block overflow-hidden app_blank"
    
-     href="/<%=product.slug%><%=(butcher ? `?butcher=${butcher}&utm_medium=Butcher`:'') %>"
-     
-    >
+     href="/<%=product.slug%><%=(butcher ? `?butcher=${butcher}&utm_medium=Butcher`:'') %>">
      <img width="500" height="500"
          src="<%= `${__req.helper.imgUrl('product-photos', product.slug)}` %>" class="lazyload "
             alt="<%= product.name  %>">
@@ -64,7 +62,7 @@
             </div>
         <% } %>
 
-        <% if (false) { %>
+        <% if (showPurchase) { %>
   <div class="mt-2 mb-2">
     <button data-product="<%=product.slug%>" style="opacity: 0.85;" class=" btn-secondary border btn btn-sm text-primary  d-print-none" type="button" title="Hızlı Satın Al"><i class="czi-icon czi-cart mr-1"></i>Satın Al</button>
 

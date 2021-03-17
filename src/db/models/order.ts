@@ -76,6 +76,12 @@ class Order extends BaseModel<Order> {
     platform: string;
 
     @Column({
+        allowNull: false,
+        defaultValue: ''
+    })
+    appPlatform: string;    
+
+    @Column({
         allowNull: true        
     })
     paymentId: string;    

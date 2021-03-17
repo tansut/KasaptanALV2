@@ -1,6 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.Platform = exports.NutritionValueOrders = exports.NutritionValueUnits = exports.NutritionValueTitles = void 0;
+exports.AppPlatform = exports.Platform = exports.NutritionValueOrders = exports.NutritionValueUnits = exports.NutritionValueTitles = void 0;
 exports.NutritionValueTitles = {
     'fat': 'Yağ',
     'fat:saturated': 'Doymuş yağ',
@@ -72,3 +72,8 @@ var Platform;
     Platform["web"] = "web";
     Platform["app"] = "app";
 })(Platform = exports.Platform || (exports.Platform = {}));
+var AppPlatform;
+(function (AppPlatform) {
+    AppPlatform["android"] = "android";
+    AppPlatform["ios"] = "ios";
+})(AppPlatform = exports.AppPlatform || (exports.AppPlatform = {}));

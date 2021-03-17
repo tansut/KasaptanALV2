@@ -122,6 +122,11 @@ export enum Platform {
     app='app'
 }
 
+export enum AppPlatform {
+    android='android',
+    ios='ios'
+}
+
 export interface AppUI {
     tabIndex?: number
     title?: string;

@@ -512,6 +512,13 @@
 
 
     <% } %>
+
+    <% if (!__req.user || (__req.user && !__req.user.hasRole('admin'))) {%>
+
+    window.App.gTag('pageView', '<%=__req.path%>',  '<%=controller.platform%>/<%=controller.appPlatform%>' )
+
+  
+    <% } %>
   
   </script>
   <% if (!__req.user) { %>
@@ -537,12 +544,7 @@
   
   </script>
   
-  <% if (__req.user && !__req.user.hasRole('admin')) {%>
-  <script>  
-    window.App.gTag('pageView', '<%=__req.path%>',  '<%=__req.user.mphone%>' )
-  </script>
-  
-    <% } %>
+
   
   
   <%}%>

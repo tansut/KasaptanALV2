@@ -19,7 +19,7 @@ import { PreferredAddress } from '../db/models/user';
 var MarkdownIt = require('markdown-it')
 const fs = require('fs');
 
-import { AppNavLevel, AppNavData, AppUI, Platform } from '../models/common';
+import { AppNavLevel, AppNavData, AppUI, Platform, AppPlatform } from '../models/common';
 import { CacheManager } from './cache';
 import Helper from './helper';
 
@@ -57,6 +57,13 @@ export default class BaseRouter {
         if (agent.indexOf('gonative') > -1) {
             return Platform.app
         } else return Platform.web
+    }
+  
+    get appPlatform(): AppPlatform {
+        let agent = this.req.headers['user-agent'] || '';
+        if (agent.toLowerCase().indexOf('android') > -1) {
+            return AppPlatform.android
+        } else return AppPlatform.ios
     }
 
     protected constructorParams: any;
