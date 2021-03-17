@@ -1,27 +1,16 @@
-<div class="card border-0 rounded-0 h-100 bg-secondary mb-2 text-center pb-0  ">
-    <a class="d-block" href="/blog/kasap-kart">
-        <img  width="500" height="333"  title="" 
-            src="<%=`${__config.staticDomain}/content-resimleri/onlinekasap-thumbnail.jpg` %>"
-            alt=""></a>
-        <div class="card-body text-center d-flex flex-column p-2">
-            <h2 class="h6 mb-auto pb-2 text-center font-weight-normal">
-                Firesiz fiyatlar ve puan kazancı bir arada 
-            </h2>
-
-                
-
-            <div class="d-flex justify-content-around">
-                <% if (__req.prefAddr) { %>
-                    <a class="btn btn-sm btn-primary" href="/kasap-urunleri">Alışverişe Başla</a>
-                <% } else { %>
-                    <a data-return="/kasap-urunleri" class="btn-sm select-area-action btn btn-primary">Semtinizi Seçin</a>
-
-                <% } %>
-                    <a class="btn btn-sm btn-outline-dark" href="/blog/kasap-kart">Kasap Kart™</a>
+<%
+    var link = '/blog/kasap-kart';
+%>
 
 
-            </div>
+
+    <a href="<%=link%>" class="d-block home-carousel">
+        <img width="500" height="333" src="<%=`${__config.staticDomain}/content-resimleri/antrikot-thumbnail.jpg` %>" alt="">
+        <div class="content p-2">
+          <h5 class="mb-0 h5 text-white">Taze et, firesiz fiyatlar ve puan kazancı bir arada</h5>
         </div>
-</div>
+    </a>
 
 
+
+  

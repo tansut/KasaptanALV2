@@ -190,8 +190,8 @@
 
 
       App.platform == 'app' && $('a.app_blank').attr('target','_blank');
-      if (App.mobileOs == "ios") {
-        $("#iosAppPromote").show()
+      if (App.mobileOs == "ios" || App.mobileOs == 'android') {
+        $("#appPromote").show()
         
       }
 

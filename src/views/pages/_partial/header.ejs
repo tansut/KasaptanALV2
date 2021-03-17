@@ -143,7 +143,7 @@
             autocomplete="off" type="search" placeholder="<%=searchHint%>">
             
               <div class="pl-1">
-                <a title="<%= __req.prefAddr ? __req.prefAddr.display: 'Teslimat Bölgesi Seçin' %>" class="btn-secondary btn-sm select-area-action btn rounded " class=""><i class="czi-icon czi-location"></i> </a>
+                <a title="<%= __req.prefAddr ? __req.prefAddr.display: 'Teslimat Bölgesi Seçin' %>" class=" btn btn-sm select-area-action  " class=""><i class="font-size-lg text-muted czi-icon czi-location"></i> </a>
               </div>
             
             
@@ -154,8 +154,8 @@
    
         </div>
         <% if (controller.platform == 'web') { %>
-        <div style="display: none;" id="iosAppPromote" class="w-100   mb-3  bg-secondary rounded d-lg-none">
-          <a href="https://itunes.apple.com/WebObjects/MZStore.woa/wa/viewSoftware?id=1554059709" class="d-flex p-2 text-dark align-items-center">
+        <div style="display: none;" id="appPromote" class="w-100   mb-3  bg-secondary rounded d-lg-none">
+          <a href="http://kasaptanal.app.link" class="d-flex p-2 text-dark align-items-center">
             <img width="720" height="720" class="mr-2"
             style="width: 2.5rem; height: 2.5rem;" src="<%=__config.staticDomain %>/resource/img/applogo.png" title="KasaptanAl.com"
             alt="Uygulamayı indir" /> <div>

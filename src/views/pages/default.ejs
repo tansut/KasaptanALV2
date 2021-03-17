@@ -14,11 +14,11 @@
     <div class="container mb-3">
         <div data-simplebar data-simplebar-auto-hide="false">
             <div class="d-flex pb-md-2">
-                <% var items= ['kampanya', 'home', 'cuneytasan', 'premium', 'ciger','besindeger'] %>
+                <% var items= ['home', 'kampanya', 'cuneytasan', 'premium', 'ciger','besindeger'] %>
                     <% items.forEach((item, i)=> {%>
 
                         <div class="mb-2">
-                            <div style="width: 17rem; height: 100%;" class="shadow mr-2 ">
+                            <div class="home-carousel-container mr-2" style=" height: 100%;">
                                 <%- include('./_partial/home-slider-' + item, {  }); %>
                             </div>
                         </div>
