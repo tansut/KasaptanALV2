@@ -11,10 +11,16 @@
 
 
     <% if (true) { %>
-    <div class="container mb-3">
+    <div class="<%= controller.platform == 'web' ? 'container':'' %> mb-3">
         <div data-simplebar data-simplebar-auto-hide="false">
             <div class="d-flex pb-md-2">
-                <% var items= ['home', 'kampanya', 'cuneytasan', 'premium', 'ciger','besindeger'] %>
+                <% if (controller.platform == 'app') { %>
+                    <% var items= ['home', 'kampanya', 'cuneytasan', 'premium', 'ciger','besindeger'] %>
+
+                <% } else { %>
+                    <% var items= ['kampanya', 'cuneytasan', 'premium', 'ciger','besindeger'] %>
+
+                <% } %>
                     <% items.forEach((item, i)=> {%>
 
                         <div class="mb-2">
@@ -213,7 +219,7 @@
                                
                                 <div class="card border-0 bg-dark text-white">
                                     
-                                        <img width="500" height="333" src="<%=`${__config.staticDomain}/content-resimleri/${item.slug}-thumbnail.jpg` %>" alt="<%=item.title%>">
+                                        <img width="500" height="333" class="rounded" src="<%=`${__config.staticDomain}/content-resimleri/${item.slug}-thumbnail.jpg` %>" alt="<%=item.title%>">
                                    
                                     <div class="card-img-overlay d-flex flex-column-reverse">
                                         <div style="opacity: 0.9;" class="">
