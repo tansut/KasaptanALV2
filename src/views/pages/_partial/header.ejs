@@ -62,7 +62,8 @@
     </div>
   </div>
 
-  <div>
+  <div id="appnavbar">
+    <% if (true) { %>
     <div class="navbar navbar-expand-lg navbar-light">
       <div class="container">
         <button class="navbar-toggler app-d-none " type="button" data-toggle="collapse" data-target="#navbarCollapse3"><span
@@ -124,7 +125,10 @@
         </div>
       </div>
     </div>
-    <div class="navbar navbar-expand-lg navbar-light navbar-stuck-menu mt-n2 pt-0 pb-0">
+    <% } else { %>
+
+    <% } %>
+    <div  class=" navbar navbar-expand-lg navbar-light navbar-stuck-menu mt-n2 pt-0 pb-0">
       <div class="container px-0">
         <div class="input-group-overlay d-lg-none mb-3">
           <div class="input-group-prepend-overlay">

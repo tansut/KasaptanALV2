@@ -33,7 +33,7 @@
         <% for(var c=0; c< reyonlar.length; c++) {%>
         <div class="mb-2 <%=titles ? 'mr-2': 'mr-0'%>">
             <div id="<%=idprefix || 'cats' %><%=reyonlar[c].slug%>"
-                class="item-slider item-slider-sm <%= selected ? (selected == reyonlar[c].slug ? 'item-slider-selected': 'item-slider-unselected') : ''%>">
+                class="item-slider item-slider-sm <%= selected ? (selected == reyonlar[c].slug ? 'item-slider-selected': 'item-slider-unselectedx') : ''%>">
                 <%subUrl = reyonlar[c].type == 'resource' ? 'et-yemekleri/':'' %>
 
                 <div class="card  shadow h-100 text-center pb-0  ">
@@ -103,22 +103,22 @@
                 <% for(var c=0; c< reyonlar.length; c++) {%>
                 <div id="cat-item-<%=reyonlar[c].slug%>" class="mr-1">
                     <% var isselected = (selected == reyonlar[c].slug ? true: false) %>
-                    <div style="width: 6.8rem;"
+                    <div style="width: 6rem;"
                         class="item-slider category-slider-item  <%= isselected ?  'item-slider-selected': 'item-slider-unselected' %>">
         
-                        <div class="card  <%= isselected ? ' border-0':'border-0' %>  rounded-0  h-100 text-center pb-0  ">
+                        <div class="card   <%= isselected ? ' border-0':'border-0' %>  rounded-0  h-100 text-center pb-0  ">
                             <% if (!hideIcon) { %>
                             <a data-cat="<%=reyonlar[c].slug%>" class=" d-block <%=linkCss%>" href="<%= `/${subUrl}${reyonlar[c].slug}?transition=1${__req.query.butcher ? '&butcher=' + __req.query.butcher:''}#items`%>">
 
                                 
-                                <img style="width: 3.8rem;"  class=" rounded-circle" width="500" height="500"  title="<%=reyonlar[c].name%>" 
+                                <img style="width: 4rem;"  class=" rounded-circle" width="500" height="500"  title="<%=reyonlar[c].name%>" 
                                     src="<%=`${__req.helper.imgUrl('category-photos', reyonlar[c].slug, 'thumbnail', true, 'list')}`%>"
                                     alt="<%=reyonlar[c].name%>">
                                 
                                 </a>
                                 <% } %>
                                 <a data-cat="<%=reyonlar[c].slug%>" href="<%= `/${subUrl}${reyonlar[c].slug}${__req.query.butcher ? '?butcher=' + __req.query.butcher:''}#items`%>" class="p-1 card-body d-flex flex-column align-items-center">
-                                        <h5 class="m-auto p-0 m-0 font-weight-normal  font-size-sm"><span  class="text-link<%=reyonlar[c].slug%> <%= isselected ? 'text-dark font-weight-bold': 'text-dark'%> <%=linkCss%>"
+                                        <h5 class="m-auto p-0 font-weight-normal  font-size-sm"><span  class="text-link<%=reyonlar[c].slug%> <%= isselected ? 'text-dark ': 'text-dark'%> <%=linkCss%>"
                                             >
                                             <%= reyonlar[c].listTitle || reyonlar[c].name %>
                                         </span>

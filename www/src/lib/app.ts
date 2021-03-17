@@ -47,9 +47,10 @@ export class App extends AppBase {
         } else Promise.reject('not supported')
     }
 
-    static scrollToAnchor(aid, handler){
+    static scrollToAnchor(aid, handler, offset){
+        if (typeof(offset) == 'undefined') offset = 0;
         var aTag = $(aid); 
-        $('html,body').animate({scrollTop: aTag.offset().top}, 'slow', "swing", handler);
+        $('html,body').animate({scrollTop: aTag.offset().top + offset}, 'fast', "swing", handler);
     }
 
     static async sendResetLink(phone: string) {

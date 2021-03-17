@@ -3,6 +3,10 @@
 
 <head>
   <% include ./_partial/head %>
+
+  <script>
+    var scrollOffset = 0;
+  </script>
 </head>
 
 <body style="<%= __req.query.transition == '1' ? 'opacity: 0':'' %>">
@@ -41,53 +45,21 @@
   </div>
 
 
-
   <div class="container">
 
-      <%if (controller.category.slug != 'kurban' || __req.query.go) { %>
 
-      <div class="d-none input-group-overlay">
 
-        <div class="input-group-prepend-overlay">
-
-          <span class="input-group-text">
-            <i class="notsearching czi-search"></i>
-            <span class="searching d-none spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
-          </span>
-        </div>
-        <input data-search="product" id="page-searchbox" class="form-control searchBox prepended-form-control"
-          data-noresults-text="Maalesef bulamadık." autocomplete="off" type="search"
-          placeholder="<%=controller.category.searchhint ? 'örneğin ' + controller.category.searchhint: 'ürünler içerisinde arayın' %>">
-        <div>
-
-        </div>
-      </div>
-
-      <% } else { %>
-      <div class="text-dark mt-3 mb-3 px-3 py-2 text-center bg-secondary border ">
-        <div class="container ">
-          <p class="lead">
-
-            Kurban İbadeti, süreç yönetimimiz ve kalite standartlarımız hakkında detaylı bilgi alın.
-          </p>
-          <p>
-            <a class="btn btn-dark" target="_blank" href="/blog/kurban-ibadeti" role="button">Detaylı Bilgi &raquo;</a></p>
-        </div>
-
-      </div>
-      <% } %>
-      <%if (controller.category.slug != 'kurbanxx' || __req.query.go) { %>
       <div id="cat-slider">
         <%- include('./_partial/category-slider', { subUrl: '',  selected: controller.category.slug, mode:'browse', header: false, titles: false, title: 'Kategoriler', allUrl: '/kasap-urunleri' }); %>
       </div>
-      <% } %>
 
-      <div class="mt-1" data-simplebar>
-        <div class="d-flex pb-2">
+
+      <div id="cat-slider-subitems"  data-simplebar>
+        <div class="d-flex py-3">
           <% controller.subCategories.forEach((sc, i) => { %>
-          <div class="tag-toggle mr-3 mb-2" data-stag="<%=__helper.slugify(sc.title)%>">
-            <a onclick="goSubitem('<%=__helper.slugify(sc.title) %>')"
-              class="text-uppercase <%= controller.subCategories.length == 1 ? 'text-dark':  'text-info' %> font-size-sm text-center text-nowrap">
+          <div class="tag-toggle mr-2" data-stag="<%=__helper.slugify(sc.title)%>">
+            <a onclick="goSubitem('<%=__helper.slugify(sc.title) %>', true, -scrollOffset)"
+              class="btn  btn-sm btn-secondary text-uppercase <%= controller.subCategories.length == 1 ? 'text-dark':  'text-dark' %> font-size-xs text-center text-nowrap">
               <%=sc.title%>
             </a>
           </div>
@@ -98,13 +70,13 @@
 
       <div class="category-container-top"></div>
 
-<div style="<%= controller.platform == 'app' ? 'overflow-x: hidden; overflow-y: auto;':''%>"  class="mb-0 category-container">
-
+<!-- <div style="<%= controller.platform == 'app' ? 'overflow-x: hidden; overflow-y: auto;':''%>"  class="mb-0 category-container"> -->
+<div>
 
       <% controller.subCategories.forEach((sc, i) => { %>
-      <%if (sc.visible && sc.products.length > 0) { %>
-      <div data-tag="" id="<%= __helper.slugify(sc.title) %>" class="mb-1 border-bottom">
-        <h4 class="h6 mb-2 text-capitalize"><%= sc.title %></h4>
+      <%if (sc.visible && sc.products.length > 0 && sc.title) { %>
+      <div id="<%= __helper.slugify(sc.title) %>">
+        <h4 class="h6 mb-1 text-capitalize"><%= sc.title %></h4>
         <span class="font-weight-light">
           <%-controller.markdown.render(sc.description || '')%>
         </span>
@@ -164,7 +136,70 @@
 
   <%- include('./_partial/purchase', { returnUrl:  controller.category.slug  }); %>
 
+<script>
 
+  function hideTop() {
+    $('#cat-slider').hide();
+         $('#appnavbar').hide();
+         $('#cat-slider-subitems').addClass('mt-3');
+
+         $(".category-container").css({
+   height: ($( window ).height() - $(".category-container-top").offset().top) + 'px'
+ })
+       }
+  
+
+  function showTop() {
+    $('#cat-slider').show();
+         $('#appnavbar').show();
+         $('#cat-slider-subitems').removeClass('mt-3');
+
+         
+         $(".category-container").css({
+   height: ($( window ).height() - $(".category-container-top").offset().top) + 'px'
+ })
+ }
+
+  $(document).ready(function () {
+    scrollOffset = $("#cat-slider-subitems").height();
+  var eTop = $("#cat-slider-subitems").offset().top;
+// $(".category-container").css({
+//   height: ($( window ).height() - $(".category-container-top").offset().top) + 'px'
+// })
+
+// var lastScrollTop = $(".category-container").scrollTop();
+// $(".category-container").scroll(function(event){
+//    var st = $(this).scrollTop();
+//    if (st > lastScrollTop){
+
+       
+//    } else {
+//       // upscroll code
+//    }
+//    lastScrollTop = st;
+//    setTimeout(() => {
+//        if (st < 10) {
+//           //showTop();
+//        } 
+//        else if (st >= 10) { 
+//         //hideTop();
+//        }
+//       },0);
+// });
+$(window).scroll(function(event){
+   setTimeout(() => {
+    var p = eTop - $(window).scrollTop()
+    var c = "sticky-top bg-white";
+    if (p < 12) {
+       $("#cat-slider-subitems").addClass(c);
+   } else {
+        $("#cat-slider-subitems").removeClass(c);
+   }
+   });
+});
+
+})
+</script>
 
 
 

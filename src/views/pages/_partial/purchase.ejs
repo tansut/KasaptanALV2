@@ -55,19 +55,16 @@
 
 
 
-    function goSubitem(tag, usePage) {
-
+    function goSubitem(tag, usePage, offset) {
+      
       <% if (controller.platform == 'app') { %>
         if (!usePage) {
           var t = $(".category-container").scrollTop()
-
-var scrollOffset = $('#' + tag).offset().top - $(".category-container-top").offset().top + t;
-$(".category-container").animate({scrollTop:scrollOffset}, 500);
-        } else App.scrollToAnchor('#' + tag)
-
-
+          var scrollOffset = $('#' + tag).offset().top - $(".category-container-top").offset().top + t;
+          $(".category-container").animate({scrollTop:scrollOffset}, 500);
+         } else App.scrollToAnchor('#' + tag, null, offset)
       <% } else { %>
-        App.scrollToAnchor('#' + tag)
+        App.scrollToAnchor('#' + tag, null, offset)
       <% } %>
 
     }
@@ -81,11 +78,7 @@ $(".category-container").animate({scrollTop:scrollOffset}, 500);
 
     $(document).ready(function () {
 
-      <% if (controller.platform == 'app') {  %>
-      $(".category-container").css({
-        height: ($( window ).height() - $(".category-container-top").offset().top) + 'px'
-      })
-      <% } %>
+
 
 
       $("#purchasemodal").on('hide.bs.modal', function () {
@@ -170,7 +163,7 @@ $(".category-container").animate({scrollTop:scrollOffset}, 500);
             
               var rep = $(".text-link" + cat)[0]
               var rept =  rep.innerHTML;
-              var rep = $(".text-link"+cat)[0]
+              var rep = $(".text-link"+cat)[0];
               rep.innerHTML = '<span class="spinner-border text-primary spinner-border-sm"></span>';
               setTimeout(function() {
                 rep.innerHTML = rept;
