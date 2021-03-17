@@ -32,6 +32,36 @@
 
   <script>
 
+function loadProducts(cat) {
+
+    
+            
+var rep = $(".text-link" + cat)[0]
+var rept =  rep.innerHTML;
+var rep = $(".text-link"+cat)[0];
+rep.innerHTML = '<span class="spinner-border text-primary spinner-border-sm"></span>';
+
+
+$.ajax('/' + cat + '?partial=1').done(function (result) { 
+$('#category-products').html(result);
+
+new SimpleBar($('#category-products [data-simplebar]')[0]);
+$('#category-products [data-simplebar]').css({
+opacity:1
+});
+$('#category-products [data-product]').click(window.purchase.purchaseClick);
+$('#cat-slider .item-slider-selected').removeClass("item-slider-selected")
+$("#cat-slider #cat-item-" + cat + " .item-slider").addClass("item-slider-selected")
+
+}).fail(function(err) {
+alert(err.message)
+}).always(function() {
+rep.innerHTML = rept;
+})
+}
+
+
+
     var p = window.purchase = {};
 
     p.closePurchaseDialog = function () {
@@ -53,48 +83,17 @@
       window.location.href = loc
     }
 
+    p.purchaseClick =  function (e) {
+        <% if (__req.prefAddr) { %>
+          p.openDialog($(e.currentTarget).data('product'))
+          <% } else { %>
+            window.kb.selectArea(function (sender, ul) {
+              window.location.href = "/adres-belirle/" + ul.selectedDistrict.slug + '?lng=' + ul.lng + '&lat=' + ul.lat + '&r=' + encodeURIComponent('/<%=`${returnUrl}?open=`%>' + $(e.currentTarget).data('product'));
+            });
+  <% } %>
+      }
 
-
-    function goSubitem(tag, usePage, offset) {
-      
-      <% if (controller.platform == 'app') { %>
-        if (!usePage) {
-          var t = $(".category-container").scrollTop()
-          var scrollOffset = $('#' + tag).offset().top - $(".category-container-top").offset().top + t;
-          $(".category-container").animate({scrollTop:scrollOffset}, 500);
-         } else App.scrollToAnchor('#' + tag, null, offset)
-      <% } else { %>
-        App.scrollToAnchor('#' + tag, null, offset)
-      <% } %>
-
-    }
-
-    function setBody() {
-
-
-    }
-
-
-
-    $(document).ready(function () {
-
-
-
-
-      $("#purchasemodal").on('hide.bs.modal', function () {
-        $(this).find('.iframe-div').remove();
-        $('#purchasemodal-loading').hide();
-
-      });
-
-      $('#purchasemodal').on('show.bs.modal', function () {
-        $(this).find('.iframe-div').focus();
-        // $(this).find('.modal-body').css({
-        //   //height: window.innerHeight + 'px'
-        // });
-      });
-
-      function openPurchaseDialog(product) {
+      p.openDialog = function (product) {
         var div = $('<div class="d-none iframe-div w-100 h-100" overflow:auto;-webkit-overflow-scrolling:touch"></div>');
 
         var iframe = document.createElement('iframe');
@@ -139,15 +138,50 @@
       }
 
 
-      $('[data-product]').click(function (e) {
-  <% if (__req.prefAddr) { %>
-          openPurchaseDialog($(e.currentTarget).data('product'))
-          <% } else { %>
-            window.kb.selectArea(function (sender, ul) {
-              window.location.href = "/adres-belirle/" + ul.selectedDistrict.slug + '?lng=' + ul.lng + '&lat=' + ul.lat + '&r=' + encodeURIComponent('/<%=`${returnUrl}?open=`%>' + $(e.currentTarget).data('product'));
-            });
-  <% } %>
-})
+
+
+    function goSubitem(tag, usePage, offset) {
+      
+      <% if (controller.platform == 'app') { %>
+        if (!usePage) {
+          var t = $(".category-container").scrollTop()
+          var scrollOffset = $('#' + tag).offset().top - $(".category-container-top").offset().top + t;
+          $(".category-container").animate({scrollTop:scrollOffset}, 500);
+         } else App.scrollToAnchor('#' + tag, null, offset)
+      <% } else { %>
+        App.scrollToAnchor('#' + tag, null, offset)
+      <% } %>
+
+    }
+
+    function setBody() {
+
+
+    }
+
+
+
+    $(document).ready(function () {
+
+
+
+
+      $("#purchasemodal").on('hide.bs.modal', function () {
+        $(this).find('.iframe-div').remove();
+        $('#purchasemodal-loading').hide();
+
+      });
+
+      $('#purchasemodal').on('show.bs.modal', function () {
+        $(this).find('.iframe-div').focus();
+        // $(this).find('.modal-body').css({
+        //   //height: window.innerHeight + 'px'
+        // });
+      });
+
+
+
+      $('[data-product]').click(window.purchase.purchaseClick)
 
 
 
@@ -157,7 +191,8 @@
         var scel = sb.getScrollElement();
         var scelOffset = $(scel).offset();
         var selected = $("#cat-item-<%=controller.category ? controller.category.slug: ''%>").offset();
-        $(".category-slider-item a").click(function (e) {
+        $(".category-slider-item a[nopartial]").click(function (e) {
+          
             if (!scel.__progress) {
               var cat = $(e.currentTarget).data('cat');
             
@@ -203,7 +238,7 @@
         }
       }
       <% if (__req.query.open) { %>
-        openPurchaseDialog('<%=__req.query.open%>')
+        p.openDialog('<%=__req.query.open%>')
         <% } %>
       
     })

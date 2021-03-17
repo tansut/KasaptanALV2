@@ -254,7 +254,7 @@ class Route extends router_1.ViewRouter {
             this.forceSemt = true;
             this.appUI.title = 'Ürünler';
             //this.appUI.tabIndex = 1;
-            this.renderPage('pages/category.ejs');
+            this.renderPage(this.req.query.partial ? 'pages/category-items.ejs' : 'pages/category.ejs');
         });
     }
     categoryPhotoRoute() {

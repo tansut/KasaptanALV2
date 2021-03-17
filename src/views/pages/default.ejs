@@ -307,7 +307,7 @@
 
                     <% } %>
 
-                        <% if (__req.query.nodesc!='1' ) { %>
+                        <% if (__req.query.nodesc !='1' && controller.platform != 'app' ) { %>
                             <div class="app-d-none container mb-3">
                                 <div class="collapse-container page-footer-text">
                                     <div class="collapse" id="collapseSummary">

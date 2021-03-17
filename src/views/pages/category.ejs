@@ -1,3 +1,5 @@
+
+
 <!DOCTYPE html>
 <html lang="tr-TR" prefix="og: http://ogp.me/ns#">
 
@@ -16,16 +18,13 @@
   <% include ./_partial/header %>
   <link href="https://www.kasaptanal.com/<%=controller.category.slug%>" rel="canonical">
 
-  <%
-    var relatedFoodCategory = controller.category.relatedFoodCategory ? __req.__categories.find(p => p.id == controller.category.relatedFoodCategory): 0;          
-    var foodCategoryParams = {allUrl: relatedFoodCategory ? '/et-yemekleri/' + relatedFoodCategory.slug: '/' + controller.category.slug + '/et-yemekleri', mode: 'yemek', foods: controller.foods, title: relatedFoodCategory ? relatedFoodCategory.name: controller.category.tarifTitle || 'Yemekler'}    
-    var foodsInserted = false; 
-  %>
+
 
 
 
   <a id="items-container" class="d-block"></a>
 
+  <% if (controller.platform == 'web') { %>
   <div class="page-title app-d-none">
     <div class="container d-lg-flex justify-content-between py-2 py-lg-3">
       <div class="order-lg-2 mb-3 mb-lg-0 pt-lg-2">
@@ -44,70 +43,35 @@
     </div>
   </div>
 
+  <% } %>
+
 
   <div class="container">
 
 
 
       <div id="cat-slider">
-        <%- include('./_partial/category-slider', { subUrl: '',  selected: controller.category.slug, mode:'browse', header: false, titles: false, title: 'Kategoriler', allUrl: '/kasap-urunleri' }); %>
+        <%- include('./_partial/category-slider', { partialRender: true, subUrl: '',  selected: controller.category.slug, mode:'browse', header: false, titles: false, title: 'Kategoriler', allUrl: '/kasap-urunleri' }); %>
       </div>
 
 
-      <div id="cat-slider-subitems"  data-simplebar>
-        <div class="d-flex py-3">
-          <% controller.subCategories.forEach((sc, i) => { %>
-          <div class="tag-toggle mr-2" data-stag="<%=__helper.slugify(sc.title)%>">
-            <a onclick="goSubitem('<%=__helper.slugify(sc.title) %>', true, -scrollOffset)"
-              class="btn  btn-sm btn-secondary text-uppercase <%= controller.subCategories.length == 1 ? 'text-dark':  'text-dark' %> font-size-xs text-center text-nowrap">
-              <%=sc.title%>
-            </a>
-          </div>
-          <% }) %>
-        </div>
-      </div>
+      
 
 
       <div class="category-container-top"></div>
 
 <!-- <div style="<%= controller.platform == 'app' ? 'overflow-x: hidden; overflow-y: auto;':''%>"  class="mb-0 category-container"> -->
-<div>
 
-      <% controller.subCategories.forEach((sc, i) => { %>
-      <%if (sc.visible && sc.products.length > 0 && sc.title) { %>
-      <div id="<%= __helper.slugify(sc.title) %>">
-        <h4 class="h6 mb-1 text-capitalize"><%= sc.title %></h4>
-        <span class="font-weight-light">
-          <%-controller.markdown.render(sc.description || '')%>
-        </span>
-      </div>
-      <%}%>
-    <div class="row mb-3">
-    <% sc.products.forEach((product,i) => { %>
 
-      <% var price = controller.getPriceData(product) %>
-      <div data-tag="<%= __helper.slugify(product.tag1) %>" class="col-md-3 col-6 py-2">
-        <%- include('./_partial/product-view.ejs', {product: product, showPurchase: true, butcher: __req.query.butcher, lowPrice: price ? price.lowPrice: 0.00, highPrice: price ? price.highPrice: 0.00, priceUnit: price ? price.priceUnit: ''}) %>
 
-      </div>
-      <% if (controller.foods && controller.foods.length > 0 && !foodsInserted && i>controller.products.length/5) { %>
-      <% foodsInserted = true; %>
-      <div data-tag="" class="col-md-3 col-6 py-2">
-        <%- include('./_partial/generic-item-view.ejs', { linkCss: 'app_blank', badge: 'Yemeklere Gözatın', imgClass: 'rounded-lg', title: foodCategoryParams.title, href: `${foodCategoryParams.allUrl}`, src: `${ __req.helper.imgUrl('category-photos', controller.category.slug, 'thumbnail', true, 'food')}` }) %>
-      </div>
-      <%}%>
-    <%  }) %>
-    </div>
-
-    <% }) %>
-
-  </div>
-
+<div id="category-products">
+  <%-include('./category-items.ejs', {}) %>
+</div>
 
 
  
-    <% if (controller.category.mddesc) { %>
-      <div class="mb-3 app-d-none collapse-container page-footer-text">
+    <% if (controller.category.mddesc && controller.platform != 'app') { %>
+      <div class="mb-3 collapse-container page-footer-text">
         <div class="collapse" id="collapseSummary">
           <%- controller.category.mddesc && controller.Markdown.render(controller.category.mddesc) %>
   
@@ -137,6 +101,7 @@
   <%- include('./_partial/purchase', { returnUrl:  controller.category.slug  }); %>
 
 <script>
+
 
   function hideTop() {
     $('#cat-slider').hide();

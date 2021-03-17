@@ -9,6 +9,7 @@
 <% viewCats = typeof(viewCats) == 'undefined' ? ['reyon', 'list', 'product:dispatch=countrywide']: viewCats %>
 <% var linkCss = typeof(linkCss) == 'undefined' ? '': linkCss %>
 <% var hideIcon = typeof(hideIcon) == 'undefined' ? false: true %>
+<% var partialRender = typeof(partialRender) == 'undefined' ? false: partialRender %>
 
 
 
@@ -33,7 +34,7 @@
         <% for(var c=0; c< reyonlar.length; c++) {%>
         <div class="mb-2 <%=titles ? 'mr-2': 'mr-0'%>">
             <div id="<%=idprefix || 'cats' %><%=reyonlar[c].slug%>"
-                class="item-slider item-slider-sm <%= selected ? (selected == reyonlar[c].slug ? 'item-slider-selected': 'item-slider-unselectedx') : ''%>">
+                class="item-slider item-slider-sm <%= selected ? (selected == reyonlar[c].slug ? 'item-slider-selected': '') : ''%>">
                 <%subUrl = reyonlar[c].type == 'resource' ? 'et-yemekleri/':'' %>
 
                 <div class="card  h-100 text-center pb-0  ">
@@ -104,11 +105,18 @@
                 <div id="cat-item-<%=reyonlar[c].slug%>" class="mr-1">
                     <% var isselected = (selected == reyonlar[c].slug ? true: false) %>
                     <div style="width: 6rem;"
-                        class="item-slider category-slider-item  <%= isselected ?  'item-slider-selected': 'item-slider-unselected' %>">
+                        class="item-slider category-slider-item  <%= isselected ?  'item-slider-selected': '' %>">
         
-                        <div class="card   <%= isselected ? ' border-0':'border-0' %>  rounded-0  h-100 text-center pb-0  ">
-                            <% if (!hideIcon) { %>
-                            <a data-cat="<%=reyonlar[c].slug%>" class=" d-block <%=linkCss%>" href="<%= `/${subUrl}${reyonlar[c].slug}?transition=1${__req.query.butcher ? '&butcher=' + __req.query.butcher:''}#items`%>">
+                        <div class="card  <%= isselected ? ' border-0':'border-0' %>  rounded-0  h-100 text-center pb-0  ">
+                           
+                            <a data-cat="<%=reyonlar[c].slug%>" class=" d-block <%=linkCss%>" 
+                                <% if (!partialRender) { %>
+                                    nopartial="true"
+                                href="<%= `/${subUrl}${reyonlar[c].slug}?transition=1${__req.query.butcher ? '&butcher=' + __req.query.butcher:''}#items`%>"
+                                <% } else { %>
+                                    onclick="loadProducts('<%=reyonlar[c].slug%>')"
+                                <% } %>
+                                >
 
                                 
                                 <img style="width: 4rem;"  class=" rounded-lg" width="500" height="500"  title="<%=reyonlar[c].name%>" 
@@ -116,8 +124,16 @@
                                     alt="<%=reyonlar[c].name%>">
                                 
                                 </a>
-                                <% } %>
-                                <a data-cat="<%=reyonlar[c].slug%>" href="<%= `/${subUrl}${reyonlar[c].slug}${__req.query.butcher ? '?butcher=' + __req.query.butcher:''}#items`%>" class="p-1 card-body d-flex flex-column align-items-center">
+                                
+                                <a data-cat="<%=reyonlar[c].slug%>" 
+                                    <% if (!partialRender) { %>
+                                        nopartial="true"
+                                    href="<%= `/${subUrl}${reyonlar[c].slug}?transition=1${__req.query.butcher ? '&butcher=' + __req.query.butcher:''}#items`%>"
+                                    <% } else { %>
+                                        onclick="loadProducts('<%=reyonlar[c].slug%>')"
+                                    <% } %>
+                                    
+                                    class="p-1 card-body d-flex flex-column align-items-center">
                                         <h5 class="m-auto p-0 font-weight-normal  font-size-sm"><span  class="text-link<%=reyonlar[c].slug%> <%= isselected ? 'text-dark ': 'text-dark'%> <%=linkCss%>"
                                             >
                                             <%= reyonlar[c].listTitle || reyonlar[c].name %>
