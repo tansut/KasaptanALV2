@@ -112,10 +112,11 @@
                             <a data-cat="<%=reyonlar[c].slug%>" class=" d-block <%=linkCss%>" 
                                 <% if (!partialRender) { %>
                                     nopartial="true"
-                                href="<%= `/${subUrl}${reyonlar[c].slug}?transition=1${__req.query.butcher ? '&butcher=' + __req.query.butcher:''}#items`%>"
                                 <% } else { %>
-                                    onclick="loadProducts('<%=reyonlar[c].slug%>')"
+                                    onclick="return loadProducts('<%=reyonlar[c].slug%>')"
                                 <% } %>
+                                href="<%= `/${subUrl}${reyonlar[c].slug}?transition=1${__req.query.butcher ? '&butcher=' + __req.query.butcher:''}#items`%>"
+
                                 >
 
                                 
@@ -128,10 +129,10 @@
                                 <a data-cat="<%=reyonlar[c].slug%>" 
                                     <% if (!partialRender) { %>
                                         nopartial="true"
-                                    href="<%= `/${subUrl}${reyonlar[c].slug}?transition=1${__req.query.butcher ? '&butcher=' + __req.query.butcher:''}#items`%>"
                                     <% } else { %>
-                                        onclick="loadProducts('<%=reyonlar[c].slug%>')"
+                                        onclick="return loadProducts('<%=reyonlar[c].slug%>')"
                                     <% } %>
+                                    href="<%= `/${subUrl}${reyonlar[c].slug}?transition=1${__req.query.butcher ? '&butcher=' + __req.query.butcher:''}#items`%>"
                                     
                                     class="p-1 card-body d-flex flex-column align-items-center">
                                         <h5 class="m-auto p-0 font-weight-normal  font-size-sm"><span  class="text-link<%=reyonlar[c].slug%> <%= isselected ? 'text-dark ': 'text-dark'%> <%=linkCss%>"

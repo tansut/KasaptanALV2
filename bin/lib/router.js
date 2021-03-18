@@ -59,11 +59,23 @@ class BaseRouter {
     }
     get appPlatform() {
         let agent = this.req.headers['user-agent'] || '';
-        if (agent.toLowerCase().indexOf('android') > -1) {
-            return common_2.AppPlatform.android;
+        if (this.platform == 'app') {
+            if (agent.toLowerCase().indexOf('android') > -1) {
+                return common_2.AppPlatform.android;
+            }
+            else
+                return common_2.AppPlatform.ios;
         }
-        else
-            return common_2.AppPlatform.ios;
+        else {
+            if (agent.toLowerCase().indexOf('chrome') > -1)
+                return common_2.AppPlatform.chrome;
+            else if (agent.toLowerCase().indexOf('safari') > -1)
+                return common_2.AppPlatform.safari;
+            else if (agent.toLowerCase().indexOf('edge') > -1)
+                return common_2.AppPlatform.edge;
+            else
+                return common_2.AppPlatform.unknown;
+        }
     }
     get Markdown() {
         this._markdown = this._markdown || new MarkdownIt();

@@ -76,4 +76,8 @@ var AppPlatform;
 (function (AppPlatform) {
     AppPlatform["android"] = "android";
     AppPlatform["ios"] = "ios";
+    AppPlatform["chrome"] = "chrome";
+    AppPlatform["safari"] = "safari";
+    AppPlatform["edge"] = "edge";
+    AppPlatform["unknown"] = "unknown";
 })(AppPlatform = exports.AppPlatform || (exports.AppPlatform = {}));

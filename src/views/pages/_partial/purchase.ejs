@@ -32,32 +32,46 @@
 
   <script>
 
-function loadProducts(cat) {
-
-    
-            
-var rep = $(".text-link" + cat)[0]
-var rept =  rep.innerHTML;
-var rep = $(".text-link"+cat)[0];
-rep.innerHTML = '<span class="spinner-border text-primary spinner-border-sm"></span>';
-
-
-$.ajax('/' + cat + '?partial=1').done(function (result) { 
-$('#category-products').html(result);
-
-new SimpleBar($('#category-products [data-simplebar]')[0]);
+    function compile(cat) {
+      App.platform == 'app' && $('#category-products a.app_blank').attr('target','_blank');
+      new SimpleBar($('#category-products [data-simplebar]')[0]);
 $('#category-products [data-simplebar]').css({
 opacity:1
 });
 $('#category-products [data-product]').click(window.purchase.purchaseClick);
 $('#cat-slider .item-slider-selected').removeClass("item-slider-selected")
 $("#cat-slider #cat-item-" + cat + " .item-slider").addClass("item-slider-selected")
+    }
+
+function loadProducts(cat) {
+
+ var cache = (window.__productsCache = window.__productsCache || {})
+    
+    if (cache[cat]) {
+      $('#category-products').html(cache[cat]);
+      compile(cat);
+
+    } else {
+      var rep = $(".text-link" + cat)[0]
+  var rept =  rep.innerHTML;
+var rep = $(".text-link"+cat)[0];
+rep.innerHTML = '<span class="spinner-border text-primary spinner-border-sm"></span>';
+$.ajax('/' + cat + '?partial=1').done(function (result) { 
+$('#category-products').html(result);
+cache[cat] = result
+compile(cat);
 
 }).fail(function(err) {
 alert(err.message)
 }).always(function() {
 rep.innerHTML = rept;
 })
+    }
+            
+return false;
+
+
+
 }
 
 

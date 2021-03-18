@@ -124,7 +124,11 @@ export enum Platform {
 
 export enum AppPlatform {
     android='android',
-    ios='ios'
+    ios='ios',
+    chrome = 'chrome',
+    safari = 'safari',
+    edge = 'edge',
+    unknown = 'unknown'
 }
 
 export interface AppUI {

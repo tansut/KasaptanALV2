@@ -58,13 +58,24 @@ export default class BaseRouter {
             return Platform.app
         } else return Platform.web
     }
-  
+
     get appPlatform(): AppPlatform {
         let agent = this.req.headers['user-agent'] || '';
-        if (agent.toLowerCase().indexOf('android') > -1) {
-            return AppPlatform.android
-        } else return AppPlatform.ios
+        if (this.platform == 'app') {
+            if (agent.toLowerCase().indexOf('android') > -1) {
+                return AppPlatform.android
+            } else return AppPlatform.ios
+        } else {
+            if (agent.toLowerCase().indexOf('chrome') > -1)
+                return AppPlatform.chrome;
+            else if (agent.toLowerCase().indexOf('safari') > -1)
+                return AppPlatform.safari;
+            else if (agent.toLowerCase().indexOf('edge') > -1)
+                return AppPlatform.edge;
+            else return AppPlatform.unknown
+        }
     }
+
 
     protected constructorParams: any;
 
@@ -75,7 +86,7 @@ export default class BaseRouter {
 
     get url() {
         return Helper.getUrl(this.req);
-                
+
     }
 
     forceAuthenticate(req, res, next) {
@@ -176,7 +187,7 @@ export class ViewRouter extends BaseRouter {
     appUI: AppUI;
     appNavData: AppNavData;
 
-    
+
 
     // let recentButchers: ButcherModel[] = CacheManager.dataCache.get("recent-butchers");
     // if (!recentButchers) {
@@ -241,7 +252,7 @@ export class ViewRouter extends BaseRouter {
 
     protected renderView(view: string, pageKey: string = null, vdata = {}) {
         pageKey = pageKey || view;
-        let dbViewData = this.req.__webpages[pageKey] || {};        
+        let dbViewData = this.req.__webpages[pageKey] || {};
         let result = { ...dbViewData, ...vdata };
         this.res.render(view, this.viewData(result))
     }
