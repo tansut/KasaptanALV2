@@ -87,6 +87,12 @@ let User = User_1 = class User extends basemodel_1.default {
     set shopcard(value) {
         this.setDataValue('shopcardjson', Buffer.from(JSON.stringify(value), "utf-8"));
     }
+    get mobiledevice() {
+        return this.mobiledevicedata ? JSON.parse(this.getDataValue('mobiledevicedata').toString()) : null;
+    }
+    set mobiledevice(value) {
+        this.setDataValue('mobiledevicedata', Buffer.from(JSON.stringify(value), "utf-8"));
+    }
     hasSavedLocation() {
         return (this.lastLevel1Id && this.lastLevel2Id && this.lastLevel3Id);
     }
@@ -226,6 +232,38 @@ __decorate([
     sequelize_typescript_1.Column,
     __metadata("design:type", Buffer)
 ], User.prototype, "shopcardjson", void 0);
+__decorate([
+    sequelize_typescript_1.Column,
+    __metadata("design:type", Date)
+], User.prototype, "mobiledeviceUpdateDate", void 0);
+__decorate([
+    sequelize_typescript_1.Column,
+    __metadata("design:type", Date)
+], User.prototype, "mobiledeviceFirstUpdateDate", void 0);
+__decorate([
+    sequelize_typescript_1.Column,
+    __metadata("design:type", Buffer)
+], User.prototype, "mobiledevicedata", void 0);
+__decorate([
+    sequelize_typescript_1.Column,
+    __metadata("design:type", String)
+], User.prototype, "oneSignalUserId", void 0);
+__decorate([
+    sequelize_typescript_1.Column,
+    __metadata("design:type", String)
+], User.prototype, "oneSignalPushToken", void 0);
+__decorate([
+    sequelize_typescript_1.Column,
+    __metadata("design:type", String)
+], User.prototype, "mobilePlatform", void 0);
+__decorate([
+    sequelize_typescript_1.Column,
+    __metadata("design:type", String)
+], User.prototype, "mobileAppVersion", void 0);
+__decorate([
+    sequelize_typescript_1.Column,
+    __metadata("design:type", String)
+], User.prototype, "mobileModel", void 0);
 User = User_1 = __decorate([
     sequelize_typescript_1.Table({
         tableName: "Users",

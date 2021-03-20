@@ -240,6 +240,20 @@ class UserRoute extends router_1.ApiRouter {
             console.log(pwd);
         return pwd;
     }
+    updateMobileDevice() {
+        return __awaiter(this, void 0, void 0, function* () {
+            if (this.req.user.mobiledeviceFirstUpdateDate == null)
+                this.req.user.mobiledeviceFirstUpdateDate = helper_1.default.Now();
+            this.req.user.mobiledeviceUpdateDate = helper_1.default.Now();
+            this.req.user.mobiledevice = this.req.body;
+            this.req.user.oneSignalUserId = this.req.body.oneSignalUserId;
+            this.req.user.oneSignalPushToken = this.req.body.oneSignalPushToken;
+            this.req.user.mobileAppVersion = this.req.body.appVersion;
+            this.req.user.mobileModel = this.req.body.model;
+            this.req.user.mobilePlatform = this.req.body.platform;
+            yield this.req.user.save();
+        });
+    }
     sendPassword(pwd, phoneNumber) {
         return __awaiter(this, void 0, void 0, function* () {
             yield sms_1.Sms.send(phoneNumber, `${pwd} kasaptanal.com giris sifreniz ile isleme devam edin.`, true, new sitelog_1.default(this.constructorParams));
@@ -353,6 +367,7 @@ class UserRoute extends router_1.ApiRouter {
         });
     }
     static SetRoutes(router) {
+        router.post("/user/updatemobiledevice", UserRoute.BindRequest(this.prototype.updateMobileDevice));
         router.post("/user/signup", UserRoute.BindRequest(this.prototype.signupRoute));
         router.post("/user/signupverify", UserRoute.BindRequest(this.prototype.verifysignupRoute));
         router.post("/user/signupcomplete", UserRoute.BindRequest(this.prototype.completesignupRoute));

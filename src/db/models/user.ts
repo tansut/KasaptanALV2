@@ -235,6 +235,39 @@ export default class User extends BaseModel<User> {
         this.setDataValue('shopcardjson', Buffer.from(JSON.stringify(value), "utf-8"));
     }
 
+    @Column
+    mobiledeviceUpdateDate: Date;
+
+    @Column
+    mobiledeviceFirstUpdateDate: Date;
+
+    @Column
+    mobiledevicedata: Buffer
+
+    get mobiledevice(): any {
+        return this.mobiledevicedata ? JSON.parse((<Buffer>this.getDataValue('mobiledevicedata')).toString()) : null
+    }
+
+    set mobiledevice(value: any) {
+        this.setDataValue('mobiledevicedata', Buffer.from(JSON.stringify(value), "utf-8"));
+    }
+
+    @Column
+    oneSignalUserId: string;
+
+    @Column
+    oneSignalPushToken: string;
+
+    @Column
+    mobilePlatform: string;
+
+    @Column
+    mobileAppVersion: string;    
+    
+    @Column
+    mobileModel: string;    
+
+
 
     hasSavedLocation() {
         return (this.lastLevel1Id && this.lastLevel2Id && this.lastLevel3Id);

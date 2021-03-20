@@ -250,6 +250,27 @@ export default class UserRoute extends ApiRouter {
         return pwd;
     }
 
+
+    
+    async updateMobileDevice() {
+
+        if (this.req.user.mobiledeviceFirstUpdateDate == null)
+         this.req.user.mobiledeviceFirstUpdateDate = Helper.Now();
+
+        this.req.user.mobiledeviceUpdateDate = Helper.Now();
+        this.req.user.mobiledevice = this.req.body;
+        this.req.user.oneSignalUserId = this.req.body.oneSignalUserId;
+        this.req.user.oneSignalPushToken = this.req.body.oneSignalPushToken;
+
+        this.req.user.mobileAppVersion = this.req.body.appVersion;
+        this.req.user.mobileModel = this.req.body.model;
+        this.req.user.mobilePlatform = this.req.body.platform;
+
+        await this.req.user.save();
+
+    }
+
+
     async sendPassword(pwd: string, phoneNumber: string) {
         await Sms.send(phoneNumber, `${pwd} kasaptanal.com giris sifreniz ile isleme devam edin.`, true, new SiteLogRoute(this.constructorParams));
         return pwd;
@@ -363,10 +384,11 @@ export default class UserRoute extends ApiRouter {
             // })
         });
     }
-
+ 
 
     static SetRoutes(router: express.Router) {
-   
+        
+        router.post("/user/updatemobiledevice", UserRoute.BindRequest(this.prototype.updateMobileDevice));
         router.post("/user/signup", UserRoute.BindRequest(this.prototype.signupRoute));
         router.post("/user/signupverify", UserRoute.BindRequest(this.prototype.verifysignupRoute));
         router.post("/user/signupcomplete", UserRoute.BindRequest(this.prototype.completesignupRoute));

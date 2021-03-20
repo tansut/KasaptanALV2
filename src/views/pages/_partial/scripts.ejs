@@ -183,6 +183,19 @@
     return false
 
   } 
+
+  <% if (controller.platform == 'app' && __req.user && !__req.session.mobiledeviceupdated) { %>
+  <% __req.session.mobiledeviceupdated = true %>
+  function gonative_onesignal_info(info) {
+
+    App.Backend.post('user/updatemobiledevice', info).then(function() {
+      console.log('successfully updated user mobile data')
+    }).catch(function(err) {
+      console.log(err)
+    });
+  }
+  <% } %>
+
   
   
   
@@ -341,6 +354,9 @@
   
   
   <script>
+
+
+
   
   
     $(document).ready(function () {
