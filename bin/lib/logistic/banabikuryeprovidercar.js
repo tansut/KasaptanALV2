@@ -5,7 +5,7 @@ const banabikurye_1 = require("./banabikurye");
 const core_1 = require("./core");
 class BanabikuryeCarProvider extends banabikurye_1.default {
     static register() {
-        core_1.LogisticFactory.register("banabikuryecar", BanabikuryeCarProvider);
+        core_1.LogisticFactory.register("banabikurye/car", BanabikuryeCarProvider);
     }
     constructor(config, options) {
         super(config, options);

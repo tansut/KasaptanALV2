@@ -1167,7 +1167,7 @@ class Route extends router_1.ApiRouter {
             let order = yield this.getOrder(ordernum, true);
             if (!order)
                 return this.res.send(404);
-            if (order.dispatcherType == 'banabikurye' && order.deliveryOrderId) {
+            if ((order.dispatcherType == 'banabikurye' || order.dispatcherType == 'banabikurye/car') && order.deliveryOrderId) {
                 let provider = core_1.LogisticFactory.getInstance(order.dispatcherType, {
                     dispatcher: yield dispatcher_1.default.findByPk(order.dispatcherid, {
                         include: [{
@@ -1200,7 +1200,7 @@ class Route extends router_1.ApiRouter {
             max.setTime(max.getTime() + (4 * 60 * 60 * 1000));
             if (max < helper_1.default.Now())
                 throw new Error("Lütfen teslimat gün ve saatini kontrol edin, hatalı gözüküyor.");
-            if (order.dispatcherType == 'banabikurye') {
+            if (order.dispatcherType == 'banabikurye' || order.dispatcherType == 'banabikurye/car') {
                 let provider = core_1.LogisticFactory.getInstance(order.dispatcherType, {
                     dispatcher: yield dispatcher_1.default.findByPk(order.dispatcherid, {
                         include: [{

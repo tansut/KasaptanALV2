@@ -5,7 +5,7 @@ import { LogisticFactory, LogisticProviderOptions, VehicleType } from "./core";
 
 export default class BanabikuryeCarProvider extends BanabikuryeProvider {
     static register() {
-        LogisticFactory.register("banabikuryecar", BanabikuryeCarProvider)
+        LogisticFactory.register("banabikurye/car", BanabikuryeCarProvider)
     }
 
     constructor(config: BanabikuryeConfig, options: LogisticProviderOptions) {
