@@ -1,6 +1,6 @@
 
 
-<div class=" border bg-secondary">
+<div class="<%= __req.query.frame != '1' ? 'border':'border-bottom' %> bg-secondary">
                    
 
                    
@@ -40,7 +40,7 @@ class="gallery-item-caption"><%= butcherVideo.title %></span></a>
               %<%=view.butcher.puanData.rate * 100 %> Puan
             </span>
             <span class="d-block badge badge-danger font-size-xs font-weight-medium">
-              <%='+15TL'%> Puan
+              <%='+10TL'%> Puan
             </span>
           </div>
         
@@ -233,9 +233,18 @@ class="gallery-item-caption"><%= butcherVideo.title %></span></a>
                   </li>
                   
                   <li>
-                    
-                    <p class="mb-0"><strong>500TL ve üzeri</strong> alışveriş yapın, ayrıca <strong class="text-dark">
-                      <%- include('./currency.ejs', {value: 15}) %>
+                    <% if (controller.platform == 'web') { %>
+                      
+           
+                      
+
+
+                    <% } %>
+                    <p class="mb-0">
+                      <a target="_blank" class="font-weight-bold" href="http://kasaptanal.app.link">KasaptanAl Uygulaması</a>
+                      üzerinden sipariş verin, 
+                      <strong>250TL ve üzeri</strong> alışveriş yapın, ayrıca <strong class="text-dark">
+                      <%- include('./currency.ejs', {value: 10}) %>
                 
                     </strong> değerinde puan kazanın.
                     </p>

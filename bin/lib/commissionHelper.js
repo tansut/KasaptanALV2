@@ -13,6 +13,7 @@ exports.PuanCalculator = exports.ComissionHelper = void 0;
 const helper_1 = require("./helper");
 const accountmodel_1 = require("../db/models/accountmodel");
 const account_1 = require("../models/account");
+const common_1 = require("../models/common");
 class ComissionHelper {
     constructor(rate, fee, vatRate) {
         this.rate = rate;
@@ -37,13 +38,15 @@ class ComissionHelper {
             butcherTaxAdvantage: helper_1.default.asCurrency(kalitteFee * 0.22),
             butcherVatAdvantage: helper_1.default.asCurrency(kalitteVat),
             butcherNetCost: helper_1.default.asCurrency(kalitteFee - kalitteFee * 0.22 - helper_1.default.asCurrency(totalSales * 0.016)),
-            butcherToCustomer: puan ? new PuanCalculator().calculateCustomerPuan(puan, totalSales) : 0.00
+            butcherToCustomer: puan ? new PuanCalculator().calculateCustomerPuan(puan, totalSales, common_1.Platform.web) : 0.00
         };
     }
 }
 exports.ComissionHelper = ComissionHelper;
 class PuanCalculator {
-    calculateCustomerPuan(puan, totalSales) {
+    calculateCustomerPuan(puan, totalSales, platform) {
+        if (puan.platforms.indexOf(platform) == -1)
+            return 0.00;
         if (helper_1.default.asCurrency(puan.minSales) == 0.00 || (totalSales >= puan.minSales)) {
             return puan.rate ? helper_1.default.asCurrency(totalSales * puan.rate) : puan.fixed;
         }

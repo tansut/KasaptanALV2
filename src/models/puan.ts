@@ -1,6 +1,8 @@
+
 export interface Puan {
     name: string;
     minSales: number;
+    platforms: string;
     rate?: number;
     fixed?: number;
     minPuanForUsage: number;

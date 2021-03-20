@@ -572,12 +572,11 @@ export default class Route extends ApiRouter {
 
 
                 let kalittePuan: Puan = {
-                
+                platforms: 'app',
             minPuanForUsage: 0.00,
-            minSales: 500.00,
-            name: `KasaptanAl.com puan kazancı`,
-            //rate: 0.03,
-            fixed: 15.00
+            minSales: 250.00,
+            name: `KasaptanAl Mobil Uygulaması Puan Kazancı`,
+            fixed: 10.00
         }
 
         if (o.butcher.enableCreditCard) {
@@ -597,8 +596,8 @@ export default class Route extends ApiRouter {
 
             if (o.butcher.enablePuan) {
                 let butcherPuan = o.butcher.getPuanData(o.orderType);
-                let earnedPuanb = calculator.calculateCustomerPuan(butcherPuan, total);
-                let earnedPuanByKalitte = kalittePuan ? calculator.calculateCustomerPuan(kalittePuan, total):0.00;
+                let earnedPuanb = calculator.calculateCustomerPuan(butcherPuan, total, this.platform);
+                let earnedPuanByKalitte = kalittePuan ? calculator.calculateCustomerPuan(kalittePuan, total, this.platform):0.00;
                 if ((earnedPuanByKalitte > 0.00 || includeAvailable) && kalittePuan) {
                     result.push(
                         {

@@ -10,6 +10,7 @@ import Helper from './helper';
 import { Puan } from '../models/puan';
 import AccountModel from '../db/models/accountmodel';
 import { Account } from '../models/account';
+import { Platform } from '../models/common';
 
 export interface ComissionResult {
     inputRate: number;
@@ -32,7 +33,7 @@ export class ComissionHelper {
 
    }
 
-   calculateButcherComission(totalSales: number, puan: Puan = null): ComissionResult {
+   calculateButcherComission(totalSales: number, puan:  Puan = null): ComissionResult {
        //let product = Helper.asCurrency(totalSales / 1.08);
        let product = Helper.asCurrency(totalSales);
        let productVat = Helper.asCurrency(totalSales - product);
@@ -50,7 +51,7 @@ export class ComissionHelper {
             butcherTaxAdvantage: Helper.asCurrency(kalitteFee * 0.22),
             butcherVatAdvantage: Helper.asCurrency(kalitteVat),
             butcherNetCost: Helper.asCurrency(kalitteFee - kalitteFee * 0.22 - Helper.asCurrency(totalSales * 0.016)),
-            butcherToCustomer: puan ? new PuanCalculator().calculateCustomerPuan(puan, totalSales): 0.00
+            butcherToCustomer: puan ? new PuanCalculator().calculateCustomerPuan(puan, totalSales, Platform.web): 0.00
         }
    }
 
@@ -58,7 +59,8 @@ export class ComissionHelper {
 
 export class PuanCalculator {
 
-    calculateCustomerPuan(puan: Puan, totalSales: number) {
+    calculateCustomerPuan(puan: Puan, totalSales: number, platform: Platform) {
+        if (puan.platforms.indexOf(platform) == -1) return 0.00;
         if (Helper.asCurrency(puan.minSales) == 0.00 || (totalSales >= puan.minSales)) {
             return puan.rate ? Helper.asCurrency(totalSales * puan.rate): puan.fixed;
         } else return 0.00

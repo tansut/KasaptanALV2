@@ -63,6 +63,7 @@ let Butcher = Butcher_1 = class Butcher extends basemodel_1.default {
     }
     getPuanData(orderType) {
         return this.enablePuan ? {
+            platforms: 'app,web',
             name: 'Kasap Kart Puanı',
             minSales: this.minSalesPuan,
             rate: orderType == 'kurban' ? this.kurbanPuanRate : this.customerPuanRate,

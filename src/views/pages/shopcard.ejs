@@ -85,25 +85,39 @@
                     <% if (pg.earned <= 0.00) {%>
                     <% showShopBtn = true%>
                     <% if (pg.earned <= 0.00) { %>
-                    <div class="text-dark">  
+                    <div>  
                         <% 
                         var butcherTotal = shopcard.getButcherTotalWithoutShipping(parseInt(pg.id));
                         var puanButcher = shopcard.butchers[pg.id];
                         var more = __helper.asCurrency(pg.based.minSales - butcherTotal)
-                        %>                   
+                        %>             
                         
+                        <%= pg.platforms %>
                         
-                        Bu kasabımızdan <strong><%- include('./_partial/currency.ejs', {value: more}) %> daha </strong> alışveriş yapın,  <strong>                  
-                                    
+                        <% if (controller.platform == 'web' && pg.based.platforms == 'app') { %>
+                          <a target="_blank" class="font-weight-bold" href="http://kasaptanal.app.link">KasaptanAl Uygulaması</a>
+                          üzerinden sipariş verin, 
                       <%- include('./_partial/puan-data-view.ejs', {puan: pg.based, hideMinPuanForUsage: true, hideMinSales: true}) %></strong>   
+                          
+                        <% } else { %>
+                        <div class="mb-3">
+                          Bu kasabımızdan <strong><%- include('./_partial/currency.ejs', {value: more}) %> daha </strong> alışveriş yapın,  <strong>                  
+                            <%- include('./_partial/puan-data-view.ejs', {puan: pg.based, hideMinPuanForUsage: true, hideMinSales: true}) %></strong>   
+                              
+                        </div>
+        
+
+                 
+                          <a class="d-block" href="/kasap-urunleri">
+                            <i class="czi-arrow-right-circle mr-1"></i>
+                            Ürünlere Gözatın</a>
+                          <% } %>            
                       
                     
     
     
                     </div>
-                    <a class="font-size-sm" href="/kasap-urunleri">
-                      <i class="czi-arrow-right-circle mr-1"></i>
-                      Ürünlere Gözatın</a>
+               
                     <%}%>       
     
                     <% } %>

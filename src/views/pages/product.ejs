@@ -87,7 +87,7 @@
 
 
 
-          <div class="mb-3 pb-2 ">
+          <div class="<%= __req.query.frame != '1' ? 'mb-3 pb-2':'' %> ">
 
 
             <div class="row no-gutters">
@@ -122,7 +122,7 @@
 
               </div>
 <% } %>
-              <div id="productapp" v-cloak class="col-lg-6 px-3 ">
+              <div id="productapp" v-cloak class="col-lg-6 <%= __req.query.frame != '1' ? 'px-3':'' %> ">
                 <% if (view.butcher) {%>
                     <%- include('./_partial/butcher-alternatives.ejs', { alternates:  view.alternateButchers }) %>
                     <%}%>
@@ -194,7 +194,7 @@
                     <%} %>
 
 
-                    <form id="product-form" @submit.prevent="addToShopcard">
+                    <form class="<%= __req.query.frame != '1' ? '':'' %>"  id="product-form" @submit.prevent="addToShopcard">
                        
                       <% if (controller.reviews.length && __req.query.frame != '1') { %>
                         <div class="mb-3 text-center">
@@ -207,10 +207,21 @@
   
                         </div>
                         <% } %>
+                        
+                    
 
-
-
-
+                        <% if (__req.session && !__req.session.productPageMobileAppPromotion && controller.platform == 'web') { %>
+                        <div class="font-size-sm bg-secondary <%= __req.query.frame != '1' ? 'rounded border mb-3':'border-bottom' %> p-2 bg-white">
+                         
+                            <a target="_blank" class="font-weight-bold" href="http://kasaptanal.app.link">KasaptanAl Uygulaması</a>
+                            üzerinden sipariş verin, <strong class="text-dark">
+                            <%- include('./_partial/currency.ejs', {value: 10}) %>
+                      
+                          </strong> değerinde puan kazanın.
+                         
+                        </div>
+                        <% __req.session && (__req.session.productPageMobileAppPromotion = true) %>
+                        <% } %>
 
                      
                         
@@ -220,7 +231,7 @@
 
                       
   
-                        <div class="bg-secondary border font-size-sm mb-2 p-3">
+                        <div class="bg-secondary <%= __req.query.frame != '1' ? 'border':'' %> font-size-sm mb-2 p-3">
   
   
   
@@ -731,16 +742,16 @@
                             
                         <%if (view.butcher) {  %>                       
                          
-                          <div class="d-flex mb-1 font-size-sm align-items-center justify-content-between ">
+                          <div class="d-flex mb-1 font-size-sm align-items-center <%= __req.query.frame != '1' ? 'justify-content-end':'justify-content-end pr-2' %>  ">
                           
                            
                                <a v-if="selectedUnit && selectedUnit.perPerson" @click="showCalculator(selectedUnit)"
-                              class="text-dark"><i class="czi-calculator mr-1"></i>Miktar Hesaplayıcı</a> 
+                              class="text-muted"><i class="czi-calculator mr-1"></i></a> 
                                            
                           </div>
 
                     
-                          <div class="bg-white mb-2 pb-3 border  shadow rounded-lg">
+                          <div class="bg-white  pb-3 <%= __req.query.frame != '1' ? 'border mb-2 shadow rounded-lg':'' %> ">
                             <div v-if="product && product.purchaseOptions.length > 1">
                               <ul class="nav nav-pills nav-pills-dark nav-fill mb-2">
                                 <li v-for="(option, index) in product.purchaseOptions" class="nav-item h-100">
