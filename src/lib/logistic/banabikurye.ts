@@ -20,10 +20,10 @@ interface BanabikuryeResponse {
     is_successful: boolean;
 }
 
+
 export default class BanabikuryeProvider extends LogisticProvider {
-    static key = "banabikurye";
     config: BanabikuryeConfig;
-    name = DispatcherTypeDesc["kasaptanal/motokurye"];
+    vehicle: VehicleType;
 
 
 
@@ -108,6 +108,7 @@ export default class BanabikuryeProvider extends LogisticProvider {
         let req = {
             total_weight_kg: oreq.weight,
             matter: oreq.matter,
+            vehicle_type_id: this.vehicle, 
             is_contact_person_notification_enabled: oreq.notifyCustomerSms,
             points: []
         }
@@ -121,6 +122,7 @@ export default class BanabikuryeProvider extends LogisticProvider {
         let req = {
             total_weight_kg: oreq.weight,
             matter: oreq.matter,
+            vehicle_type_id: 8, 
             is_contact_person_notification_enabled: oreq.notifyCustomerSms,
             points: []
         }
@@ -283,12 +285,14 @@ export default class BanabikuryeProvider extends LogisticProvider {
     }
 
     static register() {
-        LogisticFactory.register(BanabikuryeProvider.key, BanabikuryeProvider)
+        LogisticFactory.register("banabikurye", BanabikuryeProvider)
     }
 
     constructor(config: BanabikuryeConfig, options: LogisticProviderOptions) {
         super(config, options);
+        this.name = DispatcherTypeDesc["kasaptanal/motokurye"];
         this.config = config;
+        this.vehicle = VehicleType.Motor
         options.dispatcher.name = DispatcherTypeDesc[options.dispatcher.type];
     }
 }

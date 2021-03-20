@@ -35,8 +35,8 @@ export interface CustomerPriceConfig {
 }
 
 export enum VehicleType {
-    Motor,
-    Car
+    Motor = 8,
+    Car = 7
 }
 
 export interface PriceSlice {

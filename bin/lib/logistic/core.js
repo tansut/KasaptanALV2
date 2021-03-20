@@ -19,8 +19,8 @@ const butcherarea_1 = require("../../db/models/butcherarea");
 const paymentConfig = require(path.join(config_1.default.projectDir, `logistic.json`));
 var VehicleType;
 (function (VehicleType) {
-    VehicleType[VehicleType["Motor"] = 0] = "Motor";
-    VehicleType[VehicleType["Car"] = 1] = "Car";
+    VehicleType[VehicleType["Motor"] = 8] = "Motor";
+    VehicleType[VehicleType["Car"] = 7] = "Car";
 })(VehicleType = exports.VehicleType || (exports.VehicleType = {}));
 class LogisticProvider {
     constructor(config, options) {

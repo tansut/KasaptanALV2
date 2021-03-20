@@ -32,7 +32,7 @@ exports.DispatcherTypeDesc = {
     "butcher": "Kasap",
     "butcher/auto": "Kasap",
     "banabikurye": "Hızlı Kurye Sistemi",
-    "banabikurye/car": "Hızlı Araç Kurye Sistemi"
+    "banabikurye/car": "Araç Kurye Sistemi"
 };
 let Dispatcher = class Dispatcher extends basemodel_1.default {
     get minCalculated() {
@@ -95,6 +95,9 @@ let Dispatcher = class Dispatcher extends basemodel_1.default {
                 time = '120-180 dk';
             }
             return `${time} kurye ile teslimat`;
+        }
+        else if (this.type == "banabikurye/car") {
+            return `1-3 saat araç kurye ile teslimat`;
         }
         else if (!this.toareaid) {
             return "2-3 gün kargo ile teslimat";

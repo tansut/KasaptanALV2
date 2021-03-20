@@ -39,6 +39,7 @@ const fileUpload = require('express-fileupload');
 import * as bluebird from "bluebird";
 import BanabikuryeProvider from './lib/logistic/banabikurye';
 import { ButcherManualLogistics, ButcherAutoLogistics } from './lib/logistic/butcher';
+import BanabikuryeCarProvider from './lib/logistic/banabikuryeprovidercar';
 
 bluebird.config({
     warnings: false
@@ -134,6 +135,7 @@ class KasaptanAlApp {
         iyzico.register();
         paratika.register();
         BanabikuryeProvider.register();
+        BanabikuryeCarProvider.register();
         ButcherManualLogistics.register();
         ButcherAutoLogistics.register();
         

@@ -41,6 +41,7 @@ const fileUpload = require('express-fileupload');
 const bluebird = require("bluebird");
 const banabikurye_1 = require("./lib/logistic/banabikurye");
 const butcher_1 = require("./lib/logistic/butcher");
+const banabikuryeprovidercar_1 = require("./lib/logistic/banabikuryeprovidercar");
 bluebird.config({
     warnings: false
 });
@@ -108,6 +109,7 @@ class KasaptanAlApp {
             iyzico_1.default.register();
             paratika_1.default.register();
             banabikurye_1.default.register();
+            banabikuryeprovidercar_1.default.register();
             butcher_1.ButcherManualLogistics.register();
             butcher_1.ButcherAutoLogistics.register();
             this.app.use((req, res, next) => {

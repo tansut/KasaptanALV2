@@ -123,7 +123,7 @@ export default class Route extends ViewRouter {
     async tempares() {
         let tl = await TempLoc.findAll({
             where: {
-                il: ['ANKARA', 'İSTANBUL', 'İZMİR', 'BURSA', 'ESKİŞEHİR']
+                il: ['MUĞLA', 'TEKİRDAĞ', 'KOCAELİ', 'SAKARYA']
             }
         })
 

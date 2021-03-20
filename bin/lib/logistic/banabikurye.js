@@ -20,6 +20,7 @@ class BanabikuryeProvider extends core_1.LogisticProvider {
         super(config, options);
         this.name = dispatcher_1.DispatcherTypeDesc["kasaptanal/motokurye"];
         this.config = config;
+        this.vehicle = core_1.VehicleType.Motor;
         options.dispatcher.name = dispatcher_1.DispatcherTypeDesc[options.dispatcher.type];
     }
     calculateCustomerFee(offer) {
@@ -100,6 +101,7 @@ class BanabikuryeProvider extends core_1.LogisticProvider {
         let req = {
             total_weight_kg: oreq.weight,
             matter: oreq.matter,
+            vehicle_type_id: this.vehicle,
             is_contact_person_notification_enabled: oreq.notifyCustomerSms,
             points: []
         };
@@ -112,6 +114,7 @@ class BanabikuryeProvider extends core_1.LogisticProvider {
         let req = {
             total_weight_kg: oreq.weight,
             matter: oreq.matter,
+            vehicle_type_id: 8,
             is_contact_person_notification_enabled: oreq.notifyCustomerSms,
             points: []
         };
@@ -270,8 +273,7 @@ class BanabikuryeProvider extends core_1.LogisticProvider {
         });
     }
     static register() {
-        core_1.LogisticFactory.register(BanabikuryeProvider.key, BanabikuryeProvider);
+        core_1.LogisticFactory.register("banabikurye", BanabikuryeProvider);
     }
 }
 exports.default = BanabikuryeProvider;
-BanabikuryeProvider.key = "banabikurye";

@@ -31,7 +31,7 @@ export let DispatcherTypeDesc = {
     "butcher": "Kasap",
     "butcher/auto": "Kasap",
     "banabikurye": "Hızlı Kurye Sistemi",
-    "banabikurye/car": "Hızlı Araç Kurye Sistemi"
+    "banabikurye/car": "Araç Kurye Sistemi"
 }
 
 export type ExternalLogisticProviderUsage = "none" | "default" | "select" | "force" | "auto" | "disabled"
@@ -261,7 +261,11 @@ class Dispatcher extends BaseModel<Dispatcher> {
                 time = '120-180 dk'
             }
             return `${time} kurye ile teslimat` 
-        } else if (!this.toareaid) {
+        } else if (this.type == "banabikurye/car") {
+            
+            return `1-3 saat araç kurye ile teslimat` 
+        } 
+        else if (!this.toareaid) {
             return "2-3 gün kargo ile teslimat";
         } else {
             return "1-3 saat soğuk zincir teslimat";
