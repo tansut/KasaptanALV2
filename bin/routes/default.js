@@ -175,6 +175,7 @@ class Route extends router_1.ViewRouter {
         router.get("/kullanici-sozlesmesi", Route.BindToView("pages/content.kullanici-sozlesmesi.ejs"));
         router.get("/gizlilik-sozlesmesi", Route.BindToView("pages/content.gizlilik-sozlesmesi.ejs"));
         router.get("/satis-sozlesmesi", Route.BindToView("pages/content.satis-sozlesmesi.ejs"));
+        router.get("/mobil-uygulamalar", Route.BindToView("pages/content.mobil-uygulamalar.ejs"));
     }
 }
 __decorate([

@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="tr-TR" prefix="og: http://ogp.me/ns#">
+
+<head>
+    <% include ./_partial/head %>
+</head>
+
+<body>
+    <% include ./_partial/header %>
+
+        <div class="page-title">
+            <div class="container d-lg-flex justify-content-between py-2 py-lg-3">
+                <div class="order-lg-2 mb-3 mb-lg-0 pt-lg-2">
+                    <nav aria-label="breadcrumb" class="d-none d-lg-block">
+                        <ol
+                            class="breadcrumb breadcrumb-dark flex-lg-nowrap justify-content-center justify-content-lg-star">
+                            <li class="breadcrumb-item"><a class="text-nowrap" href="/"><i class="czi-home"></i></a>
+                            </li>
+                            <li class="breadcrumb-item text-nowrap">Mobil Uygulamalar
+                            </li>
+                        </ol>
+                    </nav>
+                </div>
+                <div class="order-lg-1 pr-lg-4 text-center text-lg-left">
+                    <h1 class="h3">Mobil Uygulamalar</h1>
+                    <h2 class="h4 lead">Daha hızlı, kârlı ve pratik</h2>
+                </div>
+            </div>
+        </div>
+
+
+
+
+
+
+
+        <div class="container d-flex justify-content-center mb-3 ">
+
+            <div class="d-flex flex-wrap">
+                <div class="mr-2 mb-2"><a class="btn-market btn-apple" href="https://apps.apple.com/tr/app/kasaptanal/id1554059709?l=tr#?platform=iphone" role="button"><span class="btn-market-subtitle">Download on the</span><span class="btn-market-title">App Store</span></a></div>
+                <div class="mb-2"><a class="btn-market btn-google" href="https://play.google.com/store/apps/details?id=com.kasaptanal.app&pcampaignid=pcampaignidMKT-Other-global-all-co-prtnr-py-PartBadge-Mar2515-1" role="button"><span class="btn-market-subtitle">Download on the</span><span class="btn-market-title">Google Play</span></a></div>
+              </div>
+
+        </div>
+        
+            <div class="mb-3 container">
+
+                <%- include('./_partial/category-slider', { title: 'Kategoriler' , allUrl: '/kasap-urunleri' }); %>
+
+            </div>
+        
+
+
+        <% include ./_partial/footer %>
+            <% include ./_partial/scripts %>
+
+</body>
+
+</html>
