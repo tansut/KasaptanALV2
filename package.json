@@ -15,7 +15,7 @@
   "scripts": {
     "start": "export TZ='Europe/Istanbul';node --icu-data-dir=./node_modules/full-icu ./bin/kasaptanal",
     "deploy-production": "./node_modules/shipit-cli/bin/shipit production deploy",
-    "postinstall": "node_modules/.bin/gulp deploy",
+    "postinstallx": "node_modules/.bin/gulp deploy",
     "debug": "export TZ='Europe/Istanbul'; source ./.vscode/debug.sh;  nodemon  --inspect --icu-data-dir=./node_modules/full-icu ./bin/kasaptanal",
     "prod": "source ./.vscode/prod-aws.sh;  nodemon --inspect ./bin/kasaptanal",
     "prodaws": "source ./.vscode/prod-aws.sh;  nodemon --inspect ./bin/kasaptanal",

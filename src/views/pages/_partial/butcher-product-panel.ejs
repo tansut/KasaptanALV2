@@ -233,16 +233,18 @@ class="gallery-item-caption"><%= butcherVideo.title %></span></a>
                   </li>
                   
                   <li>
-                    <% if (controller.platform == 'web') { %>
+                    
                       
            
                       
 
 
-                    <% } %>
+                    
                     <p class="mb-0">
+                      <% if (controller.platform == 'web') { %>
                       <a target="_blank" class="font-weight-bold" href="http://kasaptanal.app.link">KasaptanAl Uygulaması</a>
                       üzerinden sipariş verin, 
+                      <% } %>
                       <strong>250TL ve üzeri</strong> alışveriş yapın, ayrıca <strong class="text-dark">
                       <%- include('./currency.ejs', {value: 10}) %>
                 
@@ -321,6 +323,7 @@ class="gallery-item-caption"><%= butcherVideo.title %></span></a>
 
 
 </div>
+
 <%if (otherButcherAlternatives && (controller.showOtherButchers())) {%>
 <div class="text-center mb-2 px-2">
   <a class="btn text-dark btn-link font-weight-bolder  text-uppercase" href="javascript:showOtherButchers()"><span>Diğer Kasaplar (</span><span class="font-weight-bold text-primary"><%=otherButcherAlternatives %></span><span>)</span></a>
