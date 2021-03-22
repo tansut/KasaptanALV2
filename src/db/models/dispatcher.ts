@@ -212,14 +212,17 @@ class Dispatcher extends BaseModel<Dispatcher> {
 
         if (butcherAvail) {
             let providerKey = "butcher";
+
+            if (dispath.type == "default") {
+                providerKey = dispath.type = dispath.butcher.defaultDispatcher
+            } else {
+                providerKey = dispath.type;
+            }
+
              if (Helper.isSingleShopcardProduct(productType)) {
 
              } else {
-                if (dispath.type == "default") {
-                    providerKey = dispath.type = dispath.butcher.defaultDispatcher
-                } else {
-                    providerKey = dispath.type;
-                }
+
             }
             this.provider = LogisticFactory.getInstance(providerKey, {
                 dispatcher: dispath,
