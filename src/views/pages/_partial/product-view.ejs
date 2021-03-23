@@ -7,6 +7,7 @@
 <% var highPrice = typeof(highPrice) == 'undefined' ? 0.00: highPrice %>
 <% var priceUnit = typeof(priceUnit) == 'undefined' ? '': priceUnit %>
 <% var link2Location = typeof(link2Location) == 'undefined' ? false: link2Location %>
+<% var forceDialog = typeof(forceDialog) == 'undefined' ? false: forceDialog %>
 
 
 
@@ -28,7 +29,11 @@
 
     
     <a class="<%= link2Location ? 'select-area-action':'' %> d-block overflow-hidden app_blank"
-   
+        <% if (!link2Location && forceDialog) { %>
+            data-product="<%=product.slug%>" 
+            data-product-params="<%=(butcher ? `butcher=${butcher}&utm_medium=Butcher`:'') %>"
+            <% } %>
+
      href="/<%=product.slug%><%=(butcher ? `?butcher=${butcher}&utm_medium=Butcher`:'') %>">
      <img width="500" height="500"
          src="<%= `${__req.helper.imgUrl('product-photos', product.slug)}` %>" class="lazyload "
@@ -38,7 +43,15 @@
         </a>
             <% if (typeof(hideName) == 'undefined') { %>
     <div class="card-body p-2 d-flex flex-column align-items-center">
-        <h3 class="m-auto p-0   font-size-sm"><a class="text-dark <%= link2Location ? 'select-area-action':'' %>"
+        <h3 class="m-auto p-0   font-size-sm">
+            
+            <a 
+            
+            <% if (!link2Location && forceDialog) { %>
+                data-product="<%=product.slug%>" 
+                data-product-params="<%=(butcher ? `butcher=${butcher}&utm_medium=Butcher`:'') %>"
+                <% } %>
+            class="text-dark <%= link2Location ? 'select-area-action':'' %>"
                 href="/<%= product.slug%><%=(butcher ? `?butcher=${butcher}&utm_medium=Butcher`:'') %>"><%= product.name  %></a>
         </h3>
 
@@ -64,7 +77,12 @@
 
         <% if (showPurchase) { %>
   <div class="mt-2 mb-2">
-    <button data-product="<%=product.slug%>" style="opacity: 0.85;" class=" btn-secondary border btn btn-sm text-primary  d-print-none" type="button" title="Hızlı Satın Al"><i class="czi-icon czi-cart mr-1"></i>Satın Al</button>
+    <a 
+    <% if (!link2Location) { %>
+    data-product="<%=product.slug%>" 
+    data-product-params="<%=(butcher ? `butcher=${butcher}&utm_medium=Butcher`:'') %>"
+    <% } %>
+    style="opacity: 0.85;" class="<%= link2Location ? 'select-area-action':'' %> btn-secondary border btn btn-sm text-primary  d-print-none" title="Hızlı Satın Al"><i class="czi-icon czi-cart mr-1"></i>Satın Al</a>
 
   </div>
     

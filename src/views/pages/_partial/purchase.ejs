@@ -1,7 +1,7 @@
 <%
  var url = typeof(url) == 'undefined' ? '': url
  var returnUrl = typeof(returnUrl) == 'undefined' ? '': returnUrl
- var butcher = typeof(butcher) == 'undefined' ? null: butcher
+ var butcher = null;
 
 
 %>
@@ -97,17 +97,17 @@ return false;
       window.location.href = loc
     }
 
-    p.purchaseClick =  function (e) {
+    p.purchaseClick =  function (e, urlParams) {
         <% if (__req.prefAddr) { %>
-          p.openDialog($(e.currentTarget).data('product'))
+          p.openDialog($(e.currentTarget).data('product'), urlParams)
           <% } else { %>
             window.kb.selectArea(function (sender, ul) {
-              window.location.href = "/adres-belirle/" + ul.selectedDistrict.slug + '?lng=' + ul.lng + '&lat=' + ul.lat + '&r=' + encodeURIComponent('/<%=`${returnUrl}?open=`%>' + $(e.currentTarget).data('product'));
+              window.location.href = "/adres-belirle/" + ul.selectedDistrict.slug + '?lng=' + ul.lng + '&lat=' + ul.lat + '&r=' + encodeURIComponent('/<%=`${returnUrl}?open=`%>' + $(e.currentTarget).data('product') + (urlParams ? ('?' + urlParams):''));
             });
   <% } %>
       }
 
-      p.openDialog = function (product) {
+      p.openDialog = function (product, urlParams) {
         var div = $('<div class="d-none iframe-div w-100 h-100" overflow:auto;-webkit-overflow-scrolling:touch"></div>');
 
         var iframe = document.createElement('iframe');
@@ -137,13 +137,14 @@ return false;
 
         <% } %>
 
-
+        
         iframe.width = "100%";
         iframe.height = "100%";
         iframe.style.border ="none";
         iframe.style.overflow = "scroll";
         iframe.classList.add('d-none');
-        iframe.src = '/' + product + '?frame=1&' + '<%=butcher ? `butcher=${butcher.slug}`:`` %>';
+        debugger;
+        iframe.src = '/' + product + '?frame=1' + '<%=butcher ? `&butcher=${butcher.slug}`:`` %>' + (urlParams ? ('&' + urlParams):'');
         $('#purchasemodal-loading').show();
         
         div.prepend(iframe);
@@ -195,7 +196,10 @@ return false;
 
 
 
-      $('[data-product]').click(window.purchase.purchaseClick)
+      $('[data-product]').click(function(e) {
+        window.purchase.purchaseClick(e, $(e.currentTarget).data('product-params'));
+        return false
+      });
 
 
 
