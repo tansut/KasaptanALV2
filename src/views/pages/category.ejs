@@ -58,9 +58,6 @@
       
 
 
-      <div class="category-container-top"></div>
-
-<!-- <div style="<%= controller.platform == 'app' ? 'overflow-x: hidden; overflow-y: auto;':''%>"  class="mb-0 category-container"> -->
 
 
 
@@ -103,54 +100,11 @@
 <script>
 
 
-  function hideTop() {
-    $('#cat-slider').hide();
-         $('#appnavbar').hide();
-         $('#cat-slider-subitems').addClass('mt-3');
-
-         $(".category-container").css({
-   height: ($( window ).height() - $(".category-container-top").offset().top) + 'px'
- })
-       }
-  
-
-  function showTop() {
-    $('#cat-slider').show();
-         $('#appnavbar').show();
-         $('#cat-slider-subitems').removeClass('mt-3');
-
-         
-         $(".category-container").css({
-   height: ($( window ).height() - $(".category-container-top").offset().top) + 'px'
- })
- }
 
   $(document).ready(function () {
     scrollOffset = $("#cat-slider-subitems").height();
   var eTop = $("#cat-slider-subitems").offset().top;
-// $(".category-container").css({
-//   height: ($( window ).height() - $(".category-container-top").offset().top) + 'px'
-// })
 
-// var lastScrollTop = $(".category-container").scrollTop();
-// $(".category-container").scroll(function(event){
-//    var st = $(this).scrollTop();
-//    if (st > lastScrollTop){
-
-       
-//    } else {
-//       // upscroll code
-//    }
-//    lastScrollTop = st;
-//    setTimeout(() => {
-//        if (st < 10) {
-//           //showTop();
-//        } 
-//        else if (st >= 10) { 
-//         //hideTop();
-//        }
-//       },0);
-// });
 $(window).scroll(function(event){
    setTimeout(() => {
     var p = eTop - $(window).scrollTop()

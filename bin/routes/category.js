@@ -54,6 +54,10 @@ class Route extends router_1.ViewRouter {
     getFoods(category) {
         return this.foodsWithCats[category.id] || [];
     }
+    getProductViewParams(product) {
+        let price = this.getPriceData(product);
+        return { product: product, showPurchase: true, butcher: this.req.query.butcher, lowPrice: price ? price.lowPrice : 0.00, highPrice: price ? price.highPrice : 0.00, priceUnit: price ? price.priceUnit : '' };
+    }
     getPriceData(product) {
         let price = this.prices.find(p => p.pid == product.id);
         if (!price)

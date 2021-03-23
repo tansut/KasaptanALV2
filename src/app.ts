@@ -40,6 +40,7 @@ import * as bluebird from "bluebird";
 import BanabikuryeProvider from './lib/logistic/banabikurye';
 import { ButcherManualLogistics, ButcherAutoLogistics } from './lib/logistic/butcher';
 import BanabikuryeCarProvider from './lib/logistic/banabikuryeprovidercar';
+import ToBanabikuryeProvider from './lib/logistic/tobanabikurye';
 
 bluebird.config({
     warnings: false
@@ -138,7 +139,7 @@ class KasaptanAlApp {
         BanabikuryeCarProvider.register();
         ButcherManualLogistics.register();
         ButcherAutoLogistics.register();
-        
+        ToBanabikuryeProvider.register();
         this.app.use((req, res, next) => {
             let proto = req.header("x-forwarded-proto") || null;
             let host = (req.get('Host') || "").toLowerCase();

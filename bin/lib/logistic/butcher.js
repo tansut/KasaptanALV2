@@ -106,9 +106,9 @@ class ButcherAutoLogistics extends core_1.LogisticProvider {
         let butcherConfig = this.options.dispatcher.butcher.logisticSetings || {};
         let config = {
             contrib: 0.06,
-            kmPrice: 2.2,
+            kmPrice: 2,
             kmMin: 5,
-            kmMultiplier: 0.5,
+            kmMultiplier: 0.0,
             minMultiplier: 10.00
             //minOrder: 100.00 
         };
@@ -166,7 +166,7 @@ class ButcherAutoLogistics extends core_1.LogisticProvider {
         else if (this.options.dispatcher.totalForFree && this.options.dispatcher.totalForFree <= offer.orderTotal)
             fee = 0.00;
         else {
-            let contribDif = Math.max(0.00, offer.orderTotal - this.options.dispatcher.totalForFree);
+            let contribDif = Math.max(0.00, offer.orderTotal - this.options.dispatcher.min);
             let contrib = input.contrib ? helper_1.default.asCurrency(contribDif * input.contrib) : 0.00;
             let calc = Math.max(0.00, regCost - contrib);
             fee = this.roundCustomerFee(calc);

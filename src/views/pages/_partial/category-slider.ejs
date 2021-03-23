@@ -10,6 +10,7 @@
 <% var linkCss = typeof(linkCss) == 'undefined' ? '': linkCss %>
 <% var hideIcon = typeof(hideIcon) == 'undefined' ? false: true %>
 <% var partialRender = typeof(partialRender) == 'undefined' ? false: partialRender %>
+<% var partialRenderUrl = typeof(partialRenderUrl) == 'undefined' ? '': partialRenderUrl %>
 
 
 
@@ -113,7 +114,7 @@
                                 <% if (!partialRender) { %>
                                     nopartial="true"
                                 <% } else { %>
-                                    onclick="return loadProducts('<%=reyonlar[c].slug%>')"
+                                    onclick="return loadProducts('<%=reyonlar[c].slug%>', '<%=partialRenderUrl%>')"
                                 <% } %>
                                 href="<%= `/${subUrl}${reyonlar[c].slug}?transition=1${__req.query.butcher ? '&butcher=' + __req.query.butcher:''}#items`%>"
 

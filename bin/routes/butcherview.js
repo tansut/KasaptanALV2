@@ -155,8 +155,18 @@ class Route extends router_1.ViewRouter {
                 }
             }
             this.butcherLd = this.butcher.approved ? new ButcherLd_1.ButcherLd(this.butcher) : null;
-            this.res.render('pages/butcher', this.viewData({ pageThumbnail: pageThumbnail, pageTitle: pageTitle, pageDescription: pageDescription, butcher: butcher, images: images }));
+            if (this.req.query.partial) {
+                this.res.render('pages/category-items.ejs', this.viewData({ pageThumbnail: pageThumbnail, pageTitle: pageTitle, pageDescription: pageDescription, butcher: butcher, images: images }));
+            }
+            else
+                this.res.render('pages/butcher', this.viewData({ pageThumbnail: pageThumbnail, pageTitle: pageTitle, pageDescription: pageDescription, butcher: butcher, images: images }));
         });
+    }
+    getPriceData(product) {
+    }
+    getProductViewParams(product) {
+        let showPrice = this.butcher.approved && (this.butcher.status == 'open') && (this.butcher.priceDisplay == 'show');
+        return { forceDialog: false, link2Location: !(showPrice && this.logisticsProvider), showPrice: showPrice, showPurchase: showPrice, butcher: this.butcher.slug, butcherProduct: this.butcher.products.find(p => p.productid == product.id), product: product };
     }
     butcherProductFeedRoute() {
         return __awaiter(this, void 0, void 0, function* () {

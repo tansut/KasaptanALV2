@@ -42,6 +42,7 @@ const bluebird = require("bluebird");
 const banabikurye_1 = require("./lib/logistic/banabikurye");
 const butcher_1 = require("./lib/logistic/butcher");
 const banabikuryeprovidercar_1 = require("./lib/logistic/banabikuryeprovidercar");
+const tobanabikurye_1 = require("./lib/logistic/tobanabikurye");
 bluebird.config({
     warnings: false
 });
@@ -112,6 +113,7 @@ class KasaptanAlApp {
             banabikuryeprovidercar_1.default.register();
             butcher_1.ButcherManualLogistics.register();
             butcher_1.ButcherAutoLogistics.register();
+            tobanabikurye_1.default.register();
             this.app.use((req, res, next) => {
                 let proto = req.header("x-forwarded-proto") || null;
                 let host = (req.get('Host') || "").toLowerCase();

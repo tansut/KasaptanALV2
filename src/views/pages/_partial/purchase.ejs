@@ -43,7 +43,7 @@ $('#cat-slider .item-slider-selected').removeClass("item-slider-selected")
 $("#cat-slider #cat-item-" + cat + " .item-slider").addClass("item-slider-selected")
     }
 
-function loadProducts(cat) {
+function loadProducts(cat, url) {
 
  var cache = (window.__productsCache = window.__productsCache || {})
     
@@ -56,7 +56,7 @@ function loadProducts(cat) {
   var rept =  rep.innerHTML;
 var rep = $(".text-link"+cat)[0];
 rep.innerHTML = '<span class="spinner-border text-primary spinner-border-sm"></span>';
-$.ajax('/' + cat + '?partial=1').done(function (result) { 
+$.ajax(url + '/' + cat + '?partial=1').done(function (result) { 
 $('#category-products').html(result);
 cache[cat] = result
 compile(cat);

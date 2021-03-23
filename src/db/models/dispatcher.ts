@@ -34,7 +34,7 @@ export let DispatcherTypeDesc = {
     "banabikurye/car": "Araç Kurye Sistemi"
 }
 
-export type ExternalLogisticProviderUsage = "none" | "default" | "select" | "force" | "auto" | "disabled"
+export type ExternalLogisticProviderUsage = "none" | "auto";
 
 @Table({
     tableName: "Dispatchers",
@@ -198,11 +198,16 @@ class Dispatcher extends BaseModel<Dispatcher> {
     setProvider(useLevel1: boolean, l3: Area, productType: ProductType | string, distance2Butcher: number) {
         let dispath = this;
         let butcherAvail = dispath.toarealevel == 0 || (dispath.toarealevel > 1) || useLevel1;
+        let forcedProvider = null;
         if (!useLevel1 && dispath.toarealevel == 1) {
             let forceL1 = dispath.butcher.dispatchArea == "citywide" || dispath.butcher.dispatchArea == "radius";
             if (dispath.butcher.dispatchArea == "radius") {
                 let distance = distance2Butcher || Helper.distance(dispath.butcher.location, l3.location);
                 butcherAvail = dispath.butcher.radiusAsKm >= distance;
+                if (!butcherAvail && dispath.butcher.logisticProvider && dispath.butcher.logisticProviderUsage == "auto") {
+                    forcedProvider = dispath.butcher.logisticProvider;
+                    butcherAvail = true;
+                }
             } else butcherAvail = forceL1;
             if (butcherAvail && dispath.areaTag) {
                 butcherAvail = dispath.areaTag == l3.dispatchTag;
@@ -211,13 +216,15 @@ class Dispatcher extends BaseModel<Dispatcher> {
 
 
         if (butcherAvail) {
-            let providerKey = "butcher";
+            let providerKey = forcedProvider;
 
-            if (dispath.type == "default") {
-                providerKey = dispath.type = dispath.butcher.defaultDispatcher
-            } else {
-                providerKey = dispath.type;
-            }
+            if (!providerKey) {
+                if (dispath.type == "default") {
+                    providerKey = dispath.type = dispath.butcher.defaultDispatcher
+                } else {
+                    providerKey = dispath.type;
+                }
+            } else dispath.type = forcedProvider
 
              if (Helper.isSingleShopcardProduct(productType)) {
 

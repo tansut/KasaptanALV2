@@ -55,6 +55,11 @@ export default class Route extends ViewRouter {
         return this.foodsWithCats[category.id] || [];
     }
 
+    getProductViewParams(product: Product) {
+       let price = this.getPriceData(product);
+        return { product: product, showPurchase: true, butcher: this.req.query.butcher, lowPrice: price ? price.lowPrice: 0.00, highPrice: price ? price.highPrice: 0.00, priceUnit: price ? price.priceUnit: ''}
+    }
+
     getPriceData(product: Product) {
         let price = this.prices.find(p=>p.pid == product.id);
         if (!price) return null;

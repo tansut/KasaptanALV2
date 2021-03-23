@@ -127,6 +127,7 @@ export interface FromTo {
 export interface LogisticProviderOptions {
     dispatcher: Dispatcher;
     initialDistance: number;
+    //toArea: Area
 }
 
 

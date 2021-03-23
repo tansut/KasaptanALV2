@@ -619,10 +619,15 @@
               <%}%>
               
               <div id="cat-slider" class="mt-3 mt-md-0">
-                <%- include('./_partial/category-slider', {   categories: controller.categories, subUrl: butcher.slug + '/', selected: controller.category.slug, mode:'browse', header: false, titles: false, viewCats: ['butcher', 'reyon', 'list', 'product:dispatch=countrywide'], title: 'Kategoriler', allUrl: '/kasap-urunleri' }); %>
+                <%- include('./_partial/category-slider', { partialRender: true, partialRenderUrl: '/' + butcher.slug,   categories: controller.categories, subUrl: butcher.slug + '/', selected: controller.category.slug, mode:'browse', header: false, titles: false, viewCats: ['butcher', 'reyon', 'list', 'product:dispatch=countrywide'], title: 'Kategoriler', allUrl: '/kasap-urunleri' }); %>
               </div>
+
+              <div id="category-products">
+                <%-include('./category-items.ejs', {}) %>
+              </div>
+              
     
-              <div id="cat-slider-subitems"  data-simplebar>
+              <!-- <div id="cat-slider-subitems"  data-simplebar>
                 <div class="d-flex py-3">
                   <% controller.subCategories.forEach((sc, i) => { %>
                   <div class="tag-toggle mr-2" data-stag="<%=__helper.slugify(sc.title)%>">
@@ -633,10 +638,10 @@
                   </div>
                   <% }) %>
                 </div>
-              </div>
+              </div> -->
               
     
-    
+<!--     
                 <% controller.subCategories.forEach((sc, i) => { %>
                   <%if (sc.visible && sc.products.length > 0) { %>
                     <div id="<%= __helper.slugify(sc.title) %>">
@@ -665,7 +670,7 @@
             
                 <% }) %>
          
-    
+     -->
           
     
         </div>
@@ -704,23 +709,29 @@
   <%- include('./_partial/purchase', { returnUrl: butcher.slug + '/' + controller.category.slug  }); %>
 
 
-<script>
+
+  <script>
+
+
+
+    $(document).ready(function () {
       scrollOffset = $("#cat-slider-subitems").height();
-  var eTop = $("#cat-slider-subitems").offset().top;
-
-$(window).scroll(function(event){
-   setTimeout(() => {
-    var p = eTop - $(window).scrollTop()
-    var c = "sticky-top bg-white";
-    if (p < 12) {
-       $("#cat-slider-subitems").addClass(c);
-   } else {
-        $("#cat-slider-subitems").removeClass(c);
-   }
-   });
-});
-</script>
-
+    var eTop = $("#cat-slider-subitems").offset().top;
+  
+  $(window).scroll(function(event){
+     setTimeout(() => {
+      var p = eTop - $(window).scrollTop()
+      var c = "sticky-top bg-white";
+      if (p < 12) {
+         $("#cat-slider-subitems").addClass(c);
+     } else {
+          $("#cat-slider-subitems").removeClass(c);
+     }
+     });
+  });
+  
+  })
+  </script>
 
 
 

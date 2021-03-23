@@ -102,9 +102,9 @@ export class ButcherAutoLogistics extends LogisticProvider {
 
         let config: CustomerPriceConfig = {
             contrib: 0.06,
-            kmPrice: 2.2,
+            kmPrice: 2,
             kmMin: 5,
-            kmMultiplier: 0.5,
+            kmMultiplier: 0.0,
             minMultiplier: 10.00
             //minOrder: 100.00 
         }
@@ -149,7 +149,7 @@ export class ButcherAutoLogistics extends LogisticProvider {
         let distance = offer.distance < input.kmMin ? input.kmMin: offer.distance;
         let maxMinKmDif = kmMax - input.kmMin;
         let distanceDif = distance - input.kmMin;
-        let kmRatio = distanceDif / maxMinKmDif;
+        let kmRatio = distanceDif / maxMinKmDif; 
         let regMin = this.options.dispatcher.min;
         let kmPrice = Helper.asCurrency(input.kmPrice * (1.00 + kmRatio * input.kmMultiplier));
         let regCost = Helper.asCurrency((distance - input.kmMin) * kmPrice);
@@ -166,7 +166,7 @@ export class ButcherAutoLogistics extends LogisticProvider {
         else if (this.options.dispatcher.totalForFree && this.options.dispatcher.totalForFree <= offer.orderTotal)
             fee = 0.00;
         else {
-            let contribDif = Math.max(0.00, offer.orderTotal - this.options.dispatcher.totalForFree);
+            let contribDif = Math.max(0.00, offer.orderTotal - this.options.dispatcher.min);
             let contrib = input.contrib ? Helper.asCurrency(contribDif * input.contrib) : 0.00;
             let calc = Math.max(0.00, regCost - contrib);
             fee = this.roundCustomerFee(calc);

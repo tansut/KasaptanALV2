@@ -48,11 +48,16 @@ let Dispatcher = class Dispatcher extends basemodel_1.default {
     setProvider(useLevel1, l3, productType, distance2Butcher) {
         let dispath = this;
         let butcherAvail = dispath.toarealevel == 0 || (dispath.toarealevel > 1) || useLevel1;
+        let forcedProvider = null;
         if (!useLevel1 && dispath.toarealevel == 1) {
             let forceL1 = dispath.butcher.dispatchArea == "citywide" || dispath.butcher.dispatchArea == "radius";
             if (dispath.butcher.dispatchArea == "radius") {
                 let distance = distance2Butcher || helper_1.default.distance(dispath.butcher.location, l3.location);
                 butcherAvail = dispath.butcher.radiusAsKm >= distance;
+                if (!butcherAvail && dispath.butcher.logisticProvider && dispath.butcher.logisticProviderUsage == "auto") {
+                    forcedProvider = dispath.butcher.logisticProvider;
+                    butcherAvail = true;
+                }
             }
             else
                 butcherAvail = forceL1;
@@ -61,13 +66,17 @@ let Dispatcher = class Dispatcher extends basemodel_1.default {
             }
         }
         if (butcherAvail) {
-            let providerKey = "butcher";
-            if (dispath.type == "default") {
-                providerKey = dispath.type = dispath.butcher.defaultDispatcher;
+            let providerKey = forcedProvider;
+            if (!providerKey) {
+                if (dispath.type == "default") {
+                    providerKey = dispath.type = dispath.butcher.defaultDispatcher;
+                }
+                else {
+                    providerKey = dispath.type;
+                }
             }
-            else {
-                providerKey = dispath.type;
-            }
+            else
+                dispath.type = forcedProvider;
             if (helper_1.default.isSingleShopcardProduct(productType)) {
             }
             else {
