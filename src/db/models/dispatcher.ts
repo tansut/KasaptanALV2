@@ -270,15 +270,15 @@ class Dispatcher extends BaseModel<Dispatcher> {
             } else if (this.butcherArea.bestKm > 45.0) {
                 time = '120-180 dk'
             }
-            return `${time} kurye ile teslimat` 
+            return `Hızlı kurye teslimat` 
         } else if (this.type == "banabikurye/car") {
             
-            return `1-3 saat araç kurye ile teslimat` 
+            return `Kurye teslimat` 
         } 
         else if (!this.toareaid) {
             return "2-3 gün kargo ile teslimat";
         } else {
-            return "1-3 saat soğuk zincir teslimat";
+            return "Kasap tarafından teslimat";
         }
 
         let desc = "";

@@ -1,0 +1,63 @@
+<script>
+
+
+
+    $(document).ready(function () {
+        scrollOffset = $("#cat-slider-subitems").height();
+        var eTop = $("#cat-slider-subitems").offset().top;
+
+        $(window).scroll(function (event) {
+
+            var p = eTop - $(window).scrollTop();
+            var check = false;
+            var c = "sticky-top bg-white";
+            var sc = 'active'
+            if (p < 12) {
+                $("#cat-slider-subitems").addClass(c);
+                check = true
+            } else {
+                $("#cat-slider-subitems").removeClass(c);
+                $("#cat-slider-subitems a").removeClass(sc);
+                $(document.documentElement).focus()
+            }
+            if (!check) return;
+            $.each($(".catsubitem"), function (i, item) {
+
+                var startAt = item.offsetTop;
+                var endAt = startAt + item.offsetHeight;
+                var currentPosition = (document.documentElement.scrollTop || document.body.scrollTop) - eTop + 400;
+
+                var isInView = currentPosition > startAt && currentPosition <= endAt
+                if (isInView) {
+                    if ($("#cat-slider-subitems a[href='#" + item.id + "']").hasClass(sc))
+                        return;
+                    $("#cat-slider-subitems a[href='#" + item.id + "']").addClass(sc);
+                    var el = document.getElementById('cat-slider-subitems');
+                    var sb = SimpleBar.instances.get(el);
+                    if (sb) {
+                        var scel = sb.getScrollElement();
+                        var scelOffset = $(scel).offset();
+                        var selected = $("#cat-slider-subitems a[href='#" + item.id + "']").offset();
+
+                        
+                        if (selected) {
+                            var scroll = (selected.left - scelOffset.left);
+                            var labelSize = $("#cat-slider-subitems a[href='#" + item.id + "']").width();
+                            if (scroll > $(scel).width()) {
+                                scel.scrollLeft = selected.left - scelOffset.left + (labelSize)
+                            } else if (scroll < 0) {
+                                scel.scrollLeft = selected.left - scelOffset.left
+
+                            }
+                        }
+                    }
+
+
+                } else
+                    $("#cat-slider-subitems a[href='#" + item.id + "']").removeClass(sc)
+            })
+
+        });
+
+    })
+</script>

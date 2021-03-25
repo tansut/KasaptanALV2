@@ -627,51 +627,9 @@
               </div>
               
     
-              <!-- <div id="cat-slider-subitems"  data-simplebar>
-                <div class="d-flex py-3">
-                  <% controller.subCategories.forEach((sc, i) => { %>
-                  <div class="tag-toggle mr-2" data-stag="<%=__helper.slugify(sc.title)%>">
-                    <a onclick="goSubitem('<%=__helper.slugify(sc.title) %>', true, -scrollOffset)"
-                      class="btn  btn-sm btn-secondary text-uppercase <%= controller.subCategories.length == 1 ? 'text-dark':  'text-dark' %> font-size-xs text-center text-nowrap">
-                      <%=sc.title%>
-                    </a>
-                  </div>
-                  <% }) %>
-                </div>
-              </div> -->
+
               
     
-<!--     
-                <% controller.subCategories.forEach((sc, i) => { %>
-                  <%if (sc.visible && sc.products.length > 0) { %>
-                    <div id="<%= __helper.slugify(sc.title) %>">
-                      <h4 class="h6 mt-1 mb-1 text-capitalize"><%= sc.title %></h4>
-                      <span class="font-weight-light">
-                        <%-controller.markdown.render(sc.description || '')%>
-                      </span>
-                    </div>
-
-             
-                  <%}%>
-                <div class="row mb-3">
-                <% sc.products.forEach((product,i) => { %>
-                  <div data-tag="<%= __helper.slugify(product.tag1) %>" class="col-md-4 col-6 py-2">
-                    <% var showPrice = butcher.approved && (butcher.status == 'open') && (butcher.priceDisplay == 'show') %>
-                    <%- include('./_partial/product-view.ejs', { forceDialog: false, link2Location: !(showPrice && controller.logisticsProvider),  showPrice: showPrice , showPurchase: showPrice, butcher: butcher.slug, butcherProduct: butcher.products.find(p=>p.productid == product.id), product: product}) %>
-                  </div>
-                  <% if (controller.foods && controller.foods.length > 0 && !foodsInserted && i>controller.products.length/5) { %>
-                  <% foodsInserted = true; %>
-                  <div data-tag="" class="col-md-4 col-6 py-2">
-                    <%- include('./_partial/generic-item-view.ejs', { imgClass: 'rounded-lg', title: foodCategoryParams.title, href: `${foodCategoryParams.allUrl}`, src: `${ __req.helper.imgUrl('category-photos', controller.category.slug, 'thumbnail', true, 'list')}` }) %>
-                  </div>
-                  <%}%>
-                <%  }) %>
-                </div>
-            
-                <% }) %>
-         
-     -->
-          
     
         </div>
     
@@ -707,31 +665,7 @@
 
 
   <%- include('./_partial/purchase', { returnUrl: butcher.slug + '/' + controller.category.slug  }); %>
-
-
-
-  <script>
-
-
-
-    $(document).ready(function () {
-      scrollOffset = $("#cat-slider-subitems").height();
-    var eTop = $("#cat-slider-subitems").offset().top;
-  
-  $(window).scroll(function(event){
-     setTimeout(() => {
-      var p = eTop - $(window).scrollTop()
-      var c = "sticky-top bg-white";
-      if (p < 12) {
-         $("#cat-slider-subitems").addClass(c);
-     } else {
-          $("#cat-slider-subitems").removeClass(c);
-     }
-     });
-  });
-  
-  })
-  </script>
+  <%- include('./_partial/category-items-script', {   }); %>
 
 
 

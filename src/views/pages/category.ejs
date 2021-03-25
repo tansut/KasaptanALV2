@@ -11,7 +11,7 @@
   </script>
 </head>
 
-<body style="<%= (__req.query.transition == '1' && controller.appPlatform != 'android') ? 'opacity: 0':'' %>">
+<body>
   <% if (!__req.prefAddr) { %>
     <!-- <% include ./_partial/select-location-msg %> -->
   <% } %>
@@ -96,29 +96,9 @@
   <% include ./_partial/scripts %>
 
   <%- include('./_partial/purchase', { returnUrl:  controller.category.slug  }); %>
-
-<script>
-
+  <%- include('./_partial/category-items-script', {   }); %>
 
 
-  $(document).ready(function () {
-    scrollOffset = $("#cat-slider-subitems").height();
-  var eTop = $("#cat-slider-subitems").offset().top;
-
-$(window).scroll(function(event){
-   setTimeout(() => {
-    var p = eTop - $(window).scrollTop()
-    var c = "sticky-top bg-white";
-    if (p < 12) {
-       $("#cat-slider-subitems").addClass(c);
-   } else {
-        $("#cat-slider-subitems").removeClass(c);
-   }
-   });
-});
-
-})
-</script>
 
 
 

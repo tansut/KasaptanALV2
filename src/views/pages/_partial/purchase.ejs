@@ -157,15 +157,7 @@ return false;
 
     function goSubitem(tag, usePage, offset) {
       
-      <% if (controller.platform == 'app') { %>
-        if (!usePage) {
-          var t = $(".category-container").scrollTop()
-          var scrollOffset = $('#' + tag).offset().top - $(".category-container-top").offset().top + t;
-          $(".category-container").animate({scrollTop:scrollOffset}, 500);
-         } else App.scrollToAnchor('#' + tag, null, offset)
-      <% } else { %>
-        App.scrollToAnchor('#' + tag, null, offset)
-      <% } %>
+      App.scrollToAnchor('#' + tag, null, offset);
 
     }
 

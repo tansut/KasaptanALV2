@@ -22,6 +22,7 @@ class BanabikuryeProvider extends core_1.LogisticProvider {
         this.config = config;
         this.vehicle = core_1.VehicleType.Motor;
         options.dispatcher.name = dispatcher_1.DispatcherTypeDesc[options.dispatcher.type];
+        //options.dispatcher.min = options.dispatcher.min || Helper.asCurrency(100);
     }
     calculateCustomerFee(offer) {
         let regularFee = offer.totalFee;
