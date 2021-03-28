@@ -294,6 +294,6 @@ export default class BanabikuryeProvider extends LogisticProvider {
         this.config = config;
         this.vehicle = VehicleType.Motor
         options.dispatcher.name = DispatcherTypeDesc[options.dispatcher.type];
-        //options.dispatcher.min = options.dispatcher.min || Helper.asCurrency(100);
+        options.dispatcher.min = options.dispatcher.min || Helper.asCurrency(80);
     }
 }

@@ -18,7 +18,6 @@
             } else {
                 $("#cat-slider-subitems").removeClass(c);
                 $("#cat-slider-subitems a").removeClass(sc);
-                $(document.documentElement).focus()
             }
             if (!check) return;
             $.each($(".catsubitem"), function (i, item) {
@@ -53,8 +52,10 @@
                     }
 
 
-                } else
-                    $("#cat-slider-subitems a[href='#" + item.id + "']").removeClass(sc)
+                } else {
+                    $("#cat-slider-subitems a[href='#" + item.id + "']").removeClass(sc);
+                    $("#cat-slider-subitems a[href='#" + item.id + "']").focusout();
+                }
             })
 
         });
