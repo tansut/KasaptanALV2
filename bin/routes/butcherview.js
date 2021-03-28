@@ -166,7 +166,7 @@ class Route extends router_1.ViewRouter {
     }
     getProductViewParams(product) {
         let showPrice = this.butcher.approved && (this.butcher.status == 'open') && (this.butcher.priceDisplay == 'show');
-        return { forceDialog: false, link2Location: !(showPrice && this.logisticsProvider), showPrice: showPrice, showPurchase: showPrice, butcher: this.butcher.slug, butcherProduct: this.butcher.products.find(p => p.productid == product.id), product: product };
+        return { forceDialog: false, link2Location: !(this.req.prefAddr), showPrice: showPrice, showPurchase: showPrice, butcher: this.butcher.slug, butcherProduct: this.butcher.products.find(p => p.productid == product.id), product: product };
     }
     butcherProductFeedRoute() {
         return __awaiter(this, void 0, void 0, function* () {

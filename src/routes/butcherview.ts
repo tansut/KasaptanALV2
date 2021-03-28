@@ -216,7 +216,7 @@ export default class Route extends ViewRouter {
        
 
 
-         return { forceDialog: false, link2Location: !(showPrice && this.logisticsProvider),  showPrice: showPrice , showPurchase: showPrice, butcher: this.butcher.slug, butcherProduct: this.butcher.products.find(p=>p.productid == product.id), product: product}
+         return { forceDialog: false, link2Location: !(this.req.prefAddr),  showPrice: showPrice , showPurchase: showPrice, butcher: this.butcher.slug, butcherProduct: this.butcher.products.find(p=>p.productid == product.id), product: product}
      }
 
     @Auth.Anonymous()
