@@ -97,12 +97,17 @@ return false;
       window.location.href = loc
     }
 
-    p.purchaseClick =  function (e, urlParams) {
+    p.purchaseClick =  function (e) {
+      debugger
+      var params = $(e.currentTarget).data('product-params');
+      var product = $(e.currentTarget).data('product');
         <% if (__req.prefAddr) { %>
-          p.openDialog($(e.currentTarget).data('product'), urlParams)
+          p.openDialog(product, params);
           <% } else { %>
             window.kb.selectArea(function (sender, ul) {
-              window.location.href = "/adres-belirle/" + ul.selectedDistrict.slug + '?lng=' + ul.lng + '&lat=' + ul.lat + '&r=' + encodeURIComponent('/<%=`${returnUrl}?open=`%>' + $(e.currentTarget).data('product') + (urlParams ? ('?' + urlParams):''));
+              debugger
+              var ret = encodeURIComponent('/<%=`${returnUrl}?open=`%>' + product + (params ? ('&openParams=' + encodeURIComponent(params)):''))
+              window.location.href = "/adres-belirle/" + ul.selectedDistrict.slug + '?lng=' + ul.lng + '&lat=' + ul.lat + '&r=' + ret;
             });
   <% } %>
       }
@@ -144,7 +149,7 @@ return false;
         iframe.style.overflow = "scroll";
         iframe.classList.add('d-none');
         debugger;
-        iframe.src = '/' + product + '?frame=1' + '<%=butcher ? `&butcher=${butcher.slug}`:`` %>' + (urlParams ? ('&' + urlParams):'');
+        iframe.src = '/' + product + '?frame=1' + (urlParams ? ('&' + urlParams.replace("&amp;","&")):'');
         $('#purchasemodal-loading').show();
         
         div.prepend(iframe);
@@ -189,7 +194,7 @@ return false;
 
 
       $('[data-product]').click(function(e) {
-        window.purchase.purchaseClick(e, $(e.currentTarget).data('product-params'));
+        window.purchase.purchaseClick(e);
         return false
       });
 
@@ -248,7 +253,7 @@ return false;
         }
       }
       <% if (__req.query.open) { %>
-        p.openDialog('<%=__req.query.open%>')
+        p.openDialog('<%=__req.query.open%>', '<%=__req.query.openParams%>')
         <% } %>
       
     })

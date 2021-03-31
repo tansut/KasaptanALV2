@@ -105,13 +105,21 @@ export default class UserRoute extends ApiRouter {
                 mphone: Helper.getPhoneNumber(this.req.body.phone)
             }
         });
-        if (!user) throw new http.ValidationError("Geçersiz telefon: " + Helper.getPhoneNumber(this.req.body.phone));
+        if (!user) {
+            this.res.status(422).send("Geçersiz telefon: " + Helper.getPhoneNumber(this.req.body.phone));
+            return;
+        } 
         let sms = this.cleanSMS(this.req.body.password);
         if (!user.verifyPassword(sms))
-            throw new http.ValidationError("SMS şifreniz hatalıdır. SMS şifreniz 5 karakterden oluşmaktadır. Tel no: " +  Helper.getPhoneNumber(this.req.body.phone));
-        user.mphoneverified = true;
-        await user.save();
-        this.res.sendStatus(200)
+            {
+                this.res.status(422).send( "SMS şifreniz hatalıdır. SMS şifreniz 5 karakterden oluşmaktadır. Tel no: " +  Helper.getPhoneNumber(this.req.body.phone))
+            }
+        else {
+            user.mphoneverified = true;
+            await user.save();
+            this.res.sendStatus(200)
+        }    
+
     }
 
     
@@ -222,8 +230,9 @@ export default class UserRoute extends ApiRouter {
         } catch (err) {
             if (err.original && err.original.code == 'ER_DUP_ENTRY') {
                 let existingUser = await this.retrieveByEMailOrPhone(model.phone);
-                if (existingUser.mphoneverified)
-                    throw new http.ValidationError("Merhaba " + existingUser.name + ", hesabınıza giriş yapabilirsiniz.", 400);
+                if (existingUser.mphoneverified) {
+                    this.res.status(400).send("Merhaba " + existingUser.name + ", hesabınıza giriş yapabilirsiniz.");
+                }
                 else {
                     let pwd = await this.sendPassword(this.generatePwd(), existingUser.mphone)
                     existingUser.setPassword(pwd);

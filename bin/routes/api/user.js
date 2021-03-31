@@ -103,14 +103,19 @@ class UserRoute extends router_1.ApiRouter {
                     mphone: helper_1.default.getPhoneNumber(this.req.body.phone)
                 }
             });
-            if (!user)
-                throw new http.ValidationError("Geçersiz telefon: " + helper_1.default.getPhoneNumber(this.req.body.phone));
+            if (!user) {
+                this.res.status(422).send("Geçersiz telefon: " + helper_1.default.getPhoneNumber(this.req.body.phone));
+                return;
+            }
             let sms = this.cleanSMS(this.req.body.password);
-            if (!user.verifyPassword(sms))
-                throw new http.ValidationError("SMS şifreniz hatalıdır. SMS şifreniz 5 karakterden oluşmaktadır. Tel no: " + helper_1.default.getPhoneNumber(this.req.body.phone));
-            user.mphoneverified = true;
-            yield user.save();
-            this.res.sendStatus(200);
+            if (!user.verifyPassword(sms)) {
+                this.res.status(422).send("SMS şifreniz hatalıdır. SMS şifreniz 5 karakterden oluşmaktadır. Tel no: " + helper_1.default.getPhoneNumber(this.req.body.phone));
+            }
+            else {
+                user.mphoneverified = true;
+                yield user.save();
+                this.res.sendStatus(200);
+            }
         });
     }
     findSemtRoute() {
@@ -214,8 +219,9 @@ class UserRoute extends router_1.ApiRouter {
             catch (err) {
                 if (err.original && err.original.code == 'ER_DUP_ENTRY') {
                     let existingUser = yield this.retrieveByEMailOrPhone(model.phone);
-                    if (existingUser.mphoneverified)
-                        throw new http.ValidationError("Merhaba " + existingUser.name + ", hesabınıza giriş yapabilirsiniz.", 400);
+                    if (existingUser.mphoneverified) {
+                        this.res.status(400).send("Merhaba " + existingUser.name + ", hesabınıza giriş yapabilirsiniz.");
+                    }
                     else {
                         let pwd = yield this.sendPassword(this.generatePwd(), existingUser.mphone);
                         existingUser.setPassword(pwd);
