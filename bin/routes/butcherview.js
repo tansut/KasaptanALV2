@@ -77,6 +77,14 @@ class Route extends router_1.ViewRouter {
             }
             let butcher = this.butcher = yield butcher_1.default.loadButcherWithProducts(this.req.params.butcher);
             if (!butcher) {
+                let group = yield butcher_1.default.count({
+                    where: {
+                        parentButcher: this.req.params.butcher
+                    }
+                });
+                if (group > 0) {
+                    return this.res.redirect('/kasaplar?g=' + this.req.params.butcher);
+                }
                 return this.next();
             }
             yield this.loadReviews(butcher);

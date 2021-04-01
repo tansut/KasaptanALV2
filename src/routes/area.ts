@@ -169,9 +169,21 @@ export default class Route extends ViewRouter {
 
     @Auth.Anonymous()
     async allRoute() {
-        let where = (<any>{})
+        let where = (<any>{});
+        let subs: Area[] = [];
         where["approved"] = true;
         where["showListing"] = true;
+        if (this.req.query.g) {
+            where["parentButcher"] = this.req.query.g
+        } else {
+            subs = await AreaModel.findAll({
+                where: {
+                    level: 1,
+                    status: "active"
+                },
+                order: [['displayOrder', 'desc']]
+            })
+        }
         
         let butchers = await ButcherModel.findAll({
             where: where,
@@ -183,13 +195,7 @@ export default class Route extends ViewRouter {
             }]
         })
 
-        let subs = await AreaModel.findAll({
-            where: {
-                level: 1,
-                status: "active"
-            },
-            order: [['displayOrder', 'desc']]
-        })
+
 
         this.res.render('pages/butchers.ejs', this.viewData({
 

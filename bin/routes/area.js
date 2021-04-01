@@ -155,8 +155,21 @@ class Route extends router_1.ViewRouter {
     allRoute() {
         return __awaiter(this, void 0, void 0, function* () {
             let where = {};
+            let subs = [];
             where["approved"] = true;
             where["showListing"] = true;
+            if (this.req.query.g) {
+                where["parentButcher"] = this.req.query.g;
+            }
+            else {
+                subs = yield area_1.default.findAll({
+                    where: {
+                        level: 1,
+                        status: "active"
+                    },
+                    order: [['displayOrder', 'desc']]
+                });
+            }
             let butchers = yield butcher_1.default.findAll({
                 where: where,
                 limit: 50,
@@ -165,13 +178,6 @@ class Route extends router_1.ViewRouter {
                         model: area_2.default,
                         as: "areaLevel1"
                     }]
-            });
-            let subs = yield area_1.default.findAll({
-                where: {
-                    level: 1,
-                    status: "active"
-                },
-                order: [['displayOrder', 'desc']]
             });
             this.res.render('pages/butchers.ejs', this.viewData({
                 subs: subs, ellipsis: ellipsis,

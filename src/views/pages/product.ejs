@@ -330,107 +330,12 @@
   
                         </div>
                         <%} else { %>
-                        <div class="bg-secondary border p-3  mb-2">
-  
-  
-  
-  
-                          <div class="mb-3  text-center">
-                            <% if (__req.query.butcher) {  %>
-                          
-                              <% if (!controller.dispatchingAvailable) { %>
-                                <h5 class="h6 ">Henüz Semtinizde Değiliz</h5>
-                                <p>
-      
-                                  Kasap seçim kriterlerimiz oldukça detaylı ve belirli bir planda ilerliyoruz.
-                                  Çünkü sizlere en iyiyi sunmak için çalışıyoruz.
-      
-                                </p>
-  
-                                <script>
-                                  gtags.push(['noservice', '<%=__req.prefAddr.display%>', '<%=product.slug%>']);
-                                  gtags.push(['noproduct', '<%=product.slug%>', '<%=__req.prefAddr.display%>']);
-                                </script>
-      
-                                <%} else { %>
-                                <h5 class="h5">Semtinize hizmet
-                                  veren kasaplarımız mevcut</h5>
-                                <p>Ancak bu kasabımız semtinize hizmet veremiyor veya bu ürünü sağlayamıyor.</p>
-                                <script>
-                                  gtags.push(['noproduct', '<%=product.slug%>', '<%=__req.prefAddr.display%>']);
-                                  gtags.push(['noservice', '<%=__req.prefAddr.display%>', '<%=product.slug%>']);
-                                </script>
-                                <% } %>
-  
-  
-                            <% } else { %>
-                              <% if (!controller.dispatchingAvailable) { %>
-                                <h5 class="h6">Bu ürünü şu an sağlayamıyoruz</h5>
-                                <p>
-      
-                                 Maalesef bu ürünü şu an sağlayamıyoruz.
-      
-                                </p>
-  
-                                
-                                <script>
-                                  gtags.push(['noproduct', '<%=product.slug%>', '<%=__req.prefAddr.display%>']);
-                                  gtags.push(['noservice', '<%=__req.prefAddr.display%>', '<%=product.slug%>']);
-                                </script>
-                               
-      
-                                <%} else { %>
-                                <h5 class="h5">Hizmet Veriyoruz</h5>
-                                <p class="text-left">Ancak hiçbir kasabımız
-                                  bu ürünü şu anda semtinize sağlayamıyor.</p>
-                                  <p class="border bg-white p-3 text-left">
-                                    <i class="czi-icon czi-truck mr-1"></i>
-                                    <a class="font-weight-bold" href="javascript:gotoUrl('/tum-turkiye')">Tüm Türkiye'ye</a> gönderebildiğimiz ürünlerimiz var, mutlaka göz atın.
-                                  </p>
-                                  <script>       
-                                  gtags.push(['noproduct', '<%=product.slug%>', '<%=__req.prefAddr.display%>']);
-                                  gtags.push(['noservice', '<%=__req.prefAddr.display%>', '<%=product.slug%>']);
+                          <div class="mb-3">
+                            <%- include('./_partial/cannot-provide-product.ejs', {product: product}) %>
 
-                                  </script>
-                                <% } %>
-                            <% } %>
-                           
-  
-  
                           </div>
-                          <% if (!controller.dispatchingAvailable) { %>
-                          <div class="d-flex justify-content-center">
-  
-                            <% if (__req.query.frame != '1') { %>
-                            <button @click="selectArea(null)" type="button" class="btn mr-2 btn-primary"><i
-                                class="czi-location  mr-2"></i>Semt Seç</button>
-                            <% } else { %>
-                              <button onclick="window.parent.purchase.selectAddress('<%=product.slug%>')" type="button" class="btn mr-2 "><i
-                                class="czi-location  mr-2"></i>Semt Seç</button>
-                            <% } %>
-                            <!-- <a class="btn btn-primary " onclick="return showButchers()">Kasaplarımız<i
-                                class="czi-arrow-right mr-2"></i></a> -->
-                          </div>
-                          <%} else {%>
-         
-  
-                          <div class="d-flex justify-content-center">
-                            <a class="btn  btn-primary mr-2 btn-sm" onclick="return goBack()" >Alışverişe Devam</a>
-  
-                            <% if (__req.query.frame != '1') { %>
-                              <button @click="selectArea(null)" type="button" class="btn btn-sm mr-2 btn-primary "><i
-                                  class="czi-location mr-2 "></i>Semt Seç</button>
-                              <% } else { %>
-                                <button onclick="window.parent.purchase.selectAddress('<%=product.slug%>')" type="button" class="btn btn-sm mr-2 btn-primary "><i
-                                  class="czi-location mr-2 "></i>Semt Seç</button>
-                              <% } %>
-  
-                          </div>
-  
-                         
-                          <%}%>
-                    
-                                  </div>
+
+                          
                                 <%}%>
   
                           <% } %>

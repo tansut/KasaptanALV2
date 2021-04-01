@@ -97,6 +97,15 @@ export default class Route extends ViewRouter {
 
         
         if (!butcher) {
+            let group = await ButcherModel.count({
+                where: {
+                    parentButcher: this.req.params.butcher
+                }
+                
+            })
+            if (group > 0) {
+                return this.res.redirect('/kasaplar?g=' + this.req.params.butcher)
+            }  
             return this.next();
         } 
 

@@ -1,0 +1,40 @@
+<div class="bg-secondary p-3">
+    <div class="mb-3">
+        <h5 class="h6 ">Maalesef bu ürünü şuan sağlayamıyoruz</h5>
+<p>
+ Üzgünüz ancak taze ve kaliteli ürün sağlamanın bazı zorlukları mevcut.
+</p>
+
+<p>
+    Kasaplarımızın diğer muhteşem ürünlerine göz atabilirsiniz.
+</p>
+
+<div class="d-flex justify-content-center">
+    <a class="btn  btn-primary mr-2 btn-sm" onclick="return goBack()" >Alışverişe Devam</a>
+
+    <% if (__req.query.frame != '1') { %>
+      <button @click="selectArea(null)" type="button" class="btn btn-sm mr-2 btn-primary "><i
+          class="czi-location mr-2 "></i>Semt Seç</button>
+      <% } else { %>
+        <button onclick="window.parent.purchase.selectAddress('<%=product.slug%>')" type="button" class="btn btn-sm mr-2 btn-primary "><i
+          class="czi-location mr-2 "></i>Semt Seç</button>
+      <% } %>
+
+  </div>
+
+
+    </div>
+
+    <p class="border bg-white p-3 mb-0 text-left">
+        <i class="czi-icon czi-truck mr-1"></i>
+        <a class="font-weight-bold" href="javascript:gotoUrl('/tum-turkiye')">Tüm Türkiye'ye</a> gönderebildiğimiz ürünlerimiz var, mutlaka göz atın.
+      </p>
+
+</div>
+
+
+
+<script>
+  gtags.push(['noservice', '<%=__req.prefAddr.display%>', '<%=product.slug%>']);
+  gtags.push(['noproduct', '<%=product.slug%>', '<%=__req.prefAddr.display%>']);
+</script>
