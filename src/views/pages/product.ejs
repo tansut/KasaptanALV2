@@ -743,13 +743,13 @@
                         
 
                             <div v-if="selectedUnit" class="px-3 my-3 d-flex justify-content-between">
-                              <div class="text-center">
-                                <span class="text-muted font-size-sm d-block">
+                              <div  class="text-center">
+                                <span v-if="puan > 0" class="text-muted font-size-sm d-block">
                                   
                                    Puan
                                 </span>
                       
-                                <money-view class="badge badge-success font-size-md font-weight-medium" :money="puan">
+                                <money-view v-if="puan > 0" class="badge badge-success font-size-md font-weight-medium" :money="puan">
                                 </money-view>
                               </div>
                       

@@ -145,6 +145,8 @@ class Butcher extends BaseModel<Butcher> {
     })
     shipFailureCount: number;
 
+
+
     @Column({
         allowNull: false,
         type: DataType.INTEGER,

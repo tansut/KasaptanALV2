@@ -1,6 +1,6 @@
 export NODE_ENV=development
 export PAGETRACK=false
-export DBNAME=kasap
+export DBNAME=kasapburada
 export PORT=3000
 export DBADDRESS=localhost
 export DBUSER=kasapburada

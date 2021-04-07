@@ -535,7 +535,7 @@ export default class Route extends ApiRouter {
             user = await User.findByPk(o.userId);
             if (user) await user.loadPuanView();
         }
-        if (user && user.usablePuans > 0) {
+        if (user && user.usablePuans > 0 && o.butcher.enablePuan) {
             let butcherShip = this.calculateTeslimatOfButcher(o)
             let kasaptanAlShip = this.calculateTeslimatOfKasaptanAl(o);
             let productPrice = this.calculateProduct(o);

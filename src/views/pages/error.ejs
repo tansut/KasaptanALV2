@@ -2,11 +2,11 @@
 <html lang="en">
 
 <head>
-    <% include ./_partial/head %>
+    
 </head>
 
 <body>
-    <% include ./_partial/header %>
+    
 
 
 
@@ -34,20 +34,14 @@
         <div class="bg-light box-shadow-lg  px-4 py-4 mb-3 ">
             <div class="p-5">
                 <%= error.message || JSON.stringify(error) %>
-                <% if (__config.nodeenv == 'development') { %>
-                  <p><%= error.stack %></p>
-                <% } %>
             </div>
 
         </div>
     </div>
 
     <script>
-        window.App.gTag('error', '500', 'error.message || error ')
     </script>
 
-    <% include ./_partial/footer %>
-    <% include ./_partial/scripts %>
 
 </body>
 
