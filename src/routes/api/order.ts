@@ -568,16 +568,16 @@ export default class Route extends ApiRouter {
 
         // }
 
-        // let kalittePuan: Puan = null;
+         let kalittePuan: Puan = null;
 
 
-                let kalittePuan: Puan = {
-                platforms: 'app',
-            minPuanForUsage: 0.00,
-            minSales: 250.00,
-            name: `KasaptanAl Mobil Uygulaması Puan Kazancı`,
-            fixed: 10.00
-        }
+        //         let kalittePuan: Puan = {
+        //         platforms: 'app',
+        //     minPuanForUsage: 0.00,
+        //     minSales: 250.00,
+        //     name: `KasaptanAl Mobil Uygulaması Puan Kazancı`,
+        //     fixed: 10.00
+        // }
 
         if (o.butcher.enableCreditCard) {
             if (o.isFirstButcherOrder && o.orderType != 'kurban') {
