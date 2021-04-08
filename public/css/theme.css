@@ -16026,9 +16026,12 @@ a:hover {
   margin-right: 2px;
 }
 
-.item-slider-selected {
-  border-bottom: #e31013 6px solid;
-  font-weight: bold;
+.item-slider-selected .card {
+  background-color: #f6f6f6 !important;
+}
+
+.item-slider-selected .card span {
+  color: #000 !important;
 }
 
 .item-slider-selected-info {

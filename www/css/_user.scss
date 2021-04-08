@@ -142,8 +142,12 @@ a:hover {
 }
 
 .item-slider-selected {
-  border-bottom: $primary 6px solid;
-  font-weight: bold;
+  .card {
+  background-color: $secondary !important;
+    span {
+      color: #000 !important;
+    }
+  }
 }
 
 .item-slider-selected-info {
