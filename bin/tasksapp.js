@@ -24,12 +24,12 @@ bluebird.config({
 class KasaptanAlTasksApp {
     shutDown() {
         return __awaiter(this, void 0, void 0, function* () {
-            console.log('Received kill signal taks, shutting down gracefully');
-            index_1.default.stop().finally(() => {
-                context_1.default.getContext().close().finally(() => {
-                    process.exit(0);
-                });
-            });
+            // console.log('Received kill signal taks, shutting down gracefully');
+            // Tasks.stop().finally(() => {
+            //     db.getContext().close().finally(()=> {
+            //         process.exit(0);
+            //       })
+            //   })
         });
     }
     constructor() {
@@ -37,8 +37,8 @@ class KasaptanAlTasksApp {
     bootstrap() {
         return __awaiter(this, void 0, void 0, function* () {
             let dbinstance = yield context_1.default.init(true);
-            process.on('SIGTERM', this.shutDown.bind(this));
-            process.on('SIGINT', this.shutDown.bind(this));
+            // process.on('SIGTERM', this.shutDown.bind(this));
+            // process.on('SIGINT', this.shutDown.bind(this));
             yield index_1.default.start();
         });
     }

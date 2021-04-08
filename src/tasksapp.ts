@@ -50,13 +50,13 @@ class KasaptanAlTasksApp {
 
 
     async shutDown() {
-        console.log('Received kill signal taks, shutting down gracefully');
+        // console.log('Received kill signal taks, shutting down gracefully');
 
-        Tasks.stop().finally(() => {
-            db.getContext().close().finally(()=> {
-                process.exit(0);
-              })
-          })
+        // Tasks.stop().finally(() => {
+        //     db.getContext().close().finally(()=> {
+        //         process.exit(0);
+        //       })
+        //   })
     
 
     }
@@ -75,8 +75,8 @@ class KasaptanAlTasksApp {
     
 
   
-        process.on('SIGTERM', this.shutDown.bind(this));
-        process.on('SIGINT', this.shutDown.bind(this));
+        // process.on('SIGTERM', this.shutDown.bind(this));
+        // process.on('SIGINT', this.shutDown.bind(this));
         await Tasks.start()
     }
 }

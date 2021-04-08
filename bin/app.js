@@ -211,8 +211,8 @@ class KasaptanAlApp {
                     process.exit(2);
                 }
             });
-            process.on('SIGTERM', this.shutDown.bind(this));
-            process.on('SIGINT', this.shutDown.bind(this));
+            // process.on('SIGTERM', this.shutDown.bind(this));
+            // process.on('SIGINT', this.shutDown.bind(this));
             server.on('connection', connection => {
                 this.connections.push(connection);
                 connection.on('close', () => this.connections = this.connections.filter(curr => curr !== connection));
