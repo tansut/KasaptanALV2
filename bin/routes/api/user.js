@@ -122,9 +122,12 @@ class UserRoute extends router_1.ApiRouter {
         return __awaiter(this, void 0, void 0, function* () {
             let result = yield area_1.default.sequelize.query(`
         
-        select id, name, slug as url, display, ST_GLength(LineStringFromWKB(LineString(
-            location, 
-            ST_GeomFromText('POINT(:lat :lng)')))) AS distance from Areas where (level=3 or level=4) and (location is not null) ORDER BY distance ASC LIMIT 5
+       
+        select id, name, slug as url, display, ST_Distance(
+            location, ST_GeomFromText('POINT(:lat :lng)')
+            ) AS distance from Areas where (level=3 or level=4) and 
+            (location is not null) ORDER BY distance ASC LIMIT 5
+
         `, {
                 replacements: {
                     lat: parseFloat(this.req.body.lat),

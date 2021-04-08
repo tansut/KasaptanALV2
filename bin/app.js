@@ -42,6 +42,20 @@ const banabikurye_1 = require("./lib/logistic/banabikurye");
 const butcher_1 = require("./lib/logistic/butcher");
 const banabikuryeprovidercar_1 = require("./lib/logistic/banabikuryeprovidercar");
 const tobanabikurye_1 = require("./lib/logistic/tobanabikurye");
+const Sequelize = require('sequelize');
+const wkx = require('wkx');
+Sequelize.GEOMETRY.prototype._stringify = function _stringify(value, options) {
+    return `ST_GeomFromText(${options.escape(wkx.Geometry.parseGeoJSON(value).toWkt())})`;
+};
+Sequelize.GEOMETRY.prototype._bindParam = function _bindParam(value, options) {
+    return `ST_GeomFromText(${options.bindParam(wkx.Geometry.parseGeoJSON(value).toWkt())})`;
+};
+Sequelize.GEOGRAPHY.prototype._stringify = function _stringify(value, options) {
+    return `ST_GeomFromText(${options.escape(wkx.Geometry.parseGeoJSON(value).toWkt())})`;
+};
+Sequelize.GEOGRAPHY.prototype._bindParam = function _bindParam(value, options) {
+    return `ST_GeomFromText(${options.bindParam(wkx.Geometry.parseGeoJSON(value).toWkt())})`;
+};
 bluebird.config({
     warnings: false
 });
