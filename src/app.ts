@@ -260,8 +260,8 @@ class KasaptanAlApp {
         });
 
   
-        process.on('SIGTERM', this.shutDown.bind(this));
-        process.on('SIGINT', this.shutDown.bind(this));
+        // process.on('SIGTERM', this.shutDown.bind(this));
+        // process.on('SIGINT', this.shutDown.bind(this));
 
 
         server.on('connection', connection => {
