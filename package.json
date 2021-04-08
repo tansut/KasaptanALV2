@@ -17,6 +17,7 @@
     "deploy-production": "./node_modules/shipit-cli/bin/shipit production deploy",
     "postinstallx": "node_modules/.bin/gulp deploy",
     "debug": "export TZ='Europe/Istanbul'; source ./.vscode/debug.sh;  nodemon  --inspect --icu-data-dir=./node_modules/full-icu ./bin/kasaptanal",
+    "debug-tasks": "export TZ='Europe/Istanbul'; source ./.vscode/debug.sh;  nodemon  --inspect --icu-data-dir=./node_modules/full-icu ./bin/kasaptanaltasks",
     "prod": "source ./.vscode/prod-aws.sh;  nodemon --inspect ./bin/kasaptanal",
     "prodaws": "source ./.vscode/prod-aws.sh;  nodemon --inspect ./bin/kasaptanal",
     "build:live-api": "nodemon --exec ./node_modules/.bin/ts-node -- ./src/app.ts /start api"

@@ -129,9 +129,9 @@ export default class UserRoute extends ApiRouter {
     async findSemtRoute() {
         let result = await Area.sequelize.query(`
         
-        select id, name, slug as url, display, GLength(LineStringFromWKB(LineString(
+        select id, name, slug as url, display, ST_GLength(LineStringFromWKB(LineString(
             location, 
-            GeomFromText('POINT(:lat :lng)')))) AS distance from Areas where (level=3 or level=4) and (location is not null) ORDER BY distance ASC LIMIT 5
+            ST_GeomFromText('POINT(:lat :lng)')))) AS distance from Areas where (level=3 or level=4) and (location is not null) ORDER BY distance ASC LIMIT 5
         `,            {
                 replacements: { 
                      lat: parseFloat(this.req.body.lat as string), 

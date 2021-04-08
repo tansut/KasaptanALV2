@@ -34,7 +34,6 @@ const cookieParser = require("cookie-parser");
 const flash = require('connect-flash');
 const RequestHelper_1 = require("./lib/RequestHelper");
 const iyzico_1 = require("./lib/payment/iyzico");
-const index_5 = require("./lib/tasks/index");
 const paratika_1 = require("./lib/payment/paratika");
 const SessionStore = require('express-session-sequelize')(session.Store);
 const fileUpload = require('express-fileupload');
@@ -52,20 +51,20 @@ class KasaptanAlApp {
     }
     shutDown() {
         return __awaiter(this, void 0, void 0, function* () {
-            console.log('Received kill signal, shutting down gracefully');
-            this.server.close(function (err) {
-                index_5.default.stop().finally(() => {
-                    context_1.default.getContext().close().finally(() => {
-                        process.exit(err ? 1 : 0);
-                    });
-                });
-            });
-            setTimeout(() => {
-                console.error('Could not close connections in time, forcefully shutting down');
-                process.exit(1);
-            }, 10000);
-            this.connections.forEach(curr => curr.end());
-            setTimeout(() => this.connections.forEach(curr => curr.destroy()), 5000);
+            //console.log('Received kill signal, shutting down gracefully');
+            // this.server.close(function(err) {
+            //       Tasks.stop().finally(() => {
+            //         db.getContext().close().finally(()=> {
+            //             process.exit(err ? 1 : 0);
+            //           })
+            //       })
+            //     });
+            // setTimeout(() => {
+            //     console.error('Could not close connections in time, forcefully shutting down');
+            //     process.exit(1);
+            // }, 10000);
+            // this.connections.forEach(curr => curr.end());
+            // setTimeout(() => this.connections.forEach(curr => curr.destroy()), 5000);
         });
     }
     shopcard() {
@@ -213,10 +212,10 @@ class KasaptanAlApp {
             });
             // process.on('SIGTERM', this.shutDown.bind(this));
             // process.on('SIGINT', this.shutDown.bind(this));
-            server.on('connection', connection => {
-                this.connections.push(connection);
-                connection.on('close', () => this.connections = this.connections.filter(curr => curr !== connection));
-            });
+            // server.on('connection', connection => {
+            //     this.connections.push(connection);
+            //     connection.on('close', () => this.connections = this.connections.filter(curr => curr !== connection));
+            // });
             yield new Promise((resolve, reject) => {
                 server.listen(config_1.default.port, () => {
                     resolve();

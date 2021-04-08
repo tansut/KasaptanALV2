@@ -63,23 +63,23 @@ class KasaptanAlApp {
     connections = [];
 
     async shutDown() {
-        console.log('Received kill signal, shutting down gracefully');
+        //console.log('Received kill signal, shutting down gracefully');
 
-        this.server.close(function(err) {
-              Tasks.stop().finally(() => {
-                db.getContext().close().finally(()=> {
-                    process.exit(err ? 1 : 0);
-                  })
-              })
-            });
+        // this.server.close(function(err) {
+        //       Tasks.stop().finally(() => {
+        //         db.getContext().close().finally(()=> {
+        //             process.exit(err ? 1 : 0);
+        //           })
+        //       })
+        //     });
     
-        setTimeout(() => {
-            console.error('Could not close connections in time, forcefully shutting down');
-            process.exit(1);
-        }, 10000);
+        // setTimeout(() => {
+        //     console.error('Could not close connections in time, forcefully shutting down');
+        //     process.exit(1);
+        // }, 10000);
     
-        this.connections.forEach(curr => curr.end());
-        setTimeout(() => this.connections.forEach(curr => curr.destroy()), 5000);
+        // this.connections.forEach(curr => curr.end());
+        // setTimeout(() => this.connections.forEach(curr => curr.destroy()), 5000);
     }
 
     async shopcard() {
@@ -264,10 +264,10 @@ class KasaptanAlApp {
         // process.on('SIGINT', this.shutDown.bind(this));
 
 
-        server.on('connection', connection => {
-            this.connections.push(connection);
-            connection.on('close', () => this.connections = this.connections.filter(curr => curr !== connection));
-        });
+        // server.on('connection', connection => {
+        //     this.connections.push(connection);
+        //     connection.on('close', () => this.connections = this.connections.filter(curr => curr !== connection));
+        // });
 
 
         await new Promise<void>((resolve, reject) => {
