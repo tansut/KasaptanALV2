@@ -64,6 +64,10 @@ if (orderClosed && __req.user && __req.user.hasRole('admin')) {
   <%=order.butcherName%>
 </h3>
 
+<div>
+  <button onclick="  window.print();" class="btn btn-secondary btn-sm">Yazdır</button>
+</div>
+
 <ul class="list-unstyled font-size-sm">
   <li><span class="text-muted">Dağtımı yapacak:&nbsp;</span><%=order.dispatcherName%></li>
 
