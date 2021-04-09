@@ -7,7 +7,7 @@ module.exports = function (shipit) {
     shipit.initConfig({
         default: {
             workspace: '/tmp/' + pkg.name,
-            deployTo: '/home/ec2-user/apps' + pkg.name,
+            deployTo: '/home/ec2-user/apps/' + pkg.name,
             repositoryUrl: pkg.repository.url,
             ignores: ['.git', 'node_modules'],
             keepReleases: 1
@@ -46,8 +46,7 @@ module.exports = function (shipit) {
 
 
     shipit.blTask('restart', async function () {
-        var self = this;
-        is
+        var self = this
             , script1 = `${shipit.releasePath}/bin/kasaptanal.js --node-args="--icu-data-dir=${shipit.releasePath}/node_modules/full-icu"`
             , script2 = `${shipit.releasePath}/bin/kasaptanaltasks.js --node-args="--icu-data-dir=${shipit.releasePath}/node_modules/full-icu"`
             , startScript = 'nvm use v14.16.0 && source /home/ec2-user/{env} && /home/ec2-user/runkasap2.sh && pm2 start {script2}'
