@@ -46,7 +46,7 @@ module.exports = function (shipit) {
 
 
     shipit.blTask('restart', async function () {
-        var self = thnvm
+        var self = this;
         is
             , script1 = `${shipit.releasePath}/bin/kasaptanal.js --node-args="--icu-data-dir=${shipit.releasePath}/node_modules/full-icu"`
             , script2 = `${shipit.releasePath}/bin/kasaptanaltasks.js --node-args="--icu-data-dir=${shipit.releasePath}/node_modules/full-icu"`
