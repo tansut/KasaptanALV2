@@ -40,7 +40,7 @@ module.exports = function (shipit) {
 
     shipit.blTask('aws', async function () {
 
-        await shipit.remote("nvm use v14.16.0sudo npm i -g pm2 ; cd " + shipit.releasePath + "; ./node_modules/gulp/bin/gulp.js aws.deploy");
+        await shipit.remote("nvm use v14.16.0; cd " + shipit.releasePath + "; ./node_modules/gulp/bin/gulp.js aws.deploy");
 
     });    
 
