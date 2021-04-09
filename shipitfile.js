@@ -79,7 +79,11 @@ module.exports = function (shipit) {
         shipit.on('deployed', () => {
             shipit.start('install', 'restart', 'aws');
         });
-    })
-}
+    });
+
+    shipit.on('deployed',  () => {
+        shipit.start('install', 'restart', 'aws');
+    });
+};
 
 
