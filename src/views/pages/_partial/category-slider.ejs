@@ -12,6 +12,21 @@
 <% var partialRender = typeof(partialRender) == 'undefined' ? false: partialRender %>
 <% var partialRenderUrl = typeof(partialRenderUrl) == 'undefined' ? '': partialRenderUrl %>
 
+<% 
+   var visibleCategories = [];
+
+  viewCats.forEach(cat => { 
+     var reyonlar = (categories.filter(p=>p.type == cat && p.status == 'active'));
+     visibleCategories = visibleCategories.concat(reyonlar)
+  })
+
+  if (selected && visibleCategories.filter(p=>p.slug == selected).length == 0) {
+      var sel = categories.find(p=>p.slug == selected);
+      sel && (visibleCategories = [sel].concat(visibleCategories))
+  }
+    
+
+%>
 
 
 
@@ -100,8 +115,8 @@
         <%} else { %>
         <div id="sc"  data-simplebar >
             <div class="pb-md-2 mb-1  d-flex">
-                <% viewCats.forEach(cat => { %>
-                <% var reyonlar = (categories.filter(p=>p.type == cat && p.status == 'active')) %>
+                
+                <% var reyonlar = visibleCategories %>
                 <% for(var c=0; c< reyonlar.length; c++) {%>
                 <div id="cat-item-<%=reyonlar[c].slug%>" class="mr-1">
                     <% var isselected = (selected == reyonlar[c].slug ? true: false) %>
@@ -149,7 +164,7 @@
                     </div>
                 </div>
                 <%}%>
-                <%})%>
+               
             </div>
 
          
