@@ -35,14 +35,14 @@ module.exports = function (shipit) {
 
 
 
-        
+
     });
 
     shipit.blTask('aws', async function () {
 
         await shipit.remote("nvm use v14.16.0; cd " + shipit.releasePath + "; ./node_modules/gulp/bin/gulp.js aws.deploy");
 
-    });    
+    });
 
 
     shipit.blTask('restart', async function () {
@@ -66,7 +66,7 @@ module.exports = function (shipit) {
 
         }
 
-        
+
         startScript = startScript.replace(/\{log\}/gi, '/var/log/nodejs/' + pkg.name + '.' + moment().format('YYYY-MM-DD') + '.log');
         startScript = startScript.replace(/\{outlog\}/gi, '/var/log/nodejs/' + pkg.name + '.out.' + moment().format('YYYY-MM-DD') + '.log');
         startScript = startScript.replace(/\{errorlog\}/gi, '/var/log/nodejs/' + pkg.name + '.error.' + moment().format('YYYY-MM-DD') + '.log');
@@ -76,7 +76,10 @@ module.exports = function (shipit) {
 
         await shipit.remote(startScript);
 
-    shipit.on('deployed',  () => {
-        shipit.start('install', 'restart', 'aws');
-    });
-};
+        shipit.on('deployed', () => {
+            shipit.start('install', 'restart', 'aws');
+        });
+    })
+}
+
+
