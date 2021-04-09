@@ -7,13 +7,13 @@ module.exports = function (shipit) {
     shipit.initConfig({
         default: {
             workspace: '/tmp/' + pkg.name,
-            deployTo: '/srv/nodejs/' + pkg.name,
+            deployTo: '/home/ec2-user/apps' + pkg.name,
             repositoryUrl: pkg.repository.url,
             ignores: ['.git', 'node_modules'],
             keepReleases: 1
         },
         production: {
-            servers: ['ec2-user@ec2-18-237-6-120.us-west-2.compute.amazonaws.com'],
+            servers: ['ec2-user@ec2-54-187-204-66.us-west-2.compute.amazonaws.com'],
             branch: 'master'
         },
         staging: {
@@ -40,13 +40,14 @@ module.exports = function (shipit) {
 
     shipit.blTask('aws', async function () {
 
-        await shipit.remote("nvm use v14.16.0; cd " + shipit.releasePath + "; ./node_modules/gulp/bin/gulp.js aws.deploy");
+        await shipit.remote("nvm use v14.16.0sudo npm i -g pm2 ; cd " + shipit.releasePath + "; ./node_modules/gulp/bin/gulp.js aws.deploy");
 
     });    
 
 
     shipit.blTask('restart', async function () {
-        var self = this
+        var self = thnvm
+        is
             , script1 = `${shipit.releasePath}/bin/kasaptanal.js --node-args="--icu-data-dir=${shipit.releasePath}/node_modules/full-icu"`
             , script2 = `${shipit.releasePath}/bin/kasaptanaltasks.js --node-args="--icu-data-dir=${shipit.releasePath}/node_modules/full-icu"`
             , startScript = 'nvm use v14.16.0 && source /home/ec2-user/{env} && /home/ec2-user/runkasap2.sh && pm2 start {script2}'
