@@ -366,7 +366,7 @@ export default class Route extends ViewRouter {
         let oh = Math.round(this.order.shipmenthour - (this.order.shipmenthour%100));
         let od = this.order.shipmentdate.setHours(oh);
         if (this.order.dispatcherType == 'banabikurye' || this.order.dispatcherType == 'banabikurye/car') {
-            for (let i = 9; i < 20; i++) {
+            for (let i = 9; i < 22; i++) {
                 let selected = true;
                 if (Helper.isToday(this.order.shipmentdate) && Helper.Now().getHours() > i)
                     selected = false;

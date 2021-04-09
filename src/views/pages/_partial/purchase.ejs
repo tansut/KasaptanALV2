@@ -56,13 +56,14 @@ function loadProducts(cat, url) {
   var rept =  rep.innerHTML;
 var rep = $(".text-link"+cat)[0];
 rep.innerHTML = '<span class="spinner-border text-primary spinner-border-sm"></span>';
-$.ajax(url + '/' + cat + '?partial=1').done(function (result) { 
+$.ajax((url || '') + '/' + cat + '?partial=1').done(function (result) { 
 $('#category-products').html(result);
 cache[cat] = result
 compile(cat);
 
 }).fail(function(err) {
-alert(err.message)
+  console.log(err);
+alert("Lütfen tekrar deneyin")
 }).always(function() {
 rep.innerHTML = rept;
 })

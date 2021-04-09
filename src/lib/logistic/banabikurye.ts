@@ -68,7 +68,7 @@ export default class BanabikuryeProvider extends LogisticProvider {
     }
 
     toBnbPoint(p: Point) {
-        return {
+        let res = {
             address: p.address,
             contact_person: {
                 name: p.contactName,
@@ -84,7 +84,10 @@ export default class BanabikuryeProvider extends LogisticProvider {
             entrance_number: p.entrance,
             floor_number: p.floor,
             packages: []
-        }
+        };
+        if (!res.required_start_datetime && res.required_finish_datetime)  res.required_start_datetime = new Date(res.required_finish_datetime.getTime() - 5*60000); 
+        if (!res.required_finish_datetime && res.required_start_datetime) res.required_finish_datetime = new Date(res.required_start_datetime.getTime() + 5*60000); 
+        return res;
     }
 
     fromBnbPoint(p: any): Point {

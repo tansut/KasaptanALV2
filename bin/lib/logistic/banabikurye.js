@@ -64,7 +64,7 @@ class BanabikuryeProvider extends core_1.LogisticProvider {
         });
     }
     toBnbPoint(p) {
-        return {
+        let res = {
             address: p.address,
             contact_person: {
                 name: p.contactName,
@@ -81,6 +81,11 @@ class BanabikuryeProvider extends core_1.LogisticProvider {
             floor_number: p.floor,
             packages: []
         };
+        if (!res.required_start_datetime && res.required_finish_datetime)
+            res.required_start_datetime = new Date(res.required_finish_datetime.getTime() - 5 * 60000);
+        if (!res.required_finish_datetime && res.required_start_datetime)
+            res.required_finish_datetime = new Date(res.required_start_datetime.getTime() + 5 * 60000);
+        return res;
     }
     fromBnbPoint(p) {
         return {
