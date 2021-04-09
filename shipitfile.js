@@ -75,7 +75,6 @@ module.exports = function (shipit) {
         startScript = startScript.replace(/\{env\}/gi, envFile);
 
         await shipit.remote(startScript);
-    });
 
     shipit.on('deployed',  () => {
         shipit.start('install', 'restart', 'aws');
