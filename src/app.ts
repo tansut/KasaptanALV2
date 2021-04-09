@@ -46,16 +46,16 @@ const Sequelize = require('sequelize')
 
 const wkx = require('wkx')
 Sequelize.GEOMETRY.prototype._stringify = function _stringify(value, options) {
-  return `ST_GeomFromText(${options.escape(wkx.Geometry.parseGeoJSON(value).toWkt())})`;
+    return `ST_GeomFromText(${options.escape(wkx.Geometry.parseGeoJSON(value).toWkt())})`;
 }
 Sequelize.GEOMETRY.prototype._bindParam = function _bindParam(value, options) {
-  return `ST_GeomFromText(${options.bindParam(wkx.Geometry.parseGeoJSON(value).toWkt())})`;
+    return `ST_GeomFromText(${options.bindParam(wkx.Geometry.parseGeoJSON(value).toWkt())})`;
 }
 Sequelize.GEOGRAPHY.prototype._stringify = function _stringify(value, options) {
-  return `ST_GeomFromText(${options.escape(wkx.Geometry.parseGeoJSON(value).toWkt())})`;
+    return `ST_GeomFromText(${options.escape(wkx.Geometry.parseGeoJSON(value).toWkt())})`;
 }
 Sequelize.GEOGRAPHY.prototype._bindParam = function _bindParam(value, options) {
-  return `ST_GeomFromText(${options.bindParam(wkx.Geometry.parseGeoJSON(value).toWkt())})`;
+    return `ST_GeomFromText(${options.bindParam(wkx.Geometry.parseGeoJSON(value).toWkt())})`;
 }
 
 
@@ -80,21 +80,26 @@ class KasaptanAlApp {
     connections = [];
 
     async shutDown() {
-        //console.log('Received kill signal, shutting down gracefully');
+        console.log('App: received kill signal');
+
+        Tasks.stop().finally(() => {
+            db.getContext().close().finally(() => {
+                process.exit(0);
+            })
+        });
+
+        setTimeout(() => {
+            console.error('Could not close connections in time, forcefully shutting down');
+            process.exit(1);
+        }, 10000);
+
 
         // this.server.close(function(err) {
-        //       Tasks.stop().finally(() => {
-        //         db.getContext().close().finally(()=> {
-        //             process.exit(err ? 1 : 0);
-        //           })
-        //       })
+
         //     });
-    
-        // setTimeout(() => {
-        //     console.error('Could not close connections in time, forcefully shutting down');
-        //     process.exit(1);
-        // }, 10000);
-    
+
+
+
         // this.connections.forEach(curr => curr.end());
         // setTimeout(() => this.connections.forEach(curr => curr.destroy()), 5000);
     }
@@ -125,7 +130,7 @@ class KasaptanAlApp {
 
     async bootstrap() {
 
-        let dbinstance = await db.init(false);        
+        let dbinstance = await db.init(false);
         this.app = express();
         this.app.use(compression())
         this.app.use(fileUpload())
@@ -179,7 +184,7 @@ class KasaptanAlApp {
         this.adminPagesRouter = express.Router();
         this.butcherApiRouter = express.Router();
         this.userApiRouter = express.Router();
-        
+
         this.userRouter = express.Router();
         this.viewsRouter = express.Router();
         this.butcherPagesRouter = express.Router();
@@ -204,17 +209,17 @@ class KasaptanAlApp {
             res.sendFile(path.join(__dirname, '../apple-app-site-association.json'));
         });
 
-        
+
 
         if (config.nodeenv == 'development') {
-            this.app.use('/static/resource', express.static(path.join(__dirname, '../public')));            
-            this.app.use('/static', express.static(path.join(__dirname, '../public')));            
+            this.app.use('/static/resource', express.static(path.join(__dirname, '../public')));
+            this.app.use('/static', express.static(path.join(__dirname, '../public')));
         } else {
 
         }
         this.app.set('view engine', 'ejs');
         this.app.set('views', path.join(__dirname, '../src/views'));
- 
+
 
 
 
@@ -242,13 +247,13 @@ class KasaptanAlApp {
             if (req.user && (req.user.hasRole('butcher') || req.user.hasRole('admin')))
                 next();
             else res.redirect('/login?r=' + req.originalUrl)
-        }, this.butcherPagesRouter); 
+        }, this.butcherPagesRouter);
 
         this.app.use('/pages/operator', (req: AppRequest, res, next) => {
             if (req.user && (req.user.hasRole('admin') || req.user.hasRole('operator')))
                 next();
             else res.redirect('/login?r=' + req.originalUrl)
-        }, this.operatorPagesRouter);                     
+        }, this.operatorPagesRouter);
 
         this.app.use('/user', (req: AppRequest, res, next) => {
             if (!req.user) res.redirect('/login')
@@ -276,9 +281,9 @@ class KasaptanAlApp {
             }
         });
 
-  
-        // process.on('SIGTERM', this.shutDown.bind(this));
-        // process.on('SIGINT', this.shutDown.bind(this));
+
+        process.on('SIGTERM', this.shutDown.bind(this));
+        process.on('SIGINT', this.shutDown.bind(this));
 
 
         // server.on('connection', connection => {
@@ -294,7 +299,7 @@ class KasaptanAlApp {
             });
         });
 
-        
+
 
     }
 }
