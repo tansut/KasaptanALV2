@@ -121,7 +121,7 @@ export default class BaseRouter {
         var anonymous = Auth.GetAnonymous(handler);
 
         if (!anonymous && !req.user)
-            return next(new http.PermissionError());
+            return next(new http.PermissionError(req.originalUrl));
 
 
         var promise = handler.apply(instance, methodParams);

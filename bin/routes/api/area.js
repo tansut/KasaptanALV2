@@ -25,7 +25,6 @@ const area_1 = require("../../db/models/area");
 const Jimp = require('jimp');
 const butcherarea_1 = require("../../db/models/butcherarea");
 const google_1 = require("../../lib/google");
-const email_1 = require("../../lib/email");
 class Route extends router_1.ApiRouter {
     ensureDistances(butchers, based) {
         return __awaiter(this, void 0, void 0, function* () {
@@ -99,9 +98,10 @@ class Route extends router_1.ApiRouter {
                         });
                     }
                     else {
-                        email_1.default.send('tansut@gmail.com', 'hata/ensureDistance', "error.ejs", {
-                            text: err.message,
-                            stack: err.stack
+                        helper_1.default.logError(err, {
+                            method: "ensureDistance",
+                            butcher: butcher.slug,
+                            area: area.slug
                         });
                         return null;
                     }

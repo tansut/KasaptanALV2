@@ -3,12 +3,11 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const http_1 = require("../lib/http");
 const error_1 = require("../routes/error");
 const base_1 = require("./base");
-const email_1 = require("../lib/email");
-const config_1 = require("../config");
+const helper_1 = require("../lib/helper");
 var errormw;
 class ErrorMiddleware extends base_1.default {
     logErrors(err, req, res, next) {
-        console.error(err.stack);
+        helper_1.default.logError(err, null, req);
         next(err);
     }
     clientErrorHandler(err, req, res, next) {
@@ -16,12 +15,12 @@ class ErrorMiddleware extends base_1.default {
             let isHttpErr = err instanceof http_1.HttpError;
             let httpErr = isHttpErr ? err : null;
             let msg = httpErr ? httpErr.message : (err.message || err.name);
-            if (config_1.default.nodeenv == 'production') {
-                email_1.default.send('tansut@gmail.com', 'hata/XHR: kasaptanAl.com', "error.ejs", {
-                    text: err + '/' + err.sql,
-                    stack: err.stack
-                });
-            }
+            // if (config.nodeenv == 'production') {
+            //     email.send('tansut@gmail.com', 'hata/XHR: kasaptanAl.com', "error.ejs", {
+            //         text: Helper.getErrorLog(err, req),
+            //         stack: err.stack
+            //     })
+            // }
             res.status((httpErr && httpErr.statusCode) ? httpErr.statusCode : 500).send({ msg: msg });
         }
         else {
@@ -31,12 +30,12 @@ class ErrorMiddleware extends base_1.default {
     errorHandler(err, req, res, next) {
         let httpErr = err instanceof http_1.HttpError ? null : err;
         res.status((httpErr && httpErr.statusCode) ? httpErr.statusCode : 500);
-        if (config_1.default.nodeenv == 'production') {
-            email_1.default.send('tansut@gmail.com', 'hata: kasaptanAl.com', "error.ejs", {
-                text: err + '/' + err.sql,
-                stack: err.stack
-            });
-        }
+        // if (config.nodeenv == 'production') {
+        //     email.send('tansut@gmail.com', 'hata: kasaptanAl.com', "error.ejs", {
+        //         text: Helper.getErrorLog(err, req),
+        //         stack: err.stack
+        //     })
+        // }
         new error_1.default({
             req: req, res: res, next: next
         }).renderPage(err, `pages/error.ejs`);

@@ -20,12 +20,13 @@ export default class ButcherStats extends BaseTask {
             where: {
                 id: butcherid
             }
-        })
+        });
+        console.log('updated', butcherid, fail + success)
     }
 
     async run() {
         console.log('running butchers job', Date.now())
-        let prods = await Order.sequelize.query<any>("SELECT butcherid, status, count(*) as total FROM Orders  group by butcherid, status",
+        let prods = await Order.sequelize.query<any>("SELECT butcherid, status, count(*) as total FROM Orders  group by butcherid, status order by butcherid",
         {            
             type: sq.QueryTypes.SELECT,
             mapToModel: false,
@@ -38,8 +39,9 @@ export default class ButcherStats extends BaseTask {
             mapToModel: false,
             raw: true
         })
-        
-        rates.forEach(async r => {
+
+        for(let i=0; i < rates.length;i++) {
+            let r = rates[i]; 
             await Butcher.update({
                 userRating: r.avg,
                 userRatingCount: r.total
@@ -48,7 +50,8 @@ export default class ButcherStats extends BaseTask {
                     id: r.ref2
                 }
             })
-        })
+        }
+        
 
         let lastButcher = null, lastSuccess = 0, lastFail = 0;
 

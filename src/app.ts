@@ -42,6 +42,9 @@ import { ButcherManualLogistics, ButcherAutoLogistics } from './lib/logistic/but
 import BanabikuryeCarProvider from './lib/logistic/banabikuryeprovidercar';
 import ToBanabikuryeProvider from './lib/logistic/tobanabikurye';
 
+const winston = require('winston');
+const expressWinston = require('express-winston');
+
 const Sequelize = require('sequelize')
 
 const wkx = require('wkx')
@@ -89,9 +92,9 @@ class KasaptanAlApp {
         });
 
         setTimeout(() => {
-            console.error('Could not close connections in time, forcefully shutting down');
+            console.error('App: forcefully shutting down');
             process.exit(1);
-        }, 10000);
+        }, 15000);
 
 
         // this.server.close(function(err) {
@@ -195,6 +198,21 @@ class KasaptanAlApp {
         this.app.use(bp.text());
         this.app.use(bp.raw());
         this.app.use(flash());
+
+        // this.app.use(expressWinston.logger({
+        //     transports: [
+        //       new winston.transports.Console()
+        //     ],
+        //     format: winston.format.combine(
+        //       winston.format.colorize(),
+        //       winston.format.json()
+        //     ),
+        //     meta: true,
+        //     msg: "HTTP {{req.method}} {{req.url}}",
+        //     expressFormat: true,
+        //     colorize: false,
+        //     ignoreRoute: function (req, res) { return false; }
+        //   }));
 
         middlewares.use(this.app);
         CacheManager.use(this.app);

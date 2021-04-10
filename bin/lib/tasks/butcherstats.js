@@ -28,12 +28,13 @@ class ButcherStats extends basetask_1.BaseTask {
                     id: butcherid
                 }
             });
+            console.log('updated', butcherid, fail + success);
         });
     }
     run() {
         return __awaiter(this, void 0, void 0, function* () {
             console.log('running butchers job', Date.now());
-            let prods = yield order_1.Order.sequelize.query("SELECT butcherid, status, count(*) as total FROM Orders  group by butcherid, status", {
+            let prods = yield order_1.Order.sequelize.query("SELECT butcherid, status, count(*) as total FROM Orders  group by butcherid, status order by butcherid", {
                 type: sq.QueryTypes.SELECT,
                 mapToModel: false,
                 raw: true
@@ -43,7 +44,8 @@ class ButcherStats extends basetask_1.BaseTask {
                 mapToModel: false,
                 raw: true
             });
-            rates.forEach((r) => __awaiter(this, void 0, void 0, function* () {
+            for (let i = 0; i < rates.length; i++) {
+                let r = rates[i];
                 yield butcher_1.default.update({
                     userRating: r.avg,
                     userRatingCount: r.total
@@ -52,7 +54,7 @@ class ButcherStats extends basetask_1.BaseTask {
                         id: r.ref2
                     }
                 });
-            }));
+            }
             let lastButcher = null, lastSuccess = 0, lastFail = 0;
             for (var i = 0; i < prods.length; i++) {
                 let b = prods[i];

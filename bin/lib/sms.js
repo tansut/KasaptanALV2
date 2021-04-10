@@ -13,8 +13,8 @@ exports.Sms = void 0;
 const Nexmo = require("nexmo");
 const config_1 = require("../config");
 const axios_1 = require("axios");
-const email_1 = require("./email");
 const libphonenumber_js_1 = require("libphonenumber-js");
+const helper_1 = require("./helper");
 class Sms {
     static sendMultiple(to, text, throwexc = true, logger) {
         return __awaiter(this, void 0, void 0, function* () {
@@ -49,9 +49,10 @@ class Sms {
                     }
                 }
                 catch (err) {
-                    email_1.default.send('tansut@gmail.com', 'hata/SMS: kasaptanAl.com', "error.ejs", {
-                        text: err + "/" + to + "/" + text + "/" + err.message,
-                        stack: err.stack
+                    helper_1.default.logError(err, {
+                        method: 'Sms.send',
+                        to: to,
+                        text: text
                     });
                     if (throwexc)
                         throw err;

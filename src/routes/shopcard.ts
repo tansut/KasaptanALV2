@@ -491,10 +491,7 @@ export default class Route extends ViewRouter {
             
 
         } catch (err) {
-            email.send('tansut@gmail.com', 'hata/CreateOrder: kasaptanAl.com', "error.ejs", {
-                text: err + '/' + err.message,
-                stack: err.stack
-            })
+            Helper.logError(err, this.req);
             await this.reviewViewRoute({ _usrmsg: { text: err.message || err.errorMessage } })
         }
     }

@@ -5,7 +5,6 @@ import { Order } from '../../db/models/order';
 import Helper from '../helper';
 import Butcher from '../../db/models/butcher';
 import SiteLogRoute from '../../routes/api/sitelog';
-import { Transaction, or } from "sequelize";
 import Payment from '../../db/models/payment';
 import { ComissionHelper } from '../commissionHelper';
 import AccountModel from '../../db/models/accountmodel';

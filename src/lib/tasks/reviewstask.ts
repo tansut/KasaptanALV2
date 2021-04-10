@@ -26,10 +26,10 @@ export default class ButcherStats extends BaseTask {
                 },
                 type: 'order'
             }
-        })
+        });
 
-
-        reviews.forEach(async r => {
+        for (let i = 0; i < reviews.length; i++) {
+            let r = reviews[i];
             let products = await OrderItem.findAll(
                 {
                     where: {
@@ -53,7 +53,8 @@ export default class ButcherStats extends BaseTask {
                 }
                 await r.save();
             }
-        })
+        }
+
 
         console.log('done reviews job', Date.now())
 

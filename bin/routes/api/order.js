@@ -240,6 +240,8 @@ class Route extends router_1.ApiRouter {
                         all: true
                     }]
             });
+            if (!order)
+                return null;
             order.workedAccounts = yield this.getWorkingAccounts(order);
             order.butcherPuanAccounts = yield this.getButcherPuanAccounts(order);
             order.kalittePuanAccounts = yield this.getKalittePuanAccounts(order);
@@ -1071,7 +1073,7 @@ class Route extends router_1.ApiRouter {
             let ordernum = this.req.params.ordernum;
             let order = yield this.getOrder(ordernum, true);
             if (!order)
-                return this.res.send(404);
+                return this.res.sendStatus(404);
             let newStatus = order_3.OrderItemStatus.shipping;
             order.status = order_3.OrderItemStatus.shipping;
             order.statusDesc ? null : (order.statusDesc = '');

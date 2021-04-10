@@ -5,13 +5,16 @@ import * as moment from 'moment';
 import Middleware from "./base";
 import email from "../lib/email";
 import config from "../config";
+import Helper from "../lib/helper";
 
 var errormw: ErrorMiddleware;
 
 class ErrorMiddleware extends Middleware {
 
+    
+
     logErrors(err, req, res, next) {
-        console.error(err.stack)
+        Helper.logError(err, null, req);
         next(err)
     }
 
@@ -20,12 +23,12 @@ class ErrorMiddleware extends Middleware {
             let isHttpErr = err instanceof HttpError
             let httpErr = isHttpErr ? <HttpError>err : null;
             let msg = httpErr ? httpErr.message : (err.message || err.name) ;
-            if (config.nodeenv == 'production') {
-                email.send('tansut@gmail.com', 'hata/XHR: kasaptanAl.com', "error.ejs", {
-                    text: err + '/' + err.sql,
-                    stack: err.stack
-                })
-            }
+            // if (config.nodeenv == 'production') {
+            //     email.send('tansut@gmail.com', 'hata/XHR: kasaptanAl.com', "error.ejs", {
+            //         text: Helper.getErrorLog(err, req),
+            //         stack: err.stack
+            //     })
+            // }
 
             res.status((httpErr && httpErr.statusCode) ? httpErr.statusCode : 500).send({ msg: msg })
         } else {
@@ -36,12 +39,12 @@ class ErrorMiddleware extends Middleware {
     errorHandler(err, req, res, next) {
         let httpErr = err instanceof HttpError ? null : <HttpError>err;
         res.status((httpErr && httpErr.statusCode) ? httpErr.statusCode : 500);
-        if (config.nodeenv == 'production') {
-            email.send('tansut@gmail.com', 'hata: kasaptanAl.com', "error.ejs", {
-                text: err + '/' + err.sql,
-                stack: err.stack
-            })
-        }
+        // if (config.nodeenv == 'production') {
+        //     email.send('tansut@gmail.com', 'hata: kasaptanAl.com', "error.ejs", {
+        //         text: Helper.getErrorLog(err, req),
+        //         stack: err.stack
+        //     })
+        // }
 
         new ErrorRoute({
             req: req, res: res, next: next

@@ -73,7 +73,7 @@ class Test extends basetask_1.BaseTask {
 function init() {
     return __awaiter(this, void 0, void 0, function* () {
         yield context_1.default.init();
-        let o = new Test();
+        let o = new Test('');
         yield o.run();
     });
 }

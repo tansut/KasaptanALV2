@@ -202,10 +202,10 @@ export default class Route extends PaymentRouter {
             userMessage = err.message || err.errorMessage;
             //this.paySession = await this.paymentProvider.paySession(req);
             gotError = true;
-            email.send('tansut@gmail.com', 'hata/payment: kasaptanAl.com', "error.ejs", {
-                text: JSON.stringify(err || {}) + '/' + userMessage + ' ' + this.order.ordernum,
-                stack: err.stack
-            })            
+            Helper.logError(err, {
+                method: 'PayOrder',
+                order: this.order.ordernum
+            }, this.req)         
         }
 
         this.renderPage(userMessage, "pages/payorder.ejs", gotError ? 'danger': 'success');

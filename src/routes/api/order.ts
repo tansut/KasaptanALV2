@@ -231,6 +231,7 @@ export default class Route extends ApiRouter {
                 all: true
             }]
         })
+        if (!order) return null;
         order.workedAccounts = await this.getWorkingAccounts(order);
         order.butcherPuanAccounts = await this.getButcherPuanAccounts(order);
         order.kalittePuanAccounts = await this.getKalittePuanAccounts(order);
@@ -1190,7 +1191,7 @@ export default class Route extends ApiRouter {
         let ordernum = this.req.params.ordernum;
         let order = await this.getOrder(ordernum, true);
         if (!order)
-            return this.res.send(404);
+            return this.res.sendStatus(404);
 
         let newStatus = OrderItemStatus.shipping;
         order.status = OrderItemStatus.shipping;

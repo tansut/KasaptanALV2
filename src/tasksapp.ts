@@ -58,6 +58,10 @@ class KasaptanAlTasksApp {
               })
           })
     
+          setTimeout(() => {
+            console.error('Tasks: forcefully shutting down');
+            process.exit(1);
+        }, 15000);
 
     }
 

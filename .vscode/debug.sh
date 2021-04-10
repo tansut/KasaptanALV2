@@ -8,7 +8,7 @@ export DBPWD=cGgyMDE4Li4=
 export DBPORT=3306
 export EMAILHOST=mail.kasaptanal.com
 export EMAILPORT=8889
-export EMAILUSERNAME=noreply@kasaptanal.com
+export EMAILUSERNAME=noreply2@kasaptanal.com
 export EMAILPASS=Deneme987@.
 export BLUEBIRD_W_FORGOTTEN_RETURN=0
 #export STATICDOMAIN=https://s3-us-west-2.amazonaws.com/static.kasaptanal.com

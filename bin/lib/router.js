@@ -107,7 +107,7 @@ class BaseRouter {
         let handler = typeof (method) == "string" ? instance[method] : instance[method.name];
         var anonymous = common_1.Auth.GetAnonymous(handler);
         if (!anonymous && !req.user)
-            return next(new http.PermissionError());
+            return next(new http.PermissionError(req.originalUrl));
         var promise = handler.apply(instance, methodParams);
         if (promise && (typeof promise['catch'] == 'function')) {
             promise.catch((err) => {

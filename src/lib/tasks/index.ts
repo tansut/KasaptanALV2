@@ -1,4 +1,5 @@
 import * as express from "express";
+import Helper from "../helper";
 import { BaseTask } from "./basetask";
 
 let appRoutes = [
@@ -16,9 +17,21 @@ export default class TaskLoader {
     static tasks: BaseTask[] = []
 
     static async stop() {
-        TaskLoader.tasks.forEach(t => {
-            t.stop();
-        })
+        console.log("Stopping tasks ...");
+        for(let i = 0; i < TaskLoader.tasks.length;i++) {
+            try {
+                console.log(`waiting for task to stop: ${i}`);
+                await TaskLoader.tasks[i].stop();
+                console.log(`task stopped: ${TaskLoader.tasks[i].name}`);
+            } catch(err) {
+                Helper.logError(err, {
+                    method: 'TaskLoader.stop',
+                    task: TaskLoader.tasks[i].name
+                })
+            }
+            
+        }
+        console.log("Stoppoed all tasks ...");
     }
 
     static async start() {
@@ -32,11 +45,11 @@ export default class TaskLoader {
         var routings = [];
         appRoutes.forEach((file) => {
             var type = require(file).default;
-            let instance: BaseTask = new type();
+            let instance: BaseTask = new type(file);
             TaskLoader.tasks.push(instance);
         });
-        await TaskLoader.tasks.forEach(async t => {
-            t.init();
+        TaskLoader.tasks.forEach(t => {
+             t.init();
         })
         return routings;
     }

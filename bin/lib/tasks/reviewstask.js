@@ -30,7 +30,8 @@ class ButcherStats extends basetask_1.BaseTask {
                     type: 'order'
                 }
             });
-            reviews.forEach((r) => __awaiter(this, void 0, void 0, function* () {
+            for (let i = 0; i < reviews.length; i++) {
+                let r = reviews[i];
                 let products = yield order_1.OrderItem.findAll({
                     where: {
                         orderid: r.ref1,
@@ -52,7 +53,7 @@ class ButcherStats extends basetask_1.BaseTask {
                     };
                     yield r.save();
                 }
-            }));
+            }
             console.log('done reviews job', Date.now());
         });
     }

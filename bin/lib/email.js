@@ -5,6 +5,7 @@ const nodemailer = require("nodemailer");
 const smtpTransport = require("nodemailer-smtp-transport");
 const ejs = require("ejs");
 const path = require("path");
+const helper_1 = require("./helper");
 class EmailManager {
     static initTransport() {
         this.transporter = nodemailer.createTransport(smtpTransport({
@@ -23,14 +24,13 @@ class EmailManager {
                 if (err)
                     return reject(err);
                 var mailOptions = {
-                    to: (config_1.default.nodeenv == 'production' ? to : "tansut@gmail.com"),
-                    cc: 'archive@kasaptanal.com',
-                    from: 'KasaptanAl.com <noreply@kasaptanal.com>',
+                    to: (config_1.default.nodeenv == 'production' ? to : "tansuturkoglu@gmail.com"),
+                    from: 'KasaptanAl.com <noreply2@kasaptanal.com>',
                     subject: subject,
                     html: res
                 };
                 EmailManager.transporter.sendMail(mailOptions, (error, info) => {
-                    // error ? reject(error) : resolve(info.response)
+                    error && helper_1.default.logError(error, null, null, false);
                 });
                 resolve();
             });

@@ -38,6 +38,7 @@ let dbInstance: Sequelize;
 let init = (alter: boolean = true) => {
     dbInstance = new Sequelize({
         database: config.dbname,
+    
         dialect: 'mysql',
         username: config.dbuser,
         password: config.dbpwd,

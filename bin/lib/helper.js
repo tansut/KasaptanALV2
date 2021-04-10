@@ -9,6 +9,7 @@ const product_1 = require("../db/models/product");
 const libphonenumber_js_1 = require("libphonenumber-js");
 const shipment_1 = require("../models/shipment");
 const crypto = require("crypto");
+const email_1 = require("./email");
 class Helper {
     static serializePrefAddr(adr) {
         return {
@@ -46,6 +47,25 @@ class Helper {
             return `${n}+`;
         else
             return '';
+    }
+    static getErrorLog(err, additionalData, req) {
+        return `
+            ********* ${Helper.Now().toString()} ********
+            Error: ${err ? JSON.stringify(err) : 'none'}
+            Additional: ${additionalData ? JSON.stringify(additionalData) : 'none'}
+            Url: ${req ? req.url : ''}
+            Method: ${req ? req.method : ''}
+            Agent: ${req ? req.headers["user-agent"] : ''}
+            ******************π***************************
+        `;
+    }
+    static logError(err, additionalData, req, sendEmail = true) {
+        let text = Helper.getErrorLog(err, additionalData, req);
+        console.log(text);
+        sendEmail && email_1.default.send('tansuturkoglu@gmail.com', 'kasaptanAl:hata', "error.ejs", {
+            text: text,
+            stack: err.stack
+        });
     }
     static isSingleShopcardProduct(type) {
         return (type == product_1.ProductType.adak) ||

@@ -11,6 +11,7 @@ import parsePhoneNumber from 'libphonenumber-js';
 import { Shipment, ShipmentDays } from '../models/shipment';
 import * as crypto from 'crypto';
 import { PreferredAddress } from '../db/models/user';
+import email from './email';
 
 export default class Helper {
 
@@ -64,6 +65,31 @@ export default class Helper {
         } else if (n>0)
             return `${n}+`
         else return '';
+    }
+
+    static getErrorLog(err: Error,  additionalData?: Object, req?: AppRequest) {
+
+        
+        return `
+            ********* ${Helper.Now().toString()} ********
+            Error: ${err ? JSON.stringify(err): 'none'}
+            Additional: ${additionalData ? JSON.stringify(additionalData): 'none'}
+            Url: ${req ? req.url: ''}
+            Method: ${req ? req.method: ''}
+            Agent: ${req ? req.headers["user-agent"]: ''}
+            ******************π***************************
+        `
+        
+
+    }
+
+    static logError(err: Error, additionalData?: Object, req?: AppRequest, sendEmail: boolean = true) {
+        let text = Helper.getErrorLog(err, additionalData, req)
+        console.log(text);
+        sendEmail && email.send('tansuturkoglu@gmail.com', 'kasaptanAl:hata', "error.ejs", {
+            text: text,
+            stack: err.stack
+        })
     }
 
 

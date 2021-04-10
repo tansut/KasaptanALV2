@@ -26,7 +26,6 @@ const order_1 = require("./api/order");
 const accountmodel_1 = require("../db/models/accountmodel");
 const account_1 = require("../models/account");
 const paymentrouter_1 = require("../lib/paymentrouter");
-const email_1 = require("../lib/email");
 const order_2 = require("../models/order");
 const order_3 = require("../models/order");
 class Route extends paymentrouter_1.PaymentRouter {
@@ -187,10 +186,10 @@ class Route extends paymentrouter_1.PaymentRouter {
                 userMessage = err.message || err.errorMessage;
                 //this.paySession = await this.paymentProvider.paySession(req);
                 gotError = true;
-                email_1.default.send('tansut@gmail.com', 'hata/payment: kasaptanAl.com', "error.ejs", {
-                    text: JSON.stringify(err || {}) + '/' + userMessage + ' ' + this.order.ordernum,
-                    stack: err.stack
-                });
+                helper_1.default.logError(err, {
+                    method: 'PayOrder',
+                    order: this.order.ordernum
+                }, this.req);
             }
             this.renderPage(userMessage, "pages/payorder.ejs", gotError ? 'danger' : 'success');
         });

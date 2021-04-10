@@ -43,6 +43,8 @@ const banabikurye_1 = require("./lib/logistic/banabikurye");
 const butcher_1 = require("./lib/logistic/butcher");
 const banabikuryeprovidercar_1 = require("./lib/logistic/banabikuryeprovidercar");
 const tobanabikurye_1 = require("./lib/logistic/tobanabikurye");
+const winston = require('winston');
+const expressWinston = require('express-winston');
 const Sequelize = require('sequelize');
 const wkx = require('wkx');
 Sequelize.GEOMETRY.prototype._stringify = function _stringify(value, options) {
@@ -73,9 +75,9 @@ class KasaptanAlApp {
                 });
             });
             setTimeout(() => {
-                console.error('Could not close connections in time, forcefully shutting down');
+                console.error('App: forcefully shutting down');
                 process.exit(1);
-            }, 10000);
+            }, 15000);
             // this.server.close(function(err) {
             //     });
             // this.connections.forEach(curr => curr.end());
@@ -153,6 +155,20 @@ class KasaptanAlApp {
             this.app.use(bp.text());
             this.app.use(bp.raw());
             this.app.use(flash());
+            // this.app.use(expressWinston.logger({
+            //     transports: [
+            //       new winston.transports.Console()
+            //     ],
+            //     format: winston.format.combine(
+            //       winston.format.colorize(),
+            //       winston.format.json()
+            //     ),
+            //     meta: true,
+            //     msg: "HTTP {{req.method}} {{req.url}}",
+            //     expressFormat: true,
+            //     colorize: false,
+            //     ignoreRoute: function (req, res) { return false; }
+            //   }));
             index_4.default.use(this.app);
             cache_1.CacheManager.use(this.app);
             RequestHelper_1.RequestHelper.use(this.app);

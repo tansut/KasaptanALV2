@@ -10,10 +10,12 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.BaseTask = void 0;
+const helper_1 = require("../helper");
 const cron = require("node-cron");
 class BaseTask {
-    constructor(config = {}) {
-        this.config = config;
+    constructor(name) {
+        this.name = name;
+        this._runningJob = null;
         this.url = 'https://www.kasaptanal.com';
     }
     get interval() {
@@ -27,16 +29,25 @@ class BaseTask {
     _internalRun() {
         return __awaiter(this, void 0, void 0, function* () {
             try {
-                yield this.run();
+                console.log(`Running task ${this.name}`);
+                this._runningJob = this.run();
+                yield this._runningJob;
             }
             catch (err) {
-                console.log(err);
+                helper_1.default.logError(err, {
+                    method: `RunJob`,
+                    task: this.name
+                });
+            }
+            finally {
+                this._runningJob = null;
+                console.log(`Completed task ${this.name}`);
             }
         });
     }
     init() {
         return __awaiter(this, void 0, void 0, function* () {
-            console.log('Running@' + this.interval);
+            console.log('Starting@' + this.name + this.interval);
             yield this._internalRun().finally(() => {
                 this._task = cron.schedule(this.interval, () => __awaiter(this, void 0, void 0, function* () {
                     yield this._internalRun();
@@ -46,8 +57,13 @@ class BaseTask {
     }
     stop() {
         return __awaiter(this, void 0, void 0, function* () {
+            if (this._runningJob) {
+                console.log('waiting for task to finish..' + this.name);
+                yield Promise.all([this._runningJob]);
+                console.log('task finished.' + this.name);
+            }
             if (this._task) {
-                console.log('task destroyed');
+                console.log('crontask destroying..' + this.name);
                 this._task.destroy();
             }
         });

@@ -94,10 +94,12 @@ export default class Route extends ApiRouter {
                     })
                 }
                 else {
-                    email.send('tansut@gmail.com', 'hata/ensureDistance', "error.ejs", {
-                        text: err.message,
-                        stack: err.stack
-                    });
+                    Helper.logError(err, {
+                        method: "ensureDistance",
+                        butcher: butcher.slug,
+                        area: area.slug
+
+                    })
                     return null;
                 }
             }

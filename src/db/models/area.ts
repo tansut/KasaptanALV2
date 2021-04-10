@@ -127,9 +127,10 @@ class Area extends BaseModel<Area> {
                 }
 
             } catch (err) {
-                email.send('tansut@gmail.com', 'hata/ensurelocation', "error.ejs", {
-                    text: err.message + ' ' + this.id + ' ' + this.name,
-                    stack: err.stack
+                Helper.logError(err, {
+                    method: 'EnsureLocation Error',
+                    id: this.id,
+                    name: this.name
                 })
             }
 

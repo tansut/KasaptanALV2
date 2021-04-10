@@ -13,7 +13,6 @@ const basetask_1 = require("./basetask");
 const sq = require("sequelize");
 const sequelize_1 = require("sequelize");
 const area_1 = require("../../db/models/area");
-const context_1 = require("../../db/context");
 class AreaTask extends basetask_1.BaseTask {
     get interval() {
         return "0 0 */1 * * *";
@@ -29,53 +28,30 @@ class AreaTask extends basetask_1.BaseTask {
         select id from Areas where level=1 and status='active'
         
 
-            `, 
-            //     union
-            // select id from Areas ap where ap.level=2 and ( ap.id in 
-            // (
-            // SELECT distinct a.parentid FROM  Areas a where 
-            // (a.id in (SELECT distinct d.toareaid FROM Dispatchers d where d.enabled=1 and d.toarealevel=3))
-            // ) or 
-            // (ap.id in (SELECT distinct d.toareaid FROM Dispatchers d where d.enabled=1 and d.toarealevel=2))
-            // )
-            // union SELECT a.id FROM  Areas a where 
-            // (a.id in (SELECT distinct d.toareaid FROM Dispatchers d where d.enabled=1 and d.toarealevel=3))
-            // union select id from Areas ap where ap.level=3 and ( ap.id in 
-            //     (
-            //     SELECT distinct a.id FROM  Areas a where 
-            //     (a.parentid in (SELECT distinct d.toareaid FROM Dispatchers d where d.toarealevel=2))
-            //     )) 
-            {
+            `, {
                 type: sq.QueryTypes.SELECT,
                 mapToModel: false,
                 raw: true
             });
             let arr = items.map(i => i['id']);
-            let res = context_1.default.getContext().transaction((t) => {
-                let result = [];
-                result.push(area_1.default.update({
-                    status: 'generic'
-                }, {
-                    transaction: t,
-                    where: {
-                        level: {
-                            [sequelize_1.Op.notIn]: [1]
-                        }
+            yield area_1.default.update({
+                status: 'generic'
+            }, {
+                where: {
+                    level: {
+                        [sequelize_1.Op.notIn]: [1]
                     }
-                }));
-                result.push(area_1.default.update({
-                    status: 'active'
-                }, {
-                    transaction: t,
-                    where: {
-                        id: {
-                            [sequelize_1.Op.in]: arr
-                        }
-                    }
-                }));
-                return Promise.all(result);
+                }
             });
-            yield res;
+            yield area_1.default.update({
+                status: 'active'
+            }, {
+                where: {
+                    id: {
+                        [sequelize_1.Op.in]: arr
+                    }
+                }
+            });
             let emptyLoc = yield area_1.default.findAll({
                 where: {
                     locationData: {

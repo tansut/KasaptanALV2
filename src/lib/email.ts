@@ -5,6 +5,7 @@ import * as smtpTransport from 'nodemailer-smtp-transport';
 import * as ejs from 'ejs';
 import * as http from './http'
 import * as path from 'path';
+import Helper from './helper';
 
 
 class EmailManager {
@@ -25,22 +26,22 @@ class EmailManager {
 
 
 
-    send(to: string, subject: string, template: string, data?: { [key: string]: any }): Promise<any> {
+    send(to: string, subject: string, template: string, data?: { [key: string]: any }): Promise<void> {
         return new Promise((resolve, reject) => {
             ejs.renderFile(path.join(config.projectDir, 'src/views/email/' + template), data, {
 
             }, (err, res) => {
                 if (err) return reject(err);
                 var mailOptions = {
-                    to: (config.nodeenv == 'production' ? to: "tansut@gmail.com"),
-                    cc: 'archive@kasaptanal.com',
-                    from: 'KasaptanAl.com <noreply@kasaptanal.com>',
+                    to: (config.nodeenv == 'production' ? to: "tansuturkoglu@gmail.com"),
+        
+                    from: 'KasaptanAl.com <noreply2@kasaptanal.com>',
                     subject: subject,
                     html: res
                 }
 
                 EmailManager.transporter.sendMail(mailOptions, (error, info) => {
-                    // error ? reject(error) : resolve(info.response)
+                    error && Helper.logError(error, null, null, false)
                 });
 
                 resolve()

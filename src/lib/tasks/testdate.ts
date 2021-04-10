@@ -83,7 +83,7 @@ import * as moment from 'moment';
 
 async function init() {
     await db.init()
-    let o = new Test();
+    let o = new Test('');
     await o.run();
 }
 

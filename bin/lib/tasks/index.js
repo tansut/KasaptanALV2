@@ -9,6 +9,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
+const helper_1 = require("../helper");
 let appRoutes = [
     './butcherstats',
     './productstats',
@@ -21,9 +22,21 @@ let appRoutes = [
 class TaskLoader {
     static stop() {
         return __awaiter(this, void 0, void 0, function* () {
-            TaskLoader.tasks.forEach(t => {
-                t.stop();
-            });
+            console.log("Stopping tasks ...");
+            for (let i = 0; i < TaskLoader.tasks.length; i++) {
+                try {
+                    console.log(`waiting for task to stop: ${i}`);
+                    yield TaskLoader.tasks[i].stop();
+                    console.log(`task stopped: ${TaskLoader.tasks[i].name}`);
+                }
+                catch (err) {
+                    helper_1.default.logError(err, {
+                        method: 'TaskLoader.stop',
+                        task: TaskLoader.tasks[i].name
+                    });
+                }
+            }
+            console.log("Stoppoed all tasks ...");
         });
     }
     static start() {
@@ -34,12 +47,12 @@ class TaskLoader {
             var routings = [];
             appRoutes.forEach((file) => {
                 var type = require(file).default;
-                let instance = new type();
+                let instance = new type(file);
                 TaskLoader.tasks.push(instance);
             });
-            yield TaskLoader.tasks.forEach((t) => __awaiter(this, void 0, void 0, function* () {
+            TaskLoader.tasks.forEach(t => {
                 t.init();
-            }));
+            });
             return routings;
         });
     }

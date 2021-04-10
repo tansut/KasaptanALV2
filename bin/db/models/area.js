@@ -23,7 +23,6 @@ const sequelize_typescript_1 = require("sequelize-typescript");
 const basemodel_1 = require("./basemodel");
 const helper_1 = require("../../lib/helper");
 const google_1 = require("../../lib/google");
-const email_1 = require("../../lib/email");
 let Area = Area_1 = class Area extends basemodel_1.default {
     static NormalizeNames() {
         return __awaiter(this, void 0, void 0, function* () {
@@ -93,9 +92,10 @@ let Area = Area_1 = class Area extends basemodel_1.default {
                     }
                 }
                 catch (err) {
-                    email_1.default.send('tansut@gmail.com', 'hata/ensurelocation', "error.ejs", {
-                        text: err.message + ' ' + this.id + ' ' + this.name,
-                        stack: err.stack
+                    helper_1.default.logError(err, {
+                        method: 'EnsureLocation Error',
+                        id: this.id,
+                        name: this.name
                     });
                 }
             }
