@@ -13,8 +13,10 @@ module.exports = function (shipit) {
             keepReleases: 3
         },
         production: {
-            //db: 'ec2-user@ec2-52-10-68-146.us-west-2.compute.amazonaws.com'
+            //db: 'ec2-user@ec2-52-42-18-118.us-west-2.compute.amazonaws.com'
             servers: ['ec2-user@ec2-54-187-204-66.us-west-2.compute.amazonaws.com', 'ec2-user@ec2-52-10-68-146.us-west-2.compute.amazonaws.com'],
+            //servers: ['ec2-user@ec2-54-187-204-66.us-west-2.compute.amazonaws.com', 'ec2-user@ec2-52-10-68-146.us-west-2.compute.amazonaws.com'],
+
             branch: 'master'
         },
         staging: {
