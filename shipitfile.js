@@ -10,7 +10,7 @@ module.exports = function (shipit) {
             deployTo: '/home/ec2-user/apps/' + pkg.name,
             repositoryUrl: pkg.repository.url,
             ignores: ['.git', 'node_modules'],
-            keepReleases: 3
+            keepReleases: 1
         },
         production: {
             //db: 'ec2-user@ec2-52-42-18-118.us-west-2.compute.amazonaws.com'

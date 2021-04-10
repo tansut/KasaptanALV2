@@ -25,7 +25,7 @@ class EmailManager {
                     return reject(err);
                 var mailOptions = {
                     to: (config_1.default.nodeenv == 'production' ? to : "tansuturkoglu@gmail.com"),
-                    from: 'KasaptanAl.com <noreply2@kasaptanal.com>',
+                    from: `KasaptanAl.com <${config_1.default.emailUsername}>`,
                     subject: subject,
                     html: res
                 };
