@@ -51,7 +51,9 @@ class Helper {
     static getErrorLog(err, additionalData, req) {
         return `
             ********* ${Helper.Now().toString()} ********
-            Error: ${err ? JSON.stringify(err) : 'none'}
+            Error: ${err ? JSON.stringify(err) : 'none'},
+            Message: ${err ? err.message : 'none'},
+            Stack: ${err ? err.stack : 'none'},
             Additional: ${additionalData ? JSON.stringify(additionalData) : 'none'}
             Url: ${req ? req.url : ''}
             Method: ${req ? req.method : ''}

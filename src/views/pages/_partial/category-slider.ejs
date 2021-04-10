@@ -22,7 +22,19 @@
 
   if (selected && visibleCategories.filter(p=>p.slug == selected).length == 0) {
       var sel = categories.find(p=>p.slug == selected);
-      sel && (visibleCategories = [sel].concat(visibleCategories))
+      sel && (visibleCategories = [sel].concat(visibleCategories));
+      __req.session._tempCat = __req.session._tempCat || [];
+      if (__req.session._tempCat.indexOf(selected) < 0) {
+        __req.session._tempCat.push(selected)
+      }
+  } else if (__req.session._tempCat) {
+    __req.session._tempCat.forEach(p=> {
+        var sel = categories.find(m=>m.slug == p);
+        var found = visibleCategories.find(m=>m.slug == p);
+        if (!found) {
+            visibleCategories = [sel].concat(visibleCategories)
+        }
+    })
   }
     
 

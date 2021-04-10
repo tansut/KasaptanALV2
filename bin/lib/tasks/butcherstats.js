@@ -28,7 +28,6 @@ class ButcherStats extends basetask_1.BaseTask {
                     id: butcherid
                 }
             });
-            console.log('updated', butcherid, fail + success);
         });
     }
     run() {

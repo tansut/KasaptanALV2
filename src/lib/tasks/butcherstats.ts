@@ -21,7 +21,6 @@ export default class ButcherStats extends BaseTask {
                 id: butcherid
             }
         });
-        console.log('updated', butcherid, fail + success)
     }
 
     async run() {

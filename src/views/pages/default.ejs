@@ -116,15 +116,6 @@
           </div>
 
           <div class="container mb-3">
-            <%- include('./_partial/category-products-slider', {category: 'populer-etler' , viewMode: 'tab', limit: 8}); %>
-        </div>
-
-        <div class="container mb-3">
-            <%- include('./_partial/category-slider', { linkCss: 'app_blank', viewCats: ['resource'], title: 'Et Yemekleri', allUrl: '/et-yemekleri' }); %>
-          
-          </div>
-
-        <div class="container mb-3">
             <a class="d-block app_blank" href="/kasaplar">
                 <h3 class="h6 text-uppercase">Kasaplar</h3>
             </a>
@@ -176,6 +167,18 @@
 
 
     </div>
+    
+
+          <div class="container mb-3">
+            <%- include('./_partial/category-products-slider', {category: 'populer-etler' , viewMode: 'tab', limit: 8}); %>
+        </div>
+
+        <div class="container mb-3">
+            <%- include('./_partial/category-slider', { linkCss: 'app_blank', viewCats: ['resource'], title: 'Et Yemekleri', allUrl: '/et-yemekleri' }); %>
+          
+          </div>
+
+
 
  
 
