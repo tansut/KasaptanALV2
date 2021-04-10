@@ -29,7 +29,7 @@
       }
   } else if (__req.session._tempCat) {
     __req.session._tempCat.forEach(p=> {
-        var sel = categories.find(m1=>m.slug == p);
+        var sel = categories.find(m=>m.slug == p);
         var found = visibleCategories.find(m=>m.slug == p);
         if (!found) {
             visibleCategories = [sel].concat(visibleCategories)
