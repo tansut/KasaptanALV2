@@ -24,7 +24,7 @@
       var sel = categories.find(p=>p.slug == selected);
       sel && (visibleCategories = [sel].concat(visibleCategories));
       __req.session._tempCat = __req.session._tempCat || [];
-      if (__req.session._tempCat.indexOf(selected) < 0) {
+      if (sel && __req.session._tempCat.indexOf(selected) < 0) {
         __req.session._tempCat.push(selected)
       }
   } else if (__req.session._tempCat) {
