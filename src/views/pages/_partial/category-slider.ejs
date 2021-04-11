@@ -31,7 +31,7 @@
     __req.session._tempCat.forEach(p=> {
         var sel = categories.find(m=>m.slug == p);
         var found = visibleCategories.find(m=>m.slug == p);
-        if (!found) {
+        if (!found && sel) {
             visibleCategories = [sel].concat(visibleCategories)
         }
     })
