@@ -226,6 +226,12 @@ __decorate([
 ], Butcher.prototype, "slug", void 0);
 __decorate([
     sequelize_typescript_1.Column({
+        allowNull: true
+    }),
+    __metadata("design:type", Number)
+], Butcher.prototype, "priceBasedButcher", void 0);
+__decorate([
+    sequelize_typescript_1.Column({
         allowNull: false,
         defaultValue: "manual",
     }),

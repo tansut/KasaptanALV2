@@ -74,6 +74,11 @@ class Butcher extends BaseModel<Butcher> {
 
     calculatedRate: number;
 
+    @Column({
+        allowNull: true
+    })
+    priceBasedButcher: number;
+
 
     @Column({
         allowNull: false,

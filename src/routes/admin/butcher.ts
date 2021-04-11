@@ -3,6 +3,7 @@ import * as express from "express";
 import ButcherModel from '../../db/models/butcher';
 import moment = require('moment');
 import { Auth } from '../../lib/common';
+import * as sq from 'sequelize';
 import Area from '../../db/models/area';
 import Resource from '../../db/models/resource';
 import { parse } from 'querystring';
@@ -17,6 +18,7 @@ import IyziPayment from '../../lib/payment/iyzico';
 import { CreditcardPaymentFactory } from '../../lib/payment/creditcard';
 import SiteLogRoute from '../api/sitelog';
 import Butcher from '../../db/models/butcher';
+import { type } from 'node:os';
 
 export default class Route  extends ViewRouter {
 
@@ -310,6 +312,78 @@ export default class Route  extends ViewRouter {
             let subMerchantReq = payment.subMerchantRequestFromButcher(this.butcher);
             let result = await payment.createSubMerchant(subMerchantReq);
             let k = result.subMerchantKey;
+        } else if (this.req.body.updateprices && this.butcher.priceBasedButcher) {
+            await ButcherProduct.destroy({
+                where: {
+                    butcherid: this.butcher.id
+                }
+            })
+            await ButcherProduct.sequelize.query(
+            `INSERT INTO ButcherProducts
+            (
+            enabled,
+            unit1price,
+            unit2price,
+            unit3price,
+            unit4price,
+            unit5price,
+            displayOrder,
+            creationDate,
+            updatedOn,
+            butcherid,
+            productid,
+            vitrin,
+            kgPrice,
+            mddesc,
+            unit1enabled,
+            unit2enabled,
+            unit3enabled,
+            unit4enabled,
+            unit5enabled,
+            unit1kgRatio,
+            unit2kgRatio,
+            unit3kgRatio,
+            unit1weight,
+            unit2weight,
+            unit3weight,
+            longdesc,
+            selection)
+            
+            SELECT 
+                ButcherProducts.enabled,
+                ButcherProducts.unit1price,
+                ButcherProducts.unit2price,
+                ButcherProducts.unit3price,
+                ButcherProducts.unit4price,
+                ButcherProducts.unit5price,
+                ButcherProducts.displayOrder,
+                ButcherProducts.creationDate,
+                ButcherProducts.updatedOn,
+                ${this.butcher.id},
+                ButcherProducts.productid,
+                ButcherProducts.vitrin,
+                ButcherProducts.kgPrice,
+                ButcherProducts.mddesc,
+                ButcherProducts.unit1enabled,
+                ButcherProducts.unit2enabled,
+                ButcherProducts.unit3enabled,
+                ButcherProducts.unit4enabled,
+                ButcherProducts.unit5enabled,
+                ButcherProducts.unit1kgRatio,
+                ButcherProducts.unit2kgRatio,
+                ButcherProducts.unit3kgRatio,
+                ButcherProducts.unit1weight,
+                ButcherProducts.unit2weight,
+                ButcherProducts.unit3weight,
+                ButcherProducts.longdesc,
+                ButcherProducts.selection
+            FROM ButcherProducts where butcherid=${this.butcher.priceBasedButcher} and enabled=true                
+            `,
+            
+            {
+                type: sq.QueryTypes.BULKUPDATE,
+            });
+
         }
         else if (this.req.body.save == "true") {
             this.butcher.slug = this.req.body.butcherslug
