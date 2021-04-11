@@ -3,6 +3,7 @@ var pkg = require('./package.json')
 
 module.exports = function (shipit) {
     require('shipit-deploy')(shipit);
+    
 
     shipit.initConfig({
         default: {
