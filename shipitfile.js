@@ -79,10 +79,6 @@ module.exports = function (shipit) {
         // startScript = startScript.replace(/\{env\}/gi, envFile);
 
         await shipit.remote(`/home/ec2-user/runapp.sh`);
-
-        shipit.on('deployed', () => {
-            shipit.start('install', 'restart', 'aws');
-        });
     });
 
     shipit.on('deployed',  () => {

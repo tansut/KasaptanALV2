@@ -185,7 +185,7 @@ export class ViewRouter extends BaseRouter {
     selectedArea: any;
     categoryData: CategoryMenuData;
     appUI: AppUI;
-    appNavData: AppNavData;
+    //appNavData: AppNavData;
 
 
 
@@ -210,7 +210,7 @@ export class ViewRouter extends BaseRouter {
         this.appUI = {
             title: 'KasaptanAl'
         }
-        this.appNavData = CacheManager.dataCache.get('app-nav-data');
+        //this.appNavData = await CacheManager.dataCache.get('app-nav-data');
     }
 
     async createCategoryMenu() {

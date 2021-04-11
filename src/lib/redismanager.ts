@@ -15,29 +15,39 @@ class RedisManager {
     static client: any;
 
     static initTransport() {
-        // this.client = redis.createClient({
-        //     host: config.redis,
-        //     port: config.redisPort,
-        //     user: config.redisUser,
-        //     password: config.redisPwd
-        // });
+        this.client = redis.createClient({
+            host: config.redis,
+            port: config.redisPort,
+            user: config.redisUser,
+            password: config.redisPwd
+        });
 
-        // this.client.on('error', function (err) {
-        //     Helper.logError(err, {
-        //         method: "Redis"
-        //     })
-        // });
+        this.client.on('error', function (err) {
+            Helper.logError(err, {
+                method: "Redis"
+            })
+        });
     }
 
 
-     async get(key) {
+     async get<T>(key: string): Promise<T | undefined> {
         return new Promise<any>((resolve, reject) => {
             RedisManager.client.get(key, (err, reply) => {
                 if (err) return reject(err);
-                resolve(JSON.parse(reply))
+                resolve(reply ? JSON.parse(reply): undefined)
             })
         })
     }
+
+    async flushAll() {
+        return new Promise<any>((resolve, reject) => {
+            RedisManager.client.flushdb( function (err, succeeded) {
+                resolve(null)
+            });
+        })
+    }
+
+
 
      async del(key) {
         return new Promise<any>((resolve, reject) => {
@@ -48,7 +58,7 @@ class RedisManager {
         })
     }
 
-     async put(key, val, expireSeconds?: number) {
+     async set(key, val, expireSeconds?: number) {
         return new Promise<any>((resolve, reject) => {
             if (expireSeconds) {
                 RedisManager.client.set(key, JSON.stringify(val), 'EX', expireSeconds, (err) => {

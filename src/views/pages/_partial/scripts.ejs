@@ -417,12 +417,18 @@
     var cmd = "gonative://navigationLevels/set?persist=false&data=" + encodeURIComponent(JSON.stringify(appNavData))
     appUrls.push(cmd)
 
-   
+
 
 
   <% } %>
 
   <% if (controller.platform == 'app') { %>
+
+    <% if (__req.session && !__req.session._cacheCleared) { %>
+      appUrls.push('gonative://webview/clearCache');
+      <% __req.session._cacheCleared = true; %>
+    <% } %> 
+
     if (appUrls.length) {
       var json = JSON.stringify({urls: appUrls});
       setTimeout(function () {

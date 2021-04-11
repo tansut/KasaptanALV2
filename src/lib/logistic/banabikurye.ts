@@ -250,10 +250,10 @@ export default class BanabikuryeProvider extends LogisticProvider {
 
 
 
-        let resp: OfferResponse = this.config.cache ? (this.config.cacheType == "redis" ? await redismanager.get(cacheKey): await DBCache.retrieve(cacheKey, 5)): null;
+        let resp: OfferResponse = this.config.cache ? (this.config.cacheType != "db" ? await redismanager.get(cacheKey): await DBCache.retrieve(cacheKey, 5)): null;
         if (!resp) {
             resp = await this.safeResponse<OfferResponse>("calculate-order",request, req.distance, this.fromOfferResponse.bind(this));
-            this.config.cache && (this.config.cacheType == "redis" ? await redismanager.put(cacheKey, resp, 5*60): await DBCache.put(cacheKey, resp))
+            this.config.cache && (this.config.cacheType != "db" ? await redismanager.set(cacheKey, resp, 5*60): await DBCache.put(cacheKey, resp))
         }
         resp.orderTotal = req.orderTotal;
         resp.distance = req.distance;

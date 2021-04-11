@@ -31,7 +31,6 @@ let ellipsis = require('text-ellipsis');
 var MarkdownIt = require('markdown-it');
 const fs = require('fs');
 const common_2 = require("../models/common");
-const cache_1 = require("./cache");
 const helper_1 = require("./helper");
 var ResponseStatus;
 (function (ResponseStatus) {
@@ -143,6 +142,7 @@ class ApiRouter extends BaseRouter {
 }
 exports.ApiRouter = ApiRouter;
 class ViewRouter extends BaseRouter {
+    //appNavData: AppNavData;
     // let recentButchers: ButcherModel[] = CacheManager.dataCache.get("recent-butchers");
     // if (!recentButchers) {
     //     recentButchers = await ButcherModel.findAll({
@@ -162,7 +162,7 @@ class ViewRouter extends BaseRouter {
         this.appUI = {
             title: 'KasaptanAl'
         };
-        this.appNavData = cache_1.CacheManager.dataCache.get('app-nav-data');
+        //this.appNavData = await CacheManager.dataCache.get('app-nav-data');
     }
     createCategoryMenu() {
         return __awaiter(this, void 0, void 0, function* () {

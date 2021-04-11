@@ -61,7 +61,7 @@ export default class Route extends ViewRouter {
 
     @Auth.Anonymous()
     async defaultRoute() {
-        let recentButchers: ButcherModel[] = CacheManager.dataCache.get("recent-butchers");
+        let recentButchers: ButcherModel[] = await CacheManager.dataCache.get("recent-butchers");
         if (!recentButchers) {
             recentButchers = await ButcherModel.findAll({
                 order: [["displayOrder", "DESC"]],

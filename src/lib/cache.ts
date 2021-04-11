@@ -19,6 +19,7 @@ import Redirect from "../db/models/redirect";
 import PriceCategory from "../db/models/pricecategory";
 import SubCategory from "../db/models/subcategory";
 import { AppNavData, AppNavLevel } from "../models/common";
+import redismanager from "./redismanager";
 const fs = require('fs');
 
 let cache: Cache;
@@ -61,10 +62,13 @@ export interface CategoryProductItem {
 
 export class CacheManager {
 
-    static dataCache = new Cache();
+    static dataCache = redismanager;
+
+    static cacheGenerated = false;
 
     static clear() {
         this.dataCache.flushAll();
+        this.cacheGenerated = false;
     }
 
     static use(app: express.Application) {
@@ -93,21 +97,21 @@ export class CacheManager {
     }
 
     static async fillButcherCities(cities) {
-        let result = this.dataCache.get("butcher-cities");
+        let result = await this.dataCache.get("butcher-cities");
         if (!result) {
             let citiesOfButchers: any = await Butcher.aggregate('areaLevel1Id', 'DISTINCT', { plain: false });
             result = []
             for (let i = 0; i < citiesOfButchers.length; i++) {
                 (<any>result).push(cities[citiesOfButchers[i]['DISTINCT']])
             }
-            this.dataCache.set("butcher-cities", result);
+            await this.dataCache.set("butcher-cities", result);
 
         }
         return result;
     }
 
     static async fillRecentBlogs() {
-        let result = this.dataCache.get("recent-blogs");
+        let result = await this.dataCache.get("recent-blogs");
         if (!result) {
             result = await Content.findAll({
                 raw: true,
@@ -115,7 +119,7 @@ export class CacheManager {
                 order: [["DisplayOrder", "DESC"], ["UpdatedOn", "DESC"]],
                 limit: 10
             });
-            this.dataCache.set("recent-blogs", result);
+            await this.dataCache.set("recent-blogs", result);
         }
         return result
     }
@@ -124,14 +128,14 @@ export class CacheManager {
     
     static async fillAppNav(url): Promise<AppNavData> {    
         url = (config.nodeenv == 'production') ? 'https://www.kasaptanal.com': 'http://192.168.2.236:3000'        
-        let data: AppNavData =  this.dataCache.get("app-nav-data");
+        let data: AppNavData =  await this.dataCache.get("app-nav-data");
         if (!data) {
             let rawdata = fs.readFileSync(path.join(config.projectDir, `app-nav-levels.json`));
             let result = <AppNavLevel[]>JSON.parse(rawdata);
             for(var i=0; i < result.length; i++) {
                 result[i].regex = result[i].regex.replace('{root}', url)
             }
-            let categories = <Category[]>this.dataCache.get("categories")
+            let categories = await this.dataCache.get<Category[]>("categories")
             for(var i = 0; i < categories.length;i++) {
                 result.push({
                     regex: `${url}/${categories[i].slug}?`,
@@ -158,14 +162,14 @@ export class CacheManager {
                 active: true,
                 levels: result
             };
-            this.dataCache.set("app-nav-data", data);
+            await this.dataCache.set("app-nav-data", data);
         }
         return data;
     }
     
 
     static async fillRedirects() {        
-        let result:  { [key: string]: RedirectCacheItem }  = this.dataCache.get("redirects");
+        let result:  { [key: string]: RedirectCacheItem }  = await this.dataCache.get("redirects");
         if (!result) {
             result = {}
             let list = await Redirect.findAll({
@@ -180,14 +184,14 @@ export class CacheManager {
                     permanent: item.permanent
                 }
             })
-            this.dataCache.set("redirects", result);
+            await this.dataCache.set("redirects", result);
         }
         return result
     }
 
 
     static async fillWebPages() {        
-        let result:  { [key: string]: WebPageCacheItem }  = this.dataCache.get("web-pages");
+        let result:  { [key: string]: WebPageCacheItem }  = await this.dataCache.get("web-pages");
         if (!result) {
             result = {}
             let list = await WebPage.findAll({
@@ -199,32 +203,31 @@ export class CacheManager {
                     pageDescription: item.pageDescription
                 }
             })
-            this.dataCache.set("web-pages", result);
+            await this.dataCache.set("web-pages", result);
         }
         return result
     }
 
     static async fillCities() {
-        let result = this.dataCache.get("cities");
+        let result = await this.dataCache.get("cities");
         if (!result) {
             result = {};
-            await Area.findAll({
+            let data = await Area.findAll({
                 where: {
                     level: 1
                 },
                 raw: true
-            }).then(data => {
-                for (let i = 0; i < data.length; i++) {
-                    result[data[i].id] = data[i]
-                }
-                this.dataCache.set("cities", result);
             })
+            for (let i = 0; i < data.length; i++) {
+                result[data[i].id] = data[i]
+            }
+            await this.dataCache.set("cities", result);
         }
-        return result
+        return result;
     }
 
     static async fillCategories(): Promise<Category[]> {
-        let categories = <Category[]>this.dataCache.get("categories")
+        let categories = await this.dataCache.get<Category[]>("categories")
         if (!categories) {
             categories = await Category.findAll({
                 raw: false,
@@ -237,13 +240,13 @@ export class CacheManager {
                 order: [["type", 'desc'], ["displayOrder", 'desc']]
             });
             categories = JSON.parse(JSON.stringify(categories))
-            this.dataCache.set("categories", categories);
+            await this.dataCache.set("categories", categories);
         } 
         return categories; 
     }
 
     static async fillPriceCategories(cats: Category[]): Promise<PriceCategory[]> {
-        let categories = <PriceCategory[]>this.dataCache.get("pricecategories")
+        let categories = await this.dataCache.get<PriceCategory[]>("pricecategories")
         if (!categories) {
             categories = await PriceCategory.findAll({
                 raw: true,
@@ -254,13 +257,13 @@ export class CacheManager {
                 m.category = cats.find(c=>c.id == m.categoryid)
             })
 
-            this.dataCache.set("pricecategories", categories);
+            await this.dataCache.set("pricecategories", categories);
         }
         return categories;
     }
 
     static async fillProductsByCategory(categories: Category[]) {
-        let cacheproducts: { [key: string]: CategoryProductItem[] } = this.dataCache.get("category-products")
+        let cacheproducts: { [key: string]: CategoryProductItem[] } = await this.dataCache.get("category-products")
         if (!cacheproducts) {
             cacheproducts = {}
             for (let i = 0; i < categories.length; i++) {
@@ -270,13 +273,13 @@ export class CacheManager {
                 })
             }
 
-            this.dataCache.set("category-products", cacheproducts);
+            await this.dataCache.set("category-products", cacheproducts);
         }
         return cacheproducts;
     }
 
     static async fillResources(): Promise<{ [key: string]: [ResourceCacheItem]; }> {
-        let resources = <any>this.dataCache.get("resources")
+        let resources = await <any>this.dataCache.get("resources")
         if (!resources) {
             let res = await Resource.findAll({
                 raw: true,
@@ -302,13 +305,13 @@ export class CacheManager {
                 result[ri.type + ri.contentUrl].push(obj)
             })
             resources = result;
-            this.dataCache.set("resources", resources);
+            await this.dataCache.set("resources", resources);
         }
         return resources;
     }
 
     static async fillProducts(): Promise<{ [key: string]: [ProductCacheItem]; }> {
-        let products = <any>this.dataCache.get("products")
+        let products = await <any>this.dataCache.get("products")
         if (!products) {
             let res = await Product.findAll({
                 attributes: ['slug', 'id', 'tag2', 'badge', 'name'],
@@ -326,13 +329,13 @@ export class CacheManager {
                 }
             })
             products = result;
-            this.dataCache.set("products", result);
+            await this.dataCache.set("products", result);
         }
         return products;
     }
 
     static async fillButchers(): Promise<{ [key: string]: [ButcherCacheItem]; }> {
-        let butchers = <any>this.dataCache.get("butchers")
+        let butchers = await <any>this.dataCache.get("butchers")
         if (!butchers) {
             let res = await Butcher.findAll({
                 attributes: ['name', 'id', 'slug'],
@@ -347,7 +350,7 @@ export class CacheManager {
                 }
             })
             butchers = result;
-            this.dataCache.set("butchers", result);
+            await this.dataCache.set("butchers", result);
         }
         return butchers;
     }

@@ -62,7 +62,7 @@ class Route extends router_1.ViewRouter {
     }
     defaultRoute() {
         return __awaiter(this, void 0, void 0, function* () {
-            let recentButchers = cache_1.CacheManager.dataCache.get("recent-butchers");
+            let recentButchers = yield cache_1.CacheManager.dataCache.get("recent-butchers");
             if (!recentButchers) {
                 recentButchers = yield butcher_1.default.findAll({
                     order: [["displayOrder", "DESC"]],

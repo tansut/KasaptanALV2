@@ -10,7 +10,6 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.CacheManager = void 0;
-const Cache = require("node-cache");
 const category_1 = require("../db/models/category");
 const product_1 = require("../db/models/product");
 const productManager_1 = require("./productManager");
@@ -26,11 +25,13 @@ const webpage_1 = require("../db/models/webpage");
 const redirect_1 = require("../db/models/redirect");
 const pricecategory_1 = require("../db/models/pricecategory");
 const subcategory_1 = require("../db/models/subcategory");
+const redismanager_1 = require("./redismanager");
 const fs = require('fs');
 let cache;
 class CacheManager {
     static clear() {
         this.dataCache.flushAll();
+        this.cacheGenerated = false;
     }
     static use(app) {
         app.use((req, res, next) => {
@@ -58,21 +59,21 @@ class CacheManager {
     }
     static fillButcherCities(cities) {
         return __awaiter(this, void 0, void 0, function* () {
-            let result = this.dataCache.get("butcher-cities");
+            let result = yield this.dataCache.get("butcher-cities");
             if (!result) {
                 let citiesOfButchers = yield butcher_1.default.aggregate('areaLevel1Id', 'DISTINCT', { plain: false });
                 result = [];
                 for (let i = 0; i < citiesOfButchers.length; i++) {
                     result.push(cities[citiesOfButchers[i]['DISTINCT']]);
                 }
-                this.dataCache.set("butcher-cities", result);
+                yield this.dataCache.set("butcher-cities", result);
             }
             return result;
         });
     }
     static fillRecentBlogs() {
         return __awaiter(this, void 0, void 0, function* () {
-            let result = this.dataCache.get("recent-blogs");
+            let result = yield this.dataCache.get("recent-blogs");
             if (!result) {
                 result = yield content_1.default.findAll({
                     raw: true,
@@ -80,7 +81,7 @@ class CacheManager {
                     order: [["DisplayOrder", "DESC"], ["UpdatedOn", "DESC"]],
                     limit: 10
                 });
-                this.dataCache.set("recent-blogs", result);
+                yield this.dataCache.set("recent-blogs", result);
             }
             return result;
         });
@@ -88,14 +89,14 @@ class CacheManager {
     static fillAppNav(url) {
         return __awaiter(this, void 0, void 0, function* () {
             url = (config_1.default.nodeenv == 'production') ? 'https://www.kasaptanal.com' : 'http://192.168.2.236:3000';
-            let data = this.dataCache.get("app-nav-data");
+            let data = yield this.dataCache.get("app-nav-data");
             if (!data) {
                 let rawdata = fs.readFileSync(path.join(config_1.default.projectDir, `app-nav-levels.json`));
                 let result = JSON.parse(rawdata);
                 for (var i = 0; i < result.length; i++) {
                     result[i].regex = result[i].regex.replace('{root}', url);
                 }
-                let categories = this.dataCache.get("categories");
+                let categories = yield this.dataCache.get("categories");
                 for (var i = 0; i < categories.length; i++) {
                     result.push({
                         regex: `${url}/${categories[i].slug}?`,
@@ -120,14 +121,14 @@ class CacheManager {
                     active: true,
                     levels: result
                 };
-                this.dataCache.set("app-nav-data", data);
+                yield this.dataCache.set("app-nav-data", data);
             }
             return data;
         });
     }
     static fillRedirects() {
         return __awaiter(this, void 0, void 0, function* () {
-            let result = this.dataCache.get("redirects");
+            let result = yield this.dataCache.get("redirects");
             if (!result) {
                 result = {};
                 let list = yield redirect_1.default.findAll({
@@ -142,14 +143,14 @@ class CacheManager {
                         permanent: item.permanent
                     };
                 });
-                this.dataCache.set("redirects", result);
+                yield this.dataCache.set("redirects", result);
             }
             return result;
         });
     }
     static fillWebPages() {
         return __awaiter(this, void 0, void 0, function* () {
-            let result = this.dataCache.get("web-pages");
+            let result = yield this.dataCache.get("web-pages");
             if (!result) {
                 result = {};
                 let list = yield webpage_1.default.findAll({
@@ -161,34 +162,33 @@ class CacheManager {
                         pageDescription: item.pageDescription
                     };
                 });
-                this.dataCache.set("web-pages", result);
+                yield this.dataCache.set("web-pages", result);
             }
             return result;
         });
     }
     static fillCities() {
         return __awaiter(this, void 0, void 0, function* () {
-            let result = this.dataCache.get("cities");
+            let result = yield this.dataCache.get("cities");
             if (!result) {
                 result = {};
-                yield area_1.default.findAll({
+                let data = yield area_1.default.findAll({
                     where: {
                         level: 1
                     },
                     raw: true
-                }).then(data => {
-                    for (let i = 0; i < data.length; i++) {
-                        result[data[i].id] = data[i];
-                    }
-                    this.dataCache.set("cities", result);
                 });
+                for (let i = 0; i < data.length; i++) {
+                    result[data[i].id] = data[i];
+                }
+                yield this.dataCache.set("cities", result);
             }
             return result;
         });
     }
     static fillCategories() {
         return __awaiter(this, void 0, void 0, function* () {
-            let categories = this.dataCache.get("categories");
+            let categories = yield this.dataCache.get("categories");
             if (!categories) {
                 categories = yield category_1.default.findAll({
                     raw: false,
@@ -200,14 +200,14 @@ class CacheManager {
                     order: [["type", 'desc'], ["displayOrder", 'desc']]
                 });
                 categories = JSON.parse(JSON.stringify(categories));
-                this.dataCache.set("categories", categories);
+                yield this.dataCache.set("categories", categories);
             }
             return categories;
         });
     }
     static fillPriceCategories(cats) {
         return __awaiter(this, void 0, void 0, function* () {
-            let categories = this.dataCache.get("pricecategories");
+            let categories = yield this.dataCache.get("pricecategories");
             if (!categories) {
                 categories = yield pricecategory_1.default.findAll({
                     raw: true,
@@ -216,14 +216,14 @@ class CacheManager {
                 categories.forEach(m => {
                     m.category = cats.find(c => c.id == m.categoryid);
                 });
-                this.dataCache.set("pricecategories", categories);
+                yield this.dataCache.set("pricecategories", categories);
             }
             return categories;
         });
     }
     static fillProductsByCategory(categories) {
         return __awaiter(this, void 0, void 0, function* () {
-            let cacheproducts = this.dataCache.get("category-products");
+            let cacheproducts = yield this.dataCache.get("category-products");
             if (!cacheproducts) {
                 cacheproducts = {};
                 for (let i = 0; i < categories.length; i++) {
@@ -232,14 +232,14 @@ class CacheManager {
                         slug: pr.slug
                     }));
                 }
-                this.dataCache.set("category-products", cacheproducts);
+                yield this.dataCache.set("category-products", cacheproducts);
             }
             return cacheproducts;
         });
     }
     static fillResources() {
         return __awaiter(this, void 0, void 0, function* () {
-            let resources = this.dataCache.get("resources");
+            let resources = yield this.dataCache.get("resources");
             if (!resources) {
                 let res = yield resource_1.default.findAll({
                     raw: true,
@@ -265,14 +265,14 @@ class CacheManager {
                     result[ri.type + ri.contentUrl].push(obj);
                 });
                 resources = result;
-                this.dataCache.set("resources", resources);
+                yield this.dataCache.set("resources", resources);
             }
             return resources;
         });
     }
     static fillProducts() {
         return __awaiter(this, void 0, void 0, function* () {
-            let products = this.dataCache.get("products");
+            let products = yield this.dataCache.get("products");
             if (!products) {
                 let res = yield product_1.default.findAll({
                     attributes: ['slug', 'id', 'tag2', 'badge', 'name'],
@@ -290,14 +290,14 @@ class CacheManager {
                     };
                 });
                 products = result;
-                this.dataCache.set("products", result);
+                yield this.dataCache.set("products", result);
             }
             return products;
         });
     }
     static fillButchers() {
         return __awaiter(this, void 0, void 0, function* () {
-            let butchers = this.dataCache.get("butchers");
+            let butchers = yield this.dataCache.get("butchers");
             if (!butchers) {
                 let res = yield butcher_1.default.findAll({
                     attributes: ['name', 'id', 'slug'],
@@ -312,7 +312,7 @@ class CacheManager {
                     };
                 });
                 butchers = result;
-                this.dataCache.set("butchers", result);
+                yield this.dataCache.set("butchers", result);
             }
             return butchers;
         });
@@ -349,6 +349,7 @@ class CacheManager {
     }
 }
 exports.CacheManager = CacheManager;
-CacheManager.dataCache = new Cache();
+CacheManager.dataCache = redismanager_1.default;
+CacheManager.cacheGenerated = false;
 CacheManager.init = () => {
 };
