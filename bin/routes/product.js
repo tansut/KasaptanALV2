@@ -181,7 +181,7 @@ class Route extends router_1.ViewRouter {
                             totalForFree: dispatcher.totalForFree,
                             type: dispatcher.type,
                             distance: dispatcher.butcherArea.bestKm,
-                            priceSlice: yield dispatcher.provider.priceSlice(fromTo),
+                            priceSlice: [],
                             priceInfo: dispatcher.priceInfo,
                             userNote: dispatcher.userNote,
                             takeOnly: dispatcher.takeOnly

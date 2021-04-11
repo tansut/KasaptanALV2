@@ -5,11 +5,13 @@ import { off } from "process";
 import { ComissionHelper } from "../commissionHelper";
 import { DispatcherTypeDesc, DispatcherType } from "../../db/models/dispatcher";
 import DBCache from "../../db/models/dbcache";
+import redismanager from "../redismanager";
 
 export interface BanabikuryeConfig {
     apiKey: string,
     uri: string;
     cache: boolean;
+    cacheType: string;
 }
 
 interface BanabikuryeRequest {
@@ -248,10 +250,10 @@ export default class BanabikuryeProvider extends LogisticProvider {
 
 
 
-        let resp: OfferResponse = this.config.cache ? await DBCache.retrieve(cacheKey, 15): null;
+        let resp: OfferResponse = this.config.cache ? (this.config.cacheType == "redis" ? await redismanager.get(cacheKey): await DBCache.retrieve(cacheKey, 5)): null;
         if (!resp) {
             resp = await this.safeResponse<OfferResponse>("calculate-order",request, req.distance, this.fromOfferResponse.bind(this));
-            this.config.cache && await DBCache.put(cacheKey, resp)
+            this.config.cache && (this.config.cacheType == "redis" ? await redismanager.put(cacheKey, resp, 5*60): await DBCache.put(cacheKey, resp))
         }
         resp.orderTotal = req.orderTotal;
         resp.distance = req.distance;

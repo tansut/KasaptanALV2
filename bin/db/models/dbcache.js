@@ -59,7 +59,11 @@ let DBCache = DBCache_1 = class DBCache extends basemodel_1.default {
                         key: key,
                         data: JSON.stringify(val)
                     });
-                    return item.save();
+                    return new Promise((resolve, reject) => {
+                        item.save().catch(err => {
+                            console.error(`${key} DBCACHE Insert Error`, err.message);
+                        }).finally(() => resolve(item));
+                    });
                 });
             });
         });

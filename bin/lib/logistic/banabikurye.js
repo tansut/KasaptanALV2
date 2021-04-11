@@ -15,6 +15,7 @@ const helper_1 = require("../helper");
 const commissionHelper_1 = require("../commissionHelper");
 const dispatcher_1 = require("../../db/models/dispatcher");
 const dbcache_1 = require("../../db/models/dbcache");
+const redismanager_1 = require("../redismanager");
 class BanabikuryeProvider extends core_1.LogisticProvider {
     constructor(config, options) {
         super(config, options);
@@ -239,10 +240,10 @@ class BanabikuryeProvider extends core_1.LogisticProvider {
                 fId: req.points[1].id,
             });
             let cacheKey = req.points[0].id + '-' + req.points[1].id;
-            let resp = this.config.cache ? yield dbcache_1.default.retrieve(cacheKey, 15) : null;
+            let resp = this.config.cache ? (this.config.cacheType == "redis" ? yield redismanager_1.default.get(cacheKey) : yield dbcache_1.default.retrieve(cacheKey, 5)) : null;
             if (!resp) {
                 resp = yield this.safeResponse("calculate-order", request, req.distance, this.fromOfferResponse.bind(this));
-                this.config.cache && (yield dbcache_1.default.put(cacheKey, resp));
+                this.config.cache && (this.config.cacheType == "redis" ? yield redismanager_1.default.put(cacheKey, resp, 5 * 60) : yield dbcache_1.default.put(cacheKey, resp));
             }
             resp.orderTotal = req.orderTotal;
             resp.distance = req.distance;

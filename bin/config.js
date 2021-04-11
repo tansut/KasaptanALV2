@@ -41,6 +41,10 @@ class Config {
         this.paymentProvider = this.get(Config.PAYMENTPROVIDER) || 'iyzico';
         this.projectDir = path.join(__dirname, "../");
         this.versionKey = new Date(fs.statSync(path.join(this.projectDir, "package.json")).mtime).getTime();
+        this.redis = this.get(Config.REDIS) || 'localhost';
+        this.redisPort = this.get(Config.REDISPORT) || 6379;
+        this.redisUser = this.get(Config.REDISUSER);
+        this.redisPwd = this.get(Config.REDISPWD);
     }
     get(key, cb) {
         return nconf.get(key, cb);
@@ -79,4 +83,8 @@ Config.STATICDOMAIN = "STATICDOMAIN";
 Config.SMSKEY = "SMSKEY";
 Config.SMSSECRET = "SMSSECRET";
 Config.PAYMENTPROVIDER = "PAYMENTPROVIDER";
+Config.REDIS = "REDIS";
+Config.REDISPORT = "REDISPORT";
+Config.REDISUSER = "REDISUSER";
+Config.REDISPWD = "REDISPWD";
 exports.default = new Config();

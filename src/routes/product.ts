@@ -214,7 +214,7 @@ export default class Route extends ViewRouter {
                         totalForFree: dispatcher.totalForFree,
                         type: dispatcher.type,
                         distance: dispatcher.butcherArea.bestKm,
-                        priceSlice: await dispatcher.provider.priceSlice(fromTo),
+                        priceSlice: [], // await dispatcher.provider.priceSlice(fromTo),
                         priceInfo: dispatcher.priceInfo,
                         userNote: dispatcher.userNote,
                         takeOnly: dispatcher.takeOnly

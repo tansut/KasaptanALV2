@@ -145,7 +145,7 @@ class Route extends paymentrouter_1.PaymentRouter {
                         userMessage = "Ödemeniz başarıyla alındı";
                     }
                     else {
-                        throw new Error("Ödemenizi maalesef alamadık. 3d şifresini hatalı girmiş olabilirsiniz veya kredi kartınızın bakiyesi yeterli olmayabilir.");
+                        throw new Error("Ödemenizi maalesef alamadık. 3d şifresini hatalı girmiş olabilirsiniz veya kredi kartınızın bakiyesi yeterli olmayabilir, kullanım süresi geçmiş olabilir.");
                     }
                 }
                 else if (this.req.body.makepayment == "true") {

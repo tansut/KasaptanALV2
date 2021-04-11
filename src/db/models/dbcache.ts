@@ -4,6 +4,7 @@ import Helper from '../../lib/helper';
 import moment = require('moment');
 
 
+
 var AsyncLock = require('async-lock');
 var lock = new AsyncLock({timeout: 5000});
 
@@ -30,6 +31,8 @@ class DBCache extends BaseModel<DBCache> {
     data: string;    
 
     static async retrieve(key: string, minutes: number): Promise<any> {
+
+        
         //return lock.acquire(key, function() {
                 return DBCache.findOne({
                     where: {
@@ -56,7 +59,11 @@ class DBCache extends BaseModel<DBCache> {
                         key: key,
                         data: JSON.stringify(val)
                     });
-                    return item.save()
+                    return new Promise<any>((resolve, reject) => {
+                        item.save().catch(err=> {
+                            console.error(`${key} DBCACHE Insert Error`, err.message)
+                        }).finally(()=>resolve(item));
+                    }) 
                 })
             })
         
