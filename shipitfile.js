@@ -35,7 +35,7 @@ module.exports = function (shipit) {
 
         }
 
-        await shipit.remote("nvm use v14.16.0" + "; export NODE_OPTIONS=--max-old-space-size=4096; cd " + shipit.releasePath + "; "); //npm install --force; npm prune
+        await shipit.remote("nvm use v14.16.0" + "; export NODE_OPTIONS=--max-old-space-size=4096; cd " + shipit.releasePath + "; npm install --force; npm prune"); //
 
 
 

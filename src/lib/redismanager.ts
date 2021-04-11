@@ -15,18 +15,18 @@ class RedisManager {
     static client: any;
 
     static initTransport() {
-        this.client = redis.createClient({
-            host: config.redis,
-            port: config.redisPort,
-            user: config.redisUser,
-            password: config.redisPwd
-        });
+        // this.client = redis.createClient({
+        //     host: config.redis,
+        //     port: config.redisPort,
+        //     user: config.redisUser,
+        //     password: config.redisPwd
+        // });
 
-        this.client.on('error', function (err) {
-            Helper.logError(err, {
-                method: "Redis"
-            })
-        });
+        // this.client.on('error', function (err) {
+        //     Helper.logError(err, {
+        //         method: "Redis"
+        //     })
+        // });
     }
 
 

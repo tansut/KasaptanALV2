@@ -9,22 +9,19 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-const config_1 = require("../config");
-const helper_1 = require("./helper");
-const redis = require("redis");
 class RedisManager {
     static initTransport() {
-        this.client = redis.createClient({
-            host: config_1.default.redis,
-            port: config_1.default.redisPort,
-            user: config_1.default.redisUser,
-            password: config_1.default.redisPwd
-        });
-        this.client.on('error', function (err) {
-            helper_1.default.logError(err, {
-                method: "Redis"
-            });
-        });
+        // this.client = redis.createClient({
+        //     host: config.redis,
+        //     port: config.redisPort,
+        //     user: config.redisUser,
+        //     password: config.redisPwd
+        // });
+        // this.client.on('error', function (err) {
+        //     Helper.logError(err, {
+        //         method: "Redis"
+        //     })
+        // });
     }
     get(key) {
         return __awaiter(this, void 0, void 0, function* () {
