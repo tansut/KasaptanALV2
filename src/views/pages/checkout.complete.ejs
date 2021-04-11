@@ -64,21 +64,9 @@
       window.App.gTag('checkout', 'checkout-completed:city', "<%= order.areaLevel1Text %>", <%= order.total %>);
       window.App.gTag('checkout', 'checkout-completed:district', "<%= order.areaLevel1Text %>/<%= order.areaLevel2Text %>", <%= order.total %>);
       window.App.gTag('checkout', 'checkout-completed:semt', "<%= order.areaLevel3Text %>, <%= order.areaLevel2Text %>/<%= order.areaLevel1Text %>", <%= order.total %>);
-      fbq &&  && fbq('track', 'Purchase', {currency: "TRY", value: <%= order.total %>});
+      fbq &&  && fbq('track', 'Purchase', {currency: "TRY", platform: window.kaPlatform, value: <%= order.total %>});
     <% }) %>
 
-    // <% if (orders.length == 1 && orders[0].paymentType == 'onlinepayment') { %>
-    //   $(document).ready(function() {
-    //     setTimeout(function() {
-    //     $('.redirecting').show();
-          
-    //     }, 5000);
-    //     setTimeout(function()  {
-    //       window.location.href = "/pay/<%=orders[0].ordernum%>"
-    //   }, 10000);
-    //   })
-
-    // <% } %>
 
   </script>
 
