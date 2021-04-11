@@ -89,6 +89,10 @@ export class App extends AppBase {
             label: label,
             value: value
         })
+
+        var fb = window["fbq"];
+        var platform = window["kaPlatform"] || '';
+        fb && fb('trackCustom', (platform ? (platform + ':'): '') + category + ':' + action, {label: label, value: value});
     }
 
     static HandleError(err) {

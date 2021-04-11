@@ -688,9 +688,10 @@ window.initComponents = function initComponents() {
                         shopcardIndex: this.shopCardIndex,
                         userSelectedButcher: urlParams.has('butcher') ? urlParams.get('butcher') : undefined
                     }).then(result => {
-                        this.newlyAddedItem = result.items[result.items.length - 1];
+                        var newItem = this.newlyAddedItem = result.items[result.items.length - 1];
                         this.$nextTick(function () {
-                            $('#shopcard-added-toast').toast('show')
+                            $('#shopcard-added-toast').toast('show');
+                            fbq && fbq('track', 'AddToCart', {content_name: newItem.product.name, value: newItem.price, content_type: 'product'});
                         })
                         window.parent && window.parent.shopcard && window.parent.shopcard.card && (window.parent.shopcard.card.data = result)
                         return window.shopcard.card.data = result

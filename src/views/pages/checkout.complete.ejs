@@ -64,6 +64,7 @@
       window.App.gTag('checkout', 'checkout-completed:city', "<%= order.areaLevel1Text %>", <%= order.total %>);
       window.App.gTag('checkout', 'checkout-completed:district', "<%= order.areaLevel1Text %>/<%= order.areaLevel2Text %>", <%= order.total %>);
       window.App.gTag('checkout', 'checkout-completed:semt', "<%= order.areaLevel3Text %>, <%= order.areaLevel2Text %>/<%= order.areaLevel1Text %>", <%= order.total %>);
+      fbq &&  && fbq('track', 'Purchase', {currency: "TRY", value: <%= order.total %>});
     <% }) %>
 
     // <% if (orders.length == 1 && orders[0].paymentType == 'onlinepayment') { %>
