@@ -17,12 +17,12 @@ export class Auth {
         if ((<HTMLFormElement>$("#signup-form-1")[0]).checkValidity()) {
             event.preventDefault();
             var iti = window['intlTelInputGlobals'].getInstance(document.querySelector('#su-tel'));
-            var tel = iti.getNumber();
+            var tel = iti ? iti.getNumber(): $('#su-tel').val();
             App.gTag('signup', 'try-send-sms-code', tel);
             $('#btn-signup-sendsms').attr("disabled", "true");              
             
             try {
-                if (!iti.isValidNumber()) throw new Error('Geçersiz telefon numarası');
+                if (iti && !iti.isValidNumber()) throw new Error('Geçersiz telefon numarası');
                 let result = await Backend.post('user/signup', {
                     phone: tel                    
                 });

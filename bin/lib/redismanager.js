@@ -30,9 +30,14 @@ class RedisManager {
         return __awaiter(this, void 0, void 0, function* () {
             return new Promise((resolve, reject) => {
                 RedisManager.client.get(key, (err, reply) => {
-                    if (err)
-                        return reject(err);
-                    resolve(reply ? JSON.parse(reply) : undefined);
+                    if (err) {
+                        helper_1.default.logError(err, {
+                            method: 'Redis.Get'
+                        });
+                        resolve(null);
+                    }
+                    else
+                        resolve(reply ? JSON.parse(reply) : undefined);
                 });
             });
         });
@@ -62,11 +67,21 @@ class RedisManager {
             return new Promise((resolve, reject) => {
                 if (expireSeconds) {
                     RedisManager.client.set(key, JSON.stringify(val), 'EX', expireSeconds, (err) => {
+                        if (err) {
+                            helper_1.default.logError(err, {
+                                method: 'Redis.Put'
+                            });
+                        }
                         resolve(val);
                     });
                 }
                 else {
                     RedisManager.client.set(key, JSON.stringify(val), (err) => {
+                        if (err) {
+                            helper_1.default.logError(err, {
+                                method: 'Redis.Put'
+                            });
+                        }
                         resolve(val);
                     });
                 }

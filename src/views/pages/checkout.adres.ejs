@@ -294,7 +294,7 @@
 
     function checkSubmit() {
       var iti = window['intlTelInputGlobals'].getInstance(document.querySelector('#phone'));
-      var tel = iti.getNumber();
+      var tel = iti ? iti.getNumber(): $('#phone').val();
       $('#phone').val(tel);      
       return true;
     }

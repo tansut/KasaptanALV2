@@ -44,7 +44,7 @@
         if (!$('#si-reset-email').val()) alert('Lütfen telefon numaranızı girin');
         else {
             var iti = window['intlTelInputGlobals'].getInstance(document.querySelector('#si-reset-email'));
-            var tel = iti.getNumber()
+            var tel = iti ? iti.getNumber(): $('#si-reset-email').val();
             App.sendResetLink(tel).then(function () {
             alert('Şifre yenileme bağlantısını telefonunuza SMS olara gönderdik. Şifrenizi belirleyip giriş yapabilirsiniz.');
             $('#si-email').val(tel);

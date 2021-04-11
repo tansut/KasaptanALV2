@@ -33,8 +33,12 @@ class RedisManager {
      async get<T>(key: string): Promise<T | undefined> {
         return new Promise<any>((resolve, reject) => {
             RedisManager.client.get(key, (err, reply) => {
-                if (err) return reject(err);
-                resolve(reply ? JSON.parse(reply): undefined)
+                if (err) {
+                    Helper.logError(err, {
+                        method: 'Redis.Get'
+                    })
+                    resolve(null);
+                } else resolve(reply ? JSON.parse(reply): undefined)
             })
         })
     }
@@ -62,14 +66,23 @@ class RedisManager {
         return new Promise<any>((resolve, reject) => {
             if (expireSeconds) {
                 RedisManager.client.set(key, JSON.stringify(val), 'EX', expireSeconds, (err) => {
+                    if (err) {
+                        Helper.logError(err, {
+                            method: 'Redis.Put'
+                        })
+                    }
                     resolve(val)
                 })
             } else {
                 RedisManager.client.set(key, JSON.stringify(val), (err) => {
+                    if (err) {
+                        Helper.logError(err, {
+                            method: 'Redis.Put'
+                        })
+                    }
                     resolve(val)
                 })                
             }
-
         })
     }
 
