@@ -126,7 +126,7 @@ export default class Route extends PaymentRouter {
         if (this.order.orderSource == OrderSource.kasaptanal) {
             this.api.fillEarnedPuanAccounts(this.order, this.productTotal);
             let butcherDebptAccounts = await AccountModel.summary([Account.generateCode("kasaplardan-alacaklar", [this.order.butcherid])])
-            let butcherDebt = Helper.asCurrency(butcherDebptAccounts.borc - butcherDebptAccounts.alacak);
+            let butcherDebt =  Helper.asCurrency(butcherDebptAccounts.borc - butcherDebptAccounts.alacak);
             debt[this.order.butcherid] = butcherDebt;   
             // if (this.req.body.puanusage == 'yes') {
             //     puanUsage[this.order.butcherid] = this.usablePuanTotal;
@@ -201,8 +201,8 @@ export default class Route extends PaymentRouter {
         } catch (err) {
             userMessage = err.message || err.errorMessage;
 
-            userMessage = `<p>${userMessage}</p><a class='btn btn-sm btn-primary' onclick='window.location.reload()'>Tekrar Deneyin</a>`
-            //this.paySession = await this.paymentProvider.paySession(req);
+            userMessage = `${userMessage}`
+            this.paySession = await this.paymentProvider.paySession(req);
             gotError = true;
             Helper.logError(err, {
                 method: 'PayOrder',

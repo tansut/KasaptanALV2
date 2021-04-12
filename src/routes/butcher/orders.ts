@@ -15,11 +15,23 @@ import { Transaction } from "sequelize";
 import ButcherPriceHistory from "../../db/models/butcherpricehistory";
 import { Order } from "../../db/models/order";
 import { Op } from 'sequelize';
+import AccountModel from "../../db/models/accountmodel";
 
 
 export default class Route extends ButcherRouter {
     orders: Order[];
 
+    totalOrders: number;
+    totalOrdersSuccess: number;
+    productTotal: number;
+    shipOfButcherTotal: number;
+    paymentsByPuan: number;
+    totalOnline: number;
+    totalButcher: number;
+    totalPuan2Customer: number;
+    totalPuan2CustomerInvoice: number;
+    totalCommission: number;
+    kuryeFromCustomer: number;
 
     // set @butcher = 10;
 
@@ -81,6 +93,22 @@ export default class Route extends ButcherRouter {
             order: [['id', 'desc']]
         })
 
+        let ordersSuccess = orders.filter(o=>o.status == 'teslim edildi');
+
+        this.totalOrders = orders.length;
+        this.totalOrdersSuccess = ordersSuccess.length;
+        
+        this.totalOnline = await (await AccountModel.summary(ordersSuccess.map(o=>`205.${o.userId}.${o.ordernum}.500`))).borc;
+        this.productTotal = await (await AccountModel.summary(ordersSuccess.map(o=>`205.${o.userId}.${o.ordernum}.100`))).alacak;
+        this.shipOfButcherTotal = await (await AccountModel.summary(ordersSuccess.map(o=>`205.${o.userId}.${o.ordernum}.200`))).alacak;
+        this.totalButcher = await (await AccountModel.summary(ordersSuccess.map(o=>`205.${o.userId}.${o.ordernum}.600`))).borc;
+        this.paymentsByPuan = await (await AccountModel.summary(ordersSuccess.map(o=>`205.${o.userId}.${o.ordernum}.1100`))).borc;
+        this.totalPuan2Customer = await (await AccountModel.summary(ordersSuccess.map(o=>`130.${o.userId}.${o.butcherid}.${o.ordernum}`))).alacak;
+        this.totalPuan2CustomerInvoice = await (await AccountModel.summary(ordersSuccess.map(o=>`215.200.${o.butcherid}.${o.ordernum}`))).borc;
+        
+        this.totalCommission = await (await AccountModel.summary(ordersSuccess.map(o=>`215.200.${o.butcherid}.${o.ordernum}`))).borc;
+        this.kuryeFromCustomer = await (await AccountModel.summary(ordersSuccess.map(o=>`100.300.${o.ordernum}`))).borc;
+        this.totalCommission = await (await AccountModel.summary(ordersSuccess.map(o=>`215.100.${o.butcherid}.${o.ordernum}`))).borc;
 
         this.res.render("pages/butcher.orders.ejs", this.viewData({
             orders: orders

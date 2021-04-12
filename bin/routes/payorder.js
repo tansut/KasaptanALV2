@@ -184,8 +184,8 @@ class Route extends paymentrouter_1.PaymentRouter {
             }
             catch (err) {
                 userMessage = err.message || err.errorMessage;
-                userMessage = `<p>${userMessage}</p><a class='btn btn-sm btn-primary' onclick='window.location.reload()'>Tekrar Deneyin</a>`;
-                //this.paySession = await this.paymentProvider.paySession(req);
+                userMessage = `${userMessage}`;
+                this.paySession = yield this.paymentProvider.paySession(req);
                 gotError = true;
                 helper_1.default.logError(err, {
                     method: 'PayOrder',

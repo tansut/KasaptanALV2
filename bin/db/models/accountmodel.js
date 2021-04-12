@@ -49,6 +49,18 @@ let AccountModel = AccountModel_1 = class AccountModel extends basemodel_1.defau
             desc: 'Toplam'
         }));
     }
+    static listByOperations(operation) {
+        return __awaiter(this, void 0, void 0, function* () {
+            let list = yield AccountModel_1.findAll({
+                where: {
+                    operation: operation
+                },
+                order: [['date', 'asc']]
+            });
+            AccountModel_1.addTotals(list);
+            return list;
+        });
+    }
     static list(codes) {
         return __awaiter(this, void 0, void 0, function* () {
             let list = yield AccountModel_1.findAll({

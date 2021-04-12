@@ -141,6 +141,12 @@ export default class User extends BaseModel<User> {
     @Column
     butcherid: number;
 
+    @Column({
+        allowNull: false,
+        defaultValue: 'web'
+    })
+    platform: string;
+
     static retrieveByEMailOrPhone(email: string) {
         email = email || "";
         let where = validator.isEmail(email) ? {

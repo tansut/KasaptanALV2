@@ -102,6 +102,17 @@ export default class Route extends ApiRouter {
         return accounts;
     }
 
+    async getAllAccounts(o: Order) {
+        let list = [
+            Account.generateCode("odeme-bekleyen-satislar", [o.userId, o.ordernum]),
+            Account.generateCode("satis-indirimleri", [o.userId, o.ordernum])
+        ]
+        let accounts = await AccountModel.listByOperations([o.ordernum]);
+        return accounts;
+    }
+
+    
+
     async getAccountsSummary(o: Order) {
         let list = [
             Account.generateCode("odeme-bekleyen-satislar", [o.userId, o.ordernum]),
@@ -232,6 +243,7 @@ export default class Route extends ApiRouter {
             }]
         })
         if (!order) return null;
+        order.allAccounts = await this.getAllAccounts(order);
         order.workedAccounts = await this.getWorkingAccounts(order);
         order.butcherPuanAccounts = await this.getButcherPuanAccounts(order);
         order.kalittePuanAccounts = await this.getKalittePuanAccounts(order);
@@ -700,7 +712,7 @@ export default class Route extends ApiRouter {
 
         let income = butcherFee + earnedPuan + kasaptanAlShip;
         if (income)
-            result.accounts.push(new Account("gelirler", [100, o.butcherid], `${o.ordernum} nolu ${o.butcherName} satış geliri`).inc(income))
+            result.accounts.push(new Account("gelirler", [100, o.butcherid], `${o.ordernum} nolu ${o.butcherName} satış işlemi`).inc(income))
 
         return result;
     }
@@ -869,14 +881,17 @@ export default class Route extends ApiRouter {
     }
 
     async createManualPaymentDept(o: Order, t?: Transaction) {
-        await this.fillButcherComissionAccounts(o);
-        let butcherDebtAcc = o.butcherComissiomAccounts.find(p => p.code == 'total');
-        let butcherDebt = Helper.asCurrency(butcherDebtAcc.borc - butcherDebtAcc.alacak);
+        if (o.butcher.manualPaymentsAsDebt == "add") {
+            await this.fillButcherComissionAccounts(o);
+            let butcherDebtAcc = o.butcherComissiomAccounts.find(p => p.code == 'total');
+            let butcherDebt = Helper.asCurrency(butcherDebtAcc.borc - butcherDebtAcc.alacak);
+    
+            let result: AccountingOperation = new AccountingOperation(`${o.ordernum} nolu ${o.butcherName} siparişi kasaptan alacak`);
+            result.accounts.push(new Account("kasaplardan-alacaklar", [o.butcherid, 1, o.ordernum], `${o.ordernum} nolu siparişten doğan komisyon ve puan borcu`).inc(butcherDebt))
+            result.accounts.push(new Account("kasap-borc-tahakkuk", [1, o.butcherid, o.ordernum], `${o.ordernum} nolu manuel ödemesi`).inc(Helper.asCurrency(butcherDebt)))
+            return this.saveAccountingOperations([result], t)
+        }
 
-        let result: AccountingOperation = new AccountingOperation(`${o.ordernum} nolu ${o.butcherName} siparişi kasaptan alacak`);
-        result.accounts.push(new Account("kasaplardan-alacaklar", [o.butcherid, 1, o.ordernum], `${o.ordernum} nolu siparişten doğan komisyon ve puan borcu`).inc(butcherDebt))
-        result.accounts.push(new Account("kasap-borc-tahakkuk", [1, o.butcherid, o.ordernum], `${o.ordernum} nolu manuel ödemesi`).inc(Helper.asCurrency(butcherDebt)))
-        return this.saveAccountingOperations([result], t)
     }
 
 

@@ -35,6 +35,7 @@ let Order = Order_1 = class Order extends basemodel_1.default {
         super(...arguments);
         this.isFirstButcherOrder = false;
         this.isFirstOrder = false;
+        this.allAccounts = [];
         this.workedAccounts = [];
         this.butcherPuanAccounts = [];
         this.kalittePuanAccounts = [];

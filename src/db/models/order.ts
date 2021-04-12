@@ -34,6 +34,10 @@ class Order extends BaseModel<Order> {
 
     isFirstButcherOrder: boolean = false;
     isFirstOrder: boolean = false;
+    
+    allAccounts: AccountModel[] = [];
+
+
     workedAccounts: AccountModel[] = [];
     butcherPuanAccounts: AccountModel[] = [];
     kalittePuanAccounts: AccountModel[] = [];

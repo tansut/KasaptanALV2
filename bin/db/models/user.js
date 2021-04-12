@@ -179,6 +179,13 @@ __decorate([
 __decorate([
     sequelize_typescript_1.Column({
         allowNull: false,
+        defaultValue: 'web'
+    }),
+    __metadata("design:type", String)
+], User.prototype, "platform", void 0);
+__decorate([
+    sequelize_typescript_1.Column({
+        allowNull: false,
         defaultValue: "kasaptanal.com"
     }),
     __metadata("design:type", String)

@@ -45,6 +45,146 @@
 
 
 <div>
+  <div>
+    <table class="table table-hover">
+      <thead>
+          <tr>
+              <th>Kalem</th>
+              <th>Değer</th>
+          </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>
+            Sipariş adet
+          </td>
+
+          <td>
+            <%=controller.totalOrders%>
+          </td>
+        </tr>
+        <tr>
+          <td>
+            Teslim edilen sipariş adet
+          </td>
+
+          <td>
+            <%=controller.totalOrdersSuccess%>
+          </td>
+        </tr>    
+        <tr>
+          <td>
+            Ürün Bedeli
+          </td>
+
+          <td>
+            <%=controller.productTotal%>
+          </td>
+        </tr>         
+        
+        <tr>
+          <td>
+            Adınıza tahsil edilen teslimat bedeli
+          </td>
+
+          <td>
+            <%=controller.shipOfButcherTotal%>
+          </td>
+        </tr>       
+
+        
+
+
+        <tr>
+          <td>
+            Yapılan online ödeme
+          </td>
+
+          <td>
+            <%- include('./_partial/currency.ejs', {value: controller.totalOnline}) %>
+
+           
+          </td>
+        </tr>       
+        <tr>
+          <td>
+            Yapılan kapıda Ödeme
+          </td>
+
+          <td>
+            <%- include('./_partial/currency.ejs', {value: controller.totalButcher}) %>
+
+           
+          </td>
+        </tr>          
+        <tr>
+          <td>
+            Puan ile ödeme
+            <br>
+            <span class="text-muted font-size-sm">Puan KasaptanAl komisyonundan düşer.</span>
+          </td>
+
+          <td>
+            <%- include('./_partial/currency.ejs', {value: controller.paymentsByPuan}) %>
+
+            
+          </td>
+        </tr>        
+      
+
+        
+
+        <tr>
+          <td>
+            Müşteriye ilettiğiniz puan 
+          </td>
+
+          <td>
+            <%- include('./_partial/currency.ejs', {value: controller.totalPuan2CustomerInvoice}) %>
+
+           
+          </td>
+        </tr> 
+
+        <tr>
+          <td>
+            Satış komisyonu (kuryeye iletilecek dahil)
+          </td>
+
+          <td>
+            <%- include('./_partial/currency.ejs', {value: controller.totalCommission}) %>
+
+           
+          </td>
+        </tr>       
+
+        <tr>
+          <td>
+            Toplam maliyet
+          </td>
+
+          <td>
+            <%- include('./_partial/currency.ejs', {value: controller.totalCommission + controller.totalPuan2CustomerInvoice}) %>
+
+           
+          </td>
+        </tr>      
+        
+        <tr>
+          <td>
+            Müşteriden tahsil edilen kurye bedeli
+          </td>
+
+          <td>
+            <%- include('./_partial/currency.ejs', {value: controller.kuryeFromCustomer}) %>
+
+           
+          </td>
+        </tr>          
+
+      </tbody>
+    </table>    
+  </div>
   <table class="table table-hover">
     <thead>
         <tr>
@@ -52,7 +192,6 @@
             <th>Tarih</th>
             <th>Durum</th>
             <th>Ödeme Tipi</th>
-            <th>Ödenen</th>
         </tr>
     </thead>
     <tbody>
@@ -65,19 +204,13 @@
                 <!-- <a target="_blank" href=""><%= orders[i].name %> </a> -->
 
               <%}%>
-              <a target="_blank" href="<%= `/manageorder/${orders[i].ordernum}` %>"><%= orders[i].name %> </a>
+              <a target="_blank" href="<%= `/manageorder/${orders[i].ordernum}` %>"><%= orders[i].displayName %> </a>
 
             </td>
             <td><%= __helper.formatDate(orders[i].creationDate) %></td>
             <td><%= orders[i].status %></td>
             <td><%= orders[i].paymentType %></td>
-            <td>
-  <%- include('./_partial/currency.ejs', {value: orders[i].paidTotal}) %>
-              
-          
-            
-            
-            </td>
+
 
         </tr>
 

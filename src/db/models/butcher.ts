@@ -20,6 +20,8 @@ export type ButcherStatus = "open" | "closed";
 
 export type PriceDisplay = 'show' | 'hide';
 
+export type ManualPaymentsAsDebt = 'add' | 'none';
+
 @Table({
     tableName: "Butchers",
     indexes: [
@@ -43,6 +45,13 @@ class Butcher extends BaseModel<Butcher> {
     @AllowNull(false)
     @Column
     slug: string;
+
+    
+    @Column({
+        allowNull: false,
+        defaultValue: 'add'
+    })
+    manualPaymentsAsDebt: ManualPaymentsAsDebt;
 
     get userRatingAsPerc() {
         return Math.round((this.userRating * 2) * 10);

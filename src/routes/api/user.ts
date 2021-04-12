@@ -304,6 +304,7 @@ export default class UserRoute extends ApiRouter {
         pwd = pwd || this.generatePwd();
         user.setPassword(pwd);
         await user.save();
+        user.platform = this.platform;
         await this.sendPassword(pwd, user.mphone);
         return user;
     }

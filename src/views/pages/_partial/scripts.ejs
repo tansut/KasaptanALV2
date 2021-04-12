@@ -168,7 +168,7 @@
   </script>
   <% if (typeof _usrmsg != 'undefined' && _usrmsg.text) { %>
   <script>
-    window.App.alert("<%=_usrmsg.text%>", "<%=_usrmsg.type %>")
+    window.App.alert("<%-_usrmsg.text%>", "<%=_usrmsg.type %>")
   </script>
   <% } %>
   

@@ -52,6 +52,20 @@ class AccountModel extends BaseModel<AccountModel> {
         }))
     }
 
+    static async listByOperations(operation: string []) {
+        let list = await AccountModel.findAll({
+            where: {
+                operation: operation
+            },
+            order: [['date', 'asc']]
+        })
+
+
+        AccountModel.addTotals(list)
+
+        return list;
+    }
+
     static async list(codes: string[]) {
         let list = await AccountModel.findAll({
             where: {

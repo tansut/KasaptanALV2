@@ -351,7 +351,15 @@ if (orderClosed && __req.user && __req.user.hasRole('admin')) {
           </div>
 
 
+<div>
+  <% if (__req.user && 
+            (__req.user.hasRole('admin') || 
+            (__req.user.hasRole('butcher') && __req.user.butcherid == order.butcherid))) { %>
+  <%- include('./_partial/accounts-view.ejs', { title: 'Sipariş Hareketleri', accounts: order.allAccounts }) %>
+  <% } %>
+  
 
+</div>
 
 
       </div>

@@ -14,6 +14,7 @@ const home_1 = require("./home");
 const helper_1 = require("../../lib/helper");
 const order_1 = require("../../db/models/order");
 const sequelize_1 = require("sequelize");
+const accountmodel_1 = require("../../db/models/accountmodel");
 class Route extends home_1.ButcherRouter {
     // set @butcher = 10;
     // SELECT 'online satis toplam', sum(a.borc), sum(a.alacak) FROM  Accounts a where code in
@@ -70,6 +71,19 @@ class Route extends home_1.ButcherRouter {
                 },
                 order: [['id', 'desc']]
             });
+            let ordersSuccess = orders.filter(o => o.status == 'teslim edildi');
+            this.totalOrders = orders.length;
+            this.totalOrdersSuccess = ordersSuccess.length;
+            this.totalOnline = yield (yield accountmodel_1.default.summary(ordersSuccess.map(o => `205.${o.userId}.${o.ordernum}.500`))).borc;
+            this.productTotal = yield (yield accountmodel_1.default.summary(ordersSuccess.map(o => `205.${o.userId}.${o.ordernum}.100`))).alacak;
+            this.shipOfButcherTotal = yield (yield accountmodel_1.default.summary(ordersSuccess.map(o => `205.${o.userId}.${o.ordernum}.200`))).alacak;
+            this.totalButcher = yield (yield accountmodel_1.default.summary(ordersSuccess.map(o => `205.${o.userId}.${o.ordernum}.600`))).borc;
+            this.paymentsByPuan = yield (yield accountmodel_1.default.summary(ordersSuccess.map(o => `205.${o.userId}.${o.ordernum}.1100`))).borc;
+            this.totalPuan2Customer = yield (yield accountmodel_1.default.summary(ordersSuccess.map(o => `130.${o.userId}.${o.butcherid}.${o.ordernum}`))).alacak;
+            this.totalPuan2CustomerInvoice = yield (yield accountmodel_1.default.summary(ordersSuccess.map(o => `215.200.${o.butcherid}.${o.ordernum}`))).borc;
+            this.totalCommission = yield (yield accountmodel_1.default.summary(ordersSuccess.map(o => `215.200.${o.butcherid}.${o.ordernum}`))).borc;
+            this.kuryeFromCustomer = yield (yield accountmodel_1.default.summary(ordersSuccess.map(o => `100.300.${o.ordernum}`))).borc;
+            this.totalCommission = yield (yield accountmodel_1.default.summary(ordersSuccess.map(o => `215.100.${o.butcherid}.${o.ordernum}`))).borc;
             this.res.render("pages/butcher.orders.ejs", this.viewData({
                 orders: orders
             }));
