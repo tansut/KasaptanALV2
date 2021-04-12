@@ -267,6 +267,7 @@ class Route extends router_1.ViewRouter {
             if (this.req.body.savecopy == "true") {
                 var json = this.butcher.toJSON();
                 delete json['id'];
+                json['gpid'] = json['gpid'] + 'foo';
                 let newItem = new butcher_2.default(json);
                 newItem.slug = this.butcher.slug + '-kopya';
                 newItem.name = 'giriniz';

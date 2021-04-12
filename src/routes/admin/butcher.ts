@@ -296,6 +296,7 @@ export default class Route  extends ViewRouter {
         if (this.req.body.savecopy == "true") {
             var json = this.butcher.toJSON();
             delete json['id'];
+            json['gpid'] = json['gpid'] + 'foo';
             let newItem = new Butcher(json);
             newItem.slug = this.butcher.slug + '-kopya';
             newItem.name = 'giriniz';
