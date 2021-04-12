@@ -691,7 +691,7 @@ window.initComponents = function initComponents() {
                         var newItem = this.newlyAddedItem = result.items[result.items.length - 1];
                         this.$nextTick(function () {
                             $('#shopcard-added-toast').toast('show');
-                            fbq && fbq('track', 'AddToCart', {content_name: newItem.product.name, currency: "TRY",  value: newItem.price, content_type: 'product'});
+                            (typeof (fbq) != 'undefined') && fbq('track', 'AddToCart', {content_name: newItem.product.name, currency: "TRY",  value: newItem.price, content_type: 'product'});
                         })
                         window.parent && window.parent.shopcard && window.parent.shopcard.card && (window.parent.shopcard.card.data = result)
                         return window.shopcard.card.data = result

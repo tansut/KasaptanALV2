@@ -317,7 +317,7 @@
 
       %>
 
-      <% if (!hideMember && controller.platform == 'web' && (!forceSemt || (forceSemt && __req.prefAddr))) { %>
+      <% if (!hideMember && (controller.platform) == 'web' && (!forceSemt || (forceSemt && __req.prefAddr))) { %>
   
       $(window).scroll(function () {
         if (($(document).scrollTop() >= $(document).height() / 4) && !userGuide.autoPopuped) {
@@ -332,7 +332,9 @@
       
 
 
-      <%  if (!__req.prefAddr && forceSemt) { %>
+      <%  if (!__req.prefAddr && forceSemt && (!__req.session._semtForced)) { %>
+        <% __req.session._semtForced = true; %>
+        
         $(window).scroll(function () {
         if (($(document).scrollTop() >= $(document).height() / 20) && !window.kb.autoPopuped) {
           window.kb.autoPopuped = true;
@@ -469,7 +471,7 @@
                 var self = this;
                  setTimeout(function () {
                   $("button.close", self).show();
-                }, 10000);
+                }, 5000);
               <% } %>
        })
   

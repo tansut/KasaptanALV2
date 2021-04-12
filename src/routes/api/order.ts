@@ -1265,7 +1265,7 @@ export default class Route extends ApiRouter {
         let text = `${order.butcherName} musteriniz ${order.displayName} teslimat icin bilgilendirildi: ${order.shipmentStartText}. Siparis: ${manageUrl}`;
 
 
-        await this.sendButcherNotifications(order, text)
+        await this.sendButcherNotifications(order, text);
 
         let customerText = `KasaptanAl.com siparisiniz icin ${order.butcherName} teslimat planlamasi yapti: ${order.shipmentStartText}. Kasap tel: ${order.butcher.phone}`
         await Sms.send(order.phone, customerText, false, new SiteLogRoute(this.constructorParams))
