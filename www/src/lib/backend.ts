@@ -6,7 +6,8 @@ export class Backend {
     static hostConfig: HostConfiguration;
 
     static configure(hostConfig: IHostConfiguration) {
-        this.hostConfig = new HostConfiguration(hostConfig)
+        this.hostConfig = new HostConfiguration(hostConfig);
+        axios.defaults.headers.common['ka-platform'] = window['kaPlatform']
         this.axios = axios.create({
 
         })

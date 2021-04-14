@@ -96,6 +96,8 @@ class ButcherAutoLogistics extends core_1.LogisticProvider {
         this.options.dispatcher.min = this.options.dispatcher.min || 100.00;
         if (options.initialDistance > opts.kmMin && opts.minMultiplier) {
             this.options.dispatcher.minCalculated = helper_1.default.asCurrency(Math.ceil((this.options.dispatcher.min + (options.initialDistance - opts.kmMin) * opts.minMultiplier) / 25) * 25);
+            if (this.options.dispatcher.minCalculated && this.options.dispatcher.totalForFree && (this.options.dispatcher.minCalculated > this.options.dispatcher.totalForFree))
+                this.options.dispatcher.minCalculated = this.options.dispatcher.totalForFree;
         }
         options.dispatcher.name = dispatcher_1.DispatcherTypeDesc[options.dispatcher.type];
     }
@@ -159,6 +161,8 @@ class ButcherAutoLogistics extends core_1.LogisticProvider {
         if (distance > input.kmMin && input.minMultiplier) {
             this.options.dispatcher.minCalculated = helper_1.default.asCurrency(Math.ceil((this.options.dispatcher.min + (distance - input.kmMin) * input.minMultiplier) / 50) * 50);
         }
+        if (this.options.dispatcher.minCalculated && this.options.dispatcher.totalForFree && (this.options.dispatcher.minCalculated > this.options.dispatcher.totalForFree))
+            this.options.dispatcher.minCalculated = this.options.dispatcher.totalForFree;
         if (kmMax && distance > kmMax)
             fee = -1;
         else if (this.options.dispatcher.minCalculated && offer.orderTotal < this.options.dispatcher.minCalculated)

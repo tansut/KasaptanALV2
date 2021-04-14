@@ -147,6 +147,12 @@ export default class User extends BaseModel<User> {
     })
     platform: string;
 
+    @Column({
+        allowNull: true,
+        defaultValue: ''
+    })
+    appPlatform: string;      
+
     static retrieveByEMailOrPhone(email: string) {
         email = email || "";
         let where = validator.isEmail(email) ? {

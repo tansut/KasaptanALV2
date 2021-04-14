@@ -53,6 +53,8 @@ class BaseRouter {
         if (agent.indexOf('gonative') > -1) {
             return common_2.Platform.app;
         }
+        else if (this.req.headers['ka-platform'])
+            return this.req.headers['ka-platform'];
         else
             return common_2.Platform.web;
     }

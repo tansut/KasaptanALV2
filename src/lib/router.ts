@@ -56,7 +56,9 @@ export default class BaseRouter {
         let agent = this.req.headers['user-agent'] || '';
         if (agent.indexOf('gonative') > -1) {
             return Platform.app
-        } else return Platform.web
+        } else if (this.req.headers['ka-platform'])
+            return  <Platform>this.req.headers['ka-platform']
+        else  return Platform.web
     }
 
     get appPlatform(): AppPlatform {

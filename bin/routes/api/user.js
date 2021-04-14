@@ -285,8 +285,9 @@ class UserRoute extends router_1.ApiRouter {
             user.ivCode = (Math.random() * 999999).toString();
             pwd = pwd || this.generatePwd();
             user.setPassword(pwd);
-            yield user.save();
             user.platform = this.platform;
+            user.appPlatform = this.appPlatform;
+            yield user.save();
             yield this.sendPassword(pwd, user.mphone);
             return user;
         });
