@@ -119,7 +119,7 @@ class Route extends router_1.ViewRouter {
         return __awaiter(this, void 0, void 0, function* () {
             let tl = yield temp_loc_1.default.findAll({
                 where: {
-                    il: ['MUĞLA', 'TEKİRDAĞ', 'KOCAELİ', 'SAKARYA']
+                    il: ['KONYA']
                 }
             });
             for (let i = 0; i < tl.length; i++) {
@@ -133,22 +133,38 @@ class Route extends router_1.ViewRouter {
                     }
                 });
                 if (!area) {
-                    console.log(`${t.il}-${t.ilce}-${t.semt} bulunamadı`);
-                }
-                else {
-                    let na = new area_1.default();
-                    na.name = helper_1.default.capitlize(t.mahalle.replace(" MAH", ' Mahallesi'));
-                    na.slug = helper_1.default.slugify(`${area.slug}-${t.mahalle.replace(" MAH", '')}`);
-                    na.parentid = area.id;
-                    na.lowerName = helper_1.default.toLower(na.name);
-                    na.level = 4;
-                    na.status = 'generic';
+                    area = new area_1.default();
+                    area.name = helper_1.default.capitlize(`${t.semt}`);
+                    area.slug = helper_1.default.slugify(`${t.il}-${t.ilce}-${t.semt}`);
+                    area.parentid = (yield area_1.default.findOne({
+                        where: {
+                            slug: helper_1.default.slugify(`${t.il}-${t.ilce}`)
+                        }
+                    })).id;
+                    area.lowerName = helper_1.default.toLower(area.name);
+                    area.level = 3;
+                    area.status = 'generic';
                     try {
-                        yield na.save();
+                        yield area.save();
+                        console.log(area.slug + ' eklendi');
                     }
                     catch (err) {
                         console.log(err.message);
+                        console.log(area.slug + ' hata');
                     }
+                }
+                let na = new area_1.default();
+                na.name = helper_1.default.capitlize(t.mahalle.replace(" MAH", ' Mahallesi'));
+                na.slug = helper_1.default.slugify(`${area.slug}-${t.mahalle.replace(" MAH", '')}`);
+                na.parentid = area.id;
+                na.lowerName = helper_1.default.toLower(na.name);
+                na.level = 4;
+                na.status = 'generic';
+                try {
+                    yield na.save();
+                }
+                catch (err) {
+                    console.log(na.slug + ' mevcut');
                 }
             }
             this.res.send('OK');

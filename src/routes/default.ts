@@ -123,7 +123,7 @@ export default class Route extends ViewRouter {
     async tempares() {
         let tl = await TempLoc.findAll({
             where: {
-                il: ['MUĞLA', 'TEKİRDAĞ', 'KOCAELİ', 'SAKARYA']
+                il: ['KONYA']
             }
         })
 
@@ -144,8 +144,27 @@ export default class Route extends ViewRouter {
 
 
             if (!area) {
-                console.log(`${t.il}-${t.ilce}-${t.semt} bulunamadı`)
-            } else {
+                area = new Area();
+                area.name = Helper.capitlize(`${t.semt}`);
+                area.slug = Helper.slugify(`${t.il}-${t.ilce}-${t.semt}`);
+                area.parentid = (await Area.findOne({
+                    where: {
+                        slug: Helper.slugify(`${t.il}-${t.ilce}`)
+                    }
+                })).id;
+                area.lowerName = Helper.toLower(area.name);
+                area.level = 3;
+                area.status = 'generic';
+                try {
+                    await area.save();
+                    console.log(area.slug + ' eklendi');
+                } catch(err) {
+                    console.log(err.message);
+                    console.log(area.slug + ' hata');
+
+                }                
+                
+            } 
                 let na: Area = new Area();
                 na.name = Helper.capitlize(t.mahalle.replace(" MAH", ' Mahallesi'));
                 na.slug = Helper.slugify(`${area.slug}-${t.mahalle.replace(" MAH", '')}`);
@@ -156,10 +175,10 @@ export default class Route extends ViewRouter {
                 try {
                     await na.save();
                 } catch(err) {
-console.log(err.message)
+                    console.log(na.slug + ' mevcut')
                 }
                
-            }
+            
 
 
         }
