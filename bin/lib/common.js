@@ -182,6 +182,17 @@ class Auth {
     static GetAnonymous(target) {
         return Reflect.getMetadata('auth:anonymous', target);
     }
+    static RequireCatcpha() {
+        var fn = () => {
+            return (target, propertyKey, descriptor) => {
+                Reflect.defineMetadata('auth:catcpha', {}, descriptor.value);
+            };
+        };
+        return fn();
+    }
+    static GetCatcpha(target) {
+        return Reflect.getMetadata('auth:catcpha', target);
+    }
 }
 exports.Auth = Auth;
 ProductTypeFactory.registerAll();

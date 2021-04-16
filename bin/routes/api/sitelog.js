@@ -47,11 +47,11 @@ class SiteLogRoute extends router_1.ApiRouter {
             let count = yield this.countBy(where, seconds);
             if (count > ccount)
                 return true;
-            if (this.userIp) {
-                count = yield this.countBy({ ip: this.userIp }, seconds);
-            }
-            if (count > ccount)
-                return true;
+            // if (this.userIp)
+            // {
+            //     count = await this.countBy({ip: this.userIp}, seconds);
+            // }  
+            // if (count > ccount) return true;
             return false;
         });
     }

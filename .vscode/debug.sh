@@ -17,3 +17,5 @@ export STATICDOMAIN=/static
 #export PUBLICDIR=/wwwpublic/kasapburada/
 export PAYMENTPROVIDER=paratika
 export REDIS=localhost
+export GOOGLECAPTCHAKEY=6LepBqwaAAAAAHWVOR-t00BejwlglytVehSAcHIk
+export GOOGLECAPTCHASECRET=6LepBqwaAAAAAEA6xZE5lksTTx-GFWE2yrrFp334

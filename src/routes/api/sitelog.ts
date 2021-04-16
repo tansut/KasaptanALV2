@@ -34,11 +34,11 @@ export default class SiteLogRoute extends ApiRouter implements ISiteLogger {
         const seconds = 360, ccount = 5;
         let count = await this.countBy(where, seconds);
         if (count > ccount) return true;
-        if (this.userIp)
-        {
-            count = await this.countBy({ip: this.userIp}, seconds);
-        }  
-        if (count > ccount) return true;
+        // if (this.userIp)
+        // {
+        //     count = await this.countBy({ip: this.userIp}, seconds);
+        // }  
+        // if (count > ccount) return true;
         return false;
     }
 

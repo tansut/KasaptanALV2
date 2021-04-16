@@ -45,6 +45,8 @@ class Config {
         this.redisPort = this.get(Config.REDISPORT) || 6379;
         this.redisUser = this.get(Config.REDISUSER);
         this.redisPwd = this.get(Config.REDISPWD);
+        this.googleCaptchaKey = this.get(Config.GOOGLECAPTCHAKEY) || '6LepBqwaAAAAAHWVOR-t00BejwlglytVehSAcHIk';
+        this.googleCaptchaSecret = this.get(Config.GOOGLECAPTCHASECRET) || '6LepBqwaAAAAAEA6xZE5lksTTx-GFWE2yrrFp334';
     }
     get(key, cb) {
         return nconf.get(key, cb);
@@ -87,4 +89,6 @@ Config.REDIS = "REDIS";
 Config.REDISPORT = "REDISPORT";
 Config.REDISUSER = "REDISUSER";
 Config.REDISPWD = "REDISPWD";
+Config.GOOGLECAPTCHAKEY = "GOOGLECAPTCHAKEY";
+Config.GOOGLECAPTCHASECRET = "GOOGLECAPTCHASECRET";
 exports.default = new Config();

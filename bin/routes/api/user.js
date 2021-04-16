@@ -201,7 +201,9 @@ class UserRoute extends router_1.ApiRouter {
     }
     signupRoute() {
         return __awaiter(this, void 0, void 0, function* () {
-            var model = this.req.body;
+            var model = this.req.body || {
+                phone: ''
+            };
             model.phone = model.phone || "";
             if (validator.isEmpty(model.phone))
                 throw new http.ValidationError('Cep telefonu gereklidir');
@@ -421,6 +423,7 @@ __decorate([
 ], UserRoute.prototype, "completesignupRoute", null);
 __decorate([
     common_1.Auth.Anonymous(),
+    common_1.Auth.RequireCatcpha(),
     __metadata("design:type", Function),
     __metadata("design:paramtypes", []),
     __metadata("design:returntype", Promise)

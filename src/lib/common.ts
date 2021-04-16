@@ -209,6 +209,19 @@ export class Auth {
     static GetAnonymous(target: any) {
         return Reflect.getMetadata('auth:anonymous', target);
     }
+
+    static RequireCatcpha() {
+        var fn = () => {
+            return (target: any, propertyKey: string, descriptor: PropertyDescriptor) => {
+                Reflect.defineMetadata('auth:catcpha', {}, descriptor.value);
+            }
+        }
+        return fn();
+    }
+
+    static GetCatcpha(target: any) {
+        return Reflect.getMetadata('auth:catcpha', target);
+    }    
 }
 
 ProductTypeFactory.registerAll();

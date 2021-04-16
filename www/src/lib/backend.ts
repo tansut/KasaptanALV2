@@ -4,6 +4,7 @@ import axios, { AxiosInstance } from "axios"
 export class Backend {
     static axios: AxiosInstance;
     static hostConfig: HostConfiguration;
+    static catpchaToken: string;
 
     static configure(hostConfig: IHostConfiguration) {
         this.hostConfig = new HostConfiguration(hostConfig);
@@ -48,6 +49,8 @@ export class Backend {
     }
 
     static post(method: string, postData: Object = null, params: Object = {}) {
+        postData = postData || {};
+        Backend.catpchaToken && (postData['__token'] = Backend.catpchaToken);
         return this.axios.post(this.url(method, params), postData).then((result) => result.data);
     }
 

@@ -155,7 +155,7 @@ export class App extends AppBase {
         this.Backend = Backend;
         window.App = App;
         (<any>window).initComponents();
-        this.Ready = new Promise((resolve) => {
+        this.Ready = new Promise<void>((resolve) => {
             $(document).ready(function () {
                 resolve()
             });

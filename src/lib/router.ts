@@ -22,7 +22,9 @@ const fs = require('fs');
 import { AppNavLevel, AppNavData, AppUI, Platform, AppPlatform, ISiteLogger } from '../models/common';
 import { CacheManager } from './cache';
 import Helper from './helper';
-//import SiteLogRoute from '../routes/api/sitelog';
+import { Google } from './google';
+
+
 
 
 export enum ResponseStatus {
@@ -53,7 +55,7 @@ export default class BaseRouter {
     protected next: Function;
     private _markdown = null;
     private _logger: ISiteLogger = null;
-
+    protected useCatpcha: boolean = true;
 
     get userIp() {
         return this.req ? (this.req.header("x-forwarded-for") || this.req.connection.remoteAddress): '';
@@ -130,18 +132,38 @@ export default class BaseRouter {
 
         let handler = typeof (method) == "string" ? instance[method] : instance[method.name];
         var anonymous = Auth.GetAnonymous(handler);
+        var useCatcpha = Auth.GetCatcpha(handler);
 
         if (!anonymous && !req.user)
             return next(new http.PermissionError(req.originalUrl));
 
+        let prom = new Promise<void>((resolve, reject) => {
+            if (useCatcpha) {
+                let token = (req.body ? req.body.__token: undefined);
+                if (!token) {
+                     return reject(new http.PermissionError("Güvenlik adımını maalesef tamamlayamadık. Daha sonra tekrar deneyin."))
+                } else {
+                    Google.verifyCatpcha(token).then(()=>{
+                        resolve();
+                    }).catch(err => {
+                         Helper.logError(err, {
+                             method: "Controller"
+                         }, req);
+                         reject(new http.PermissionError("Güvenlik adımını maalesef tamamlayamadık. Daha sonra tekrar deneyin."));
+                    })
+                }            
+            } else resolve()
+        })
 
-        var promise = handler.apply(instance, methodParams);
+        prom.then(()=>{
+            var promise = handler.apply(instance, methodParams);
 
-        if (promise && (typeof promise['catch'] == 'function')) {
-            promise.catch((err) => {
-                next(err);
-            });
-        }
+            if (promise && (typeof promise['catch'] == 'function')) {
+                promise.catch((err) => {
+                    next(err);
+                });
+            }
+        }).catch((err)=>next(err))
 
         return instance;
     }

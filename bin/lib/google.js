@@ -12,7 +12,18 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.Google = void 0;
 const axios_1 = require("axios");
 const _ = require("lodash");
+const config_1 = require("../config");
 class Google {
+    static verifyCatpcha(token) {
+        return __awaiter(this, void 0, void 0, function* () {
+            const url = `https://www.google.com/recaptcha/api/siteverify?secret=${config_1.default.googleCaptchaSecret}&response=${token}`;
+            let resp = yield axios_1.default.post(url);
+            let result = resp.data && resp.data['success'] == true;
+            if (!result)
+                throw new Error("Invalid catpcha");
+            return resp.data;
+        });
+    }
     static convertLocationResult(results) {
         let res = [];
         results && results.forEach(r => {

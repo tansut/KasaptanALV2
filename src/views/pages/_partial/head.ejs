@@ -63,6 +63,9 @@
   window.kaPlatform = '<%- controller.platform %>';
 </script>
 
+<% if (controller.useCatpcha && __config) {  %>
+<script src="https://www.google.com/recaptcha/api.js?render=<%-__config.googleCaptchaKey %>"></script>
+<% } %>
 
 <% if (config.pagetrack == "true" && (!__req.user || !__req.user.hasRole('admin') )) { %>
 
@@ -131,9 +134,6 @@
   display: inline !important;
 }
 
-body {
-
-}
 
 </style>
 

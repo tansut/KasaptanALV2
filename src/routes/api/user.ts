@@ -25,7 +25,8 @@ import { add } from 'lodash';
 import AccountModel from '../../db/models/accountmodel';
 import SiteLog from '../../db/models/sitelog';
 
-
+// import { RecaptchaV3 } from 'express-recaptcha'
+// var recaptcha = new RecaptchaV3(config.googleCaptchaKey, config.googleCaptchaSecret);
  
 interface GeneratedTokenData {
     accessToken: authorization.IEncryptedAccessTokenData;
@@ -212,8 +213,11 @@ export default class UserRoute extends ApiRouter {
     }
 
     @Auth.Anonymous()
+    @Auth.RequireCatcpha()
     async signupRoute() {
-        var model = <SignupModel>this.req.body;
+        var model = <SignupModel>this.req.body || {
+            phone: ''
+        };
         model.phone = model.phone || "";
         
         

@@ -1,6 +1,8 @@
 import axios, { AxiosResponse } from "axios";
 import { GeoLocation, LocationType } from "../models/geo";
 import * as _ from "lodash";
+import config from "../config";
+
 
 export interface GeocodeResult {
     location: GeoLocation;
@@ -13,6 +15,14 @@ export interface GeocodeResult {
 }
 
 export class Google  {
+
+    static async verifyCatpcha(token: string) {
+        const url = `https://www.google.com/recaptcha/api/siteverify?secret=${config.googleCaptchaSecret}&response=${token}`;
+        let resp = await axios.post(url);
+        let result = resp.data && resp.data['success'] == true;
+        if (!result) throw new Error("Invalid catpcha");
+        return resp.data;
+    }
 
     static convertLocationResult(results: any []): GeocodeResult [] {
        let res: GeocodeResult [] = [];

@@ -26,6 +26,18 @@
   
   <script>
 
+<% if (controller.useCatpcha && __config) {  %>
+
+grecaptcha.ready(function() {
+    grecaptcha.execute('<%-__config.googleCaptchaKey%>', {action: 'default'})
+        .then(function(token) {
+          window.App.Backend.catpchaToken = token;
+        });
+});
+
+
+<% } %>
+
 
     window.App.platform = '<%=controller.platform%>'
 

@@ -124,6 +124,7 @@ class Route extends router_1.ApiRouter {
 }
 __decorate([
     common_1.Auth.Anonymous(),
+    common_1.Auth.RequireCatcpha(),
     __metadata("design:type", Function),
     __metadata("design:paramtypes", []),
     __metadata("design:returntype", Promise)
@@ -142,8 +143,15 @@ __decorate([
 ], Route.prototype, "removeRoute", null);
 __decorate([
     common_1.Auth.Anonymous(),
+    common_1.Auth.RequireCatcpha(),
     __metadata("design:type", Function),
     __metadata("design:paramtypes", []),
     __metadata("design:returntype", Promise)
 ], Route.prototype, "geocode", null);
+__decorate([
+    common_1.Auth.RequireCatcpha(),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", []),
+    __metadata("design:returntype", Promise)
+], Route.prototype, "revgeocode", null);
 exports.default = Route;
