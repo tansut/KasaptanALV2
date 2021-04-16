@@ -2,9 +2,14 @@ import { Table, Column, DataType, Model, HasMany, CreatedAt, UpdatedAt, DeletedA
 import BaseModel from "./basemodel"
 import Helper from '../../lib/helper';
 
+
+
 @Table({
     tableName: "SiteLogs",
-    indexes: []
+    indexes: [{
+        name: "email_idx",
+        fields: ["email"]
+    }]
 })
 class SiteLog extends BaseModel<SiteLog> {
 

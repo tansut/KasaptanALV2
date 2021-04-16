@@ -19,9 +19,11 @@ import { PreferredAddress } from '../db/models/user';
 var MarkdownIt = require('markdown-it')
 const fs = require('fs');
 
-import { AppNavLevel, AppNavData, AppUI, Platform, AppPlatform } from '../models/common';
+import { AppNavLevel, AppNavData, AppUI, Platform, AppPlatform, ISiteLogger } from '../models/common';
 import { CacheManager } from './cache';
 import Helper from './helper';
+//import SiteLogRoute from '../routes/api/sitelog';
+
 
 export enum ResponseStatus {
     success = 0,
@@ -50,6 +52,13 @@ export default class BaseRouter {
     protected res: express.Response;
     protected next: Function;
     private _markdown = null;
+    private _logger: ISiteLogger = null;
+
+
+    get userIp() {
+        return this.req ? (this.req.header("x-forwarded-for") || this.req.connection.remoteAddress): '';
+    }
+
 
 
     get platform(): Platform {

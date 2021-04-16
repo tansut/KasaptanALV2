@@ -3,12 +3,44 @@ import { ApiRouter } from '../../lib/router';
 import * as express from "express";
 import SiteLog from '../../db/models/sitelog';
 import email from '../../lib/email';
+import {Op} from "sequelize";
+import { ISiteLogger } from '../../models/common';
+ 
+
+import Helper from '../../lib/helper';
 
 // type express.response : {
 //     session: any
 // }
 
-export default class SiteLogRoute extends ApiRouter {
+
+
+export default class SiteLogRoute extends ApiRouter implements ISiteLogger {
+
+    async countBy(where: any, seconds: number) {
+        var t = Helper.Now();
+        t.setSeconds(t.getSeconds() - seconds);
+
+        where = where || {};
+        where['creationDate'] = {
+            [Op.gt]: t
+        }
+        return await SiteLog.count({
+            where: where
+        })
+    }
+
+    async isFraud(where: any) {
+        const seconds = 360, ccount = 5;
+        let count = await this.countBy(where, seconds);
+        if (count > ccount) return true;
+        if (this.userIp)
+        {
+            count = await this.countBy({ip: this.userIp}, seconds);
+        }  
+        if (count > ccount) return true;
+        return false;
+    }
 
 
     async log(content: any) {

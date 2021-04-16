@@ -89,7 +89,10 @@ __decorate([
 SiteLog = __decorate([
     sequelize_typescript_1.Table({
         tableName: "SiteLogs",
-        indexes: []
+        indexes: [{
+                name: "email_idx",
+                fields: ["email"]
+            }]
     })
 ], SiteLog);
 exports.default = SiteLog;

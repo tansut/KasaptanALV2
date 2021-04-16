@@ -23,6 +23,7 @@ let passport = require("passport")
 import * as sq from 'sequelize';
 import { add } from 'lodash';
 import AccountModel from '../../db/models/accountmodel';
+import SiteLog from '../../db/models/sitelog';
 
 
  
@@ -67,7 +68,7 @@ export default class UserRoute extends ApiRouter {
         let res = moment(utc).add('minutes', 30).toDate()
         user.resetTokenValid = res;
         await user.save();
-        await Sms.send(user.mphone, `KasaptanAl.com sifrenizi yenilemek icin ${this.url}/rpwd?k=${user.resetToken}`, true, null)
+        await Sms.send(user.mphone, `KasaptanAl.com sifrenizi yenilemek icin ${this.url}/rpwd?k=${user.resetToken}`, true, new SiteLogRoute(this.constructorParams))
         this.res.sendStatus(200);
     }
 
@@ -221,6 +222,11 @@ export default class UserRoute extends ApiRouter {
         if (!Helper.isValidPhone(model.phone))
             throw new http.ValidationError('Geçersiz telefon:' + model.phone);
         model.phone = Helper.getPhoneNumber(model.phone);
+
+        let log = new SiteLogRoute(this.constructorParams);
+        //let requestIsFraud= await log.isFraud({email: model.phone});
+        //if (requestIsFraud) throw new http.ValidationError('Lütfen 5 dk sonra tekrar deneyiniz.');
+
         let pwd = this.generatePwd();
         try {
             await this.create(this.req.body, pwd);
@@ -237,6 +243,7 @@ export default class UserRoute extends ApiRouter {
                     this.res.status(400).send("Merhaba " + existingUser.name + ", hesabınıza giriş yapabilirsiniz.");
                 }
                 else {
+                    
                     let pwd = await this.sendPassword(this.generatePwd(), existingUser.mphone)
                     existingUser.setPassword(pwd);
                     await existingUser.save()
@@ -299,6 +306,9 @@ export default class UserRoute extends ApiRouter {
     async create(model: SignupModel, pwd?: string): Promise<UserModel> {
         var user = new UserModel();
         user.mphone = Helper.getPhoneNumber(model.phone);
+
+
+
         user.email = user.mphone + '@unverified.kasaptanal.com';
         user.ivCode = (Math.random() * 999999).toString();
         pwd = pwd || this.generatePwd();

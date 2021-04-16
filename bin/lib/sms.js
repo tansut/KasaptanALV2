@@ -15,6 +15,7 @@ const config_1 = require("../config");
 const axios_1 = require("axios");
 const libphonenumber_js_1 = require("libphonenumber-js");
 const helper_1 = require("./helper");
+const http_1 = require("./http");
 class Sms {
     static sendMultiple(to, text, throwexc = true, logger) {
         return __awaiter(this, void 0, void 0, function* () {
@@ -32,6 +33,12 @@ class Sms {
             let phone = libphonenumber_js_1.default(to, 'TR');
             to = phone && phone.number ? phone.number.toString() : to;
             if (Sms.canSend(to)) {
+                let requestIsFraud = yield logger.isFraud({ email: to });
+                if (requestIsFraud) {
+                    if (throwexc)
+                        throw new http_1.ValidationError('Lütfen 5 dk sonra tekrar deneyiniz.');
+                    return false;
+                }
                 let url = `https://api.netgsm.com.tr/sms/send/get?usercode=${8503054216}&password=BOV0MN1M&gsmno=${encodeURI(to.trim())}&message=${encodeURI(text)}&msgheader=${('KasaptanAl')}`;
                 let resp;
                 try {
@@ -56,8 +63,11 @@ class Sms {
                     });
                     if (throwexc)
                         throw err;
+                    return false;
                 }
             }
+            else
+                return false;
         });
     }
 }

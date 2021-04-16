@@ -88,10 +88,10 @@ export default class Helper {
     static logError(err: Error, additionalData?: Object, req?: AppRequest, sendEmail: boolean = true) {
         let text = Helper.getErrorLog(err, additionalData, req)
         console.log(text);
-        sendEmail && email.send('tansuturkoglu@gmail.com', 'kasaptanAl:hata', "error.ejs", {
-            text: text,
-            stack: err.stack
-        })
+        // sendEmail && email.send('tansuturkoglu@gmail.com', 'kasaptanAl:hata', "error.ejs", {
+        //     text: text,
+        //     stack: err.stack
+        // })
     }
 
 

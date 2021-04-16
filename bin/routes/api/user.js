@@ -64,7 +64,7 @@ class UserRoute extends router_1.ApiRouter {
             let res = moment(utc).add('minutes', 30).toDate();
             user.resetTokenValid = res;
             yield user.save();
-            yield sms_1.Sms.send(user.mphone, `KasaptanAl.com sifrenizi yenilemek icin ${this.url}/rpwd?k=${user.resetToken}`, true, null);
+            yield sms_1.Sms.send(user.mphone, `KasaptanAl.com sifrenizi yenilemek icin ${this.url}/rpwd?k=${user.resetToken}`, true, new sitelog_1.default(this.constructorParams));
             this.res.sendStatus(200);
         });
     }
@@ -208,6 +208,9 @@ class UserRoute extends router_1.ApiRouter {
             if (!helper_1.default.isValidPhone(model.phone))
                 throw new http.ValidationError('Geçersiz telefon:' + model.phone);
             model.phone = helper_1.default.getPhoneNumber(model.phone);
+            let log = new sitelog_1.default(this.constructorParams);
+            //let requestIsFraud= await log.isFraud({email: model.phone});
+            //if (requestIsFraud) throw new http.ValidationError('Lütfen 5 dk sonra tekrar deneyiniz.');
             let pwd = this.generatePwd();
             try {
                 yield this.create(this.req.body, pwd);

@@ -22,10 +22,39 @@ const common_1 = require("../../lib/common");
 const router_1 = require("../../lib/router");
 const sitelog_1 = require("../../db/models/sitelog");
 const email_1 = require("../../lib/email");
+const sequelize_1 = require("sequelize");
+const helper_1 = require("../../lib/helper");
 // type express.response : {
 //     session: any
 // }
 class SiteLogRoute extends router_1.ApiRouter {
+    countBy(where, seconds) {
+        return __awaiter(this, void 0, void 0, function* () {
+            var t = helper_1.default.Now();
+            t.setSeconds(t.getSeconds() - seconds);
+            where = where || {};
+            where['creationDate'] = {
+                [sequelize_1.Op.gt]: t
+            };
+            return yield sitelog_1.default.count({
+                where: where
+            });
+        });
+    }
+    isFraud(where) {
+        return __awaiter(this, void 0, void 0, function* () {
+            const seconds = 360, ccount = 5;
+            let count = yield this.countBy(where, seconds);
+            if (count > ccount)
+                return true;
+            if (this.userIp) {
+                count = yield this.countBy({ ip: this.userIp }, seconds);
+            }
+            if (count > ccount)
+                return true;
+            return false;
+        });
+    }
     log(content) {
         return __awaiter(this, void 0, void 0, function* () {
             var objectC = Object.assign(Object.assign({}, content), {

@@ -32,6 +32,7 @@ var MarkdownIt = require('markdown-it');
 const fs = require('fs');
 const common_2 = require("../models/common");
 const helper_1 = require("./helper");
+//import SiteLogRoute from '../routes/api/sitelog';
 var ResponseStatus;
 (function (ResponseStatus) {
     ResponseStatus[ResponseStatus["success"] = 0] = "success";
@@ -41,12 +42,16 @@ var ResponseStatus;
 class BaseRouter {
     constructor(reqParams) {
         this._markdown = null;
+        this._logger = null;
         if (reqParams) {
             this.req = reqParams.req;
             this.res = reqParams.res;
             this.next = reqParams.next;
         }
         this.constructorParams = reqParams;
+    }
+    get userIp() {
+        return this.req ? (this.req.header("x-forwarded-for") || this.req.connection.remoteAddress) : '';
     }
     get platform() {
         let agent = this.req.headers['user-agent'] || '';
