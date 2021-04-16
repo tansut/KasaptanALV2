@@ -393,6 +393,7 @@ class UserRoute extends router_1.ApiRouter {
 }
 __decorate([
     common_1.Auth.Anonymous(),
+    common_1.Auth.RequireCatcpha(),
     __metadata("design:type", Function),
     __metadata("design:paramtypes", []),
     __metadata("design:returntype", Promise)

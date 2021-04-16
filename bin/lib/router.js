@@ -43,7 +43,6 @@ class BaseRouter {
     constructor(reqParams) {
         this._markdown = null;
         this._logger = null;
-        this.useCatpcha = true;
         if (reqParams) {
             this.req = reqParams.req;
             this.res = reqParams.res;
@@ -51,8 +50,12 @@ class BaseRouter {
         }
         this.constructorParams = reqParams;
     }
+    //protected useCatpcha: boolean = true;
     get userIp() {
         return this.req ? (this.req.header("x-forwarded-for") || this.req.connection.remoteAddress) : '';
+    }
+    get useCatpcha() {
+        return this.platform == common_2.Platform.web;
     }
     get platform() {
         let agent = this.req.headers['user-agent'] || '';
@@ -117,7 +120,7 @@ class BaseRouter {
         if (!anonymous && !req.user)
             return next(new http.PermissionError(req.originalUrl));
         let prom = new Promise((resolve, reject) => {
-            if (useCatcpha) {
+            if (useCatcpha && instance.useCatpcha) {
                 let token = (req.body ? req.body.__token : undefined);
                 if (!token) {
                     return reject(new http.PermissionError("Güvenlik adımını maalesef tamamlayamadık. Daha sonra tekrar deneyin."));

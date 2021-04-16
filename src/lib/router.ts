@@ -55,12 +55,15 @@ export default class BaseRouter {
     protected next: Function;
     private _markdown = null;
     private _logger: ISiteLogger = null;
-    protected useCatpcha: boolean = true;
+    //protected useCatpcha: boolean = true;
 
     get userIp() {
         return this.req ? (this.req.header("x-forwarded-for") || this.req.connection.remoteAddress): '';
     }
 
+    get useCatpcha() {
+        return this.platform == Platform.web
+    }
 
 
     get platform(): Platform {
@@ -138,7 +141,7 @@ export default class BaseRouter {
             return next(new http.PermissionError(req.originalUrl));
 
         let prom = new Promise<void>((resolve, reject) => {
-            if (useCatcpha) {
+            if (useCatcpha && instance.useCatpcha) {
                 let token = (req.body ? req.body.__token: undefined);
                 if (!token) {
                      return reject(new http.PermissionError("Güvenlik adımını maalesef tamamlayamadık. Daha sonra tekrar deneyin."))

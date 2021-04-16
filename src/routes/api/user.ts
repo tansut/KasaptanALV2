@@ -60,6 +60,7 @@ export default class UserRoute extends ApiRouter {
 
 
     @Auth.Anonymous()
+    @Auth.RequireCatcpha()
     async sendResetLink() {
         let phone: string = this.req.body.phone;
         let user = await this.retrieveByEMailOrPhone(phone);
