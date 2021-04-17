@@ -8,7 +8,9 @@
 
 
             <div class="d-flex justify-content-center d-print-w-50">
-                <%- include('./product-view.ejs', {hideBadge: true, butcher: controller.butcher.slug, product: prodinfo.product}); %>
+                <h3>
+                    <%= prodinfo.product.name %>
+                </h3>
 
             </div>
 
@@ -111,8 +113,20 @@
         </div>
 
         <div class="form-group d-print-none">
+            <% if (prodinfo.fromButcherDesc) { %>
+            <p>
+                Kasabın Bildirdiği Not:
+            </p>
+            <%= prodinfo.fromButcherDesc %>
 
-            <textarea name="productmddesc" id="productmddesc" class="form-control" rows="5"><%= prodinfo.mddesc %></textarea>
+            <% } %>
+
+
+        </div>
+
+        <div class="form-group d-print-none">
+
+            <textarea name="productmddesc" id="productmddesc" placeholder="Kasaba özel ürün notu varsa giriniz" class="form-control" rows="5"><%= prodinfo.mddesc %></textarea>
 
 
 
@@ -120,7 +134,7 @@
         </div>
         <div class="form-group d-print-none">
 
-            <textarea name="productlongdesc" id="productlongdesc" class="form-control" rows="5"><%= prodinfo.longdesc %></textarea>
+            <textarea name="productlongdesc" id="productlongdesc" placeholder="Kasaba özel uzun ve detaylı ürün notu varsa giriniz" class="form-control" rows="5"><%= prodinfo.longdesc %></textarea>
 
 
 

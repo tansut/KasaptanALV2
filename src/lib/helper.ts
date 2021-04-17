@@ -10,7 +10,7 @@ import { min, round } from 'lodash';
 import parsePhoneNumber from 'libphonenumber-js';
 import { Shipment, ShipmentDays } from '../models/shipment';
 import * as crypto from 'crypto';
-import { PreferredAddress } from '../db/models/user';
+import User, { PreferredAddress } from '../db/models/user';
 import email from './email';
 
 export default class Helper {
@@ -65,6 +65,10 @@ export default class Helper {
         } else if (n>0)
             return `${n}+`
         else return '';
+    }
+
+    static hasRightOnButcher(user: User, butcherid: number) {
+        return user.hasRole("admin") || ((user.hasRole("butcher") && user.butcherid == butcherid))
     }
 
     static getErrorLog(err: Error,  additionalData?: Object, req?: AppRequest) {
@@ -126,6 +130,7 @@ export default class Helper {
     }
 
     static asCurrency(n: number) {
+        n = n || 0.00;
         return Number(n.toFixed(2));
     }
 

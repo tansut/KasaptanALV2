@@ -1,0 +1,272 @@
+<!DOCTYPE html>
+<html lang="tr-TR" prefix="og: http://ogp.me/ns#">
+
+<head>
+  <% include ./_partial/head %>
+</head>
+
+<body>
+  <% include ./_partial/header %>
+
+
+      <div class="page-title app-d-none">
+        <div class="container d-lg-flex justify-content-between py-2 py-lg-3">
+          <div class="order-lg-2 mb-3 mb-lg-0 pt-lg-2">
+            <nav aria-label="breadcrumb" class="d-none d-lg-block">
+              <ol class="breadcrumb breadcrumb-dark flex-lg-nowrap justify-content-center justify-content-lg-star">
+                <li class="breadcrumb-item"><a class="text-nowrap" href="/"><i class="czi-home"></i></a></li>
+                <li class="breadcrumb-item text-nowrap"><a href="/kasap-urunleri">Ürünler</a>
+                </li>
+              </ol>
+            </nav>
+          </div>
+          <div class="order-lg-1 pr-lg-4 text-center text-lg-left">
+            <h1 class="h3">
+              <%=butcher.name%>
+            </h1>
+            <h2 class="h2 lead">
+              Ne kadar çok ürün o kadar çok sipariş
+            </h2>
+          </div>
+        </div>
+      </div>
+
+
+        <div id="priceapp" v-cloak class="container">
+          <div class="bg-secondary p-3 mb-3">
+            <p>
+              Faydalı olacağını düşündüğümüz bir kaç not:
+            </p>
+            <ul class="list">
+              <li>
+                KasaptanAl.com'da satışı biz değil siz yapmaktasınız. Tezgah fiyatlarınızı birebir verin.
+              </li>
+              <li>
+                Internet ortamında firesiz satış yapıyoruz. Sadece firesi olabilecek kemikli ürünlerde fire farkı ekleyin.
+              </li>
+              <li>
+                Aynı gün elinizde olmasa bile temin edebileceğiniz her ürüne fiyat verin.
+              </li>
+            </ul>
+            <button v-if="!canGo" @click="canGo=1" class="btn-info btn">Notları Okudum Devam Edeyim</button>
+          </div>
+
+          <div v-show="canGo">
+            <div v-if="!list || list.length == 0">
+              Yüklüyorum ...
+            </div>
+            <div v-if="list">
+              <div class="border bg-secondary p-3" v-if="list.length - completed > 0">
+                {{completed}} üründe fiyatınız var, kalan <strong>{{list.length - completed}}</strong> üründe fiyatınız gözükmüyor. Aynı gün temin edemeseniz bile temin edebildiğiniz her ürüne fiyat veriniz.
+              </div>
+              <div class="progress rounded-0 mb-2">
+                <div class="progress-bar bg-info" role="progressbar" :style="{'width': completedPerc + '%'}"
+                  :aria-valuenow="completed" aria-valuemin="0" :aria-valuemax="list.length">{{completed}}/{{list.length}}
+                </div>
+              </div>
+            </div>
+  
+            <table v-if="list && list.length > 0" class="table table-sm">
+              <thead class="thead-dark">
+                
+                <th scope="col">Resim</th>
+                <th scope="col">Ürün</th>
+                <th scope="col">Fiyat</th>
+                </tr>
+              </thead>
+              <tbody>
+  
+  
+                <tr v-bind:class="{'border border-primary': p.price <= 0}" v-for="(p, index) in list">
+                  <td style="width: 3rem;">
+                    <a class="d-block" target="_blank" :href="'/' + p.slug">
+                      <img style="width: 3rem;" width="500" height="500" :src="p.thumbnail" class="lazyload">
+                    </a>
+                  </td>
+                  <td>
+                    <p class="mb-1">
+                      <a class="text-dark d-block" target="_blank" :href="'/' + p.slug">
+                      {{p.name}} <i v-if="p.__updated" class="czi-icon czi-thumb-up"></i>
+                      </a>
+                      <span class="text-muted font-size-sm">{{p.butcherProductNote}}</span>
+                    </p>
+                    <p class="text-muted font-size-sm" v-if="p.note">
+                      <span>
+                        {{p.note}}
+                      </span>
+                    </p>
+  
+  
+  
+                  </td>
+  
+                  <td scope="row">
+                    <button v-on:click="openDialog(p, index)"
+                      v-bind:class="{'btn-success': p.price > 0, 'btn-secondary': p.price <=0 }" class="btn btn-sm">
+                      <money-view v-if="p.price > 0" :unit="p.unit" :money="p.price"></money-view>
+                      <span v-else>Fiyat Ver</span>
+                    </button>
+                  </td>
+  
+  
+  
+                </tr>
+              </tbody>
+            </table>
+          </div>
+         
+          <div class="modal modal-fullscreen-sm" id="pricemodal" tabindex="-1" role="dialog" data-keyboard="false"
+            aria-hidden="true">
+            <div class="modal-dialog " role="document">
+              <div class="modal-content">
+                <div class="modal-header">
+                  <h5 class="modal-title">{{edit && edit.name}}</h5>
+                  <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                  </button>
+                </div>
+                <div class="modal-body p-0">
+                  <div class="p-2">
+                    <div class="alert alert-secondary" v-if="edit && edit.butcherProductNote" class="text-muted">
+                      {{edit && edit.butcherProductNote }}
+                    </div>
+                    <div  class="d-none form-group">
+                      <label>Satış Biriminiz</label>
+                      <input readonly type="text" class="form-control" v-model="edit && edit.unit"
+                        placeholder="satış birimi (kg, adet, paket gibi)">
+                      <small class="form-text text-dark">Bu şekilde satış yapmıyorsanız fiyat verip not bölümünde
+                        belirtiniz.</small>
+                    </div>
+                    <div class="form-group">
+                      <label><strong style="text-transform: uppercase;">{{edit && edit.unit}}</strong> Satış Fiyatınız</label>
+                      <input id="price-edit" type="text" class="form-control" v-model="edit && edit.price"
+                        placeholder="tezgah satış fiyatınız">
+                      <small class="form-text text-dark">
+<ul>
+  <li>
+    Tezgah satış fiyatınızı belirtin. 
+  </li>
+  <li>
+    KasaptanAl'da firesiz
+                        satmaktayız. Sadece kemikli ürünlerde fire payı ekleyin.
+  </li>
+  <li>
+    Ürünü {{edit && edit.unit}} dışında satıyorsanız not bölümüne yazın.
+  </li>
+  <li>
+    Ürünü hiçbir şekilde temin edemiyorsanız 0 girin.
+  </li>
+</ul>
+
+                      </small>
+                     
+                    </div>
+                    <div class="form-group">
+                      <label>Notunuzu varsa belirtin</label>
+                      <textarea class="form-control" v-model="edit && edit.note"
+                        placeholder="Ürününüzle ilgili müşteriye veya bize iletmek istediğiniz bilgi varsa belirtin."></textarea>
+                      <small class=" form-text text-muted"></small>
+                    </div>
+                  </div>
+
+                </div>
+                <div class="modal-footer">
+                  <button v-on:click="saveDialog(edit)" class="btn btn-primary">Kaydet</button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+
+
+        <% include ./_partial/footer %>
+          <% include ./_partial/scripts %>
+
+
+            <script>
+
+              $(document).ready(function () {
+                $('#price-edit').maskMoney();
+              })
+
+              window.priceApp = new Vue({
+                el: '#priceapp',
+
+                mounted: function () {
+                  var self = this;
+
+                  App.Backend.get('product/<%=butcher.slug%>/prePrices').then(function (result) {
+                    self.list = result.data;
+                  })
+                },
+
+                data: function () {
+                  return {
+                    list: [],
+                    edit: null,
+                    editIndex: -1,
+                    completedPerc: 0,
+                    canGo: 0
+                  }
+                },
+
+                computed: {
+
+
+                  completed: function () {
+                    let result = this.list.filter(function (p) {
+                      return p.price > 0
+                    }).length;
+                    this.completedPerc = Math.floor(this.list.length > 0 ? (result / this.list.length) * 100 : 0)
+                    return result;
+                  }
+                },
+
+                methods: {
+                  saveDialog(p) {
+                    var self = this;
+                    let v = parseFloat($('#price-edit').val().replace(/,/g, '') || "0")
+                    p.price = parseFloat(v);
+                    App.Backend.post('product/<%=butcher.slug%>/prePrices', {
+                      id: p.id,
+                      unit: p.unit,
+                      price: p.price,
+                      note: p.note
+                    }).then(function (result) {
+                      var f = self.list.find(function (l) {
+                        return l.id == p.id
+                      })
+                      //p.price ? (f.__updated=true): (f.__updated=false);
+
+                      Object.assign(f, p);
+
+                      $('#pricemodal').modal('hide');
+                      
+                      //App.alert(f.name + ' fiyatı belirlendi');
+                      
+                      // if (self.editIndex < (self.list.length - 1)) {
+                      //   Object.assign(self.edit = {}, self.list[++self.editIndex]);
+                      //   $('#price-edit').focusin();
+                      //   $('#price-edit').select();
+                      // } else $('#pricemodal').modal('hide');
+                    }).catch(function (err) {
+                      App.HandleError(err)
+                    });
+
+                  },
+
+                  openDialog(p, index) {
+                    Object.assign(this.edit = {}, p);
+                    this.editIndex = index;
+                    $('#pricemodal').modal('show');
+                    $('#price-edit').focusin();
+                    $('#price-edit').select();
+                  }
+                }
+              })
+            </script>
+
+</body>
+
+</html>

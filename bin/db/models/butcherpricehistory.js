@@ -8,12 +8,56 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
 var __metadata = (this && this.__metadata) || function (k, v) {
     if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
 };
+var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
+    function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
+    return new (P || (P = Promise))(function (resolve, reject) {
+        function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
+        function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
+        function step(result) { result.done ? resolve(result.value) : adopt(result.value).then(fulfilled, rejected); }
+        step((generator = generator.apply(thisArg, _arguments || [])).next());
+    });
+};
+var ButcherPriceHistory_1;
 Object.defineProperty(exports, "__esModule", { value: true });
 const sequelize_typescript_1 = require("sequelize-typescript");
 const basemodel_1 = require("./basemodel");
 const product_1 = require("./product");
 const butcher_1 = require("./butcher");
-let ButcherPriceHistory = class ButcherPriceHistory extends basemodel_1.default {
+let ButcherPriceHistory = ButcherPriceHistory_1 = class ButcherPriceHistory extends basemodel_1.default {
+    static manageHistory(rec, t) {
+        return __awaiter(this, void 0, void 0, function* () {
+            if (!rec.enabled)
+                return;
+            let existing = yield ButcherPriceHistory_1.findOne({
+                where: {
+                    butcherid: rec.butcherid,
+                    productid: rec.productid,
+                },
+                order: [['id', 'desc']],
+            });
+            if (existing) {
+                if (existing.unit1price == rec.unit1price &&
+                    existing.unit2price == rec.unit2price &&
+                    existing.unit3price == rec.unit3price &&
+                    existing.unit4price == rec.unit4price &&
+                    existing.unit5price == rec.unit5price &&
+                    existing.kgPrice == rec.kgPrice)
+                    return;
+            }
+            let newItem = new ButcherPriceHistory_1();
+            newItem.unit1price = rec.unit1price;
+            newItem.unit2price = rec.unit2price;
+            newItem.unit3price = rec.unit3price;
+            newItem.unit4price = rec.unit4price;
+            newItem.unit5price = rec.unit5price;
+            newItem.kgPrice = rec.kgPrice;
+            newItem.productid = rec.productid;
+            newItem.butcherid = rec.butcherid;
+            return newItem.save({
+                transaction: t
+            });
+        });
+    }
 };
 __decorate([
     sequelize_typescript_1.ForeignKey(() => butcher_1.default),
@@ -74,7 +118,7 @@ __decorate([
     }),
     __metadata("design:type", Number)
 ], ButcherPriceHistory.prototype, "kgPrice", void 0);
-ButcherPriceHistory = __decorate([
+ButcherPriceHistory = ButcherPriceHistory_1 = __decorate([
     sequelize_typescript_1.Table({
         tableName: "ButcherPriceHistories",
         indexes: [{

@@ -8,6 +8,15 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
 var __metadata = (this && this.__metadata) || function (k, v) {
     if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
 };
+var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
+    function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
+    return new (P || (P = Promise))(function (resolve, reject) {
+        function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
+        function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
+        function step(result) { result.done ? resolve(result.value) : adopt(result.value).then(fulfilled, rejected); }
+        step((generator = generator.apply(thisArg, _arguments || [])).next());
+    });
+};
 Object.defineProperty(exports, "__esModule", { value: true });
 const common_1 = require("../../lib/common");
 const router_1 = require("../../lib/router");
@@ -21,6 +30,8 @@ const fs = require("fs");
 const mime = require("mime-types");
 const Jimp = require('jimp');
 const stream = require("stream");
+const sitelog_1 = require("./sitelog");
+const sms_1 = require("../../lib/sms");
 class Route extends router_1.ApiRouter {
     googleSearchRoute() {
         if (this.req.query.q)
@@ -32,6 +43,18 @@ class Route extends router_1.ApiRouter {
         if (!placeid)
             throw new http_1.ValidationError("");
         return this.googleSync(placeid).then((data) => this.res.send({ id: data.id, slug: data.slug }));
+    }
+    SaveButcherApplication() {
+        return __awaiter(this, void 0, void 0, function* () {
+            let log = new sitelog_1.default(this.constructorParams);
+            let data = {
+                logData: JSON.stringify(this.req.body),
+                logtype: "BAS"
+            };
+            yield log.log(data);
+            yield sms_1.Sms.send('+905326274151', 'yeni basvuru: ' + this.req.body.tel, false, log);
+            this.res.send('OK');
+        });
     }
     googleSyncPhotosRoute() {
         const id = this.req.params.id;
@@ -358,6 +381,7 @@ class Route extends router_1.ApiRouter {
     static SetRoutes(router) {
         router.get("/butcher/googlesearch", Route.BindRequest(this.prototype.googleSearchRoute));
         router.post("/butcher/googlesync", Route.BindRequest(this.prototype.googleSyncRoute));
+        router.post("/savebutcherapplication", Route.BindRequest(this.prototype.SaveButcherApplication));
         //router.get("/butcher/googlesyncphotos/:id", Route.BindRequest(this.prototype.googleSyncPhotosRoute));
         //router.get("/butcher/dbsync", Route.BindRequest(this.prototype.dbSyncAllFromCachedGoogle));
     }
@@ -374,6 +398,13 @@ __decorate([
     __metadata("design:paramtypes", []),
     __metadata("design:returntype", void 0)
 ], Route.prototype, "googleSyncRoute", null);
+__decorate([
+    common_1.Auth.Anonymous(),
+    common_1.Auth.RequireCatcpha(),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", []),
+    __metadata("design:returntype", Promise)
+], Route.prototype, "SaveButcherApplication", null);
 __decorate([
     common_1.Auth.Anonymous(),
     __metadata("design:type", Function),

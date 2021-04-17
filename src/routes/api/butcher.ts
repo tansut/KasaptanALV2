@@ -15,6 +15,8 @@ import * as Jimp2 from 'jimp'
 const Jimp = <Jimp2>require('jimp');
 import * as path from "path"
 import * as stream from "stream"
+import SiteLogRoute from './sitelog';
+import { Sms } from '../../lib/sms';
 
 export default class Route extends ApiRouter {
 
@@ -34,6 +36,21 @@ export default class Route extends ApiRouter {
             throw new ValidationError("")
         return this.googleSync(placeid).then((data) => this.res.send({ id: data.id, slug: data.slug }));
     }
+
+    @Auth.Anonymous()
+    @Auth.RequireCatcpha()
+    async SaveButcherApplication() {
+        let log = new SiteLogRoute(this.constructorParams);
+        let data = {
+            logData: JSON.stringify(this.req.body),
+            logtype: "BAS"
+        }
+        await log.log(data);
+        await Sms.send('+905326274151', 'yeni basvuru: ' + this.req.body.tel, false, log)
+        this.res.send('OK')
+    }
+
+    
 
     @Auth.Anonymous()
     googleSyncPhotosRoute() {
@@ -411,6 +428,10 @@ export default class Route extends ApiRouter {
     static SetRoutes(router: express.Router) {
         router.get("/butcher/googlesearch", Route.BindRequest(this.prototype.googleSearchRoute));
         router.post("/butcher/googlesync", Route.BindRequest(this.prototype.googleSyncRoute));
+        router.post("/savebutcherapplication", Route.BindRequest(this.prototype.SaveButcherApplication));
+
+
+        
         //router.get("/butcher/googlesyncphotos/:id", Route.BindRequest(this.prototype.googleSyncPhotosRoute));
         //router.get("/butcher/dbsync", Route.BindRequest(this.prototype.dbSyncAllFromCachedGoogle));
 

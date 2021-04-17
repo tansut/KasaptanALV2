@@ -21,11 +21,13 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const common_1 = require("../../lib/common");
 const router_1 = require("../../lib/router");
 const product_1 = require("../../db/models/product");
+const butcher_1 = require("../../db/models/butcher");
 const butcherproduct_1 = require("../../db/models/butcherproduct");
 const helper_1 = require("../../lib/helper");
 var MarkdownIt = require('markdown-it');
 const sq = require("sequelize");
 const builder = require("xmlbuilder");
+const context_1 = require("../../db/context");
 const _ = require("lodash");
 const resource_1 = require("../../db/models/resource");
 const resourcecategory_1 = require("../../db/models/resourcecategory");
@@ -38,6 +40,9 @@ const shipment_1 = require("../../models/shipment");
 const path = require("path");
 const dispatcher_2 = require("../../db/models/dispatcher");
 const config_1 = require("../../config");
+const productManager_1 = require("../../lib/productManager");
+const http_1 = require("../../lib/http");
+const butcherpricehistory_1 = require("../../db/models/butcherpricehistory");
 const fs = require('fs');
 let ButcherPropertyWeigts = {
     'distance': -0.80,
@@ -620,6 +625,19 @@ class Route extends router_1.ApiRouter {
         });
         return _.sortBy(purchaseOptions, ["displayOrder"]).reverse();
     }
+    getProductViewforButcher(product, butcher, butcherProduct) {
+        return __awaiter(this, void 0, void 0, function* () {
+            let view = yield this.getProductView(product, butcher, butcherProduct);
+            let result = view;
+            result.butcherProductNote = product.butcherProductNote;
+            result.priceUnit = product.priceUnit;
+            if (butcher && butcher.products) {
+                let butcherProduct = butcher.products.find(c => (c.productid == product.id));
+                result.fromButcherNote = butcherProduct ? butcherProduct.fromButcherDesc : '';
+            }
+            return result;
+        });
+    }
     getProductView(product, butcher, butcherProduct, loadResources = false) {
         return __awaiter(this, void 0, void 0, function* () {
             if (!butcherProduct && butcher && !butcher.products) {
@@ -731,9 +749,111 @@ class Route extends router_1.ApiRouter {
     //     let view = this.getProductView(product, butcher)
     //     this.res.send(view)
     // }
+    viewProductsForButchers() {
+        return __awaiter(this, void 0, void 0, function* () {
+            if (!this.req.params.butcher) {
+                return this.next();
+            }
+            let butcher = yield butcher_1.default.loadButcherWithProducts(this.req.params.butcher);
+            if (!butcher) {
+                return this.next();
+            }
+            let api = this;
+            let categories = this.req.__categories.filter(p => p.slug != 'populer-etler');
+            let viewProducts = [];
+            for (let i = 0; i < categories.length; i++) {
+                let prods = yield productManager_1.default.getProductsOfCategories([categories[i].id]);
+                for (let p = 0; p < prods.length; p++) {
+                    let view = yield api.getProductViewforButcher(prods[p], butcher);
+                    if (!viewProducts.find(vp => vp.id == view.id)) {
+                        let price = view.kgPrice;
+                        if (price <= 0) {
+                            let op = view.purchaseOptions.find(po => po.unit == view.priceUnit);
+                            price = op ? op.unitPrice : price;
+                        }
+                        viewProducts.push({
+                            id: view.id,
+                            name: view.name,
+                            unit: view.priceUnit == 'kg' ? 'kg' : prods[p][`${view.priceUnit}`],
+                            price: price,
+                            butcherProductNote: view.butcherProductNote,
+                            note: view.fromButcherNote,
+                            slug: view.slug,
+                            thumbnail: this.req.helper.imgUrl("product-photos", view.slug)
+                        });
+                    }
+                }
+            }
+            this.res.send(viewProducts);
+        });
+    }
+    saveProductsForButchers() {
+        return __awaiter(this, void 0, void 0, function* () {
+            if (!this.req.params.butcher) {
+                return this.next();
+            }
+            let butcher = yield butcher_1.default.findOne({
+                where: {
+                    slug: this.req.params.butcher
+                }
+            });
+            if (!butcher) {
+                return this.next();
+            }
+            if (butcher.approved) {
+                if (!this.req.user || !helper_1.default.hasRightOnButcher(this.req.user, butcher.id)) {
+                    return new http_1.PermissionError();
+                }
+            }
+            ;
+            let productid = parseInt(this.req.body.id);
+            let product = yield product_1.default.findOne({ where: {
+                    id: productid
+                } });
+            let newItem = yield butcherproduct_1.default.findOne({
+                where: {
+                    butcherid: butcher.id,
+                    productid: productid
+                }
+            });
+            if (newItem == null)
+                newItem = new butcherproduct_1.default();
+            newItem.enabled = butcher.approved ? (this.req.body.price <= 0 ? false : true) : newItem.enabled;
+            newItem.butcherid = butcher.id;
+            newItem.productid = productid;
+            newItem.fromButcherDesc = this.req.body.note;
+            if (this.req.body.unit == 'kg') {
+                newItem.kgPrice = this.req.body.price;
+            }
+            else {
+                let unitid = product.getUnitBy(this.req.body.unit);
+                if (!unitid)
+                    throw new http_1.ValidationError('Geçersiz birim');
+                newItem[`${unitid}price`] = this.req.body.price;
+                newItem[`${unitid}enabled`] = true;
+            }
+            // newItem.unit1price = this.req.body.unit1price ? parseFloat(this.req.body.unit1price) : 0;
+            // newItem.unit2price = this.req.body.unit2price ? parseFloat(this.req.body.unit2price) : 0;
+            // newItem.unit3price = this.req.body.unit3price ? parseFloat(this.req.body.unit3price) : 0;
+            // newItem.kgPrice = this.req.body.productkgPrice ? parseFloat(this.req.body.productkgPrice) : 0;
+            //newItem.mddesc = this.req.body.productmddesc;
+            //newItem.longdesc = this.req.body.productlongdesc;
+            // newItem.unit1enabled = this.req.body.unit1enabled == "on";
+            // newItem.unit2enabled = this.req.body.unit2enabled == "on";
+            // newItem.unit3enabled = this.req.body.unit3enabled == "on";
+            yield context_1.default.getContext().transaction((t) => {
+                return newItem.save({
+                    transaction: t
+                }).then(() => butcher.approved ? butcherpricehistory_1.default.manageHistory(newItem, t) : null);
+            });
+            this.res.send('OK');
+        });
+    }
     static SetRoutes(router) {
         // router.get("/product/:slug", Route.BindRequest(this.prototype.searchRoute));
         // router.get("/product/:slug/:butcher", Route.BindRequest(this.prototype.searchRoute));
+        router.get("/product/:butcher/prePrices", Route.BindRequest(this.prototype.viewProductsForButchers));
+        router.post("/product/:butcher/prePrices", Route.BindRequest(this.prototype.saveProductsForButchers));
     }
 }
 __decorate([
@@ -742,4 +862,16 @@ __decorate([
     __metadata("design:paramtypes", [Number, Object]),
     __metadata("design:returntype", Promise)
 ], Route.prototype, "getProductLdById", null);
+__decorate([
+    common_1.Auth.Anonymous(),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", []),
+    __metadata("design:returntype", Promise)
+], Route.prototype, "viewProductsForButchers", null);
+__decorate([
+    common_1.Auth.Anonymous(),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", []),
+    __metadata("design:returntype", Promise)
+], Route.prototype, "saveProductsForButchers", null);
 exports.default = Route;

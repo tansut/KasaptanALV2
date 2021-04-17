@@ -23,6 +23,7 @@ import { flatMap } from 'lodash';
 import DispatcherApi, { DispatcherQuery } from './api/dispatcher';
 import { timeStamp } from 'console';
 import { ShopCard, ShopcardItem } from '../models/shopcard';
+import { ProductView } from '../models/productView';
 
 
 export default class Route extends ViewRouter {
@@ -56,19 +57,19 @@ export default class Route extends ViewRouter {
     }
 
     getProductViewParams(product: Product) {
-       let price = this.getPriceData(product);
-        return { product: product, showPurchase: true, butcher: this.req.query.butcher, lowPrice: price ? price.lowPrice: 0.00, highPrice: price ? price.highPrice: 0.00, priceUnit: price ? price.priceUnit: ''}
+        let price = this.getPriceData(product);
+        return { product: product, showPurchase: true, butcher: this.req.query.butcher, lowPrice: price ? price.lowPrice : 0.00, highPrice: price ? price.highPrice : 0.00, priceUnit: price ? price.priceUnit : '' }
     }
 
     getPriceData(product: Product) {
-        let price = this.prices.find(p=>p.pid == product.id);
+        let price = this.prices.find(p => p.pid == product.id);
         if (!price) return null;
         let units = ['kg', 'unit1', 'unit2', 'unit3'];
         let usedUnit = null;
 
-        for(let i = 0; i < units.length;i++) {
+        for (let i = 0; i < units.length; i++) {
             let avgPrice = price[`${units[i]}avg`];
-            if (avgPrice > 0)  {
+            if (avgPrice > 0) {
                 usedUnit = units[i];
                 break;
             }
@@ -76,9 +77,9 @@ export default class Route extends ViewRouter {
         if (usedUnit) {
             return {
                 offerCount: price['count'],
-                highPrice: Number(price[`${usedUnit}max`].toFixed(2)) ,
+                highPrice: Number(price[`${usedUnit}max`].toFixed(2)),
                 lowPrice: Number(price[`${usedUnit}min`].toFixed(2)),
-                priceUnit: usedUnit == 'kg' ? 'KG': product[`${usedUnit}title`],
+                priceUnit: usedUnit == 'kg' ? 'KG' : product[`${usedUnit}title`],
                 priceCurrency: "TRY"
             }
         } else return null;
@@ -195,10 +196,36 @@ export default class Route extends ViewRouter {
                 await this.fillFoods(this.category.id, this.category.slug, true);
             } else await this.fillFoodsAndTarifs(this.category.id, this.category.slug, true);
 
-            this.renderPage('pages/category-sub-food.ejs', true)
+            this.renderView('pages/category-sub-food.ejs');
         }
     }
 
+    @Auth.Anonymous()
+    async viewProductsForButchers() {
+        if (!this.req.params.butcher) {
+            return this.next();
+        }
+        let butcher = await ButcherModel.findOne({
+            where: {
+                slug: this.req.params.butcher
+            }
+        })
+
+        if (!butcher) {
+            return this.next();
+        }
+
+        if (butcher.approved) {
+            if (!this.req.user || !Helper.hasRightOnButcher(this.req.user, butcher.id)) {
+                return this.res.redirect('/login?r=' + this.req.originalUrl)
+            }
+        };
+
+
+        this.renderView('pages/products.forbutchers.ejs', null, {
+            butcher: butcher
+        });
+    }
 
 
     @Auth.Anonymous()
@@ -258,12 +285,12 @@ export default class Route extends ViewRouter {
             //     serving = serving.filter(p=>p.butcherid == scButcher);
             //     serving = serving.length == 0 ? servings: serving;
             // }
-            this.prices = serving.length ? await api.getPriceStats(this.products.map(p=>p.id), serving.map(b=>b.butcherid)): []
+            this.prices = serving.length ? await api.getPriceStats(this.products.map(p => p.id), serving.map(b => b.butcherid)) : []
         } else this.prices = []
         this.forceSemt = true;
         this.appUI.title = 'Ürünler';
         //this.appUI.tabIndex = 1;
-        this.renderPage(this.req.query.partial ? 'pages/category-items.ejs': 'pages/category.ejs')
+        this.renderPage(this.req.query.partial ? 'pages/category-items.ejs' : 'pages/category.ejs')
 
     }
 
@@ -300,6 +327,7 @@ export default class Route extends ViewRouter {
         router.get("/et-yemekleri", Route.BindRequest(Route.prototype.foodsAndTarifsRoute));
         router.get("/et-yemekleri/:category", Route.BindRequest(Route.prototype.viewAsFoodAndTarifRoute));
 
+        router.get("/fiyat-al/:butcher", Route.BindRequest(Route.prototype.viewProductsForButchers));
 
 
 

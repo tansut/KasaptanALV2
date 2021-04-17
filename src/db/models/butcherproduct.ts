@@ -6,6 +6,9 @@ import Category from './category';
 import Butcher from './butcher';
 import ProductCategory from './productcategory';
 import { PriceView } from '../../models/common';
+import { Transaction } from "sequelize";
+import ButcherPriceHistory from './butcherpricehistory';
+
 
 @Table({
     tableName: "ButcherProducts",
@@ -30,6 +33,7 @@ class ButcherProduct extends BaseModel<ButcherProduct> {
 
     @BelongsTo(() => Product, "productid")
     product: Product;
+
 
 
     get priceView(): PriceView {
@@ -205,6 +209,11 @@ class ButcherProduct extends BaseModel<ButcherProduct> {
     })
     longdesc: string;       
 
+    @Column({
+        allowNull: true,
+        type: DataType.TEXT
+    })
+    fromButcherDesc: string;       
     
 }
 

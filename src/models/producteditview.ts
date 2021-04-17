@@ -4,13 +4,13 @@ import { PriceSlice } from "../lib/logistic/core";
 import { NutritionView, PriceView } from "./common";
 import { ShipmentDayHours } from "./shipment";
 
+
+
 export interface PurchaseOption {
     id: number;
     unit: string,
     unitTitle: string,
     unitWeight: string;
-    desc: string,
-    notePlaceholder: string;
     kgRatio: number,
     unitPrice: number,
     displayOrder: number;
@@ -20,8 +20,17 @@ export interface PurchaseOption {
     perPerson: number;
     step: number;
     weigthNote: string;
+}
+
+export interface ProductEditView {
+    productid: number;
+    productName: string;
     
 }
+
+
+
+
 
 export interface ButcherPurchaseOption {
     unit: string;
@@ -108,10 +117,4 @@ export interface ProductView {
     nutritionView: NutritionView;
     shipmentDayHours: ShipmentDayHours [];
     alternateButchers: AlternateButchersView[]
-}
-
-export interface ProductViewForButcher extends ProductView  {
-    butcherProductNote: string;
-    priceUnit: string;
-    fromButcherNote: string;
 }

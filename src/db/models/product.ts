@@ -25,6 +25,8 @@ export enum ProductType {
      countrywide = 'countrywide'
  }
 
+ export type ProductPriceUnit = 'kg' | 'unit1' | 'unit3' | 'unit3';
+
 export type ProductStatus = "onsale" | "archieved" 
 
 export type ProductSelection = 'tam' | 'sadece liste' | 'one cikar';
@@ -120,6 +122,16 @@ class Product extends BaseModel<Product> {
         this.unit4 && res.push(this.unit4title || this.unit4);
         this.unit5 && res.push(this.unit5title || this.unit5);
         return res;
+    }
+
+
+     getUnitBy(nameOrTitle: string) {
+        if (this.unit1 == nameOrTitle || this.unit1title == nameOrTitle) return 'unit1';
+        if (this.unit2 == nameOrTitle || this.unit1title == nameOrTitle) return 'unit2';
+        if (this.unit3 == nameOrTitle || this.unit1title == nameOrTitle) return 'unit3';
+        if (this.unit4 == nameOrTitle || this.unit1title == nameOrTitle) return 'unit4';
+        if (this.unit5 == nameOrTitle || this.unit1title == nameOrTitle) return 'unit5';
+        return null;
     }
 
     @HasMany(() => ProductCategory, {
@@ -613,9 +625,12 @@ class Product extends BaseModel<Product> {
     })
     badge: string;
 
-
+    @Column({
+        allowNull: false,
+        defaultValue: 'kg'
+    })
+    priceUnit: string;
     
-
     getCategories(): Category[] {
         let result = [];
         for (let i = 0; i < this.categories.length; i++) {

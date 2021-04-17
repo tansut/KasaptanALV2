@@ -93,6 +93,19 @@ let Product = Product_1 = class Product extends basemodel_1.default {
         this.unit5 && res.push(this.unit5title || this.unit5);
         return res;
     }
+    getUnitBy(nameOrTitle) {
+        if (this.unit1 == nameOrTitle || this.unit1title == nameOrTitle)
+            return 'unit1';
+        if (this.unit2 == nameOrTitle || this.unit1title == nameOrTitle)
+            return 'unit2';
+        if (this.unit3 == nameOrTitle || this.unit1title == nameOrTitle)
+            return 'unit3';
+        if (this.unit4 == nameOrTitle || this.unit1title == nameOrTitle)
+            return 'unit4';
+        if (this.unit5 == nameOrTitle || this.unit1title == nameOrTitle)
+            return 'unit5';
+        return null;
+    }
     getCategories() {
         let result = [];
         for (let i = 0; i < this.categories.length; i++) {
@@ -704,6 +717,13 @@ __decorate([
     }),
     __metadata("design:type", String)
 ], Product.prototype, "badge", void 0);
+__decorate([
+    sequelize_typescript_1.Column({
+        allowNull: false,
+        defaultValue: 'kg'
+    }),
+    __metadata("design:type", String)
+], Product.prototype, "priceUnit", void 0);
 Product = Product_1 = __decorate([
     sequelize_typescript_1.Table({
         tableName: "Products",

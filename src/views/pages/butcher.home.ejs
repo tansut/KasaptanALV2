@@ -39,7 +39,7 @@
         </li>
         <% }%>
         <li class="list-group-item">
-          <a href="/kasapsayfam/urun-listesi">Ürün Listesi</a>
+          <a href="/fiyat-al/<%=controller.butcher.slug%>">Ürün Fiyatlarım</a>
         </li>
         <li class="list-group-item">
           <a href="/kasapsayfam/siparislerim">Siparişlerim</a>
@@ -69,6 +69,7 @@
     </td>
     <td><%= b.approved %></td>
     <td>
+      <a class="btn btn-sm btn-dark mr-1 " target="_blank" href="/fiyat-al/<%=b.slug%>">Ürünler</a>
       <button class="btn btn-sm btn-primary" name="butcherid" type="submit" value="<%=b.id%>">Set</button>
 
     </td>

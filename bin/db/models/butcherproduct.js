@@ -223,6 +223,13 @@ __decorate([
     }),
     __metadata("design:type", String)
 ], ButcherProduct.prototype, "longdesc", void 0);
+__decorate([
+    sequelize_typescript_1.Column({
+        allowNull: true,
+        type: sequelize_typescript_1.DataType.TEXT
+    }),
+    __metadata("design:type", String)
+], ButcherProduct.prototype, "fromButcherDesc", void 0);
 ButcherProduct = __decorate([
     sequelize_typescript_1.Table({
         tableName: "ButcherProducts",

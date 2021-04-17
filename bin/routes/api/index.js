@@ -9,7 +9,8 @@ let appRoutes = [
     './user',
     './shopcard',
     './fts',
-    './order'
+    './order',
+    './product'
 ];
 class RouteLoader {
     static use(router) {

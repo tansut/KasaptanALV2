@@ -47,6 +47,9 @@ class Helper {
         else
             return '';
     }
+    static hasRightOnButcher(user, butcherid) {
+        return user.hasRole("admin") || ((user.hasRole("butcher") && user.butcherid == butcherid));
+    }
     static getErrorLog(err, additionalData, req) {
         return `
             ********* ${Helper.Now().toString()} ********
@@ -101,6 +104,7 @@ class Helper {
         }
     }
     static asCurrency(n) {
+        n = n || 0.00;
         return Number(n.toFixed(2));
     }
     static isToday(date) {

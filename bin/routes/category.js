@@ -19,7 +19,9 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 const router_1 = require("../lib/router");
+const butcher_1 = require("../db/models/butcher");
 const common_1 = require("../lib/common");
+const helper_1 = require("../lib/helper");
 let ellipsis = require('text-ellipsis');
 const resource_1 = require("./resource");
 const product_1 = require("../db/models/product");
@@ -197,8 +199,32 @@ class Route extends router_1.ViewRouter {
                 }
                 else
                     yield this.fillFoodsAndTarifs(this.category.id, this.category.slug, true);
-                this.renderPage('pages/category-sub-food.ejs', true);
+                this.renderView('pages/category-sub-food.ejs');
             }
+        });
+    }
+    viewProductsForButchers() {
+        return __awaiter(this, void 0, void 0, function* () {
+            if (!this.req.params.butcher) {
+                return this.next();
+            }
+            let butcher = yield butcher_1.default.findOne({
+                where: {
+                    slug: this.req.params.butcher
+                }
+            });
+            if (!butcher) {
+                return this.next();
+            }
+            if (butcher.approved) {
+                if (!this.req.user || !helper_1.default.hasRightOnButcher(this.req.user, butcher.id)) {
+                    return this.res.redirect('/login?r=' + this.req.originalUrl);
+                }
+            }
+            ;
+            this.renderView('pages/products.forbutchers.ejs', null, {
+                butcher: butcher
+            });
         });
     }
     viewProductCategoryRoute(back = false) {
@@ -290,6 +316,7 @@ class Route extends router_1.ViewRouter {
         router.get("/:category/et-yemekleri", Route.BindRequest(Route.prototype.viewAsFoodAndTarifRoute));
         router.get("/et-yemekleri", Route.BindRequest(Route.prototype.foodsAndTarifsRoute));
         router.get("/et-yemekleri/:category", Route.BindRequest(Route.prototype.viewAsFoodAndTarifRoute));
+        router.get("/fiyat-al/:butcher", Route.BindRequest(Route.prototype.viewProductsForButchers));
         // router.get("/et-yemek-tarifleri", Route.BindRequest(Route.prototype.viewTarifsRoute));
         // router.get("/et-yemek-tarifleri/kategori/:category", Route.BindRequest(Route.prototype.viewTarifsRoute));
         //router.get("/et-yemekleri/kategori/:category", Route.BindRequest(Route.prototype.viewFoodsRoute));
@@ -314,6 +341,12 @@ __decorate([
     __metadata("design:paramtypes", [Boolean]),
     __metadata("design:returntype", Promise)
 ], Route.prototype, "viewAsFoodAndTarifRoute", null);
+__decorate([
+    common_1.Auth.Anonymous(),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", []),
+    __metadata("design:returntype", Promise)
+], Route.prototype, "viewProductsForButchers", null);
 __decorate([
     common_1.Auth.Anonymous(),
     __metadata("design:type", Function),

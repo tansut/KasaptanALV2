@@ -586,7 +586,10 @@ class Butcher extends BaseModel<Butcher> {
         return this.location ? (<any>this.location).coordinates[1] : 0
     }
 
-    static async loadButcherWithProducts(slug: string) {
+    static async loadButcherWithProducts(slug: string | number) {
+        let where = {}
+        if (typeof slug == 'string') where['slug'] = slug;
+        else where["id"] = slug
         let butcher = await Butcher.findOne({
             include: [{
                 model: ButcherProduct,
@@ -622,11 +625,7 @@ class Butcher extends BaseModel<Butcher> {
                 all: true,
                 as: "areaLevel1Id"
 
-            }], where: {
-                slug: slug,
-
-
-            }
+            }], where: where
         });
         if (butcher) {
             butcher.products = butcher.products.filter(p => {

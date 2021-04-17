@@ -97,7 +97,8 @@ class Route extends home_1.ButcherRouter {
             vitrin: butcherProduct.vitrin,
             kgPrice: butcherProduct.kgPrice,
             mddesc: butcherProduct.mddesc,
-            longdesc: butcherProduct.longdesc
+            longdesc: butcherProduct.longdesc,
+            fromButcherDesc: butcherProduct.fromButcherDesc
         } : {
             displayOrder: "",
             enabled: false,
@@ -139,40 +140,38 @@ class Route extends home_1.ButcherRouter {
             this.otherProducts = others.map(p => this.getButcherProductInfo(null, p));
         });
     }
-    manageHistory(rec, t) {
-        return __awaiter(this, void 0, void 0, function* () {
-            if (!rec.enabled)
-                return;
-            let existing = yield butcherpricehistory_1.default.findOne({
-                where: {
-                    butcherid: rec.butcherid,
-                    productid: rec.productid,
-                },
-                order: [['id', 'desc']],
-            });
-            if (existing) {
-                if (existing.unit1price == rec.unit1price &&
-                    existing.unit2price == rec.unit2price &&
-                    existing.unit3price == rec.unit3price &&
-                    existing.unit4price == rec.unit4price &&
-                    existing.unit5price == rec.unit5price &&
-                    existing.kgPrice == rec.kgPrice)
-                    return;
-            }
-            let newItem = new butcherpricehistory_1.default();
-            newItem.unit1price = rec.unit1price;
-            newItem.unit2price = rec.unit2price;
-            newItem.unit3price = rec.unit3price;
-            newItem.unit4price = rec.unit4price;
-            newItem.unit5price = rec.unit5price;
-            newItem.kgPrice = rec.kgPrice;
-            newItem.productid = rec.productid;
-            newItem.butcherid = rec.butcherid;
-            return newItem.save({
-                transaction: t
-            });
-        });
-    }
+    // async manageHistory(rec: ButcherProduct, t: Transaction) {
+    //     if (!rec.enabled)
+    //         return;            
+    //     let existing = await ButcherPriceHistory.findOne({
+    //         where: {
+    //             butcherid: rec.butcherid,
+    //             productid: rec.productid,                
+    //         },
+    //         order: [['id', 'desc']],            
+    //     })
+    //     if (existing) {
+    //         if (existing.unit1price == rec.unit1price && 
+    //             existing.unit2price == rec.unit2price &&
+    //             existing.unit3price == rec.unit3price &&
+    //             existing.unit4price == rec.unit4price &&
+    //             existing.unit5price == rec.unit5price &&
+    //             existing.kgPrice == rec.kgPrice)
+    //             return;
+    //     }    
+    //     let newItem = new ButcherPriceHistory();
+    //     newItem.unit1price = rec.unit1price;
+    //     newItem.unit2price = rec.unit2price;
+    //     newItem.unit3price = rec.unit3price;
+    //     newItem.unit4price = rec.unit4price;
+    //     newItem.unit5price = rec.unit5price;
+    //     newItem.kgPrice = rec.kgPrice;
+    //     newItem.productid = rec.productid;
+    //     newItem.butcherid = rec.butcherid;
+    //     return newItem.save({
+    //         transaction: t
+    //     })
+    // }
     saveProductRoute() {
         return __awaiter(this, void 0, void 0, function* () {
             yield this.setButcher();
@@ -220,7 +219,7 @@ class Route extends home_1.ButcherRouter {
                 yield context_1.default.getContext().transaction((t) => {
                     return newItem.save({
                         transaction: t
-                    }).then(() => this.manageHistory(newItem, t));
+                    }).then(() => butcherpricehistory_1.default.manageHistory(newItem, t));
                 });
                 yield this.setButcher();
                 yield this.setProducts();

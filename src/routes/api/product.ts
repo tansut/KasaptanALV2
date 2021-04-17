@@ -1,7 +1,7 @@
 import { Auth } from '../../lib/common';
-import { ApiRouter } from '../../lib/router';
+import { ApiRouter, ViewRouter } from '../../lib/router';
 import * as express from "express";
-import { ProductView } from '../../models/productView';
+import { ProductButcherView, ProductView, ProductViewForButcher } from '../../models/productView';
 import Product, { ProductSelectionWeigts, ProductType } from '../../db/models/product';
 import Butcher from '../../db/models/butcher';
 import ButcherProduct from '../../db/models/butcherproduct';
@@ -9,7 +9,8 @@ import Helper from '../../lib/helper';
 var MarkdownIt = require('markdown-it')
 import * as sq from 'sequelize';
 import * as builder from "xmlbuilder"
-
+import { Transaction } from "sequelize";
+import db from "../../db/context";
 import * as _ from 'lodash';
 import Resource from '../../db/models/resource';
 import ResourceCategory from '../../db/models/resourcecategory';
@@ -27,6 +28,10 @@ import { PreferredAddress } from '../../db/models/user';
 import { ShopCard } from '../../models/shopcard';
 import { OrderButcherSelection } from '../../db/models/order';
 import { PriceView } from '../../models/common';
+import ProductManager from '../../lib/productManager';
+import { isThisTypeNode } from 'typescript';
+import { BusinessError, PermissionError, ValidationError } from '../../lib/http';
+import ButcherPriceHistory from '../../db/models/butcherpricehistory';
 const fs = require('fs');
 
 export interface ProductFeedItem {
@@ -34,7 +39,7 @@ export interface ProductFeedItem {
     title: string;
     description: string;
     link: string;
-    images: string [];
+    images: string[];
     condition: string;
     availability: string;
     price: number;
@@ -57,9 +62,9 @@ export interface StartPrice {
     title: string;
 }
 
-export type ButcherProperty = 'distance' |  'rating' | 'kasapkart' | 'productPrice' | 'shipmentPrice' | 'shipTotal' | 'butcherSelection' | 'productSelection';
+export type ButcherProperty = 'distance' | 'rating' | 'kasapkart' | 'productPrice' | 'shipmentPrice' | 'shipTotal' | 'butcherSelection' | 'productSelection';
 
-let ButcherPropertyWeigts: {[key in ButcherProperty]: number} = {
+let ButcherPropertyWeigts: { [key in ButcherProperty]: number } = {
     'distance': -0.80,
     'kasapkart': 0.60,
     'productPrice': 0.00,
@@ -73,19 +78,19 @@ let ButcherPropertyWeigts: {[key in ButcherProperty]: number} = {
 export default class Route extends ApiRouter {
     markdown = new MarkdownIt();
 
-    async getButcherPropertyWeights(): Promise<{[key in ButcherProperty]: number}> {
+    async getButcherPropertyWeights(): Promise<{ [key in ButcherProperty]: number }> {
         let rawdata = await fs.readFileSync(path.join(__dirname, "../../../butcherweights.json"));
         return JSON.parse(rawdata);
     }
 
 
-    async calculateButcherRate(butcher: Butcher, product: Product, dispatcher: Dispatcher, limits: {[key in ButcherProperty]: number []}, customerFee: number, weights: {[key in ButcherProperty]: number}) {
-        let bp = butcher.products.find(p=>p.productid == product.id);
+    async calculateButcherRate(butcher: Butcher, product: Product, dispatcher: Dispatcher, limits: { [key in ButcherProperty]: number[] }, customerFee: number, weights: { [key in ButcherProperty]: number }) {
+        let bp = butcher.products.find(p => p.productid == product.id);
         let butcherWeight = DispatcherSelectionWeigts[dispatcher.selection];
         if (butcherWeight == 0 && butcher.selectionRadiusAsKm > 0) {
-            butcherWeight = dispatcher.butcherArea.bestKm <= butcher.selectionRadiusAsKm ? 1: butcherWeight;
+            butcherWeight = dispatcher.butcherArea.bestKm <= butcher.selectionRadiusAsKm ? 1 : butcherWeight;
         }
-        let butcherweights: {[key in ButcherProperty]: number} = {
+        let butcherweights: { [key in ButcherProperty]: number } = {
             'distance': dispatcher.butcherArea.bestKm,
             'kasapkart': butcher.customerPuanRate,
             'productPrice': bp.priceView.price,
@@ -98,12 +103,12 @@ export default class Route extends ApiRouter {
         let puan = 0.00;
 
         config.nodeenv == "development" && console.log('*', butcher.name, '*')
-        for(let k in butcherweights) {
+        for (let k in butcherweights) {
             let lim = limits[k];
             let propPuan = Helper.mapValues(butcherweights[k], lim[0], lim[1]);
-            propPuan =Number.isNaN(propPuan) ? 0: propPuan*weights[k];
+            propPuan = Number.isNaN(propPuan) ? 0 : propPuan * weights[k];
             config.nodeenv == "development" && console.log(k, propPuan.toFixed(2), '[', lim[0], lim[1], ']:', butcherweights[k]);
-            puan+=propPuan
+            puan += propPuan
         }
         config.nodeenv == "development" && console.log(butcher.name, ':', puan.toFixed(2));
         config.nodeenv == "development" && console.log('------------------')
@@ -127,14 +132,14 @@ export default class Route extends ApiRouter {
         and (:butcherid = 0 || :butcherid = ref2)
         ORDER BY r.ID DESC
         `
-        ,
-        {
-            replacements: { butcherid: butcherid,  pid: productid },
-            type: sq.QueryTypes.SELECT,
-            model: Review,
-            mapToModel: true,
-            raw: false
-        }
+            ,
+            {
+                replacements: { butcherid: butcherid, pid: productid },
+                type: sq.QueryTypes.SELECT,
+                model: Review,
+                mapToModel: true,
+                raw: false
+            }
         );
         return res;
     }
@@ -166,7 +171,7 @@ export default class Route extends ApiRouter {
         if (products4) {
             let ids = products4.map(p => p.id);
             where = {
-                ...{                    
+                ...{
                     [Op.or]: {
                         ref1: ids,
                         ref2: ids,
@@ -293,14 +298,14 @@ export default class Route extends ApiRouter {
         return resources;
     }
 
-    async getPriceStatsForUnit(productids: number [], unit: string, butcherids: number [] = [], options = {}): Promise<Array<any>> {
+    async getPriceStatsForUnit(productids: number[], unit: string, butcherids: number[] = [], options = {}): Promise<Array<any>> {
         let sql = `(${productids.join(',')})`;
         let butchers = `(${butcherids.join(',')})`;
         let q = `select ButcherProducts.productid as pid,  count(*) as count, 
         min(${unit}Price) as ${unit}min, avg(${unit}Price) as ${unit}avg, max(${unit}Price) as ${unit}max
         from ButcherProducts, Butchers 
         where 
-        ${butcherids.length > 0 ? 'Butchers.id in ' + butchers + ' and ':''}
+        ${butcherids.length > 0 ? 'Butchers.id in ' + butchers + ' and ' : ''}
         ButcherProducts.productid in ${sql} and 
         ButcherProducts.${unit}Price > 0 and
         ButcherProducts.enabled=true and 
@@ -310,75 +315,75 @@ export default class Route extends ApiRouter {
         `
 
         let res = await Product.sequelize.query<any>(q, {
-            raw: true  ,
+            raw: true,
             mapToModel: false,
-            type: sq.QueryTypes.SELECT       
-        } )        
+            type: sq.QueryTypes.SELECT
+        })
 
         return res;
-    }    
+    }
 
 
-    async getPriceStats(productids: number [], butcherids: number[]=[], options = {}): Promise<Array<any>> {
+    async getPriceStats(productids: number[], butcherids: number[] = [], options = {}): Promise<Array<any>> {
 
         let units = ['kg', 'unit1', 'unit2', 'unit3'];
         let res: Array<any> = [];
         let pids = [...productids];
-        for(let i = 0; i < units.length; i++) {
-            let stats = await this.getPriceStatsForUnit(pids,  units[i], butcherids, options = {});
+        for (let i = 0; i < units.length; i++) {
+            let stats = await this.getPriceStatsForUnit(pids, units[i], butcherids, options = {});
             res = res.concat(stats);
-            pids = pids.filter(p=>!res.find(r=>r.pid == p))
+            pids = pids.filter(p => !res.find(r => r.pid == p))
             if (pids.length == 0) break;
         }
 
-       
+
         return res;
     }
 
-     getProductsFeedXML(products: ProductFeedItem []): builder.XMLElement {
+    getProductsFeedXML(products: ProductFeedItem[]): builder.XMLElement {
 
-        var feed = builder.create('feed').att("xmlns", "http://www.w3.org/2005/Atom").att("xmlns:g","http://base.google.com/ns/1.0"); 
-                feed.ele("title", "KasaptanAl.com") ;   
-                feed.ele("link", 'https://www.kasaptanal.com').att("rel", "self") ;   
-                feed.ele("updated", new Date().toISOString()) ;   
-                
-                products.forEach( p => {
-                    let entry = feed.ele("entry");
-                    entry.ele("g:id", p.id);
-                    entry.ele("g:title", p.title);
-                    entry.ele("g:description", p.description);
-                    entry.ele("g:link", p.link);
-                    entry.ele("g:condition", p.condition);
-                    entry.ele("g:availability", p.availability);
-                    entry.ele("g:price", Helper.formattedCurrency(p.price, "TRY"));
-                    entry.ele("g:identifier_exists", "no");
-                    entry.ele("g:fb_product_category", "10");
-                    entry.ele("g:google_product_category", "4628");
-                    let ship = entry.ele("g:shipping");
-                    ship.ele("g:country", "TR");
-                    ship.ele("g:service", "Same Day");
-                    ship.ele("g:price", "0TRY");
+        var feed = builder.create('feed').att("xmlns", "http://www.w3.org/2005/Atom").att("xmlns:g", "http://base.google.com/ns/1.0");
+        feed.ele("title", "KasaptanAl.com");
+        feed.ele("link", 'https://www.kasaptanal.com').att("rel", "self");
+        feed.ele("updated", new Date().toISOString());
 
-                    //entry.ele("g:gtin", p.gtin);
-                    entry.ele("g:brand", "");
-                    entry.ele("g:mpn", p.mpn);
+        products.forEach(p => {
+            let entry = feed.ele("entry");
+            entry.ele("g:id", p.id);
+            entry.ele("g:title", p.title);
+            entry.ele("g:description", p.description);
+            entry.ele("g:link", p.link);
+            entry.ele("g:condition", p.condition);
+            entry.ele("g:availability", p.availability);
+            entry.ele("g:price", Helper.formattedCurrency(p.price, "TRY"));
+            entry.ele("g:identifier_exists", "no");
+            entry.ele("g:fb_product_category", "10");
+            entry.ele("g:google_product_category", "4628");
+            let ship = entry.ele("g:shipping");
+            ship.ele("g:country", "TR");
+            ship.ele("g:service", "Same Day");
+            ship.ele("g:price", "0TRY");
+
+            //entry.ele("g:gtin", p.gtin);
+            entry.ele("g:brand", "");
+            entry.ele("g:mpn", p.mpn);
 
 
 
-                    p.images.forEach((im, i) => {
-                       (i < 5) && entry.ele(i == 0? "g:image_link":"g:additional_image_link", `${im}`);
-                    })
+            p.images.forEach((im, i) => {
+                (i < 5) && entry.ele(i == 0 ? "g:image_link" : "g:additional_image_link", `${im}`);
+            })
 
-                    
 
-                })
+
+        })
 
 
         return feed;
     }
 
 
-    async tryBestFromShopcard(shopcard: ShopCard, serving: Dispatcher[], others: Dispatcher[] = []) {       
+    async tryBestFromShopcard(shopcard: ShopCard, serving: Dispatcher[], others: Dispatcher[] = []) {
         let scButcher = (shopcard.items && shopcard.items.length) ? shopcard.items[0].product.butcher.id : null;
         if (scButcher) {
             let inServing = serving.find(p => p.butcherid == scButcher);
@@ -390,7 +395,7 @@ export default class Route extends ApiRouter {
     useL1(product: Product) {
         return (product.productType == ProductType.kurban)
     }
-    
+
     async locateButchersForProduct(product: Product, adr: PreferredAddress, userBest: Butcher, shopcard: ShopCard): Promise<ButcherSelection> {
         let api = new DispatcherApi(this.constructorParams);
 
@@ -421,7 +426,7 @@ export default class Route extends ApiRouter {
 
         let weighedServing = await this.findBestButcher(serving, product, adr);
         let mybest: Dispatcher = await this.tryBestFromShopcard(shopcard, weighedServing) || weighedServing[0];
-        
+
         if (mybest) {
             mybest = (userBest ? (weighedServing.find(s => s.butcherid == userBest.id)) : null) || mybest;
         }
@@ -437,7 +442,7 @@ export default class Route extends ApiRouter {
 
 
         //let minDistance = Math.min.apply(Math, serving.map(s=>s.butcherArea.bestKm));
-        let maxDistance = Math.max.apply(Math, serving.map(s=>s.butcherArea.bestKm));
+        let maxDistance = Math.max.apply(Math, serving.map(s => s.butcherArea.bestKm));
 
         //let minPuan = Math.min.apply(Math, serving.map(s=>s.butcher.customerPuanRate));
         //let maxPuan = Math.max.apply(Math, serving.map(s=>s.butcher.customerPuanRate));
@@ -445,20 +450,20 @@ export default class Route extends ApiRouter {
         //let minRate = Math.min.apply(Math, serving.map(s=>s.butcher.totalRatingAsPerc));
         //let maxRate = Math.max.apply(Math, serving.map(s=>s.butcher.totalRatingAsPerc));
 
-        let minShipTotal = Math.min.apply(Math, serving.map(s=>s.butcher.shipTotalCount));
-        let maxShipTotal = Math.max.apply(Math, serving.map(s=>s.butcher.shipTotalCount));
+        let minShipTotal = Math.min.apply(Math, serving.map(s => s.butcher.shipTotalCount));
+        let maxShipTotal = Math.max.apply(Math, serving.map(s => s.butcher.shipTotalCount));
 
-        let minPrice = Math.min.apply(Math, serving.map(s=> {
-            let bp = s.butcher.products.find(p=>p.productid == product.id);
+        let minPrice = Math.min.apply(Math, serving.map(s => {
+            let bp = s.butcher.products.find(p => p.productid == product.id);
             bp.product = product;
             return bp.priceView.price;
         }));
 
-        let maxPrice = Math.max.apply(Math, serving.map(s=> {
-            let bp = s.butcher.products.find(p=>p.productid == product.id);
+        let maxPrice = Math.max.apply(Math, serving.map(s => {
+            let bp = s.butcher.products.find(p => p.productid == product.id);
             bp.product = product;
             return bp.priceView.price;
-        }));      
+        }));
         let weights = await this.getButcherPropertyWeights();
 
         let l1 = adr.based.getLevel(1);
@@ -467,8 +472,8 @@ export default class Route extends ApiRouter {
 
         let orderSize = l3.butcherWeightOrder || l2.butcherWeightOrder || l1.butcherWeightOrder || 150.00;
 
-        let customerFees: {[key: number]: number} = {}, minFee = Number.MAX_SAFE_INTEGER, maxFee = Number.MIN_SAFE_INTEGER;
-        
+        let customerFees: { [key: number]: number } = {}, minFee = Number.MAX_SAFE_INTEGER, maxFee = Number.MIN_SAFE_INTEGER;
+
         // for(let i = 0; i < serving.length;i ++) {
         //     let fromTo: FromTo = {
         //         start: serving[i].butcher.location,
@@ -498,46 +503,46 @@ export default class Route extends ApiRouter {
         //     this.calculateCustomerFee(offer);
 
 
-        let limits: {[key in ButcherProperty]: number []} = {
+        let limits: { [key in ButcherProperty]: number[] } = {
             'distance': [0, maxDistance],
             'kasapkart': [0.00, 0.15],
             'productPrice': [minPrice, maxPrice],
             'shipmentPrice': [minFee, maxFee],
             'rating': [80, 100],
             'shipTotal': [0, maxShipTotal],
-            'butcherSelection': [-1,1],
-            'productSelection': [-1,1]
+            'butcherSelection': [-1, 1],
+            'productSelection': [-1, 1]
         }
 
 
 
-        weights = l1.butcherWeights ? {...weights, ...l1.butcherWeights}: weights; 
-        weights = l2.butcherWeights ? {...weights, ...l2.butcherWeights}: weights; 
-        weights = l3.butcherWeights ? {...weights, ...l3.butcherWeights}: weights; 
+        weights = l1.butcherWeights ? { ...weights, ...l1.butcherWeights } : weights;
+        weights = l2.butcherWeights ? { ...weights, ...l2.butcherWeights } : weights;
+        weights = l3.butcherWeights ? { ...weights, ...l3.butcherWeights } : weights;
 
-        weights = product.butcherWeights ? {...weights, ...product.butcherWeights}: weights; 
+        weights = product.butcherWeights ? { ...weights, ...product.butcherWeights } : weights;
 
-        for(let i = 0; i < serving.length;i ++) {
-            
-            serving[i].butcher.calculatedRate = await this.calculateButcherRate(serving[i].butcher, product, serving[i], limits, typeof customerFees[serving[i].butcher.id] == 'undefined' ? maxFee: customerFees[serving[i].butcher.id], weights)
+        for (let i = 0; i < serving.length; i++) {
+
+            serving[i].butcher.calculatedRate = await this.calculateButcherRate(serving[i].butcher, product, serving[i], limits, typeof customerFees[serving[i].butcher.id] == 'undefined' ? maxFee : customerFees[serving[i].butcher.id], weights)
         }
 
         let weightSorted = _.orderBy(serving, 'butcher.calculatedRate', 'desc');
 
         return weightSorted;
 
-      
+
     }
 
-    async getProductsFeed(options: ProductLdOptions): Promise<ProductFeedItem []> {
-        let res: ProductFeedItem [] = [];
-        let products = await Product.findAll({ 
-             where: { status: "onsale" }
+    async getProductsFeed(options: ProductLdOptions): Promise<ProductFeedItem[]> {
+        let res: ProductFeedItem[] = [];
+        let products = await Product.findAll({
+            where: { status: "onsale" }
         });
 
 
 
-        for(let i = 0; i < products.length; i++) {
+        for (let i = 0; i < products.length; i++) {
             let p = products[i];
             if (p.status == "onsale" && (p.productType == ProductType.generic || p.productType == ProductType.tumkuzu)) {
                 await p.loadResources();
@@ -560,25 +565,25 @@ export default class Route extends ApiRouter {
                 }
             }
         }
-        
-       return res;
-  }
 
-  async getProductsFeedOfButcher(butcher: Butcher, options: ProductLdOptions): Promise<ProductFeedItem []> {
-    let res: ProductFeedItem [] = [];
-    // let products = await Product.findAll({ 
-    //      where: { status: "onsale" }
-    // });
+        return res;
+    }
 
-    let products = butcher.products;
+    async getProductsFeedOfButcher(butcher: Butcher, options: ProductLdOptions): Promise<ProductFeedItem[]> {
+        let res: ProductFeedItem[] = [];
+        // let products = await Product.findAll({ 
+        //      where: { status: "onsale" }
+        // });
+
+        let products = butcher.products;
 
 
-    for(let i = 0; i < products.length; i++) {
-        let p = products[i].product;
-        if (p.status == "onsale" && (p.productType == ProductType.generic || p.productType == ProductType.tumkuzu)) {
-            await p.loadResources();
-            let ld = new ProductLd(p, options)            
-            
+        for (let i = 0; i < products.length; i++) {
+            let p = products[i].product;
+            if (p.status == "onsale" && (p.productType == ProductType.generic || p.productType == ProductType.tumkuzu)) {
+                await p.loadResources();
+                let ld = new ProductLd(p, options)
+
                 let feed: ProductFeedItem = {
                     id: p.id.toString(),
                     availability: "in stock",
@@ -593,12 +598,12 @@ export default class Route extends ApiRouter {
                     gtin: butcher.slug + p.id.toString()
                 }
                 res.push(feed)
-            
+
+            }
         }
+
+        return res;
     }
-    
-   return res;
-}  
 
 
 
@@ -609,9 +614,9 @@ export default class Route extends ApiRouter {
         let usedUnit = null;
         if (prices && prices.length) {
             let price = prices[0];
-            for(let i = 0; i < units.length;i++) {
+            for (let i = 0; i < units.length; i++) {
                 let avgPrice = price[`${units[i]}avg`];
-                if (avgPrice > 0)  {
+                if (avgPrice > 0) {
                     usedUnit = units[i];
                     break;
                 }
@@ -627,9 +632,9 @@ export default class Route extends ApiRouter {
                 res.offers = {
                     '@type': "AggregateOffer",
                     offerCount: price['count'],
-                    highPrice: high ,
+                    highPrice: high,
                     lowPrice: low,
-                    unit: usedUnit == "kg" ? "KG": product[`${usedUnit}title`],
+                    unit: usedUnit == "kg" ? "KG" : product[`${usedUnit}title`],
                     priceCurrency: "TRY",
                     availability: "InStock"
                 }
@@ -643,13 +648,13 @@ export default class Route extends ApiRouter {
         }
 
         return res;
-  }
+    }
 
     @Auth.Anonymous()
     async getProductLdById(id: number, options: ProductLdOptions) {
         let product = await Product.findOne({
             include: [{
-                all: true 
+                all: true
             }], where: { slug: this.req.params.product }
         });
         if (!product) return this.res.sendStatus(404);
@@ -674,11 +679,11 @@ export default class Route extends ApiRouter {
     }
 
     getPurchaseOptions(product: Product, butcherProduct?: ButcherProduct) {
-        let purchaseOptions =[];
+        let purchaseOptions = [];
         let kgPrice = butcherProduct ? butcherProduct.kgPrice : 0.00;
         this.getProductUnits(product).forEach((p, i) => {
             let col = `unit${i + 1}`
-            let add = !butcherProduct ? true: (butcherProduct[`${col}enabled`]);
+            let add = !butcherProduct ? true : (butcherProduct[`${col}enabled`]);
             add && purchaseOptions.push({
                 id: i + 1,
                 notePlaceholder: product[`${col}note`],
@@ -686,12 +691,12 @@ export default class Route extends ApiRouter {
                 kgRatio: product[`${col}kgRatio`],
                 unitWeight: (butcherProduct && butcherProduct[`${col}weight`]) || product[`${col}weight`],
                 unitPrice: butcherProduct ?
-                     (
-                         Helper.asCurrency(butcherProduct[`${col}price`]) > 0 ?
-                         Helper.asCurrency(butcherProduct[`${col}price`]):
-                         Helper.asCurrency( (butcherProduct[`${col}kgRatio`] || product[`${col}kgRatio`]) * kgPrice)
-                     ):
-                     0.00,
+                    (
+                        Helper.asCurrency(butcherProduct[`${col}price`]) > 0 ?
+                            Helper.asCurrency(butcherProduct[`${col}price`]) :
+                            Helper.asCurrency((butcherProduct[`${col}kgRatio`] || product[`${col}kgRatio`]) * kgPrice)
+                    ) :
+                    0.00,
                 unit: p,
                 unitTitle: product[`${col}title`],
                 displayOrder: product[`${col}Order`],
@@ -705,6 +710,22 @@ export default class Route extends ApiRouter {
         })
         return _.sortBy(purchaseOptions, ["displayOrder"]).reverse()
     }
+
+
+
+
+    async getProductViewforButcher(product: Product, butcher?: Butcher, butcherProduct?: ButcherProduct): Promise<ProductViewForButcher> {
+        let view = await this.getProductView(product, butcher, butcherProduct);
+        let result = <ProductViewForButcher>view;
+        result.butcherProductNote = product.butcherProductNote;
+        result.priceUnit = product.priceUnit;
+        if (butcher && butcher.products) {
+            let butcherProduct = butcher.products.find(c => (c.productid == product.id));
+            result.fromButcherNote = butcherProduct ? butcherProduct.fromButcherDesc: '';
+        }
+        return result;
+    }
+
 
     async getProductView(product: Product, butcher?: Butcher, butcherProduct?: ButcherProduct, loadResources: boolean = false) {
         if (!butcherProduct && butcher && !butcher.products) {
@@ -731,8 +752,8 @@ export default class Route extends ApiRouter {
         //    kgRatio = 1.00;
         //    defaultUnit = 'kg'
         //} else {
-            //kgRatio = product[`${defaultUnitCol}kgRatio`]
-            //defaultUnit = product[`${defaultUnitCol}`]
+        //kgRatio = product[`${defaultUnitCol}kgRatio`]
+        //defaultUnit = product[`${defaultUnitCol}`]
         //}
         // defaultUnitPrice = Helper.asCurrency(Helper.asCurrency(kgRatio * kgPrice) * product.defaultAmount);
         // defaultUnitText = defaultUnit == 'kg' ? (product.defaultAmount < 1 ? `${product.defaultAmount * 1000}gr` : "kg") : product[`${defaultUnitCol}`]
@@ -756,16 +777,16 @@ export default class Route extends ApiRouter {
                 slug: butcher.slug,
                 badges: butcher.getBadgeList(),
                 name: butcher.name,
-                id: butcher.id           ,
+                id: butcher.id,
                 puanData: butcher.getPuanData(product.productType),
                 earnedPuan: 0.00,
-                productNote: '',     
+                productNote: '',
                 kgPrice: kgPrice,
                 calculatedRate: butcher.calculatedRate,
-                locationText: butcher.locationText,                
+                locationText: butcher.locationText,
             } : null,
-            butcherNote: (butcherProduct && butcherProduct.mddesc) ? butcherProduct.mddesc: '',
-            butcherLongNote: (butcherProduct && butcherProduct.longdesc) ? butcherProduct.longdesc: '',
+            butcherNote: (butcherProduct && butcherProduct.mddesc) ? butcherProduct.mddesc : '',
+            butcherLongNote: (butcherProduct && butcherProduct.longdesc) ? butcherProduct.longdesc : '',
             slug: product.slug,
             name: product.name,
             kgPrice: kgPrice,
@@ -786,13 +807,13 @@ export default class Route extends ApiRouter {
 
         if (loadResources) {
             view.resources = [];
-            product.resources.forEach(r=>view.resources.push(r.asView()))
+            product.resources.forEach(r => view.resources.push(r.asView()))
         }
 
         view.nutritionView = product.nutritionView;
 
 
-        view.purchaseOptions = this.getPurchaseOptions(product, butcherProduct); 
+        view.purchaseOptions = this.getPurchaseOptions(product, butcherProduct);
 
         if (view.purchaseOptions.length) {
             view.priceView = {
@@ -801,7 +822,7 @@ export default class Route extends ApiRouter {
                 unit: view.purchaseOptions[0].unit
             }
         }
-        
+
 
         return view;
     }
@@ -829,9 +850,122 @@ export default class Route extends ApiRouter {
     //     this.res.send(view)
     // }
 
+    @Auth.Anonymous()
+    async viewProductsForButchers() {
+        if (!this.req.params.butcher) {
+            return this.next();
+        }
+        let butcher = await Butcher.loadButcherWithProducts(this.req.params.butcher);
+
+
+        if (!butcher) {
+            return this.next();
+        }
+
+        let api = this
+        let categories = this.req.__categories.filter(p => p.slug != 'populer-etler');
+        let viewProducts: any[] = [];
+        for (let i = 0; i < categories.length; i++) {
+            let prods = await ProductManager.getProductsOfCategories([categories[i].id]);
+            for (let p = 0; p < prods.length; p++) {
+                let view = await api.getProductViewforButcher(prods[p], butcher);
+                if (!viewProducts.find(vp => vp.id == view.id)) {
+                    let price = view.kgPrice;   
+                    if (price <= 0) {
+                        let op = view.purchaseOptions.find(po=>po.unit == view.priceUnit);
+                        price = op ? op.unitPrice: price
+                    }
+                    viewProducts.push({ 
+                        id: view.id,
+                        name: view.name,
+                        unit: view.priceUnit == 'kg' ? 'kg': prods[p][`${view.priceUnit}`],
+                        price: price,
+                        butcherProductNote: view.butcherProductNote,
+                        note: view.fromButcherNote,
+                        slug: view.slug,
+                        thumbnail: this.req.helper.imgUrl("product-photos", view.slug)
+                    })
+                }
+            }
+        }
+        this.res.send(viewProducts);
+    }
+
+    @Auth.Anonymous()
+    async saveProductsForButchers() {
+        if (!this.req.params.butcher) {
+            return this.next();
+        }
+        let butcher = await Butcher.findOne({
+            where: {
+                slug: this.req.params.butcher
+            }
+        })
+
+        if (!butcher) {
+            return this.next();
+        }
+
+        if (butcher.approved) {
+            if (!this.req.user || !Helper.hasRightOnButcher(this.req.user, butcher.id)) {
+                return new PermissionError()
+            }
+        };
+
+        let productid = parseInt(this.req.body.id);
+        let product = await Product.findOne({where: {
+            id: productid
+        }})
+        let newItem: ButcherProduct = await ButcherProduct.findOne({
+            where: {
+                butcherid: butcher.id,
+                productid: productid
+            }
+        });
+
+        if (newItem == null)
+            newItem = new ButcherProduct();
+
+        newItem.enabled = butcher.approved ? (this.req.body.price <= 0 ? false: true): newItem.enabled;
+        newItem.butcherid = butcher.id;
+        newItem.productid = productid;
+        newItem.fromButcherDesc = this.req.body.note;
+
+        if (this.req.body.unit == 'kg') {
+            newItem.kgPrice = this.req.body.price
+        } else {
+            let unitid = product.getUnitBy(this.req.body.unit)
+            if (!unitid) throw new ValidationError('Geçersiz birim');
+            newItem[`${unitid}price`] = this.req.body.price;
+            newItem[`${unitid}enabled`] = true;
+        }
+
+        // newItem.unit1price = this.req.body.unit1price ? parseFloat(this.req.body.unit1price) : 0;
+        // newItem.unit2price = this.req.body.unit2price ? parseFloat(this.req.body.unit2price) : 0;
+        // newItem.unit3price = this.req.body.unit3price ? parseFloat(this.req.body.unit3price) : 0;
+        // newItem.kgPrice = this.req.body.productkgPrice ? parseFloat(this.req.body.productkgPrice) : 0;
+        //newItem.mddesc = this.req.body.productmddesc;
+        //newItem.longdesc = this.req.body.productlongdesc;
+
+        // newItem.unit1enabled = this.req.body.unit1enabled == "on";
+        // newItem.unit2enabled = this.req.body.unit2enabled == "on";
+        // newItem.unit3enabled = this.req.body.unit3enabled == "on";
+
+
+        await db.getContext().transaction((t: Transaction) => {
+            return newItem.save({
+                transaction: t
+            }).then(() => butcher.approved ? ButcherPriceHistory.manageHistory(newItem, t): null)
+        })
+
+        this.res.send('OK');
+    }
+
     static SetRoutes(router: express.Router) {
         // router.get("/product/:slug", Route.BindRequest(this.prototype.searchRoute));
         // router.get("/product/:slug/:butcher", Route.BindRequest(this.prototype.searchRoute));
+        router.get("/product/:butcher/prePrices", Route.BindRequest(this.prototype.viewProductsForButchers));
+        router.post("/product/:butcher/prePrices", Route.BindRequest(this.prototype.saveProductsForButchers));
     }
 }
 

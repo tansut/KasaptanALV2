@@ -102,6 +102,11 @@ let Butcher = Butcher_1 = class Butcher extends basemodel_1.default {
     }
     static loadButcherWithProducts(slug) {
         return __awaiter(this, void 0, void 0, function* () {
+            let where = {};
+            if (typeof slug == 'string')
+                where['slug'] = slug;
+            else
+                where["id"] = slug;
             let butcher = yield Butcher_1.findOne({
                 include: [{
                         model: butcherproduct_1.default,
@@ -111,9 +116,7 @@ let Butcher = Butcher_1 = class Butcher extends basemodel_1.default {
                         model: area_1.default,
                         all: true,
                         as: "areaLevel1Id"
-                    }], where: {
-                    slug: slug,
-                }
+                    }], where: where
             });
             if (butcher) {
                 butcher.products = butcher.products.filter(p => {
