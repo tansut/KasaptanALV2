@@ -766,7 +766,7 @@ class Route extends router_1.ApiRouter {
                 for (let p = 0; p < prods.length; p++) {
                     let view = yield api.getProductViewforButcher(prods[p], butcher);
                     if (!viewProducts.find(vp => vp.id == view.id)) {
-                        let price = view.kgPrice;
+                        let price = helper_1.default.asCurrency(view.kgPrice);
                         if (price <= 0) {
                             let op = view.purchaseOptions.find(po => po.unit == view.priceUnit);
                             price = op ? op.unitPrice : price;
