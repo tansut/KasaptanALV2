@@ -627,30 +627,35 @@ class Route extends router_1.ApiRouter {
     }
     getProductViewforButcher(product, butcher, butcherProduct) {
         return __awaiter(this, void 0, void 0, function* () {
-            let view = yield this.getProductView(product, butcher, butcherProduct);
+            let view = yield this.getProductView(product, butcher, butcherProduct, false, true);
             let result = view;
             result.butcherProductNote = product.butcherProductNote;
             result.priceUnit = product.priceUnit;
+            result.enabled = false;
             if (butcher && butcher.products) {
                 let butcherProduct = butcher.products.find(c => (c.productid == product.id));
                 result.fromButcherNote = butcherProduct ? butcherProduct.fromButcherDesc : '';
+                result.enabled = butcherProduct ? butcherProduct.enabled : false;
             }
             return result;
         });
     }
-    getProductView(product, butcher, butcherProduct, loadResources = false) {
+    getProductView(product, butcher, butcherProduct, loadResources = false, includeDisable = false) {
         return __awaiter(this, void 0, void 0, function* () {
             if (!butcherProduct && butcher && !butcher.products) {
+                let where = {
+                    productid: product.id,
+                    butcherid: butcher.id,
+                };
+                if (!includeDisable) {
+                    where['enabled'] = true;
+                }
                 butcherProduct = yield butcherproduct_1.default.findOne({
-                    where: {
-                        productid: product.id,
-                        butcherid: butcher.id,
-                        enabled: true
-                    }
+                    where: where
                 });
             }
             else if (butcher && butcher.products) {
-                butcherProduct = butcher.products.find(c => (c.productid == product.id) && c.enabled);
+                butcherProduct = butcher.products.find(c => (c.productid == product.id) && (includeDisable ? true : c.enabled));
             }
             let kgPrice = butcherProduct ? butcherProduct.kgPrice : 0;
             // let defaultUnitCol = `unit${product.defaultUnit}`
@@ -754,7 +759,7 @@ class Route extends router_1.ApiRouter {
             if (!this.req.params.butcher) {
                 return this.next();
             }
-            let butcher = yield butcher_1.default.loadButcherWithProducts(this.req.params.butcher);
+            let butcher = yield butcher_1.default.loadButcherWithProducts(this.req.params.butcher, true);
             if (!butcher) {
                 return this.next();
             }
@@ -775,6 +780,7 @@ class Route extends router_1.ApiRouter {
                             id: view.id,
                             name: view.name,
                             unit: view.priceUnit == 'kg' ? 'kg' : prods[p][`${view.priceUnit}`],
+                            enabled: view.enabled,
                             price: price,
                             butcherProductNote: view.butcherProductNote,
                             note: view.fromButcherNote,
@@ -818,7 +824,7 @@ class Route extends router_1.ApiRouter {
             });
             if (newItem == null)
                 newItem = new butcherproduct_1.default();
-            newItem.enabled = butcher.approved ? (this.req.body.price <= 0 ? false : true) : newItem.enabled;
+            newItem.enabled = (this.req.body.price <= 0 ? false : this.req.body.enabled);
             newItem.butcherid = butcher.id;
             newItem.productid = productid;
             newItem.fromButcherDesc = this.req.body.note;
@@ -846,7 +852,7 @@ class Route extends router_1.ApiRouter {
                     transaction: t
                 }).then(() => butcher.approved ? butcherpricehistory_1.default.manageHistory(newItem, t) : null);
             });
-            this.res.send('OK');
+            this.res.send(this.req.body);
         });
     }
     static SetRoutes(router) {

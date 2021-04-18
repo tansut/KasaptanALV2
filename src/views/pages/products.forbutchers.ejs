@@ -45,7 +45,7 @@
             Internet ortamında <strong>firesiz satış yapıyoruz</strong>. Sadece firesi olabilecek kemikli ürünlerde fire farkı ekleyin.
           </li>
           <li>
-            Aynı gün elinizde olmasa bile <strong>ertesi gğn temin edebileceğiniz her ürüne</strong> fiyat verin.
+            Aynı gün elinizde olmasa bile <strong>ertesi gün temin edebileceğiniz her ürüne</strong> fiyat verin.
           </li>
           <li>
             <strong>Aşırı yüksek fiyat vermeniz</strong> sıralamada arkalarda olmanıza yol açmaktadır.
@@ -106,7 +106,7 @@
 
               <td scope="row">
                 <button v-on:click="openDialog(p, index)"
-                  v-bind:class="{'btn-success': p.price > 0, 'btn-secondary': p.price <=0 }" class="btn btn-sm">
+                  v-bind:class="{'btn-warning': p.price > 0 && !p.enabled ,'btn-success': p.price > 0 && p.enabled, 'btn-secondary': p.price <=0 }" class="btn btn-sm">
                   <money-view v-if="p.price > 0" :unit="p.unit" :money="p.price"></money-view>
                   <span v-else>Fiyat Ver</span>
                 </button>
@@ -130,16 +130,16 @@
               </button>
             </div>
             <div class="modal-body p-0">
-
+              <div class=" p-2 border-bottom bg-dark text-light" v-if="edit && edit.butcherProductNote" class="text-muted">
+                {{edit && edit.butcherProductNote }}
+              </div>
 
               <div class="p-2">
-                <div class="alert alert-secondary rounded-0" v-if="edit && edit.butcherProductNote" class="text-muted">
-                  {{edit && edit.butcherProductNote }}
-                </div>
+
                 <div class="form-group">
                   <label>Notunuz varsa alalım</label>
                   <textarea cols="8" class="form-control font-size-sm" v-model="edit && edit.note"
-                    placeholder="Paketli, şoklu olduğu, özel olarak yaptırıldığı gibi müşteriye veya bize iletmek istediğiniz bilgi varsa belirtin."></textarea>
+                    :placeholder="false ? edit.butcherProductNote: 'Paketli, şoklu olduğu, özel olarak yaptırıldığı gibi müşteriye veya bize iletmek istediğiniz bilgi varsa belirtin.'"></textarea>
                   <small class=" form-text text-muted"></small>
                 </div>
 
@@ -159,7 +159,7 @@
                       placeholder="tezgah satış fiyatınız">
 
                     <div class="input-group-append">
-                      <button v-on:click="saveDialog(edit)" class="btn btn-sm btn-primary">Kaydet</button>
+                      <button v-on:click="saveDialog(edit, true)" class="btn btn-sm btn-primary">Kaydet</button>
                     </div>
                     <small class="form-text text-dark">
                       <ul>
@@ -181,7 +181,13 @@
                     </small>
                   </div>
                 </div>
-             
+                <div class="d-flex justify-content-between">
+                  <button v-if="edit && list[editIndex].price > 0" v-on:click="toogleEnabled(edit)" :class="{'btn-warning': list[editIndex].enabled, 'btn-success': !list[editIndex].enabled}" class="btn btn-sm">
+                  <span v-if="list[editIndex].enabled">Satıştan Kaldır</span>
+                  <span v-else>Satışa Al</span>
+                </button>
+                <a v-if="edit" class="btn btn-sm btn-primary" target="_blank" :href="'/' + edit.slug">Ürünü Gör</a>
+                </div>
 
               </div>
 
@@ -230,7 +236,7 @@
 
               completed: function () {
                 let result = this.list.filter(function (p) {
-                  return p.price > 0
+                  return p.price > 0 && p.enabled
                 }).length;
                 this.completedPerc = Math.floor(this.list.length > 0 ? (result / this.list.length) * 100 : 0)
                 return result;
@@ -238,7 +244,13 @@
             },
 
             methods: {
-              saveDialog(p) {
+
+              toogleEnabled(p) {
+                p.enabled = !p.enabled;
+                this.saveDialog(p, false);
+              },
+
+              saveDialog(p, doEnable) {
                 var self = this;
                 let v = parseFloat($('#price-edit').val().replace(/,/g, '') || "0")
                 p.price = parseFloat(v);
@@ -246,14 +258,14 @@
                   id: p.id,
                   unit: p.unit,
                   price: p.price,
-                  note: p.note
+                  note: p.note,
+                  enabled: (p.price <= 0) ? false: (p.enabled || doEnable)
                 }).then(function (result) {
                   var f = self.list.find(function (l) {
                     return l.id == p.id
                   })
-                  //p.price ? (f.__updated=true): (f.__updated=false);
 
-                  Object.assign(f, p);
+                  Object.assign(f, result);
 
                   $('#pricemodal').modal('hide');
                   $('#' + p.slug + 'row').fadeOut(500).fadeIn(500);
@@ -275,8 +287,6 @@
                 Object.assign(this.edit = {}, p);
                 this.editIndex = index;
                 $('#pricemodal').modal('show');
-                $('#price-edit').focusin();
-                $('#price-edit').select();
               }
             }
           })

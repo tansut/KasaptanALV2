@@ -13,8 +13,10 @@ const home_1 = require("./home");
 class Route extends home_1.ButcherRouter {
     viewRoute() {
         return __awaiter(this, void 0, void 0, function* () {
-            yield this.setButcher();
-            this.res.render("pages/butcher.get-payment.ejs", this.viewData({}));
+            if (yield this.setButcher()) {
+                this.res.render("pages/butcher.get-payment.ejs", this.viewData({}));
+            }
+            ;
         });
     }
     static SetRoutes(router) {

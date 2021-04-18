@@ -9,6 +9,8 @@ export type FatValueItemType = 'fat' | 'fat:saturated' | 'fat:polyunsaturated' |
 export type CarbValueItemType = 'carb' | 'carb:fiber' | 'carb:sugar';
 export type ProteinValueItemType = 'protein';
 export type GeneralValueItemType = 'cholesterol' | 'sodium' | 'potassium'
+export type AgreementAcceptStatus = 'waiting' | 'approved' | 'reaprovement';
+export type AgreementType = 'butchersales';
 
 export interface ISiteLogger {
     isFraud(where: any): Promise<boolean>;

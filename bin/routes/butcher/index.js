@@ -3,6 +3,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 let appRoutes = [
     './home',
     './products',
+    './products2',
     './payment',
     './orders'
 ];

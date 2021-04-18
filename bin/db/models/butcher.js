@@ -100,7 +100,7 @@ let Butcher = Butcher_1 = class Butcher extends basemodel_1.default {
     get lng() {
         return this.location ? this.location.coordinates[1] : 0;
     }
-    static loadButcherWithProducts(slug) {
+    static loadButcherWithProducts(slug, includeDisabled = false) {
         return __awaiter(this, void 0, void 0, function* () {
             let where = {};
             if (typeof slug == 'string')
@@ -120,7 +120,7 @@ let Butcher = Butcher_1 = class Butcher extends basemodel_1.default {
             });
             if (butcher) {
                 butcher.products = butcher.products.filter(p => {
-                    return p.enabled && (p.kgPrice > 0 || (p.unit1price > 0 && p.unit1enabled) || (p.unit2price > 0 && p.unit2enabled) || (p.unit3price > 0 && p.unit1enabled));
+                    return (includeDisabled ? true : p.enabled) && (p.kgPrice > 0 || (p.unit1price > 0 && p.unit1enabled) || (p.unit2price > 0 && p.unit2enabled) || (p.unit3price > 0 && p.unit1enabled));
                 });
             }
             return butcher;
@@ -282,6 +282,13 @@ __decorate([
     sequelize_typescript_1.Column,
     __metadata("design:type", String)
 ], Butcher.prototype, "btnUrl", void 0);
+__decorate([
+    sequelize_typescript_1.Column({
+        allowNull: false,
+        defaultValue: 'waiting'
+    }),
+    __metadata("design:type", String)
+], Butcher.prototype, "agreementStatus", void 0);
 __decorate([
     sequelize_typescript_1.Column({
         allowNull: false,

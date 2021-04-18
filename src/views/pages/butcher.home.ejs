@@ -22,33 +22,47 @@
 
 
         <h1 class="h3"><%= controller.butcher ? controller.butcher.name + ' Sayfam': "Kasap Sayfam" %></h1>
-        <h2 class=" h4 lead">Hayırlı işler, bol kazançlar.</h2>         
+        <h2 class=" h4 lead">Kasap dostu KasaptanAl.com hayırlı işler, bol kazançlar diler.</h2>         
       </div>
     </div>
   </div>
 
 
 
-  <div class="container px-0">
-    <div class="bg-light box-shadow-lg px-4 py-4 mb-3 ">
+  <div class="container mb-3">
+    <div>
       <% if (controller.butcher) { %>
       <ul class="list-group">
         <% if (__req.user.hasRole('admin')) { %>
         <li class="list-group-item">
-          <a href="/kasapsayfam/urunler">Ürün Yönetimi</a>
+          <a class="app_blank" href="/kasapsayfam/urunler">Yönetici Ürün Yönetimi</a>
         </li>
         <% }%>
+        <% if (controller.needsAgreementSign) { %>
+       
+<li class="list-group-item">
+  <form action="/kasapsayfam/acceptAgreement" method="POST">
+    <p> Lütfen
+      <a href="javascript:App.agreementDialog('butcherkvkk?butcherid=<%=controller.butcher.id%>')">aydınlatma metni</a>, <a href="javascript:App.agreementDialog('butchersales?butcherid=<%=controller.butcher.id%>')">satış sözleşmesi</a> ve <a href="javascript:App.agreementDialog('butcherriza?butcherid=<%=controller.butcher.id%>')">rıza metni</a> belgelerini onaylayın.
+      </p>
+      <button type="submit" class="btn btn-success" value="acceptAgreements">Onayla</button>
+  </form>
+
+
+</li>
+        <% } %>
         <li class="list-group-item">
-          <a href="/fiyat-al/<%=controller.butcher.slug%>">Ürün Fiyatlarım</a>
+          <a class="app_blank" href="/kasapsayfam/urunlerim">Ürün Fiyatlarım</a>
         </li>
-        <li class="list-group-item">
-          <a href="/kasapsayfam/siparislerim">Siparişlerim</a>
+        <li  class="list-group-item">
+          <a class="app_blank" href="/kasapsayfam/siparislerim">Siparişlerim</a>
         </li>        
-        <li class="list-group-item">
-          <a href="/kasapsayfam/odemeal">Online Ödeme Al</a>
+        <li  class="list-group-item">
+          <a class="app_blank" href="/kasapsayfam/odemeal">Online Ödeme Al</a>
         </li>
       </ul>
 <%}%>
+
     <% if (__req.user.hasRole('admin')) { %>
     <div>
 <form method="POST" action="/kasapsayfam/setbutcher">

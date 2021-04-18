@@ -271,7 +271,14 @@
   </div>
 </header>
 
-
+<% if (__req.user && (__req.originalUrl.indexOf('kasapsayfam') == -1)  && (__req.user.hasRole('butcher'))) {%>
+  <div class="bg-secondary container pt-3 mb-3 border">
+    <p>
+      Merhaba <strong><%=__req.user.name%></strong>, kasabınız yönetim ekranına erişmek için <a target="_blank" class="text-dark font-weight-bold" href="/kasapsayfam">burayı</a> kullanın.
+    </p>
+  </div>
+  
+  <%}%>
 
 <div class="d-print-none" id="__whatsup"></div>
 

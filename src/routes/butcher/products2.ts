@@ -8,25 +8,34 @@ import ButcherProduct from "../../db/models/butcherproduct";
 import Product from "../../db/models/product";
 import Area from "../../db/models/area";
 import { ButcherRouter } from "./home";
-
+import * as _ from "lodash";
+import Helper from "../../lib/helper";
+import db from "../../db/context";
+import { Transaction } from "sequelize";
+import ButcherPriceHistory from "../../db/models/butcherpricehistory";
 
 
 export default class Route extends ButcherRouter {
 
+    @Auth.Anonymous()
     async viewRoute() {
         if (await this.setButcher()) {
-            this.res.render("pages/butcher.get-payment.ejs", this.viewData({
+            this.renderView('pages/products.forbutchers.ejs', null, {
+                butcher: this.butcher
+            });
+        }
 
-            }))
-        }; 
+
 
     }
 
 
 
 
+
     static SetRoutes(router: express.Router) {
-        router.get("/odemeal", Route.BindRequest(this.prototype.viewRoute));        
+        router.get("/urunlerim", Route.BindRequest(this.prototype.viewRoute));
+
     }
 }
 

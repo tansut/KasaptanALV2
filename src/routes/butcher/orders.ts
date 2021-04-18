@@ -57,62 +57,65 @@ export default class Route extends ButcherRouter {
 
 
     async viewRoute() {
-        await this.setButcher();
+        if (await this.setButcher()) {
+            let sdate = Helper.newDate2(2000,1,1);
+            let fdate = moment().endOf("month").toDate();
+    
+            let q = this.req.query.q || '7days';
+    
+            if (q == '7days') {
+                sdate = moment().startOf('day').subtract(7, "days").toDate();
+            } else if (q=='thismonth') {
+                sdate = moment().startOf("month").toDate();
+                fdate = moment().endOf("month").toDate();
+            } else {
+                sdate = moment().subtract(1, "month").startOf("month").toDate();
+                fdate = moment(sdate).endOf("month").toDate();
+            }
+    
+            let orders = await Order.findAll({
+                where: {
+                    butcherid: this.butcher.id,
+                    [Op.and]: [
+                        {
+                            creationDate: {
+                                [Op.gte]: sdate
+                            }
+                        },
+                        {
+                            creationDate: {
+                                [Op.lte]: fdate
+                            }
+                        }    
+                    ]                
+                },
+                order: [['id', 'desc']]
+            })
+    
 
-        let sdate = Helper.newDate2(2000,1,1);
-        let fdate = moment().endOf("month").toDate();
 
-        let q = this.req.query.q || '7days';
-
-        if (q == '7days') {
-            sdate = moment().startOf('day').subtract(7, "days").toDate();
-        } else if (q=='thismonth') {
-            sdate = moment().startOf("month").toDate();
-            fdate = moment().endOf("month").toDate();
-        } else {
-            sdate = moment().subtract(1, "month").startOf("month").toDate();
-            fdate = moment(sdate).endOf("month").toDate();
+            
+            let ordersSuccess = orders.filter(o=>o.status == 'teslim edildi');
+    
+            this.totalOrders = orders.length;
+            this.totalOrdersSuccess = ordersSuccess.length;
+            
+            this.totalOnline = await (await AccountModel.summary(ordersSuccess.map(o=>`205.${o.userId}.${o.ordernum}.500`))).borc;
+            this.productTotal = await (await AccountModel.summary(ordersSuccess.map(o=>`205.${o.userId}.${o.ordernum}.100`))).alacak;
+            this.shipOfButcherTotal = await (await AccountModel.summary(ordersSuccess.map(o=>`205.${o.userId}.${o.ordernum}.200`))).alacak;
+            this.totalButcher = await (await AccountModel.summary(ordersSuccess.map(o=>`205.${o.userId}.${o.ordernum}.600`))).borc;
+            this.paymentsByPuan = await (await AccountModel.summary(ordersSuccess.map(o=>`205.${o.userId}.${o.ordernum}.1100`))).borc;
+            this.totalPuan2Customer = await (await AccountModel.summary(ordersSuccess.map(o=>`130.${o.userId}.${o.butcherid}.${o.ordernum}`))).alacak;
+            this.totalPuan2CustomerInvoice = await (await AccountModel.summary(ordersSuccess.map(o=>`215.200.${o.butcherid}.${o.ordernum}`))).borc;
+            
+            this.totalCommission = await (await AccountModel.summary(ordersSuccess.map(o=>`215.200.${o.butcherid}.${o.ordernum}`))).borc;
+            this.kuryeFromCustomer = await (await AccountModel.summary(ordersSuccess.map(o=>`100.300.${o.ordernum}`))).borc;
+            this.totalCommission = await (await AccountModel.summary(ordersSuccess.map(o=>`215.100.${o.butcherid}.${o.ordernum}`))).borc;
+    
+            this.res.render("pages/butcher.orders.ejs", this.viewData({
+                orders: orders
+            }))
         }
-
-        let orders = await Order.findAll({
-            where: {
-                butcherid: this.butcher.id,
-                [Op.and]: [
-                    {
-                        creationDate: {
-                            [Op.gte]: sdate
-                        }
-                    },
-                    {
-                        creationDate: {
-                            [Op.lte]: fdate
-                        }
-                    }    
-                ]                
-            },
-            order: [['id', 'desc']]
-        })
-
-        let ordersSuccess = orders.filter(o=>o.status == 'teslim edildi');
-
-        this.totalOrders = orders.length;
-        this.totalOrdersSuccess = ordersSuccess.length;
-        
-        this.totalOnline = await (await AccountModel.summary(ordersSuccess.map(o=>`205.${o.userId}.${o.ordernum}.500`))).borc;
-        this.productTotal = await (await AccountModel.summary(ordersSuccess.map(o=>`205.${o.userId}.${o.ordernum}.100`))).alacak;
-        this.shipOfButcherTotal = await (await AccountModel.summary(ordersSuccess.map(o=>`205.${o.userId}.${o.ordernum}.200`))).alacak;
-        this.totalButcher = await (await AccountModel.summary(ordersSuccess.map(o=>`205.${o.userId}.${o.ordernum}.600`))).borc;
-        this.paymentsByPuan = await (await AccountModel.summary(ordersSuccess.map(o=>`205.${o.userId}.${o.ordernum}.1100`))).borc;
-        this.totalPuan2Customer = await (await AccountModel.summary(ordersSuccess.map(o=>`130.${o.userId}.${o.butcherid}.${o.ordernum}`))).alacak;
-        this.totalPuan2CustomerInvoice = await (await AccountModel.summary(ordersSuccess.map(o=>`215.200.${o.butcherid}.${o.ordernum}`))).borc;
-        
-        this.totalCommission = await (await AccountModel.summary(ordersSuccess.map(o=>`215.200.${o.butcherid}.${o.ordernum}`))).borc;
-        this.kuryeFromCustomer = await (await AccountModel.summary(ordersSuccess.map(o=>`100.300.${o.ordernum}`))).borc;
-        this.totalCommission = await (await AccountModel.summary(ordersSuccess.map(o=>`215.100.${o.butcherid}.${o.ordernum}`))).borc;
-
-        this.res.render("pages/butcher.orders.ejs", this.viewData({
-            orders: orders
-        }))
     }
 
     static SetRoutes(router: express.Router) {

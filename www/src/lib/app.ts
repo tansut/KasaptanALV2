@@ -34,6 +34,16 @@ export class App extends AppBase {
 
     public static ComponentMap: ComponentMap = {};
 
+    static agreementDialog(agreement) {
+        Backend.get('agreement/content/' + agreement).then((result) => {
+            $('#agreementModal .modal-title').html(result.data.title);
+            $('#agreementModal .modal-body').html(result.data.content);
+            (<any>$('#agreementModal')).modal('show');
+        }).catch(err=> {
+            App.HandleError(err)
+        })
+    }
+
 
     static GetGeoLocation() {
         if (navigator.geolocation) {

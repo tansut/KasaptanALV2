@@ -114,4 +114,5 @@ export interface ProductViewForButcher extends ProductView  {
     butcherProductNote: string;
     priceUnit: string;
     fromButcherNote: string;
+    enabled: boolean;
 }

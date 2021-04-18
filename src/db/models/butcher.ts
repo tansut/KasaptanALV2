@@ -13,6 +13,7 @@ import { ExternalLogisticProviderUsage, DispatcherType } from './dispatcher';
 import { GeoLocation } from '../../models/geo';
 import { ShipmentInfo } from '../../models/shipment';
 import Resource from './resource';
+import { AgreementAcceptStatus } from '../../models/common';
 
 export type DispatchArea = "manual" | "citywide" | "radius";
 
@@ -123,6 +124,13 @@ class Butcher extends BaseModel<Butcher> {
     @AllowNull(true)
     @Column
     btnUrl: string;
+
+    
+    @Column({
+        allowNull: false,
+        defaultValue: 'waiting'
+    })
+    agreementStatus: AgreementAcceptStatus;
 
     @Column({
         allowNull: false,
@@ -586,7 +594,7 @@ class Butcher extends BaseModel<Butcher> {
         return this.location ? (<any>this.location).coordinates[1] : 0
     }
 
-    static async loadButcherWithProducts(slug: string | number) {
+    static async loadButcherWithProducts(slug: string | number, includeDisabled: boolean = false) {
         let where = {}
         if (typeof slug == 'string') where['slug'] = slug;
         else where["id"] = slug
@@ -629,7 +637,7 @@ class Butcher extends BaseModel<Butcher> {
         });
         if (butcher) {
             butcher.products = butcher.products.filter(p => {
-                return p.enabled && (p.kgPrice > 0 || (p.unit1price > 0 && p.unit1enabled) || (p.unit2price > 0 && p.unit2enabled) || (p.unit3price > 0 && p.unit1enabled))
+                return (includeDisabled ? true: p.enabled) && (p.kgPrice > 0 || (p.unit1price > 0 && p.unit1enabled) || (p.unit2price > 0 && p.unit2enabled) || (p.unit3price > 0 && p.unit1enabled))
             })
         }
         return butcher;

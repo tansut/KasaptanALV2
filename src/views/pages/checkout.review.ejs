@@ -85,7 +85,7 @@
                   Mesafeli Satış Sözleşmesi
                 </h6>
                 <div class="form-group">
-                  <textarea style="font-family: 'Courier New', Courier, monospace;" class="font-size-xs form-control" rows="5" readonly><%= include('./_partial/user-butcher-agreement.ejs', {
+                  <textarea style="font-family: 'Courier New', Courier, monospace;" class="font-size-xs form-control" rows="5" readonly><%= include('../legal/user-butcher-agreement.ejs', {
                       user: shopcard,
                       butcher: controller.Butchers.find(b=>b.id == bi)
                     }) %>

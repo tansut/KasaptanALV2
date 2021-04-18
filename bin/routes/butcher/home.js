@@ -15,6 +15,7 @@ const butcher_1 = require("../../db/models/butcher");
 const butcherproduct_1 = require("../../db/models/butcherproduct");
 const product_1 = require("../../db/models/product");
 const area_1 = require("../../db/models/area");
+const agreement_1 = require("../../db/models/agreement");
 class ButcherRouter extends router_1.ViewRouter {
     loadButcher(id) {
         return __awaiter(this, void 0, void 0, function* () {
@@ -34,7 +35,11 @@ class ButcherRouter extends router_1.ViewRouter {
             return butcher;
         });
     }
-    setButcher() {
+    get needsAgreementSign() {
+        return this.butcher.agreementStatus == 'waiting' ||
+            this.butcher.agreementStatus == 'reaprovement';
+    }
+    setButcher(checkOk = true) {
         return __awaiter(this, void 0, void 0, function* () {
             if (this.req.session.__butcherid) {
                 this.butcher = yield this.loadButcher(this.req.session.__butcherid);
@@ -42,14 +47,35 @@ class ButcherRouter extends router_1.ViewRouter {
             else if (this.req.user.butcherid) {
                 this.butcher = yield this.loadButcher(this.req.user.butcherid);
             }
+            if (this.req.user.hasRole("butcher") && checkOk && this.needsAgreementSign) {
+                this.res.redirect('/kasapsayfam');
+                return false;
+            }
+            return true;
         });
     }
 }
 exports.ButcherRouter = ButcherRouter;
 class Route extends ButcherRouter {
+    acceptAgreements() {
+        return __awaiter(this, void 0, void 0, function* () {
+            yield this.setButcher(false);
+            yield agreement_1.default.create({
+                ip: this.userIp,
+                type: 'butchersales',
+                title: 'Kasap Satış Sözleşmesi',
+                userid: this.req.user.id,
+                name: this.req.user.name,
+                sessionid: this.req.session.id
+            });
+            this.butcher.agreementStatus = 'approved';
+            yield this.butcher.save();
+            this.res.redirect('/kasapsayfam?accepted=1');
+        });
+    }
     viewRoute() {
         return __awaiter(this, void 0, void 0, function* () {
-            yield this.setButcher();
+            yield this.setButcher(false);
             if (this.req.user.hasRole("admin")) {
                 this.adminButchers = yield butcher_1.default.findAll({
                     where: {
@@ -69,6 +95,7 @@ class Route extends ButcherRouter {
     }
     static SetRoutes(router) {
         router.get("/", Route.BindRequest(this.prototype.viewRoute));
+        router.post("/acceptAgreement", Route.BindRequest(this.prototype.acceptAgreements));
         router.post("/setbutcher", Route.BindRequest(this.prototype.setButcherRoute));
     }
 }

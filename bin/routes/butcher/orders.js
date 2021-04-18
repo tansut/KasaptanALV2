@@ -38,55 +38,56 @@ class Route extends home_1.ButcherRouter {
     // )
     viewRoute() {
         return __awaiter(this, void 0, void 0, function* () {
-            yield this.setButcher();
-            let sdate = helper_1.default.newDate2(2000, 1, 1);
-            let fdate = moment().endOf("month").toDate();
-            let q = this.req.query.q || '7days';
-            if (q == '7days') {
-                sdate = moment().startOf('day').subtract(7, "days").toDate();
-            }
-            else if (q == 'thismonth') {
-                sdate = moment().startOf("month").toDate();
-                fdate = moment().endOf("month").toDate();
-            }
-            else {
-                sdate = moment().subtract(1, "month").startOf("month").toDate();
-                fdate = moment(sdate).endOf("month").toDate();
-            }
-            let orders = yield order_1.Order.findAll({
-                where: {
-                    butcherid: this.butcher.id,
-                    [sequelize_1.Op.and]: [
-                        {
-                            creationDate: {
-                                [sequelize_1.Op.gte]: sdate
+            if (yield this.setButcher()) {
+                let sdate = helper_1.default.newDate2(2000, 1, 1);
+                let fdate = moment().endOf("month").toDate();
+                let q = this.req.query.q || '7days';
+                if (q == '7days') {
+                    sdate = moment().startOf('day').subtract(7, "days").toDate();
+                }
+                else if (q == 'thismonth') {
+                    sdate = moment().startOf("month").toDate();
+                    fdate = moment().endOf("month").toDate();
+                }
+                else {
+                    sdate = moment().subtract(1, "month").startOf("month").toDate();
+                    fdate = moment(sdate).endOf("month").toDate();
+                }
+                let orders = yield order_1.Order.findAll({
+                    where: {
+                        butcherid: this.butcher.id,
+                        [sequelize_1.Op.and]: [
+                            {
+                                creationDate: {
+                                    [sequelize_1.Op.gte]: sdate
+                                }
+                            },
+                            {
+                                creationDate: {
+                                    [sequelize_1.Op.lte]: fdate
+                                }
                             }
-                        },
-                        {
-                            creationDate: {
-                                [sequelize_1.Op.lte]: fdate
-                            }
-                        }
-                    ]
-                },
-                order: [['id', 'desc']]
-            });
-            let ordersSuccess = orders.filter(o => o.status == 'teslim edildi');
-            this.totalOrders = orders.length;
-            this.totalOrdersSuccess = ordersSuccess.length;
-            this.totalOnline = yield (yield accountmodel_1.default.summary(ordersSuccess.map(o => `205.${o.userId}.${o.ordernum}.500`))).borc;
-            this.productTotal = yield (yield accountmodel_1.default.summary(ordersSuccess.map(o => `205.${o.userId}.${o.ordernum}.100`))).alacak;
-            this.shipOfButcherTotal = yield (yield accountmodel_1.default.summary(ordersSuccess.map(o => `205.${o.userId}.${o.ordernum}.200`))).alacak;
-            this.totalButcher = yield (yield accountmodel_1.default.summary(ordersSuccess.map(o => `205.${o.userId}.${o.ordernum}.600`))).borc;
-            this.paymentsByPuan = yield (yield accountmodel_1.default.summary(ordersSuccess.map(o => `205.${o.userId}.${o.ordernum}.1100`))).borc;
-            this.totalPuan2Customer = yield (yield accountmodel_1.default.summary(ordersSuccess.map(o => `130.${o.userId}.${o.butcherid}.${o.ordernum}`))).alacak;
-            this.totalPuan2CustomerInvoice = yield (yield accountmodel_1.default.summary(ordersSuccess.map(o => `215.200.${o.butcherid}.${o.ordernum}`))).borc;
-            this.totalCommission = yield (yield accountmodel_1.default.summary(ordersSuccess.map(o => `215.200.${o.butcherid}.${o.ordernum}`))).borc;
-            this.kuryeFromCustomer = yield (yield accountmodel_1.default.summary(ordersSuccess.map(o => `100.300.${o.ordernum}`))).borc;
-            this.totalCommission = yield (yield accountmodel_1.default.summary(ordersSuccess.map(o => `215.100.${o.butcherid}.${o.ordernum}`))).borc;
-            this.res.render("pages/butcher.orders.ejs", this.viewData({
-                orders: orders
-            }));
+                        ]
+                    },
+                    order: [['id', 'desc']]
+                });
+                let ordersSuccess = orders.filter(o => o.status == 'teslim edildi');
+                this.totalOrders = orders.length;
+                this.totalOrdersSuccess = ordersSuccess.length;
+                this.totalOnline = yield (yield accountmodel_1.default.summary(ordersSuccess.map(o => `205.${o.userId}.${o.ordernum}.500`))).borc;
+                this.productTotal = yield (yield accountmodel_1.default.summary(ordersSuccess.map(o => `205.${o.userId}.${o.ordernum}.100`))).alacak;
+                this.shipOfButcherTotal = yield (yield accountmodel_1.default.summary(ordersSuccess.map(o => `205.${o.userId}.${o.ordernum}.200`))).alacak;
+                this.totalButcher = yield (yield accountmodel_1.default.summary(ordersSuccess.map(o => `205.${o.userId}.${o.ordernum}.600`))).borc;
+                this.paymentsByPuan = yield (yield accountmodel_1.default.summary(ordersSuccess.map(o => `205.${o.userId}.${o.ordernum}.1100`))).borc;
+                this.totalPuan2Customer = yield (yield accountmodel_1.default.summary(ordersSuccess.map(o => `130.${o.userId}.${o.butcherid}.${o.ordernum}`))).alacak;
+                this.totalPuan2CustomerInvoice = yield (yield accountmodel_1.default.summary(ordersSuccess.map(o => `215.200.${o.butcherid}.${o.ordernum}`))).borc;
+                this.totalCommission = yield (yield accountmodel_1.default.summary(ordersSuccess.map(o => `215.200.${o.butcherid}.${o.ordernum}`))).borc;
+                this.kuryeFromCustomer = yield (yield accountmodel_1.default.summary(ordersSuccess.map(o => `100.300.${o.ordernum}`))).borc;
+                this.totalCommission = yield (yield accountmodel_1.default.summary(ordersSuccess.map(o => `215.100.${o.butcherid}.${o.ordernum}`))).borc;
+                this.res.render("pages/butcher.orders.ejs", this.viewData({
+                    orders: orders
+                }));
+            }
         });
     }
     static SetRoutes(router) {

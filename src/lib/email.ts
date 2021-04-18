@@ -1,4 +1,3 @@
-import * as common from './common';
 import config from '../config';
 import * as nodemailer from 'nodemailer';
 import * as smtpTransport from 'nodemailer-smtp-transport';

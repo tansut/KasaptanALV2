@@ -10,7 +10,8 @@ let appRoutes = [
     './shopcard',
     './fts',
     './order',
-    './product'
+    './product',
+    './agreement'
 ];
 
 export default class RouteLoader {

@@ -3,6 +3,7 @@ import * as express from "express";
 let appRoutes = [
     './home',
     './products',
+    './products2',
     './payment',
     './orders'
 ];
