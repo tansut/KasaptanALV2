@@ -17,7 +17,7 @@ const productcategory_1 = require("../../db/models/productcategory");
 const helper_1 = require("../helper");
 class ButcherStats extends basetask_1.BaseTask {
     get interval() {
-        return "0 0 */6 * * *";
+        return "30 0 * * *";
     }
     run() {
         return __awaiter(this, void 0, void 0, function* () {

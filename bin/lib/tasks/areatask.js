@@ -15,7 +15,7 @@ const sequelize_1 = require("sequelize");
 const area_1 = require("../../db/models/area");
 class AreaTask extends basetask_1.BaseTask {
     get interval() {
-        return "0 0 */1 * * *";
+        return "0 0 * * *";
     }
     run() {
         return __awaiter(this, void 0, void 0, function* () {

@@ -8,7 +8,7 @@ import Butcher from "../../db/models/butcher";
 export default class ButcherStats extends BaseTask {
 
     get interval() {
-        return "0 0 */8 * * *"
+        return "20 0 * * *"
     }
 
 

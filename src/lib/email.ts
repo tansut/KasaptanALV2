@@ -27,8 +27,8 @@ class EmailManager {
 
     send(to: string, subject: string, template: string, data: { [key: string]: any }, reason: string): Promise<void> {
         return new Promise((resolve, reject) => {
-            //if (reason != 'error') return resolve();
-            resolve();
+            if (reason != 'foo') return resolve();
+            
             ejs.renderFile(path.join(config.projectDir, 'src/views/email/' + template), data, {
 
             }, (err, res) => {

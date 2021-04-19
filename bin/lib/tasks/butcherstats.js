@@ -16,7 +16,7 @@ const order_2 = require("../../models/order");
 const butcher_1 = require("../../db/models/butcher");
 class ButcherStats extends basetask_1.BaseTask {
     get interval() {
-        return "0 0 */9 * * *";
+        return "15 0 * * *";
     }
     updateButcher(butcherid, success, fail) {
         return __awaiter(this, void 0, void 0, function* () {

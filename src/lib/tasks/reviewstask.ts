@@ -12,7 +12,7 @@ import Product from "../../db/models/product";
 export default class ButcherStats extends BaseTask {
 
     get interval() {
-        return "0 0 */1 * * *"
+        return "25 0 * * *"
     }
 
 

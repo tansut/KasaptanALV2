@@ -14,7 +14,7 @@ import db from "../../db/context";
 export default class AreaTask extends BaseTask {
 
     get interval() {
-        return "0 0 */1 * * *"
+        return "0 0 * * *"
     }
 
 

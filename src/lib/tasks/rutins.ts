@@ -15,7 +15,7 @@ import Helper from "../helper";
 export default class ButcherStats extends BaseTask {
 
     get interval() {
-        return "0 0 */6 * * *"
+        return "30 0 * * *"
     }
 
 

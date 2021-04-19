@@ -14,7 +14,7 @@ const order_1 = require("../../db/models/order");
 const sq = require("sequelize");
 class ButcherStats extends basetask_1.BaseTask {
     get interval() {
-        return "0 0 */8 * * *";
+        return "20 0 * * *";
     }
     run() {
         return __awaiter(this, void 0, void 0, function* () {
