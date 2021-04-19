@@ -27,7 +27,13 @@
   </div>
 
 
-
+  <div class="container mb-3 bg-secondary border p-3">
+    <ul class="list">
+      <li>
+        Teslim durumu elle düzeltildiği için teslim ettiğiniz siparişler tedarik sürecinde veya teslim edilecek olarak görünebilir.
+      </li>
+    </ul>
+  </div>
   <div class="container px-0">
     <div class="bg-light box-shadow-lg px-4 py-4 mb-3 ">
       <ul class="nav nav-pills mb-3">
@@ -46,6 +52,7 @@
 
 <div>
   <div>
+
     <table class="table table-hover">
       <thead>
           <tr>
@@ -78,7 +85,8 @@
           </td>
 
           <td>
-            <%=controller.productTotal%>
+            <%- include('./_partial/currency.ejs', {value: controller.productTotal}) %>
+            
           </td>
         </tr>         
         
@@ -91,7 +99,17 @@
             <%=controller.shipOfButcherTotal%>
           </td>
         </tr>       
+        <tr class="bg-secondary">
+          <td>
+            Ciro Artışınız
+          </td>
 
+          <td class="font-weight-bold">
+            <%- include('./_partial/currency.ejs', {value: controller.shipOfButcherTotal + controller.productTotal}) %>
+
+
+          </td>
+        </tr>  
         
 
 
@@ -146,19 +164,20 @@
           </td>
         </tr> 
 
-        <tr>
+        <tr class="bg-secondary">
           <td>
-            Satış komisyonu (kuryeye iletilecek dahil)
+            KasaptanAl komisyonu <br>
+            <span class="text-muted font-size-sm">KDV, kurye ve kredi kartı komisyon bedeli dahildir.</span> 
           </td>
 
-          <td>
+          <td class="font-weight-bold">
             <%- include('./_partial/currency.ejs', {value: controller.totalCommission}) %>
 
            
           </td>
         </tr>       
 
-        <tr>
+        <!-- <tr class="bg-secondary">
           <td>
             Toplam maliyet
           </td>
@@ -168,7 +187,7 @@
 
            
           </td>
-        </tr>      
+        </tr>       -->
         
         <tr>
           <td>

@@ -1,5 +1,6 @@
 import { HostConfiguration, IHostConfiguration } from './config'
 import axios, { AxiosInstance } from "axios"
+import { App } from './app';
 
 export class Backend {
     static axios: AxiosInstance;
@@ -62,7 +63,8 @@ export class Backend {
                             .then((result) => resolve(result.data))
                             .catch((err)=>reject(err))
                     }).catch((err) => {
-                      reject(err)
+                        App.gTag("grecaptcha", "execute", err.message);
+                      reject(err);
                     });
             });
 
