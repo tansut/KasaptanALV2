@@ -19,8 +19,10 @@ class Google {
             const url = `https://www.google.com/recaptcha/api/siteverify?secret=${config_1.default.googleCaptchaSecret}&response=${token}`;
             let resp = yield axios_1.default.post(url);
             let result = resp.data && resp.data['success'] == true;
+            let err = new Error("Invalid catpcha");
+            err['googleError'] = resp.data;
             if (!result)
-                throw new Error("Invalid catpcha");
+                throw err;
             return resp.data;
         });
     }

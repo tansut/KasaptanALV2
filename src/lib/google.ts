@@ -20,7 +20,9 @@ export class Google  {
         const url = `https://www.google.com/recaptcha/api/siteverify?secret=${config.googleCaptchaSecret}&response=${token}`;
         let resp = await axios.post(url);
         let result = resp.data && resp.data['success'] == true;
-        if (!result) throw new Error("Invalid catpcha");
+        let err = new Error("Invalid catpcha");
+        err['googleError'] = resp.data;
+        if (!result) throw err;
         return resp.data;
     }
 

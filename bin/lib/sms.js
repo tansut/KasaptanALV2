@@ -36,7 +36,7 @@ class Sms {
                 let requestIsFraud = yield logger.isFraud({ email: to });
                 if (requestIsFraud) {
                     if (throwexc)
-                        throw new http_1.ValidationError('Lütfen 5 dk sonra tekrar deneyiniz.');
+                        throw new http_1.ValidationError('Lütfen 5 dk sonra tekrar deneyiniz:' + to);
                     return false;
                 }
                 let url = `https://api.netgsm.com.tr/sms/send/get?usercode=${8503054216}&password=BOV0MN1M&gsmno=${encodeURI(to.trim())}&message=${encodeURI(text)}&msgheader=${('KasaptanAl')}`;
