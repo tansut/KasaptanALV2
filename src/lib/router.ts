@@ -135,7 +135,7 @@ export default class BaseRouter {
 
         let handler = typeof (method) == "string" ? instance[method] : instance[method.name];
         var anonymous = Auth.GetAnonymous(handler);
-        var useCatcpha = false; // Auth.GetCatcpha(handler);
+        var useCatcpha = Auth.GetCatcpha(handler);
 
         if (!anonymous && !req.user)
             return next(new http.PermissionError(req.originalUrl));
@@ -144,7 +144,7 @@ export default class BaseRouter {
             if (useCatcpha && instance.useCatpcha) {
                 let token = (req.body ? req.body.__token: undefined);
                 if (!token) {
-                     return reject(new http.PermissionError("Güvenlik adımını maalesef tamamlayamadık. Daha sonra tekrar deneyin."))
+                     return reject(new http.PermissionError("Güvenlik adımını maalesef tamamlayamadık. Sayfayı yenileyip tekrar deneyin.", 403))
                 } else {
                     Google.verifyCatpcha(token).then(()=>{
                         resolve();
@@ -152,7 +152,7 @@ export default class BaseRouter {
                          Helper.logError(err, {
                              method: "Controller"
                          }, req);
-                         reject(new http.PermissionError("Güvenlik adımını maalesef tamamlayamadık. Daha sonra tekrar deneyin."));
+                         reject(new http.PermissionError("Güvenlik adımını maalesef tamamlayamadık. Sayfayı yenileyip tekrar deneyin.", 403));
                     })
                 }            
             } else resolve()

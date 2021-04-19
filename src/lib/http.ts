@@ -43,8 +43,8 @@ export class HttpError extends ApplicationError {
 
 
 export class PermissionError extends HttpError {
-    constructor(msg?: string) {
-        super(401, msg || 'unauthorized');
+    constructor(msg?: string, code: number = 401) {
+        super(code, msg || 'unauthorized');
     }
 }
 

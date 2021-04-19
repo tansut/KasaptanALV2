@@ -32,6 +32,8 @@ grecaptcha.ready(function() {
     grecaptcha.execute('<%-__config.googleCaptchaKey%>', {action: 'default'})
         .then(function(token) {
           window.App.Backend.catpchaToken = token;
+        }).catch(function(err) {
+          App.handleError(err);
         });
 });
 

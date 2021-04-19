@@ -35,8 +35,8 @@ HttpError.dbErrorCodes = {
     11000: 'It seems there already exists a record with this id'
 };
 class PermissionError extends HttpError {
-    constructor(msg) {
-        super(401, msg || 'unauthorized');
+    constructor(msg, code = 401) {
+        super(code, msg || 'unauthorized');
     }
 }
 exports.PermissionError = PermissionError;

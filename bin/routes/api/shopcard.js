@@ -105,6 +105,7 @@ class Route extends router_1.ApiRouter {
             this.res.send(coded);
         });
     }
+    //@Auth.RequireCatcpha()
     revgeocode() {
         return __awaiter(this, void 0, void 0, function* () {
             if (!this.req.body.lat || !this.req.body.lng)
@@ -124,7 +125,6 @@ class Route extends router_1.ApiRouter {
 }
 __decorate([
     common_1.Auth.Anonymous(),
-    common_1.Auth.RequireCatcpha(),
     __metadata("design:type", Function),
     __metadata("design:paramtypes", []),
     __metadata("design:returntype", Promise)
@@ -143,15 +143,8 @@ __decorate([
 ], Route.prototype, "removeRoute", null);
 __decorate([
     common_1.Auth.Anonymous(),
-    common_1.Auth.RequireCatcpha(),
     __metadata("design:type", Function),
     __metadata("design:paramtypes", []),
     __metadata("design:returntype", Promise)
 ], Route.prototype, "geocode", null);
-__decorate([
-    common_1.Auth.RequireCatcpha(),
-    __metadata("design:type", Function),
-    __metadata("design:paramtypes", []),
-    __metadata("design:returntype", Promise)
-], Route.prototype, "revgeocode", null);
 exports.default = Route;

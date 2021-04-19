@@ -24,7 +24,7 @@ export default class Route extends ApiRouter {
     }
 
     @Auth.Anonymous()
-    @Auth.RequireCatcpha()    
+    //@Auth.RequireCatcpha()    
     async addRoute() {
         let api = new ProductApi(this.constructorParams);
         let item = this.req.body;
@@ -87,7 +87,7 @@ export default class Route extends ApiRouter {
 
     
     @Auth.Anonymous()
-    @Auth.RequireCatcpha()
+    //@Auth.RequireCatcpha()
     async geocode() {
         if(!this.req.body.address)
             return this.next();
@@ -96,7 +96,7 @@ export default class Route extends ApiRouter {
         this.res.send(coded)
     }
 
-    @Auth.RequireCatcpha()
+    //@Auth.RequireCatcpha()
     async revgeocode() {
         if(!this.req.body.lat || !this.req.body.lng)
             return this.next();
