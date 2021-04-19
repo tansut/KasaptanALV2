@@ -763,16 +763,17 @@ class Route extends router_1.ApiRouter {
     }
     completeManuelPayment(o, total) {
         return __awaiter(this, void 0, void 0, function* () {
-            let res = context_1.default.getContext().transaction((t) => {
-                return this.makeManuelPayment(o, total, t);
-            });
-            yield new Promise((resolve, reject) => {
-                res.then((result) => {
-                    resolve(result);
-                }).catch((err) => {
-                    reject(err);
-                });
-            });
+            // let res = db.getContext().transaction((t: Transaction) => {
+            //     return this.makeManuelPayment(o, total, t)
+            // })
+            // await new Promise((resolve, reject) => {
+            //     res.then((result) => {
+            //         resolve(result)
+            //     }).catch((err) => {
+            //         reject(err);
+            //     })
+            // })
+            yield this.makeManuelPayment(o, total);
         });
     }
     // async loadPuan(o: Order, total: number, t?: Transaction): Promise<any> {
@@ -815,9 +816,10 @@ class Route extends router_1.ApiRouter {
     }
     completeManualPaymentDept(o) {
         return __awaiter(this, void 0, void 0, function* () {
-            let res = context_1.default.getContext().transaction((t) => {
-                return this.createManualPaymentDept(o, t);
-            });
+            // let res = db.getContext().transaction((t: Transaction) => {
+            //     return this.createManualPaymentDept(o, t)
+            // })
+            let res = this.createManualPaymentDept(o);
             yield res;
         });
     }
@@ -827,7 +829,7 @@ class Route extends router_1.ApiRouter {
                 yield this.fillButcherComissionAccounts(o);
                 let butcherDebtAcc = o.butcherComissiomAccounts.find(p => p.code == 'total');
                 let butcherDebt = helper_1.default.asCurrency(butcherDebtAcc.borc - butcherDebtAcc.alacak);
-                let result = new account_1.AccountingOperation(`${o.ordernum} nolu ${o.butcherName} siparişi kasaptan alacak`);
+                let result = new account_1.AccountingOperation(`${o.ordernum} nolu ${o.butcherName} siparişi kasaptan alacak`, o.ordernum);
                 result.accounts.push(new account_1.Account("kasaplardan-alacaklar", [o.butcherid, 1, o.ordernum], `${o.ordernum} nolu siparişten doğan komisyon ve puan borcu`).inc(butcherDebt));
                 result.accounts.push(new account_1.Account("kasap-borc-tahakkuk", [1, o.butcherid, o.ordernum], `${o.ordernum} nolu manuel ödemesi`).inc(helper_1.default.asCurrency(butcherDebt)));
                 return this.saveAccountingOperations([result], t);
@@ -838,23 +840,24 @@ class Route extends router_1.ApiRouter {
         return __awaiter(this, void 0, void 0, function* () {
             let ops = [];
             let promises = [];
+            let productPrice = this.calculateProduct(o);
             let paymentId = "manuel";
-            let usablePuan = Math.min(0.00, yield this.getUsablePuans(o));
+            let usablePuan = helper_1.default.asCurrency(0);
+            this.fillEarnedPuanAccounts(o, productPrice);
             let op = new account_1.AccountingOperation(`${o.ordernum} ödemesi - ${paymentId}`, o.ordernum);
             op.accounts.push(new account_1.Account("odeme-bekleyen-satislar", [o.userId, o.ordernum, 600], "kapıda ödeme").dec(total - usablePuan));
-            if (usablePuan) {
-                op.accounts.push(new account_1.Account("odeme-bekleyen-satislar", [o.userId, o.ordernum, 1100], "puan kullanımı").dec(usablePuan));
-            }
+            // if (usablePuan) {
+            //     op.accounts.push(new Account("odeme-bekleyen-satislar", [o.userId, o.ordernum, 1100], "puan kullanımı").dec(usablePuan));
+            // }
             op.accounts.push(new account_1.Account("satis-alacaklari", [o.userId, o.ordernum]).dec(total));
             ops.push(op);
             let butcherShip = this.calculateTeslimatOfButcher(o);
             let kasaptanAlShip = this.calculateTeslimatOfKasaptanAl(o);
-            let productPrice = this.calculateProduct(o);
             let puanAccounts = this.getEarnedPuanAccounts(o, productPrice);
-            let usedPuanAccounts = this.getUsedPuanAccounts(o, usablePuan);
+            //let usedPuanAccounts = this.getUsedPuanAccounts(o, usablePuan);
             let comissionAccounts = this.getComissionAccounts(o, butcherShip + productPrice, kasaptanAlShip, usablePuan);
             ops.push(puanAccounts);
-            ops.push(usedPuanAccounts);
+            //ops.push(usedPuanAccounts);
             ops.push(comissionAccounts);
             o.paidTotal = total;
             promises.push(o.save({

@@ -77,7 +77,7 @@ let Order = Order_1 = class Order extends basemodel_1.default {
                 return this.butcher.kurbanCommissionRate;
             }
             else {
-                if (dispatcherType == "butcher" || dispatcherType == "butcher/auto") {
+                if (!dispatcherType || dispatcherType == "butcher" || dispatcherType == "butcher/auto") {
                     return this.butcher.commissionRate;
                 }
                 else {
