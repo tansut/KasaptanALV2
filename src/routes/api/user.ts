@@ -193,7 +193,7 @@ export default class UserRoute extends ApiRouter {
         }
         email.send( user.email, "iyi et rehberi", "meatguide.ejs", {
             email:  user.email
-        })
+        }, 'user/meatguide')
         await this.authenticateRoute()
     }
 

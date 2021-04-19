@@ -1007,7 +1007,7 @@ export default class Route extends ApiRouter {
             notifyMobilePhones.push('5326274151');
             notifyMobilePhones.push('5316857306');
 
-            email.send(ol[i].email, "siparişinizin ödemesi yapıldı", "order.paid.ejs", this.getView(ol[i]));
+            email.send(ol[i].email, "siparişinizin ödemesi yapıldı", "order.paid.ejs", this.getView(ol[i]), 'order/paid');
             for (var p = 0; p < notifyMobilePhones.length; p++) {
                 if (notifyMobilePhones[p].trim()) {
                     let payUrl = `${this.url}/manageorder/${ol[i].ordernum}`;
@@ -1169,8 +1169,8 @@ export default class Route extends ApiRouter {
             let view = this.getView(dbOrder);
 
             let viewUrl = `${this.url}/user/orders/${order.ordernum}`;
-            await email.send(dbOrder.email, "siparişinizi aldık", "order.started.ejs", view);
-            await Sms.send(dbOrder.phone, `KasaptanAl.com ${dbOrder.butcherName} siparisinizi aldik, Teslimat kodu: ${order.securityCode}. ${order.paymentType == 'onlinepayment' ? 'Simdi odeme yapabilirsiniz' : 'Bilgi'}: ${viewUrl}`, false, new SiteLogRoute(this.constructorParams))
+            await email.send(dbOrder.email, "siparişinizi aldık", "order.started.ejs", view, 'order/created');
+            await Sms.send(dbOrder.phone, `KasaptanAl.com ${dbOrder.butcherName} siparisinizi aldik, Teslimat kodu: ${order.securityCode}. ${order.paymentType == 'onlinepayment' ? 'Simdi odeme yapabilirsiniz' : 'Bilgi'}: ${viewUrl}`, false, new SiteLogRoute(this.constructorParams));
             if (order.paymentType != "onlinepayment") {
                 let notifyMobilePhones = (order.butcher.notifyMobilePhones || "").split(',');
                 notifyMobilePhones.push('5531431988');
@@ -1269,7 +1269,7 @@ export default class Route extends ApiRouter {
 
         let customerText = `KasaptanAl.com siparisiniz icin ${order.butcherName} teslimat planlamasi yapti: ${order.shipmentStartText}. Kasap tel: ${order.butcher.phone}`
         await Sms.send(order.phone, customerText, false, new SiteLogRoute(this.constructorParams))
-        email.send(order.email, `KasaptanAl.com ${order.butcherName} siparişiniz teslimat bilgisi`, "order.planed.ejs", this.getView(order));
+        email.send(order.email, `KasaptanAl.com ${order.butcherName} siparişiniz teslimat bilgisi`, "order.planed.ejs", this.getView(order), 'order/planned');
     }
 
     // @Auth.Anonymous()

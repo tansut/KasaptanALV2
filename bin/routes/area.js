@@ -172,7 +172,7 @@ class Route extends router_1.ViewRouter {
             }
             let butchers = yield butcher_1.default.findAll({
                 where: where,
-                limit: 50,
+                limit: 100,
                 order: [["displayOrder", "DESC"]],
                 include: [{
                         model: area_2.default,

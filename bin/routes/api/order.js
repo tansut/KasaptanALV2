@@ -918,7 +918,7 @@ class Route extends router_1.ApiRouter {
                 notifyMobilePhones.push('5531431988');
                 notifyMobilePhones.push('5326274151');
                 notifyMobilePhones.push('5316857306');
-                email_1.default.send(ol[i].email, "siparişinizin ödemesi yapıldı", "order.paid.ejs", this.getView(ol[i]));
+                email_1.default.send(ol[i].email, "siparişinizin ödemesi yapıldı", "order.paid.ejs", this.getView(ol[i]), 'order/paid');
                 for (var p = 0; p < notifyMobilePhones.length; p++) {
                     if (notifyMobilePhones[p].trim()) {
                         let payUrl = `${this.url}/manageorder/${ol[i].ordernum}`;
@@ -1051,7 +1051,7 @@ class Route extends router_1.ApiRouter {
                 let dbOrder = yield api.getOrder(order.ordernum);
                 let view = this.getView(dbOrder);
                 let viewUrl = `${this.url}/user/orders/${order.ordernum}`;
-                yield email_1.default.send(dbOrder.email, "siparişinizi aldık", "order.started.ejs", view);
+                yield email_1.default.send(dbOrder.email, "siparişinizi aldık", "order.started.ejs", view, 'order/created');
                 yield sms_1.Sms.send(dbOrder.phone, `KasaptanAl.com ${dbOrder.butcherName} siparisinizi aldik, Teslimat kodu: ${order.securityCode}. ${order.paymentType == 'onlinepayment' ? 'Simdi odeme yapabilirsiniz' : 'Bilgi'}: ${viewUrl}`, false, new sitelog_1.default(this.constructorParams));
                 if (order.paymentType != "onlinepayment") {
                     let notifyMobilePhones = (order.butcher.notifyMobilePhones || "").split(',');
@@ -1143,7 +1143,7 @@ class Route extends router_1.ApiRouter {
             yield this.sendButcherNotifications(order, text);
             let customerText = `KasaptanAl.com siparisiniz icin ${order.butcherName} teslimat planlamasi yapti: ${order.shipmentStartText}. Kasap tel: ${order.butcher.phone}`;
             yield sms_1.Sms.send(order.phone, customerText, false, new sitelog_1.default(this.constructorParams));
-            email_1.default.send(order.email, `KasaptanAl.com ${order.butcherName} siparişiniz teslimat bilgisi`, "order.planed.ejs", this.getView(order));
+            email_1.default.send(order.email, `KasaptanAl.com ${order.butcherName} siparişiniz teslimat bilgisi`, "order.planed.ejs", this.getView(order), 'order/planned');
         });
     }
     // @Auth.Anonymous()

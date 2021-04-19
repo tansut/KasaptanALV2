@@ -116,7 +116,7 @@ class BaseRouter {
         });
         let handler = typeof (method) == "string" ? instance[method] : instance[method.name];
         var anonymous = common_1.Auth.GetAnonymous(handler);
-        var useCatcpha = common_1.Auth.GetCatcpha(handler);
+        var useCatcpha = false; // Auth.GetCatcpha(handler);
         if (!anonymous && !req.user)
             return next(new http.PermissionError(req.originalUrl));
         let prom = new Promise((resolve, reject) => {

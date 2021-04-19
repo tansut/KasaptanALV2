@@ -178,7 +178,7 @@ class UserRoute extends router_1.ApiRouter {
             }
             email_1.default.send(user.email, "iyi et rehberi", "meatguide.ejs", {
                 email: user.email
-            });
+            }, 'user/meatguide');
             yield this.authenticateRoute();
         });
     }

@@ -70,6 +70,7 @@
 
     <% if (__req.user && __req.user.hasRole('admin')) {%>
     <a target="_blank" class=" btn btn-dark btn-sm" href="/pages/admin/butcher/<%=butcher.slug%>">Düzenle <%=butcher.id%></a>
+    <a target="_blank" class=" btn btn-dark btn-sm" href="/kasapsayfam">Kasap Sayfam</a>
     <%}%>
 
 
@@ -117,7 +118,7 @@
         <div class=" mb-3">
           <h1 class="h2 mb-0"><%=butcher.name%></h1>
           <h2 class="h5 mb-3">
-            <a class="text-muted" target="_blank" href="https://www.google.com/maps/search/?api=1&query=<%=butcher.lat%>,<%=butcher.lng%>"><%= butcher.areaLevel3.name %>/<%= butcher.areaLevel1.name %></a>
+            <a class="text-muted" target="_blank" href="https://www.google.com/maps/search/?api=1&query=<%=butcher.lat%>,<%=butcher.lng%>"><%= butcher.areaLevel2.name %>/<%= butcher.areaLevel1.name %></a>
            
           </h2>
           <% if (puanData ) { %>
@@ -544,12 +545,12 @@
     
                         <%  } %>
     
-                        <hr class="my-4">
-                        <h6>İletişim</h6>
-                        <p><%= butcher.address %>, <%= butcher.areaLevel2.name %>/<%= butcher.areaLevel1.name %></p>
-                        <a target="_blank" href="https://www.google.com/maps/search/?api=1&query=<%=butcher.lat%>,<%=butcher.lng%>"> <%= 'Kasap Lokasyonuna Git' %></a>
+                        <!-- <hr class="my-4"> -->
+                        <!-- <h6>İletişim</h6> -->
+                        <!-- <p><%= butcher.address %>, <%= butcher.areaLevel2.name %>/<%= butcher.areaLevel1.name %></p> -->
+                        <!-- <a target="_blank" href="https://www.google.com/maps/search/?api=1&query=<%=butcher.lat%>,<%=butcher.lng%>"> <%= 'Kasap Lokasyonuna Git' %></a> -->
                         
-                        <% if (butcher.website) { %>
+                        <% if (false) { %>
                         <a target="_blank" class="font-size-xs nav-link-style d-flex align-items-center"
                           href="<%= butcher.website %>"><i
                             class="czi-globe opacity-60 mr-2"></i><%= butcher.website %></a>

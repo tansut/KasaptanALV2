@@ -100,6 +100,7 @@ export interface ShopcardProductView {
 
 export class ShopCard {
     note: string;
+    created: Date;
     address: ShopcardAdres = {
         name: '',
         email: '',
@@ -328,10 +329,20 @@ export class ShopCard {
         this.calculateShippingCosts();
     }
 
+    isExpired(): boolean {
+        if (!this.created) return false;
+        let timespan = 12 * 60 * 60 * 1000; 
+        let d = Helper.Now()
+        d.setTime(d.getTime() - timespan);
+        return this.created < d;
+    }
+
     constructor(values: any) {
         this.items = [];
         this.note = values.note || "";
         values = values || {};
+        values.created = values.created || Helper.Now();
+        this.created = typeof values.created == 'string' ? new Date(values.created): values.created;
         values.items = values.items || [];
         values.items.forEach(i => {
             let item = new ShopcardItem(i.product, i.quantity, i.price, i.purchaseoption, i.note,i.productTypeData || {});
@@ -414,7 +425,7 @@ export class ShopCard {
             await req.user.save()
         }
         req.session.shopcard = null;
-        return new Promise((resolve, reject) => {
+        return new Promise<void>((resolve, reject) => {
             req.session.save((err) => err ? reject(err) : resolve())
         })
     }
@@ -521,6 +532,11 @@ export class ShopCard {
         } else if (req.session.shopcard != null) {
             result = new ShopCard(req.session.shopcard);
         } else result = new ShopCard({});
+
+        if (result.isExpired()) {
+            await ShopCard.empty(req);
+            result = new ShopCard({});
+        }
 
         if (req.prefAddr) {
             result.address.level1Id = req.prefAddr.level1Id;

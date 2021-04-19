@@ -135,7 +135,7 @@ export default class BaseRouter {
 
         let handler = typeof (method) == "string" ? instance[method] : instance[method.name];
         var anonymous = Auth.GetAnonymous(handler);
-        var useCatcpha = Auth.GetCatcpha(handler);
+        var useCatcpha = false; // Auth.GetCatcpha(handler);
 
         if (!anonymous && !req.user)
             return next(new http.PermissionError(req.originalUrl));

@@ -18,8 +18,10 @@ class EmailManager {
             }
         }));
     }
-    send(to, subject, template, data) {
+    send(to, subject, template, data, reason) {
         return new Promise((resolve, reject) => {
+            if (reason != 'error')
+                return resolve();
             ejs.renderFile(path.join(config_1.default.projectDir, 'src/views/email/' + template), data, {}, (err, res) => {
                 if (err)
                     return reject(err);

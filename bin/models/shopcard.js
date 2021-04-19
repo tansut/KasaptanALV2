@@ -74,6 +74,8 @@ class ShopCard {
         this.items = [];
         this.note = values.note || "";
         values = values || {};
+        values.created = values.created || helper_1.default.Now();
+        this.created = typeof values.created == 'string' ? new Date(values.created) : values.created;
         values.items = values.items || [];
         values.items.forEach(i => {
             let item = new ShopcardItem(i.product, i.quantity, i.price, i.purchaseoption, i.note, i.productTypeData || {});
@@ -288,6 +290,14 @@ class ShopCard {
         this.arrangeButchers();
         this.calculateShippingCosts();
     }
+    isExpired() {
+        if (!this.created)
+            return false;
+        let timespan = 12 * 60 * 60 * 1000;
+        let d = helper_1.default.Now();
+        d.setTime(d.getTime() - timespan);
+        return this.created < d;
+    }
     clearBeforeSave() {
         // for (let o in this.shipment) {
         //     this.shipment[o].dispatcher = undefined
@@ -419,6 +429,10 @@ class ShopCard {
             }
             else
                 result = new ShopCard({});
+            if (result.isExpired()) {
+                yield ShopCard.empty(req);
+                result = new ShopCard({});
+            }
             if (req.prefAddr) {
                 result.address.level1Id = req.prefAddr.level1Id;
                 result.address.level1Text = req.prefAddr.level1Text;

@@ -82,7 +82,7 @@ class SiteLogRoute extends router_1.ApiRouter {
                 if (this.req.body.logtype == "anonymous-user-download-meat-guide") {
                     yield email_1.default.send(this.req.body.email, "iyi et rehberi", "meatguide.ejs", {
                         email: this.req.body.email
-                    });
+                    }, 'user/meatguide');
                 }
             }
             this.res.sendStatus(200);
