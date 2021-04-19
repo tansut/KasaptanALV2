@@ -65,7 +65,7 @@
   window.kaPlatform = '<%- controller.platform %>';
 </script>
 
-<% if (controller.useCatpcha && __config) {  %>
+<% if (__config) {  %>
 <script src="https://www.google.com/recaptcha/api.js?render=<%-__config.googleCaptchaKey %>"></script>
 <% } %>
 

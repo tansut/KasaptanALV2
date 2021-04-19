@@ -31,7 +31,7 @@ class SiteLogRoute extends router_1.ApiRouter {
     countBy(where, seconds) {
         return __awaiter(this, void 0, void 0, function* () {
             var t = helper_1.default.Now();
-            t.setSeconds(t.getSeconds() - seconds);
+            t.setTime(t.getTime() - seconds * 1000);
             where = where || {};
             where['creationDate'] = {
                 [sequelize_1.Op.gt]: t

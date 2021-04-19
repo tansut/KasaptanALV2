@@ -5,6 +5,7 @@ export class Backend {
     static axios: AxiosInstance;
     static hostConfig: HostConfiguration;
     static catpchaToken: string;
+    static catpchaKey: string;
 
     static configure(hostConfig: IHostConfiguration) {
         this.hostConfig = new HostConfiguration(hostConfig);
@@ -44,14 +45,31 @@ export class Backend {
         return url;
     }
 
-    static get(method: string, params: Object = {}) {
+    static get(method: string, params: Object = {}): any {
         return this.axios.get(this.url(method, params));
     }
 
-    static post(method: string, postData: Object = null, params: Object = {}) {
-        postData = postData || {};
-        Backend.catpchaToken && (postData['__token'] = Backend.catpchaToken);
-        return this.axios.post(this.url(method, params), postData).then((result) => result.data);
+    static post(method: string, postData: Object = null, params: Object = {}): Promise<any> {
+        var g = window['grecaptcha'];
+
+        return new Promise((resolve, reject) => {
+            g.ready(() => {
+                g.execute(Backend.catpchaKey, {action: method})
+                    .then((token) => {
+                        postData = postData || {};
+                        postData['__token'] = token
+                        this.axios.post(this.url(method, params), postData)
+                            .then((result) => resolve(result.data))
+                            .catch((err)=>reject(err))
+                    }).catch((err) => {
+                      reject(err)
+                    });
+            });
+
+        })
+
+
+
     }
 
 

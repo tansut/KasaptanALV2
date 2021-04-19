@@ -275,7 +275,7 @@
             alert('Maalesef böyle bir adres bulamadık, lütfen tekrar deneyin.');
           }
         }).catch(function (err) {
-          App.handleError(err);
+          App.HandleError(err);
         }).finally(function () {
           //$('.gonext').removeAttr("disabled");
           $('.gonext').text("İlerle");

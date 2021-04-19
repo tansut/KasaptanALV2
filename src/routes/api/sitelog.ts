@@ -19,7 +19,8 @@ export default class SiteLogRoute extends ApiRouter implements ISiteLogger {
 
     async countBy(where: any, seconds: number) {
         var t = Helper.Now();
-        t.setSeconds(t.getSeconds() - seconds);
+        
+        t.setTime(t.getTime() - seconds * 1000);
 
         where = where || {};
         where['creationDate'] = {

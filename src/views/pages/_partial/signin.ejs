@@ -51,7 +51,7 @@
             $('#reset-password-modal').modal('hide')
             $('#signin-modal').modal('show');
         }).catch(function (err) {
-            alert(err.message)
+            App.HandleError(err)
         })
         } 
     }

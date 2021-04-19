@@ -26,14 +26,17 @@
   
   <script>
 
-<% if (controller.useCatpcha && __config) {  %>
+<% if (__config) {  %>
+
+  window.App.Backend.catpchaKey = '<%-__config.googleCaptchaKey%>';
+
 
 grecaptcha.ready(function() {
     grecaptcha.execute('<%-__config.googleCaptchaKey%>', {action: 'default'})
         .then(function(token) {
           window.App.Backend.catpchaToken = token;
         }).catch(function(err) {
-          App.handleError(err);
+          App.HandleError(err);
         });
 });
 
@@ -41,7 +44,7 @@ grecaptcha.ready(function() {
 <% } %>
 
 
-    window.App.platform = '<%=controller.platform%>'
+window.App.platform = '<%=controller.platform%>'
 
 
 
