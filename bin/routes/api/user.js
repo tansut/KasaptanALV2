@@ -37,6 +37,10 @@ var generator = require('generate-password');
 let passport = require("passport");
 const sq = require("sequelize");
 class UserRoute extends router_1.ApiRouter {
+    constructor() {
+        super(...arguments);
+        this.autoLogin = false;
+    }
     // createSample() {
     //     // userroute.authenticate("tansut@gmail.com", "deneme1").then((user) => {
     //     //     console.log(user)
@@ -331,6 +335,17 @@ class UserRoute extends router_1.ApiRouter {
     setAccessToken(accessToken) {
         this.res.cookie("auth", accessToken, {
             maxAge: 0.5 * 60 * 60 * 1000
+        });
+    }
+    loginAs(user) {
+        return __awaiter(this, void 0, void 0, function* () {
+            this.autoLogin = true;
+            return this.login({
+                email: user.email,
+                password: '',
+                req: this.req,
+                remember_me: false
+            });
         });
     }
     login({ email, password, req, remember_me }) {

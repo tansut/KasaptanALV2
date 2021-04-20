@@ -60,7 +60,8 @@
 
                     %>
           <tr class="<%=colors[orders[i].status]%>">
-              <td><a href="<%= `/pages/operator/order/${orders[i].ordernum}` %>"><%= orders[i].name %>, <%=orders[i].phone%> </a>
+              <td>
+                <a target="_blank" href="<%= `/pages/operator/order/${orders[i].ordernum}` %>"><%= orders[i].name %>, <%=orders[i].phone%> <br> <%=orders[i].ordernum%> </a>
               </td>
               <td><%= __helper.formatDate(orders[i].creationDate) %></td>
               <td>
@@ -72,7 +73,7 @@
               <td><%= orders[i].paymentType %></td>
               <td><%= orders[i].dispatcherType %></td>
               <td>
-                <a href="/manageorder/<%=orders[i].ordernum%>">
+                <a target="_blank" href="/manageorder/<%=orders[i].ordernum%>">
     <%- include('./_partial/currency.ejs', {value: orders[i].paidTotal}) %></a>
                 
             

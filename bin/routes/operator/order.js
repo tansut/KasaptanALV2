@@ -122,14 +122,12 @@ class Route extends router_1.ViewRouter {
                 else
                     userMessage = "Ödemesi yok siparişin";
             }
-            if (this.req.body.makeManuelPaymentDebt == "true") {
-                if (this.paid > 0) {
-                    let toKalitte = helper_1.default.asCurrency(this.butcherFee.kalitteFee + this.butcherFee.kalitteVat);
-                    yield this.api.completeManualPaymentDept(this.order);
-                }
-                else
-                    userMessage = "Ödemesi yok siparişin";
-            }
+            // if (this.req.body.makeManuelPaymentDebt == "true") {
+            //     if (this.paid > 0) {
+            //         let toKalitte = Helper.asCurrency(this.butcherFee.kalitteFee + this.butcherFee.kalitteVat)
+            //         await this.api.completeManualPaymentDept(this.order)
+            //     } else userMessage = "Ödemesi yok siparişin";
+            // }
             // if (this.req.body.loadPuans == "true") {
             //     if (this.shouldBePaid > 0) {
             //         userMessage = "Ödemesi henüz yapılmamış siparişin";

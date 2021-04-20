@@ -275,41 +275,38 @@ class Route extends router_1.ApiRouter {
     changeOrderStatus(o, newStatus, t) {
         return __awaiter(this, void 0, void 0, function* () {
             let promises = [], ops = [];
-            if (o.status != newStatus) {
-                if (newStatus.startsWith('iptal') && o.status.startsWith('iptal')) {
-                }
-                else {
-                    if (newStatus.startsWith('iptal')) {
-                        let summary = yield this.getAccountsSummary(o);
-                        let balance = helper_1.default.asCurrency(summary.alacak - summary.borc);
-                        if (balance > 0.00) {
-                            let op = new account_1.AccountingOperation(`${o.ordernum} iptali`);
-                            op.accounts.push(new account_1.Account("odeme-bekleyen-satislar", [o.userId, o.ordernum]).dec(balance));
-                            op.accounts.push(new account_1.Account("satis-alacaklari", [o.userId, o.ordernum]).dec(balance));
-                            ops.push(op);
-                        }
-                        o.items.forEach(oi => {
-                            if (!oi.status.startsWith('iptal')) {
-                                oi.status = newStatus;
-                                promises.push(oi.save({ transaction: t }));
-                            }
-                        });
-                    }
-                    else if (o.status.startsWith('iptal')) {
-                    }
-                    else {
-                        o.items.forEach(oi => {
-                            if (!oi.status.startsWith('iptal')) {
-                                oi.status = newStatus;
-                                promises.push(oi.save({ transaction: t }));
-                            }
-                        });
-                    }
-                }
-                yield this.saveAccountingOperations(ops, t);
-                o.status = newStatus;
-                yield o.save({ transaction: t });
-            }
+            // if (o.status != newStatus) {
+            //     if (newStatus.startsWith('iptal') && o.status.startsWith('iptal')) {
+            //     } else {
+            //         if (newStatus.startsWith('iptal')) {
+            //             let summary = await this.getAccountsSummary(o);
+            //             let balance = Helper.asCurrency(summary.alacak - summary.borc);
+            //             if (balance > 0.00) {
+            //                 let op = new AccountingOperation(`${o.ordernum} iptali`);
+            //                 op.accounts.push(new Account("odeme-bekleyen-satislar", [o.userId, o.ordernum]).dec(balance))
+            //                 op.accounts.push(new Account("satis-alacaklari", [o.userId, o.ordernum]).dec(balance))
+            //                 ops.push(op);
+            //             }
+            //             o.items.forEach(oi => {
+            //                 if (!oi.status.startsWith('iptal')) {
+            //                     oi.status = newStatus;
+            //                     promises.push(oi.save({ transaction: t }))
+            //                 }
+            //             })
+            //         } else if (o.status.startsWith('iptal')) {
+            //         } else {
+            //             o.items.forEach(oi => {
+            //                 if (!oi.status.startsWith('iptal')) {
+            //                     oi.status = newStatus;
+            //                     promises.push(oi.save({ transaction: t }))
+            //                 }
+            //             })
+            //         }
+            //     }
+            //await this.saveAccountingOperations(ops, t)
+            o.status = newStatus;
+            yield o.save({ transaction: t });
+            //}
         });
     }
     lastOrders(userId, limit = 8) {
@@ -1183,6 +1180,27 @@ class Route extends router_1.ApiRouter {
     //     await this.sendPlanNotifications(order);
     //     this.res.send(200);
     // }
+    markAsShippedRoute() {
+        return __awaiter(this, void 0, void 0, function* () {
+            let ordernum = this.req.params.ordernum;
+            let order = yield this.getOrder(ordernum, true);
+            if (!order)
+                return this.res.send(404);
+            let balance = order.workedAccounts.find(p => p.code == 'total');
+            let shouldBePaid = helper_1.default.asCurrency(balance.alacak - balance.borc);
+            if (shouldBePaid > 0) {
+                yield this.completeManuelPayment(order, shouldBePaid);
+                order = yield this.getOrder(ordernum, true);
+                yield this.completeManualPaymentDept(order);
+            }
+            if (order.status != order_3.OrderItemStatus.success) {
+                order.statusDesc ? null : (order.statusDesc = '');
+                order.statusDesc += `\n- ${helper_1.default.formatDate(helper_1.default.Now(), true)} tarihinde ${order.status} -> ${order_3.OrderItemStatus.success}`;
+                yield this.completeOrderStatus(order, order_3.OrderItemStatus.success);
+            }
+            this.res.send('OK');
+        });
+    }
     cancelDeliveryRoute() {
         return __awaiter(this, void 0, void 0, function* () {
             let ordernum = this.req.params.ordernum;
@@ -1323,6 +1341,7 @@ class Route extends router_1.ApiRouter {
         router.post('/order/bnbCallback', Route.BindRequest(Route.prototype.bnbCallbackRoute));
         router.post('/order/:ordernum/setDelivery', Route.BindRequest(Route.prototype.setDeliveryRoute));
         router.post('/order/:ordernum/cancelDelivery', Route.BindRequest(Route.prototype.cancelDeliveryRoute));
+        router.post('/order/:ordernum/markAsShipped', Route.BindRequest(Route.prototype.markAsShippedRoute));
         //router.get("/admin/order/:ordernum", Route.BindRequest(this.prototype.getOrderRoute));
     }
 }
@@ -1332,6 +1351,12 @@ __decorate([
     __metadata("design:paramtypes", []),
     __metadata("design:returntype", Promise)
 ], Route.prototype, "approveRoute", null);
+__decorate([
+    common_1.Auth.Anonymous(),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", []),
+    __metadata("design:returntype", Promise)
+], Route.prototype, "markAsShippedRoute", null);
 __decorate([
     common_1.Auth.Anonymous(),
     __metadata("design:type", Function),

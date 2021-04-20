@@ -34,6 +34,9 @@ if (orderClosed && __req.user && __req.user.hasRole('admin')) {
           Sipariş Bilgileri</h1>
           <% if (!orderClosed) { %>
             <a class="btn btn-secondary btn-sm" target="_blank" href="/printorder/<%=controller.order.ordernum%>">Yazdır</a>
+            <% if ((order.status == controller.OrderStatus.shipping) || (order.status == controller.OrderStatus.onway)) { %>
+              <button type="button" class="btn btn-sm btn-success" id="markAsDoneBtn">Teslim Edildi Olarak İşaretle</a>
+            <% } %>
           <% } %>
       </div>
     </div>
@@ -554,6 +557,22 @@ if (orderClosed && __req.user && __req.user.hasRole('admin')) {
       <% } %>
 
       
+      
+
+      $("#markAsDoneBtn").click(function () {
+        if (window.confirm('Teslim işlemini onaylayıyor musunuz?')) {
+          $('#markAsDoneBtn').attr('disabled');
+          App.Backend.post('order/<%=order.ordernum%>/markAsShipped').finally(function () {
+            $('#markAsDoneBtn').removeAttr('disabled');
+          }).then(function () {
+            App.alert('Bir başarılı sipariş daha! Teşekkürler!');
+            window.location.reload(true);
+          }).catch(function (err) {
+            App.HandleError(err)
+          })                
+            }
+      })
+
 
       $("#kuryeIptalBtn").click(function () {
               if (window.confirm('Kuryeyi iptal etmek istiyor musunuz?')) {

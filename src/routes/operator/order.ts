@@ -159,12 +159,12 @@ export default class Route extends ViewRouter {
             } else userMessage = "Ödemesi yok siparişin";
         }
 
-        if (this.req.body.makeManuelPaymentDebt == "true") {
-            if (this.paid > 0) {
-                let toKalitte = Helper.asCurrency(this.butcherFee.kalitteFee + this.butcherFee.kalitteVat)
-                await this.api.completeManualPaymentDept(this.order)
-            } else userMessage = "Ödemesi yok siparişin";
-        }
+        // if (this.req.body.makeManuelPaymentDebt == "true") {
+        //     if (this.paid > 0) {
+        //         let toKalitte = Helper.asCurrency(this.butcherFee.kalitteFee + this.butcherFee.kalitteVat)
+        //         await this.api.completeManualPaymentDept(this.order)
+        //     } else userMessage = "Ödemesi yok siparişin";
+        // }
 
 
 

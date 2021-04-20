@@ -264,40 +264,40 @@ export default class Route extends ApiRouter {
 
     async changeOrderStatus(o: Order, newStatus: OrderItemStatus, t?: Transaction) {
         let promises = [], ops = [];
-        if (o.status != newStatus) {
-            if (newStatus.startsWith('iptal') && o.status.startsWith('iptal')) {
+        // if (o.status != newStatus) {
+        //     if (newStatus.startsWith('iptal') && o.status.startsWith('iptal')) {
 
-            } else {
-                if (newStatus.startsWith('iptal')) {
-                    let summary = await this.getAccountsSummary(o);
-                    let balance = Helper.asCurrency(summary.alacak - summary.borc);
-                    if (balance > 0.00) {
-                        let op = new AccountingOperation(`${o.ordernum} iptali`);
-                        op.accounts.push(new Account("odeme-bekleyen-satislar", [o.userId, o.ordernum]).dec(balance))
-                        op.accounts.push(new Account("satis-alacaklari", [o.userId, o.ordernum]).dec(balance))
-                        ops.push(op);
-                    }
-                    o.items.forEach(oi => {
-                        if (!oi.status.startsWith('iptal')) {
-                            oi.status = newStatus;
-                            promises.push(oi.save({ transaction: t }))
-                        }
-                    })
-                } else if (o.status.startsWith('iptal')) {
+        //     } else {
+        //         if (newStatus.startsWith('iptal')) {
+        //             let summary = await this.getAccountsSummary(o);
+        //             let balance = Helper.asCurrency(summary.alacak - summary.borc);
+        //             if (balance > 0.00) {
+        //                 let op = new AccountingOperation(`${o.ordernum} iptali`);
+        //                 op.accounts.push(new Account("odeme-bekleyen-satislar", [o.userId, o.ordernum]).dec(balance))
+        //                 op.accounts.push(new Account("satis-alacaklari", [o.userId, o.ordernum]).dec(balance))
+        //                 ops.push(op);
+        //             }
+        //             o.items.forEach(oi => {
+        //                 if (!oi.status.startsWith('iptal')) {
+        //                     oi.status = newStatus;
+        //                     promises.push(oi.save({ transaction: t }))
+        //                 }
+        //             })
+        //         } else if (o.status.startsWith('iptal')) {
 
-                } else {
-                    o.items.forEach(oi => {
-                        if (!oi.status.startsWith('iptal')) {
-                            oi.status = newStatus;
-                            promises.push(oi.save({ transaction: t }))
-                        }
-                    })
-                }
-            }
-            await this.saveAccountingOperations(ops, t)
+        //         } else {
+        //             o.items.forEach(oi => {
+        //                 if (!oi.status.startsWith('iptal')) {
+        //                     oi.status = newStatus;
+        //                     promises.push(oi.save({ transaction: t }))
+        //                 }
+        //             })
+        //         }
+        //     }
+            //await this.saveAccountingOperations(ops, t)
             o.status = newStatus;
             await o.save({ transaction: t })
-        }
+        //}
     }
 
     async lastOrders(userId: number, limit: number = 8) {
@@ -1321,6 +1321,26 @@ export default class Route extends ApiRouter {
     //     this.res.send(200);
     // }
 
+    @Auth.Anonymous()
+    async markAsShippedRoute() {
+        let ordernum = this.req.params.ordernum;
+        let order = await this.getOrder(ordernum, true);
+        if (!order)
+            return this.res.send(404);
+        let balance = order.workedAccounts.find(p => p.code == 'total')
+        let shouldBePaid = Helper.asCurrency(balance.alacak - balance.borc);     
+        if (shouldBePaid > 0) {
+            await this.completeManuelPayment(order, shouldBePaid);
+            order = await this.getOrder(ordernum, true);
+            await this.completeManualPaymentDept(order);            
+        }       
+        if (order.status != OrderItemStatus.success) {
+            order.statusDesc ? null : (order.statusDesc = '')
+            order.statusDesc += `\n- ${Helper.formatDate(Helper.Now(), true)} tarihinde ${order.status} -> ${OrderItemStatus.success}`
+            await this.completeOrderStatus(order, OrderItemStatus.success);
+        }
+        this.res.send('OK')
+    }
 
     @Auth.Anonymous()
     async cancelDeliveryRoute() {
@@ -1475,7 +1495,9 @@ export default class Route extends ApiRouter {
         router.post('/order/bnbCallback', Route.BindRequest(Route.prototype.bnbCallbackRoute))
         router.post('/order/:ordernum/setDelivery', Route.BindRequest(Route.prototype.setDeliveryRoute))
         router.post('/order/:ordernum/cancelDelivery', Route.BindRequest(Route.prototype.cancelDeliveryRoute))
+        router.post('/order/:ordernum/markAsShipped', Route.BindRequest(Route.prototype.markAsShippedRoute))
 
+        
         //router.get("/admin/order/:ordernum", Route.BindRequest(this.prototype.getOrderRoute));
     }
 }

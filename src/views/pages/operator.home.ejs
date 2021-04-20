@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="tr-TR" prefix="og: http://ogp.me/ns#">
+
+<head>
+  <% include ./_partial/head %>
+</head>
+
+<body>
+  <% include ./_partial/header %>
+
+    <!-- Page Title (Light)-->
+    <div class="bg-secondary pt-4 ">
+      <div class="container d-lg-flex justify-content-between py-2 py-lg-3">
+        <div class="order-lg-2 mb-3 mb-lg-0 pt-lg-2">
+          <nav aria-label="breadcrumb" class="d-none d-lg-block">
+            <ol class="breadcrumb flex-lg-nowrap justify-content-center justify-content-lg-star">
+              <li class="breadcrumb-item"><a class="text-nowrap" href="/"><i class="czi-home"></i></a></li>
+            </ol>
+          </nav>
+        </div>
+        <div class="order-lg-1 pr-lg-4 text-center text-lg-left">
+          <h1 class="h3">Operatör Sayfası</h1>
+        </div>
+      </div>
+    </div>
+
+
+
+
+
+    <div id="app" class="container mb-3 ">
+
+      <ul class="list-group">
+
+        <li class="list-group-item">
+          <a target="_blank" href="/pages/operator/orders">Siparişler</a>
+
+        </li>
+        <li class="list-group-item">
+          <form @submit="checkForm" method="post">
+            <input placeholder="müşteri tel" v-model="userphone" type="text" name="loginAs" id="loginAs">
+            <button @click="loginAs" id="loginAs" value="true" name="loginAs" type="button" class="btn btn-sm btn-primary">Giriş Yap</button>
+          </form>
+        </li>
+      </ul>
+
+
+    </div>
+
+
+
+
+
+
+
+
+    <% include ./_partial/footer %>
+      <% include ./_partial/scripts %>
+
+        <script>
+
+          window.app = new Vue({
+            el: '#app',
+
+            data: function () {
+              return {
+                userphone: ''
+              }
+            },
+
+            methods: {
+              checkForm: function (e) {
+                if (!this.userphone) {
+                  e.preventDefault();
+                }
+              }
+            }
+
+          })
+
+        </script>
+
+</body>
+
+</html>

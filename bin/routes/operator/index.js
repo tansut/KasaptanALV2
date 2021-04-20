@@ -1,7 +1,8 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 let appRoutes = [
-    './order'
+    './order',
+    './home'
 ];
 class RouteLoader {
     static use(router) {

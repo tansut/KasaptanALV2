@@ -38,7 +38,7 @@ export interface UserCreateResult {
 }
 
 export default class UserRoute extends ApiRouter {
-
+    autoLogin: boolean = false;
     // createSample() {
     //     // userroute.authenticate("tansut@gmail.com", "deneme1").then((user) => {
     //     //     console.log(user)
@@ -365,6 +365,16 @@ export default class UserRoute extends ApiRouter {
             maxAge: 0.5 * 60 * 60 * 1000
         });
     }
+
+    async loginAs(user: UserModel) {
+        this.autoLogin = true;
+        return this.login({
+            email: user.email,
+            password:'',
+            req: this.req,
+            remember_me: false
+        })
+    }   
 
     login({ email, password, req, remember_me }): Promise<UserModel> {
         return new Promise((resolve, reject) => {
