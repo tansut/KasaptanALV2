@@ -47,12 +47,16 @@ class Route extends router_1.ApiRouter {
     SaveButcherApplication() {
         return __awaiter(this, void 0, void 0, function* () {
             let log = new sitelog_1.default(this.constructorParams);
+            let sdata = this.req.body;
+            if (!sdata)
+                return this.next();
+            sdata['city'] = (yield area_1.default.findByPk(parseInt(sdata['cityid']))).name;
             let data = {
-                logData: JSON.stringify(this.req.body),
+                logData: JSON.stringify(sdata),
                 logtype: "BAS"
             };
             yield log.log(data);
-            yield sms_1.Sms.send('+905326274151', 'yeni basvuru: ' + this.req.body.tel, false, log);
+            yield sms_1.Sms.send('+905326274151', 'yeni basvuru: ' + sdata.tel, false, log);
             this.res.send('OK');
         });
     }

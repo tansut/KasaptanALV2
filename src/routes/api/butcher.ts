@@ -41,12 +41,15 @@ export default class Route extends ApiRouter {
     @Auth.RequireCatcpha()
     async SaveButcherApplication() {
         let log = new SiteLogRoute(this.constructorParams);
+        let sdata = this.req.body;
+        if (!sdata) return this.next();
+        sdata['city'] = (await Area.findByPk(parseInt(sdata['cityid']))).name;
         let data = {
-            logData: JSON.stringify(this.req.body),
+            logData: JSON.stringify(sdata),
             logtype: "BAS"
         }
         await log.log(data);
-        await Sms.send('+905326274151', 'yeni basvuru: ' + this.req.body.tel, false, log)
+        await Sms.send('+905326274151', 'yeni basvuru: ' + sdata.tel, false, log)
         this.res.send('OK')
     }
 

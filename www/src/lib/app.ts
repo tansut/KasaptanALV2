@@ -66,7 +66,7 @@ export class App extends AppBase {
     static async sendResetLink(phone: string) {
         return await Backend.post('user/sendResetLink', {
             phone: phone
-        })
+        }, null, true)
     }
 
     static jump(h){

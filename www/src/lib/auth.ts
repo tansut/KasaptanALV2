@@ -25,7 +25,8 @@ export class Auth {
                 if (iti && !iti.isValidNumber()) throw new Error('Geçersiz telefon numarası');
                 let result = await Backend.post('user/signup', {
                     phone: tel                    
-                });
+                }, null, true);
+                $('#btn-signup-sendsms').removeAttr("disabled");
                 Auth.phone = <string>tel;
                 App.gTag('signup', 'send-sms-code', tel);
                 $("#signup-form-2").removeClass('d-none');
@@ -40,6 +41,7 @@ export class Auth {
                     
                 });
             } catch (err) {
+
                 if (err && err.response && err.response.status == 400) {
                     $('#si-email').val(tel);                    
                     App.activaTab("signin-tab");
@@ -53,6 +55,7 @@ export class Auth {
 
                 } else {
                     App.gTag('signup', 'error-send-sms-code', tel);
+
                     App.HandleError(err)
                 }
                 

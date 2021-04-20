@@ -133,7 +133,7 @@
                   butcher: this.butcher,
                   butcherAddress: this.butcherAddress,
                   cityid: this.cityid
-                }).then(function(err) {
+                }, null, true).then(function(err) {
                   App.alert('Teşekkür ederiz, en kısa zamanda iletişime geçiyor olacağız', 'info');
                   $('#submit').hide();
                 }).catch(function(err) {

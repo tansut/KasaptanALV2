@@ -50,28 +50,34 @@ export class Backend {
         return this.axios.get(this.url(method, params));
     }
 
-    static post(method: string, postData: Object = null, params: Object = {}): Promise<any> {
+    static post(method: string, postData: Object = null, params: Object = {}, usecaptcha: boolean = false): Promise<any> {
         var g = window['grecaptcha'];
 
-        return new Promise((resolve, reject) => {
+        let captcha = new Promise((resolve, reject) => {
+            if (!usecaptcha) return resolve(null);
             g.ready(() => {
-                g.execute(Backend.catpchaKey, {action: method})
+                try {
+                    g.execute(Backend.catpchaKey, {action: method})
                     .then((token) => {
-                        postData = postData || {};
-                        postData['__token'] = token
-                        this.axios.post(this.url(method, params), postData)
-                            .then((result) => resolve(result.data))
-                            .catch((err)=>reject(err))
+                        resolve(token)
                     }).catch((err) => {
-                        App.gTag("grecaptcha", "execute", err.message);
+                      App.gTag("grecaptcha", "execute", err.message);
                       reject(err);
                     });
+                } catch(err) {
+                    App.gTag("grecaptcha", "execute", err.message);
+                    reject(err);
+                }
             });
 
         })
 
-
-
+        return captcha.then((token) => {
+            postData = postData || {};
+            token && (postData['__token'] = token)
+            return this.axios.post(this.url(method, params), postData)
+                .then((result) => result.data)
+        })
     }
 
 
