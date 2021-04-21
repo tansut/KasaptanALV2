@@ -35,6 +35,7 @@ var UserRole;
 let User = User_1 = class User extends basemodel_1.default {
     constructor() {
         super(...arguments);
+        this.obBehalf = false;
         this.usablePuans = 0.00;
     }
     loadPuanView() {

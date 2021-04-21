@@ -72,6 +72,9 @@ export interface PreferredAddress {
     ]
 })
 export default class User extends BaseModel<User> {
+
+    obBehalf: boolean = false;
+    
     @Column
     email: string;
 

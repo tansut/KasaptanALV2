@@ -368,6 +368,8 @@ export default class UserRoute extends ApiRouter {
 
     async loginAs(user: UserModel) {
         this.autoLogin = true;
+        user.obBehalf = true;
+        this.req['__onbehalf'] = user.id;
         return this.login({
             email: user.email,
             password:'',

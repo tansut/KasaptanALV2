@@ -195,6 +195,7 @@ window.App.platform = '<%=controller.platform%>'
   function ensureLocation(returnUrl) {
     if (window.App.User.prefAdr) return true;
     window.kb.selectArea(function (sender, ul) {
+
           window.location.href = "/adres-belirle/" + ul.selectedDistrict.slug + '?lng=' + ul.lng + '&lat=' + ul.lat + '&r=' + (returnUrl || window.location.href);
         });
     return false
@@ -309,6 +310,7 @@ window.App.platform = '<%=controller.platform%>'
         var self = this;
         window.kb.selectArea(function (sender, ul) {
           var ref = $(self).data('return') ||  window.location.href;
+          debugger
           window.location.href = "/adres-belirle/" + ul.selectedDistrict.slug + '?lng=' + ul.lng + '&lat=' + ul.lat + '&r=' + ref;
         });
         return false;

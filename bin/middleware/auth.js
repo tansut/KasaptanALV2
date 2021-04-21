@@ -77,7 +77,7 @@ class AuthMiddleware extends base_1.default {
                 if (!user) {
                     return done(null, false, { message: 'Incorrect user.' });
                 }
-                if (!user.verifyPassword(password)) {
+                if (req['__onbehalf'] != user.id && !user.verifyPassword(password)) {
                     return done(null, false, { message: 'Incorrect user.' });
                 }
                 return done(null, user, { s: true });

@@ -163,6 +163,10 @@ class Route extends router_1.ViewRouter {
                 }
             }
             this.butcherLd = this.butcher.approved ? new ButcherLd_1.ButcherLd(this.butcher) : null;
+            if (this.req.session.isNew) {
+                this.req.session.prefButcher = butcher.slug;
+                yield this.req.session.save();
+            }
             if (this.req.query.partial) {
                 this.res.render('pages/category-items.ejs', this.viewData({ pageThumbnail: pageThumbnail, pageTitle: pageTitle, pageDescription: pageDescription, butcher: butcher, images: images }));
             }

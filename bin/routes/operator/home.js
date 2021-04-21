@@ -25,7 +25,7 @@ class Route extends router_1.ViewRouter {
             let ur = new user_1.default(this.constructorParams);
             let user = yield ur.retrieveByEMailOrPhone(this.req.body.userphone);
             if (user && !user.hasRole('admin') && !user.hasRole('operator')) {
-                yield ur.signOff();
+                //await ur.signOff();
                 yield ur.loginAs(user);
                 return this.res.redirect("/");
             }

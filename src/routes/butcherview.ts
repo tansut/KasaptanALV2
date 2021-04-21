@@ -210,6 +210,13 @@ export default class Route extends ViewRouter {
 
         this.butcherLd = this.butcher.approved ? new ButcherLd(this.butcher): null;
 
+
+
+        if (this.req.session.isNew) {
+          this.req.session.prefButcher = butcher.slug;
+          await this.req.session.save();
+        }
+
         if (this.req.query.partial) {
             this.res.render('pages/category-items.ejs', this.viewData({ pageThumbnail: pageThumbnail, pageTitle: pageTitle, pageDescription: pageDescription, butcher: butcher, images: images }));
         } else this.res.render('pages/butcher', this.viewData({ pageThumbnail: pageThumbnail, pageTitle: pageTitle, pageDescription: pageDescription, butcher: butcher, images: images }));

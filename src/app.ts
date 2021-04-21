@@ -181,7 +181,7 @@ class KasaptanAlApp {
 
         this.app.use(cookieParser());
         this.app.use(session(sess));
-        // this.app.set('etag', 'strong');  
+
 
         this.apiRouter = express.Router();
         this.adminPagesRouter = express.Router();
@@ -213,6 +213,19 @@ class KasaptanAlApp {
         //     colorize: false,
         //     ignoreRoute: function (req, res) { return false; }
         //   }));
+
+
+        this.app.use((req: any, res, next) => {
+            if (typeof req.session.isNew === "undefined") {
+                req.session.isNew = true;
+                req.session.save(next);
+            } else if (req.session.isNew) {
+                req.session.isNew = false;
+                req.session.save(next);
+            } else {
+                next();
+            }
+        });
 
         middlewares.use(this.app);
         CacheManager.use(this.app);

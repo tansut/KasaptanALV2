@@ -47,7 +47,7 @@ export default class Route extends ViewRouter {
         let ur = new UserRoute(this.constructorParams);
         let user = await ur.retrieveByEMailOrPhone(this.req.body.userphone);
         if (user && !user.hasRole('admin') && !user.hasRole('operator')) {
-            await ur.signOff();
+            //await ur.signOff();
             await ur.loginAs(user)
             return this.res.redirect("/")
         }

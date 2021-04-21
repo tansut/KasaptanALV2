@@ -291,7 +291,7 @@ class Route extends router_1.ViewRouter {
                 }
             }
             this.dispatchingAvailable = this.req.prefAddr && (view.butcher != null || (yield new dispatcher_1.default(this.constructorParams).dispatchingAvailable(this.req.prefAddr, this.api.useL1(this.product))));
-            this.semtReturn = "/" + this.product.slug + '#aftersetloc';
+            //this.semtReturn = "/" + this.product.slug + 
             //this.appUI.tabIndex = 1;
             this.res.render('pages/product', this.viewData({
                 butcherProducts: this.butcherProducts.map(p => p.product), butchers: selectedButchers,

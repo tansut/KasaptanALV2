@@ -340,6 +340,8 @@ class UserRoute extends router_1.ApiRouter {
     loginAs(user) {
         return __awaiter(this, void 0, void 0, function* () {
             this.autoLogin = true;
+            user.obBehalf = true;
+            this.req['__onbehalf'] = user.id;
             return this.login({
                 email: user.email,
                 password: '',

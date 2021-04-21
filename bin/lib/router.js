@@ -146,7 +146,7 @@ class BaseRouter {
                     next(err);
                 });
             }
-        }).catch((err) => next(err));
+        }).catch((err) => res.sendStatus(403));
         return instance;
     }
     validateOwnership(ownerOfResource) {
