@@ -47,13 +47,13 @@ class Sms {
                         if (["20", "30", "40", "70"].indexOf(resp.data.toString()) > 0)
                             throw new Error("SMS iletilemedi");
                     }
-                    // if (logger) {
-                    //     await logger.log({
-                    //         logData: text,
-                    //         logtype: "SMS",
-                    //         email: to
-                    //     })
-                    // }
+                    if (logger) {
+                        yield logger.log({
+                            logData: text,
+                            logtype: "SMS",
+                            email: to
+                        });
+                    }
                 }
                 catch (err) {
                     helper_1.default.logError(err, {

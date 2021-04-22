@@ -146,7 +146,10 @@ class BaseRouter {
                     next(err);
                 });
             }
-        }).catch((err) => res.sendStatus(403));
+        }).catch((err) => {
+            console.error('CATPCHA:' + err.message);
+            res.sendStatus(403);
+        });
         return instance;
     }
     validateOwnership(ownerOfResource) {
