@@ -43,6 +43,7 @@ const config_1 = require("../../config");
 const productManager_1 = require("../../lib/productManager");
 const http_1 = require("../../lib/http");
 const butcherpricehistory_1 = require("../../db/models/butcherpricehistory");
+const productrelation_1 = require("../../db/models/productrelation");
 const fs = require('fs');
 let ButcherPropertyWeigts = {
     'distance': -0.80,
@@ -760,37 +761,49 @@ class Route extends router_1.ApiRouter {
                 return this.next();
             }
             let butcher = yield butcher_1.default.loadButcherWithProducts(this.req.params.butcher, true);
+            let relations = yield productrelation_1.default.findAll();
             if (!butcher) {
                 return this.next();
             }
             let api = this;
             let categories = this.req.__categories.filter(p => p.slug != 'populer-etler');
             let viewProducts = [];
+            let add = (product, view, category) => {
+                let price = view.priceUnit == 'kg' ? helper_1.default.asCurrency(view.kgPrice) : 0.00;
+                if (price <= 0) {
+                    let op = view.purchaseOptions.find(po => po.unit == product[`${view.priceUnit}`]);
+                    price = op ? op.unitPrice : price;
+                }
+                viewProducts.push({
+                    category: {
+                        id: category.id,
+                        title: category.name
+                    },
+                    id: view.id,
+                    name: view.name,
+                    unit: view.priceUnit == 'kg' ? 'kg' : product[`${view.priceUnit}`],
+                    enabled: view.enabled,
+                    price: price,
+                    butcherProductNote: view.butcherProductNote,
+                    note: view.fromButcherNote,
+                    slug: view.slug,
+                    thumbnail: this.req.helper.imgUrl("product-photos", view.slug)
+                });
+            };
             for (let i = 0; i < categories.length; i++) {
                 let prods = yield productManager_1.default.getProductsOfCategories([categories[i].id]);
                 for (let p = 0; p < prods.length; p++) {
-                    let view = yield api.getProductViewforButcher(prods[p], butcher);
-                    if (!viewProducts.find(vp => vp.id == view.id)) {
-                        let price = view.priceUnit == 'kg' ? helper_1.default.asCurrency(view.kgPrice) : 0.00;
-                        if (price <= 0) {
-                            let op = view.purchaseOptions.find(po => po.unit == prods[p][`${view.priceUnit}`]);
-                            price = op ? op.unitPrice : price;
+                    if (!viewProducts.find(vp => vp.id == prods[p].id)) {
+                        let view = yield api.getProductViewforButcher(prods[p], butcher);
+                        add(prods[p], view, categories[i]);
+                        let related = relations.filter(r => ((r.productid1 == view.id || r.productid2 == view.id) && r.relation == 'price'));
+                        for (let r = 0; r < related.length; r++) {
+                            let rp = prods.find(p => p.id == (related[r].productid2 == view.id ? related[r].productid1 : related[r].productid2));
+                            if (rp && !viewProducts.find(vp => vp.id == rp.id)) {
+                                let view = yield api.getProductViewforButcher(rp, butcher);
+                                add(rp, view, categories[i]);
+                            }
                         }
-                        viewProducts.push({
-                            category: {
-                                id: categories[i].id,
-                                title: categories[i].name
-                            },
-                            id: view.id,
-                            name: view.name,
-                            unit: view.priceUnit == 'kg' ? 'kg' : prods[p][`${view.priceUnit}`],
-                            enabled: view.enabled,
-                            price: price,
-                            butcherProductNote: view.butcherProductNote,
-                            note: view.fromButcherNote,
-                            slug: view.slug,
-                            thumbnail: this.req.helper.imgUrl("product-photos", view.slug)
-                        });
                     }
                 }
             }

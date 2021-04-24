@@ -32,6 +32,7 @@ import ProductManager from '../../lib/productManager';
 import { isThisTypeNode } from 'typescript';
 import { BusinessError, PermissionError, ValidationError } from '../../lib/http';
 import ButcherPriceHistory from '../../db/models/butcherpricehistory';
+import ProductRelation from '../../db/models/productrelation';
 const fs = require('fs');
 
 export interface ProductFeedItem {
@@ -855,13 +856,18 @@ export default class Route extends ApiRouter {
     //     this.res.send(view)
     // }
 
+    
+
     @Auth.Anonymous()
     async viewProductsForButchers() {
+
+
+
         if (!this.req.params.butcher) {
             return this.next();
         }
         let butcher = await Butcher.loadButcherWithProducts(this.req.params.butcher, true);
-
+        let relations = await ProductRelation.findAll();
 
         if (!butcher) {
             return this.next();
@@ -870,31 +876,44 @@ export default class Route extends ApiRouter {
         let api = this
         let categories = this.req.__categories.filter(p => p.slug != 'populer-etler');
         let viewProducts: any[] = [];
+
+        let add = (product: Product, view: ProductViewForButcher, category: Category) => {
+            let price = view.priceUnit == 'kg' ? Helper.asCurrency(view.kgPrice): 0.00;   
+            if (price <= 0) {
+                let op = view.purchaseOptions.find(po=>po.unit == product[`${view.priceUnit}`]);
+                price = op ? op.unitPrice: price
+            }
+            viewProducts.push({ 
+                category: {
+                    id: category.id,
+                    title: category.name
+                },
+                id: view.id,
+                name: view.name,
+                unit: view.priceUnit == 'kg' ? 'kg': product[`${view.priceUnit}`],
+                enabled: view.enabled,
+                price: price,
+                butcherProductNote: view.butcherProductNote,
+                note: view.fromButcherNote,
+                slug: view.slug,
+                thumbnail: this.req.helper.imgUrl("product-photos", view.slug)
+            });
+        }
+
         for (let i = 0; i < categories.length; i++) {
             let prods = await ProductManager.getProductsOfCategories([categories[i].id]);
             for (let p = 0; p < prods.length; p++) {
-                let view = await api.getProductViewforButcher(prods[p], butcher);
-                if (!viewProducts.find(vp => vp.id == view.id)) {
-                    let price = view.priceUnit == 'kg' ? Helper.asCurrency(view.kgPrice): 0.00;   
-                    if (price <= 0) {
-                        let op = view.purchaseOptions.find(po=>po.unit == prods[p][`${view.priceUnit}`]);
-                        price = op ? op.unitPrice: price
+                if (!viewProducts.find(vp => vp.id == prods[p].id)) {
+                    let view = await api.getProductViewforButcher(prods[p], butcher);
+                    add(prods[p], view, categories[i]);
+                    let related = relations.filter(r=> ((r.productid1 == view.id || r.productid2 == view.id) && r.relation == 'price'));
+                    for (let r = 0; r < related.length;r++) {
+                        let rp = prods.find(p=>p.id == (related[r].productid2 == view.id ? related[r].productid1: related[r].productid2));
+                        if (rp && !viewProducts.find(vp => vp.id == rp.id)) {
+                            let view = await api.getProductViewforButcher(rp, butcher);
+                            add(rp, view, categories[i]);
+                        }
                     }
-                    viewProducts.push({ 
-                        category: {
-                            id: categories[i].id,
-                            title: categories[i].name
-                        },
-                        id: view.id,
-                        name: view.name,
-                        unit: view.priceUnit == 'kg' ? 'kg': prods[p][`${view.priceUnit}`],
-                        enabled: view.enabled,
-                        price: price,
-                        butcherProductNote: view.butcherProductNote,
-                        note: view.fromButcherNote,
-                        slug: view.slug,
-                        thumbnail: this.req.helper.imgUrl("product-photos", view.slug)
-                    })
                 }
             }
         }

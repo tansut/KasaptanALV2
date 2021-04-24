@@ -96,6 +96,7 @@
                 <a class="d-block" target="_blank" :href="'/' + p.slug">
                   <img style="width: 3rem;" width="500" height="500" :src="p.thumbnail" class="lazyload">
                 </a>
+                <span class="text-muted font-size-xs">{{p.id}}</span>
               </td>
               <td>
                 <div class="bg-secondary p-2 border mb-2" v-if="lastCat != p.category.id">
