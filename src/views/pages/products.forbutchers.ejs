@@ -86,12 +86,25 @@
 
 
             <tr :id="p.slug + 'row'" v-bind:class="{'border border-primary': p.price <= 0}" v-for="(p, index) in list">
+              
+
+              
+             
               <td style="width: 3rem;">
+        
+                
                 <a class="d-block" target="_blank" :href="'/' + p.slug">
                   <img style="width: 3rem;" width="500" height="500" :src="p.thumbnail" class="lazyload">
                 </a>
               </td>
               <td>
+                <div class="bg-secondary p-2 border mb-2" v-if="lastCat != p.category.id">
+                  <h4 class="h5 mb-0">
+                   {{p.category.title}}
+                   <span class="d-none">{{ lastCat = p.category.id}}</span>
+                  </h4>
+                </div>
+              
                 <p class="mb-1">
                   <a class="text-dark d-block" target="_blank" :href="'/' + p.slug">
                     {{p.name}} <i v-if="p.__updated" class="czi-icon czi-thumb-up"></i>
@@ -231,7 +244,8 @@
                 edit: null,
                 editIndex: -1,
                 completedPerc: 0,
-                canGo: 0
+                canGo: 0,
+                lastCat: 0
               }
             },
 

@@ -120,7 +120,7 @@ let Butcher = Butcher_1 = class Butcher extends basemodel_1.default {
             });
             if (butcher) {
                 butcher.products = butcher.products.filter(p => {
-                    return (includeDisabled ? true : p.enabled) && (p.kgPrice > 0 || (p.unit1price > 0 && p.unit1enabled) || (p.unit2price > 0 && p.unit2enabled) || (p.unit3price > 0 && p.unit1enabled));
+                    return (p.product.status == "onsale") && (includeDisabled ? true : p.enabled) && (p.kgPrice > 0 || (p.unit1price > 0 && p.unit1enabled) || (p.unit2price > 0 && p.unit2enabled) || (p.unit3price > 0 && p.unit1enabled));
                 });
             }
             return butcher;

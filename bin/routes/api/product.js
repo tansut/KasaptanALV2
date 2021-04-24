@@ -777,6 +777,10 @@ class Route extends router_1.ApiRouter {
                             price = op ? op.unitPrice : price;
                         }
                         viewProducts.push({
+                            category: {
+                                id: categories[i].id,
+                                title: categories[i].name
+                            },
                             id: view.id,
                             name: view.name,
                             unit: view.priceUnit == 'kg' ? 'kg' : prods[p][`${view.priceUnit}`],

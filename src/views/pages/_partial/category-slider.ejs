@@ -158,7 +158,7 @@
                                     <% if (!partialRender) { %>
                                         nopartial="true"
                                     <% } else { %>
-                                        onclick="return loadProducts('<%=reyonlar[c].slug%>')"
+                                        onclick="return loadProducts('<%=reyonlar[c].slug%>', '<%=partialRenderUrl%>')"
                                     <% } %>
                                     href="<%= `/${subUrl}${reyonlar[c].slug}?transition=1${__req.query.butcher ? '&butcher=' + __req.query.butcher:''}#items`%>"
                                     
