@@ -138,6 +138,20 @@
                                 </div>
 
                                 <div class="form-group">
+                                    <label>Ürün fiyatı kasaptan nasıl alınacak</label>
+                                    <select class="form-control" name="priceUnit" id="priceUnit">
+                                        
+                                        <option <%=product.priceUnit == 'kg' ? 'selected':''%> value="kg">KG</option>
+                                        <option <%=product.priceUnit == 'unit1' ? 'selected':''%> value="unit1">unit1</option>
+                                        <option <%=product.priceUnit == 'unit2' ? 'selected':''%> value="unit2">unit2</option>
+                                        <option <%=product.priceUnit == 'unit3' ? 'selected':''%> value="unit3">unit3</option>
+                                       
+                                    </select>
+
+
+                                </div>
+
+                                <div class="form-group">
                                     <label>Kasaba Sipariş Hazırlama Notu</label>
                                     <textarea rows="5" class="form-control" name="butcherNote"
                                         id="mddesc"><%= product.butcherNote %></textarea>

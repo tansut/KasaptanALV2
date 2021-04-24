@@ -875,9 +875,9 @@ export default class Route extends ApiRouter {
             for (let p = 0; p < prods.length; p++) {
                 let view = await api.getProductViewforButcher(prods[p], butcher);
                 if (!viewProducts.find(vp => vp.id == view.id)) {
-                    let price = Helper.asCurrency(view.kgPrice);   
+                    let price = view.priceUnit == 'kg' ? Helper.asCurrency(view.kgPrice): 0.00;   
                     if (price <= 0) {
-                        let op = view.purchaseOptions.find(po=>po.unit == view.priceUnit);
+                        let op = view.purchaseOptions.find(po=>po.unit == prods[p][`${view.priceUnit}`]);
                         price = op ? op.unitPrice: price
                     }
                     viewProducts.push({ 

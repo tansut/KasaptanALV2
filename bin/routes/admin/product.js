@@ -173,6 +173,7 @@ class Route extends router_1.ViewRouter {
                     this.product.tag1 = this.req.body.tag1;
                     this.product.tag2 = this.req.body.tag2;
                     this.product.tag3 = this.req.body.tag3;
+                    this.product.priceUnit = this.req.body.priceUnit;
                     this.product.keywords = this.req.body.keywords;
                     this.product.shortdesc = this.req.body.description;
                     this.product.notePlaceholder = this.req.body.notePlaceholder;
