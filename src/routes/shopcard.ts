@@ -199,6 +199,13 @@ export default class Route extends ViewRouter {
                 let provider = serving.length ? serving[0].provider: null;
 
                 if (provider && !provider.options.dispatcher.takeOnly) {
+
+                    let req: OfferRequest, offer: OfferResponse;
+                    order.shipLocation = order.shipLocation || area.location;
+                    req = provider.offerFromOrder(order);
+                    offer = await provider.requestOffer(req)
+                    
+
                     let dispatcher = this.shopcard.shipment[o].dispatcher = {
                         id: provider.options.dispatcher.id,
                         feeOffer: provider.options.dispatcher.feeOffer,
@@ -211,32 +218,16 @@ export default class Route extends ViewRouter {
                         min: provider.options.dispatcher.min,
                         minCalculated: provider.options.dispatcher.minCalculated,
                         takeOnly: provider.options.dispatcher.takeOnly,
-                        km: 0,
-                        //location: provider.options.dispatcher.butcher ? <any>provider.options.dispatcher.butcher.location : null,
-                    }
-                    let req: OfferRequest;
-                    if (order && order.shipLocation) {
-                        req = provider.offerFromOrder(order);
-                        let offer = await provider.requestOffer(req)
-                        if (offer) {
-                            provider.lastOffer = offer;
-                            dispatcher.feeOffer = provider.lastOffer.totalFee;
-                            dispatcher.fee = provider.lastOffer.customerFee;
-                            dispatcher.km = provider.lastOffer.distance;
-                            offers[o] = offer;
-                        } else {
-                            // dispatcher = this.shopcard.shipment[o].dispatcher = null;
-                            // this.shopcard.shipment[o].howTo = 'take';
-                        }
-                    } else {
-                        // req = provider.offerRequestFromTo({
-                        //     start: provider.options.dispatcher.butcher.location,
-                        //     finish: area.location
-                        // });
-                        // req.orderTotal = this.shopcard.butchers[o].subTotal;
+                        km: 0
                     }
                     
-
+                    if (offer) {
+                        provider.lastOffer = offer;
+                        dispatcher.feeOffer = provider.lastOffer.totalFee;
+                        dispatcher.fee = provider.lastOffer.customerFee;
+                        dispatcher.km = provider.lastOffer.distance;
+                        offers[o] = offer;
+                    } 
 
                     this.destinationMatrix[o] = {
                         start: provider.options.dispatcher.butcher.location,

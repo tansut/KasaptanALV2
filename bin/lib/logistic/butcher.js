@@ -163,9 +163,9 @@ class ButcherAutoLogistics extends core_1.LogisticProvider {
         }
         if (this.options.dispatcher.minCalculated && this.options.dispatcher.totalForFree && (this.options.dispatcher.minCalculated > this.options.dispatcher.totalForFree))
             this.options.dispatcher.minCalculated = this.options.dispatcher.totalForFree;
-        if (kmMax && distance > kmMax)
+        if (false && (kmMax && distance > kmMax))
             fee = -1;
-        else if (this.options.dispatcher.minCalculated && offer.orderTotal < this.options.dispatcher.minCalculated)
+        else if (false && (this.options.dispatcher.minCalculated && offer.orderTotal < this.options.dispatcher.minCalculated))
             fee = -1;
         else if (this.options.dispatcher.totalForFree && this.options.dispatcher.totalForFree <= offer.orderTotal)
             fee = 0.00;

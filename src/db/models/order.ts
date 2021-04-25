@@ -581,9 +581,11 @@ class Order extends BaseModel<Order> {
         o.shippingTotal = c.getShippingCostOfCustomer(bi);
         o.total = c.getButcherTotal(bi);        
         o.areaLevel1Id = c.address.level1Id;
+        o.areaLevel2Id = c.address.level2Id;
         o.areaLevel3Id = c.address.level3Id;
         o.areaLevel4Id = c.address.level4Id;
         o.areaLevel1Text = c.address.level1Text;
+        o.areaLevel2Text = c.address.level1Text;
         o.areaLevel3Text = c.address.level3Text;
         o.areaLevel4Text = c.address.level4Text;
         o.email = c.address.email;

@@ -112,8 +112,8 @@
               <%} %>
 
              
-   
-              <% if (shopcard.shipment[bi].dispatcher && (shopcard.shipment[bi].dispatcher.takeOnly)) { %>
+              
+              <% if (shipment.dispatcher && (shipment.dispatcher.takeOnly)) { %>
                 <div class="alert alert-accent mx-4 mb-4" v-if="card && card.shipment[<%=bi%>].dispatcher.takeOnly">
                   <p class="font-size-sm">
                     <%=shipment.dispatcher.name%> bu bölgede sadece gel-al hizmeti vermektedir.

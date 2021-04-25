@@ -21,7 +21,6 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const common_1 = require("../../lib/common");
 const router_1 = require("../../lib/router");
 const order_1 = require("../../db/models/order");
-const area_1 = require("../../db/models/area");
 const email_1 = require("../../lib/email");
 const shipment_1 = require("../../models/shipment");
 const dispatcher_1 = require("../../db/models/dispatcher");
@@ -983,8 +982,8 @@ class Route extends router_1.ApiRouter {
         return __awaiter(this, void 0, void 0, function* () {
             let butchers = card.butchers;
             let groupid = orderid.generate();
-            let l3 = yield area_1.default.findByPk(card.address.level3Id);
-            let l2 = l3 ? yield area_1.default.findByPk(l3.parentid) : null;
+            // let l3 = await Area.findByPk(card.address.level3Id);
+            // let l2 = l3 ? await Area.findByPk(l3.parentid) : null;
             let orders = [];
             // let payment = CreditcardPaymentFactory.getInstance();
             // let log = new SiteLogRoute(this.constructorParams);
@@ -1004,8 +1003,6 @@ class Route extends router_1.ApiRouter {
                     order.isFirstButcherOrder = true;
                     order.isFirstOrder = true;
                 }
-                order.areaLevel2Id = l2 && l2.id;
-                order.areaLevel2Text = l2 && l2.name;
                 orders.push(order);
             }
             return orders;

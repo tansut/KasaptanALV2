@@ -155,15 +155,16 @@ export class ButcherAutoLogistics extends LogisticProvider {
         let regCost = Helper.asCurrency((distance - input.kmMin) * kmPrice);
         let fee = regCost;
         this.options.dispatcher.min = this.options.dispatcher.min || 100.00;
+        
         if (distance > input.kmMin && input.minMultiplier) {
             this.options.dispatcher.minCalculated = Helper.asCurrency(Math.ceil((this.options.dispatcher.min + (distance - input.kmMin) * input.minMultiplier)/50)*50)
         }
         if (this.options.dispatcher.minCalculated && this.options.dispatcher.totalForFree && (this.options.dispatcher.minCalculated > this.options.dispatcher.totalForFree))
             this.options.dispatcher.minCalculated = this.options.dispatcher.totalForFree;
 
-        if (kmMax && distance > kmMax)
+        if (false && (kmMax && distance > kmMax))
            fee = -1;
-        else if (this.options.dispatcher.minCalculated && offer.orderTotal < this.options.dispatcher.minCalculated)
+        else if (false && (this.options.dispatcher.minCalculated && offer.orderTotal < this.options.dispatcher.minCalculated))
             fee = -1;    
         else if (this.options.dispatcher.totalForFree && this.options.dispatcher.totalForFree <= offer.orderTotal)
             fee = 0.00;

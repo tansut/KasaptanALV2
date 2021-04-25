@@ -1096,8 +1096,8 @@ export default class Route extends ApiRouter {
     async getFromShopcard(card: ShopCard): Promise<Order[]> {
         let butchers = card.butchers;
         let groupid = orderid.generate();
-        let l3 = await Area.findByPk(card.address.level3Id);
-        let l2 = l3 ? await Area.findByPk(l3.parentid) : null;
+        // let l3 = await Area.findByPk(card.address.level3Id);
+        // let l2 = l3 ? await Area.findByPk(l3.parentid) : null;
         let orders = []
 
         // let payment = CreditcardPaymentFactory.getInstance();
@@ -1120,8 +1120,6 @@ export default class Route extends ApiRouter {
                 order.isFirstButcherOrder = true;
                 order.isFirstOrder = true;
             }
-            order.areaLevel2Id = l2 && l2.id;
-            order.areaLevel2Text = l2 && l2.name;
             orders.push(order);
         }
 

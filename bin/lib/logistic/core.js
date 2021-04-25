@@ -139,7 +139,7 @@ class LogisticProvider {
                     note: "Arayıp onay almanıza gerek yok, *kasap sizi bekliyor*, müşteri paketini alıp götürebilirsiniz. Teşekkürler."
                 },
                 {
-                    id: o.areaLevel3Id ? o.areaLevel3Id.toString() : '',
+                    id: (o.areaLevel4Id || o.areaLevel3Id) ? (o.areaLevel4Id || o.areaLevel3Id).toString() : '',
                     address: o.displayAddress,
                     contactName: o.displayName,
                     contactPhone: o.phone,

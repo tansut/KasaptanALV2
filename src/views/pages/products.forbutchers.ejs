@@ -53,6 +53,9 @@
           <li>
             Fiyat düzenlemesi yaptıktan sonra <strong><a target="_blank" href="/<%=butcher.slug%>">burayı</a></strong> kullanarak kasap profilinizi <strong>açıp lütfen kontrol edin</strong>.
           </li>
+          <li>
+            Fiyat giriş ve düzenleme bittikten sonra gerekli kontroller için <strong>bizi haberda ediniz</strong>
+          </li>
         </ul>
         <button v-if="!canGo" @click="canGo=1" class="btn-info btn mr-1">Okudum Devam</button>
         <a v-if="canGo" target="_blank" class="btn btn-dark" href="/<%=butcher.slug%>">Profilinizi Görüntüleyin</a>
