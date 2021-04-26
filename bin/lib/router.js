@@ -67,6 +67,7 @@ class BaseRouter {
             let l = new userlog_1.default();
             l.userid = this.req.user.id;
             l.name = this.req.user.name;
+            l.role = this.req.user.roles;
             l.logCategory = category;
             l.logAction = action;
             l.platform = `${this.platform}/${this.appPlatform}`;

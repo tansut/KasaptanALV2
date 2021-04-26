@@ -31,6 +31,11 @@ class UserLog extends BaseModel<UserLog> {
     @Column({
         allowNull: true,
     })
+    role: string;        
+
+    @Column({
+        allowNull: true,
+    })
     platform: string;        
 
     @Column({

@@ -30,6 +30,12 @@ __decorate([
         allowNull: true,
     }),
     __metadata("design:type", String)
+], UserLog.prototype, "role", void 0);
+__decorate([
+    sequelize_typescript_1.Column({
+        allowNull: true,
+    }),
+    __metadata("design:type", String)
 ], UserLog.prototype, "platform", void 0);
 __decorate([
     sequelize_typescript_1.Column({
