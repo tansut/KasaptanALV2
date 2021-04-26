@@ -36,6 +36,7 @@ export class App extends AppBase {
 
 
     static  add2ShopcardFromOrder(ordernum: string, redirectUrl?: string) {
+        App.gTag('buttons', 'click', 'add2ShopcardFromOrder', ordernum);
         let result = Backend.post("shopcard/addFromOrder", {
             ordernum: ordernum
         })
