@@ -53,6 +53,23 @@ export default class Route extends ApiRouter {
         this.res.send('OK')
     }
 
+    @Auth.Anonymous()
+    @Auth.RequireCatcpha()
+    async SaveButcherInfo() {
+        let log = new SiteLogRoute(this.constructorParams);
+        let sdata = this.req.body;
+        if (!sdata) return this.next();
+        sdata['city'] = (await Area.findByPk(parseInt(sdata['cityid']))).name;
+        let data = {
+            logData: JSON.stringify(sdata),
+            logtype: "BUTCHERINFO"
+        }
+        await log.log(data);
+        await Sms.send('+905326274151', 'kasap bilgileri giris: ' + sdata.tel, false, log)
+        this.res.send('OK')
+    }
+
+    
     
 
     @Auth.Anonymous()
@@ -432,6 +449,7 @@ export default class Route extends ApiRouter {
         router.get("/butcher/googlesearch", Route.BindRequest(this.prototype.googleSearchRoute));
         router.post("/butcher/googlesync", Route.BindRequest(this.prototype.googleSyncRoute));
         router.post("/savebutcherapplication", Route.BindRequest(this.prototype.SaveButcherApplication));
+        router.post("/savebutcherinfo", Route.BindRequest(this.prototype.SaveButcherInfo));
 
 
         

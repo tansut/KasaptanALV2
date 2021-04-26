@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html lang="tr-TR" prefix="og: http://ogp.me/ns#">
+
+<head>
+  <% include ./_partial/head %>
+</head>
+
+<body>
+  <% include ./_partial/header %>
+
+    <div class="page-title">
+      <div class="container d-lg-flex justify-content-between py-2 py-lg-3">
+        <div class="order-lg-2 mb-3 mb-lg-0 pt-lg-2">
+          <nav aria-label="breadcrumb" class="d-none d-lg-block">
+            <ol class="breadcrumb breadcrumb-dark flex-lg-nowrap justify-content-center justify-content-lg-star">
+              <li class="breadcrumb-item"><a class="text-nowrap" href="/"><i class="czi-home"></i></a></li>
+              <li class="breadcrumb-item text-nowrap">Kasap Başvurusu
+              </li>
+            </ol>
+          </nav>
+        </div>
+        <div class="order-lg-1 pr-lg-4 text-center text-lg-left">
+          <h1 class="h3">Hoş Geldiniz</h1>
+          <h2 class="h4 lead">Başvurunuzu tamamlamak için lütfen aşağıdaki bilgileri girin</h2>
+        </div>
+      </div>
+    </div>
+
+
+
+
+
+
+
+    <div id="applyApp" v-cloak class="container mb-3 ">
+
+      <form id="app" @submit="checkForm" method="post">
+        <p class="text-primary" v-if="errors.length">
+          <b>Lütfen aşağıdaki hataları düzeltin:</b>
+        <ul>
+          <li v-for="error in errors">{{ error }}</li>
+        </ul>
+        </p>
+        <div class="form-row">
+          <div class="form-group col-md-6">
+            <label for="inputEmail4">Adınız ve Soyadınız</label>
+            <input v-model="data.name" required type="text" class="form-control" id="inputEmail4" placeholder="adınızı ve soyadınızı girin">
+          </div>
+          <div class="form-group col-md-6">
+            <label for="inputPassword4">Cep Telefonunuz</label>
+
+            <input v-model="data.tel" class="form-control iphone" minlength="10" maxlength="15" type="tel" id="tel" 
+                required>
+
+            <div class="invalid-feedback">Geçersiz telefon numarası.</div>
+
+          </div>
+        </div>
+        <div class="form-row">
+          <div class="form-group col-md-6">
+            <label for="inputPassword4">Kasabınızın Adı</label>
+            <input required v-model="data.butcher" type="text" class="form-control" id="inputPassword4" placeholder="kasabınızın adını girin">
+          </div>
+          <div class="form-group col-md-6">
+            <label for="inputAddress">Kasabınızın Adresi</label>
+            <input v-model="data.butcherAddress" required type="text" class="form-control" id="inputAddress" placeholder="cadde sokak vs ">
+          </div>
+
+        </div>
+
+
+        <div class="form-row">
+
+          <div class="form-group col-md-4">
+            <label for="inputState">Şehir</label>
+            <select v-model="data.cityid" required id="inputState" class="form-control">
+              <option value="" selected>Seçin</option>
+              <option  :value="c.id" v-for="(c, i) in cities">{{c.name}}</option>
+            </select>
+          </div>
+
+          <div class="form-group col-md-4">
+            <label for="inputIlce">İlçe</label>
+            <input v-model="data.butcherIlce" required type="text" class="form-control" id="inputIlce" placeholder="hangi ilçedesiniz">
+          </div>
+          <div class="form-group col-md-4">
+            <label>Semt</label>
+            <input v-model="data.butcherSemt" required type="text" class="form-control" placeholder="hangi semttesiniz">
+          </div>
+        </div>
+
+        <div class="form-row">
+          <div class="form-group col-md-3">
+            <label for="inputPassword4">Şirket Resmi Adı</label>
+            <input required v-model="data.butcherCompanyName" type="text" class="form-control">
+          </div>
+          <div class="form-group col-md-3">
+            <label for="inputPassword4">Şirket Tipi</label>
+            <select v-model="data.companyType" required  class="form-control">
+              <option value="" selected>Seçin</option>
+              <option value="sahis" selected>Şahıs Şirleti</option>
+              <option value="limited" selected>Limited veya A.Ş.</option>
+            </select>
+          </div>
+          <div class="form-group col-md-3">
+            <label for="inputAddress">Vergi Dairesi</label>
+            <input v-model="data.butcherTaxOffice" required type="text" class="form-control">
+          </div>
+          <div class="form-group col-md-3">
+            <label for="inputAddress">Vergi No</label>
+            <input v-model="data.butcherTaxNo" required type="text" class="form-control">
+          </div>
+        </div>
+        <div class="form-row">
+          <div class="form-group col-md-4">
+            <label for="inputPassword4">IBAN</label>
+            <input required v-model="data.iban" type="text" class="form-control" placeholder="şirketiniz iban no">
+          </div>
+          <div class="form-group col-md-4">
+            <label for="inputPassword4">Dükkan Telefon No</label>
+            <input v-model="data.shoptel" type="text" class="form-control">
+          </div>
+          <div class="form-group col-md-4">
+            <label for="inputPassword4">Kendiniz kaç KM uzağa dağıtım yapabilirsiniz</label>
+            <input v-model="data.dispatchKM" type="text" class="form-control">
+          </div>
+        </div>
+
+        <button id="submit" type="submit" class="btn btn-primary">Başvurumu Tamamla</button>
+      </form>
+
+
+
+
+    </div>
+
+    <div class="container mb-3">
+
+      <%- include('./_partial/category-slider', { title: 'Kategoriler' , allUrl: '/kasap-urunleri' }); %>
+
+    </div>
+
+    <% include ./_partial/footer %>
+      <% include ./_partial/scripts %>
+
+        <script>
+          window.applyApp = new Vue({
+            el: '#applyApp',
+
+            mounted: function () {
+              var self = this;
+              App.Backend.get("area/children").then(function(result) {
+                self.cities = result.data
+              })
+            },
+
+            data: function () {
+              return {
+                errors: [],
+                data: {},
+                cities: []
+              }
+            },
+
+
+            methods: {
+              checkForm: function (e) {
+                this.errors = [];
+                if (!this.data.cityid) this.errors.push('Şehir belirtmeniz gerekmekte');
+                e.preventDefault();
+                App.Backend.post('savebutcherinfo', this.data, null, true).then(function(err) {
+                  App.alert('Teşekkür ederiz, en kısa zamanda iletişime geçiyor olacağız', 'info');
+                  $('#submit').hide();
+                }).catch(function(err) {
+                  App.alert('Maalesef başvurunuzu kaydedemedik. Lütfen tekrar deneyin, sorun devam ederse bize başvurun', 'danger')
+                  
+                })
+              }
+
+           
+            }
+          })
+        </script>
+        </script>
+
+</body>
+
+</html>

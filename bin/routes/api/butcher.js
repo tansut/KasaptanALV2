@@ -60,6 +60,22 @@ class Route extends router_1.ApiRouter {
             this.res.send('OK');
         });
     }
+    SaveButcherInfo() {
+        return __awaiter(this, void 0, void 0, function* () {
+            let log = new sitelog_1.default(this.constructorParams);
+            let sdata = this.req.body;
+            if (!sdata)
+                return this.next();
+            sdata['city'] = (yield area_1.default.findByPk(parseInt(sdata['cityid']))).name;
+            let data = {
+                logData: JSON.stringify(sdata),
+                logtype: "BUTCHERINFO"
+            };
+            yield log.log(data);
+            yield sms_1.Sms.send('+905326274151', 'kasap bilgileri giris: ' + sdata.tel, false, log);
+            this.res.send('OK');
+        });
+    }
     googleSyncPhotosRoute() {
         const id = this.req.params.id;
         if (!id)
@@ -386,6 +402,7 @@ class Route extends router_1.ApiRouter {
         router.get("/butcher/googlesearch", Route.BindRequest(this.prototype.googleSearchRoute));
         router.post("/butcher/googlesync", Route.BindRequest(this.prototype.googleSyncRoute));
         router.post("/savebutcherapplication", Route.BindRequest(this.prototype.SaveButcherApplication));
+        router.post("/savebutcherinfo", Route.BindRequest(this.prototype.SaveButcherInfo));
         //router.get("/butcher/googlesyncphotos/:id", Route.BindRequest(this.prototype.googleSyncPhotosRoute));
         //router.get("/butcher/dbsync", Route.BindRequest(this.prototype.dbSyncAllFromCachedGoogle));
     }
@@ -409,6 +426,13 @@ __decorate([
     __metadata("design:paramtypes", []),
     __metadata("design:returntype", Promise)
 ], Route.prototype, "SaveButcherApplication", null);
+__decorate([
+    common_1.Auth.Anonymous(),
+    common_1.Auth.RequireCatcpha(),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", []),
+    __metadata("design:returntype", Promise)
+], Route.prototype, "SaveButcherInfo", null);
 __decorate([
     common_1.Auth.Anonymous(),
     __metadata("design:type", Function),

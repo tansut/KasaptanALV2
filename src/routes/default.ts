@@ -115,7 +115,12 @@ export default class Route extends ViewRouter {
         this.renderView('pages/kasap-basvuru.ejs');
     }
 
+    
 
+    @Auth.Anonymous()
+    async butcherInfo() {
+        this.renderView('pages/kasap-bilgi-giris.ejs');
+    }
 
     @Auth.Anonymous()
     async setUserAddr() {
@@ -221,5 +226,6 @@ export default class Route extends ViewRouter {
         router.get("/satis-sozlesmesi", Route.BindToView("pages/content.satis-sozlesmesi.ejs"))
         router.get("/mobil-uygulamalar", Route.BindToView("pages/content.mobil-uygulamalar.ejs"));
         router.get("/kasap-basvuru/:butcher?", Route.BindRequest(this.prototype.butcherApply));
+        router.get("/kasap-bilgi-giris/:butcher?", Route.BindRequest(this.prototype.butcherInfo));
     }
 } 

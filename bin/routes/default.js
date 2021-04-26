@@ -108,6 +108,11 @@ class Route extends router_1.ViewRouter {
             this.renderView('pages/kasap-basvuru.ejs');
         });
     }
+    butcherInfo() {
+        return __awaiter(this, void 0, void 0, function* () {
+            this.renderView('pages/kasap-bilgi-giris.ejs');
+        });
+    }
     setUserAddr() {
         return __awaiter(this, void 0, void 0, function* () {
             let area = yield area_1.default.getBySlug(this.req.params.slug);
@@ -199,6 +204,7 @@ class Route extends router_1.ViewRouter {
         router.get("/satis-sozlesmesi", Route.BindToView("pages/content.satis-sozlesmesi.ejs"));
         router.get("/mobil-uygulamalar", Route.BindToView("pages/content.mobil-uygulamalar.ejs"));
         router.get("/kasap-basvuru/:butcher?", Route.BindRequest(this.prototype.butcherApply));
+        router.get("/kasap-bilgi-giris/:butcher?", Route.BindRequest(this.prototype.butcherInfo));
     }
 }
 __decorate([
@@ -225,6 +231,12 @@ __decorate([
     __metadata("design:paramtypes", []),
     __metadata("design:returntype", Promise)
 ], Route.prototype, "butcherApply", null);
+__decorate([
+    common_1.Auth.Anonymous(),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", []),
+    __metadata("design:returntype", Promise)
+], Route.prototype, "butcherInfo", null);
 __decorate([
     common_1.Auth.Anonymous(),
     __metadata("design:type", Function),
