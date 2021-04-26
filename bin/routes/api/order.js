@@ -1121,7 +1121,6 @@ class Route extends router_1.ApiRouter {
             let notifyMobilePhones = (order.butcher.notifyMobilePhones || "").split(',');
             notifyMobilePhones.push('5531431988');
             notifyMobilePhones.push('5326274151');
-            notifyMobilePhones.push('5316857306');
             for (var p = 0; p < notifyMobilePhones.length; p++) {
                 if (notifyMobilePhones[p].trim()) {
                     yield sms_1.Sms.send(notifyMobilePhones[p].trim(), text, false, new sitelog_1.default(this.constructorParams));
@@ -1134,7 +1133,6 @@ class Route extends router_1.ApiRouter {
             let notifyMobilePhones = (order.butcher.notifyMobilePhones || "").split(',');
             notifyMobilePhones.push('5531431988');
             notifyMobilePhones.push('5326274151');
-            notifyMobilePhones.push('5316857306');
             let manageUrl = `${this.url}/manageorder/${order.ordernum}`;
             let text = `${order.butcherName} musteriniz ${order.displayName} teslimat icin bilgilendirildi: ${order.shipmentStartText}. Siparis: ${manageUrl}`;
             yield this.sendButcherNotifications(order, text);
@@ -1291,9 +1289,7 @@ class Route extends router_1.ApiRouter {
                     order.status = order_3.OrderItemStatus.onway;
                     order.statusDesc += `\n- ${helper_1.default.formatDate(helper_1.default.Now(), true)}: teslimat süreci başladı, yolda.`;
                     let notifyMobilePhones = (order.butcher.notifyMobilePhones || "").split(',');
-                    notifyMobilePhones.push('5531431988');
                     notifyMobilePhones.push('5326274151');
-                    notifyMobilePhones.push('5316857306');
                     for (var p = 0; p < notifyMobilePhones.length; p++) {
                         if (notifyMobilePhones[p].trim()) {
                             let manageUrl = `${this.url}/manageorder/${order.ordernum}`;

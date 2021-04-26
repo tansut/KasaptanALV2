@@ -39,7 +39,10 @@
         </p>
         <ul class="list">
           <li>
-            KasaptanAl.com'da <strong>satışı biz değil siz</strong> yapmaktasınız. Tezgah fiyatlarınızı birebir verin.
+            <strong>Satışı biz değil siz</strong> yapmaktasınız. <strong>Tezgah fiyatlarınızı birebir</strong> verin.
+          </li>
+          <li>
+            <strong>Tezgâh ve KasaptanAl fiyatlarının farklı olması</strong> durumunda KasaptanAl hiçbir uyarıya gerek duymadan <strong>üyelik iptal hakkını</strong> saklı tutar.
           </li>
           <li>
             Internet ortamında <strong>firesiz satış yapıyoruz</strong>. Sadece firesi olabilecek kemikli ürünlerde fire farkı ekleyin.
@@ -79,7 +82,6 @@
 
         <table v-if="list && list.length > 0" class="table table-sm">
           <thead class="thead-dark">
-
             <th scope="col">Resim</th>
             <th scope="col">Ürün</th>
             <th scope="col">Fiyat</th>
@@ -120,9 +122,6 @@
                     {{p.note}}
                   </span>
                 </p>
-
-
-
               </td>
 
               <td scope="row">
@@ -132,9 +131,6 @@
                   <span v-else>Fiyat Ver</span>
                 </button>
               </td>
-
-
-
             </tr>
           </tbody>
         </table>
@@ -174,6 +170,7 @@
                 <div class="form-group">
                   <div class="d-block"><strong style="text-transform: uppercase;">{{edit && edit.unit}}</strong> Satış
                     Fiyatınız</div>
+                    <span class="text-muted font-size-sm">Tüm <strong>fiyat değişiklikleri saklanmaktadır</strong> ve fiyat değişim grafiği kasap bazında yakında sitede gösterilecektir.</span>
                   <div class="input-group mb-3">
                    
                     <input id="price-edit" type="text" class="form-control" v-model="edit && edit.price"

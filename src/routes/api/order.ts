@@ -1247,7 +1247,6 @@ export default class Route extends ApiRouter {
         let notifyMobilePhones = (order.butcher.notifyMobilePhones || "").split(',');
         notifyMobilePhones.push('5531431988');
         notifyMobilePhones.push('5326274151');
-        notifyMobilePhones.push('5316857306');
 
 
         for (var p = 0; p < notifyMobilePhones.length; p++) {
@@ -1261,7 +1260,6 @@ export default class Route extends ApiRouter {
         let notifyMobilePhones = (order.butcher.notifyMobilePhones || "").split(',');
         notifyMobilePhones.push('5531431988');
         notifyMobilePhones.push('5326274151');
-        notifyMobilePhones.push('5316857306');
 
 
         let manageUrl = `${this.url}/manageorder/${order.ordernum}`;
@@ -1440,9 +1438,7 @@ export default class Route extends ApiRouter {
                 order.status = OrderItemStatus.onway;
                 order.statusDesc += `\n- ${Helper.formatDate(Helper.Now(), true)}: teslimat süreci başladı, yolda.`
                 let notifyMobilePhones = (order.butcher.notifyMobilePhones || "").split(',');
-                notifyMobilePhones.push('5531431988');
                 notifyMobilePhones.push('5326274151');
-                notifyMobilePhones.push('5316857306');
 
                 for (var p = 0; p < notifyMobilePhones.length; p++) {
                     if (notifyMobilePhones[p].trim()) {

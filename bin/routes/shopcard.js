@@ -421,9 +421,9 @@ class Route extends router_1.ViewRouter {
                     ordernum: ordernums
                 }
             });
-            this.res.render("pages/checkout.complete.ejs", this.viewData({
-                orders: orders,
-            }));
+            yield this.sendView("pages/checkout.complete.ejs", {
+                orders: orders
+            });
         });
     }
     savereviewRoute() {

@@ -451,10 +451,9 @@ export default class Route extends ViewRouter {
                 ordernum: ordernums
             }
         })
-        this.res.render("pages/checkout.complete.ejs", this.viewData({
-            orders: orders,
-
-        }));
+        await this.sendView("pages/checkout.complete.ejs", {
+            orders: orders
+        })
     }
 
     @Auth.Anonymous()
