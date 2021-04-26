@@ -26,6 +26,9 @@ const product_2 = require("./product");
 const butcher_1 = require("../../db/models/butcher");
 const dispatcher_1 = require("../../db/models/dispatcher");
 const google_1 = require("../../lib/google");
+const shoplist_1 = require("../../db/models/shoplist");
+const helper_1 = require("../../lib/helper");
+const order_1 = require("../../db/models/order");
 class Route extends router_1.ApiRouter {
     getDispatcher(to) {
         return __awaiter(this, void 0, void 0, function* () {
@@ -37,15 +40,61 @@ class Route extends router_1.ApiRouter {
             return res;
         });
     }
-    addRoute() {
+    addFromOrderRoute() {
+        return __awaiter(this, void 0, void 0, function* () {
+            let order = yield order_1.Order.findOne({
+                where: {
+                    ordernum: this.req.body.ordernum
+                },
+                include: [
+                    {
+                        model: order_1.OrderItem
+                    }
+                ]
+            });
+            let list = shoplist_1.default.fromOrder(order);
+            yield this.append(list);
+            this.res.sendStatus(200);
+        });
+    }
+    append(list) {
+        return __awaiter(this, void 0, void 0, function* () {
+            let butcher = yield butcher_1.default.findByPk(list.butcherid, {
+                include: [
+                    {
+                        all: true
+                    }
+                ]
+            });
+            let shopcard = yield shopcard_1.ShopCard.createFromRequest(this.req);
+            for (let i = 0; i < list.items.length; i++) {
+                let li = list.items[i];
+                try {
+                    let api = new product_2.default(this.constructorParams);
+                    let product = yield product_1.default.findByPk(li.productid);
+                    let productView = yield api.getProductView(product, butcher);
+                    let po = productView.purchaseOptions.find(po => po.unit == li.poUnit);
+                    if (po) {
+                        //let bp = butcher.products.find(bp=>bp.enabled && bp.un)
+                        shopcard.addProduct(productView, li.quantity, po, li.note, {});
+                    }
+                }
+                catch (exc) {
+                    helper_1.default.logError(exc, {}, this.req);
+                }
+            }
+            yield shopcard.saveToRequest(this.req);
+        });
+    }
+    addRoute(item) {
         return __awaiter(this, void 0, void 0, function* () {
             let api = new product_2.default(this.constructorParams);
-            let item = this.req.body;
+            item = item || this.req.body;
             let shopcard = yield shopcard_1.ShopCard.createFromRequest(this.req);
             let product = yield product_1.default.findByPk(item.id);
-            let butcher = this.req.body.butcher ? yield butcher_1.default.findOne({
+            let butcher = item.butcher ? yield butcher_1.default.findOne({
                 where: {
-                    slug: this.req.body.butcher.slug
+                    slug: item.butcher.slug
                 },
                 include: [{
                         all: true
@@ -144,6 +193,7 @@ class Route extends router_1.ApiRouter {
         router.post("/shopcard/geocode", Route.BindRequest(this.prototype.geocode));
         router.post("/shopcard/reversegeocode", Route.BindRequest(this.prototype.revgeocode));
         router.post("/shopcard/add", Route.BindRequest(this.prototype.addRoute));
+        router.post("/shopcard/addFromOrder", Route.BindRequest(this.prototype.addFromOrderRoute));
         router.post("/shopcard/update", Route.BindRequest(this.prototype.updateRoute));
         router.post("/shopcard/remove", Route.BindRequest(this.prototype.removeRoute));
     }
@@ -151,7 +201,7 @@ class Route extends router_1.ApiRouter {
 __decorate([
     common_1.Auth.Anonymous(),
     __metadata("design:type", Function),
-    __metadata("design:paramtypes", []),
+    __metadata("design:paramtypes", [Object]),
     __metadata("design:returntype", Promise)
 ], Route.prototype, "addRoute", null);
 __decorate([

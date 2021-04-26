@@ -34,6 +34,21 @@ export class App extends AppBase {
 
     public static ComponentMap: ComponentMap = {};
 
+
+    static  add2ShopcardFromOrder(ordernum: string, redirectUrl?: string) {
+        let result = Backend.post("shopcard/addFromOrder", {
+            ordernum: ordernum
+        })
+
+        if (redirectUrl) {
+            result.then(()=> {
+                window.location.href = redirectUrl;
+            }).catch(err=>App.HandleError(err))
+        }
+
+        return result;
+    }
+
     static agreementDialog(agreement) {
         Backend.get('agreement/content/' + agreement).then((result) => {
             $('#agreementModal .modal-title').html(result.data.title);
