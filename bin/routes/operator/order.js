@@ -253,7 +253,7 @@ class Route extends router_1.ViewRouter {
             //
             yield this.getOrder();
             yield this.getOrderSummary();
-            this.sendView("pages/operator.manageorder.ejs", Object.assign(Object.assign({ _usrmsg: { text: userMessage } }, this.api.getView(this.order)), { enableImgContextMenu: true }));
+            yield this.sendView("pages/operator.manageorder.ejs", Object.assign(Object.assign({ _usrmsg: { text: userMessage } }, this.api.getView(this.order)), { enableImgContextMenu: true }));
         });
     }
     getOrder() {
@@ -267,7 +267,7 @@ class Route extends router_1.ViewRouter {
         return __awaiter(this, void 0, void 0, function* () {
             this.api = new order_1.default(this.constructorParams);
             let orders = yield this.api.getOrders();
-            this.sendView('pages/operator.orders.ejs', { orders: orders });
+            yield this.sendView('pages/operator.orders.ejs', { orders: orders });
         });
     }
     orderItemUpdateRoute() {
@@ -309,7 +309,7 @@ class Route extends router_1.ViewRouter {
             }
             yield this.getOrder();
             yield this.getOrderSummary();
-            this.sendView("pages/operator.manageorder.ejs", Object.assign(Object.assign({ _usrmsg: { text: userMessage } }, this.api.getView(this.order)), { enableImgContextMenu: true }));
+            yield this.sendView("pages/operator.manageorder.ejs", Object.assign(Object.assign({ _usrmsg: { text: userMessage } }, this.api.getView(this.order)), { enableImgContextMenu: true }));
         });
     }
     orderViewRoute() {
@@ -318,7 +318,7 @@ class Route extends router_1.ViewRouter {
             if (!this.order)
                 return this.next();
             yield this.getOrderSummary();
-            this.sendView("pages/operator.manageorder.ejs", Object.assign(Object.assign({}, this.api.getView(this.order)), { enableImgContextMenu: true }));
+            yield this.sendView("pages/operator.manageorder.ejs", Object.assign(Object.assign({}, this.api.getView(this.order)), { enableImgContextMenu: true }));
         });
     }
     //approveSubMerchant

@@ -146,9 +146,8 @@ export default class Route extends ViewRouter {
         } else if (this.foodCategory == 'yemekler') {
             await this.fillFoods();
         } else await this.fillFoodsAndTarifs();
-
-
-        this.sendView('pages/foods.ejs', {
+        
+        await this.sendView('pages/foods.ejs', {
             pageTitle: 'Et Yemekleri ve Tarifleri'
         })
     }
@@ -198,6 +197,7 @@ export default class Route extends ViewRouter {
 
             this.renderView('pages/category-sub-food.ejs');
         }
+        await this.createUserLog();
     }
 
     @Auth.Anonymous()
@@ -221,11 +221,21 @@ export default class Route extends ViewRouter {
             }
         };
 
-
+        await this.createUserLog();
         this.renderView('pages/products.forbutchers.ejs', null, {
             butcher: butcher
         });
     }
+
+    async createUserLog() {
+        let l = this.generateUserLog('category', 'view');
+        if (l) {
+            this.category && (l.categoryid = this.category.id);
+            this.category && (l.categoryName = this.category.name);
+            this.req.query.partial && (l.note = 'partial')
+            await this.saveUserLog(l)
+        }
+    }    
 
 
     @Auth.Anonymous()
@@ -290,6 +300,7 @@ export default class Route extends ViewRouter {
         this.forceSemt = true;
         this.appUI.title = 'Ürünler';
         //this.appUI.tabIndex = 1;
+        await this.createUserLog();
         this.renderPage(this.req.query.partial ? 'pages/category-items.ejs' : 'pages/category.ejs')
 
     }

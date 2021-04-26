@@ -75,9 +75,9 @@ export default class Route extends ViewRouter {
     }
 
 
-    renderPage(page: string, userMessage?: any) {
+    async renderPage(page: string, userMessage?: any) {
         userMessage = userMessage || {}
-        this.sendView(page, {
+        await this.sendView(page, {
             ...userMessage, ...{
                 shopcard: this.shopcard,
             }
@@ -96,7 +96,7 @@ export default class Route extends ViewRouter {
         this.appUI.title = 'Sepetim';
         this.appUI.tabIndex = 2;
 
-        this.renderPage(`pages/shopcard.ejs`)
+        await this.renderPage(`pages/shopcard.ejs`)
 
     }
 

@@ -78,10 +78,12 @@ class Route extends router_1.ViewRouter {
         });
     }
     renderPage(page, userMessage) {
-        userMessage = userMessage || {};
-        this.sendView(page, Object.assign(Object.assign({}, userMessage), {
-            shopcard: this.shopcard,
-        }));
+        return __awaiter(this, void 0, void 0, function* () {
+            userMessage = userMessage || {};
+            yield this.sendView(page, Object.assign(Object.assign({}, userMessage), {
+                shopcard: this.shopcard,
+            }));
+        });
     }
     viewRoute() {
         return __awaiter(this, void 0, void 0, function* () {
@@ -90,7 +92,7 @@ class Route extends router_1.ViewRouter {
             yield this.getOrderSummary();
             this.appUI.title = 'Sepetim';
             this.appUI.tabIndex = 2;
-            this.renderPage(`pages/shopcard.ejs`);
+            yield this.renderPage(`pages/shopcard.ejs`);
         });
     }
     shipPossibleToday() {

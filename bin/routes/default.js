@@ -57,7 +57,7 @@ class Route extends router_1.ViewRouter {
     kasapViewRoute() {
         return __awaiter(this, void 0, void 0, function* () {
             this.foods = yield new product_1.default(this.constructorParams).getFoodResources(null, 10);
-            this.sendView("pages/content.kasap-basvuru.ejs", this.viewData({}));
+            yield this.sendView("pages/content.kasap-basvuru.ejs", this.viewData({}));
         });
     }
     defaultRoute() {
@@ -91,6 +91,7 @@ class Route extends router_1.ViewRouter {
             this.blogItems = yield this.getBlogItems();
             //this.stats = await SiteStats.get();
             this.appUI.tabIndex = 0;
+            yield this.createUserLog();
             this.res.render("pages/default.ejs", this.viewData({
                 recentButchers: recentButchers,
                 ellipsis: ellipsis
@@ -184,8 +185,8 @@ class Route extends router_1.ViewRouter {
         // }
         router.get("/", Route.BindRequest(this.prototype.defaultRoute));
         router.get("/temparea", Route.BindRequest(this.prototype.tempares));
-        router.get("/testsubmit", Route.BindToView("pages/test-submit.ejs"));
-        router.post("/testsubmit", Route.BindRequest(this.prototype.testsubmit));
+        // router.get("/testsubmit", Route.BindToView("pages/test-submit.ejs"))
+        // router.post("/testsubmit", Route.BindRequest(this.prototype.testsubmit))
         router.get("/adres-belirle/:slug", Route.BindRequest(this.prototype.setUserAddr));
         router.get("/hikayemiz", Route.BindToView("pages/content.kurumsal.ejs"));
         router.get("/neden-kasaptanal", Route.BindToView("pages/content.neden-kasaptanal.ejs"));

@@ -249,7 +249,7 @@ class Route extends router_1.ViewRouter {
         return __awaiter(this, void 0, void 0, function* () {
             this.api = new order_1.default(this.constructorParams);
             let orders = yield this.api.getOrders();
-            this.sendView('pages/operator.orders.ejs', { orders: orders });
+            yield this.sendView('pages/operator.orders.ejs', { orders: orders });
         });
     }
     orderItemUpdateRoute() {
@@ -291,7 +291,7 @@ class Route extends router_1.ViewRouter {
             }
             yield this.getOrder();
             yield this.getOrderSummary();
-            this.sendView("pages/operator.manageorder.ejs", Object.assign(Object.assign({ _usrmsg: { text: userMessage } }, this.api.getView(this.order)), { enableImgContextMenu: true }));
+            yield this.sendView("pages/operator.manageorder.ejs", Object.assign(Object.assign({ _usrmsg: { text: userMessage } }, this.api.getView(this.order)), { enableImgContextMenu: true }));
         });
     }
     availableTimes() {
@@ -353,7 +353,7 @@ class Route extends router_1.ViewRouter {
                 pageDescription: pageDescription,
                 pageThumbnail: pageThumbnail
             };
-            this.sendView("pages/printorder.ejs", Object.assign(Object.assign(Object.assign({}, pageInfo), this.api.getView(this.order)), { enableImgContextMenu: true }));
+            yield this.sendView("pages/printorder.ejs", Object.assign(Object.assign(Object.assign({}, pageInfo), this.api.getView(this.order)), { enableImgContextMenu: true }));
         });
     }
     orderViewRoute() {
@@ -372,7 +372,7 @@ class Route extends router_1.ViewRouter {
                 pageDescription: pageDescription,
                 pageThumbnail: pageThumbnail
             };
-            this.sendView("pages/manageorder.ejs", Object.assign(Object.assign(Object.assign({}, pageInfo), this.api.getView(this.order)), { enableImgContextMenu: true }));
+            yield this.sendView("pages/manageorder.ejs", Object.assign(Object.assign(Object.assign({}, pageInfo), this.api.getView(this.order)), { enableImgContextMenu: true }));
         });
     }
     static SetRoutes(router) {

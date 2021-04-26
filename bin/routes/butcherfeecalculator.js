@@ -25,8 +25,10 @@ let ellipsis = require('text-ellipsis');
 var MarkdownIt = require('markdown-it');
 class Route extends router_1.ViewRouter {
     renderPage(msg = undefined) {
-        this.sendView(`pages/butcher.feecalculator.ejs`, {
-            pageTitle: 'Komisyon Hesap Makinesi'
+        return __awaiter(this, void 0, void 0, function* () {
+            yield this.sendView(`pages/butcher.feecalculator.ejs`, {
+                pageTitle: 'Komisyon Hesap Makinesi'
+            });
         });
     }
     viewRoute() {
@@ -35,7 +37,7 @@ class Route extends router_1.ViewRouter {
                 this.calculateRoute(parseFloat(this.req.query.total), parseFloat(this.req.query.rate));
             }
             else
-                this.renderPage();
+                yield this.renderPage();
         });
     }
     calculateRoute(totalSales = 0.00, ratePercParam = 0.00) {
@@ -44,7 +46,7 @@ class Route extends router_1.ViewRouter {
             let ratePerc = ratePercParam || parseFloat(this.req.body.rate);
             let calc = new commissionHelper_1.ComissionHelper(ratePerc / 100, 0, 0.18);
             this.feeResult = calc.calculateButcherComission(total);
-            this.renderPage();
+            yield this.renderPage();
         });
     }
     static SetRoutes(router) {

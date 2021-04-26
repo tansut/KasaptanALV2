@@ -54,7 +54,7 @@
             Fiyat düzenlemesi yaptıktan sonra <strong><a target="_blank" href="/<%=butcher.slug%>">burayı</a></strong> kullanarak kasap profilinizi <strong>açıp lütfen kontrol edin</strong>.
           </li>
           <li>
-            Fiyat giriş ve düzenleme bittikten sonra gerekli kontroller için <strong>bizi haberda ediniz</strong>
+            Fiyat giriş ve düzenleme bittikten sonra gerekli kontroller için <strong>bizi haberdar ediniz</strong>
           </li>
         </ul>
         <button v-if="!canGo" @click="canGo=1" class="btn-info btn mr-1">Okudum Devam</button>
@@ -111,11 +111,11 @@
               
                 <p class="mb-1">
                   <a class="text-dark d-block" target="_blank" :href="'/' + p.slug">
-                    {{p.name}} <i v-if="p.__updated" class="czi-icon czi-thumb-up"></i>
+                    {{p.name}} 
                   </a>
                   <span class="text-muted font-size-sm">{{p.butcherProductNote}}</span>
                 </p>
-                <p class="text-muted font-size-sm" v-if="p.note">
+                <p class="font-size-sm text-success" v-if="p.note">
                   <span>
                     {{p.note}}
                   </span>

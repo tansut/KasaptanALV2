@@ -53,7 +53,8 @@ export default class Route extends ViewRouter {
     @Auth.Anonymous()
     async kasapViewRoute() {
          this.foods = await new ProductsApi(this.constructorParams).getFoodResources(null, 10);
-        this.sendView("pages/content.kasap-basvuru.ejs", this.viewData({
+ 
+        await this.sendView("pages/content.kasap-basvuru.ejs", this.viewData({
 
         }))
     }
@@ -96,6 +97,7 @@ export default class Route extends ViewRouter {
 
         
         this.appUI.tabIndex = 0;
+        await this.createUserLog();
         this.res.render("pages/default.ejs", this.viewData({
             recentButchers: recentButchers,
             ellipsis: ellipsis
@@ -204,8 +206,8 @@ export default class Route extends ViewRouter {
         router.get("/", Route.BindRequest(this.prototype.defaultRoute))
         router.get("/temparea", Route.BindRequest(this.prototype.tempares))
 
-        router.get("/testsubmit", Route.BindToView("pages/test-submit.ejs"))
-        router.post("/testsubmit", Route.BindRequest(this.prototype.testsubmit))
+        // router.get("/testsubmit", Route.BindToView("pages/test-submit.ejs"))
+        // router.post("/testsubmit", Route.BindRequest(this.prototype.testsubmit))
 
         router.get("/adres-belirle/:slug", Route.BindRequest(this.prototype.setUserAddr))
         router.get("/hikayemiz", Route.BindToView("pages/content.kurumsal.ejs"));

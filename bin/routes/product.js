@@ -98,14 +98,18 @@ class Route extends router_1.ViewRouter {
             this.shopCardIndex = this.req.query.shopcarditem ? parseInt(this.req.query.shopcarditem) : -1;
             this.shopCardItem = (this.shopCardIndex >= 0 && shopcard.items) ? shopcard.items[this.shopCardIndex] : null;
             let butcher = null;
+            let butcherSelection = 'auto-selected';
             if (this.shopCardItem) {
                 butcher = yield butcher_1.default.getBySlug(this.shopCardItem.product.butcher.slug);
+                butcher && (butcherSelection = 'from-shopcard');
             }
             else if (this.req.query.butcher) {
                 butcher = yield butcher_1.default.getBySlug(this.req.query.butcher);
+                butcher && (butcherSelection = 'from-url');
             }
             else if (this.req.session && this.req.session.prefButcher) {
                 butcher = yield butcher_1.default.getBySlug(this.req.session.prefButcher);
+                butcher && (butcherSelection = 'from-session');
             }
             this.reviews = yield this.api.loadReviews(product.id, (butcher && this.showOtherButchers()) ? 0 : (butcher ? butcher.id : 0));
             // this.reviews = await api.loadReviews(product.id, butcher ? (this.req.query.butcher ? butcher.id : 0): 0);
@@ -293,6 +297,16 @@ class Route extends router_1.ViewRouter {
             this.dispatchingAvailable = this.req.prefAddr && (view.butcher != null || (yield new dispatcher_1.default(this.constructorParams).dispatchingAvailable(this.req.prefAddr, this.api.useL1(this.product))));
             //this.semtReturn = "/" + this.product.slug + 
             //this.appUI.tabIndex = 1;
+            let l = this.generateUserLog('product', 'view');
+            if (l) {
+                l.productid = this.product.id;
+                l.productName = this.product.name;
+                butcher && (l.butcherid = butcher.id);
+                butcher && (l.butcherName = butcher.name);
+                l.note = 'butcherselection:' + butcherSelection;
+                l.note += (' inframe:' + (this.req.query.frame == '1' ? 'yes' : 'no'));
+                yield this.saveUserLog(l);
+            }
             this.res.render('pages/product', this.viewData({
                 butcherProducts: this.butcherProducts.map(p => p.product), butchers: selectedButchers,
                 pageTitle: product.name + ' Siparişi ve Fiyatları',

@@ -32,13 +32,17 @@ class Route extends router_1.ViewRouter {
         this.redirect = "";
     }
     renderPage(msg = undefined) {
-        this.sendView(`pages/resetpassword.ejs`, {
-            _usrmsg: msg
+        return __awaiter(this, void 0, void 0, function* () {
+            yield this.sendView(`pages/resetpassword.ejs`, {
+                _usrmsg: msg
+            });
         });
     }
     renderPage2(msg = undefined) {
-        this.sendView(`pages/resetpasswordnew.ejs`, {
-            _usrmsg: msg
+        return __awaiter(this, void 0, void 0, function* () {
+            yield this.sendView(`pages/resetpasswordnew.ejs`, {
+                _usrmsg: msg
+            });
         });
     }
     resetRoute() {
@@ -54,17 +58,17 @@ class Route extends router_1.ViewRouter {
                         this.showLogin = true;
                         this.loginUser = helper_1.default.getPhoneNumber(phone);
                         this.redirect = this.req.query.r;
-                        this.renderPage({ text: "Yeni şifreniz telefonunuza gönderildi. Şifrenizi kullanarak giriş yapabilirsiniz.", type: "info" });
+                        yield this.renderPage({ text: "Yeni şifreniz telefonunuza gönderildi. Şifrenizi kullanarak giriş yapabilirsiniz.", type: "info" });
                     }
                     else {
-                        this.renderPage({ text: "Geçersiz e-posta adresi/telefon numarası.", type: "danger" });
+                        yield this.renderPage({ text: "Geçersiz e-posta adresi/telefon numarası.", type: "danger" });
                     }
                 }
                 else
-                    this.renderPage({ text: "Geçersiz telefon numarası", type: "danger" });
+                    yield this.renderPage({ text: "Geçersiz telefon numarası", type: "danger" });
             }
             else
-                this.renderPage({ text: "Geçersiz e-posta adresi veya telefon numarası.", type: "danger" });
+                yield this.renderPage({ text: "Geçersiz e-posta adresi veya telefon numarası.", type: "danger" });
         });
     }
     viewRoute() {

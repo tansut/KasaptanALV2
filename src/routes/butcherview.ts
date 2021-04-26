@@ -84,7 +84,17 @@ export default class Route extends ViewRouter {
         this.reviews = res;
     }
 
-
+    async createUserLog() {
+        let l = this.generateUserLog('butcher', 'view');
+        if (l) {
+            this.butcher && (l.butcherid = this.butcher.id);
+            this.category && (l.butcherName = this.butcher.name);
+            this.category && (l.categoryid = this.category.id);
+            this.category && (l.categoryName = this.category.name);            
+            this.req.query.partial && (l.note = 'partial')
+            await this.saveUserLog(l)
+        }
+    } 
 
 
     @Auth.Anonymous()
@@ -216,8 +226,8 @@ export default class Route extends ViewRouter {
           this.req.session.prefButcher = butcher.slug;
           await this.req.session.save();
         }
-
-        if (this.req.query.partial) {
+        this.createUserLog();
+        if (this.req.query.partial) {           
             this.res.render('pages/category-items.ejs', this.viewData({ pageThumbnail: pageThumbnail, pageTitle: pageTitle, pageDescription: pageDescription, butcher: butcher, images: images }));
         } else this.res.render('pages/butcher', this.viewData({ pageThumbnail: pageThumbnail, pageTitle: pageTitle, pageDescription: pageDescription, butcher: butcher, images: images }));
     }

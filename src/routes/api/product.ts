@@ -65,16 +65,7 @@ export interface StartPrice {
 
 export type ButcherProperty = 'distance' | 'rating' | 'kasapkart' | 'productPrice' | 'shipmentPrice' | 'shipTotal' | 'butcherSelection' | 'productSelection';
 
-let ButcherPropertyWeigts: { [key in ButcherProperty]: number } = {
-    'distance': -0.80,
-    'kasapkart': 0.60,
-    'productPrice': 0.00,
-    'shipmentPrice': 0.00,
-    'rating': 0.40,
-    'shipTotal': 0.00,
-    'butcherSelection': 1.00,
-    'productSelection': 1.00
-}
+
 
 export default class Route extends ApiRouter {
     markdown = new MarkdownIt();

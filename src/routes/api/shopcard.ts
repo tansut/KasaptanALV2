@@ -52,6 +52,14 @@ export default class Route extends ApiRouter {
             }
         }
         await shopcard.saveToRequest(this.req);
+        let l = this.generateUserLog('shopcard', 'add');
+        if (l) {
+            l.productid = product.id;
+            l.productName = product.name;
+            l.butcherid = butcher ? butcher.id: undefined;
+            l.butcherName = butcher ? butcher.name: undefined;
+            await this.saveUserLog(l);
+        }
         this.res.send(shopcard);
     }
 
@@ -73,6 +81,14 @@ export default class Route extends ApiRouter {
         let productView = await api.getProductView(product, butcher)
         shopcard.addProduct(productView, item.quantity, item.purchaseoption, item.note, item.productTypeData || {});
         await shopcard.saveToRequest(this.req);
+        let l = this.generateUserLog('shopcard', 'update');
+        if (l) {
+            l.productid = product.id;
+            l.productName = product.name;
+            l.butcherid = butcher ? butcher.id: undefined;
+            l.butcherName = butcher ? butcher.name: undefined;
+            await this.saveUserLog(l);
+        }
         this.res.send(shopcard);
     }    
 
@@ -80,8 +96,17 @@ export default class Route extends ApiRouter {
     async removeRoute() {
         let item = this.req.body;
         let shopcard = await ShopCard.createFromRequest(this.req);
+        let scItem = shopcard.items[item.order]
         shopcard.remove(item.order);
         await shopcard.saveToRequest(this.req);
+        let l = this.generateUserLog('shopcard', 'remove');
+        if (l) {
+            l.productid = scItem.product.id;
+            l.productName = scItem.product.name;
+            l.butcherid = scItem.product.butcher.id;
+            l.butcherName = scItem.product.butcher.name;
+            await this.saveUserLog(l);
+        }        
         this.res.send(shopcard);
     }
 

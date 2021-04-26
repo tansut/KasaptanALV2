@@ -44,25 +44,27 @@ class Route extends paymentrouter_1.PaymentRouter {
         this.possiblePuanList = [];
     }
     renderPage(userMessage, view, msgType = 'success') {
-        let pageInfo = {};
-        if (this.shouldBePaid > 0.00) {
-            let pageTitle = '', pageDescription = '';
-            if (this.mayEarnPuanTotal > 0.00) {
-                pageTitle = `Online ödeyin, ${this.mayEarnPuanTotal} TL değerinde puan kazanın: ${helper_1.default.formatDate(this.order.creationDate)} tarihli ${this.order.butcherName} siparişiniz`;
-                pageDescription = `Nefis ürünlerinizi güvenle online ödeyin, puan kazanın, zaman kazanın, sağlığınızı koruyun.`;
+        return __awaiter(this, void 0, void 0, function* () {
+            let pageInfo = {};
+            if (this.shouldBePaid > 0.00) {
+                let pageTitle = '', pageDescription = '';
+                if (this.mayEarnPuanTotal > 0.00) {
+                    pageTitle = `Online ödeyin, ${this.mayEarnPuanTotal} TL değerinde puan kazanın: ${helper_1.default.formatDate(this.order.creationDate)} tarihli ${this.order.butcherName} siparişiniz`;
+                    pageDescription = `Nefis ürünlerinizi güvenle online ödeyin, puan kazanın, zaman kazanın, sağlığınızı koruyun.`;
+                }
+                else {
+                    pageTitle = `Online Ödeyin: ${helper_1.default.formatDate(this.order.creationDate)} tarihli ${this.order.butcherName} siparişiniz`;
+                    pageDescription = `Nefis ürünlerinizi güvenle online ödeyin, hem zamandan kazanın, hem sağlığınızı koruyun.`;
+                }
+                pageInfo = {
+                    pageTitle: pageTitle,
+                    pageDescription: pageDescription
+                };
             }
             else {
-                pageTitle = `Online Ödeyin: ${helper_1.default.formatDate(this.order.creationDate)} tarihli ${this.order.butcherName} siparişiniz`;
-                pageDescription = `Nefis ürünlerinizi güvenle online ödeyin, hem zamandan kazanın, hem sağlığınızı koruyun.`;
             }
-            pageInfo = {
-                pageTitle: pageTitle,
-                pageDescription: pageDescription
-            };
-        }
-        else {
-        }
-        this.sendView(view, Object.assign(Object.assign(Object.assign(Object.assign({}, pageInfo), { _usrmsg: { type: msgType, text: userMessage } }), this.api.getView(this.order)), { enableImgContextMenu: true }));
+            yield this.sendView(view, Object.assign(Object.assign(Object.assign(Object.assign({}, pageInfo), { _usrmsg: { type: msgType, text: userMessage } }), this.api.getView(this.order)), { enableImgContextMenu: true }));
+        });
     }
     getOrderSummary() {
         return __awaiter(this, void 0, void 0, function* () {
@@ -192,7 +194,7 @@ class Route extends paymentrouter_1.PaymentRouter {
                     order: this.order.ordernum
                 }, this.req);
             }
-            this.renderPage(userMessage, "pages/payorder.ejs", gotError ? 'danger' : 'success');
+            yield this.renderPage(userMessage, "pages/payorder.ejs", gotError ? 'danger' : 'success');
         });
     }
     getOrder() {
@@ -212,7 +214,7 @@ class Route extends paymentrouter_1.PaymentRouter {
                 let payRequest = yield this.getPaymentRequest();
                 this.paySession = yield this.paymentProvider.paySession(payRequest);
             }
-            this.renderPage(null, "pages/payorder.ejs");
+            yield this.renderPage(null, "pages/payorder.ejs");
         });
     }
     static SetRoutes(router) {

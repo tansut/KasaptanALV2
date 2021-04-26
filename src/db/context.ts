@@ -32,6 +32,7 @@ import NutritionValueItem from './models/nutritionvalueitem';
 import TempLoc from './models/temp_loc';
 import AgreementLog from './models/agreement';
 import ProductRelation from './models/productrelation';
+import UserLog from './models/userlog';
 
 
 
@@ -52,7 +53,7 @@ let init = (alter: boolean = true) => {
 
     
 
-    dbInstance.addModels([ProductRelation, AgreementLog, TempLoc, DBCache, NutritionValue, NutritionValueItem, ButcherArea, Subcategory, Payment, AccountModel, Review, ButcherPriceHistory, PriceCategory, Redirect, WebPage, ButcherModel, Order, OrderItem, Dispatcher, User, RefreshToken, Resource, Area, SiteLog, Category, Product, ProductCategory, ButcherProduct, Content, ResourceCategory]);
+    dbInstance.addModels([UserLog, ProductRelation, AgreementLog, TempLoc, DBCache, NutritionValue, NutritionValueItem, ButcherArea, Subcategory, Payment, AccountModel, Review, ButcherPriceHistory, PriceCategory, Redirect, WebPage, ButcherModel, Order, OrderItem, Dispatcher, User, RefreshToken, Resource, Area, SiteLog, Category, Product, ProductCategory, ButcherProduct, Content, ResourceCategory]);
 
     return dbInstance.sync({
         alter: alter,

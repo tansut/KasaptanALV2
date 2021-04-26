@@ -119,13 +119,17 @@ export default class Route extends ViewRouter {
         this.shopCardIndex = this.req.query.shopcarditem ? parseInt(this.req.query.shopcarditem as string) : -1;
         this.shopCardItem = (this.shopCardIndex >= 0 && shopcard.items) ? shopcard.items[this.shopCardIndex] : null;
         let butcher: Butcher = null;
+        let butcherSelection ='auto-selected';
 
         if (this.shopCardItem) {
             butcher = await Butcher.getBySlug(this.shopCardItem.product.butcher.slug);
+            butcher && (butcherSelection = 'from-shopcard')
         } else if (this.req.query.butcher) {
-            butcher = await Butcher.getBySlug(this.req.query.butcher as string)
+            butcher = await Butcher.getBySlug(this.req.query.butcher as string);
+            butcher && (butcherSelection = 'from-url')
         } else if (this.req.session && this.req.session.prefButcher) {
-            butcher = await Butcher.getBySlug(this.req.session.prefButcher as string)
+            butcher = await Butcher.getBySlug(this.req.session.prefButcher as string);
+            butcher && (butcherSelection = 'from-session')
         }
          
          this.reviews = await this.api.loadReviews(product.id, (butcher && this.showOtherButchers()) ? 0: (butcher ? butcher.id:0));
@@ -338,6 +342,16 @@ export default class Route extends ViewRouter {
         this.dispatchingAvailable = this.req.prefAddr && (view.butcher != null || await new DispatcherApi(this.constructorParams).dispatchingAvailable(this.req.prefAddr, this.api.useL1(this.product)));
         //this.semtReturn = "/" + this.product.slug + 
         //this.appUI.tabIndex = 1;
+        let l = this.generateUserLog('product', 'view');
+        if (l) {
+            l.productid = this.product.id;
+            l.productName = this.product.name;
+            butcher && (l.butcherid = butcher.id);
+            butcher && (l.butcherName = butcher.name);
+            l.note = 'butcherselection:' + butcherSelection;
+            l.note += (' inframe:' + (this.req.query.frame == '1' ? 'yes':'no'))
+            await this.saveUserLog(l);
+        }
         this.res.render('pages/product', this.viewData({
             butcherProducts: this.butcherProducts.map(p => p.product), butchers: selectedButchers,
             pageTitle: product.name + ' Siparişi ve Fiyatları',

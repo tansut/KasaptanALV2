@@ -103,6 +103,7 @@ class Route extends router_1.ViewRouter {
             this.resources = yield new product_1.default(this.constructorParams).getInformationalVideos(25);
             yield this.loadCategories();
             let category = this.categories.find(p => p.categorySlug == this.req.params.category);
+            yield this.createUserLog();
             this.renderView('pages/blog.index.ejs', this.req.params.category ? `blog/${this.req.params.category}` : null, {
                 pageTitle: 'Et Kültür Blog' + (category ? ' | ' + category.category : ''),
                 pageDescription: category ? 'KasaptanAl.com Et Kültür Blog ' + category.category + ' kategorisi içeriklerini keşfedin.' : 'KasaptanAl.com Et Kültür Blog ete ve hayata dair pek çok eğlenceli, kısa ve öz içeriklerle sizi bekliyor.',
@@ -127,6 +128,7 @@ class Route extends router_1.ViewRouter {
             }
             yield this.loadCategories();
             this.mangalFoods = this.req.params.content == 'antrikot' ? yield this.foods() : [];
+            yield this.createUserLog();
             this.renderPage();
         });
     }

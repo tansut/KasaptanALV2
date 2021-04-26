@@ -70,6 +70,19 @@ class Route extends router_1.ViewRouter {
             this.reviews = res;
         });
     }
+    createUserLog() {
+        return __awaiter(this, void 0, void 0, function* () {
+            let l = this.generateUserLog('butcher', 'view');
+            if (l) {
+                this.butcher && (l.butcherid = this.butcher.id);
+                this.category && (l.butcherName = this.butcher.name);
+                this.category && (l.categoryid = this.category.id);
+                this.category && (l.categoryName = this.category.name);
+                this.req.query.partial && (l.note = 'partial');
+                yield this.saveUserLog(l);
+            }
+        });
+    }
     butcherRoute() {
         return __awaiter(this, void 0, void 0, function* () {
             if (!this.req.params.butcher) {
@@ -167,6 +180,7 @@ class Route extends router_1.ViewRouter {
                 this.req.session.prefButcher = butcher.slug;
                 yield this.req.session.save();
             }
+            this.createUserLog();
             if (this.req.query.partial) {
                 this.res.render('pages/category-items.ejs', this.viewData({ pageThumbnail: pageThumbnail, pageTitle: pageTitle, pageDescription: pageDescription, butcher: butcher, images: images }));
             }

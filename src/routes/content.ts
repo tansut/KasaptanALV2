@@ -82,6 +82,8 @@ export default class Route extends ViewRouter {
         return `${config.staticDomain}/content-resimleri/${content.slug}-thumbnail.jpg`;
     }
 
+
+
     @Auth.Anonymous()
     async indexRoute() {
         let where = {};
@@ -103,7 +105,8 @@ export default class Route extends ViewRouter {
         this.allcontent = allcontent;
         this.resources = await new ProductsApi(this.constructorParams).getInformationalVideos(25)
         await this.loadCategories();
-        let category = this.categories.find(p=>p.categorySlug == this.req.params.category)
+        let category = this.categories.find(p=>p.categorySlug == this.req.params.category);
+        await this.createUserLog();
         this.renderView('pages/blog.index.ejs',
         
             this.req.params.category ? `blog/${this.req.params.category}`: null, {
@@ -136,7 +139,7 @@ export default class Route extends ViewRouter {
 
         await this.loadCategories();
         this.mangalFoods = this.req.params.content == 'antrikot' ? await this.foods(): [];
-
+        await this.createUserLog();
         this.renderPage()
 
     }

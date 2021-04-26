@@ -76,7 +76,7 @@ export default class Route extends PaymentRouter {
             }
         }
 
-        this.sendView("pages/testcard.ejs", {
+        await this.sendView("pages/testcard.ejs", {
             _usrmsg: userMessage ? { text: userMessage }: null
         })
 

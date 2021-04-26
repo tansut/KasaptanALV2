@@ -23,6 +23,7 @@ import { AppNavLevel, AppNavData, AppUI, Platform, AppPlatform, ISiteLogger } fr
 import { CacheManager } from './cache';
 import Helper from './helper';
 import { Google } from './google';
+import UserLog, { UserLogAction, userLogCategory } from '../db/models/userlog';
 
 
 
@@ -56,6 +57,43 @@ export default class BaseRouter {
     private _markdown = null;
     private _logger: ISiteLogger = null;
     //protected useCatpcha: boolean = true;
+
+
+    async saveUserLog(ul: UserLog) {
+        try {
+            await ul.save();
+        } catch(err) {
+            Helper.logError(err, {}, this.req, false)
+        }
+    }
+
+    generateUserLog(category: userLogCategory, action: UserLogAction): UserLog {
+        if (config.userlog && this.req.user && !this.req.user.hasRole('admin')) {
+            let l = new UserLog();
+            l.userid = this.req.user.id;
+            l.name = this.req.user.name;
+            l.logCategory = category;
+            l.logAction = action;
+            l.platform = `${this.platform}/${this.appPlatform}`
+            if (this.req.prefAddr) {
+                let addr = this.req.prefAddr
+                l.areaid = addr.based.id;
+                l.arelaL1 = addr.level1Text;
+                l.arelaL2 = addr.level2Text;
+                l.arelaL3 = addr.level3Text;
+                l.arelaL4 = addr.level4Text;                
+            }
+            l.url = this.req.url;
+            l.referal = this.req.header('Referer');
+            l.ip = this.userIp;
+            return l;
+        } else return null;
+    }
+
+    async createUserLog() {
+        let l = this. generateUserLog('page', 'view');
+        return (l && await this.saveUserLog(l));
+    }
 
     get userIp() {
         return this.req ? (this.req.header("x-forwarded-for") || this.req.connection.remoteAddress): '';
@@ -289,7 +327,7 @@ export class ViewRouter extends BaseRouter {
 
 
 
-    protected renderView(view: string, pageKey: string = null, vdata = {}) {
+    protected async renderView(view: string, pageKey: string = null, vdata = {}) {
         pageKey = pageKey || view;
         let dbViewData = this.req.__webpages[pageKey] || {};
         let result = { ...dbViewData, ...vdata };
@@ -298,8 +336,9 @@ export class ViewRouter extends BaseRouter {
 
 
     @Auth.Anonymous()
-    protected sendView(view: string, vdata = {}) {
-        this.renderView(view, view, vdata)
+    protected async sendView(view: string, vdata = {}) {
+        await this.createUserLog();
+        await this.renderView(view, view, vdata)
     }
 
 

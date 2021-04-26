@@ -45,16 +45,6 @@ const http_1 = require("../../lib/http");
 const butcherpricehistory_1 = require("../../db/models/butcherpricehistory");
 const productrelation_1 = require("../../db/models/productrelation");
 const fs = require('fs');
-let ButcherPropertyWeigts = {
-    'distance': -0.80,
-    'kasapkart': 0.60,
-    'productPrice': 0.00,
-    'shipmentPrice': 0.00,
-    'rating': 0.40,
-    'shipTotal': 0.00,
-    'butcherSelection': 1.00,
-    'productSelection': 1.00
-};
 class Route extends router_1.ApiRouter {
     constructor() {
         super(...arguments);

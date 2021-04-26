@@ -52,7 +52,7 @@ export default class Route extends PaymentRouter {
 
     possiblePuanList: PuanResult[] = [];
 
-    renderPage(userMessage: string, view: string, msgType: string='success') {
+    async renderPage(userMessage: string, view: string, msgType: string='success') {
         let pageInfo = {};
         if (this.shouldBePaid > 0.00) {
             let pageTitle = '', pageDescription = '';
@@ -75,7 +75,7 @@ export default class Route extends PaymentRouter {
             
         }
 
-        this.sendView(view, { ...pageInfo, ...{ _usrmsg: { type: msgType, text: userMessage } }, ...this.api.getView(this.order), ...{ enableImgContextMenu: true } });
+        await this.sendView(view, { ...pageInfo, ...{ _usrmsg: { type: msgType, text: userMessage } }, ...this.api.getView(this.order), ...{ enableImgContextMenu: true } });
 
     }
 
@@ -210,7 +210,7 @@ export default class Route extends PaymentRouter {
             }, this.req)         
         }
 
-        this.renderPage(userMessage, "pages/payorder.ejs", gotError ? 'danger': 'success');
+        await this.renderPage(userMessage, "pages/payorder.ejs", gotError ? 'danger': 'success');
 
     }
 
@@ -233,7 +233,7 @@ export default class Route extends PaymentRouter {
             this.paySession = await this.paymentProvider.paySession(payRequest);
         }   
 
-        this.renderPage(null, "pages/payorder.ejs");
+        await this.renderPage(null, "pages/payorder.ejs");
     }
 
 

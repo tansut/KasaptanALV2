@@ -73,7 +73,7 @@ class Route extends paymentrouter_1.PaymentRouter {
                     }
                 }
             }
-            this.sendView("pages/testcard.ejs", {
+            yield this.sendView("pages/testcard.ejs", {
                 _usrmsg: userMessage ? { text: userMessage } : null
             });
         });

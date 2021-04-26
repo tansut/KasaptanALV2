@@ -33,6 +33,7 @@ const fs = require('fs');
 const common_2 = require("../models/common");
 const helper_1 = require("./helper");
 const google_1 = require("./google");
+const userlog_1 = require("../db/models/userlog");
 var ResponseStatus;
 (function (ResponseStatus) {
     ResponseStatus[ResponseStatus["success"] = 0] = "success";
@@ -51,6 +52,46 @@ class BaseRouter {
         this.constructorParams = reqParams;
     }
     //protected useCatpcha: boolean = true;
+    saveUserLog(ul) {
+        return __awaiter(this, void 0, void 0, function* () {
+            try {
+                yield ul.save();
+            }
+            catch (err) {
+                helper_1.default.logError(err, {}, this.req, false);
+            }
+        });
+    }
+    generateUserLog(category, action) {
+        if (config_1.default.userlog && this.req.user && !this.req.user.hasRole('admin')) {
+            let l = new userlog_1.default();
+            l.userid = this.req.user.id;
+            l.name = this.req.user.name;
+            l.logCategory = category;
+            l.logAction = action;
+            l.platform = `${this.platform}/${this.appPlatform}`;
+            if (this.req.prefAddr) {
+                let addr = this.req.prefAddr;
+                l.areaid = addr.based.id;
+                l.arelaL1 = addr.level1Text;
+                l.arelaL2 = addr.level2Text;
+                l.arelaL3 = addr.level3Text;
+                l.arelaL4 = addr.level4Text;
+            }
+            l.url = this.req.url;
+            l.referal = this.req.header('Referer');
+            l.ip = this.userIp;
+            return l;
+        }
+        else
+            return null;
+    }
+    createUserLog() {
+        return __awaiter(this, void 0, void 0, function* () {
+            let l = this.generateUserLog('page', 'view');
+            return (l && (yield this.saveUserLog(l)));
+        });
+    }
     get userIp() {
         return this.req ? (this.req.header("x-forwarded-for") || this.req.connection.remoteAddress) : '';
     }
@@ -231,13 +272,18 @@ class ViewRouter extends BaseRouter {
         }, data);
     }
     renderView(view, pageKey = null, vdata = {}) {
-        pageKey = pageKey || view;
-        let dbViewData = this.req.__webpages[pageKey] || {};
-        let result = Object.assign(Object.assign({}, dbViewData), vdata);
-        this.res.render(view, this.viewData(result));
+        return __awaiter(this, void 0, void 0, function* () {
+            pageKey = pageKey || view;
+            let dbViewData = this.req.__webpages[pageKey] || {};
+            let result = Object.assign(Object.assign({}, dbViewData), vdata);
+            this.res.render(view, this.viewData(result));
+        });
     }
     sendView(view, vdata = {}) {
-        this.renderView(view, view, vdata);
+        return __awaiter(this, void 0, void 0, function* () {
+            yield this.createUserLog();
+            yield this.renderView(view, view, vdata);
+        });
     }
     static BindToView(view, viewData = {}) {
         var self = this;
@@ -248,7 +294,7 @@ __decorate([
     common_1.Auth.Anonymous(),
     __metadata("design:type", Function),
     __metadata("design:paramtypes", [String, Object]),
-    __metadata("design:returntype", void 0)
+    __metadata("design:returntype", Promise)
 ], ViewRouter.prototype, "sendView", null);
 exports.ViewRouter = ViewRouter;
 var CrudOperation;

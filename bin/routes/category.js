@@ -149,7 +149,7 @@ class Route extends router_1.ViewRouter {
             }
             else
                 yield this.fillFoodsAndTarifs();
-            this.sendView('pages/foods.ejs', {
+            yield this.sendView('pages/foods.ejs', {
                 pageTitle: 'Et Yemekleri ve Tarifleri'
             });
         });
@@ -201,6 +201,7 @@ class Route extends router_1.ViewRouter {
                     yield this.fillFoodsAndTarifs(this.category.id, this.category.slug, true);
                 this.renderView('pages/category-sub-food.ejs');
             }
+            yield this.createUserLog();
         });
     }
     viewProductsForButchers() {
@@ -222,9 +223,21 @@ class Route extends router_1.ViewRouter {
                 }
             }
             ;
+            yield this.createUserLog();
             this.renderView('pages/products.forbutchers.ejs', null, {
                 butcher: butcher
             });
+        });
+    }
+    createUserLog() {
+        return __awaiter(this, void 0, void 0, function* () {
+            let l = this.generateUserLog('category', 'view');
+            if (l) {
+                this.category && (l.categoryid = this.category.id);
+                this.category && (l.categoryName = this.category.name);
+                this.req.query.partial && (l.note = 'partial');
+                yield this.saveUserLog(l);
+            }
         });
     }
     viewProductCategoryRoute(back = false) {
@@ -284,6 +297,7 @@ class Route extends router_1.ViewRouter {
             this.forceSemt = true;
             this.appUI.title = 'Ürünler';
             //this.appUI.tabIndex = 1;
+            yield this.createUserLog();
             this.renderPage(this.req.query.partial ? 'pages/category-items.ejs' : 'pages/category.ejs');
         });
     }

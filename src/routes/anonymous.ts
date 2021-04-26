@@ -22,14 +22,14 @@ export default class Route extends ViewRouter {
     loginUser = '';
     redirect = ""
 
-    renderPage(msg: any = undefined) {
-        this.sendView(`pages/resetpassword.ejs`, {
+    async renderPage(msg: any = undefined) {
+        await this.sendView(`pages/resetpassword.ejs`, {
             _usrmsg: msg
         })
     }
 
-    renderPage2(msg: any = undefined) {
-        this.sendView(`pages/resetpasswordnew.ejs`, {
+    async renderPage2(msg: any = undefined) {
+        await this.sendView(`pages/resetpasswordnew.ejs`, {
             _usrmsg: msg
         })
     }
@@ -48,12 +48,12 @@ export default class Route extends ViewRouter {
                     this.showLogin = true;
                     this.loginUser = Helper.getPhoneNumber(phone);
                     this.redirect = this.req.query.r as string
-                    this.renderPage({ text: "Yeni şifreniz telefonunuza gönderildi. Şifrenizi kullanarak giriş yapabilirsiniz.", type: "info" });
+                    await this.renderPage({ text: "Yeni şifreniz telefonunuza gönderildi. Şifrenizi kullanarak giriş yapabilirsiniz.", type: "info" });
                 } else {
-                    this.renderPage({ text: "Geçersiz e-posta adresi/telefon numarası.", type: "danger" });
+                    await this.renderPage({ text: "Geçersiz e-posta adresi/telefon numarası.", type: "danger" });
                 }
-            } else this.renderPage({ text: "Geçersiz telefon numarası", type: "danger" });
-        } else this.renderPage({ text: "Geçersiz e-posta adresi veya telefon numarası.", type: "danger" });
+            } else await this.renderPage({ text: "Geçersiz telefon numarası", type: "danger" });
+        } else await this.renderPage({ text: "Geçersiz e-posta adresi veya telefon numarası.", type: "danger" });
     }
 
 

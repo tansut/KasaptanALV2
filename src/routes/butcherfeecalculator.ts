@@ -21,8 +21,8 @@ export default class Route extends ViewRouter {
     feeResult: ComissionResult;
 
 
-    renderPage(msg: any = undefined) {        
-        this.sendView(`pages/butcher.feecalculator.ejs`, {
+    async renderPage(msg: any = undefined) {        
+        await this.sendView(`pages/butcher.feecalculator.ejs`, {
             pageTitle: 'Komisyon Hesap Makinesi'
         })
     }
@@ -37,7 +37,7 @@ export default class Route extends ViewRouter {
         if (this.req.query.go && this.req.query.total && this.req.query.rate) {
             this.calculateRoute(parseFloat(this.req.query.total as string), parseFloat(this.req.query.rate as string))
         }
-        else this.renderPage();
+        else await this.renderPage();
     }
 
     @Auth.Anonymous()
@@ -48,7 +48,7 @@ export default class Route extends ViewRouter {
             let calc = new ComissionHelper(ratePerc / 100, 0, 0.18);
             this.feeResult = calc.calculateButcherComission(total);
         
-        this.renderPage();
+        await this.renderPage();
     }
 
 

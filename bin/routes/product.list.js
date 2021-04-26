@@ -86,7 +86,7 @@ class Route extends router_1.ViewRouter {
             //this.products = await this.fillProducts(this.req.__categories);
             this.appUI.title = 'Kategoriler';
             this.appUI.tabIndex = 1;
-            this.sendView('pages/reyon-view.ejs', { ellipsis: ellipsis, products: this.products });
+            yield this.sendView('pages/reyon-view.ejs', { ellipsis: ellipsis, products: this.products });
         });
     }
     redirectedReyon() {

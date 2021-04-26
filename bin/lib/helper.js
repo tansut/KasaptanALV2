@@ -85,7 +85,7 @@ class Helper {
     static logError(err, additionalData, req, sendEmail = true) {
         let text = Helper.getErrorLog(err, additionalData, req);
         console.log(text);
-        sendEmail && email_1.default.send('tansuturkoglu@gmail.com', 'kasaptanAl:hata', "error.ejs", {
+        sendEmail && email_1.default.send('tansut@gmail.com', 'kasaptanAl:hata', "error.ejs", {
             text: text,
             stack: err.stack
         }, 'error');

@@ -64,6 +64,14 @@ class Route extends router_1.ApiRouter {
                 }
             }
             yield shopcard.saveToRequest(this.req);
+            let l = this.generateUserLog('shopcard', 'add');
+            if (l) {
+                l.productid = product.id;
+                l.productName = product.name;
+                l.butcherid = butcher ? butcher.id : undefined;
+                l.butcherName = butcher ? butcher.name : undefined;
+                yield this.saveUserLog(l);
+            }
             this.res.send(shopcard);
         });
     }
@@ -84,6 +92,14 @@ class Route extends router_1.ApiRouter {
             let productView = yield api.getProductView(product, butcher);
             shopcard.addProduct(productView, item.quantity, item.purchaseoption, item.note, item.productTypeData || {});
             yield shopcard.saveToRequest(this.req);
+            let l = this.generateUserLog('shopcard', 'update');
+            if (l) {
+                l.productid = product.id;
+                l.productName = product.name;
+                l.butcherid = butcher ? butcher.id : undefined;
+                l.butcherName = butcher ? butcher.name : undefined;
+                yield this.saveUserLog(l);
+            }
             this.res.send(shopcard);
         });
     }
@@ -91,8 +107,17 @@ class Route extends router_1.ApiRouter {
         return __awaiter(this, void 0, void 0, function* () {
             let item = this.req.body;
             let shopcard = yield shopcard_1.ShopCard.createFromRequest(this.req);
+            let scItem = shopcard.items[item.order];
             shopcard.remove(item.order);
             yield shopcard.saveToRequest(this.req);
+            let l = this.generateUserLog('shopcard', 'remove');
+            if (l) {
+                l.productid = scItem.product.id;
+                l.productName = scItem.product.name;
+                l.butcherid = scItem.product.butcher.id;
+                l.butcherName = scItem.product.butcher.name;
+                yield this.saveUserLog(l);
+            }
             this.res.send(shopcard);
         });
     }

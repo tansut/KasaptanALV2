@@ -307,7 +307,7 @@ export default class Route extends ViewRouter {
         await this.getOrder();
         await this.getOrderSummary()
 
-        this.sendView("pages/operator.manageorder.ejs", { ...{ _usrmsg: { text: userMessage } }, ...this.api.getView(this.order), ...{ enableImgContextMenu: true } });
+        await this.sendView("pages/operator.manageorder.ejs", { ...{ _usrmsg: { text: userMessage } }, ...this.api.getView(this.order), ...{ enableImgContextMenu: true } });
 
 
     }
@@ -321,7 +321,7 @@ export default class Route extends ViewRouter {
     async ordersListRoute() {
         this.api = new OrderApi(this.constructorParams);
         let orders = await this.api.getOrders();
-        this.sendView('pages/operator.orders.ejs', { orders: orders })
+        await this.sendView('pages/operator.orders.ejs', { orders: orders })
     }
 
 
@@ -371,7 +371,7 @@ export default class Route extends ViewRouter {
         await this.getOrder();
         await this.getOrderSummary();
 
-        this.sendView("pages/operator.manageorder.ejs", {
+        await this.sendView("pages/operator.manageorder.ejs", {
             ...{ _usrmsg: { text: userMessage } },
             ...this.api.getView(this.order), ...{ enableImgContextMenu: true }
         });
@@ -386,7 +386,7 @@ export default class Route extends ViewRouter {
 
         await this.getOrderSummary();
 
-        this.sendView("pages/operator.manageorder.ejs", { ...this.api.getView(this.order), ...{ enableImgContextMenu: true } });
+        await this.sendView("pages/operator.manageorder.ejs", { ...this.api.getView(this.order), ...{ enableImgContextMenu: true } });
     }
 
     //approveSubMerchant
