@@ -28,10 +28,12 @@ const account_1 = require("../models/account");
 const paymentrouter_1 = require("../lib/paymentrouter");
 const order_2 = require("../models/order");
 const order_3 = require("../models/order");
+const paymentmethod_1 = require("../db/models/paymentmethod");
 class Route extends paymentrouter_1.PaymentRouter {
     constructor() {
         super(...arguments);
         this.DeliveryStatusDesc = order_3.DeliveryStatusDesc;
+        this.savedCards = [];
         this.paySession = {};
         this.shouldBePaid = 0.00;
         this.earnedPuanButcher = 0.00;
@@ -66,6 +68,12 @@ class Route extends paymentrouter_1.PaymentRouter {
             yield this.sendView(view, Object.assign(Object.assign(Object.assign(Object.assign({}, pageInfo), { _usrmsg: { type: msgType, text: userMessage } }), this.api.getView(this.order)), { enableImgContextMenu: true }));
         });
     }
+    redirect({ success, error }) {
+        let url = this.req.url.indexOf('?') <= 0 ?
+            this.req.url + `?${success ? 'success=' : 'error='}${(success || error)}` :
+            this.req.url + `&${success ? 'success=' : 'error='}${(success || error)}`;
+        this.res.redirect(url);
+    }
     getOrderSummary() {
         return __awaiter(this, void 0, void 0, function* () {
             if (this.order.workedAccounts.length == 1) {
@@ -88,6 +96,17 @@ class Route extends paymentrouter_1.PaymentRouter {
                 this.possiblePuanList.forEach(pg => this.mayEarnPuanTotal += pg.earned);
                 this.mayEarnPuanTotal = helper_1.default.asCurrency(this.mayEarnPuanTotal);
                 this.usablePuanTotal = Math.min(this.order.requestedPuan, yield this.api.getUsablePuans(this.order));
+            }
+            if (this.req.user) {
+                this.savedCards = yield paymentmethod_1.default.findAll({
+                    where: {
+                        userid: this.req.user.id,
+                        method: 'creditcard',
+                        instance: this.paymentProvider.providerKey,
+                        enabled: true
+                    },
+                    order: [['id', 'desc']]
+                });
             }
         });
     }
@@ -118,14 +137,9 @@ class Route extends paymentrouter_1.PaymentRouter {
                 let butcherDebptAccounts = yield accountmodel_1.default.summary([account_1.Account.generateCode("kasaplardan-alacaklar", [this.order.butcherid])]);
                 let butcherDebt = helper_1.default.asCurrency(butcherDebptAccounts.borc - butcherDebptAccounts.alacak);
                 debt[this.order.butcherid] = butcherDebt;
-                // if (this.req.body.puanusage == 'yes') {
-                //     puanUsage[this.order.butcherid] = this.usablePuanTotal;
-                // }        
             }
             let request = this.paymentProvider.requestFromOrder([this.order], debt);
             request.callbackUrl = this.url + '/3dnotify?provider=' + this.paymentProvider.providerKey;
-            // if (this.shouldBePaid != request.paidPrice)
-            //     throw new Error("Geçersiz sipariş ve muhasebesel tutarlar");
             return request;
         });
     }
@@ -186,15 +200,15 @@ class Route extends paymentrouter_1.PaymentRouter {
             }
             catch (err) {
                 userMessage = err.message || err.errorMessage;
-                userMessage = `${userMessage}`;
-                this.paySession = yield this.paymentProvider.paySession(req);
+                this.paySession = req ? yield this.paymentProvider.paySession(req) : null;
                 gotError = true;
                 helper_1.default.logError(err, {
                     method: 'PayOrder',
                     order: this.order.ordernum
                 }, this.req);
             }
-            yield this.renderPage(userMessage, "pages/payorder.ejs", gotError ? 'danger' : 'success');
+            this.redirect({ success: gotError ? undefined : userMessage, error: gotError ? userMessage : undefined });
+            //await this.renderPage(userMessage, "pages/payorder.ejs", gotError ? 'danger': 'success');
         });
     }
     getOrder() {
@@ -202,6 +216,16 @@ class Route extends paymentrouter_1.PaymentRouter {
             let ordernum = this.req.params.ordernum;
             this.api = new order_1.default(this.constructorParams);
             this.order = yield this.api.getOrder(ordernum, true);
+            if (this.req.user) {
+                this.savedCards = yield paymentmethod_1.default.findAll({
+                    where: {
+                        userid: this.order.userId,
+                        method: 'creditcard',
+                        instance: this.paymentProvider.providerKey,
+                        enabled: true
+                    }
+                });
+            }
         });
     }
     payOrderViewRoute() {
@@ -214,7 +238,9 @@ class Route extends paymentrouter_1.PaymentRouter {
                 let payRequest = yield this.getPaymentRequest();
                 this.paySession = yield this.paymentProvider.paySession(payRequest);
             }
-            yield this.renderPage(null, "pages/payorder.ejs");
+            let msg = (this.req.query.success || this.req.query.error);
+            let msgType = this.req.query.success ? 'info' : 'danger';
+            yield this.renderPage(msg, "pages/payorder.ejs", msgType);
         });
     }
     static SetRoutes(router) {

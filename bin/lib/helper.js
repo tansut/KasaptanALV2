@@ -1,4 +1,13 @@
 "use strict";
+var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
+    function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
+    return new (P || (P = Promise))(function (resolve, reject) {
+        function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
+        function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
+        function step(result) { result.done ? resolve(result.value) : adopt(result.value).then(fulfilled, rejected); }
+        step((generator = generator.apply(thisArg, _arguments || [])).next());
+    });
+};
 Object.defineProperty(exports, "__esModule", { value: true });
 const Jimp2 = require("jimp");
 const path = require("path");
@@ -83,12 +92,14 @@ class Helper {
     //     return ret;
     //   }
     static logError(err, additionalData, req, sendEmail = true) {
-        let text = Helper.getErrorLog(err, additionalData, req);
-        console.log(text);
-        (config_1.default.nodeenv == "production") && sendEmail && email_1.default.send('tansut@gmail.com', 'kasaptanAl:hata', "error.ejs", {
-            text: text,
-            stack: err.stack
-        }, 'error');
+        return __awaiter(this, void 0, void 0, function* () {
+            let text = Helper.getErrorLog(err, additionalData, req);
+            console.log(text);
+            (config_1.default.nodeenv == "production") && sendEmail && (yield email_1.default.send('tansut@gmail.com', 'kasaptanAl:hata', "error.ejs", {
+                text: text,
+                stack: err.stack
+            }, 'error'));
+        });
     }
     static isSingleShopcardProduct(type) {
         return (type == product_1.ProductType.adak) ||

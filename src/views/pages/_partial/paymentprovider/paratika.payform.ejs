@@ -20,12 +20,12 @@ method="post">
     <div class="form-group col-sm-6">
       <input class="form-control" type="text" name="cardOwner" id="cardOwner" autocomplete="cc-name" placeholder="Kartın Üzerindeki İsim" 
       <% if (__config.nodeenv == 'development') { %>  
-        value="xxx"
+        value="000"
       <% } %> 
       
       required>
     </div>
-    <div class="form-group col-sm-6">
+    <div class="form-group col-sm-6">           
       <div class="d-flex">
         <select autocomplete="cc-exp-month" class="form-control mr-2" name="expiryMonth" id="expiryMonth">
           <option value="01">01</option>
@@ -71,11 +71,27 @@ method="post">
       
       name="cvv" id="cvv" autocomplete="cc-csc" placeholder="CVC" required>
     </div>
+    <% if (__req.user) { %>
+    <div class="form-group">
+      <div class="form-check">
+        <input class="form-check-input " checked value="YES" type="checkbox" name="saveCard" id="saveCard">
+        <label class="form-check-label" for="gridCheck">
+          Kredi Kartımı Kaydet
+        </label>
+        <small class="form-text text-muted">Güvenle uluslararası Paratika güvencesi ile kaydet</small>
+      </div>
+    </div>
+
+    <% } %>
+
+
+
+
 </div>
 <div class="card-wrapper d-none"></div>
 
 <div class="text-center">
-    <button id="pay-btn" name="makepayment" value="true" class="btn btn-success" type="submit"><i
+    <button id="pay-btn" name="makepayment" value="true" class="pay-btn btn btn-success" type="submit"><i
         class="czi-thumb-up mr-2"></i>Ödeme Yap</button>
   </div>
 

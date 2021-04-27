@@ -214,6 +214,7 @@ class ParatikaPayment extends creditcard_1.CreditcardPaymentProvider {
                     }
                 ]
             };
+            (yield request.cardToken) && this.saveOrUpdateSavedCard(request.merchantPaymentId, request.cardToken);
             return new Promise((resolve, reject) => {
                 this.logOperation("creditcard-3d-complete", request, result).then(() => {
                     return this.savePayment("3d-paratika", request, result).then(() => resolve(result)).catch(err => reject(err));

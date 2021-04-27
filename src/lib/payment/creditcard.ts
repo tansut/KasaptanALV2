@@ -11,6 +11,7 @@ import AccountModel from '../../db/models/accountmodel';
 import { Account } from '../../models/account';
 import { OrderSource } from '../../models/order';
 import OrderApi from "../../routes/api/order"
+import PaymentMethod from '../../db/models/paymentmethod';
 
 const paymentConfig = require(path.join(config.projectDir, `payment.json`));
 
@@ -157,6 +158,28 @@ export class CreditcardPaymentProvider {
     marketPlace: boolean = true;
     api: OrderApi;
 
+
+    async saveOrUpdateSavedCard(orderid: string, token: string) {
+       let order = await Order.findOne({where: {ordernum: orderid}});
+       let existing = await PaymentMethod.findOne({
+           where: {
+            userid: order.userId,
+            method: 'creditcard',
+            instance: this.providerKey,
+            data: token
+           }
+       });
+       if (!existing) {
+            let save = new PaymentMethod();
+            save.userid = order.userId;
+            save.method = 'creditcard';
+            save.instance = this.providerKey;
+            save.data = token;
+            save.enabled = true;
+            save.name = `${Helper.formatDate(order.creationDate)} kaydettiğim kredi kartım`
+            await save.save();
+       }
+    }
 
     constructor(config: any) {
         this.marketPlace = config.marketPlace == "true";

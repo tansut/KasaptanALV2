@@ -427,7 +427,6 @@ __decorate([
     __metadata("design:returntype", Promise)
 ], Route.prototype, "SaveButcherApplication", null);
 __decorate([
-    common_1.Auth.Anonymous(),
     common_1.Auth.RequireCatcpha(),
     __metadata("design:type", Function),
     __metadata("design:paramtypes", []),

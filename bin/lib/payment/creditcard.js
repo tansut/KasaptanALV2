@@ -13,15 +13,40 @@ exports.CreditcardPaymentFactory = exports.CreditcardPaymentProvider = void 0;
 var fs = require('fs');
 const config_1 = require("../../config");
 const path = require("path");
+const order_1 = require("../../db/models/order");
 const helper_1 = require("../helper");
 const payment_1 = require("../../db/models/payment");
-const order_1 = require("../../routes/api/order");
+const order_2 = require("../../routes/api/order");
+const paymentmethod_1 = require("../../db/models/paymentmethod");
 const paymentConfig = require(path.join(config_1.default.projectDir, `payment.json`));
 class CreditcardPaymentProvider {
     constructor(config) {
         this.marketPlace = true;
         this.marketPlace = config.marketPlace == "true";
-        this.api = new order_1.default();
+        this.api = new order_2.default();
+    }
+    saveOrUpdateSavedCard(orderid, token) {
+        return __awaiter(this, void 0, void 0, function* () {
+            let order = yield order_1.Order.findOne({ where: { ordernum: orderid } });
+            let existing = yield paymentmethod_1.default.findOne({
+                where: {
+                    userid: order.userId,
+                    method: 'creditcard',
+                    instance: this.providerKey,
+                    data: token
+                }
+            });
+            if (!existing) {
+                let save = new paymentmethod_1.default();
+                save.userid = order.userId;
+                save.method = 'creditcard';
+                save.instance = this.providerKey;
+                save.data = token;
+                save.enabled = true;
+                save.name = `${helper_1.default.formatDate(order.creationDate)} kaydettiğim kredi kartım`;
+                yield save.save();
+            }
+        });
     }
     validateCard(card) {
     }

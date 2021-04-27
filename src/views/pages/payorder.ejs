@@ -9,122 +9,154 @@
 <body class="<%= controller.threeDhtml ? 'd-none':''%>">
   <% include ./_partial/header %>
 
-  <% if (__req.query.print != '1') { %>
-
-  <div class="page-title">
-    <div class="container d-lg-flex justify-content-between py-2 py-lg-3">
-      <div class="order-lg-2 mb-3 mb-lg-0 pt-lg-2">
-        <nav aria-label="breadcrumb" class="d-none d-lg-block">
-          <ol class="breadcrumb flex-lg-nowrap justify-content-center justify-content-lg-star">
-          </ol>
-        </nav>
-      </div>
-      <div class="order-lg-1 pr-lg-4 text-center text-lg-left d-print-none">
-        <h1 class="h3">Online Ödeme</h1>
-        <!-- <h2 class="lead h4">
-          <%=order.name%>
-        </h2> -->
-        <h2 class="lead h4">
-          <%= __helper.formatDate(order.creationDate) + ' tarihli ' + order.butcherName + ' siparişim' %></h2>
-        
-      </div>
-    </div>
-  </div>
-
-
-<% } %>
-
-<div class="container mb-3">
-
-  <div class="mb-3 ">
-
-    
-  
-
-    
-
-    <% if (controller.shouldBePaid > 0) { %>
-
-      <% if (controller.mayEarnPuanTotal + controller.usablePuanTotal > 0.00) { %>
-        <h5 class="h5">
-          Kazançlar
-        </h5>
-      <% } %>
-
-    <% if (controller.mayEarnPuanTotal) { %>
-    <div class="mb-3">
-      <h6 class="h6 font-weight-bold"><i class="czi-check-circle  mr-2"></i>Kasap Kart&trade; Puan Kazancı</h6>
-
-
-      <p>
-        Alışverişiniz size
-        <strong class="text-success"><%- include('./_partial/currency.ejs', {value: controller.mayEarnPuanTotal}) %></strong> değerinde puan
-        kazandırdı.
-      </p> 
-    </div>
-
-
-
-
-
-      
-      
-        
+    <div class="page-title">
+      <div class="container d-lg-flex justify-content-between py-2 py-lg-3">
+        <div class="order-lg-2 mb-3 mb-lg-0 pt-lg-2">
+          <nav aria-label="breadcrumb" class="d-none d-lg-block">
+            <ol class="breadcrumb flex-lg-nowrap justify-content-center justify-content-lg-star">
+            </ol>
+          </nav>
         </div>
-     
+        <div class="order-lg-1 pr-lg-4 text-center text-lg-left d-print-none">
+          <h1 class="h3">Online Ödeme</h1>
+          <h2 class="lead h4">
+            <%= __helper.formatDate(order.creationDate) + ' tarihli ' + order.butcherName + ' siparişim' %>
+          </h2>
 
-      <% if (controller.usablePuanTotal > 0.00) { %>
-        <div class="mb-3">      
-          
+        </div>
+      </div>
+    </div>
+
+
+
+
+    <div class="container mb-3">
+
+      <div class="mb-3 ">
+
+
+
+
+
+
+        <% if (controller.shouldBePaid> 0) { %>
+
+          <% if (false && controller.mayEarnPuanTotal + controller.usablePuanTotal> 0.00) { %>
+            <h5 class="h5">
+              Kazançlar
+            </h5>
+            <% } %>
+
+              <% if (false && controller.mayEarnPuanTotal) { %>
+                <div class="mb-3">
+                  <h6 class="h6 font-weight-bold"><i class="czi-check-circle  mr-2"></i>Kasap Kart&trade; Puan
+                    Kazancı</h6>
+
+
+                  <p>
+                    Alışverişiniz size
+                    <strong class="text-success">
+                      <%- include('./_partial/currency.ejs', {value: controller.mayEarnPuanTotal}) %>
+                    </strong> değerinde puan
+                    kazandırdı.
+                  </p>
+                </div>
+      </div>
+
+
+      <% if (controller.usablePuanTotal> 0.00) { %>
+        <div class="mb-3">
+
           <h6 class="h6 font-weight-bold"><i class="czi-check-circle mr-2"></i>İndirimler</h6>
 
-          <span class="text-dark d-block mb-2">Önceki siparişlerinizden kazandığınız 
-            <strong class="text-success"><%- include('./_partial/currency.ejs', {value: controller.usablePuanTotal}) %></strong>
+          <span class="text-dark d-block mb-2">Önceki siparişlerinizden kazandığınız
+            <strong class="text-success">
+              <%- include('./_partial/currency.ejs', {value: controller.usablePuanTotal}) %>
+            </strong>
             değerinde puanı düşüyoruz.
           </span>
         </div>
-        <% } %>       
-      <p class="mt-3 text-muted text-center">
-        <% if (controller.usablePuanTotal > 0.00) { %>
-          <del class="d-block">
-            <%- include('./_partial/currency.ejs', {value: controller.shouldBePaid}) %>
-          </del>
-          <%- include('./_partial/currency.ejs', {value: controller.shouldBePaid-controller.usablePuanTotal}) %>
+        <% } %>
+          <p class="mt-3 text-muted text-center">
+            <% if (controller.usablePuanTotal> 0.00) { %>
+              <del class="d-block">
+                <%- include('./_partial/currency.ejs', {value: controller.shouldBePaid}) %>
+              </del>
+              <%- include('./_partial/currency.ejs', {value: controller.shouldBePaid-controller.usablePuanTotal}) %>
 
 
-        <% } else { %>
-        <%- include('./_partial/currency.ejs', {value: controller.shouldBePaid}) %>
-          
-        <%} %>
-      </p>
+                <% } else { %>
+                  <%- include('./_partial/currency.ejs', {value: controller.shouldBePaid}) %>
+
+                    <%} %>
+          </p>
 
 
-      <%}%>
+          <%}%>
 
-      <% if (controller.shouldBePaid > 0) { %>
-<div class="d-print-none">
-  <%- include(`./_partial/paymentprovider/${controller.paymentProvider.providerKey}.payform.ejs`) %>
+            <% if (controller.shouldBePaid> 0) { %>
+              <ul class="nav nav-tabs" id="optionsTab" role="tablist">
 
-    
-</div>
+                <li class="nav-item">
+                  <a class="nav-link <%= controller.savedCards.length > 0 ? 'active':'' %>" id="saved-tab"
+                    data-toggle="tab" href="#saved" role="tab" aria-controls="home" aria-selected="true">Kayıtlı
+                    Kartlarınız</a>
+                </li>
 
-      <% } %>
+                <li class="nav-item">
+                  <a class="nav-link <%= controller.savedCards.length == 0 ? 'active':'' %>" id="home-tab"
+                    data-toggle="tab" href="#newcard" role="tab" aria-controls="home" aria-selected="true">Yeni Kredi
+                    Kartı</a>
+                </li>
+              </ul>
+              <div class="tab-content px-4" id="myTabContent">
+                <div class="tab-pane fade <%= controller.savedCards.length > 0 ? 'show active':'' %>" id="saved"
+                  role="tabpanel">
+                  <% if (controller.savedCards.length==0) { %>
+                    <p>
+                      Henüz kayıtlı kredi kartınız yok. Zamandan kazanmak için ödeme yapın ve kredi kartınızı kaydedin.
+                    </p>
+                    <% } else { %>
+                      <ul class="list-group">
+                      <% controller.savedCards.forEach(c => {  %>
+                        
+                          <li class="list-group-item">
+                            <%- include(`./_partial/paymentprovider/${controller.paymentProvider.providerKey}.payformsaved.ejs`, {
+                              saved: c
+                            }) %>
+
+                          </li>
+                      
+
+                      <% }) %>
+                    </ul>
+                    <% }%>
+
+                </div>
+                <div class="tab-pane fade <%= controller.savedCards.length == 0 ? 'show active':'' %>" id="newcard"
+                  role="tabpanel">
+                  <%- include(`./_partial/paymentprovider/${controller.paymentProvider.providerKey}.payform.ejs`) %>
+                </div>
+              </div>
+              <% } %>
 
 
-      
-      </div>
+
+    </div>
 
     <% } else { %>
       <div class="border bg-secondary px-3 pt-3">
         <h4 class="h5">Siparişin borcu yoktur</h5>
-          <p >
-            Sipariş Durumu: <strong><%=controller.order.status%></strong>
+          <p>
+            Sipariş Durumu: <strong>
+              <%=controller.order.status%>
+            </strong>
           </p>
           <p>
             Sipariş bilgilerine <a href="/user/orders/<%=controller.order.ordernum%>">buradan</a> ulaşabilirsiniz.
           </p>
       </div>
-    <% } %>
+      <% } %>
 
 
 
@@ -135,8 +167,8 @@
 
 
 
-    </div>
-</div>
+        </div>
+        </div>
 
 
 
@@ -146,49 +178,49 @@
 
 
 
-    <% include ./_partial/footer %>
-    <% include ./_partial/scripts %>
+        <% include ./_partial/footer %>
+          <% include ./_partial/scripts %>
 
 
 
-    <script>
+            <script>
 
 
 
-<% if (__req.query.print=='1') { %>
-  window.print();
+<% if (__req.query.print == '1') { %>
+                window.print();
 <%}%>
 
 
 
 
-      function beforeSubmit() {
-        var n = $("#pan").val() || "";
-        $("#pan").val(n.replace(/\s+/g, ''))       
-        setTimeout(function () { $('#pay-btn').text(' Ödemenizi yapıyorum ... '); $('#pay-btn').attr('disabled', true); })
-      }
+                function beforeSubmit() {
+                  var n = $("#pan").val() || "";
+                  $("#pan").val(n.replace(/\s+/g, ''))
+                  setTimeout(function () { $('.pay-btn').text(' Ödemenizi yapıyorum ... '); $('.pay-btn').attr('disabled', true); })
+                }
 
-<% if (controller.threeDhtml) { %>
+                <% if (controller.threeDhtml) { %>
 
-        $(window).on('load', function () {
-          $('#threeDmodal').modal('show');
-          setTimeout(function () { $(document.body).removeClass("d-none") }, 250);
-        })
+                  $(window).on('load', function () {
+                    $('#threeDmodal').modal('show');
+                    setTimeout(function () { $(document.body).removeClass("d-none") }, 250);
+                  })
 
-        <% } %>
+                  <% } %>
 
-          new Card({
-            form: document.querySelector('.interactive-credit-card'),
-            container: '.card-wrapper',
-            formSelectors: {
-              numberInput: 'input#pan', // optional — default input[name="number"]
-              expiryInput: 'input#expiry', // optional — default input[name="expiry"]
-              cvcInput: 'input#cvv', // optional — default input[name="cvc"]
-              nameInput: 'input#cardOwner' // optional - defaults input[name="name"]
-            },
-          });
+                    new Card({
+                      form: document.querySelector('.interactive-credit-card'),
+                      container: '.card-wrapper',
+                      formSelectors: {
+                        numberInput: 'input#pan', // optional — default input[name="number"]
+                        expiryInput: 'input#expiry', // optional — default input[name="expiry"]
+                        cvcInput: 'input#cvv', // optional — default input[name="cvc"]
+                        nameInput: 'input#cardOwner' // optional - defaults input[name="name"]
+                      },
+                    });
 
-    </script>
+            </script>
 
 </body>
 

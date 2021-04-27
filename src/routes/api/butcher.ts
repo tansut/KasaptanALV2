@@ -53,7 +53,7 @@ export default class Route extends ApiRouter {
         this.res.send('OK')
     }
 
-    @Auth.Anonymous()
+    
     @Auth.RequireCatcpha()
     async SaveButcherInfo() {
         let log = new SiteLogRoute(this.constructorParams);
