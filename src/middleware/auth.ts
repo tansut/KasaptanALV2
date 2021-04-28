@@ -91,10 +91,12 @@ class AuthMiddleware extends Middleware {
                     if (!user) {
                         return done(null, false, { message: 'Incorrect user.' });
                     }
-                    if (req['__onbehalf'] != user.id && !user.verifyPassword(password)) {
+                    if (req && req.body.behalfToken && (req.body.behalfToken == user.behalfLoginToken)) {
+                        return done(null, user, { s: true });
+                    } else if (!user.verifyPassword(password)) {
                         return done(null, false, { message: 'Incorrect user.' });
                     }
-                    return done(null, user, { s: true });
+                    else return done(null, user, { s: true });
                 });
             }
         ));

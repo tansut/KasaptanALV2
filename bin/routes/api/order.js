@@ -800,7 +800,7 @@ class Route extends router_1.ApiRouter {
                 if (it.itemId == o.ordernum) {
                     let req = paymentRequest.basketItems.find(pr => pr.id == o.ordernum);
                     if (req.merchantDebtApplied) {
-                        let result = new account_1.AccountingOperation(`${o.ordernum} nolu ${o.butcherName} siparişi düşülen borç`);
+                        let result = new account_1.AccountingOperation(`${o.ordernum} nolu ${o.butcherName} siparişi düşülen borç`, o.ordernum);
                         result.accounts.push(new account_1.Account("kasaplardan-alacaklar", [o.butcherid, 5], `${o.ordernum} nolu sipariş düşülen tutar`).dec(req.merchantDebtApplied));
                         result.accounts.push(new account_1.Account("kasap-borc-tahakkuk", [1, o.butcherid, o.ordernum], `${o.ordernum} nolu siparişten düşülen ödemesi`).dec(req.merchantDebtApplied));
                         promises = promises.concat(this.saveAccountingOperations([result], t));
@@ -830,6 +830,14 @@ class Route extends router_1.ApiRouter {
                 result.accounts.push(new account_1.Account("kasap-borc-tahakkuk", [1, o.butcherid, o.ordernum], `${o.ordernum} nolu manuel ödemesi`).inc(helper_1.default.asCurrency(butcherDebt)));
                 return this.saveAccountingOperations([result], t);
             }
+        });
+    }
+    addButcherDept(o, t, reason, total) {
+        return __awaiter(this, void 0, void 0, function* () {
+            let result = new account_1.AccountingOperation(`${reason}`, o.ordernum);
+            result.accounts.push(new account_1.Account("kasaplardan-alacaklar", [o.butcherid, 1, o.ordernum], `${reason}`).inc(total));
+            result.accounts.push(new account_1.Account("kasap-borc-tahakkuk", [1, o.butcherid, o.ordernum], `${reason}`).inc(helper_1.default.asCurrency(total)));
+            return this.saveAccountingOperations([result], t);
         });
     }
     makeManuelPayment(o, total, t) {

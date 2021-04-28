@@ -62,13 +62,13 @@
               
                       <div class="d-flex justify-content-between mb-1">
                     
-                        <a class="btn btn-primary" href="javascript:App.add2ShopcardFromOrder('<%= `${order.ordernum}` %>', '/alisveris-sepetim')"> <i class="czi-icon czi-cart"></i> Siparişi Tekrarla</a>
+                        <a class="btn btn-primary" href="javascript:App.add2ShopcardFromOrder('<%= `${order.ordernum}` %>', '/alisveris-sepetim')"> <i class="czi-icon czi-cart"></i> Siparişi Kopyala</a>
                         <% if (order.cancelable()) { %>
                             <button name="action" class="btn btn-danger" value="cancelOrder" type="submit">İptal Et</button>
                         <% } %>
                     </div>
                     <div class="text-muted font-size-sm">
-                        <i class="czi-icon czi-thumb-up"></i> Siparişinizdeki tüm ürünleri tek tıkla alışveriş sepetine aktarın, zamandan kazanın.
+                        <i class="czi-icon czi-thumb-up"></i> Siparişi Kopyala özelliği ile siparişinizdeki tüm ürünleri tek tıkla alışveriş sepetine aktarın, zamandan kazanın.
                     </div>
                 <%- include('./_partial/order.details.ejs', {
                     order: order                

@@ -12,11 +12,21 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const creditcard_1 = require("./creditcard");
 const axios_1 = require("axios");
 const helper_1 = require("../helper");
+const paymentmethod_1 = require("../../db/models/paymentmethod");
 var qs = require('qs');
 class ParatikaPayment extends creditcard_1.CreditcardPaymentProvider {
     constructor(config) {
         super(config);
         this.config = config;
+    }
+    post2(body, uri = null) {
+        return new Promise((resolve, reject) => {
+            this.post(body, (err, data) => {
+                if (err)
+                    return reject(err);
+                resolve(data);
+            }, uri);
+        });
     }
     post(body, handler, uri = null) {
         const config = {
@@ -197,27 +207,52 @@ class ParatikaPayment extends creditcard_1.CreditcardPaymentProvider {
             }
         });
     }
-    pay3dComplete(request) {
+    createSavedCreditcard(userid, response) {
+        return __awaiter(this, void 0, void 0, function* () {
+            let req = {
+                ACTION: "QUERYBIN",
+                MERCHANT: this.config.merchant,
+                MERCHANTUSER: this.config.merchantUser,
+                MERCHANTPASSWORD: this.config.merchantPassword,
+                CARDTOKEN: response.cardToken
+            };
+            let binResponse = null;
+            try {
+                binResponse = yield this.post2(req);
+            }
+            finally {
+                let save = new paymentmethod_1.default();
+                save.userid = userid;
+                save.method = 'creditcard';
+                save.instance = this.providerKey;
+                save.data = response.cardToken;
+                save.enabled = true;
+                save.name = (binResponse && binResponse.responseCode == "00" && binResponse.bin) ? `${binResponse.bin.cardNetwork} ****${binResponse.bin.bin}` : `${helper_1.default.formatDate(helper_1.default.Now())} kaydettiğim kredi kartım`;
+                yield save.save();
+            }
+        });
+    }
+    pay3dComplete(response) {
         return __awaiter(this, void 0, void 0, function* () {
             let result = {
-                conversationId: request.merchantPaymentId,
-                paidPrice: parseFloat(request.amount),
-                paymentId: request.pgTranId,
+                conversationId: response.merchantPaymentId,
+                paidPrice: parseFloat(response.amount),
+                paymentId: response.pgTranId,
                 status: 'success',
-                price: parseFloat(request.amount),
+                price: parseFloat(response.amount),
                 itemTransactions: [
                     {
-                        itemId: request.merchantPaymentId,
-                        paidPrice: parseFloat(request.amount),
-                        paymentTransactionId: request.pgTranId,
-                        price: parseFloat(request.amount)
+                        itemId: response.merchantPaymentId,
+                        paidPrice: parseFloat(response.amount),
+                        paymentTransactionId: response.pgTranId,
+                        price: parseFloat(response.amount)
                     }
                 ]
             };
-            (yield request.cardToken) && this.saveOrUpdateSavedCard(request.merchantPaymentId, request.cardToken);
+            (yield response.cardToken) && this.saveOrUpdateSavedCard(result.conversationId, response);
             return new Promise((resolve, reject) => {
-                this.logOperation("creditcard-3d-complete", request, result).then(() => {
-                    return this.savePayment("3d-paratika", request, result).then(() => resolve(result)).catch(err => reject(err));
+                this.logOperation("creditcard-3d-complete", response, result).then(() => {
+                    return this.savePayment("3d-paratika", response, result).then(() => resolve(result)).catch(err => reject(err));
                 }).catch(err => reject(err));
             });
         });

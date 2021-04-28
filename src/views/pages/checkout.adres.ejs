@@ -26,6 +26,42 @@
           <%- include('./_partial/checkout-steps.ejs', {   step: 2        }); %>
           <!-- Shipping address-->
           <h2 class="h6 pt-1 pb-3 mb-3 border-bottom">Nereye Gönderelim?</h2>
+          <% if (shopcard.address.geolocation) { %>
+            <div id="savedAddress">
+              <p class="mb-1">Kayıtlı Adresime:</p>
+              <div class="bg-secondary border p-3 mb-3">
+                <p class="mb-0"><%=shopcard.address.name%></p>
+                <p class="mb-0">
+                  İletişim: <%=shopcard.address.phone%>
+                </p>
+                <p class="mb-0">
+                  <%= shopcard.address.adres %>
+                </p>
+                <% if (shopcard.address.bina || shopcard.address.daire || shopcard.address.kat) { %>
+                  <% if (shopcard.address.bina)  { %>
+                    <span>Bina: <%=shopcard.address.bina%></span>
+                  <% } %>
+                  <% if (shopcard.address.kat)  { %>
+                    <span>Kat: <%=shopcard.address.kat%></span>
+                  <% } %>
+                  <% if (shopcard.address.daire)  { %>
+                    <span>Daire: <%=shopcard.address.daire%></span>
+                  <% } %>
+                <% } %>
+               
+                <p class="mb-0">
+                  <%=shopcard.address.level4Text%> <%=shopcard.address.level3Text%>, <%=shopcard.address.level2Text%>/<%=shopcard.address.level1Text%>
+                </p>
+                <div class="pt-2">
+                  <button type="button" onclick="toggleNewAddress()" class="btn-sm btn-primary btn">Değiştir</button>
+                </div>
+              </div>
+
+            </div>
+
+            
+          <% } %>
+          <div class="<%= shopcard.address.geolocation ? 'd-none':''  %>" id="newAddress">
           <div class="row">
             <div class="col-sm-12">
               <div class="form-group">
@@ -89,9 +125,6 @@
             </div>
 
           </div>
-
-
-
           <input type="hidden" name="lat" value="0" id="lat">
           <input type="hidden" name="long" value="0" id="long">
           <input type="hidden" name="accuracy" value="0" id="accuracy">
@@ -115,6 +148,12 @@
               kontrol edip işleme devam edebilirsiniz.</p>
             <button onclick="showMap()" type="button" class="btn btn-sm btn-primary">Teslimat Konumu</button>
           </div>
+          </div>
+
+
+
+
+  
 
 
 
@@ -250,6 +289,10 @@
       $("#locdone").hide();
     }
 
+    function toggleNewAddress() {
+      $('#savedAddress').addClass('d-none');
+      $('#newAddress').removeClass('d-none');
+    }
 
     function goNext(approve) {
       if (!($("#adresform")[0]).checkValidity()) 

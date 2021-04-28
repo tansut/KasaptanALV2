@@ -123,15 +123,32 @@
           </h2>
           <% if (puanData ) { %>
             <div class="d-flex justify-content-center mb-3">
-              <div class="bg-secondary p-3  rounded-lg border ">
-                <h5 class="h6 mb-2">ONLINE SİPARİŞE ÖZEL</h5>
-                <a class="mb-2 d-block" href="/blog/kasap-kart">
+              <div class="border shadow  p-3  rounded-lg ">
+                <h5 class="h5 mb-3 ">SADECE ONLINE SİPARİŞLERİNİZDE GEÇERLİ</h5>
+                <a class="mb-3 d-block" href="/blog/kasap-kart">
                   <span class="badge badge-success font-weight-medium font-size-md">
                     %<%= puanData.rate * 100 %> Puan Kazancı
                   </span>
                 </a>
-                <div class=" text-center text-muted font-size-sm">
-                  Puanlarınızı sonraki alışverişlerinizde <strong>indirim olarak </strong>kullanabilirsiniz. 
+                <div class="text-left font-size-sm">
+                  <ul>
+                  
+                    <li>
+                      Kazandığınız puanlarınızı sonraki alışverişlerinizde <strong>indirim olarak </strong>kullanabilirsiniz.
+
+                    </li>
+                    <li>
+                      <strong>Güvenli sipariş için telefon yerine</strong> online veya whatsapp üzerinden sipariş veriniz.
+                    </li>
+                    <li>
+                      Whatsapp üzerinden vereceğiniz siprişlerde de puan kazancı mevcuttur.
+                    </li>
+                  </ul>
+                 
+                </div>
+                <div>
+                  <span class="d-block mb-3">Ücretsiz Sipariş Hattı: 0 850 305 4216</span>
+                  <a href="tel:08503054216" class="font-weight-bold btn btn-dark btn-sm rounded "><i class="czi-icon czi-phone mr-2"></i> Kasabı Ara</a>
                 </div>
               </div>
             
@@ -142,6 +159,8 @@
        
       
           <% } %>
+
+          
 
           <% if (butcher.shipRatingAsPerc > 0 && butcher.userRatingAsPerc > 0) { %>
           <div class="container row mx-auto">
@@ -189,7 +208,7 @@
           
         </div>
 <% if (butcher.status == 'open' && butcher.approved) { %>
-<div id="delivery"  class="border pt-3 px-3 bg-secondary">
+<div id="delivery">
   <% if ((!controller.logisticsProvider || controller.logisticsPriceSlice.length == 0) && __req.prefAddr) { %>
     <p>
       
@@ -259,9 +278,9 @@
       </div>
 
   <% } else { %>
-    <div class="text-center mb-3">
+    <div class="text-center bg-secondary p-3 border mb-3">
       <h6 class="h6">
-       Sipariş vermek için önce semtinizi seçin
+       Online sipariş vermek için önce semtinizi seçin
       </h6>
     <a data-return="/<%=butcher.slug%>#delivery" class=" select-area-action btn-sm btn btn-primary">Semt Seç</a>
 

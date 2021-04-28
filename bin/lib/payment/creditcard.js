@@ -25,8 +25,13 @@ class CreditcardPaymentProvider {
         this.marketPlace = config.marketPlace == "true";
         this.api = new order_2.default();
     }
-    saveOrUpdateSavedCard(orderid, token) {
+    createSavedCreditcard(userid, response) {
         return __awaiter(this, void 0, void 0, function* () {
+        });
+    }
+    saveOrUpdateSavedCard(orderid, response) {
+        return __awaiter(this, void 0, void 0, function* () {
+            let token = response.cardToken;
             let order = yield order_1.Order.findOne({ where: { ordernum: orderid } });
             let existing = yield paymentmethod_1.default.findOne({
                 where: {
@@ -37,14 +42,7 @@ class CreditcardPaymentProvider {
                 }
             });
             if (!existing) {
-                let save = new paymentmethod_1.default();
-                save.userid = order.userId;
-                save.method = 'creditcard';
-                save.instance = this.providerKey;
-                save.data = token;
-                save.enabled = true;
-                save.name = `${helper_1.default.formatDate(order.creationDate)} kaydettiğim kredi kartım`;
-                yield save.save();
+                yield this.createSavedCreditcard(order.userId, response);
             }
         });
     }

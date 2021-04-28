@@ -133,6 +133,13 @@ class Route extends router_1.ViewRouter {
             //         userMessage = "Ödemesi henüz yapılmamış siparişin";
             //     } else await this.api.completeLoadPuan(this.order, this.paid)
             // }
+            if (this.req.body["borc-ekle"] == "true") {
+                let tutar = helper_1.default.asCurrency(helper_1.default.parseFloat(this.req.body["borc-tutar"]));
+                if (tutar > 0) {
+                    yield this.api.addButcherDept(this.order, null, this.req.body["borc-tutar-desc"] || "Belirtilmedi", tutar);
+                    userMessage = `Borc eklendi: ${helper_1.default.formatCurrency(tutar)}`;
+                }
+            }
             if (this.req.body["kurye-maliyet"] == "true" && this.order.butcher.logisticProvider) {
                 let provider = core_1.LogisticFactory.getInstance(this.order.butcher.logisticProvider, {
                     dispatcher: yield dispatcher_1.default.findByPk(this.order.dispatcherid, {

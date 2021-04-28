@@ -73,7 +73,6 @@ export interface PreferredAddress {
 })
 export default class User extends BaseModel<User> {
 
-    obBehalf: boolean = false;
     
     @Column
     email: string;
@@ -89,6 +88,9 @@ export default class User extends BaseModel<User> {
 
     @Column
     resetToken?: string;
+
+    @Column
+    behalfLoginToken?: string;
 
     @Column
     roles: string

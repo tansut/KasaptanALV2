@@ -7,22 +7,12 @@
      
      <input type="hidden" value="<%=saved.data%>" name="cardToken" id="cardToken"
 autocomplete="off" maxlength="64" />
-<div class="p-2 "><%=saved.name%> ile öde</div>
+<div class="p-2 "></div>
 <div class="form-row align-items-center">
 
-  <div class="col-auto">
-    <label class="sr-only" for="inlineFormInput">Name</label>
-    <input class="form-control mb-2" type="text" placeholder="CVV"
-      
-    <% if (__config.nodeenv == 'development') { %>  
-      value="000" 
-    <% } %> 
-    
-    name="cvv" id="cvv" autocomplete="cc-csc" placeholder="CVC" required>
-  </div>
 
   <div class="col-auto">
-    <button  name="makepayment" value="true" class="mb-2 pay-btn btn btn-success" type="submit"><i class="czi-thumb-up mr-2"></i>Ödeme Yap</button>
+    <button  name="makepayment" value="true" class="mb-2 pay-btn btn btn-success" type="submit"><i class="czi-card mr-2"></i><%=saved.name%> kartım ile öde</button>
 
   </div>
 

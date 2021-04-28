@@ -35,7 +35,6 @@ var UserRole;
 let User = User_1 = class User extends basemodel_1.default {
     constructor() {
         super(...arguments);
-        this.obBehalf = false;
         this.usablePuans = 0.00;
     }
     loadPuanView() {
@@ -126,6 +125,10 @@ __decorate([
     sequelize_typescript_1.Column,
     __metadata("design:type", String)
 ], User.prototype, "resetToken", void 0);
+__decorate([
+    sequelize_typescript_1.Column,
+    __metadata("design:type", String)
+], User.prototype, "behalfLoginToken", void 0);
 __decorate([
     sequelize_typescript_1.Column,
     __metadata("design:type", String)

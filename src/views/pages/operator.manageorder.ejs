@@ -50,6 +50,11 @@
       <!-- <button name="loadPuans" value="true" class="btn btn-primary btn-sm">Puan Yükle</button> -->
        <button name="kurye-maliyet" value="true" class="btn btn-primary btn-sm">Kurye Maliyet Hesapla</button> 
        <button name="kurye-cagir" value="true" class="btn btn-primary btn-sm">Kurye Çağır</button> 
+       <div class="d-flex">
+         <input class="form-control" placeholder="tutar" type="text" name="borc-tutar" id="borc-tutar">
+         <input class="form-control" placeholder="sebep" type="text" name="borc-tutar-desc" id="borc-tutar-desc">
+       </div>
+       <button name="borc-ekle" value="true" class="btn btn-primary btn-sm">Borç Ekle</button> 
       
       <p><%-controller.markdown.render(order.statusDesc || '')%></p>
 

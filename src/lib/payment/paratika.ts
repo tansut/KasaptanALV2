@@ -3,6 +3,8 @@ import axios, { AxiosResponse } from "axios";
 import { response } from "express";
 import { Order } from "../../db/models/order";
 import Helper from "../helper";
+import PaymentMethod from "../../db/models/paymentmethod";
+import { fail } from "node:assert";
 var qs = require('qs');
 
 export interface ParatikaConfig {
@@ -23,6 +25,15 @@ export default class ParatikaPayment extends CreditcardPaymentProvider {
     constructor(config: ParatikaConfig) {
         super(config);
         this.config = config;
+    }
+
+    post2(body: any, uri: string = null) {
+        return new Promise((resolve, reject) => {
+            this.post(body, (err, data) => {
+                if (err) return reject(err);
+                resolve(data)
+            }, uri)
+        })
     }
 
     post(body: any, handler: any, uri: string = null) {
@@ -208,27 +219,52 @@ export default class ParatikaPayment extends CreditcardPaymentProvider {
         } 
     }
 
-    async pay3dComplete(request: any): Promise<PaymentResult> {
+    async createSavedCreditcard(userid: number, response) {
+        let req = {
+            ACTION: "QUERYBIN",
+            MERCHANT: this.config.merchant,
+            MERCHANTUSER: this.config.merchantUser,
+            MERCHANTPASSWORD: this.config.merchantPassword,
+            CARDTOKEN: response.cardToken
+        };
+
+        let binResponse = null;
+        try {
+            binResponse = await this.post2(req)
+        } finally {
+            let save = new PaymentMethod();
+            save.userid = userid;
+            save.method = 'creditcard';
+            save.instance = this.providerKey;
+            save.data = response.cardToken;
+            save.enabled = true;
+    
+            save.name = (binResponse && binResponse.responseCode == "00" && binResponse.bin) ? `${binResponse.bin.cardNetwork} ****${binResponse.bin.bin}`: `${Helper.formatDate(Helper.Now())} kaydettiğim kredi kartım`
+            await save.save();
+        }
+    }
+
+    async pay3dComplete(response: any): Promise<PaymentResult> {
         
         let result: PaymentResult = {
-            conversationId: request.merchantPaymentId,
-            paidPrice: parseFloat(request.amount),
-            paymentId: request.pgTranId,
+            conversationId: response.merchantPaymentId,
+            paidPrice: parseFloat(response.amount),
+            paymentId: response.pgTranId,
             status: 'success',
-            price: parseFloat(request.amount),
+            price: parseFloat(response.amount),
             itemTransactions: [
                 {
-                    itemId: request.merchantPaymentId,
-                    paidPrice: parseFloat(request.amount),
-                    paymentTransactionId: request.pgTranId,
-                    price: parseFloat(request.amount)
+                    itemId: response.merchantPaymentId,
+                    paidPrice: parseFloat(response.amount),
+                    paymentTransactionId: response.pgTranId,
+                    price: parseFloat(response.amount)
                 }
             ]
         }
-        await request.cardToken && this.saveOrUpdateSavedCard(request.merchantPaymentId, request.cardToken);
+        await response.cardToken && this.saveOrUpdateSavedCard(result.conversationId, response);
         return new Promise((resolve, reject) => {
-                this.logOperation("creditcard-3d-complete", request, result).then(() => {
-                    return this.savePayment("3d-paratika", request, result).then(() => resolve(result)).catch(err => reject(err));
+                this.logOperation("creditcard-3d-complete", response, result).then(() => {
+                    return this.savePayment("3d-paratika", response, result).then(() => resolve(result)).catch(err => reject(err));
                 }).catch(err => reject(err))
 
         })

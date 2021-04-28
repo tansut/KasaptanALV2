@@ -158,8 +158,12 @@ export class CreditcardPaymentProvider {
     marketPlace: boolean = true;
     api: OrderApi;
 
+    async createSavedCreditcard(userid: number, response) {
 
-    async saveOrUpdateSavedCard(orderid: string, token: string) {
+    }
+
+    async saveOrUpdateSavedCard(orderid: string, response: any) {
+       let token = response.cardToken;
        let order = await Order.findOne({where: {ordernum: orderid}});
        let existing = await PaymentMethod.findOne({
            where: {
@@ -170,14 +174,8 @@ export class CreditcardPaymentProvider {
            }
        });
        if (!existing) {
-            let save = new PaymentMethod();
-            save.userid = order.userId;
-            save.method = 'creditcard';
-            save.instance = this.providerKey;
-            save.data = token;
-            save.enabled = true;
-            save.name = `${Helper.formatDate(order.creationDate)} kaydettiğim kredi kartım`
-            await save.save();
+
+        await this.createSavedCreditcard(order.userId, response)
        }
     }
 

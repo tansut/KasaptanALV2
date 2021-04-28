@@ -10,6 +10,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 const router_1 = require("../../lib/router");
+const helper_1 = require("../../lib/helper");
 const user_1 = require("../api/user");
 let ellipsis = require('text-ellipsis');
 var MarkdownIt = require('markdown-it');
@@ -27,7 +28,8 @@ class Route extends router_1.ViewRouter {
             if (user && !user.hasRole('admin') && !user.hasRole('operator')) {
                 //await ur.signOff();
                 yield ur.loginAs(user);
-                return this.res.redirect("/");
+                return this.res.redirect('/?go=' + helper_1.default.getRandomInt(100));
+                //this.renderView("pages/operator.redirect.ejs");
             }
             this.renderView("pages/operator.home.ejs");
         });

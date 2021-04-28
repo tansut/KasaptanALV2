@@ -15899,6 +15899,10 @@ html:not([dir=rtl]) .cz-range-slider-ui.noUi-horizontal .noUi-handle {
   }
 }
 
+.modal-header {
+  background-color: #f7f7f7;
+}
+
 select.btn-mini {
   height: auto;
   line-height: 14px;

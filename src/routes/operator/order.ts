@@ -159,6 +159,8 @@ export default class Route extends ViewRouter {
             } else userMessage = "Ödemesi yok siparişin";
         }
 
+
+
         // if (this.req.body.makeManuelPaymentDebt == "true") {
         //     if (this.paid > 0) {
         //         let toKalitte = Helper.asCurrency(this.butcherFee.kalitteFee + this.butcherFee.kalitteVat)
@@ -176,6 +178,14 @@ export default class Route extends ViewRouter {
         //     } else await this.api.completeLoadPuan(this.order, this.paid)
 
         // }
+
+        if (this.req.body["borc-ekle"] == "true") {
+            let tutar = Helper.asCurrency(Helper.parseFloat(this.req.body["borc-tutar"]));
+            if (tutar > 0) {
+                await this.api.addButcherDept(this.order, null, this.req.body["borc-tutar-desc"] || "Belirtilmedi", tutar);
+                userMessage = `Borc eklendi: ${Helper.formatCurrency(tutar)}`;
+            }
+        }        
 
         if (this.req.body["kurye-maliyet"] == "true" && this.order.butcher.logisticProvider) {
             let provider = LogisticFactory.getInstance(this.order.butcher.logisticProvider, {
