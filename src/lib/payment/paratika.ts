@@ -239,7 +239,7 @@ export default class ParatikaPayment extends CreditcardPaymentProvider {
             save.data = response.cardToken;
             save.enabled = true;
     
-            save.name = (binResponse && binResponse.responseCode == "00" && binResponse.bin) ? `${binResponse.bin.cardNetwork} ****${binResponse.bin.bin}`: `${Helper.formatDate(Helper.Now())} kaydettiğim kredi kartım`
+            save.name = (binResponse && binResponse.responseCode == "00" && binResponse.bin) ? `${binResponse.bin.cardNetwork} ${binResponse.bin.bin}****`: `${Helper.formatDate(Helper.Now())} kaydettiğim kredi kartım`
             await save.save();
         }
     }
