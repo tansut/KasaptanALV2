@@ -11,27 +11,27 @@
 
 
 
-  <!-- Page Content -->
-  <div class="page-title" >
-    <div class="container d-lg-flex justify-content-between py-2 py-lg-3">
-      <div class="order-lg-2 mb-3 mb-lg-0 pt-lg-2">
-        <nav aria-label="breadcrumb" class="d-none d-lg-block">
-          <ol class="breadcrumb breadcrumb-dark flex-lg-nowrap justify-content-center justify-content-lg-star">
-            <li class="breadcrumb-item"><a class="text-nowrap" href="/"><i class="czi-home"></i></a></li>
-          </ol>
-        </nav>
+    <!-- Page Content -->
+    <div class="page-title">
+      <div class="container d-lg-flex justify-content-between py-2 py-lg-3">
+        <div class="order-lg-2 mb-3 mb-lg-0 pt-lg-2">
+          <nav aria-label="breadcrumb" class="d-none d-lg-block">
+            <ol class="breadcrumb breadcrumb-dark flex-lg-nowrap justify-content-center justify-content-lg-star">
+              <li class="breadcrumb-item"><a class="text-nowrap" href="/"><i class="czi-home"></i></a></li>
+            </ol>
+          </nav>
+        </div>
+        <div class="order-lg-1 pr-lg-4 text-center text-lg-left">
+
+          <h1 class="h3">Kasaplar</h1>
+          <h2 class="h4 lead">
+            Online et ve et ürünleri siparişi verebileceğiniz güvenilir kasap iş ortaklarımız.</h2>
+
+        </div>
+
+
       </div>
-      <div class="order-lg-1 pr-lg-4 text-center text-lg-left">
-
-        <h1 class="h3">Kasaplar</h1>
-        <h2 class="h4 lead">
-          Online et ve et ürünleri siparişi verebileceğiniz güvenilir kasap iş ortaklarımız.</h2> 
-
-      </div>
-
-
     </div>
-  </div>
 
 
 
@@ -40,114 +40,128 @@
 
 
 
-  <div class="container pt-3">
+    <div class="container pt-3">
       <div class="row">
         <% for(var i=0; i<butchers.length; i++) {%>
 
-        <div class="col-md-3 col-6 mb-3 ">
+          <div class="col-md-3 col-6 mb-3 ">
 
-          <div class="card h-100">
-            
-          
-             
-            <a href="<%= `/${butchers[i].slug}` %>" class="app_blank">
-              <img width="500" height="500" src="<%= `${__req.helper.imgUrl('butcher-google-photos', butchers[i].slug)}` %>"
-                  class="card-img-top" alt="<%= `/${butchers[i].name}` %>">
-          </a>
-
-            <div class="card-body text-center ">
-              <h5 class="card-title">
-                <a href="<%= `/${butchers[i].slug}` %>" class="text-dark font-size-md app_blank">
-                  <%= butchers[i].name %>
-                </a>
-
-                </h5>
-                <p class="card-text"><%=butchers[i].areaLevel1Text%></p>
-
-            </div>
+            <div class="card shadow h-100 text-center pb-0  product-card">
+              <% if (butchers[i].badge) { %>
+                <span  class="badge badge-danger"><%=butchers[i].badge%></span>
+              <% } %>
+              <a class="d-block app_blank" href="<%= `/${butchers[i].slug}` %>">
+                  <img class="card-img-top" width="500" height="500"  title="<%=butchers[i].title%>" 
+                      src="<%= `${__req.helper.imgUrl('butcher-google-photos', butchers[i].slug)}` %>"
+                      alt="<%=butchers[i].name%>"></a>
+                  <div class="card-body d-flex flex-column">
+                          <h5 class="mb-auto pb-2 text-center font-size-sm"><a class="text-dark app_blank"
+                              href="<%= `/${butchers[i].slug}` %>">
+                              <%= butchers[i].name %>
+                          </a>
+                      </h5>
+                      <h6 class="font-size-sm mb-0 text-muted"> <%= butchers[i].areaLevel1Text %></h6>
+                  </div>
           </div>
 
 
-        </div>
 
-        <% } %>
+          </div>
+          <% } %>
       </div>
-    
-  </div>
 
-  <% if(typeof(subs) != "undefined"){ %>
-  <div class="container-fluid text-center pb-4 bg-light">
-    <% for(var i=0; i<subs.length; i++) {%>
+    </div>
 
-    <a href="<%= `/${subs[i].slug}-kasap` %>" class="app_blank btn btn-sm btn-secondary mx-2 my-2"><%= subs[i].name %></a>
+    <% if(typeof(subs) !="undefined" ){ %>
+      <div class="container-fluid text-center pb-4 bg-light">
+        <% for(var i=0; i<subs.length; i++) {%>
 
-
-    <% } %>
-  </div>
+          <a href="<%= `/${subs[i].slug}-kasap` %>" class="app_blank btn btn-sm btn-secondary mx-2 my-2">
+            <%= subs[i].name %>
+          </a>
 
 
+          <% } %>
+      </div>
 
-  <% } %>
 
-  <% if (__req.query.nodesc!='1') { %>
-    <div class="container mb-3">
-        <div class="collapse-container page-footer-text">
-            <div class="collapse" id="collapseSummary">
+
+      <% } %>
+
+        <% if (__req.query.nodesc!='1' ) { %>
+          <div class="container mb-3">
+            <div class="collapse-container page-footer-text">
+              <div class="collapse" id="collapseSummary">
                 <h2>Online Kasaplar</h2>
-              <p>
-                  Birbirinden seçkin kasaplar KasaptanAl.com ile, <strong>sağlıklı ve lezzetli et ürünlerine online</strong> ulaşmanızı sağlamakta.      
-                <strong>Şehrin en iyi kasaplarını</strong> saydam, ölçülebilir ve doğrulanabilir kriterlerle belirliyoruz. Örneğin <strong>mesleki deneyim olarak en az 10 yılı</strong> şart koşuyoruz.                 
-              </p>
-              <h3>
-                İyi Kasap, iyi et, sağlıklı yaşam
-              </h3>
-              <p>
-                Sağlıklı bir yaşam için sağlıklı beslenme şart. Kırmızı ve beyaz et ve et ürünleri de sağlıklı bir diyetin önemli parçalarından. Bu ürünleri nereden aldığınız belki de <strong>sağlıklı beslenmenin en kritik sorusu</strong>.
-                Bu aşamada KasaptanAl.com olarak iş ortaklarımız <strong>iyi eti size garanti ediyor</strong>. Çünkü tüm iş ortaklarımız; yerel, et konusunda deneyimli, kendi işini yapan <strong>dürüst kasaplar</strong>.                                
-              </p>
-              <h3>Neden et kasaptan alınır?</h3>
-              <p>
-                Uzun yıllardır yaygın kullanılan bu sözün arkasında önemli gerçekler var.
+                <p>
+                  Birbirinden seçkin kasaplar KasaptanAl.com ile, <strong>sağlıklı ve lezzetli et ürünlerine
+                    online</strong> ulaşmanızı sağlamakta.
+                  <strong>Şehrin en iyi kasaplarını</strong> saydam, ölçülebilir ve doğrulanabilir kriterlerle
+                  belirliyoruz. Örneğin <strong>mesleki deneyim olarak en az 10 yılı</strong> şart koşuyoruz.
+                </p>
+                <h3>
+                  İyi Kasap, iyi et, sağlıklı yaşam
+                </h3>
+                <p>
+                  Sağlıklı bir yaşam için sağlıklı beslenme şart. Kırmızı ve beyaz et ve et ürünleri de sağlıklı bir
+                  diyetin önemli parçalarından. Bu ürünleri nereden aldığınız belki de <strong>sağlıklı beslenmenin en
+                    kritik sorusu</strong>.
+                  Bu aşamada KasaptanAl.com olarak iş ortaklarımız <strong>iyi eti size garanti ediyor</strong>. Çünkü
+                  tüm iş ortaklarımız; yerel, et konusunda deneyimli, kendi işini yapan <strong>dürüst
+                    kasaplar</strong>.
+                </p>
+                <h3>Neden et kasaptan alınır?</h3>
+                <p>
+                  Uzun yıllardır yaygın kullanılan bu sözün arkasında önemli gerçekler var.
                 <ul>
                   <li>
-                    <strong>Kasaplar</strong> yerel işletmelerdir. Bir kasap müşterilerine en iyi eti sağlamalıdır ki işletmesini devam ettirebilsin.
+                    <strong>Kasaplar</strong> yerel işletmelerdir. Bir kasap müşterilerine en iyi eti sağlamalıdır ki
+                    işletmesini devam ettirebilsin.
                   </li>
                   <li>
-                    <strong>Kasaplar</strong> iyi eti bilmek zorundadır. Yerel bir işletme olarak et konusunda deneyim kazanırlar.
+                    <strong>Kasaplar</strong> iyi eti bilmek zorundadır. Yerel bir işletme olarak et konusunda deneyim
+                    kazanırlar.
                   </li>
                   <li>
-                    <strong>Kasaplar</strong> hayvan seçimi konusunda deneyimlidir. Bazıları yerel tedarikçilerle çalışırken bazıları kendi çiftliklerine sahiptir.
+                    <strong>Kasaplar</strong> hayvan seçimi konusunda deneyimlidir. Bazıları yerel tedarikçilerle
+                    çalışırken bazıları kendi çiftliklerine sahiptir.
                   </li>
                 </ul>
-              </p>
-              <h3>
-                Her şehrin en iyi kasapları KasaptanAl.com ile online
-              </h3>
-              <p>
-                Türkiye'nin <strong>online kasap platformu</strong> ile hedeflerimiz, şehrin en iyi ve <strong>en yakın kasaplarını</strong> keşfetmenizi sağlamak, hızlı, kolay ve kârlı bir kasap alışverişi deneyimi yaşamanız. Bu amacımızı gerçekleştirmek için web sitemizi devamlı güncelliyoruz, iş ortağı kasaplarımızdan ve sizlerden gelen yorumları titizlikle değerlendiriyoruz.
-              </p>
-              <p>
-                Pek çok ilde hizmet vermekteyiz. <strong>Ankara'nın en iyi kasapları</strong> ve <strong>İstanbul'un en iyi kasapları</strong> başta olmak üzere <strong>İzmir</strong> kasapları, <strong>Eskişehir</strong> kasapları KasaptanAl.com üzerinden <strong>en kaliteli ve sağlıklı et ürünlerini</strong> güvenle sizlere sunmakta ve <strong>online et siparişi</strong> almaktadır.
-              </p>
-            </div>
-            <a class="collapsed text-dark" data-toggle="collapse" href="#collapseSummary" aria-expanded="false"
+                </p>
+                <h3>
+                  Her şehrin en iyi kasapları KasaptanAl.com ile online
+                </h3>
+                <p>
+                  Türkiye'nin <strong>online kasap platformu</strong> ile hedeflerimiz, şehrin en iyi ve <strong>en
+                    yakın kasaplarını</strong> keşfetmenizi sağlamak, hızlı, kolay ve kârlı bir kasap alışverişi
+                  deneyimi yaşamanız. Bu amacımızı gerçekleştirmek için web sitemizi devamlı güncelliyoruz, iş ortağı
+                  kasaplarımızdan ve sizlerden gelen yorumları titizlikle değerlendiriyoruz.
+                </p>
+                <p>
+                  Pek çok ilde hizmet vermekteyiz. <strong>Ankara'nın en iyi kasapları</strong> ve <strong>İstanbul'un
+                    en iyi kasapları</strong> başta olmak üzere <strong>İzmir</strong> kasapları,
+                  <strong>Eskişehir</strong> kasapları KasaptanAl.com üzerinden <strong>en kaliteli ve sağlıklı et
+                    ürünlerini</strong> güvenle sizlere sunmakta ve <strong>online et siparişi</strong> almaktadır.
+                </p>
+              </div>
+              <a class="collapsed text-dark" data-toggle="collapse" href="#collapseSummary" aria-expanded="false"
                 aria-controls="collapseSummary"></a>
-        </div>
-    </div>
-    <% } %>
+            </div>
+          </div>
+          <% } %>
 
 
 
 
-  </div>
+            </div>
 
-  <% include ./_partial/footer %>
-  <% include ./_partial/scripts %>
+            <% include ./_partial/footer %>
+              <% include ./_partial/scripts %>
 
-  <script>
+                <script>
 
-    
-  </script>
+
+                </script>
 </body>
 
 </html>

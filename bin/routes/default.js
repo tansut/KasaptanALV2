@@ -66,7 +66,7 @@ class Route extends router_1.ViewRouter {
             if (!recentButchers) {
                 recentButchers = yield butcher_1.default.findAll({
                     order: [["displayOrder", "DESC"]],
-                    limit: 10,
+                    limit: 12,
                     where: {
                         approved: true,
                         showListing: true

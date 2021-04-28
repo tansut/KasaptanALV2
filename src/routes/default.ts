@@ -66,7 +66,7 @@ export default class Route extends ViewRouter {
         if (!recentButchers) {
             recentButchers = await ButcherModel.findAll({
                 order: [["displayOrder", "DESC"]],
-                limit: 10,
+                limit: 12,
                 where: {
                     approved: true,
                     showListing: true

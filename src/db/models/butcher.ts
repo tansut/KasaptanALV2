@@ -324,6 +324,9 @@ class Butcher extends BaseModel<Butcher> {
     phone: string;
 
     @Column
+    badge: string;    
+
+    @Column
     website: string;
 
     @Column({ type: DataType.FLOAT, defaultValue: 0, allowNull: false })

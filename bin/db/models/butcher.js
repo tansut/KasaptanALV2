@@ -477,6 +477,10 @@ __decorate([
 __decorate([
     sequelize_typescript_1.Column,
     __metadata("design:type", String)
+], Butcher.prototype, "badge", void 0);
+__decorate([
+    sequelize_typescript_1.Column,
+    __metadata("design:type", String)
 ], Butcher.prototype, "website", void 0);
 __decorate([
     sequelize_typescript_1.Column({ type: sequelize_typescript_1.DataType.FLOAT, defaultValue: 0, allowNull: false }),
