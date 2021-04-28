@@ -3,6 +3,7 @@
 var hideBorc = typeof(hideBorc) != 'undefined' ? hideBorc: false;
 var hideAlacak = typeof(hideAlacak) != 'undefined' ? hideAlacak: false;
 var showDate = typeof(showDate) != 'undefined' ? showDate: false;
+var hideTotal = typeof(hideTotal) != 'undefined' ? hideTotal: false;
 
 %>
 
@@ -40,7 +41,7 @@ var showDate = typeof(showDate) != 'undefined' ? showDate: false;
 
             </tr>
             <% accounts.forEach((o, i) => { %>
-            <tr class="<%= o.code == 'total' ? 'font-weight-bold':'' %>">
+            <tr class="<%= o.code == 'total' ? (hideTotal ? 'd-none': 'font-weight-bold'):'' %>">
           
               <% if (showDate) { %>
                 <td class="text-left">
