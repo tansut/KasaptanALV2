@@ -24,6 +24,7 @@ const common_1 = require("../../lib/common");
 const sq = require("sequelize");
 const area_1 = require("../../db/models/area");
 const resource_1 = require("../../db/models/resource");
+const helper_1 = require("../../lib/helper");
 const product_1 = require("../../db/models/product");
 const butcherproduct_1 = require("../../db/models/butcherproduct");
 const dispatcher_1 = require("../../db/models/dispatcher");
@@ -267,7 +268,7 @@ class Route extends router_1.ViewRouter {
             if (this.req.body.savecopy == "true") {
                 var json = this.butcher.toJSON();
                 delete json['id'];
-                json['gpid'] = json['gpid'] + 'foo';
+                json['gpid'] = json['gpid'] + 'foo' + helper_1.default.getRandomInt(155);
                 let newItem = new butcher_2.default(json);
                 newItem.slug = this.butcher.slug + '-kopya';
                 newItem.name = 'giriniz';
@@ -369,6 +370,17 @@ class Route extends router_1.ViewRouter {
                 this.butcher.keywords = this.req.body.keywords;
                 this.butcher.pageDescription = this.req.body.butcherpagedesc;
                 this.butcher.pageTitle = this.req.body.butcherpagetitle;
+                this.butcher.legalName = this.req.body.butcherlegalname;
+                this.butcher.iban = this.req.body.butcheriban;
+                this.butcher.companyType = this.req.body.butchercompanytype;
+                this.butcher.taxOffice = this.req.body.butchertaxoffice;
+                this.butcher.taxNumber = this.req.body.butchertaxnumber;
+                this.butcher.notifyMobilePhones = this.req.body.butchernotifymobilephones;
+                this.butcher.dispatchArea = this.req.body.butcherdispatcharea;
+                this.butcher.logisticProviderUsage = this.req.body.butcherlogisticproviderusage;
+                this.butcher.logisticProvider = this.req.body.butcherlogisticprovider;
+                this.butcher.locationText = this.req.body.butcherlocationtext;
+                this.butcher.areaLevel1Text = this.req.body.butcherarealevel1text;
                 if (this.req.body.butcherlat && this.req.body.butcherlng) {
                     this.butcher.location = {
                         type: 'Point',

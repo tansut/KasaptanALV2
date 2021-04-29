@@ -53,6 +53,20 @@
             <input class="form-control" type="text" id="su-name" placeholder="adınız ve soyadınız" required>
             <div class="invalid-feedback">adınızı girin.</div>
         </div>
+        <div class="form-row mb-3">
+            <div class="col">
+              <label>Cinsiyetiniz</label>
+              <select class="form-control" name="sex" id="sex" required>
+                  <option value=""></option>
+                  <option value="K">Kadın</option>
+                  <option value="E">Erkek</option>
+              </select>
+            </div>
+            <div class="col">
+                <label>Doğduğunuz Yıl</label>
+              <input name="birthYear" id="birthYear" type="number" min="1920" max="2021" required class="form-control" placeholder="1977 gibi">
+            </div>
+          </div>
         <div class="form-group">
             <!-- <label for="su-email">E-Posta Adresi</label> -->
             <input class="form-control" type="email" id="su-email" placeholder="e-posta adresiniz" required>

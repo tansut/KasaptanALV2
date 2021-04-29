@@ -166,6 +166,14 @@ __decorate([
     __metadata("design:type", String)
 ], User.prototype, "lastDaire", void 0);
 __decorate([
+    sequelize_typescript_1.Column,
+    __metadata("design:type", String)
+], User.prototype, "sex", void 0);
+__decorate([
+    sequelize_typescript_1.Column,
+    __metadata("design:type", Number)
+], User.prototype, "birtyYear", void 0);
+__decorate([
     sequelize_typescript_1.Column({
         allowNull: true,
         type: sequelize_typescript_1.DataType.GEOMETRY('POINT')

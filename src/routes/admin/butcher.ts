@@ -296,7 +296,7 @@ export default class Route  extends ViewRouter {
         if (this.req.body.savecopy == "true") {
             var json = this.butcher.toJSON();
             delete json['id'];
-            json['gpid'] = json['gpid'] + 'foo';
+            json['gpid'] = json['gpid'] + 'foo' + Helper.getRandomInt(155);
             let newItem = new Butcher(json);
             newItem.slug = this.butcher.slug + '-kopya';
             newItem.name = 'giriniz';
@@ -404,6 +404,29 @@ export default class Route  extends ViewRouter {
             this.butcher.keywords = this.req.body.keywords;
             this.butcher.pageDescription = this.req.body.butcherpagedesc;
             this.butcher.pageTitle = this.req.body.butcherpagetitle;
+
+            this.butcher.legalName = this.req.body.butcherlegalname;
+
+            this.butcher.iban = this.req.body.butcheriban;
+
+            this.butcher.companyType = this.req.body.butchercompanytype;
+
+            this.butcher.taxOffice = this.req.body.butchertaxoffice;
+
+            this.butcher.taxNumber = this.req.body.butchertaxnumber;
+
+            this.butcher.notifyMobilePhones = this.req.body.butchernotifymobilephones;
+
+            this.butcher.dispatchArea = this.req.body.butcherdispatcharea;
+
+            this.butcher.logisticProviderUsage = this.req.body.butcherlogisticproviderusage;
+
+            this.butcher.logisticProvider = this.req.body.butcherlogisticprovider;
+
+            this.butcher.locationText = this.req.body.butcherlocationtext;
+
+            this.butcher.areaLevel1Text = this.req.body.butcherarealevel1text;
+
             if (this.req.body.butcherlat && this.req.body.butcherlng) {
                 this.butcher.location = {                                
                     type: 'Point',

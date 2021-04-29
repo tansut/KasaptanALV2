@@ -133,6 +133,10 @@ export class Auth {
             event.preventDefault();
             let name = $('#su-name').val();
             let email = $('#su-email').val();
+            let sex = $('#sex').val();
+            let birthYear = $('#birthYear').val();
+
+            
             App.gTag('signup', 'try-complete', Auth.phone);
             $('#signup-btn-complete').attr("disabled", "true");
 
@@ -142,7 +146,9 @@ export class Auth {
                     phone: Auth.phone,
                     password: Auth.sms,
                     name: name,
-                    email: email
+                    email: email,
+                    sex: sex,
+                    birthYear: birthYear
                 })
                 App.gTag('signup', 'signup/complete', Auth.phone);
                 window.location.href = App.RunConfig['returnUrl'] || '/'

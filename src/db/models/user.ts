@@ -119,6 +119,12 @@ export default class User extends BaseModel<User> {
     @Column
     lastDaire: string    
 
+    @Column
+    sex: string   
+    
+    @Column
+    birtyYear: number    
+
     @Column({
         allowNull: true,
         type: DataType.GEOMETRY('POINT')
