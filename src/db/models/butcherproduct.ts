@@ -106,31 +106,31 @@ class ButcherProduct extends BaseModel<ButcherProduct> {
 
     @Column({
         allowNull: false,
-        defaultValue: true
+        defaultValue: false
     })
     unit1enabled: boolean;    
 
     @Column({
         allowNull: false,
-        defaultValue: true
+        defaultValue: false
     })
     unit2enabled: boolean;     
 
     @Column({
         allowNull: false,
-        defaultValue: true
+        defaultValue: false
     })
     unit3enabled: boolean;     
 
     @Column({
         allowNull: false,
-        defaultValue: true
+        defaultValue: false
     })
     unit4enabled: boolean;    
     
     @Column({
         allowNull: false,
-        defaultValue: true
+        defaultValue: false
     })
     unit5enabled: boolean;     
 

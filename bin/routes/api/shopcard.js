@@ -29,6 +29,7 @@ const google_1 = require("../../lib/google");
 const shoplist_1 = require("../../db/models/shoplist");
 const helper_1 = require("../../lib/helper");
 const order_1 = require("../../db/models/order");
+const winston_1 = require("winston");
 class Route extends router_1.ApiRouter {
     getDispatcher(to) {
         return __awaiter(this, void 0, void 0, function* () {
@@ -67,11 +68,12 @@ class Route extends router_1.ApiRouter {
                 ]
             });
             let shopcard = yield shopcard_1.ShopCard.createFromRequest(this.req);
+            let product;
             for (let i = 0; i < list.items.length; i++) {
                 let li = list.items[i];
                 try {
                     let api = new product_2.default(this.constructorParams);
-                    let product = yield product_1.default.findByPk(li.productid);
+                    product = yield product_1.default.findByPk(li.productid);
                     let productView = yield api.getProductView(product, butcher);
                     let po = productView.purchaseOptions.find(po => po.unit == li.poUnit);
                     if (po) {
@@ -80,7 +82,7 @@ class Route extends router_1.ApiRouter {
                     }
                 }
                 catch (exc) {
-                    helper_1.default.logError(exc, {}, this.req);
+                    helper_1.default.logError(exc, { product: product.slug }, this.req);
                 }
             }
             yield shopcard.saveToRequest(this.req);
@@ -104,24 +106,30 @@ class Route extends router_1.ApiRouter {
             if (item.shopcardIndex >= 0) {
                 shopcard.remove(item.shopcardIndex);
             }
-            shopcard.addProduct(productView, item.quantity, item.purchaseoption, item.note, item.productTypeData || {});
-            if (this.req.body.userSelectedButcher) {
-                for (var bi in shopcard.butchers) {
-                    if (shopcard.butchers[bi].slug == this.req.body.userSelectedButcher) {
-                        shopcard.butchers[bi].userSelected = true;
+            try {
+                shopcard.addProduct(productView, item.quantity, item.purchaseoption, item.note, item.productTypeData || {});
+                if (this.req.body.userSelectedButcher) {
+                    for (var bi in shopcard.butchers) {
+                        if (shopcard.butchers[bi].slug == this.req.body.userSelectedButcher) {
+                            shopcard.butchers[bi].userSelected = true;
+                        }
                     }
                 }
+                yield shopcard.saveToRequest(this.req);
+                let l = this.generateUserLog('shopcard', 'add');
+                if (l) {
+                    l.productid = product.id;
+                    l.productName = product.name;
+                    l.butcherid = butcher ? butcher.id : undefined;
+                    l.butcherName = butcher ? butcher.name : undefined;
+                    yield this.saveUserLog(l);
+                }
+                this.res.send(shopcard);
             }
-            yield shopcard.saveToRequest(this.req);
-            let l = this.generateUserLog('shopcard', 'add');
-            if (l) {
-                l.productid = product.id;
-                l.productName = product.name;
-                l.butcherid = butcher ? butcher.id : undefined;
-                l.butcherName = butcher ? butcher.name : undefined;
-                yield this.saveUserLog(l);
+            catch (err) {
+                helper_1.default.logError(err, { product: product.slug, method: 'shopcard/add' }, this.req);
+                throw winston_1.exceptions;
             }
-            this.res.send(shopcard);
         });
     }
     updateRoute() {

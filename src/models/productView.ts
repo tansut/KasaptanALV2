@@ -3,15 +3,19 @@ import { Puan } from "./puan";
 import { PriceSlice } from "../lib/logistic/core";
 import { NutritionView, PriceView } from "./common";
 import { ShipmentDayHours } from "./shipment";
+import { ButcherUnitSelection } from "../db/models/product";
 
 export interface PurchaseOption {
     id: number;
+    enabled: boolean;
     unit: string,
     unitTitle: string,
     unitWeight: string;
     desc: string,
     notePlaceholder: string;
     kgRatio: number,
+    customPrice: boolean;
+    customWeight: boolean;
     unitPrice: number,
     displayOrder: number;
     min: number;
@@ -20,6 +24,7 @@ export interface PurchaseOption {
     perPerson: number;
     step: number;
     weigthNote: string;
+    butcherUnitSelection: ButcherUnitSelection;   
     
 }
 
@@ -115,4 +120,5 @@ export interface ProductViewForButcher extends ProductView  {
     priceUnit: string;
     fromButcherNote: string;
     enabled: boolean;
+    
 }

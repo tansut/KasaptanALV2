@@ -455,7 +455,7 @@ if (orderClosed && __req.user && __req.user.hasRole('admin')) {
                       <% let days = controller.availableDays(true)%>
                       <% Object.keys(days).forEach(key=> { %>
   
-                      <option <%= key == order.shipmentdate.toDateString() ? 'selected':'' %> value="<%=key%>">
+                      <option <%= key == order.shipmentdate && order.shipmentdate.toDateString() ? 'selected':'' %> value="<%=key%>">
                         <%= days[key]%></option>
   
                       <%})%>

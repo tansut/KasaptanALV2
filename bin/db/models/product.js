@@ -683,6 +683,27 @@ __decorate([
 __decorate([
     sequelize_typescript_1.Column({
         allowNull: false,
+        defaultValue: 'selected'
+    }),
+    __metadata("design:type", String)
+], Product.prototype, "unit1ButcherUnitSelection", void 0);
+__decorate([
+    sequelize_typescript_1.Column({
+        allowNull: false,
+        defaultValue: 'selected'
+    }),
+    __metadata("design:type", String)
+], Product.prototype, "unit2ButcherUnitSelection", void 0);
+__decorate([
+    sequelize_typescript_1.Column({
+        allowNull: false,
+        defaultValue: 'selected'
+    }),
+    __metadata("design:type", String)
+], Product.prototype, "unit3ButcherUnitSelection", void 0);
+__decorate([
+    sequelize_typescript_1.Column({
+        allowNull: false,
         defaultValue: 0,
         type: sequelize_typescript_1.DataType.DECIMAL(8, 3)
     }),

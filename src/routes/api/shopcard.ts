@@ -14,6 +14,7 @@ import ShopList from '../../db/models/shoplist';
 import Helper from '../../lib/helper';
 import { Order, OrderItem } from '../../db/models/order';
 import { all } from 'sequelize/types/lib/operators';
+import { exceptions } from 'winston';
 
 
 export default class Route extends ApiRouter {
@@ -53,12 +54,12 @@ export default class Route extends ApiRouter {
             ]
         });
         let shopcard = await ShopCard.createFromRequest(this.req);
-
+        let product: Product;
         for (let i = 0; i < list.items.length; i++) {
             let li = list.items[i];
             try {
                 let api = new ProductApi(this.constructorParams);
-                let product = await Product.findByPk(li.productid);
+                product = await Product.findByPk(li.productid);
                 let productView = await api.getProductView(product, butcher);
                 let po = productView.purchaseOptions.find(po => po.unit == li.poUnit);
                 if (po) {
@@ -66,7 +67,7 @@ export default class Route extends ApiRouter {
                     shopcard.addProduct(productView, li.quantity, po, li.note, {});
                 }
             } catch (exc) {
-                Helper.logError(exc, {}, this.req)
+                Helper.logError(exc, {product: product.slug}, this.req);
             }
         }
         await shopcard.saveToRequest(this.req);
@@ -92,24 +93,30 @@ export default class Route extends ApiRouter {
         if (item.shopcardIndex >= 0) {
             shopcard.remove(item.shopcardIndex);
         }
-        shopcard.addProduct(productView, item.quantity, item.purchaseoption, item.note, item.productTypeData || {});
-        if (this.req.body.userSelectedButcher) {
-            for (var bi in shopcard.butchers) {
-                if (shopcard.butchers[bi].slug == this.req.body.userSelectedButcher) {
-                    shopcard.butchers[bi].userSelected = true;
+        try {
+            shopcard.addProduct(productView, item.quantity, item.purchaseoption, item.note, item.productTypeData || {});
+            if (this.req.body.userSelectedButcher) {
+                for (var bi in shopcard.butchers) {
+                    if (shopcard.butchers[bi].slug == this.req.body.userSelectedButcher) {
+                        shopcard.butchers[bi].userSelected = true;
+                    }
                 }
             }
+            await shopcard.saveToRequest(this.req);
+            let l = this.generateUserLog('shopcard', 'add');
+            if (l) {
+                l.productid = product.id;
+                l.productName = product.name;
+                l.butcherid = butcher ? butcher.id : undefined;
+                l.butcherName = butcher ? butcher.name : undefined;
+                await this.saveUserLog(l);
+            }
+            this.res.send(shopcard);
+        } catch(err) {
+            Helper.logError(err, {product: product.slug, method:'shopcard/add'}, this.req);
+            throw exceptions;
         }
-        await shopcard.saveToRequest(this.req);
-        let l = this.generateUserLog('shopcard', 'add');
-        if (l) {
-            l.productid = product.id;
-            l.productName = product.name;
-            l.butcherid = butcher ? butcher.id : undefined;
-            l.butcherName = butcher ? butcher.name : undefined;
-            await this.saveUserLog(l);
-        }
-        this.res.send(shopcard);
+        
     }
 
     @Auth.Anonymous()

@@ -427,6 +427,10 @@ export default class Route  extends ViewRouter {
 
             this.butcher.areaLevel1Text = this.req.body.butcherarealevel1text;
 
+            this.butcher.radiusAsKm = this.req.body.butcherradiusAsKm ? parseInt(this.req.body.butcherradiusAsKm):0;
+            this.butcher.selectionRadiusAsKm = this.req.body.butcherselectionRadiusAsKm ? parseInt(this.req.body.butcherselectionRadiusAsKm):0;
+
+
             if (this.req.body.butcherlat && this.req.body.butcherlng) {
                 this.butcher.location = {                                
                     type: 'Point',

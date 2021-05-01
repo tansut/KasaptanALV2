@@ -381,6 +381,8 @@ class Route extends router_1.ViewRouter {
                 this.butcher.logisticProvider = this.req.body.butcherlogisticprovider;
                 this.butcher.locationText = this.req.body.butcherlocationtext;
                 this.butcher.areaLevel1Text = this.req.body.butcherarealevel1text;
+                this.butcher.radiusAsKm = this.req.body.butcherradiusAsKm ? parseInt(this.req.body.butcherradiusAsKm) : 0;
+                this.butcher.selectionRadiusAsKm = this.req.body.butcherselectionRadiusAsKm ? parseInt(this.req.body.butcherselectionRadiusAsKm) : 0;
                 if (this.req.body.butcherlat && this.req.body.butcherlng) {
                     this.butcher.location = {
                         type: 'Point',

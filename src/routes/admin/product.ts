@@ -307,7 +307,9 @@ export default class Route extends ViewRouter {
             this.product.unit2ButcherNote = this.req.body.unit2ButcherNote;
             this.product.unit3ButcherNote = this.req.body.unit3ButcherNote;
 
-        
+            this.product.unit1ButcherUnitSelection = this.req.body.unit1ButcherUnitSelection;
+            this.product.unit2ButcherUnitSelection = this.req.body.unit2ButcherUnitSelection;
+            this.product.unit3ButcherUnitSelection = this.req.body.unit3ButcherUnitSelection;
 
             // this.product.defaultUnit = parseInt(this.req.body.defaultUnit);
             // this.product.defaultAmount = parseFloat(this.req.body.defaultAmount);

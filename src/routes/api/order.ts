@@ -975,6 +975,8 @@ export default class Route extends ApiRouter {
             if (o.orderSource == OrderSource.butcher) {
                 op.accounts.push(new Account("odeme-bekleyen-satislar", [o.userId, o.ordernum, 1000]).dec(paymentInfo.paidPrice))
                 op.accounts.push(new Account("satis-alacaklari", [o.userId, o.ordernum]).dec(paymentInfo.paidPrice))
+                let comissionAccounts = this.getComissionAccounts(o, paymentInfo.paidPrice, 0, 0);
+                ops.push(comissionAccounts);
                 ops.push(op);
                 promises = promises.concat(this.updateOrderByCreditcardPayment(o, paymentInfo, t));
             } else {
@@ -1032,7 +1034,7 @@ export default class Route extends ApiRouter {
     generateInitialAccounting(o: Order): AccountingOperation {
         let op = new AccountingOperation(`${o.ordernum} numaralı sipariş`, o.ordernum);
         if (o.orderSource == OrderSource.butcher) {
-            op.accounts.push(new Account("odeme-bekleyen-satislar", [o.userId, o.ordernum, 500], "Sipariş Bedeli").inc(o.subTotal));
+            op.accounts.push(new Account("odeme-bekleyen-satislar", [o.userId, o.ordernum, 100], "Kasabın Kendi Sipariş Bedeli").inc(o.subTotal));
             op.accounts.push(new Account("satis-alacaklari", [o.userId, o.ordernum]).inc(o.total))
         } else {
             op.accounts.push(new Account("odeme-bekleyen-satislar", [o.userId, o.ordernum, 100], "Ürün Bedeli").inc(o.subTotal));

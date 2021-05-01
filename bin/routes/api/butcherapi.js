@@ -70,7 +70,7 @@ class Route extends router_1.ApiRouter {
             let o = new order_2.Order();
             o.total = tutar;
             o.subTotal = tutar;
-            o.phone = user.mphone;
+            o.phone = helper_1.default.getPhoneNumber(user.mphone);
             o.name = name;
             o.note = this.req.body.desc;
             o.paymentType = "onlinepayment";

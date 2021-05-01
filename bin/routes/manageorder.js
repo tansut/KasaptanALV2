@@ -297,7 +297,6 @@ class Route extends router_1.ViewRouter {
     availableTimes() {
         let shipmentHours = [];
         let oh = Math.round(this.order.shipmenthour - (this.order.shipmenthour % 100));
-        let od = this.order.shipmentdate.setHours(oh);
         if (this.order.dispatcherType == 'banabikurye' || this.order.dispatcherType == 'banabikurye/car') {
             for (let i = 9; i < 22; i++) {
                 let selected = true;

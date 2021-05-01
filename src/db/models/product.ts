@@ -27,6 +27,8 @@ export enum ProductType {
 
  export type ProductPriceUnit = 'kg' | 'unit1' | 'unit3' | 'unit3';
 
+ export type ButcherUnitSelection = 'unselected' | 'selected' | 'forced' | 'none-selected' | 'none-unselected';
+
 export type ProductStatus = "onsale" | "archieved" 
 
 export type ProductSelection = 'tam' | 'sadece liste' | 'one cikar';
@@ -591,8 +593,26 @@ class Product extends BaseModel<Product> {
         defaultValue: 0,
         type: DataType.DECIMAL(8, 3)
     })
-    unit1kgRatio: number;     
+    unit1kgRatio: number;  
     
+    @Column({
+        allowNull: false,
+        defaultValue: 'selected'
+    })
+    unit1ButcherUnitSelection: ButcherUnitSelection;   
+
+    @Column({
+        allowNull: false,
+        defaultValue: 'selected'
+    })
+    unit2ButcherUnitSelection: ButcherUnitSelection;   
+
+    @Column({
+        allowNull: false,
+        defaultValue: 'selected'
+    })
+    unit3ButcherUnitSelection: ButcherUnitSelection;   
+
     @Column({
         allowNull: false,
         defaultValue: 0,

@@ -11,34 +11,26 @@
 
 
 <body>
-
-
-
-  <div class="page-title-overlap bg-primary pt-4 d-print-none">
-    <div class="container d-lg-flex justify-content-between py-2 py-lg-3">
-      <div class="order-lg-2 mb-3 mb-lg-0 pt-lg-2">
-        <nav aria-label="breadcrumb" class="d-none d-lg-block">
-          <ol class="breadcrumb breadcrumb-dark flex-lg-nowrap justify-content-center justify-content-lg-star">
-            <li class="breadcrumb-item"><a class="text-nowrap" href="/kasapsayfam"><i class="czi-home"></i></a></li>
-          </ol>
-        </nav>
+  <% include ./_partial/header %>
+  <% if (controller.platform == 'web') { %>
+    <div class="page-title app-d-none">
+      <div class="container d-lg-flex justify-content-between py-2 py-lg-3">
+        <div class="order-lg-2 mb-3 mb-lg-0 pt-lg-2">
+          <nav aria-label="breadcrumb" class="d-none d-lg-block">
+            <ol class="breadcrumb breadcrumb-dark flex-lg-nowrap justify-content-center justify-content-lg-star">
+              <li class="breadcrumb-item"><a class="text-nowrap" href="/kasapsayfam"><i class="czi-home"></i></a></li>
+            
+            </ol>
+          </nav>
+        </div>
+        <div class="order-lg-1 pr-lg-4 text-center text-lg-left">
+          <h1 class="h3 ">Online Ödeme Alın</h1>
+          <h2 class=" h4 lead">Kendi satışlarınızdan online ödeme alın</h2>
+        </div>
       </div>
-
-      <div class="media-body pt-2">
-
-
-        <h1 class="h3">Online Ödeme Talep</h1>
-        <h2 class=" h4 lead">Müşterilerinizden online ödeme alın.</h2>     
-     
-      </div>
-
-
     </div>
-
-  </div>
-
-
-
+  
+    <% } %>
 
 
 

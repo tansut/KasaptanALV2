@@ -75,7 +75,7 @@ export default class Route extends ApiRouter {
         let o = new Order();
         o.total = tutar;
         o.subTotal = tutar;
-        o.phone = user.mphone;
+        o.phone = Helper.getPhoneNumber(user.mphone);
         o.name = name;
         o.note = this.req.body.desc;
         o.paymentType = "onlinepayment"

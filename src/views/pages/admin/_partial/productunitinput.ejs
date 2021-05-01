@@ -112,6 +112,25 @@
                     <textarea rows="5" type="text" class="form-control" name="<%=unit%>ButcherNote" id="<%=unit%>ButcherNote"><%= product[unit + 'ButcherNote'] %></textarea>
                 </div>
             </div> 
+            <div class="col-md-6 mb-3">
+            <div class="form-group">
+                <label>Kasap bu birime nasıl fiyat versin</label>
+                <select class="form-control" name="<%=unit%>ButcherUnitSelection" id="<%=unit%>ButcherUnitSelection">
+                    
+                    <option <%=product[unit + 'ButcherUnitSelection'] == 'unselected' ? 'selected':''%> value="unselected">Seçili GELMESİN</option>
+                    <option <%=product[unit + 'ButcherUnitSelection'] == 'selected' ? 'selected':''%> value="selected">Direkt Seçili Gelsin</option>
+                    <option <%=product[unit + 'ButcherUnitSelection'] == 'forced' ? 'selected':''%> value="forced">Zorunlu olarak seçmeli</option>
+                    <option <%=product[unit + 'ButcherUnitSelection'] == 'none-selected' ? 'selected':''%> value="none-selected">Kasaba gösterme ve Otomatik Seç</option>
+                    <option <%=product[unit + 'ButcherUnitSelection'] == 'none-unselected' ? 'selected':''%> value="none-unselected">Kasaba gösterme ve Seçme</option>
+
+                    
+                 
+                   
+                </select>
+
+
+            </div>
+            </div>
         </div>
 
     </div>

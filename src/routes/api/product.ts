@@ -1,7 +1,7 @@
 import { Auth } from '../../lib/common';
 import { ApiRouter, ViewRouter } from '../../lib/router';
 import * as express from "express";
-import { ProductButcherView, ProductView, ProductViewForButcher } from '../../models/productView';
+import { ProductButcherView, ProductView, ProductViewForButcher, PurchaseOption,  } from '../../models/productView';
 import Product, { ProductSelectionWeigts, ProductType } from '../../db/models/product';
 import Butcher from '../../db/models/butcher';
 import ButcherProduct from '../../db/models/butcherproduct';
@@ -670,17 +670,19 @@ export default class Route extends ApiRouter {
     async getProductViewByProduct(product: Product, butcherproduct: ButcherProduct) {
     }
 
-    getPurchaseOptions(product: Product, butcherProduct?: ButcherProduct) {
-        let purchaseOptions = [];
+    getPurchaseOptions(product: Product, butcherProduct?: ButcherProduct, includeDisable: boolean = false) {
+        let purchaseOptions: Array<PurchaseOption> = [];
         let kgPrice = butcherProduct ? butcherProduct.kgPrice : 0.00;
         this.getProductUnits(product).forEach((p, i) => {
             let col = `unit${i + 1}`
-            let add = !butcherProduct ? true : (butcherProduct[`${col}enabled`]);
+            let add = !butcherProduct ? true : (!includeDisable ? (butcherProduct[`${col}enabled`]): true);
             add && purchaseOptions.push({
                 id: i + 1,
+                enabled: butcherProduct ? butcherProduct[`${col}enabled`]: false,
                 notePlaceholder: product[`${col}note`],
                 desc: this.markdown.render(product[`${col}desc`] || ""),
-                kgRatio: product[`${col}kgRatio`],
+                kgRatio: (butcherProduct && butcherProduct[`${col}kgRatio`]) ? butcherProduct[`${col}kgRatio`]: product[`${col}kgRatio`],
+                customWeight: butcherProduct && butcherProduct[`${col}kgRatio`] ? true: false,
                 unitWeight: (butcherProduct && butcherProduct[`${col}weight`]) || product[`${col}weight`],
                 unitPrice: butcherProduct ?
                     (
@@ -689,6 +691,7 @@ export default class Route extends ApiRouter {
                             Helper.asCurrency((butcherProduct[`${col}kgRatio`] || product[`${col}kgRatio`]) * kgPrice)
                     ) :
                     0.00,
+                customPrice: butcherProduct ? (Helper.asCurrency(butcherProduct[`${col}price`]) > 0): false,
                 unit: p,
                 unitTitle: product[`${col}title`],
                 displayOrder: product[`${col}Order`],
@@ -697,6 +700,7 @@ export default class Route extends ApiRouter {
                 default: product[`${col}def`],
                 perPerson: product[`${col}perPerson`],
                 step: product[`${col}step`],
+                butcherUnitSelection: product[`${col}ButcherUnitSelection`], 
                 weigthNote: product[`${col}WeigthNote`]
             })
         })
@@ -810,7 +814,7 @@ export default class Route extends ApiRouter {
         view.nutritionView = product.nutritionView;
 
 
-        view.purchaseOptions = this.getPurchaseOptions(product, butcherProduct);
+        view.purchaseOptions = this.getPurchaseOptions(product, butcherProduct, includeDisable);
 
         if (view.purchaseOptions.length) {
             view.priceView = {
@@ -847,13 +851,67 @@ export default class Route extends ApiRouter {
     //     this.res.send(view)
     // }
 
-    
+      getProductView2Edit(product: Product, view: ProductViewForButcher, category?: Category) {
+        let price = view.priceUnit == 'kg' ? Helper.asCurrency(view.kgPrice): 0.00;   
+
+        let getpOptions = ()=>{
+            let orj: any = view.purchaseOptions.filter(p=> ((p.butcherUnitSelection != 'none-unselected') && (p.butcherUnitSelection != 'none-selected')));
+            let kg = view.purchaseOptions.find(po=>po.unit == 'kg');
+            let hasKgDependency = view.purchaseOptions.find(po=>po.kgRatio > 0);
+            if (!kg && (product.priceUnit == 'kg')) {
+                orj.splice(0, 0, {
+                    unit: 'kg',
+                    unitTitle:'KG',
+                    enabled: view.kgPrice > 0,
+                    kgRatio:1,
+                    unitPrice: view.kgPrice,
+                    customWeight: false,
+                    customPrice: true,
+                    butcherUnitSelection: 'selected'
+                })
+            }
+            return orj;
+        }
+
+
+
+
+
+
+        if (price <= 0) {
+            let op = view.purchaseOptions.find(po=>po.unit == product[`${view.priceUnit}`]);
+            price = op ? op.unitPrice: price
+        }
+        return { 
+            category: category ? {
+                id: category.id,
+                title: category.name
+            }: undefined,
+            id: view.id,
+            name: view.name,
+            units: getpOptions().map(po => {
+                return {
+                    unit: po.unit,
+                    title: po.unitTitle,
+                    kgRatio: po.kgRatio,
+                    enabled: po.enabled,
+                    price: po.unitPrice || 0.00,
+                    customPrice: po.customPrice,
+                    customWeight: po.customWeight,
+                    butcherUnitSelection: po.butcherUnitSelection
+                }
+            }),
+            enabled: view.enabled,
+            price: price,
+            butcherProductNote: view.butcherProductNote,
+            note: view.fromButcherNote,
+            slug: view.slug,
+            thumbnail: this.req.helper.imgUrl("product-photos", view.slug)
+        };
+    }
 
     @Auth.Anonymous()
     async viewProductsForButchers() {
-
-
-
         if (!this.req.params.butcher) {
             return this.next();
         }
@@ -868,41 +926,22 @@ export default class Route extends ApiRouter {
         let categories = this.req.__categories.filter(p => p.slug != 'populer-etler');
         let viewProducts: any[] = [];
 
-        let add = (product: Product, view: ProductViewForButcher, category: Category) => {
-            let price = view.priceUnit == 'kg' ? Helper.asCurrency(view.kgPrice): 0.00;   
-            if (price <= 0) {
-                let op = view.purchaseOptions.find(po=>po.unit == product[`${view.priceUnit}`]);
-                price = op ? op.unitPrice: price
-            }
-            viewProducts.push({ 
-                category: {
-                    id: category.id,
-                    title: category.name
-                },
-                id: view.id,
-                name: view.name,
-                unit: view.priceUnit == 'kg' ? 'kg': product[`${view.priceUnit}`],
-                enabled: view.enabled,
-                price: price,
-                butcherProductNote: view.butcherProductNote,
-                note: view.fromButcherNote,
-                slug: view.slug,
-                thumbnail: this.req.helper.imgUrl("product-photos", view.slug)
-            });
-        }
+
 
         for (let i = 0; i < categories.length; i++) {
             let prods = await ProductManager.getProductsOfCategories([categories[i].id]);
             for (let p = 0; p < prods.length; p++) {
                 if (!viewProducts.find(vp => vp.id == prods[p].id)) {
-                    let view = await api.getProductViewforButcher(prods[p], butcher);
-                    add(prods[p], view, categories[i]);
+                    let view = await this.getProductViewforButcher(prods[p], butcher);
+                    let edit = this.getProductView2Edit(prods[p], view, categories[i]);
+                    viewProducts.push(edit);
                     let related = relations.filter(r=> ((r.productid1 == view.id || r.productid2 == view.id) && r.relation == 'price'));
                     for (let r = 0; r < related.length;r++) {
                         let rp = prods.find(p=>p.id == (related[r].productid2 == view.id ? related[r].productid1: related[r].productid2));
                         if (rp && !viewProducts.find(vp => vp.id == rp.id)) {
                             let view = await api.getProductViewforButcher(rp, butcher);
-                            add(rp, view, categories[i]);
+                            edit =  this.getProductView2Edit(rp, view, categories[i]);
+                            viewProducts.push(edit);
                         }
                     }
                 }
@@ -916,11 +955,8 @@ export default class Route extends ApiRouter {
         if (!this.req.params.butcher) {
             return this.next();
         }
-        let butcher = await Butcher.findOne({
-            where: {
-                slug: this.req.params.butcher
-            }
-        })
+
+        let butcher = await Butcher.loadButcherWithProducts(this.req.params.butcher, true);
 
         if (!butcher) {
             return this.next();
@@ -946,30 +982,63 @@ export default class Route extends ApiRouter {
         if (newItem == null)
             newItem = new ButcherProduct();
 
+            
+
         newItem.enabled =  (this.req.body.price <= 0 ? false: this.req.body.enabled)
         newItem.butcherid = butcher.id;
         newItem.productid = productid;
         newItem.fromButcherDesc = this.req.body.note;
 
-        if (this.req.body.unit == 'kg') {
-            newItem.kgPrice = this.req.body.price
-        } else {
-            let unitid = product.getUnitBy(this.req.body.unit)
-            if (!unitid) throw new ValidationError('Geçersiz birim');
-            newItem[`${unitid}price`] = this.req.body.price;
-            newItem[`${unitid}enabled`] = true;
-        }
+        newItem.unit1enabled = false;
+        newItem.unit2enabled = false;
+        newItem.unit3enabled = false;
+        newItem.unit4enabled = false;
+        newItem.unit5enabled = false;
 
-        // newItem.unit1price = this.req.body.unit1price ? parseFloat(this.req.body.unit1price) : 0;
-        // newItem.unit2price = this.req.body.unit2price ? parseFloat(this.req.body.unit2price) : 0;
-        // newItem.unit3price = this.req.body.unit3price ? parseFloat(this.req.body.unit3price) : 0;
-        // newItem.kgPrice = this.req.body.productkgPrice ? parseFloat(this.req.body.productkgPrice) : 0;
-        //newItem.mddesc = this.req.body.productmddesc;
-        //newItem.longdesc = this.req.body.productlongdesc;
+        newItem.unit1weight = null;
+        newItem.unit2weight = null;
+        newItem.unit3weight = null;
 
-        // newItem.unit1enabled = this.req.body.unit1enabled == "on";
-        // newItem.unit2enabled = this.req.body.unit2enabled == "on";
-        // newItem.unit3enabled = this.req.body.unit3enabled == "on";
+        newItem.unit1price = null;
+        newItem.unit2price = null;
+        newItem.unit3price = null;
+
+        newItem.unit1kgRatio = 0;
+        newItem.unit2kgRatio = 0;
+        newItem.unit3kgRatio = 0;
+    
+        newItem.kgPrice = 0;
+
+        newItem.isNewRecord && product.availableUnits.forEach(u=>{
+            if (product[`${u}ButcherButcherUnitSelection`] == 'none-selected')
+                newItem[`${u}enabled`] = true;
+            else (product[`${u}ButcherButcherUnitSelection`] == 'none-unselected')
+                newItem[`${u}enabled`] = false;
+        })
+
+        this.req.body.units.forEach(u=> {
+            let unitid = product.getUnitBy(u.unit);
+            if (u.kgRatio && u.unit != 'kg') {
+                let butcherKgRatio = u.kgRatio;
+                let productKgRatio = product[`${unitid}kgRatio`];
+                if (u.customWeight && butcherKgRatio != productKgRatio)  {
+                    newItem[`${unitid}kgRatio`] = butcherKgRatio;
+                    newItem[`${unitid}weight`] =  `ortalama ${u.kgRatio} kg`;
+                }
+            }
+
+            if (u.unit == 'kg') {
+                newItem.kgPrice = u.price;
+            }
+            
+            if (unitid) {
+                newItem[`${unitid}enabled`] = u.enabled;
+                if (u.price && u.customPrice) {
+                    newItem[`${unitid}price`] = u.price;
+                }
+            }
+        })
+
 
 
         await db.getContext().transaction((t: Transaction) => {
@@ -977,8 +1046,11 @@ export default class Route extends ApiRouter {
                 transaction: t
             }).then(() => butcher.approved ? ButcherPriceHistory.manageHistory(newItem, t): null)
         })
+        butcher = await Butcher.loadButcherWithProducts(this.req.params.butcher, true);
+        let view = await this.getProductViewforButcher(product, butcher);
+        let edit = this.getProductView2Edit(product, view)
 
-        this.res.send(this.req.body);
+        this.res.send(edit);
     }
 
     static SetRoutes(router: express.Router) {

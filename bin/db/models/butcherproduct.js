@@ -107,35 +107,35 @@ __decorate([
 __decorate([
     sequelize_typescript_1.Column({
         allowNull: false,
-        defaultValue: true
+        defaultValue: false
     }),
     __metadata("design:type", Boolean)
 ], ButcherProduct.prototype, "unit1enabled", void 0);
 __decorate([
     sequelize_typescript_1.Column({
         allowNull: false,
-        defaultValue: true
+        defaultValue: false
     }),
     __metadata("design:type", Boolean)
 ], ButcherProduct.prototype, "unit2enabled", void 0);
 __decorate([
     sequelize_typescript_1.Column({
         allowNull: false,
-        defaultValue: true
+        defaultValue: false
     }),
     __metadata("design:type", Boolean)
 ], ButcherProduct.prototype, "unit3enabled", void 0);
 __decorate([
     sequelize_typescript_1.Column({
         allowNull: false,
-        defaultValue: true
+        defaultValue: false
     }),
     __metadata("design:type", Boolean)
 ], ButcherProduct.prototype, "unit4enabled", void 0);
 __decorate([
     sequelize_typescript_1.Column({
         allowNull: false,
-        defaultValue: true
+        defaultValue: false
     }),
     __metadata("design:type", Boolean)
 ], ButcherProduct.prototype, "unit5enabled", void 0);

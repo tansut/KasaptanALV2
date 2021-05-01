@@ -42,10 +42,15 @@
             <strong>Satışı biz değil siz</strong> yapmaktasınız. <strong>Tezgah fiyatlarınızı birebir</strong> verin.
           </li>
           <li>
-            <strong>Tezgâh ve KasaptanAl fiyatlarının farklı olması</strong> durumunda KasaptanAl hiçbir uyarıya gerek duymadan <strong>üyelik iptal hakkını</strong> saklı tutar.
+            <strong>Tezgâh ve KasaptanAl fiyatlarının farklı olması</strong> durumunda KasaptanAl hiçbir uyarıya gerek
+            duymadan <strong>üyelik iptal hakkını</strong> saklı tutar.
           </li>
           <li>
-            Internet ortamında <strong>firesiz satış yapıyoruz</strong>. Sadece firesi olabilecek kemikli ürünlerde fire farkı ekleyin.
+            Internet ortamında <strong>firesiz satış yapıyoruz</strong>. Sadece firesi olabilecek kemikli ürünlerde fire
+            farkı ekleyin.
+          </li>
+          <li>
+            <strong>Tavuk gibi fiyatı günlük değişen ürünlerde</strong> 1-2 TL fiyat farkı ekleyebilirsiniz.
           </li>
           <li>
             Aynı gün elinizde olmasa bile <strong>ertesi gün temin edebileceğiniz her ürüne</strong> fiyat verin.
@@ -54,7 +59,8 @@
             <strong>Aşırı yüksek fiyat vermeniz</strong> sıralamada arkalarda olmanıza yol açmaktadır.
           </li>
           <li>
-            Fiyat düzenlemesi yaptıktan sonra <strong><a target="_blank" href="/<%=butcher.slug%>">burayı</a></strong> kullanarak kasap profilinizi <strong>açıp lütfen kontrol edin</strong>.
+            Fiyat düzenlemesi yaptıktan sonra <strong><a target="_blank" href="/<%=butcher.slug%>">burayı</a></strong>
+            kullanarak kasap profilinizi <strong>açıp lütfen kontrol edin</strong>.
           </li>
           <li>
             Fiyat giriş ve düzenleme bittikten sonra gerekli kontroller için <strong>bizi haberdar ediniz</strong>
@@ -80,24 +86,29 @@
           </div>
         </div>
 
+
+
+
+
+
         <table v-if="list && list.length > 0" class="table table-sm">
           <thead class="thead-dark">
             <th scope="col">Resim</th>
             <th scope="col">Ürün</th>
-            <th scope="col">Fiyat</th>
-            </tr>
+            <th class="text-right" scope="col">Fiyat</th>
+
           </thead>
           <tbody>
 
 
-            <tr :id="p.slug + 'row'" v-bind:class="{'border border-primary': p.price <= 0}" v-for="(p, index) in list">
-              
+            <tr :id="p.slug + 'row'" v-bind:class="{'border border-primary': !hasPrice(p)}" v-for="(p, index) in list">
 
-              
-             
+
+
+
               <td style="width: 3rem;">
-        
-                
+
+
                 <a class="d-block" target="_blank" :href="'/' + p.slug">
                   <img style="width: 3rem;" width="500" height="500" :src="p.thumbnail" class="lazyload">
                 </a>
@@ -110,27 +121,37 @@
                    <span class="d-none">{{ lastCat = p.category.id}}</span>
                   </h4>
                 </div> -->
-              
+
                 <p class="mb-1">
                   <a class="text-dark d-block" target="_blank" :href="'/' + p.slug">
-                    {{p.name}} 
+                    {{p.name}}
                   </a>
-                  <span class="text-muted font-size-sm">{{p.butcherProductNote}}</span>
+                  <span class="d-none text-muted font-size-sm">{{p.butcherProductNote}}</span>
                 </p>
                 <p class="font-size-sm text-success" v-if="p.note">
                   <span>
                     {{p.note}}
                   </span>
                 </p>
+                <ul class="list-unstyled mb-3">
+                  <li v-for="(u, i) in p.units" class="badge badge-secondary mr-2 p-2 " v-if="u.enabled">
+                    <money-view :unit="u.title || u.unit" :money="u.price">
+                    </money-view>
+                    <span v-if="u.unit != 'kg'"> ({{u.kgRatio}}KG)</span>
+                  </li>
+
+                </ul>
+
               </td>
 
-              <td scope="row">
+              <td class="text-right">
                 <button v-on:click="openDialog(p, index)"
-                  v-bind:class="{'btn-warning': p.price > 0 && !p.enabled ,'btn-success': p.price > 0 && p.enabled, 'btn-secondary': p.price <=0 }" class="btn btn-sm">
-                  <money-view v-if="p.price > 0" :unit="p.unit" :money="p.price"></money-view>
-                  <span v-else>Fiyat Ver</span>
+                  v-bind:class="{'btn-warning': hasPrice(p) && !p.enabled ,'btn-success': hasPrice(p) && p.enabled, 'btn-secondary': !hasPrice(p) }"
+                  class="btn btn-sm">
+                  <span>{{hasPrice(p) ? 'Fiyat Düzenle':'Fiyat Ver'}}</span>
                 </button>
               </td>
+
             </tr>
           </tbody>
         </table>
@@ -147,7 +168,8 @@
               </button>
             </div>
             <div class="modal-body p-0">
-              <div class=" p-2 border-bottom bg-dark text-light" v-if="edit && edit.butcherProductNote" class="text-muted">
+              <div class=" p-2 border-bottom bg-dark text-light" v-if="edit && edit.butcherProductNote"
+                class="text-muted">
                 {{edit && edit.butcherProductNote }}
               </div>
 
@@ -160,51 +182,75 @@
                   <small class=" form-text text-muted"></small>
                 </div>
 
-                <div class="d-none form-group">
-                  <label>Satış Biriminiz</label>
-                  <input readonly type="text" class="form-control" v-model="edit && edit.unit"
-                    placeholder="satış birimi (kg, adet, paket gibi)">
-                  <small class="form-text text-dark">Bu şekilde satış yapmıyorsanız fiyat verip not bölümünde
-                    belirtiniz.</small>
-                </div>
-                <div class="form-group">
-                  <div class="d-block">Tezgâh <strong style="text-transform: uppercase;">{{edit && edit.unit}}</strong> Satış
-                    Fiyatınız</div>
-                    <span class="text-muted font-size-sm">Tüm <strong>fiyat değişiklikleri saklanmaktadır</strong> ve fiyat değişim grafiği kasap bazında yakında sitede gösterilecektir.</span>
-                  <div class="input-group mb-3">
-                   
-                    <input id="price-edit" type="text" class="form-control" v-model="edit && edit.price"
-                      placeholder="tezgah satış fiyatınız">
-
-                    <div class="input-group-append">
-                      <button v-on:click="saveDialog(edit, true)" class="btn btn-sm btn-primary">Kaydet</button>
+                <div v-if="edit">
+                  <ul class="nav nav-tabs">
+                    <li v-for="(u, i) in edit.units" class="nav-item">
+                      <a @click="editUnitVal=u" :class="{'active': editUnit == u}" class="nav-link">{{u.title}}</a>
+                    </li>
+                  </ul>
+                  <div class="mb-3" v-if="editUnit">
+                    <div class="mb-3 custom-control custom-checkbox">
+                      <input :id="editUnit.unit + 'enabled'" type="checkbox" v-model="editUnit.enabled"
+                        class="custom-control-input">
+                      <label v-if="editUnit.unit != 'kg'" :for="editUnit.unit + 'enabled'" class="custom-control-label">{{editUnit.title}} olarak
+                        satışınız varsa işaretleyin</label>
+                        <label v-else :for="editUnit.unit + 'enabled'" class="custom-control-label">{{editUnit.title}} satış fiyatınız</label>
                     </div>
-                    <small class="form-text text-dark">
-                      <ul>
-                        <li>
-                          Tezgah satış fiyatınızı belirtin.
-                        </li>
-                        <li>
-                          KasaptanAl'da firesiz
-                          satmaktayız. Sadece kemikli ürünlerde fire payı ekleyin.
-                        </li>
-                        <li>
-                          Ürünü {{edit && edit.unit}} dışında satıyorsanız not bölümüne yazın.
-                        </li>
-                        <li>
-                          Ürünü hiçbir şekilde temin edemiyorsanız 0 girin.
-                        </li>
-                      </ul>
 
-                    </small>
+
+
+                    <div v-if="editUnit.enabled">
+
+                      <div v-if="(editUnit.unit != 'kg') && (findUnit('kg', true))"
+                        class="custom-control custom-checkbox mb-1">
+                        <input required :id="editUnit.unit + 'customWeightcb'" v-model="editUnit.customWeight"
+                          type="checkbox" class="custom-control-input">
+                        <label :for="editUnit.unit + 'customWeightcb'" class="custom-control-label">1 {{editUnit.title}} <strong>
+                          {{editUnit.kgRatio}} KG</strong> olarak tanımlı. Değiştirmek isterseniz işaretleyin.</label>
+                      </div>
+
+                      <div class="mb-3" v-if="editUnit.customWeight && (editUnit.unit != 'kg') && (findUnit('kg'))">
+                        <label for="">1 {{editUnit.title}} sizde kaç KG ?</label>
+                        <input  v-model="editUnit.kgRatio" type="number" class="form-control price-control">
+                      </div>
+
+                      <div  v-if="(editUnit.unit != 'kg') && (findUnit('kg', true))"
+                        class="custom-control custom-checkbox mb-1">
+                        <input required :id="editUnit.unit + 'salemanualcb'" v-model="editUnit.customPrice"
+                          type="checkbox" class="custom-control-input">
+                        <label :for="editUnit.unit + 'salemanualcb'" class="custom-control-label">{{editUnit.title}}
+                          fiyatı KG'a göre otomatik hesaplanır. Ayrı fiyat vermek için işaretleyin.</label>
+                      </div>
+
+
+
+                      <div class="form-group" v-if="(editUnit.unit == 'kg') || editUnit.customPrice || !findUnit('kg')">
+                        <div class="d-block"><strong style="text-transform: uppercase;">{{editUnit.title}}</strong>
+                          satış fiyatınız</div>
+                        <input required v-model="editUnit.price" type="text" class="form-control price-control"
+                          placeholder="tezgah satış fiyatınız">
+                      </div>
+
+
+
+
+
+                    </div>
                   </div>
+
                 </div>
+
+
                 <div class="d-flex justify-content-between">
-                  <button v-if="edit && list[editIndex].price > 0" v-on:click="toogleEnabled(edit)" :class="{'btn-warning': list[editIndex].enabled, 'btn-success': !list[editIndex].enabled}" class="btn btn-sm">
-                  <span v-if="list[editIndex].enabled">Satıştan Kaldır</span>
-                  <span v-else>Satışa Al</span>
-                </button>
-                <a v-if="edit" class="btn btn-sm btn-primary" target="_blank" :href="'/' + edit.slug">Ürünü Gör</a>
+                  <button v-on:click="saveDialog(edit, true)" class="btn btn-sm btn-primary">Kaydet</button>
+
+                  <button v-if="edit && hasPrice(list[editIndex])" v-on:click="toogleEnabled(edit)"
+                    :class="{'btn-warning': list[editIndex].enabled, 'btn-success': !list[editIndex].enabled}"
+                    class="btn btn-sm">
+                    <span v-if="list[editIndex].enabled">Satıştan Kaldır</span>
+                    <span v-else>Satışa Al</span>
+                  </button>
+                  <a v-if="edit" class="btn btn-sm btn-primary" target="_blank" :href="'/' + edit.slug">Ürünü Gör</a>
                 </div>
 
               </div>
@@ -214,8 +260,8 @@
           </div>
         </div>
       </div>
-    </div>
 
+    </div>
 
 
     <% include ./_partial/footer %>
@@ -243,19 +289,29 @@
               return {
                 list: [],
                 edit: null,
+                editUnitVal: null,
                 editIndex: -1,
                 completedPerc: 0,
                 canGo: 0,
-                lastCat: 0
+                lastCat: 0,
+                renderComponent: true,
               }
             },
 
             computed: {
 
 
+              editUnit: function () {
+                if (!this.edit) return null;
+                return this.editUnitVal || (this.editUnitVal = this.edit.units[0]);
+              },
+
+
+
               completed: function () {
+                var self = this;
                 let result = this.list.filter(function (p) {
-                  return p.price > 0 && p.enabled
+                  return self.hasPrice(p) && p.enabled
                 }).length;
                 this.completedPerc = Math.floor(this.list.length > 0 ? (result / this.list.length) * 100 : 0)
                 return result;
@@ -264,38 +320,95 @@
 
             methods: {
 
+              forceRerender() {
+                this.renderComponent = false;
+
+                this.$nextTick(() => {
+                  this.renderComponent = true;
+                });
+              },
+
+              priceView: function (units) {
+                var best = units.find(function (u) {
+                  if (u.unit == 'kg' && u.enabled) return u;
+                });
+                if (best) return best;
+                best = units.find(function (u) {
+                  if (u.enabled) return u;
+                });
+                if (!best) {
+                  return {
+                    title: 'Fiyat Verin',
+                    price: 0
+                  }
+                } else return best;
+              },
+
+              hasPrice: function (item, forceEnabled) {
+                var res = false;
+                for (var i = 0; i < item.units.length; i++) {
+                  if (item.units[i].price > 0) {
+                    if (forceEnabled) return item.units[i].enabled;
+                    return true;
+                  }
+                }
+                return false;
+              },
+
+              findUnit: function (unit, enabled) {
+                if (!this.edit || !this.editUnitVal) return false;
+                var f = this.edit.units.find(function (u) {
+                  return u.unit == unit
+                });
+                return f && (enabled ? (f.enabled ? f : null) : f);
+              },
+
               toogleEnabled(p) {
                 p.enabled = !p.enabled;
                 this.saveDialog(p, false);
               },
 
               saveDialog(p, doEnable) {
+
+                var valid = true;
+
+                p.units.forEach(function (u) {
+                  if (u.unit == 'kg' && u.enabled && !u.price) {
+                    u.enabled = false
+                  }
+                  if (u.unit != 'kg' && !(u.kgRatio) && !(u.price)) {
+                    u.enabled = false;
+                  }
+                });
+
                 var self = this;
-                let v = parseFloat($('#price-edit').val().replace(/,/g, '') || "0")
-                p.price = parseFloat(v);
+
                 App.Backend.post('product/<%=butcher.slug%>/prePrices', {
                   id: p.id,
-                  unit: p.unit,
-                  price: p.price,
+                  units: p.units.map(function (u) {
+                    return {
+                      unit: u.unit,
+                      enabled: u.enabled,
+                      customPrice: u.customPrice,
+                      price: parseFloat(u.price),
+                      customWeight: u.customWeight,
+                      kgRatio: u.kgRatio ? parseFloat(u.kgRatio): 0
+                    }
+                  }),
                   note: p.note,
-                  enabled: (p.price <= 0) ? false: (p.enabled || doEnable)
+                  enabled: (p.enabled || doEnable)
                 }).then(function (result) {
+                  var i = 0;
                   var f = self.list.find(function (l) {
                     return l.id == p.id
+                    i++
                   })
 
                   Object.assign(f, result);
-
+                  self.forceRerender()
                   $('#pricemodal').modal('hide');
                   $('#' + p.slug + 'row').fadeOut(500).fadeIn(500);
 
-                  //App.alert(f.name + ' fiyatı belirlendi');
-
-                  // if (self.editIndex < (self.list.length - 1)) {
-                  //   Object.assign(self.edit = {}, self.list[++self.editIndex]);
-                  //   $('#price-edit').focusin();
-                  //   $('#price-edit').select();
-                  // } else $('#pricemodal').modal('hide');
                 }).catch(function (err) {
                   App.HandleError(err)
                 });
@@ -303,8 +416,14 @@
               },
 
               openDialog(p, index) {
-                Object.assign(this.edit = {}, p);
+                this.edit = JSON.parse(JSON.stringify(p));
+                this.edit.units.forEach(function (u) {
+                  if (u.butcherUnitSelection == 'selected' || u.butcherUnitSelection == 'forced') {
+                    u.enabled = true
+                  }
+                });                
                 this.editIndex = index;
+                this.editUnitVal = null;
                 $('#pricemodal').modal('show');
               }
             }
