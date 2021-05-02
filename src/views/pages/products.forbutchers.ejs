@@ -418,6 +418,7 @@
                 this.edit = JSON.parse(JSON.stringify(p));                
                 this.editIndex = index;
                 this.editUnitVal = null;
+                this.edit.discountType = 'discountAsPercent';
                 this.edit.priceDiscount = this.edit.priceDiscount || 4;
                 $('#campaignmodal').modal('show');                
               },

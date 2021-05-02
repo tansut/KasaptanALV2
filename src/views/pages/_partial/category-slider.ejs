@@ -6,6 +6,7 @@
 <% urlParams = typeof(urlParams) == 'undefined' ? '': urlParams %>
 <% subUrl = typeof(subUrl) == 'undefined' ? '': subUrl %>
 <% categories = typeof(categories) == 'undefined' ? __categories: categories %>
+<% customCategories = typeof(customCategories) == 'undefined' ? []:  customCategories %>
 <% viewCats = typeof(viewCats) == 'undefined' ? ['reyon', 'list', 'product:dispatch=countrywide']: viewCats %>
 <% var linkCss = typeof(linkCss) == 'undefined' ? '': linkCss %>
 <% var hideIcon = typeof(hideIcon) == 'undefined' ? false: true %>
@@ -13,13 +14,13 @@
 <% var partialRenderUrl = typeof(partialRenderUrl) == 'undefined' ? '': partialRenderUrl %>
 
 <% 
-   var visibleCategories = categories || [];
-  if (visibleCategories.length == 0) {
+   var visibleCategories =  [];
+  if (customCategories.length == 0) {
   viewCats.forEach(cat => { 
      var reyonlar = (categories.filter(p=>p.type == cat && p.status == 'active'));
      visibleCategories = visibleCategories.concat(reyonlar)
   })
-}
+} else visibleCategories = customCategories;
 
   /*if (selected && visibleCategories.filter(p=>p.slug == selected).length == 0) {
       var sel = categories.find(p=>p.slug == selected);
