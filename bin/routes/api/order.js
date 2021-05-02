@@ -1243,8 +1243,8 @@ class Route extends router_1.ApiRouter {
             order.shipmentstart = helper_1.default.newDate2(day.getFullYear(), day.getMonth(), day.getDate(), shour, fHour, 0);
             let max = new Date(order.shipmentstart);
             max.setTime(max.getTime() + (4 * 60 * 60 * 1000));
-            if (max < helper_1.default.Now())
-                throw new Error("Lütfen teslimat gün ve saatini kontrol edin, hatalı gözüküyor.");
+            //if (max < Helper.Now())
+            //    throw new Error("Lütfen teslimat gün ve saatini kontrol edin, hatalı gözüküyor.")
             if (order.dispatcherType == 'banabikurye' || order.dispatcherType == 'banabikurye/car') {
                 let provider = core_1.LogisticFactory.getInstance(order.dispatcherType, {
                     dispatcher: yield dispatcher_1.default.findByPk(order.dispatcherid, {

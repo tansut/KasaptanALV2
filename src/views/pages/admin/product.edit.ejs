@@ -201,7 +201,7 @@
 <% for (var i = 0; i < units.length;i++) { %>
    
         <li class="nav-item">
-          <a class="nav-link <%= i == 0 ? ' active':'' %>" id="<%=units[i]%>container-tab" data-toggle="tab" href="#<%=units[i]%>container" role="tab"><%=units[i]%></a>
+          <a class="nav-link <%= i == 0 ? ' active':'' %>" id="<%=units[i]%>container-tab" data-toggle="tab" href="#<%=units[i]%>container" role="tab"><%= product[`${units[i]}`] || units[i]%></a>
         </li>
 
      

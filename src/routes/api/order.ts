@@ -1383,8 +1383,8 @@ export default class Route extends ApiRouter {
 
         let max = new Date(order.shipmentstart); 
         max.setTime(max.getTime() + (4*60*60*1000));
-        if (max < Helper.Now())
-            throw new Error("Lütfen teslimat gün ve saatini kontrol edin, hatalı gözüküyor.")
+        //if (max < Helper.Now())
+        //    throw new Error("Lütfen teslimat gün ve saatini kontrol edin, hatalı gözüküyor.")
         if (order.dispatcherType == 'banabikurye' || order.dispatcherType == 'banabikurye/car') {
             let provider = LogisticFactory.getInstance(order.dispatcherType, {
                 dispatcher: await Dispatcher.findByPk(order.dispatcherid, {

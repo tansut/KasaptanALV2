@@ -211,8 +211,14 @@
                         <label :for="editUnit.unit + 'customWeightcb'" class="custom-control-label">1 {{editUnit.title}} ortalama <strong>
                           {{editUnit.kgRatio}} {{edit.kgTitle}}</strong> içerecek şekilde tanımlı. Size özel değiştirmek isterseniz işaretleyin.</label>
                       </div>
+                      <div class="font-size-sm text-muted" v-else-if="editUnit.kgRatio > 0 && editUnit.id > 0 ">
+                        <p>
+                          1 {{editUnit.title}} ortalama <strong>{{editUnit.kgRatio}} {{edit.kgTitle}}</strong> içerecek şekilde tanımlıdır.</span>
 
-                      <div class="mb-3" v-if="editUnit.customWeight && canEdit(editUnit,'weight') && (editUnit.unit != 'kg')">
+                        </p>
+                      </div>
+
+                      <div class="mb-3" v-if="editUnit.customWeight && canEdit(editUnit,'weight', true) && (editUnit.unit != 'kg')">
                         <label for="">1 {{editUnit.title}} <strong>sizde</strong> ortalama kaç {{edit.kgTitle}} ?</label>
                         <input  v-model="editUnit.kgRatio" type="number" class="form-control price-control">
                       </div>
@@ -227,7 +233,7 @@
 
 
 
-                      <div class="form-group" v-if="canEdit(editUnit,'price')">
+                      <div class="form-group" v-if="canEdit(editUnit,'price', true)">
                         <div class="d-block"><strong style="text-transform: uppercase;">{{editUnit.title}}</strong>
                           satış fiyatınız</div>
                         <input required v-model="editUnit.price" type="text" class="form-control price-control"
@@ -323,12 +329,14 @@
 
             methods: {
 
-              canEdit(unit, prop) {
+              canEdit(unit, prop, checkCustom) {
                 
                 if (prop == 'price' && unit.unit == 'kg' && unit.id == 0) return true;
                 if (unit.butcherUnitEdit == 'none') return false;
                 if (unit.butcherUnitEdit == 'all') return true;
-                return unit.butcherUnitEdit == prop || (prop == "weight" || unit.customPrice);
+                if (checkCustom) {
+                  return ((prop == "price" && unit.customPrice) || (prop == "price" && unit.customWeight));
+                } else return unit.butcherUnitEdit == prop
                 
               },
 
