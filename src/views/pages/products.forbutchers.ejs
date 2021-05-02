@@ -134,10 +134,10 @@
                   </span>
                 </p>
                 <ul v-if="p.enabled" class="list-unstyled mb-3">
-                  <li v-for="(u, i) in p.units" class="badge badge-secondary mr-2 p-2 " v-if="u.enabled">
+                  <li v-for="(u, i) in p.units" class="badge badge-secondary mr-2 p-2 " v-if="u.enabled && u.id != 0">
                     <money-view :unit="u.title || u.unit" :money="u.price">
                     </money-view>
-                    <span v-if="u.unit != 'kg'"> ({{u.kgRatio}}KG)</span>
+                    <span v-if="u.unit != 'kg' && u.kgRatio"> ({{u.kgRatio}} {{p.kgTitle}})</span>
                   </li>
 
                 </ul>
@@ -177,57 +177,57 @@
 
                 <div class="form-group mb-0">
                   <label><strong>Bize iletmek istediğiniz</strong> notunuz varsa alalım</label>
-                  <textarea rows="4" class="form-control font-size-sm" v-model="edit && edit.note"
+                  <textarea rows="3" class="form-control font-size-sm" v-model="edit && edit.note"
                     :placeholder="false ? edit.butcherProductNote: 'Paketli, şoklu olduğu, özel olarak yaptırıldığı gibi ürününüze özel yazmamızı istediğiniz not varsa belirtin.'"></textarea>
                   <small class=" form-text text-muted"></small>
                 </div>
 
                 <div v-if="edit">
-                  <ul class="nav nav-tabs mb-0">
-                    <li v-for="(u, i) in edit.units" class="nav-item">
-                      <a @click="editUnitVal=u" :class="{'active': editUnit == u}" class="nav-link">{{u.title}}</a>
+                  <ul class="nav nav-tabs  mb-3">
+                    <li v-for="(u, i) in edit.units" class="nav-item font-size-sm">
+                      <a @click="editUnitVal=u" :class="{'active': editUnit == u}" class="nav-link">{{u.id == 0 ? 'Birim': u.title}}</a>
                     </li>
                   </ul>
                   <div  v-if="editUnit">
-                    <div v-html="editUnit.butcherNote" v-if="editUnit.butcherNote" class="mb-3 p-2 bg-secondary font-size-sm">
+                    <div v-html="editUnit.butcherNote" v-if="editUnit.butcherNote" class="mb-3 mt-n3 p-2 bg-secondary font-size-sm">
                       
                     </div>
-                    <div class="mb-3 mt-3 custom-control custom-checkbox">
+                    <div v-if="editUnit.id != 0" class="mb-3 custom-control custom-checkbox">
                       <input :disabled="editUnit.butcherUnitSelection == 'forced'" :id="editUnit.unit + 'enabled'" type="checkbox" v-model="editUnit.enabled"
                         class="custom-control-input">
-                      <label v-if="editUnit.unit != 'kg'" :for="editUnit.unit + 'enabled'" class="custom-control-label">{{editUnit.title}} olarak
+                      <label v-if="editUnit.id != 0" :for="editUnit.unit + 'enabled'" class="custom-control-label">{{editUnit.title}} olarak
                         satışınız varsa işaretleyin {{editUnit.butcherUnitSelection == 'forced' ? '[Zorunlu]':''}}</label>
-                        <label v-else :for="editUnit.unit + 'enabled'" class="custom-control-label">{{editUnit.title}} satış fiyatınız</label>
+                      <label v-else :for="editUnit.unit + 'enabled'" class="custom-control-label">{{editUnit.title}} satış fiyatınız:</label>
                     </div>
                   
 
 
                     <div v-if="editUnit.enabled">
 
-                      <div v-if="(editUnit.unit != 'kg') && (findUnit('kg', true) && canEdit(editUnit, 'weight'))"
+                      <div v-if="(editUnit.id != 0) && (editUnit.unit != 'kg') && (canEdit(editUnit, 'weight'))"
                         class="custom-control custom-checkbox mb-1">
                         <input required :id="editUnit.unit + 'customWeightcb'" v-model="editUnit.customWeight"
                           type="checkbox" class="custom-control-input">
                         <label :for="editUnit.unit + 'customWeightcb'" class="custom-control-label">1 {{editUnit.title}} ortalama <strong>
-                          {{editUnit.kgRatio}} KG</strong> olarak tanımlı. Ağırlığı size özel değiştirmek isterseniz işaretleyin.</label>
+                          {{editUnit.kgRatio}} {{edit.kgTitle}}</strong> içerecek şekilde tanımlı. Size özel değiştirmek isterseniz işaretleyin.</label>
                       </div>
 
-                      <div class="mb-3" v-if="editUnit.customWeight && canEdit(editUnit,'weight') && (editUnit.unit != 'kg') && (findUnit('kg'))">
-                        <label for="">1 {{editUnit.title}} <strong>sizde</strong> ortalama kaç KG ?</label>
+                      <div class="mb-3" v-if="editUnit.customWeight && canEdit(editUnit,'weight') && (editUnit.unit != 'kg')">
+                        <label for="">1 {{editUnit.title}} <strong>sizde</strong> ortalama kaç {{edit.kgTitle}} ?</label>
                         <input  v-model="editUnit.kgRatio" type="number" class="form-control price-control">
                       </div>
 
-                      <div  v-if="(editUnit.unit != 'kg') && (findUnit('kg', true) && canEdit(editUnit,'price'))"
+                      <div v-if=" (editUnit.id != 0) && (editUnit.unit != 'kg') && (canEdit(editUnit,'price'))"
                         class="custom-control custom-checkbox mb-1">
                         <input required :id="editUnit.unit + 'salemanualcb'" v-model="editUnit.customPrice"
                           type="checkbox" class="custom-control-input">
                         <label :for="editUnit.unit + 'salemanualcb'" class="custom-control-label">{{editUnit.title}}
-                          fiyatı KG'a göre otomatik hesaplanır. Ayrı fiyat vermek için işaretleyin.</label>
+                          fiyatı {{editUnit.kgRatio}}x{{edit.kgTitle}} olacak şekilde otomatik hesaplanır. Ayrı fiyat vermek için işaretleyin.</label>
                       </div>
 
 
 
-                      <div class="form-group" v-if="canEdit(editUnit,'price') && (editUnit.unit == 'kg') || editUnit.customPrice || !findUnit('kg')">
+                      <div class="form-group" v-if="canEdit(editUnit,'price')">
                         <div class="d-block"><strong style="text-transform: uppercase;">{{editUnit.title}}</strong>
                           satış fiyatınız</div>
                         <input required v-model="editUnit.price" type="text" class="form-control price-control"
@@ -324,10 +324,12 @@
             methods: {
 
               canEdit(unit, prop) {
-                if (prop == 'price' && unit.unit == 'kg') return true;
+                
+                if (prop == 'price' && unit.unit == 'kg' && unit.id == 0) return true;
                 if (unit.butcherUnitEdit == 'none') return false;
                 if (unit.butcherUnitEdit == 'all') return true;
-                return unit.butcherUnitEdit == prop;
+                return unit.butcherUnitEdit == prop || (prop == "weight" || unit.customPrice);
+                
               },
 
               forceRerender() {
@@ -382,14 +384,14 @@
 
                 var valid = true;
 
-                p.units.forEach(function (u) {
-                  if (u.unit == 'kg' && u.enabled && !u.price) {
-                    u.enabled = false
-                  }
-                  if (u.unit != 'kg' && !(u.kgRatio) && !(u.price)) {
-                    u.enabled = false;
-                  }
-                });
+                // p.units.forEach(function (u) {
+                //   if (u.unit == 'kg' && u.enabled && !u.price) {
+                //     u.enabled = false
+                //   }
+                //   if (u.unit != 'kg' && !(u.kgRatio) && !(u.price)) {
+                //     u.enabled = false;
+                //   }
+                // });
 
                 var self = this;
 
@@ -397,6 +399,7 @@
                   id: p.id,
                   units: p.units.map(function (u) {
                     return {
+                      id: u.id,
                       unit: u.unit,
                       enabled: u.enabled,
                       customPrice: u.customPrice,

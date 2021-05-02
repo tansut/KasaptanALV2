@@ -718,12 +718,12 @@ export default class Route extends ApiRouter {
         result.butcherProductNote = this.markdown.render(product.butcherProductNote || '');
         result.priceUnit = product.priceUnit;
         result.enabled = false;
-        
+
         if (butcher && butcher.products) {
             let butcherProduct = butcher.products.find(c => (c.productid == product.id));
             result.fromButcherNote = butcherProduct ? butcherProduct.fromButcherDesc : '';
             result.enabled = butcherProduct ? butcherProduct.enabled : false;
-            
+
         }
         return result;
     }
@@ -751,7 +751,7 @@ export default class Route extends ApiRouter {
         let view: ProductView;
         view = {
             id: product.id,
-            source: butcherProduct ? 'butcher': 'product',
+            source: butcherProduct ? 'butcher' : 'product',
             butcher: butcherProduct ? {
                 shipday0: butcher.shipday0,
                 shipday1: butcher.shipday1,
@@ -781,6 +781,7 @@ export default class Route extends ApiRouter {
             slug: product.slug,
             name: product.name,
             kgPrice: kgPrice,
+            kgTitle: product[`${product.priceUnit}title`] || 'KG',
             productType: product.productType,
             shortDesc: product.shortdesc,
             notePlaceholder: product.notePlaceholder,
@@ -800,6 +801,7 @@ export default class Route extends ApiRouter {
 
 
         view.purchaseOptions = this.getPurchaseOptions(product, butcherProduct, includeDisable);
+
 
         if (view.purchaseOptions.length) {
             view.priceView = {
@@ -841,22 +843,25 @@ export default class Route extends ApiRouter {
 
         let getpOptions = () => {
             let orj: any = view.purchaseOptions.filter(p => ((p.butcherUnitSelection != 'none-unselected') && (p.butcherUnitSelection != 'none-selected')));
-            let kg = view.purchaseOptions.find(po => po.unit == 'kg');
+            let priceUnit = view.purchaseOptions.find(po => po.unit == product.priceUnit);
             let hasKgDependency = view.purchaseOptions.find(po => po.kgRatio > 0);
-            if (!kg && (product.priceUnit == 'kg')) {
-                orj.splice(0, 0, {
-                    unit: 'kg',
-                    unitTitle: 'KG',
-                    id: 0,
-                    enabled: true,
-                    kgRatio: 1,
-                    unitPrice: view.kgPrice,
-                    customWeight: false,
-                    customPrice: true,
-                    butcherUnitSelection: 'selected',
-                    butcherUnitEdit: 'price',
+            if (!priceUnit || priceUnit.unit == 'kg') {
+            orj.splice(0, 0, {
+                unit: product.priceUnit == 'kg' ? 'kg': product[`${product.priceUnit}`],
+                unitTitle: product.priceUnit == 'kg' ? 'KG': product[`${product.priceUnit}title`] || product[`${product.priceUnit}`],
+                id: 0,
+                enabled: true,
+                kgRatio: 1,
+                unitPrice: view.kgPrice,
+                customWeight: false,
+                customPrice: true,
+                butcherUnitSelection: 'forced',
+                butcherUnitEdit: 'price',
                 })
             }
+
+
+
             return orj;
         }
 
@@ -883,8 +888,10 @@ export default class Route extends ApiRouter {
             } : undefined,
             id: view.id,
             name: view.name,
+            kgTitle: view.kgTitle,
             units: getpOptions().map(po => {
                 return {
+                    id: po.id,
                     unit: po.unit,
                     title: po.unitTitle,
                     kgRatio: po.kgRatio,
@@ -893,7 +900,7 @@ export default class Route extends ApiRouter {
                     customPrice: po.customPrice,
                     customWeight: po.customWeight,
                     butcherUnitSelection: po.butcherUnitSelection,
-                    butcherUnitEdit: po.butcherUnitEdit,
+                    butcherUnitEdit: (po.id != 0 && po.unit == 'kg') ? 'none': po.butcherUnitEdit,
                     butcherNote: this.markdown.render(product[`unit${po.id}ButcherNote`] || '')
                 }
             }),
@@ -1007,7 +1014,16 @@ export default class Route extends ApiRouter {
 
         newItem.kgPrice = 0;
 
-
+        let unitPrice = this.req.body.units.find(u=>u.id == 0);
+        if (unitPrice) {
+            let other = this.req.body.units.find(u=>u.id != 0 && u.unit == unitPrice.unit);
+            if (other) {
+                other.price = unitPrice.price;
+                other.customPrice = true;
+                other.isPriceUnit = true;
+                _.remove(this.req.body.units, u=>u == unitPrice);
+            }
+        }
 
         this.req.body.units.forEach(u => {
             let unitid = product.getUnitBy(u.unit);
@@ -1021,7 +1037,7 @@ export default class Route extends ApiRouter {
                 } else newItem[`${unitid}weight`] = null;
             }
 
-            if (u.unit == 'kg') {
+            if (u.unit == 'kg' || u.isPriceUnit) {
                 newItem.kgPrice = u.price;
             }
 

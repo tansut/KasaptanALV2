@@ -687,6 +687,7 @@ class Route extends router_1.ApiRouter {
                 slug: product.slug,
                 name: product.name,
                 kgPrice: kgPrice,
+                kgTitle: product[`${product.priceUnit}title`] || 'KG',
                 productType: product.productType,
                 shortDesc: product.shortdesc,
                 notePlaceholder: product.notePlaceholder,
@@ -736,19 +737,19 @@ class Route extends router_1.ApiRouter {
         let price = view.priceUnit == 'kg' ? helper_1.default.asCurrency(view.kgPrice) : 0.00;
         let getpOptions = () => {
             let orj = view.purchaseOptions.filter(p => ((p.butcherUnitSelection != 'none-unselected') && (p.butcherUnitSelection != 'none-selected')));
-            let kg = view.purchaseOptions.find(po => po.unit == 'kg');
+            let priceUnit = view.purchaseOptions.find(po => po.unit == product.priceUnit);
             let hasKgDependency = view.purchaseOptions.find(po => po.kgRatio > 0);
-            if (!kg && (product.priceUnit == 'kg')) {
+            if (!priceUnit || priceUnit.unit == 'kg') {
                 orj.splice(0, 0, {
-                    unit: 'kg',
-                    unitTitle: 'KG',
+                    unit: product.priceUnit == 'kg' ? 'kg' : product[`${product.priceUnit}`],
+                    unitTitle: product.priceUnit == 'kg' ? 'KG' : product[`${product.priceUnit}title`] || product[`${product.priceUnit}`],
                     id: 0,
                     enabled: true,
                     kgRatio: 1,
                     unitPrice: view.kgPrice,
                     customWeight: false,
                     customPrice: true,
-                    butcherUnitSelection: 'selected',
+                    butcherUnitSelection: 'forced',
                     butcherUnitEdit: 'price',
                 });
             }
@@ -775,8 +776,10 @@ class Route extends router_1.ApiRouter {
             } : undefined,
             id: view.id,
             name: view.name,
+            kgTitle: view.kgTitle,
             units: getpOptions().map(po => {
                 return {
+                    id: po.id,
                     unit: po.unit,
                     title: po.unitTitle,
                     kgRatio: po.kgRatio,
@@ -785,7 +788,7 @@ class Route extends router_1.ApiRouter {
                     customPrice: po.customPrice,
                     customWeight: po.customWeight,
                     butcherUnitSelection: po.butcherUnitSelection,
-                    butcherUnitEdit: po.butcherUnitEdit,
+                    butcherUnitEdit: (po.id != 0 && po.unit == 'kg') ? 'none' : po.butcherUnitEdit,
                     butcherNote: this.markdown.render(product[`unit${po.id}ButcherNote`] || '')
                 };
             }),
@@ -880,6 +883,16 @@ class Route extends router_1.ApiRouter {
             newItem.unit2kgRatio = 0;
             newItem.unit3kgRatio = 0;
             newItem.kgPrice = 0;
+            let unitPrice = this.req.body.units.find(u => u.id == 0);
+            if (unitPrice) {
+                let other = this.req.body.units.find(u => u.id != 0 && u.unit == unitPrice.unit);
+                if (other) {
+                    other.price = unitPrice.price;
+                    other.customPrice = true;
+                    other.isPriceUnit = true;
+                    _.remove(this.req.body.units, u => u == unitPrice);
+                }
+            }
             this.req.body.units.forEach(u => {
                 let unitid = product.getUnitBy(u.unit);
                 if (u.kgRatio && u.unit != 'kg' && u.customWeight) {
@@ -892,7 +905,7 @@ class Route extends router_1.ApiRouter {
                     else
                         newItem[`${unitid}weight`] = null;
                 }
-                if (u.unit == 'kg') {
+                if (u.unit == 'kg' || u.isPriceUnit) {
                     newItem.kgPrice = u.price;
                 }
                 if (unitid) {

@@ -139,7 +139,7 @@ class Product extends BaseModel<Product> {
     }
 
 
-     getUnitBy(nameOrTitle: string) {
+     getUnitBy(nameOrTitle: string): string {
         if (this.unit1 == nameOrTitle || this.unit1title == nameOrTitle) return 'unit1';
         if (this.unit2 == nameOrTitle || this.unit1title == nameOrTitle) return 'unit2';
         if (this.unit3 == nameOrTitle || this.unit1title == nameOrTitle) return 'unit3';

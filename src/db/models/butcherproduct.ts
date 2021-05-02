@@ -10,6 +10,8 @@ import { Transaction } from "sequelize";
 import ButcherPriceHistory from './butcherpricehistory';
 
 
+export type ButcherPriceDiscount = 'none' | 'discount' | 'discountAsPercent';
+
 @Table({
     tableName: "ButcherProducts",
     indexes: [{
@@ -18,9 +20,6 @@ import ButcherPriceHistory from './butcherpricehistory';
         unique: true
     }]
 })
-
-
-
 class ButcherProduct extends BaseModel<ButcherProduct> {
     @ForeignKey(() => Butcher)
     butcherid: number
@@ -47,7 +46,7 @@ class ButcherProduct extends BaseModel<ButcherProduct> {
     canBeEnabled() {
         let eu = this.enabledUnits;
         if (!eu.length) return false;
-
+        
         return true;
     }
 
@@ -119,6 +118,19 @@ class ButcherProduct extends BaseModel<ButcherProduct> {
     })
     unit5price: number;
 
+    @Column({
+        allowNull: false,
+        defaultValue: 'none'
+    })
+    discountType: string;
+
+    @Column({
+        allowNull: false,
+        type: DataType.DECIMAL(13, 2)
+    })
+    priceDiscount: number;
+
+   
     @Column({
         allowNull: false,
         defaultValue: false

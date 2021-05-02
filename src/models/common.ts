@@ -12,6 +12,8 @@ export type GeneralValueItemType = 'cholesterol' | 'sodium' | 'potassium'
 export type AgreementAcceptStatus = 'waiting' | 'approved' | 'reaprovement';
 export type AgreementType = 'butchersales';
 
+
+
 export interface ISiteLogger {
     isFraud(where: any): Promise<boolean>;
      log(content: any): Promise<any>;

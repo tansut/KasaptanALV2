@@ -121,6 +121,20 @@ __decorate([
 __decorate([
     sequelize_typescript_1.Column({
         allowNull: false,
+        defaultValue: 'none'
+    }),
+    __metadata("design:type", String)
+], ButcherProduct.prototype, "discountType", void 0);
+__decorate([
+    sequelize_typescript_1.Column({
+        allowNull: false,
+        type: sequelize_typescript_1.DataType.DECIMAL(13, 2)
+    }),
+    __metadata("design:type", Number)
+], ButcherProduct.prototype, "priceDiscount", void 0);
+__decorate([
+    sequelize_typescript_1.Column({
+        allowNull: false,
         defaultValue: false
     }),
     __metadata("design:type", Boolean)

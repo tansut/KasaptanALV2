@@ -100,6 +100,7 @@ export interface ProductView {
     dispatcher?: ProductDispatcherView
     slug: string;
     kgPrice: number;
+    kgTitle: string;
     name: string;
     productType: string;
     priceView: PriceView;
