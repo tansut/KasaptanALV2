@@ -212,7 +212,7 @@
                           {{editUnit.kgRatio}} {{edit.kgTitle}}</strong> içerecek şekilde tanımlı. Size özel değiştirmek isterseniz işaretleyin.</label>
                       </div>
                       <div class="font-size-sm text-muted" v-else>
-                        <p v-if="(editUnit.id > 0) && (editUnit.kgRatio != 1)">
+                        <p v-if="(editUnit.id > 0) && (editUnit.kgRatio != 1 && editUnit.kgRatio != 0)">
                           1 {{editUnit.title}} ortalama <strong>{{editUnit.kgRatio}} {{edit.kgTitle}}</strong> içerecek şekilde tanımlıdır.</span>
 
                         </p>
