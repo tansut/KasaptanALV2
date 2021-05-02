@@ -12,6 +12,7 @@ export type GeneralValueItemType = 'cholesterol' | 'sodium' | 'potassium'
 export type AgreementAcceptStatus = 'waiting' | 'approved' | 'reaprovement';
 export type AgreementType = 'butchersales';
 
+export type PriceDiscount = 'none' | 'discount' | 'discountAsPercent';
 
 
 export interface ISiteLogger {

@@ -1,7 +1,7 @@
 import { Badge } from "./badge";
 import { Puan } from "./puan";
 import { PriceSlice } from "../lib/logistic/core";
-import { NutritionView, PriceView } from "./common";
+import { NutritionView, PriceDiscount, PriceView } from "./common";
 import { ShipmentDayHours } from "./shipment";
 import { ButcherUnitEdit, ButcherUnitSelection } from "../db/models/product";
 
@@ -26,7 +26,10 @@ export interface PurchaseOption {
     weigthNote: string;
     butcherUnitSelection: ButcherUnitSelection;   
     butcherUnitEdit: ButcherUnitEdit;   
-    
+
+    discount: PriceDiscount;
+    discountValue: number;
+    regularUnitPrice: number;
 }
 
 export interface ButcherPurchaseOption {
@@ -101,6 +104,11 @@ export interface ProductView {
     slug: string;
     kgPrice: number;
     kgTitle: string;
+
+    discount: PriceDiscount;
+    discountValue: number;
+    kgRegularPrice: number;
+
     name: string;
     productType: string;
     priceView: PriceView;

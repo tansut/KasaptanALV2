@@ -137,6 +137,14 @@ class Helper {
         n = n || 0.00;
         return Number(n.toFixed(2));
     }
+    static CalculateDiscount(discount, discountVal, regularPrice) {
+        if (discount == 'none')
+            return regularPrice;
+        if (discount == 'discount')
+            return Helper.asCurrency(Math.abs(regularPrice - discountVal));
+        else
+            return Helper.asCurrency(regularPrice * (100 - discountVal));
+    }
     static isToday(date) {
         return (Helper.Now().toDateString() === date.toDateString());
     }

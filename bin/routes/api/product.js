@@ -592,19 +592,25 @@ class Route extends router_1.ApiRouter {
         this.getProductUnits(product).forEach((p, i) => {
             let col = `unit${i + 1}`;
             let add = !butcherProduct ? true : (!includeDisable ? (butcherProduct[`${col}enabled`]) : true);
+            let discount = butcherProduct ? butcherProduct.discountType : 'none';
+            let discountValue = butcherProduct ? butcherProduct.priceDiscount : 0.00;
+            let regularUnitPrice = butcherProduct ?
+                (helper_1.default.asCurrency(butcherProduct[`${col}price`]) > 0 ?
+                    helper_1.default.asCurrency(butcherProduct[`${col}price`]) :
+                    helper_1.default.asCurrency((butcherProduct[`${col}kgRatio`] || product[`${col}kgRatio`]) * kgPrice)) : 0.00;
+            let unitPrice = helper_1.default.CalculateDiscount(discount, discountValue, regularUnitPrice);
             add && purchaseOptions.push({
                 id: i + 1,
+                discount: discount,
+                discountValue: discountValue,
+                regularUnitPrice: regularUnitPrice,
                 enabled: butcherProduct ? butcherProduct[`${col}enabled`] : false,
                 notePlaceholder: product[`${col}note`],
                 desc: this.markdown.render(product[`${col}desc`] || ""),
                 kgRatio: (butcherProduct && butcherProduct[`${col}kgRatio`]) ? butcherProduct[`${col}kgRatio`] : product[`${col}kgRatio`],
                 customWeight: butcherProduct && butcherProduct[`${col}kgRatio`] ? true : false,
                 unitWeight: (butcherProduct && butcherProduct[`${col}weight`]) || product[`${col}weight`],
-                unitPrice: butcherProduct ?
-                    (helper_1.default.asCurrency(butcherProduct[`${col}price`]) > 0 ?
-                        helper_1.default.asCurrency(butcherProduct[`${col}price`]) :
-                        helper_1.default.asCurrency((butcherProduct[`${col}kgRatio`] || product[`${col}kgRatio`]) * kgPrice)) :
-                    0.00,
+                unitPrice: unitPrice,
                 customPrice: butcherProduct ? (helper_1.default.asCurrency(butcherProduct[`${col}price`]) > 0) : false,
                 unit: p,
                 unitTitle: product[`${col}title`],
@@ -653,10 +659,16 @@ class Route extends router_1.ApiRouter {
             else if (butcher && butcher.products) {
                 butcherProduct = butcher.products.find(c => (c.productid == product.id) && (includeDisable ? true : c.enabled));
             }
-            let kgPrice = butcherProduct ? butcherProduct.kgPrice : 0;
             let view;
+            let discount = butcherProduct ? butcherProduct.discountType : 'none';
+            let discountValue = butcherProduct ? butcherProduct.priceDiscount : 0.00;
+            let regularPrice = butcherProduct ? butcherProduct.kgPrice : 0.00;
+            let kgPrice = helper_1.default.CalculateDiscount(discount, discountValue, regularPrice);
             view = {
                 id: product.id,
+                discount: discount,
+                discountValue: discountValue,
+                kgRegularPrice: regularPrice,
                 source: butcherProduct ? 'butcher' : 'product',
                 butcher: butcherProduct ? {
                     shipday0: butcher.shipday0,

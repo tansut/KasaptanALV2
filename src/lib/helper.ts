@@ -12,6 +12,7 @@ import { Shipment, ShipmentDays } from '../models/shipment';
 import * as crypto from 'crypto';
 import User, { PreferredAddress } from '../db/models/user';
 import email from './email';
+import { PriceDiscount } from '../models/common';
 
 export default class Helper {
 
@@ -151,6 +152,12 @@ export default class Helper {
     static asCurrency(n: number) {
         n = n || 0.00;
         return Number(n.toFixed(2));
+    }
+
+    static CalculateDiscount(discount: PriceDiscount, discountVal: number, regularPrice: number) {
+        if (discount == 'none') return regularPrice;
+        if (discount == 'discount') return Helper.asCurrency(Math.abs(regularPrice - discountVal));
+        else return Helper.asCurrency(regularPrice * (100-discountVal));
     }
 
     static isToday(date): boolean {

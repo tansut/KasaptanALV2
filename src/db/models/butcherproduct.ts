@@ -5,12 +5,11 @@ import Product, { ProductSelection } from './product';
 import Category from './category';
 import Butcher from './butcher';
 import ProductCategory from './productcategory';
-import { PriceView } from '../../models/common';
+import { PriceDiscount, PriceView } from '../../models/common';
 import { Transaction } from "sequelize";
 import ButcherPriceHistory from './butcherpricehistory';
 
 
-export type ButcherPriceDiscount = 'none' | 'discount' | 'discountAsPercent';
 
 @Table({
     tableName: "ButcherProducts",
@@ -122,11 +121,12 @@ class ButcherProduct extends BaseModel<ButcherProduct> {
         allowNull: false,
         defaultValue: 'none'
     })
-    discountType: string;
+    discountType: PriceDiscount;
 
     @Column({
         allowNull: false,
-        type: DataType.DECIMAL(13, 2)
+        type: DataType.DECIMAL(13, 2),
+        defaultValue: 0.00
     })
     priceDiscount: number;
 
