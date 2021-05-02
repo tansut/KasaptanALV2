@@ -168,7 +168,7 @@
               </button>
             </div>
             <div class="modal-body p-0">
-              <div v-html="edit.butcherProductNote" class="font-size-sm p-2 border-bottom bg-dark text-light" v-if="edit && edit.butcherProductNote"
+              <div v-html="edit.butcherProductNote" class="font-size-sm font-weight-bold p-2 border-bottom bg-secondary  text-dark" v-if="edit && edit.butcherProductNote"
                 class="text-muted">
                 
               </div>
@@ -188,11 +188,11 @@
                       <a @click="editUnitVal=u" :class="{'active': editUnit == u}" class="nav-link">{{u.title}}</a>
                     </li>
                   </ul>
-                  <div class="mb-3" v-if="editUnit">
-                    <div v-if="editUnit.butcherNote" class="mb-3 p-2 bg-secondary font-size-sm">
-                      {{editUnit.butcherNote}}
+                  <div  v-if="editUnit">
+                    <div v-html="editUnit.butcherNote" v-if="editUnit.butcherNote" class="mb-3 p-2 bg-secondary font-size-sm">
+                      
                     </div>
-                    <div class="mb-3 custom-control custom-checkbox">
+                    <div class="mb-3 mt-3 custom-control custom-checkbox">
                       <input :disabled="editUnit.butcherUnitSelection == 'forced'" :id="editUnit.unit + 'enabled'" type="checkbox" v-model="editUnit.enabled"
                         class="custom-control-input">
                       <label v-if="editUnit.unit != 'kg'" :for="editUnit.unit + 'enabled'" class="custom-control-label">{{editUnit.title}} olarak
@@ -208,7 +208,7 @@
                         class="custom-control custom-checkbox mb-1">
                         <input required :id="editUnit.unit + 'customWeightcb'" v-model="editUnit.customWeight"
                           type="checkbox" class="custom-control-input">
-                        <label :for="editUnit.unit + 'customWeightcb'" class="custom-control-label">1 {{editUnit.title}} <strong>
+                        <label :for="editUnit.unit + 'customWeightcb'" class="custom-control-label">1 {{editUnit.title}} ortalama <strong>
                           {{editUnit.kgRatio}} KG</strong> olarak tanımlı. Ağırlığı size özel değiştirmek isterseniz işaretleyin.</label>
                       </div>
 
