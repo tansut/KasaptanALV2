@@ -625,7 +625,7 @@ class Route extends router_1.ApiRouter {
         return __awaiter(this, void 0, void 0, function* () {
             let view = yield this.getProductView(product, butcher, butcherProduct, false, true);
             let result = view;
-            result.butcherProductNote = product.butcherProductNote;
+            result.butcherProductNote = this.markdown.render(product.butcherProductNote || '');
             result.priceUnit = product.priceUnit;
             result.enabled = false;
             if (butcher && butcher.products) {
@@ -786,7 +786,7 @@ class Route extends router_1.ApiRouter {
                     customWeight: po.customWeight,
                     butcherUnitSelection: po.butcherUnitSelection,
                     butcherUnitEdit: po.butcherUnitEdit,
-                    butcherNote: product[`unit${po.id}ButcherNote`]
+                    butcherNote: this.markdown.render(product[`unit${po.id}ButcherNote`] || '')
                 };
             }),
             enabled: view.enabled,
@@ -889,6 +889,8 @@ class Route extends router_1.ApiRouter {
                         newItem[`${unitid}kgRatio`] = butcherKgRatio;
                         newItem[`${unitid}weight`] = `ortalama ${u.kgRatio} kg`;
                     }
+                    else
+                        newItem[`${unitid}weight`] = null;
                 }
                 if (u.unit == 'kg') {
                     newItem.kgPrice = u.price;

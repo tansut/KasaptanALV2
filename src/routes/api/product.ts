@@ -715,13 +715,15 @@ export default class Route extends ApiRouter {
     async getProductViewforButcher(product: Product, butcher?: Butcher, butcherProduct?: ButcherProduct): Promise<ProductViewForButcher> {
         let view = await this.getProductView(product, butcher, butcherProduct, false, true);
         let result = <ProductViewForButcher>view;
-        result.butcherProductNote = product.butcherProductNote;
+        result.butcherProductNote = this.markdown.render(product.butcherProductNote || '');
         result.priceUnit = product.priceUnit;
         result.enabled = false;
+        
         if (butcher && butcher.products) {
             let butcherProduct = butcher.products.find(c => (c.productid == product.id));
             result.fromButcherNote = butcherProduct ? butcherProduct.fromButcherDesc : '';
             result.enabled = butcherProduct ? butcherProduct.enabled : false;
+            
         }
         return result;
     }
@@ -892,7 +894,7 @@ export default class Route extends ApiRouter {
                     customWeight: po.customWeight,
                     butcherUnitSelection: po.butcherUnitSelection,
                     butcherUnitEdit: po.butcherUnitEdit,
-                    butcherNote: product[`unit${po.id}ButcherNote`] 
+                    butcherNote: this.markdown.render(product[`unit${po.id}ButcherNote`] || '')
                 }
             }),
             enabled: view.enabled,
@@ -1016,7 +1018,7 @@ export default class Route extends ApiRouter {
                 if (u.customWeight && butcherKgRatio != productKgRatio) {
                     newItem[`${unitid}kgRatio`] = butcherKgRatio;
                     newItem[`${unitid}weight`] = `ortalama ${u.kgRatio} kg`;
-                }
+                } else newItem[`${unitid}weight`] = null;
             }
 
             if (u.unit == 'kg') {
