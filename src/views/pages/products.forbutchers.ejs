@@ -133,7 +133,7 @@
                     {{p.note}}
                   </span>
                 </p>
-                <ul class="list-unstyled mb-3">
+                <ul v-if="p.enabled" class="list-unstyled mb-3">
                   <li v-for="(u, i) in p.units" class="badge badge-secondary mr-2 p-2 " v-if="u.enabled">
                     <money-view :unit="u.title || u.unit" :money="u.price">
                     </money-view>
@@ -190,10 +190,10 @@
                   </ul>
                   <div class="mb-3" v-if="editUnit">
                     <div class="mb-3 custom-control custom-checkbox">
-                      <input :id="editUnit.unit + 'enabled'" type="checkbox" v-model="editUnit.enabled"
+                      <input :disabled="editUnit.butcherUnitSelection == 'forced'" :id="editUnit.unit + 'enabled'" type="checkbox" v-model="editUnit.enabled"
                         class="custom-control-input">
                       <label v-if="editUnit.unit != 'kg'" :for="editUnit.unit + 'enabled'" class="custom-control-label">{{editUnit.title}} olarak
-                        satışınız varsa işaretleyin</label>
+                        satışınız varsa işaretleyin {{editUnit.butcherUnitSelection == 'forced' ? '[Zorunlu]':''}}</label>
                         <label v-else :for="editUnit.unit + 'enabled'" class="custom-control-label">{{editUnit.title}} satış fiyatınız</label>
                     </div>
 
@@ -201,7 +201,7 @@
 
                     <div v-if="editUnit.enabled">
 
-                      <div v-if="(editUnit.unit != 'kg') && (findUnit('kg', true))"
+                      <div v-if="(editUnit.unit != 'kg') && (findUnit('kg', true) && canEdit(editUnit, 'weight'))"
                         class="custom-control custom-checkbox mb-1">
                         <input required :id="editUnit.unit + 'customWeightcb'" v-model="editUnit.customWeight"
                           type="checkbox" class="custom-control-input">
@@ -209,12 +209,12 @@
                           {{editUnit.kgRatio}} KG</strong> olarak tanımlı. Değiştirmek isterseniz işaretleyin.</label>
                       </div>
 
-                      <div class="mb-3" v-if="editUnit.customWeight && (editUnit.unit != 'kg') && (findUnit('kg'))">
+                      <div class="mb-3" v-if="editUnit.customWeight && canEdit(editUnit,'weight') && (editUnit.unit != 'kg') && (findUnit('kg'))">
                         <label for="">1 {{editUnit.title}} sizde kaç KG ?</label>
                         <input  v-model="editUnit.kgRatio" type="number" class="form-control price-control">
                       </div>
 
-                      <div  v-if="(editUnit.unit != 'kg') && (findUnit('kg', true))"
+                      <div  v-if="(editUnit.unit != 'kg') && (findUnit('kg', true) && canEdit(editUnit,'price'))"
                         class="custom-control custom-checkbox mb-1">
                         <input required :id="editUnit.unit + 'salemanualcb'" v-model="editUnit.customPrice"
                           type="checkbox" class="custom-control-input">
@@ -224,7 +224,7 @@
 
 
 
-                      <div class="form-group" v-if="(editUnit.unit == 'kg') || editUnit.customPrice || !findUnit('kg')">
+                      <div class="form-group" v-if="canEdit(editUnit,'price') && (editUnit.unit == 'kg') || editUnit.customPrice || !findUnit('kg')">
                         <div class="d-block"><strong style="text-transform: uppercase;">{{editUnit.title}}</strong>
                           satış fiyatınız</div>
                         <input required v-model="editUnit.price" type="text" class="form-control price-control"
@@ -319,6 +319,13 @@
             },
 
             methods: {
+
+              canEdit(unit, prop) {
+                if (prop == 'price' && unit.unit == 'kg') return true;
+                if (unit.butcherUnitEdit == 'none') return false;
+                if (unit.butcherUnitEdit == 'all') return true;
+                return unit.butcherUnitEdit == prop;
+              },
 
               forceRerender() {
                 this.renderComponent = false;
@@ -417,11 +424,11 @@
 
               openDialog(p, index) {
                 this.edit = JSON.parse(JSON.stringify(p));
-                this.edit.units.forEach(function (u) {
-                  if (u.butcherUnitSelection == 'selected' || u.butcherUnitSelection == 'forced') {
-                    u.enabled = true
-                  }
-                });                
+                // this.edit.units.forEach(function (u) {
+                //   if (u.butcherUnitSelection == 'selected' || u.butcherUnitSelection == 'forced') {
+                //     u.enabled = true
+                //   }
+                // });                
                 this.editIndex = index;
                 this.editUnitVal = null;
                 $('#pricemodal').modal('show');

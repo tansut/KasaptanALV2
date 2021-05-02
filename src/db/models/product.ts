@@ -28,6 +28,8 @@ export enum ProductType {
  export type ProductPriceUnit = 'kg' | 'unit1' | 'unit3' | 'unit3';
 
  export type ButcherUnitSelection = 'unselected' | 'selected' | 'forced' | 'none-selected' | 'none-unselected';
+ 
+ export type ButcherUnitEdit = 'none' | 'weight' | 'price' | 'all';
 
 export type ProductStatus = "onsale" | "archieved" 
 
@@ -123,6 +125,16 @@ class Product extends BaseModel<Product> {
         this.unit3 && res.push(this.unit3title || this.unit3);
         this.unit4 && res.push(this.unit4title || this.unit4);
         this.unit5 && res.push(this.unit5title || this.unit5);
+        return res;
+    }
+
+    get availableUnitIds() {
+        let res = [];
+        this.unit1 && res.push("unit1");
+        this.unit2 && res.push("unit2");
+        this.unit3 && res.push("unit3");
+        this.unit4 && res.push("unit4");
+        this.unit5 && res.push("unit5");
         return res;
     }
 
@@ -612,6 +624,25 @@ class Product extends BaseModel<Product> {
         defaultValue: 'selected'
     })
     unit3ButcherUnitSelection: ButcherUnitSelection;   
+
+    @Column({
+        allowNull: false,
+        defaultValue: 'none'
+    })
+    unit1ButcherUnitEdit: string;  
+
+    @Column({
+        allowNull: false,
+        defaultValue: 'none'
+    })
+    unit2ButcherUnitEdit: string;  
+
+    @Column({
+        allowNull: false,
+        defaultValue: 'none'
+    })
+    unit3ButcherUnitEdit: string;  
+
 
     @Column({
         allowNull: false,

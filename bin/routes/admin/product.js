@@ -289,6 +289,9 @@ class Route extends router_1.ViewRouter {
                 this.product.unit1ButcherUnitSelection = this.req.body.unit1ButcherUnitSelection;
                 this.product.unit2ButcherUnitSelection = this.req.body.unit2ButcherUnitSelection;
                 this.product.unit3ButcherUnitSelection = this.req.body.unit3ButcherUnitSelection;
+                this.product.unit1ButcherUnitEdit = this.req.body.unit1ButcherUnitEdit;
+                this.product.unit2ButcherUnitEdit = this.req.body.unit2ButcherUnitEdit;
+                this.product.unit3ButcherUnitEdit = this.req.body.unit3ButcherUnitEdit;
                 // this.product.defaultUnit = parseInt(this.req.body.defaultUnit);
                 // this.product.defaultAmount = parseFloat(this.req.body.defaultAmount);
                 //this.product.perPersonKg = parseFloat(this.req.body.perPersonKg);

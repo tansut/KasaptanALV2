@@ -130,6 +130,22 @@
 
 
             </div>
+            <div class="form-group">
+                <label>Bu birimde neleri değiştirebilsin</label>
+                <select class="form-control" name="<%=unit%>ButcherUnitEdit" id="<%=unit%>ButcherUnitEdit">
+                    
+                    <option <%=product[unit + 'ButcherUnitEdit'] == 'none' ? 'selected':''%> value="none">Hiçbirşey</option>
+                    <option <%=product[unit + 'ButcherUnitEdit'] == 'weight' ? 'selected':''%> value="weight">Sadece ağırlık</option>
+                    <option <%=product[unit + 'ButcherUnitEdit'] == 'weight' ? 'selected':''%> value="weight">Sadece birim fiyatı</option>
+                    <option <%=product[unit + 'ButcherUnitEdit'] == 'all' ? 'selected':''%> value="all">Herşey</option>
+
+                    
+                 
+                   
+                </select>
+
+
+            </div>
             </div>
         </div>
 

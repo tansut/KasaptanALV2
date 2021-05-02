@@ -615,6 +615,7 @@ class Route extends router_1.ApiRouter {
                 perPerson: product[`${col}perPerson`],
                 step: product[`${col}step`],
                 butcherUnitSelection: product[`${col}ButcherUnitSelection`],
+                butcherUnitEdit: product[`${col}ButcherUnitEdit`],
                 weigthNote: product[`${col}WeigthNote`]
             });
         });
@@ -653,23 +654,10 @@ class Route extends router_1.ApiRouter {
                 butcherProduct = butcher.products.find(c => (c.productid == product.id) && (includeDisable ? true : c.enabled));
             }
             let kgPrice = butcherProduct ? butcherProduct.kgPrice : 0;
-            // let defaultUnitCol = `unit${product.defaultUnit}`
-            // let defaultUnitPrice = 0.0;
-            // let defaultUnitText = "";
-            //let kgRatio = 0.00;
-            //let defaultUnit = "";
-            //if (product.defaultUnit == 0) {
-            //    kgRatio = 1.00;
-            //    defaultUnit = 'kg'
-            //} else {
-            //kgRatio = product[`${defaultUnitCol}kgRatio`]
-            //defaultUnit = product[`${defaultUnitCol}`]
-            //}
-            // defaultUnitPrice = Helper.asCurrency(Helper.asCurrency(kgRatio * kgPrice) * product.defaultAmount);
-            // defaultUnitText = defaultUnit == 'kg' ? (product.defaultAmount < 1 ? `${product.defaultAmount * 1000}gr` : "kg") : product[`${defaultUnitCol}`]
             let view;
             view = {
                 id: product.id,
+                source: butcherProduct ? 'butcher' : 'product',
                 butcher: butcherProduct ? {
                     shipday0: butcher.shipday0,
                     shipday1: butcher.shipday1,
@@ -704,11 +692,6 @@ class Route extends router_1.ApiRouter {
                 notePlaceholder: product.notePlaceholder,
                 priceView: null,
                 shipmentDayHours: shipment_1.Shipment.getShipmentDays(),
-                // viewUnitPrice: defaultUnitPrice,
-                // viewUnit: defaultUnitText,
-                // viewUnitDesc: product[`${defaultUnitCol}desc`] || (defaultUnit == 'kg' ? 'kg' : ''),
-                // defaultUnit: product.defaultUnit,
-                // viewUnitAmount: product.defaultAmount,
                 purchaseOptions: [],
                 alternateButchers: [],
                 nutritionView: null
@@ -759,12 +742,13 @@ class Route extends router_1.ApiRouter {
                 orj.splice(0, 0, {
                     unit: 'kg',
                     unitTitle: 'KG',
-                    enabled: view.kgPrice > 0,
+                    enabled: true,
                     kgRatio: 1,
                     unitPrice: view.kgPrice,
                     customWeight: false,
                     customPrice: true,
-                    butcherUnitSelection: 'selected'
+                    butcherUnitSelection: 'selected',
+                    butcherUnitEdit: 'price',
                 });
             }
             return orj;
@@ -773,6 +757,16 @@ class Route extends router_1.ApiRouter {
             let op = view.purchaseOptions.find(po => po.unit == product[`${view.priceUnit}`]);
             price = op ? op.unitPrice : price;
         }
+        let getEnabled = (po) => {
+            if (po.butcherUnitSelection == 'forced')
+                return true;
+            if (view.source == "butcher")
+                return po.enabled;
+            if (po.butcherUnitSelection == 'selected')
+                return true;
+            if (po.butcherUnitSelection == 'unselected')
+                return false;
+        };
         return {
             category: category ? {
                 id: category.id,
@@ -785,11 +779,12 @@ class Route extends router_1.ApiRouter {
                     unit: po.unit,
                     title: po.unitTitle,
                     kgRatio: po.kgRatio,
-                    enabled: po.enabled,
+                    enabled: getEnabled(po),
                     price: po.unitPrice || 0.00,
                     customPrice: po.customPrice,
                     customWeight: po.customWeight,
-                    butcherUnitSelection: po.butcherUnitSelection
+                    butcherUnitSelection: po.butcherUnitSelection,
+                    butcherUnitEdit: po.butcherUnitEdit
                 };
             }),
             enabled: view.enabled,
@@ -851,9 +846,11 @@ class Route extends router_1.ApiRouter {
             }
             ;
             let productid = parseInt(this.req.body.id);
-            let product = yield product_1.default.findOne({ where: {
+            let product = yield product_1.default.findOne({
+                where: {
                     id: productid
-                } });
+                }
+            });
             let newItem = yield butcherproduct_1.default.findOne({
                 where: {
                     butcherid: butcher.id,
@@ -862,7 +859,7 @@ class Route extends router_1.ApiRouter {
             });
             if (newItem == null)
                 newItem = new butcherproduct_1.default();
-            newItem.enabled = (this.req.body.price <= 0 ? false : this.req.body.enabled);
+            newItem.enabled = this.req.body.enabled;
             newItem.butcherid = butcher.id;
             newItem.productid = productid;
             newItem.fromButcherDesc = this.req.body.note;
@@ -881,16 +878,9 @@ class Route extends router_1.ApiRouter {
             newItem.unit2kgRatio = 0;
             newItem.unit3kgRatio = 0;
             newItem.kgPrice = 0;
-            newItem.isNewRecord && product.availableUnits.forEach(u => {
-                if (product[`${u}ButcherButcherUnitSelection`] == 'none-selected')
-                    newItem[`${u}enabled`] = true;
-                else
-                    (product[`${u}ButcherButcherUnitSelection`] == 'none-unselected');
-                newItem[`${u}enabled`] = false;
-            });
             this.req.body.units.forEach(u => {
                 let unitid = product.getUnitBy(u.unit);
-                if (u.kgRatio && u.unit != 'kg') {
+                if (u.kgRatio && u.unit != 'kg' && u.customWeight) {
                     let butcherKgRatio = u.kgRatio;
                     let productKgRatio = product[`${unitid}kgRatio`];
                     if (u.customWeight && butcherKgRatio != productKgRatio) {
@@ -903,11 +893,21 @@ class Route extends router_1.ApiRouter {
                 }
                 if (unitid) {
                     newItem[`${unitid}enabled`] = u.enabled;
-                    if (u.price && u.customPrice) {
+                    if (u.price && (u.customPrice || u.unit == 'kg')) {
                         newItem[`${unitid}price`] = u.price;
                     }
                 }
             });
+            product.availableUnitIds.forEach(u => {
+                if (newItem.isNewRecord && product[`${u}ButcherUnitSelection`] == 'none-selected')
+                    newItem[`${u}enabled`] = true;
+                else if (newItem.isNewRecord && product[`${u}ButcherUnitSelection`] == 'none-unselected')
+                    newItem[`${u}enabled`] = false;
+                else if (product[`${u}ButcherUnitSelection`] == 'forced')
+                    newItem[`${u}enabled`] = true;
+            });
+            if (!newItem.canBeEnabled())
+                newItem.enabled = false;
             yield context_1.default.getContext().transaction((t) => {
                 return newItem.save({
                     transaction: t

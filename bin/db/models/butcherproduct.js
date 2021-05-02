@@ -14,6 +14,20 @@ const basemodel_1 = require("./basemodel");
 const product_1 = require("./product");
 const butcher_1 = require("./butcher");
 let ButcherProduct = class ButcherProduct extends basemodel_1.default {
+    get enabledUnits() {
+        let res = [];
+        let units = ['unit1', 'unit2', 'unit3'];
+        units.forEach(i => {
+            this[`${i}enabled`] && res.push(`${i}`);
+        });
+        return res;
+    }
+    canBeEnabled() {
+        let eu = this.enabledUnits;
+        if (!eu.length)
+            return false;
+        return true;
+    }
     get priceView() {
         let units = ['unit1', 'unit2', 'unit3'];
         if (this.kgPrice > 0) {

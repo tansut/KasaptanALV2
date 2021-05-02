@@ -3,7 +3,7 @@ import { Puan } from "./puan";
 import { PriceSlice } from "../lib/logistic/core";
 import { NutritionView, PriceView } from "./common";
 import { ShipmentDayHours } from "./shipment";
-import { ButcherUnitSelection } from "../db/models/product";
+import { ButcherUnitEdit, ButcherUnitSelection } from "../db/models/product";
 
 export interface PurchaseOption {
     id: number;
@@ -25,6 +25,7 @@ export interface PurchaseOption {
     step: number;
     weigthNote: string;
     butcherUnitSelection: ButcherUnitSelection;   
+    butcherUnitEdit: ButcherUnitEdit;   
     
 }
 
@@ -92,6 +93,7 @@ export interface ResourceView {
 
 export interface ProductView {
     id: number;
+    source: 'product' | 'butcher';
     butcher?: ProductButcherView;
     butcherNote?: string;
     butcherLongNote?: string;

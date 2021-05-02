@@ -93,6 +93,15 @@ let Product = Product_1 = class Product extends basemodel_1.default {
         this.unit5 && res.push(this.unit5title || this.unit5);
         return res;
     }
+    get availableUnitIds() {
+        let res = [];
+        this.unit1 && res.push("unit1");
+        this.unit2 && res.push("unit2");
+        this.unit3 && res.push("unit3");
+        this.unit4 && res.push("unit4");
+        this.unit5 && res.push("unit5");
+        return res;
+    }
     getUnitBy(nameOrTitle) {
         if (this.unit1 == nameOrTitle || this.unit1title == nameOrTitle)
             return 'unit1';
@@ -701,6 +710,27 @@ __decorate([
     }),
     __metadata("design:type", String)
 ], Product.prototype, "unit3ButcherUnitSelection", void 0);
+__decorate([
+    sequelize_typescript_1.Column({
+        allowNull: false,
+        defaultValue: 'none'
+    }),
+    __metadata("design:type", String)
+], Product.prototype, "unit1ButcherUnitEdit", void 0);
+__decorate([
+    sequelize_typescript_1.Column({
+        allowNull: false,
+        defaultValue: 'none'
+    }),
+    __metadata("design:type", String)
+], Product.prototype, "unit2ButcherUnitEdit", void 0);
+__decorate([
+    sequelize_typescript_1.Column({
+        allowNull: false,
+        defaultValue: 'none'
+    }),
+    __metadata("design:type", String)
+], Product.prototype, "unit3ButcherUnitEdit", void 0);
 __decorate([
     sequelize_typescript_1.Column({
         allowNull: false,
