@@ -64,7 +64,7 @@ export default class UserRoute extends ApiRouter {
     async sendResetLink() {
         let phone: string = this.req.body.phone;
         let user = await this.retrieveByEMailOrPhone(phone);
-        if (!user) throw Error('Geçersiz telefon no');
+        if (!user) throw Error('Geçersiz telefon no' + this.req.body.phone);
         user.resetToken = crypto.randomBytes(32).toString('hex');;
         let utc = Helper.UtcNow();
         let res = moment(utc).add('minutes', 30).toDate()

@@ -845,6 +845,7 @@ export default class Route extends ApiRouter {
                 orj.splice(0, 0, {
                     unit: 'kg',
                     unitTitle: 'KG',
+                    id: 0,
                     enabled: true,
                     kgRatio: 1,
                     unitPrice: view.kgPrice,
@@ -890,7 +891,8 @@ export default class Route extends ApiRouter {
                     customPrice: po.customPrice,
                     customWeight: po.customWeight,
                     butcherUnitSelection: po.butcherUnitSelection,
-                    butcherUnitEdit: po.butcherUnitEdit
+                    butcherUnitEdit: po.butcherUnitEdit,
+                    butcherNote: product[`unit${po.id}ButcherNote`] 
                 }
             }),
             enabled: view.enabled,

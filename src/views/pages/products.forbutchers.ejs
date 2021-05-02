@@ -175,20 +175,23 @@
 
               <div class="p-2">
 
-                <div class="form-group">
-                  <label>Notunuz varsa alalım</label>
-                  <textarea cols="8" class="form-control font-size-sm" v-model="edit && edit.note"
-                    :placeholder="false ? edit.butcherProductNote: 'Paketli, şoklu olduğu, özel olarak yaptırıldığı gibi müşteriye veya bize iletmek istediğiniz bilgi varsa belirtin.'"></textarea>
+                <div class="form-group mb-0">
+                  <label><strong>Bize iletmek istediğiniz</strong> notunuz varsa alalım</label>
+                  <textarea rows="4" class="form-control font-size-sm" v-model="edit && edit.note"
+                    :placeholder="false ? edit.butcherProductNote: 'Paketli, şoklu olduğu, özel olarak yaptırıldığı gibi ürününüze özel yazmamızı istediğiniz not varsa belirtin.'"></textarea>
                   <small class=" form-text text-muted"></small>
                 </div>
 
                 <div v-if="edit">
-                  <ul class="nav nav-tabs">
+                  <ul class="nav nav-tabs mb-0">
                     <li v-for="(u, i) in edit.units" class="nav-item">
                       <a @click="editUnitVal=u" :class="{'active': editUnit == u}" class="nav-link">{{u.title}}</a>
                     </li>
                   </ul>
                   <div class="mb-3" v-if="editUnit">
+                    <div v-if="editUnit.butcherNote" class="mb-3 p-2 bg-secondary font-size-sm">
+                      {{editUnit.butcherNote}}
+                    </div>
                     <div class="mb-3 custom-control custom-checkbox">
                       <input :disabled="editUnit.butcherUnitSelection == 'forced'" :id="editUnit.unit + 'enabled'" type="checkbox" v-model="editUnit.enabled"
                         class="custom-control-input">
@@ -196,7 +199,7 @@
                         satışınız varsa işaretleyin {{editUnit.butcherUnitSelection == 'forced' ? '[Zorunlu]':''}}</label>
                         <label v-else :for="editUnit.unit + 'enabled'" class="custom-control-label">{{editUnit.title}} satış fiyatınız</label>
                     </div>
-
+                  
 
 
                     <div v-if="editUnit.enabled">
@@ -206,11 +209,11 @@
                         <input required :id="editUnit.unit + 'customWeightcb'" v-model="editUnit.customWeight"
                           type="checkbox" class="custom-control-input">
                         <label :for="editUnit.unit + 'customWeightcb'" class="custom-control-label">1 {{editUnit.title}} <strong>
-                          {{editUnit.kgRatio}} KG</strong> olarak tanımlı. Değiştirmek isterseniz işaretleyin.</label>
+                          {{editUnit.kgRatio}} KG</strong> olarak tanımlı. Ağırlığı size özel değiştirmek isterseniz işaretleyin.</label>
                       </div>
 
                       <div class="mb-3" v-if="editUnit.customWeight && canEdit(editUnit,'weight') && (editUnit.unit != 'kg') && (findUnit('kg'))">
-                        <label for="">1 {{editUnit.title}} sizde kaç KG ?</label>
+                        <label for="">1 {{editUnit.title}} <strong>sizde</strong> ortalama kaç KG ?</label>
                         <input  v-model="editUnit.kgRatio" type="number" class="form-control price-control">
                       </div>
 

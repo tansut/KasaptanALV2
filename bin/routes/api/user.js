@@ -61,7 +61,7 @@ class UserRoute extends router_1.ApiRouter {
             let phone = this.req.body.phone;
             let user = yield this.retrieveByEMailOrPhone(phone);
             if (!user)
-                throw Error('Geçersiz telefon no');
+                throw Error('Geçersiz telefon no' + this.req.body.phone);
             user.resetToken = crypto.randomBytes(32).toString('hex');
             ;
             let utc = helper_1.default.UtcNow();
