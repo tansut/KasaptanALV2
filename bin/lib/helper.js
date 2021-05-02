@@ -150,7 +150,7 @@ class Helper {
         if (discount == 'discount')
             return Helper.asCurrency(Math.abs(regularPrice - discountVal));
         else
-            return Helper.asCurrency(regularPrice * (100 - discountVal));
+            return Helper.asCurrency(regularPrice * ((100 - discountVal) / 100.00));
     }
     static isToday(date) {
         return (Helper.Now().toDateString() === date.toDateString());

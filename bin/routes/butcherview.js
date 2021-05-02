@@ -142,6 +142,16 @@ class Route extends router_1.ViewRouter {
                     this.categories.push(c);
                 }
             });
+            let discountCat = this.req.__categories.find(c => c.type == 'discount');
+            let discountProducts = [];
+            if (discountCat && (!this.req.params.category || this.req.params.category == discountCat.slug)) {
+                discountProducts = butcher.products.filter(bp => {
+                    return bp.discountType != "none" && bp.priceDiscount > 0;
+                }).map(bp => bp.product);
+                if (discountProducts.length > 0) {
+                    discountCat && this.categories.splice(0, 0, discountCat);
+                }
+            }
             if (!this.req.params.category && this.categories.length) {
                 this.category = this.butcher.defaultCategoryId ? this.categories.find(p => p.id == this.butcher.defaultCategoryId) : this.categories[0];
             }
@@ -150,7 +160,11 @@ class Route extends router_1.ViewRouter {
             if (!this.category) {
                 this.category = this.req.__categories[0];
             }
-            this.products = productManager_1.default.filterProductsByCategory(this.products, { slug: this.category.slug }, { productType: 'generic' }, { chunk: 0 });
+            if (discountProducts.length) {
+                this.products = discountProducts;
+            }
+            else
+                this.products = productManager_1.default.filterProductsByCategory(this.products, { slug: this.category.slug }, { productType: 'generic' }, { chunk: 0 });
             this.subCategories = productManager_1.default.generateSubcategories(this.category, this.products);
             let pageTitle = helper_1.default.template(butcher.pageTitle || `${butcher.name}`, butcher);
             let pageDescription = helper_1.default.template(butcher.pageDescription || `${butcher.name}, ${butcher.address} ${butcher.areaLevel1.name}/${butcher.areaLevel2.name} adresinde hizmet vermekte olup ${(butcher.phone || '').trim().slice(0, -5) + " ..."} numaralı telefon ile ulaşabilirsiniz.`, butcher);

@@ -45,9 +45,14 @@ window.initComponents = function initComponents() {
             <span>
             {{formatCurrency(money).val}}<span v-if="splitCurrency(money).krs > 0.00">.<small>{{formatCurrency(money).krs}}</small></span>&#8378;
             <span v-if="unit">/{{unit}}</span>
+            <del class=" text-primary font-weight-normal" v-if="regular && regular > money">
+            
+            {{formatCurrency(regular).val}}<span v-if="splitCurrency(regular).krs > 0.00">.<small>{{formatCurrency(regular).krs}}</small></span>&#8378;
+            </del>
             </span>`,
         props: {
             money: { type: Number },
+            regular: { type: Number },
             unit: { type: this.String }
         },
 

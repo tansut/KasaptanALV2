@@ -59,7 +59,8 @@ class ButcherProduct extends BaseModel<ButcherProduct> {
                 }
             })
             return {
-                price: this.kgPrice,
+                price: Helper.CalculateDiscount(this.discountType, this.priceDiscount, this.kgPrice),
+                regular: this.kgPrice,
                 unit: 'kg',
                 unitTitle: title
             }
@@ -70,14 +71,16 @@ class ButcherProduct extends BaseModel<ButcherProduct> {
                 if (done) return {
                     unit: this.product[`${units[i]}`],
                     unitTitle: this.product[`${units[i]}title`],
-                    price: this[`${units[i]}price`]
+                    price: Helper.CalculateDiscount(this.discountType, this.priceDiscount, this[`${units[i]}price`]),
+                    regular: this[`${units[i]}price`]
                 }
             }
 
             return {
                 unit:'',
                 price: 0.00,
-                unitTitle:''
+                unitTitle:'',
+                regular: 0.00
             }
         }
     }

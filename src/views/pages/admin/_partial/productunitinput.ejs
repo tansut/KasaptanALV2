@@ -38,7 +38,7 @@
             </div>
             <div class="col-md-2 mb-3">
                 <div class="form-group">
-                    <label>KG Oranı</label>
+                    <label>Ana birim oranı</label>
                     <input type="text" class="form-control" name="<%=unit%>kgRatio" id="<%=unit%>kgRatio"
                         value="<%= product[unit + 'kgRatio'] %>">
                 </div>
@@ -135,7 +135,7 @@
                 <select class="form-control" name="<%=unit%>ButcherUnitEdit" id="<%=unit%>ButcherUnitEdit">
                     
                     <option <%=product[unit + 'ButcherUnitEdit'] == 'none' ? 'selected':''%> value="none">Hiçbirşey</option>
-                    <option <%=product[unit + 'ButcherUnitEdit'] == 'weight' ? 'selected':''%> value="weight">Sadece ağırlık</option>
+                    <option <%=product[unit + 'ButcherUnitEdit'] == 'weight' ? 'selected':''%> value="weight">Sadece birim içeriği</option>
                     <option <%=product[unit + 'ButcherUnitEdit'] == 'price' ? 'selected':''%> value="price">Sadece birim fiyatı</option>
                     <option <%=product[unit + 'ButcherUnitEdit'] == 'all' ? 'selected':''%> value="all">Herşey</option>
 

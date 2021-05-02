@@ -293,7 +293,7 @@ class ShopCard {
     isExpired() {
         if (!this.created)
             return false;
-        let timespan = 12 * 60 * 60 * 1000;
+        let timespan = 6 * 60 * 60 * 1000;
         let d = helper_1.default.Now();
         d.setTime(d.getTime() - timespan);
         return this.created < d;
@@ -314,7 +314,7 @@ class ShopCard {
             else if (req.session) {
                 req.session.shopcard = this;
                 return new Promise((resolve, reject) => {
-                    req.session.save((err) => err ? reject(err) : resolve());
+                    req.session.save((err) => err ? reject(err) : resolve(null));
                 });
             }
         });

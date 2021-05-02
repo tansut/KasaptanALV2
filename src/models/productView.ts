@@ -60,6 +60,7 @@ export interface ProductButcherView {
     badges: Badge[];
     id: number;
     kgPrice: number;
+    regularKgPrice: number;
     thumbnail?: string;
     userRatingAsPerc: number;
     shipRatingAsPerc: number;
@@ -107,7 +108,7 @@ export interface ProductView {
 
     discount: PriceDiscount;
     discountValue: number;
-    kgRegularPrice: number;
+    regularKgPrice: number;
 
     name: string;
     productType: string;

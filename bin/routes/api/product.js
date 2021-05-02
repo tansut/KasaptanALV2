@@ -668,7 +668,7 @@ class Route extends router_1.ApiRouter {
                 id: product.id,
                 discount: discount,
                 discountValue: discountValue,
-                kgRegularPrice: regularPrice,
+                regularKgPrice: regularPrice,
                 source: butcherProduct ? 'butcher' : 'product',
                 butcher: butcherProduct ? {
                     shipday0: butcher.shipday0,
@@ -691,6 +691,7 @@ class Route extends router_1.ApiRouter {
                     earnedPuan: 0.00,
                     productNote: '',
                     kgPrice: kgPrice,
+                    regularKgPrice: regularPrice,
                     calculatedRate: butcher.calculatedRate,
                     locationText: butcher.locationText,
                 } : null,
@@ -719,7 +720,8 @@ class Route extends router_1.ApiRouter {
                 view.priceView = {
                     price: view.purchaseOptions[0].unitPrice,
                     unitTitle: view.purchaseOptions[0].unitTitle,
-                    unit: view.purchaseOptions[0].unit
+                    unit: view.purchaseOptions[0].unit,
+                    regular: view.purchaseOptions[0].regularUnitPrice
                 };
             }
             return view;
@@ -746,7 +748,7 @@ class Route extends router_1.ApiRouter {
     //     this.res.send(view)
     // }
     getProductView2Edit(product, view, category) {
-        let price = view.priceUnit == 'kg' ? helper_1.default.asCurrency(view.kgPrice) : 0.00;
+        let price = view.priceUnit == 'kg' ? helper_1.default.asCurrency(view.regularKgPrice) : 0.00;
         let getpOptions = () => {
             let orj = view.purchaseOptions.filter(p => ((p.butcherUnitSelection != 'none-unselected') && (p.butcherUnitSelection != 'none-selected')));
             let priceUnit = view.purchaseOptions.find(po => po.unit == product.priceUnit);
@@ -759,6 +761,7 @@ class Route extends router_1.ApiRouter {
                     enabled: true,
                     kgRatio: 1,
                     unitPrice: view.kgPrice,
+                    regularUnitPrice: view.regularKgPrice,
                     customWeight: false,
                     customPrice: true,
                     butcherUnitSelection: 'forced',
@@ -796,7 +799,7 @@ class Route extends router_1.ApiRouter {
                     title: po.unitTitle,
                     kgRatio: po.kgRatio,
                     enabled: getEnabled(po),
-                    price: po.unitPrice || 0.00,
+                    price: po.regularUnitPrice || 0.00,
                     customPrice: po.customPrice,
                     customWeight: po.customWeight,
                     butcherUnitSelection: po.butcherUnitSelection,
@@ -808,6 +811,8 @@ class Route extends router_1.ApiRouter {
             price: price,
             butcherProductNote: view.butcherProductNote,
             note: view.fromButcherNote,
+            discountType: view.discount,
+            priceDiscount: view.discountValue,
             slug: view.slug,
             thumbnail: this.req.helper.imgUrl("product-photos", view.slug)
         };
@@ -847,21 +852,59 @@ class Route extends router_1.ApiRouter {
             this.res.send(viewProducts);
         });
     }
-    saveProductsForButchers() {
+    saveCampaign() {
+        return __awaiter(this, void 0, void 0, function* () {
+            let butcher = yield this.getButcher();
+            if (!butcher) {
+                return new http_1.PermissionError();
+            }
+            let productid = parseInt(this.req.body.id);
+            let product = yield product_1.default.findOne({
+                where: {
+                    id: productid
+                }
+            });
+            let butcherProduct = yield butcherproduct_1.default.findOne({
+                where: {
+                    butcherid: butcher.id,
+                    productid: productid
+                }
+            });
+            if (!butcherProduct)
+                throw new http_1.ValidationError('Geçersiz ürün');
+            butcherProduct.discountType = this.req.body.discountType;
+            butcherProduct.priceDiscount = helper_1.default.parseFloat(this.req.body.priceDiscount, 0);
+            yield butcherProduct.save();
+            butcher = yield butcher_1.default.loadButcherWithProducts(this.req.params.butcher, true);
+            let view = yield this.getProductViewforButcher(product, butcher);
+            let edit = this.getProductView2Edit(product, view);
+            this.res.send(edit);
+        });
+    }
+    getButcher() {
         return __awaiter(this, void 0, void 0, function* () {
             if (!this.req.params.butcher) {
                 return this.next();
             }
             let butcher = yield butcher_1.default.loadButcherWithProducts(this.req.params.butcher, true);
             if (!butcher) {
-                return this.next();
+                return null;
             }
             if (butcher.approved) {
                 if (!this.req.user || !helper_1.default.hasRightOnButcher(this.req.user, butcher.id)) {
-                    return new http_1.PermissionError();
+                    return null;
                 }
             }
             ;
+            return butcher;
+        });
+    }
+    saveProductsForButchers() {
+        return __awaiter(this, void 0, void 0, function* () {
+            let butcher = yield this.getButcher();
+            if (!butcher) {
+                return new http_1.PermissionError();
+            }
             let productid = parseInt(this.req.body.id);
             let product = yield product_1.default.findOne({
                 where: {
@@ -955,6 +998,7 @@ class Route extends router_1.ApiRouter {
         // router.get("/product/:slug/:butcher", Route.BindRequest(this.prototype.searchRoute));
         router.get("/product/:butcher/prePrices", Route.BindRequest(this.prototype.viewProductsForButchers));
         router.post("/product/:butcher/prePrices", Route.BindRequest(this.prototype.saveProductsForButchers));
+        router.post("/product/:butcher/campaign", Route.BindRequest(this.prototype.saveCampaign));
     }
 }
 __decorate([
@@ -974,5 +1018,5 @@ __decorate([
     __metadata("design:type", Function),
     __metadata("design:paramtypes", []),
     __metadata("design:returntype", Promise)
-], Route.prototype, "saveProductsForButchers", null);
+], Route.prototype, "saveCampaign", null);
 exports.default = Route;

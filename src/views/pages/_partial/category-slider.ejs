@@ -13,12 +13,13 @@
 <% var partialRenderUrl = typeof(partialRenderUrl) == 'undefined' ? '': partialRenderUrl %>
 
 <% 
-   var visibleCategories = [];
-
+   var visibleCategories = categories || [];
+  if (visibleCategories.length == 0) {
   viewCats.forEach(cat => { 
      var reyonlar = (categories.filter(p=>p.type == cat && p.status == 'active'));
      visibleCategories = visibleCategories.concat(reyonlar)
   })
+}
 
   /*if (selected && visibleCategories.filter(p=>p.slug == selected).length == 0) {
       var sel = categories.find(p=>p.slug == selected);

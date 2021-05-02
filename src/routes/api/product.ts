@@ -1,7 +1,7 @@
 import { Auth } from '../../lib/common';
 import { ApiRouter, ViewRouter } from '../../lib/router';
 import * as express from "express";
-import { ProductButcherView, ProductView, ProductViewForButcher, PurchaseOption, } from '../../models/productView';
+import { ProductView, ProductViewForButcher, PurchaseOption, } from '../../models/productView';
 import Product, { ProductSelectionWeigts, ProductType } from '../../db/models/product';
 import Butcher from '../../db/models/butcher';
 import ButcherProduct from '../../db/models/butcherproduct';
@@ -764,7 +764,7 @@ export default class Route extends ApiRouter {
             id: product.id,
             discount: discount,
             discountValue: discountValue,
-            kgRegularPrice: regularPrice,
+            regularKgPrice: regularPrice,
             source: butcherProduct ? 'butcher' : 'product',
             butcher: butcherProduct ? {
                 shipday0: butcher.shipday0,
@@ -787,6 +787,7 @@ export default class Route extends ApiRouter {
                 earnedPuan: 0.00,
                 productNote: '',
                 kgPrice: kgPrice,
+                regularKgPrice: regularPrice,
                 calculatedRate: butcher.calculatedRate,
                 locationText: butcher.locationText,
             } : null,
@@ -821,7 +822,8 @@ export default class Route extends ApiRouter {
             view.priceView = {
                 price: view.purchaseOptions[0].unitPrice,
                 unitTitle: view.purchaseOptions[0].unitTitle,
-                unit: view.purchaseOptions[0].unit
+                unit: view.purchaseOptions[0].unit,
+                regular: view.purchaseOptions[0].regularUnitPrice
             }
         }
 
@@ -853,7 +855,7 @@ export default class Route extends ApiRouter {
     // }
 
     getProductView2Edit(product: Product, view: ProductViewForButcher, category?: Category) {
-        let price = view.priceUnit == 'kg' ? Helper.asCurrency(view.kgPrice) : 0.00;
+        let price = view.priceUnit == 'kg' ? Helper.asCurrency(view.regularKgPrice) : 0.00;
 
         let getpOptions = () => {
             let orj: any = view.purchaseOptions.filter(p => ((p.butcherUnitSelection != 'none-unselected') && (p.butcherUnitSelection != 'none-selected')));
@@ -867,6 +869,7 @@ export default class Route extends ApiRouter {
                 enabled: true,
                 kgRatio: 1,
                 unitPrice: view.kgPrice,
+                regularUnitPrice: view.regularKgPrice,
                 customWeight: false,
                 customPrice: true,
                 butcherUnitSelection: 'forced',
@@ -910,7 +913,7 @@ export default class Route extends ApiRouter {
                     title: po.unitTitle,
                     kgRatio: po.kgRatio,
                     enabled: getEnabled(po),
-                    price: po.unitPrice || 0.00,
+                    price: po.regularUnitPrice || 0.00,
                     customPrice: po.customPrice,
                     customWeight: po.customWeight,
                     butcherUnitSelection: po.butcherUnitSelection,
@@ -922,6 +925,8 @@ export default class Route extends ApiRouter {
             price: price,
             butcherProductNote: view.butcherProductNote,
             note: view.fromButcherNote,
+            discountType: view.discount,
+            priceDiscount: view.discountValue,
             slug: view.slug,
             thumbnail: this.req.helper.imgUrl("product-photos", view.slug)
         };
@@ -967,8 +972,46 @@ export default class Route extends ApiRouter {
         this.res.send(viewProducts);
     }
 
+
     @Auth.Anonymous()
-    async saveProductsForButchers() {
+    async saveCampaign() {
+        let butcher = await this.getButcher();
+
+        if (!butcher) {
+            return new PermissionError()
+        }
+
+        let productid = parseInt(this.req.body.id);
+
+        let product = await Product.findOne({
+            where: {
+                id: productid
+            }
+        })
+
+        let butcherProduct: ButcherProduct = await ButcherProduct.findOne({
+            where: {
+                butcherid: butcher.id,
+                productid: productid
+            }
+        });
+
+        if (!butcherProduct) throw new ValidationError('Geçersiz ürün');
+
+        butcherProduct.discountType = this.req.body.discountType;
+        butcherProduct.priceDiscount = Helper.parseFloat(this.req.body.priceDiscount, 0);
+
+        await butcherProduct.save();
+
+        butcher = await Butcher.loadButcherWithProducts(this.req.params.butcher, true);
+        let view = await this.getProductViewforButcher(product, butcher);
+        let edit = this.getProductView2Edit(product, view)
+
+        this.res.send(edit);        
+
+    }
+
+    async getButcher() {
         if (!this.req.params.butcher) {
             return this.next();
         }
@@ -976,14 +1019,28 @@ export default class Route extends ApiRouter {
         let butcher = await Butcher.loadButcherWithProducts(this.req.params.butcher, true);
 
         if (!butcher) {
-            return this.next();
+            return null;
         }
 
         if (butcher.approved) {
             if (!this.req.user || !Helper.hasRightOnButcher(this.req.user, butcher.id)) {
-                return new PermissionError()
+                return null
             }
         };
+
+        return butcher;
+    }
+
+    
+    async saveProductsForButchers() {
+
+
+        let butcher = await this.getButcher();
+
+        if (!butcher) {
+            return new PermissionError()
+        }
+
 
         let productid = parseInt(this.req.body.id);
         let product = await Product.findOne({
@@ -1095,6 +1152,9 @@ export default class Route extends ApiRouter {
         // router.get("/product/:slug/:butcher", Route.BindRequest(this.prototype.searchRoute));
         router.get("/product/:butcher/prePrices", Route.BindRequest(this.prototype.viewProductsForButchers));
         router.post("/product/:butcher/prePrices", Route.BindRequest(this.prototype.saveProductsForButchers));
+        router.post("/product/:butcher/campaign", Route.BindRequest(this.prototype.saveCampaign));
+
+        
     }
 }
 

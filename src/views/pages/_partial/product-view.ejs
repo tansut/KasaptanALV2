@@ -59,7 +59,7 @@
             <% var view = butcherProduct.priceView;  %>
            
                 <div class="text-accent font-size-sm">
-                    <%- include('./currency.ejs', {value: view.price, unit: view.unitTitle}) %>
+                    <%- include('./currency.ejs', {value: view.price, regular: view.regular, unit: view.unitTitle}) %>
                 </div>
              
             <% } %>

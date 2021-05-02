@@ -89,7 +89,7 @@ class="gallery-item-caption"><%= butcherVideo.title %></span></a>
           <% } %>
 
             <div v-if="product && selectedUnit" class="mb-2 text-right">
-              <money-view class="font-weight-bold  border p-2 text-dark bg-white font-size-md" :unit="product.kgPrice ? 'Kg':  selectedUnit.unitTitle"  :money="product.kgPrice || selectedUnit.unitPrice"></money-view>
+              <money-view class="font-weight-bold  border p-2 text-dark bg-white font-size-md" :unit="product.kgPrice ? 'Kg':  selectedUnit.unitTitle" :regular="product.regularKgPrice || selectedUnit.regularUnitPrice"  :money="product.kgPrice || selectedUnit.unitPrice"></money-view>
 
             </div>
 

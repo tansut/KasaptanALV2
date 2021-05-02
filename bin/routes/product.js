@@ -21,6 +21,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const router_1 = require("../lib/router");
 const product_1 = require("../db/models/product");
 const common_1 = require("../lib/common");
+const helper_1 = require("../lib/helper");
 const resource_1 = require("../db/models/resource");
 const resource_2 = require("./resource");
 const Jimp = require('jimp');
@@ -173,7 +174,8 @@ class Route extends router_1.ViewRouter {
                             puanData: butcher.getPuanData(this.product.productType),
                             earnedPuan: 0.00,
                             calculatedRate: butcher.calculatedRate,
-                            kgPrice: bp ? bp.kgPrice : 0,
+                            kgPrice: bp ? helper_1.default.CalculateDiscount(bp.discountType, bp.priceDiscount, bp.kgPrice) : 0,
+                            regularKgPrice: bp.kgPrice,
                             locationText: butcher.locationText,
                             productNote: bp ? (bp.mddesc ? this.markdown.render(bp.mddesc) : "") : "",
                             thumbnail: this.req.helper.imgUrl("butcher-google-photos", butcher.slug)
@@ -288,7 +290,10 @@ class Route extends router_1.ViewRouter {
                             title: '',
                             basedOn: 'global',
                             view: {
-                                price: this.productLd.offers.lowPrice, unit: this.productLd.offers.unit, unitTitle: this.productLd.offers.unit
+                                price: this.productLd.offers.lowPrice,
+                                unit: this.productLd.offers.unit,
+                                unitTitle: this.productLd.offers.unit,
+                                regular: this.productLd.offers.lowPrice
                             }
                         };
                     }

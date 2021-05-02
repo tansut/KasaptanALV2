@@ -146,15 +146,81 @@
 
               <td class="text-right">
                 <button v-on:click="openDialog(p, index)"
-                  v-bind:class="{'btn-warning': hasPrice(p) && !p.enabled ,'btn-success': hasPrice(p) && p.enabled, 'btn-secondary': !hasPrice(p) }"
-                  class="btn btn-sm">
+                  v-bind:class="{'btn-warning': hasPrice(p) && !p.enabled ,'btn-info': hasPrice(p) && p.enabled, 'btn-secondary': !hasPrice(p) }"
+                  class="btn btn-sm btn-block">
                   <span>{{hasPrice(p) ? 'Fiyat Düzenle':'Fiyat Ver'}}</span>
                 </button>
+                <button v-if="hasPrice(p) && p.enabled" v-on:click="openCampaign(p, index)"
+                  v-bind:class="{'btn-secondary': !hasCampaign(p) ,'btn-secondary border border-success': hasCampaign(p) }"
+                  class="btn btn-sm btn-block">
+                  <i v-if="!hasCampaign(p)"  class="czi-icon czi-loudspeaker mr-1"></i>
+                  <i v-else class="czi-icon czi-thumb-up mr-1"></i>
+
+                  <span>{{hasCampaign(p) ? 'Aktif - %' + (p.priceDiscount).toString() :'Kapmanya Yap'}}</span>
+                </button>
+                
               </td>
 
             </tr>
           </tbody>
         </table>
+      </div>
+
+      
+
+      <div class="modal modal-fullscreen-sm" id="campaignmodal" tabindex="-1" role="dialog" data-keyboard="false"
+      aria-hidden="true">
+      <div class="modal-dialog " role="document">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title">{{edit && edit.name}}</h5>
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+              <span aria-hidden="true">&times;</span>
+            </button>
+          </div>
+          <div class="modal-body p-3">
+            <form v-if="edit" @submit="checkCampaignForm" method="post">
+              <div class="bg-secondary p-3 border font-size-sm">
+                <h5 class="h6">KasaptanAl ile öne çıkın</h5>
+                <p>
+                  Basit bir indirim ile yeni müşteriler kazanın. 
+                </p>
+                <p>
+                  Kapmpanyalı ürününüz KasaptanAl'da  <strong>indirim işaretiyle</strong> görünsün, KasaptanAl profilinizde  <strong>kampanyalı ürünler</strong> bölümü hemen açılsın. 
+                </p>
+              </div>
+              <p class="text-primary" v-if="errors.length">
+                <b>Lütfen aşağıdaki hataları düzeltin:</b>
+              <ul>
+                <li v-for="error in errors">{{ error }}</li>
+              </ul>
+              </p>
+
+              <div>
+
+                <div class="form-group ">
+                  <label for="inputState">Kampanya durumu</label>
+                  <select v-model="edit.discountType" required class="form-control">
+                    <option disabled value="">Lütfen seçim yapın</option>
+                    <option value="none" :selected="edit.discountType == 'none'">Kapmanya Kapalı</option>
+                    <option value="discountAsPercent" :selected="edit.discountType == 'discountAsPercent'">Kapmanya Aktif</option>
+                    
+                  </select>
+                </div>
+
+                <div class="form-group">
+                  <label>İndirim yüzdesi belirleyin</label>
+                  <input v-model="edit.priceDiscount" min="2" max="25" required type="number" class="form-control"  placeholder="yüzde kaç indirim yapmak istersiniz">
+                  <small></small>
+                </div>
+              
+              </div>
+      
+              <button class="btn btn-primary">Değişiklikleri Kaydet</button>
+            </form>
+          </div>
+        </div>
+      </div>
       </div>
 
       <div class="modal modal-fullscreen-sm" id="pricemodal" tabindex="-1" role="dialog" data-keyboard="false"
@@ -168,7 +234,7 @@
               </button>
             </div>
             <div class="modal-body p-0">
-              <div v-html="edit.butcherProductNote" class="font-size-sm font-weight-bold p-2 border-bottom bg-secondary  text-dark" v-if="edit && edit.butcherProductNote"
+              <div v-html="edit.butcherProductNote" class="font-size-sm px-2 pt-2 border-bottom bg-secondary  text-dark" v-if="edit && edit.butcherProductNote"
                 class="text-muted">
                 
               </div>
@@ -176,7 +242,7 @@
               <div class="p-2">
 
                 <div class="form-group mb-0">
-                  <label><strong>Bize iletmek istediğiniz</strong> notunuz varsa alalım</label>
+                  <label class="d-none"><strong>Bize iletmek istediğiniz</strong> notunuz varsa alalım</label>
                   <textarea rows="3" class="form-control font-size-sm" v-model="edit && edit.note"
                     :placeholder="false ? edit.butcherProductNote: 'Paketli, şoklu olduğu, özel olarak yaptırıldığı gibi ürününüze özel yazmamızı istediğiniz not varsa belirtin.'"></textarea>
                   <small class=" form-text text-muted"></small>
@@ -195,8 +261,8 @@
                     <div v-if="editUnit.id != 0" class="mb-3 custom-control custom-checkbox">
                       <input :disabled="editUnit.butcherUnitSelection == 'forced'" :id="editUnit.unit + 'enabled'" type="checkbox" v-model="editUnit.enabled"
                         class="custom-control-input">
-                      <label v-if="editUnit.id != 0" :for="editUnit.unit + 'enabled'" class="custom-control-label">{{editUnit.title}} olarak
-                        satışınız varsa işaretleyin {{editUnit.butcherUnitSelection == 'forced' ? '[Zorunlu]':''}}</label>
+                      <label v-if="editUnit.id != 0" :for="editUnit.unit + 'enabled'" class="custom-control-label">Müşterinize {{editUnit.title}} ile
+                        satış yapmak için işaretleyin. {{editUnit.butcherUnitSelection == 'forced' ? '[Zorunlu]':''}}</label>
                       <label v-else :for="editUnit.unit + 'enabled'" class="custom-control-label">{{editUnit.title}} satış fiyatınız:</label>
                     </div>
                   
@@ -228,7 +294,7 @@
                         <input required :id="editUnit.unit + 'salemanualcb'" v-model="editUnit.customPrice"
                           type="checkbox" class="custom-control-input">
                         <label :for="editUnit.unit + 'salemanualcb'" class="custom-control-label">{{editUnit.title}}
-                          fiyatı {{editUnit.kgRatio}}x{{edit.kgTitle}} olacak şekilde otomatik hesaplanır. Ayrı fiyat vermek için işaretleyin.</label>
+                          fiyatı <strong>{{editUnit.kgRatio}} x {{edit.kgTitle}} fiyatı</strong> olacak şekilde otomatik hesaplanır. Ayrı fiyat vermek için işaretleyin.</label>
                       </div>
 
 
@@ -296,6 +362,7 @@
 
             data: function () {
               return {
+                errors: [],
                 list: [],
                 edit: null,
                 editUnitVal: null,
@@ -328,6 +395,38 @@
             },
 
             methods: {
+
+              checkCampaignForm: function (e) {
+                this.errors = [];
+                
+                e.preventDefault();
+                var self = this;
+                App.Backend.post('product/<%=butcher.slug%>/campaign', {
+                  id: this.edit.id,
+                  discountType: this.edit.discountType,
+                  priceDiscount: this.edit.priceDiscount
+                }, null, true).then(function(result) {
+                  self.updateItem(self.edit, result);
+                  $('#campaignmodal').modal('hide'); 
+                }).catch(function(err) {
+                  App.HandleError(err)
+                })
+              },
+
+
+              openCampaign(p, index) {
+                this.edit = JSON.parse(JSON.stringify(p));                
+                this.editIndex = index;
+                this.editUnitVal = null;
+                this.edit.priceDiscount = this.edit.priceDiscount || 4;
+                $('#campaignmodal').modal('show');                
+              },
+
+              hasCampaign(p) {
+                if (this.hasPrice(p) && p.enabled) {
+                  return p.discountType != 'none'
+                } else return false;
+              },
 
               canEdit(unit, prop, checkCustom) {
                 
@@ -382,12 +481,22 @@
                 return f && (enabled ? (f.enabled ? f : null) : f);
               },
 
-              toogleEnabled(p) {
+              updateItem: function(p, result) {
+                var f = this.list.find(function (l) {
+                    return l.id == p.id
+                  })
+
+                  Object.assign(f, result);
+                  this.forceRerender()
+                  $('#' + p.slug + 'row').fadeOut(500).fadeIn(500);
+              },
+
+              toogleEnabled: function(p) {
                 p.enabled = !p.enabled;
                 this.saveDialog(p, false);
               },
 
-              saveDialog(p, doEnable) {
+              saveDialog: function(p, doEnable) {
 
                 var valid = true;
 
@@ -418,16 +527,12 @@
                   note: p.note,
                   enabled: (p.enabled || doEnable)
                 }).then(function (result) {
-                  var i = 0;
-                  var f = self.list.find(function (l) {
-                    return l.id == p.id
-                    i++
-                  })
+                  self.updateItem(p, result)
 
-                  Object.assign(f, result);
-                  self.forceRerender()
+
+
                   $('#pricemodal').modal('hide');
-                  $('#' + p.slug + 'row').fadeOut(500).fadeIn(500);
+                  
 
                 }).catch(function (err) {
                   App.HandleError(err)

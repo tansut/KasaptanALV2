@@ -163,7 +163,7 @@ export default class Helper {
     static CalculateDiscount(discount: PriceDiscount, discountVal: number, regularPrice: number) {
         if (discount == 'none') return regularPrice;
         if (discount == 'discount') return Helper.asCurrency(Math.abs(regularPrice - discountVal));
-        else return Helper.asCurrency(regularPrice * (100-discountVal));
+        else return Helper.asCurrency(regularPrice * ((100-discountVal) / 100.00));
     }
 
     static isToday(date): boolean {

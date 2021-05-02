@@ -175,9 +175,24 @@ export default class Route extends ViewRouter {
         this.req.__categories.forEach(c=> {
             let products = <Product []>ProductManager.filterProductsByCategory(this.products, {slug: c.slug}, { }, { chunk: 0 });
             if (products.length) {
-                this.categories.push(c)
+                this.categories.push(c);
             }            
         });
+
+        let discountCat = this.req.__categories.find(c=>c.type == 'discount');
+        let discountProducts = [];
+
+        if (discountCat && (!this.req.params.category ||  this.req.params.category == discountCat.slug)) {
+            discountProducts = butcher.products.filter(bp=> {
+                return bp.discountType != "none" && bp.priceDiscount > 0;
+            }).map(bp=>bp.product)
+    
+            if (discountProducts.length > 0) {
+                discountCat && this.categories.splice(0, 0, discountCat);
+            }
+        }
+
+
 
         if (!this.req.params.category && this.categories.length) {
             this.category = this.butcher.defaultCategoryId ? this.categories.find(p=>p.id == this.butcher.defaultCategoryId): this.categories[0];
@@ -188,7 +203,11 @@ export default class Route extends ViewRouter {
         }
 
 
-        this.products = <Product []>ProductManager.filterProductsByCategory(this.products, {slug: this.category.slug}, { productType: 'generic' }, { chunk: 0 })
+
+        if (discountProducts.length) {
+            this.products = discountProducts;
+        } else
+            this.products = <Product []>ProductManager.filterProductsByCategory(this.products, {slug: this.category.slug}, { productType: 'generic' }, { chunk: 0 })
         this.subCategories = ProductManager.generateSubcategories(this.category, this.products);
  
 

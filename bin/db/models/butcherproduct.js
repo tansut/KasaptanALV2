@@ -11,6 +11,7 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 Object.defineProperty(exports, "__esModule", { value: true });
 const sequelize_typescript_1 = require("sequelize-typescript");
 const basemodel_1 = require("./basemodel");
+const helper_1 = require("../../lib/helper");
 const product_1 = require("./product");
 const butcher_1 = require("./butcher");
 let ButcherProduct = class ButcherProduct extends basemodel_1.default {
@@ -38,7 +39,8 @@ let ButcherProduct = class ButcherProduct extends basemodel_1.default {
                 }
             });
             return {
-                price: this.kgPrice,
+                price: helper_1.default.CalculateDiscount(this.discountType, this.priceDiscount, this.kgPrice),
+                regular: this.kgPrice,
                 unit: 'kg',
                 unitTitle: title
             };
@@ -50,13 +52,15 @@ let ButcherProduct = class ButcherProduct extends basemodel_1.default {
                     return {
                         unit: this.product[`${units[i]}`],
                         unitTitle: this.product[`${units[i]}title`],
-                        price: this[`${units[i]}price`]
+                        price: helper_1.default.CalculateDiscount(this.discountType, this.priceDiscount, this[`${units[i]}price`]),
+                        regular: this[`${units[i]}price`]
                     };
             }
             return {
                 unit: '',
                 price: 0.00,
-                unitTitle: ''
+                unitTitle: '',
+                regular: 0.00
             };
         }
     }

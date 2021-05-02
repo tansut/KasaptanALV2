@@ -206,7 +206,8 @@ export default class Route extends ViewRouter {
                         puanData: butcher.getPuanData(this.product.productType),
                         earnedPuan: 0.00,
                         calculatedRate: butcher.calculatedRate,
-                        kgPrice: bp ? bp.kgPrice : 0,
+                        kgPrice: bp ? Helper.CalculateDiscount(bp.discountType, bp.priceDiscount, bp.kgPrice) : 0,
+                        regularKgPrice: bp.kgPrice,
                         locationText: butcher.locationText,
                         productNote: bp ? (bp.mddesc ? this.markdown.render(bp.mddesc) : "") : "",
                         thumbnail: this.req.helper.imgUrl("butcher-google-photos", butcher.slug)
@@ -330,7 +331,10 @@ export default class Route extends ViewRouter {
                         title: '',
                         basedOn: 'global',
                         view: {
-                            price: this.productLd.offers.lowPrice, unit: this.productLd.offers.unit, unitTitle: this.productLd.offers.unit
+                            price: this.productLd.offers.lowPrice, 
+                            unit: this.productLd.offers.unit, 
+                            unitTitle: this.productLd.offers.unit,
+                            regular: this.productLd.offers.lowPrice
                         }
                     }
                 }

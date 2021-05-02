@@ -2,8 +2,21 @@
 <% var parts = __helper.formatCurrency(value) %>
 <% var unit = typeof(unit) == 'undefined' ? '': unit %>
 <% if (parts.val <= 0.00 && parts.krs <= 0.00 && zero) { %>
-<%= zero %>
+    <%= zero %>
 <% } else { %>
-<%= parts.val%><% if (parts.krs > 0) { %>.<small><%= parts.krs %></small><% } %>&#8378;
-<%= unit ? '/' + unit: '' %>
+    <%= parts.val%><% if (parts.krs > 0) { %>.<small><%= parts.krs %></small><% } %>&#8378;
+    <%= unit ? '/' + unit: '' %>
+<% } %>
+
+<% if (typeof (regular) != 'undefined' && regular >  value ) { %>
+    <% var parts = __helper.formatCurrency(regular) %>
+    <br>
+    <del class="text-primary font-weight-normal">
+        <% if (parts.val <= 0.00 && parts.krs <= 0.00 && zero) { %>
+            <%= zero %>
+        <% } else { %>
+            <%= parts.val%><% if (parts.krs > 0) { %>.<small><%= parts.krs %></small><% } %>&#8378;
+            <%= unit ? '/' + unit: '' %>
+        <% } %>
+    </del>
 <% } %>

@@ -1,6 +1,6 @@
 import { AppRequest, ValidationError } from "../lib/http";
 import Product, { ProductType } from "../db/models/product";
-import { PurchaseOption, ProductView, ProductButcherView } from "./productView";
+import { PurchaseOption, ProductView } from "./productView";
 import Helper from "../lib/helper";
 import { Shipment, ShipmentType, ShipmentTypeDesc } from "./shipment";
 import { Payment, PaymentType, PaymentTypeDesc } from "./payment";
@@ -331,7 +331,7 @@ export class ShopCard {
 
     isExpired(): boolean {
         if (!this.created) return false;
-        let timespan = 12 * 60 * 60 * 1000; 
+        let timespan = 6 * 60 * 60 * 1000; 
         let d = Helper.Now()
         d.setTime(d.getTime() - timespan);
         return this.created < d;
@@ -413,7 +413,7 @@ export class ShopCard {
         } else if (req.session) {
             req.session.shopcard = this;
             return new Promise<any>((resolve, reject) => {
-                req.session.save((err) => err ? reject(err) : resolve())
+                req.session.save((err) => err ? reject(err) : resolve(null))
             })
             
         }
