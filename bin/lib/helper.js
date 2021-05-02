@@ -36,8 +36,15 @@ class Helper {
     static nvl(val, def = 0) {
         return parseInt(val) == NaN ? def : parseInt(val);
     }
-    static parseFloat(val) {
-        return parseFloat(val.replace(/,/g, ''));
+    static parseFloat(val, def) {
+        if (typeof (val) == 'undefined' || val == null)
+            val = '';
+        let res = parseFloat(typeof val == 'number' ? val : val.replace(/,/g, ''));
+        if (typeof def != 'undefined') {
+            if (isNaN(res))
+                return def;
+        }
+        return res;
     }
     static distance(p1, p2) {
         return Helper._distance(p1.coordinates[0], p1.coordinates[1], p2.coordinates[0], p2.coordinates[1], 'K');

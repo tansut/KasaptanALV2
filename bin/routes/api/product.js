@@ -899,7 +899,7 @@ class Route extends router_1.ApiRouter {
             if (unitPrice) {
                 let other = this.req.body.units.find(u => u.id != 0 && u.unit == unitPrice.unit);
                 if (other) {
-                    other.price = unitPrice.price;
+                    other.price = helper_1.default.parseFloat(unitPrice.price, 0);
                     other.customPrice = true;
                     other.isPriceUnit = true;
                     _.remove(this.req.body.units, u => u == unitPrice);
@@ -918,23 +918,25 @@ class Route extends router_1.ApiRouter {
                         newItem[`${unitid}weight`] = null;
                 }
                 if (u.unit == 'kg' || u.isPriceUnit) {
-                    newItem.kgPrice = u.price;
+                    newItem.kgPrice = helper_1.default.parseFloat(u.price, 0);
                 }
                 if (unitid) {
-                    newItem[`${unitid}enabled`] = u.enabled;
-                    if (u.price && (u.customPrice || u.unit == 'kg')) {
-                        newItem[`${unitid}price`] = u.price;
+                    if (u.price && (u.customPrice)) {
+                        newItem[`${unitid}price`] = helper_1.default.parseFloat(u.price);
                     }
+                    if (u.isPriceUnit && !u.price)
+                        u.enabled = false;
+                    newItem[`${unitid}enabled`] = u.enabled;
                 }
             });
-            product.availableUnitIds.forEach(u => {
-                if (newItem.isNewRecord && product[`${u}ButcherUnitSelection`] == 'none-selected')
-                    newItem[`${u}enabled`] = true;
-                else if (newItem.isNewRecord && product[`${u}ButcherUnitSelection`] == 'none-unselected')
-                    newItem[`${u}enabled`] = false;
-                else if (product[`${u}ButcherUnitSelection`] == 'forced')
-                    newItem[`${u}enabled`] = true;
-            });
+            // product.availableUnitIds.forEach(u => {
+            //     if (newItem.isNewRecord && product[`${u}ButcherUnitSelection`] == 'none-selected')
+            //         newItem[`${u}enabled`] = true;
+            //     else if (newItem.isNewRecord && product[`${u}ButcherUnitSelection`] == 'none-unselected')
+            //         newItem[`${u}enabled`] = false;
+            //     else if (product[`${u}ButcherUnitSelection`] == 'forced')
+            //         newItem[`${u}enabled`] = true;
+            // })
             if (!newItem.canBeEnabled())
                 newItem.enabled = false;
             yield context_1.default.getContext().transaction((t) => {

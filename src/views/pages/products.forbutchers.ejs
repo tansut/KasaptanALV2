@@ -211,8 +211,8 @@
                         <label :for="editUnit.unit + 'customWeightcb'" class="custom-control-label">1 {{editUnit.title}} ortalama <strong>
                           {{editUnit.kgRatio}} {{edit.kgTitle}}</strong> içerecek şekilde tanımlı. Size özel değiştirmek isterseniz işaretleyin.</label>
                       </div>
-                      <div class="font-size-sm text-muted" v-else-if="editUnit.kgRatio > 0 && editUnit.id > 0 ">
-                        <p>
+                      <div class="font-size-sm text-muted" v-else>
+                        <p v-if="(editUnit.id > 0) && (editUnit.kgRatio != 1)">
                           1 {{editUnit.title}} ortalama <strong>{{editUnit.kgRatio}} {{edit.kgTitle}}</strong> içerecek şekilde tanımlıdır.</span>
 
                         </p>
@@ -331,12 +331,11 @@
 
               canEdit(unit, prop, checkCustom) {
                 
-                if (prop == 'price' && unit.unit == 'kg' && unit.id == 0) return true;
+                if (prop == 'price' && unit.id == 0) return true;
                 if (unit.butcherUnitEdit == 'none') return false;
-                if (unit.butcherUnitEdit == 'all') return true;
                 if (checkCustom) {
-                  return ((prop == "price" && unit.customPrice) || (prop == "price" && unit.customWeight));
-                } else return unit.butcherUnitEdit == prop
+                  return ((prop == "price" && unit.customPrice) || (prop == "weight" && unit.customWeight));
+                } else return unit.butcherUnitEdit == prop | unit.butcherUnitEdit == "all"
                 
               },
 
@@ -411,9 +410,9 @@
                       unit: u.unit,
                       enabled: u.enabled,
                       customPrice: u.customPrice,
-                      price: parseFloat(u.price),
+                      price: (u.price),
                       customWeight: u.customWeight,
-                      kgRatio: u.kgRatio ? parseFloat(u.kgRatio): 0
+                      kgRatio: u.kgRatio ? (u.kgRatio): 0
                     }
                   }),
                   note: p.note,

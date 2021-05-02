@@ -44,8 +44,14 @@ export default class Helper {
         return parseInt(val) == NaN ? def: parseInt(val);
     }
 
-    static parseFloat(val) {
-        return parseFloat(val.replace(/,/g, ''));
+    static parseFloat(val: string, def?) {
+        if (typeof(val) == 'undefined' || val == null) val = '';
+
+        let res = parseFloat(typeof val == 'number' ? val: val.replace(/,/g, ''));
+        if (typeof def != 'undefined' ) {
+            if (isNaN(res)) return def;
+        }  
+        return res;
     }
 
 
