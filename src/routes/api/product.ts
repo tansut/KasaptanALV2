@@ -862,7 +862,7 @@ export default class Route extends ApiRouter {
             let orj: any = view.purchaseOptions.filter(p => ((p.butcherUnitSelection != 'none-unselected') && (p.butcherUnitSelection != 'none-selected')));
             let priceUnit = view.purchaseOptions.find(po => po.unit == product.priceUnit);
             let hasKgDependency = view.purchaseOptions.find(po => po.kgRatio > 0);
-            if (!priceUnit) {
+            {
             orj.splice(0, 0, {
                 unit: product.priceUnit == 'kg' ? 'kg': product[`${product.priceUnit}`],
                 unitTitle: product.priceUnitTitle,
@@ -1104,7 +1104,7 @@ export default class Route extends ApiRouter {
                 let productKgRatio = product[`${unitid}kgRatio`];
                 if (butcherKgRatio != productKgRatio) {
                     newItem[`${unitid}kgRatio`] = butcherKgRatio;
-                    newItem[`${unitid}weight`] = `${unitPrice.unit == 'kg'? 'ortalama ':''}${u.kgRatio} ${unitPrice.title}`;
+                    newItem[`${unitid}weight`] = `${unitPrice.unit == 'kg'? 'ortalama ':''}${u.kgRatio}  ${product.getUnitTitle(unitPrice.unit)}`;
                 } else newItem[`${unitid}weight`] = null;
             }
 

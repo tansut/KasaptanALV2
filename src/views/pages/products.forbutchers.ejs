@@ -156,7 +156,7 @@
                   <i v-if="!hasCampaign(p)"  class="czi-icon czi-loudspeaker mr-1"></i>
                   <i v-else class="czi-icon czi-thumb-up mr-1"></i>
 
-                  <span>{{hasCampaign(p) ? 'Aktif - %' + (p.priceDiscount).toString() :'Kamanya Yap'}}</span>
+                  <span>{{hasCampaign(p) ? 'Aktif - %' + (p.priceDiscount).toString() :'Kampanya Yap'}}</span>
                 </button>
                 
               </td>
@@ -281,7 +281,7 @@
                         </label>
                       </div>
                       <div class="font-size-sm text-muted" v-else>
-                        <p v-if="(editUnit.id > 0) && (editUnit.kgRatio != 1 && editUnit.kgRatio != 0)">
+                        <p v-if="(editUnit.id) && (editUnit.kgRatio != 1 && editUnit.kgRatio != 0)">
                           1 {{editUnit.title}} ortalama <strong>{{editUnit.kgRatio}} {{edit.kgTitle}}</strong> içerecek şekilde tanımlıdır.</span>
 
                         </p>

@@ -148,6 +148,11 @@ class Product extends BaseModel<Product> {
         return res;
     }
 
+    getUnitTitle(unit: string) {
+        if (unit == 'kg') return 'KG';
+        return this[`${unit}title`] || this[`${unit}`]
+    }
+
 
      getUnitBy(nameOrTitle: string): string {
         if (this.unit1 == nameOrTitle || this.unit1title == nameOrTitle) return 'unit1';

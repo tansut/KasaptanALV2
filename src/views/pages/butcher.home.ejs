@@ -51,18 +51,45 @@
 
 </li>
         <% } %>
-        <li class="list-group-item">
-          <a class="app_blank" href="/">Ürün Fiyatlarım</a>
-        </li>
-        <li  class="list-group-item">
-          <a class="app_blank" href="/kasapsayfam/siparislerim">Siparişlerim</a>
-        </li>        
-        <li class="bg-secondary list-group-item">
-          <a class="app_blank d-block" href="/kasapsayfam/odemeal"><i class="czi-icon czi-card mr-1"></i> Online Ödeme Al</a>
-          <small><strong>POS cihazı taşımayın. Kendi siparişlerinizden </strong> sadece %<%=controller.butcher.payCommissionRate*100%> pos komisyonu ile online ödeme alın, <strong>EFT, kapıya POS cihazı taşımakla </strong> uğraşmayın. Bilgi almak için <a target="_blank" href="https://www.youtube.com/watch?v=mKlBHYADTqg">tıklayın.</a></small>
-        </li>
+
       </ul>
 <%}%>
+
+<div class="row mb-3">
+  <div class="col-sm-6">
+    <div class="card">
+      <div class="card-body">
+        <h5 class="card-title">Ürün Fiyatlarım</h5>
+        <p class="card-text">Ürün fiyatlarınızı belirleyin, kendi ağırlıklarınızı tanımlayın. Kampanya yaparak satışlarınızı artırın.</p>
+        <a onclick="return false" href="/kasapsayfam/urunlerim" class="btn btn-primary">Ürünlerim</a>
+        <small><br> Son düzenlemeleri yapıyoruz, 5 Mayıs saat 14:00 de açmış olacağız.</small>
+      </div>
+    </div>
+  </div>
+  <div class="col-sm-6">
+    <div class="card">
+      <div class="card-body">
+        <h5 class="card-title">Siparişlerim</h5>
+        <p class="card-text">Siparişlerinizi listelerin, ciro artışınızı anlık takip edin. Teslim ettiğiniz siparişlerinizi işaretleyin.</p>
+        <a href="/kasapsayfam/siparislerim" class="btn btn-primary">Siparişlerim</a>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="row">
+  <div class="col-sm-6">
+    <div class="card">
+      <div class="card-body">
+        <h5 class="card-title">Online Ödeme Alın</h5>
+          <strong>Kendi siparişlerinizden </strong> sadece %<%=controller.butcher.payCommissionRate*100%> pos komisyonu ile online ödeme alın, <strong>EFT, kapıya POS cihazı taşımakla </strong> uğraşmayın. Bilgi almak için <a target="_blank" href="https://www.youtube.com/watch?v=mKlBHYADTqg">tıklayın.</a>
+          <p class="card-text"></p>
+        <a href="/kasapsayfam/odemeal" class="btn btn-primary">Online Ödeme Alın</a>
+      </div>
+    </div>
+  </div>
+
+</div>
 
     <% if (__req.user.hasRole('admin')) { %>
     <div>

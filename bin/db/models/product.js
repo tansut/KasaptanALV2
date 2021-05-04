@@ -116,6 +116,11 @@ let Product = Product_1 = class Product extends basemodel_1.default {
         this.unit5 && res.push("unit5");
         return res;
     }
+    getUnitTitle(unit) {
+        if (unit == 'kg')
+            return 'KG';
+        return this[`${unit}title`] || this[`${unit}`];
+    }
     getUnitBy(nameOrTitle) {
         if (this.unit1 == nameOrTitle || this.unit1title == nameOrTitle)
             return 'unit1';
