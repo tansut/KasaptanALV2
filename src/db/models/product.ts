@@ -116,7 +116,17 @@ class Product extends BaseModel<Product> {
         return result;
     }
 
-    
+    get priceUnitTitle() {
+        if (this.priceUnit == 'kg') return 'KG';
+        return this[`${this.priceUnit}title`] || this[`${this.priceUnit}`]
+    }
+
+    get priceBasedUnitId() {
+        if (this.unit1 == this.priceUnit) return 'unit1';
+        if (this.unit2 == this.priceUnit) return 'unit2';
+        if (this.unit3 == this.priceUnit) return 'unit3';
+        return null;
+    }
 
     get availableUnits() {
         let res = [];

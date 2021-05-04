@@ -84,6 +84,20 @@ let Product = Product_1 = class Product extends basemodel_1.default {
         let result = `${start} En iyi ${units} fiyat teklifleriyle online sipariş verin, kapınıza gelsin.`;
         return result;
     }
+    get priceUnitTitle() {
+        if (this.priceUnit == 'kg')
+            return 'KG';
+        return this[`${this.priceUnit}title`] || this[`${this.priceUnit}`];
+    }
+    get priceBasedUnitId() {
+        if (this.unit1 == this.priceUnit)
+            return 'unit1';
+        if (this.unit2 == this.priceUnit)
+            return 'unit2';
+        if (this.unit3 == this.priceUnit)
+            return 'unit3';
+        return null;
+    }
     get availableUnits() {
         let res = [];
         this.unit1 && res.push(this.unit1title || this.unit1);

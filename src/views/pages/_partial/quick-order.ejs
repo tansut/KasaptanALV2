@@ -1,36 +1,87 @@
 <div id="quickorder">
     <div class="modal modal-fullscreen-sm" id="quickordermodal" tabindex="-1" role="dialog" data-keyboard="false"
-    aria-hidden="true">
-    <div class="modal-dialog " role="document">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title">{{edit && edit.name}}</h5>
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
-                </button>
-            </div>
-            <div class="modal-body p-3">
-                <form v-if="edit" @submit="checkForm" method="post">
-                    <div class="bg-secondary p-3 border font-size-sm">
-                        <h5 class="h6">Hızlı Sipariş</h5>
-                    </div>
+        aria-hidden="true">
+        <div class="modal-dialog " role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title"> {{butchername || 'Pratik sipariş'}} </h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body p-3">
+                    <form @submit="checkForm" method="post">
 
-                    <p class="text-primary" v-if="errors.length">
-                        <b>Lütfen aşağıdaki hataları düzeltin:</b>
-                    <ul>
-                        <li v-for="error in errors">{{ error }}</li>
-                    </ul>
-                    </p>
 
-                    <div>
-                    </div>
+                        <p class="text-primary" v-if="errors.length">
+                            <b>Lütfen aşağıdaki hataları düzeltin:</b>
+                        <ul>
+                            <li v-for="error in errors">{{ error }}</li>
+                        </ul>
+                        </p>
 
-                    <button class="btn btn-primary">Siparişimi Oluştur</button>
-                </form>
+                        <div v-if="step==2">
+                            <div class="form-row">
+                                <div class="form-group col-md-6">
+                                    <label for="inputEmail4">Adınız ve Soyadınız</label>
+                                    <input v-model="custName" required type="text" class="form-control"
+                                        placeholder="kimin adına gönderelim">
+                                </div>
+                                <div class="form-group col-md-6">
+                                    <label>Cep Telefonunuz</label>
+
+                                    <input v-model="custPhone" class="form-control iphone" minlength="10"
+                                        placeholder="5xx" maxlength="15" type="tel" id="tel" required>
+
+                                    <div class="invalid-feedback">Geçersiz telefon numarası.</div>
+
+                                </div>
+                            </div>
+                            <div class="form-row">
+                                <div class="form-group col-md-12">
+                                    <input v-model="custEmail" required type="email" class="form-control"
+                                        placeholder="bilgi mesajları için e-posta adresiniz">
+                                </div>
+
+                            </div>
+                            <div class="form-row">
+                                <div class="form-group col-md-12">
+
+                                    <textarea rows="2" v-model="custAddress" required class="form-control"
+                                        placeholder="teslimat adresiniz"></textarea>
+                                </div>
+
+                            </div>
+                            <div class="form-row">
+                                <div class="form-group col-md-12">
+
+                                    <textarea rows="2" v-model="custNote" class="form-control"
+                                        placeholder="ek notunuz varsa burayı kullanın"></textarea>
+                                </div>
+
+                            </div>
+                        </div>
+                        <div v-if="step==1">
+                            <div class="form-row">
+                                <div class="form-group col-md-12">
+                                    <label>Kasaptan taptaze neler istersiniz ?</label>
+                                    <textarea rows="5" v-model="custOrder" required class="form-control"
+                                        placeholder="Ağırlık ve adetleriyle yazın. Örneğin 2kg kuzu kıyma, 1 adet sucuk ve 1kg kuzu pirzola gibi"></textarea>
+                                </div>
+                            </div>
+
+                        </div>
+                        <div class="d-flex justify-content-between">
+                            <button v-if="step==2" class="btn btn-primary">Siparişimi Oluştur</button>
+                            <button type="button" :disabled="!custOrder"  @click="step=2" v-show="step==1" class="btn btn-dark">İlerle</button>
+                            <button type="button" @click="step=1" v-show="step ==2" class="btn btn-dark">Geri</button>
+
+                        </div>
+                    </form>
+                </div>
             </div>
         </div>
     </div>
-</div>
 </div>
 
 
@@ -46,7 +97,15 @@
         data: function () {
             return {
                 errors: [],
-
+                butchername: '',
+                butcherslug: '',
+                custName: '',
+                custPhone: '',
+                custEmail: '',
+                custOrder: '',
+                custAddress: '',
+                custNote: '',
+                step: 1
             }
         },
 
@@ -59,29 +118,66 @@
 
             checkForm: function (e) {
                 this.errors = [];
-
                 e.preventDefault();
                 var self = this;
-                App.Backend.post('', {
+
+                if (!this.custOrder) {
+                    this.errors.push('Lütfen içerik girin.')
+                
+                }
+                
+                if (this.errors.length) return;
+                if (!confirm('Siparişinizi onaylıyor musunuz ?')) return;
+                App.Backend.post('order/createManuel', {
+                    butchername: this.butchername,
+                    butcherslug: this.butcherslug,
+                    custName: this.custName,
+                    custPhone: this.custPhone,
+                    custEmail: this.custEmail,
+                    custOrder: this.custOrder,
+                    custAddress: this.custAddress,
+                    custNote: this.custNote,
+                    addr: window.App.User.prefAdr
 
                 }, null, true).then(function (result) {
-                    self.updateItem(self.edit, result);
+                    App.alert('Teşekkür ederiz, herşey hazır olduğunda sizi bilgilendireceğiz.')
                     $('#quickordermodal').modal('hide');
                 }).catch(function (err) {
                     App.HandleError(err)
                 })
             },
 
-
-            open({butcher}) {
-                if (!window.App.prefAdr) {
-                    window.kb.selectArea(function(done, ul) {
-                        debugger
-                        $('#quickordermodal').modal('show');
-                        ul.hide();
-                    })
+            fillParams() {
+                if (App.User.isAuthenticated) {
+                    this.custEmail = App.User.email;
+                    this.custName = App.User.name;
+                    this.custPhone = App.User.mphone;
+                    this.custAddress = App.User.address;
                 }
-                
+            },
+
+            useUrl(urlParams) {
+                this.butchername = urlParams.get('butchername');
+                this.butcherslug = urlParams.get('butcherslug');
+                this.fillParams();
+                $('#quickordermodal').modal('show');
+            },
+
+            open(params) {
+                if (!window.App.User.prefAdr) {
+                    window.kb.selectArea(function (done, ul) {
+                        params = params || {};
+                        params.quickorder = 1;
+                        window.location.href = "/adres-belirle/" + ul.selectedDistrict.slug + '?lng=' + ul.lng + '&lat=' + ul.lat + '&r=' + App.getUrl(location.href, params);
+
+                    }, { msg: 'Lütfen önce mahallenizi seçin böylece hizmet verip veremeyeceğimizi kontrol edelim.' })
+                } else {
+                    this.step = 1;
+                    var self = this;
+                    Object.assign(self, params || {});
+                    this.fillParams()
+                    $('#quickordermodal').modal('show');
+                }
             }
         }
 

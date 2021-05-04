@@ -1338,6 +1338,11 @@ class Route extends router_1.ApiRouter {
             this.res.send(200);
         });
     }
+    getManuelOrder() {
+        return __awaiter(this, void 0, void 0, function* () {
+            this.res.sendStatus(200);
+        });
+    }
     static SetRoutes(router) {
         router.post('/order/:ordernum/approve', Route.BindRequest(Route.prototype.approveRoute));
         // router.post('/order/:ordernum/kuryeCagir', Route.BindRequest(Route.prototype.kuryeCagirRoute))
@@ -1345,6 +1350,7 @@ class Route extends router_1.ApiRouter {
         router.post('/order/:ordernum/setDelivery', Route.BindRequest(Route.prototype.setDeliveryRoute));
         router.post('/order/:ordernum/cancelDelivery', Route.BindRequest(Route.prototype.cancelDeliveryRoute));
         router.post('/order/:ordernum/markAsShipped', Route.BindRequest(Route.prototype.markAsShippedRoute));
+        router.post('/order/createManuel', Route.BindRequest(Route.prototype.getManuelOrder));
         //router.get("/admin/order/:ordernum", Route.BindRequest(this.prototype.getOrderRoute));
     }
 }
@@ -1378,4 +1384,11 @@ __decorate([
     __metadata("design:paramtypes", []),
     __metadata("design:returntype", Promise)
 ], Route.prototype, "bnbCallbackRoute", null);
+__decorate([
+    common_1.Auth.Anonymous(),
+    common_1.Auth.RequireCatcpha(),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", []),
+    __metadata("design:returntype", Promise)
+], Route.prototype, "getManuelOrder", null);
 exports.default = Route;

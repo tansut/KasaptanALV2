@@ -95,7 +95,7 @@
                         <money-view v-if="!alt.butcher.kgPrice && selectedUnitForAlternate(alt.butcher)" :unit="selectedUnitForAlternate(alt.butcher).unitTitle" 
                         
                         class="  border p-2 text-dark bg-white font-size-md" :regular="selectedUnitForAlternate(alt.butcher).regularUnitPrice" :money="selectedUnitForAlternate(alt.butcher).unitPrice"></money-view>
-                        <money-view v-else unit="Kg" 
+                        <money-view v-else-if="alt.butcher.kgPrice" :unit="product.kgTitle" 
                         
                         class=" border p-2 text-dark bg-white font-size-md" :regular="alt.butcher.regularKgPrice" :money="alt.butcher.kgPrice" ></money-view>
                       </div>

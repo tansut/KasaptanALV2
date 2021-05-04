@@ -589,9 +589,10 @@ class Route extends router_1.ApiRouter {
     getPurchaseOptions(product, butcherProduct, includeDisable = false) {
         let purchaseOptions = [];
         let kgPrice = butcherProduct ? butcherProduct.kgPrice : 0.00;
-        this.getProductUnits(product).forEach((p, i) => {
-            let col = `unit${i + 1}`;
+        product.availableUnitIds.forEach((p, i) => {
+            let col = `${p}`;
             let add = !butcherProduct ? true : (!includeDisable ? (butcherProduct[`${col}enabled`]) : true);
+            add = add && product[`${col}`];
             let discount = butcherProduct ? butcherProduct.discountType : 'none';
             let discountValue = butcherProduct ? butcherProduct.priceDiscount : 0.00;
             let regularUnitPrice = butcherProduct ?
@@ -600,7 +601,7 @@ class Route extends router_1.ApiRouter {
                     helper_1.default.asCurrency((butcherProduct[`${col}kgRatio`] || product[`${col}kgRatio`]) * kgPrice)) : 0.00;
             let unitPrice = helper_1.default.CalculateDiscount(discount, discountValue, regularUnitPrice);
             add && purchaseOptions.push({
-                id: i + 1,
+                id: p,
                 discount: discount,
                 discountValue: discountValue,
                 regularUnitPrice: regularUnitPrice,
@@ -612,7 +613,7 @@ class Route extends router_1.ApiRouter {
                 unitWeight: (butcherProduct && butcherProduct[`${col}weight`]) || product[`${col}weight`],
                 unitPrice: unitPrice,
                 customPrice: butcherProduct ? (helper_1.default.asCurrency(butcherProduct[`${col}price`]) > 0) : false,
-                unit: p,
+                unit: product[`${col}`],
                 unitTitle: product[`${col}title`],
                 displayOrder: product[`${col}Order`],
                 min: product[`${col}min`],
@@ -700,7 +701,7 @@ class Route extends router_1.ApiRouter {
                 slug: product.slug,
                 name: product.name,
                 kgPrice: kgPrice,
-                kgTitle: product[`${product.priceUnit}title`] || 'KG',
+                kgTitle: product.priceUnitTitle,
                 productType: product.productType,
                 shortDesc: product.shortdesc,
                 notePlaceholder: product.notePlaceholder,
@@ -753,11 +754,11 @@ class Route extends router_1.ApiRouter {
             let orj = view.purchaseOptions.filter(p => ((p.butcherUnitSelection != 'none-unselected') && (p.butcherUnitSelection != 'none-selected')));
             let priceUnit = view.purchaseOptions.find(po => po.unit == product.priceUnit);
             let hasKgDependency = view.purchaseOptions.find(po => po.kgRatio > 0);
-            if (!priceUnit || priceUnit.unit == 'kg') {
+            if (!priceUnit) {
                 orj.splice(0, 0, {
                     unit: product.priceUnit == 'kg' ? 'kg' : product[`${product.priceUnit}`],
-                    unitTitle: product.priceUnit == 'kg' ? 'KG' : product[`${product.priceUnit}title`] || product[`${product.priceUnit}`],
-                    id: 0,
+                    unitTitle: product.priceUnitTitle,
+                    id: '',
                     enabled: true,
                     kgRatio: 1,
                     unitPrice: view.kgPrice,
@@ -938,33 +939,32 @@ class Route extends router_1.ApiRouter {
             newItem.unit2kgRatio = 0;
             newItem.unit3kgRatio = 0;
             newItem.kgPrice = 0;
-            let unitPrice = this.req.body.units.find(u => u.id == 0);
+            let unitPrice = this.req.body.units.find(u => !u.id);
             if (unitPrice) {
-                let other = this.req.body.units.find(u => u.id != 0 && u.unit == unitPrice.unit);
+                let other = this.req.body.units.find(u => u.id && u.unit == unitPrice.unit);
                 if (other) {
                     other.price = helper_1.default.parseFloat(unitPrice.price, 0);
-                    other.customPrice = true;
                     other.isPriceUnit = true;
                     _.remove(this.req.body.units, u => u == unitPrice);
                 }
             }
             this.req.body.units.forEach(u => {
                 let unitid = product.getUnitBy(u.unit);
-                if (u.kgRatio && u.unit != 'kg' && u.customWeight) {
+                if (u.kgRatio && u.unit != unitPrice.unit && u.customWeight) {
                     let butcherKgRatio = u.kgRatio;
                     let productKgRatio = product[`${unitid}kgRatio`];
-                    if (u.customWeight && butcherKgRatio != productKgRatio) {
+                    if (butcherKgRatio != productKgRatio) {
                         newItem[`${unitid}kgRatio`] = butcherKgRatio;
-                        newItem[`${unitid}weight`] = `ortalama ${u.kgRatio} kg`;
+                        newItem[`${unitid}weight`] = `${unitPrice.unit == 'kg' ? 'ortalama ' : ''}${u.kgRatio} ${unitPrice.title}`;
                     }
                     else
                         newItem[`${unitid}weight`] = null;
                 }
-                if (u.unit == 'kg' || u.isPriceUnit) {
+                if (u.isPriceUnit || !u.id) {
                     newItem.kgPrice = helper_1.default.parseFloat(u.price, 0);
                 }
                 if (unitid) {
-                    if (u.price && (u.customPrice)) {
+                    if (u.price && !u.isPriceUnit && u.customPrice) {
                         newItem[`${unitid}price`] = helper_1.default.parseFloat(u.price);
                     }
                     if (u.isPriceUnit && !u.price)

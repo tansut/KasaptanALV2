@@ -121,10 +121,14 @@
             <a class="text-muted" target="_blank" href="https://www.google.com/maps/search/?api=1&query=<%=butcher.lat%>,<%=butcher.lng%>"><%= butcher.areaLevel2.name %>/<%= butcher.areaLevel1.name %></a>
            
           </h2>
-          <% if (puanData ) { %>
+         
+             
+               
+
+          <% if (puanData && butcher.status == 'open' && butcher.approved) { %>
             <div class="d-flex justify-content-center mb-3">
               <div class="border shadow  p-3  rounded-lg ">
-                <h5 class="h5 mb-3 ">SADECE ONLINE SİPARİŞLERİNİZDE GEÇERLİ</h5>
+                <h5 class="h5 mb-3 ">KASAPTANAL SİPARİŞLERİNİZDE</h5>
                 <a class="mb-3 d-block" href="/blog/kasap-kart">
                   <span class="badge badge-success font-weight-medium font-size-md">
                     %<%= puanData.rate * 100 %> Puan Kazancı
@@ -148,7 +152,13 @@
                 </div>
                 <div>
                   <span class="d-block mb-3">Ücretsiz Sipariş Hattı: 0 850 305 4216</span>
-                  <a href="tel:08503054216" class="font-weight-bold btn btn-dark btn-sm rounded "><i class="czi-icon czi-phone mr-2"></i> Kasabı Ara</a>
+                  <% if ((!controller.logisticsProvider || controller.logisticsPriceSlice.length == 0) && __req.prefAddr) { %>
+                  <% } else { %>
+               <a data-tag="true" data-category="user actions" data-action="pratik sipariş click" data-label="<%=butcher.slug%>" onclick="quickOrderApp.open({butchername: '<%=butcher.name%>', 'butcherslug': '<%=butcher.slug%>'})" class="d-none font-weight-bold btn  btn-sm rounded btn-danger mr-2"><i class="czi-icon czi-cart mr-1"></i>Pratik Sipariş Ver</a>
+
+                  <% } %>
+
+                  <a data-tag="true" data-category="user actions" data-action="kasabı ara click" data-label="<%=butcher.slug%>" href="tel:08503054216" class="font-weight-bold btn btn-dark btn-sm rounded "><i class="czi-icon czi-phone mr-2"></i> Kasabı Ara</a>
                 </div>
               </div>
             
@@ -270,11 +280,11 @@
 
        
        <div>
+         <h6>Sipariş Ver</h6>
         <div class="py-2 d-flex justify-content-center">
-          <a class="btn rounded-lg btn-sm btn-success mr-2" href="/<%=butcher.slug%>/siparis">Online Sipariş</a>
-          <!-- <a onclick="quickOrderApp.open({butcher: {name: '<%=butcher.name%>', 'slug': '<%=butcher.slug%>'} })" class="btn rounded-lg btn-sm btn-danger mr-2"><i class="czi-icon czi-phone mr-1"></i> Süper Hızlı Sipariş</a> -->
-          
-          <a class="btn rounded-lg btn-sm btn-dark" target="_blank" href="https://wa.me/+908503059286?text=<%=butcher.name%> <%=__req.prefAddr.display%> semtinden sipariş vermek istiyorum."><i class="czi_icon czi-message mr-1"></i>Whatsapp Sipariş</a>
+          <a data-tag="true" data-category="user actions" data-action="online sipariş click" data-label="<%=butcher.slug%>" class="btn rounded-lg btn-sm btn-success mr-2" href="/<%=butcher.slug%>/siparis">Online</a>
+          <a data-tag="true" data-category="user actions" data-action="pratik sipariş click" data-label="<%=butcher.slug%>" onclick="quickOrderApp.open({butchername: '<%=butcher.name%>', 'butcherslug': '<%=butcher.slug%>'})" class="d-none font-weight-bold btn  btn-sm rounded btn-danger mr-2"><i class="czi-icon czi-cart mr-1"></i>Pratik Sipariş</a>
+          <a data-tag="true" data-category="user actions" data-action="whatsapp sipariş click" data-label="<%=butcher.slug%>" class="btn rounded-lg btn-sm btn-dark" target="_blank" href="https://wa.me/+908503059286?text=<%=butcher.name%> <%=__req.prefAddr.display%> semtinden sipariş vermek istiyorum."><i class="czi_icon czi-message mr-1"></i>Whatsapp</a>
       
         </div>
       </div>

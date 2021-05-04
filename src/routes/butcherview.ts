@@ -37,6 +37,7 @@ import { ButcherLd } from '../models/ButcherLd';
 
 
 export default class Route extends ViewRouter {
+    disableQuickOrder  = false;
     markdown = new MarkdownIt();
     products: Product[];
     vitrinProducts: Product[];
@@ -239,7 +240,14 @@ export default class Route extends ViewRouter {
 
         this.butcherLd = this.butcher.approved ? new ButcherLd(this.butcher): null;
 
+        var userMessage = '';
 
+        if ((!this.logisticsProvider || this.logisticsPriceSlice.length == 0) && this.req.prefAddr) {
+             this.disableQuickOrder = true;
+             if (this.req.query.quickorder) {
+                 userMessage = 'Kasabımızın maalesef semtinize hizmeti bulunmuyor, aşağıdaki bağlantıdan başka bir semt seçebilir veya diğer kasaplarımıza ulaşabilirsiniz.'
+             }
+        }
 
         if (this.req.session.isNew) {
           this.req.session.prefButcher = butcher.slug;
@@ -248,7 +256,7 @@ export default class Route extends ViewRouter {
         this.createUserLog();
         if (this.req.query.partial) {           
             this.res.render('pages/category-items.ejs', this.viewData({ pageThumbnail: pageThumbnail, pageTitle: pageTitle, pageDescription: pageDescription, butcher: butcher, images: images }));
-        } else this.res.render('pages/butcher', this.viewData({ pageThumbnail: pageThumbnail, pageTitle: pageTitle, pageDescription: pageDescription, butcher: butcher, images: images }));
+        } else this.res.render('pages/butcher', this.viewData({  _usrmsg: {text: userMessage} , pageThumbnail: pageThumbnail, pageTitle: pageTitle, pageDescription: pageDescription, butcher: butcher, images: images }));
     }
 
     getPriceData(product: Product) {

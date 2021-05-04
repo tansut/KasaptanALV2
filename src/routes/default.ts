@@ -20,6 +20,9 @@ import { SiteStats } from '../lib/sitestats';
 import TempLoc from '../db/models/temp_loc';
 import { Order } from '../db/models/order';
 import OrderApi from './api/order'
+import ButcherProduct from '../db/models/butcherproduct';
+import Butcher from '../db/models/butcher';
+import { bodyBlacklist } from 'express-winston';
 
 let ellipsis = require('text-ellipsis');
 
@@ -134,6 +137,87 @@ export default class Route extends ViewRouter {
          else this.res.redirect('/')
     }
 
+    async tempprods() {
+
+        let prods = await Product.findAll({
+       
+        });
+
+        for (let i = 0; i < prods.length;i ++) {
+            let prod = prods[i];
+
+            let pbu = prod.priceBasedUnitId;
+            let availIds = prod.availableUnitIds;
+
+            if (pbu && prod[`${pbu}kgRatio`] != 1) {
+                prod[`${pbu}kgRatio`] = 1;
+                console.log(`${prod.name} ratio 1 olmalıydı`)
+            }
+
+            if (availIds.length == 1 && prod[`${availIds[0]}ButcherUnitSelection`] != 'forced') {
+                console.log(`${prod.name} için tek unit var ancak zorunlu tutulmamış` )
+                prod[`${availIds[0]}ButcherUnitSelection`] = 'forced';
+                await prod.save();
+            }
+
+        }
+
+
+
+        let bps = await ButcherProduct.findAll({
+            include: [
+                {model: Product},
+                {model: Butcher}
+            ]
+        });
+        for (let i = 0; i < bps.length;i ++) {
+            let bp = bps[i];
+            for (let u=1;u<4;u++) {
+                let unit = `unit${u}`;
+                
+                if (bp.enabled && (bp.kgPrice > 0  || bp[`${unit}price`] > 0) 
+                  && bp[`${unit}enabled`] && !bp.product[`${unit}`]) {
+                    bp[`${unit}enabled`] = false;
+                    console.log(`${bp.butcher.name}-${bp.product.name}-${unit} null olduğu için disable edildi` )
+                }
+
+
+                
+
+
+            }
+
+            if (bp.enabled && bp.enabledUnits.length == 0) {
+                bp.enabled = false;
+                console.log(`${bp.butcher.name}-${bp.product.name} hiçbir unit seçili olmadığı için için disable edildi` )
+
+            }
+
+ 
+            let availIds = bp.product.availableUnitIds;
+
+            if (bp.enabled) {
+                let exist = false;
+                availIds.forEach(a=> {
+                    if (bp[`${a}enabled`]) exist = true;
+                })
+                if (!exist) {
+                    console.log(`${bp.butcher.name}-${bp.product.name} ürünü satışta ancak hiçbir unit seçili değil` );
+                }
+            }
+
+
+
+            await bp.save();
+
+        }
+
+
+
+
+        this.res.send('OK');
+    }
+
     async tempares() {
         let tl = await TempLoc.findAll({
             where: {
@@ -210,6 +294,7 @@ export default class Route extends ViewRouter {
         // }
         router.get("/", Route.BindRequest(this.prototype.defaultRoute))
         router.get("/temparea", Route.BindRequest(this.prototype.tempares))
+        router.get("/tempproducts", Route.BindRequest(this.prototype.tempprods))
 
         // router.get("/testsubmit", Route.BindToView("pages/test-submit.ejs"))
         // router.post("/testsubmit", Route.BindRequest(this.prototype.testsubmit))

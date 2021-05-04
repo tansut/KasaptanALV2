@@ -7,6 +7,7 @@ import { ShopCard } from "./shopcard";
 import AppBase from "./appbase";
 import numeral from "numeral";
 import ButcherApp from "./butcherapp"
+import { urlencoded } from "express";
 
 declare global {
     interface Window { App: App; }
@@ -33,6 +34,15 @@ export class App extends AppBase {
 
 
     public static ComponentMap: ComponentMap = {};
+
+    static getUrl(url: string, append: any) {
+        if (!append) return url;
+        var c = '&'
+        if (url.indexOf("?") == -1) c = '?';
+        var a = '';
+        for (var k in append) a += (k + '=' + append[k] + '&')
+        return url + c + encodeURIComponent(a)
+    }
 
 
     static  add2ShopcardFromOrder(ordernum: string, redirectUrl?: string) {

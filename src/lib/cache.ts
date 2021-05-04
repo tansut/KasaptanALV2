@@ -126,46 +126,47 @@ export class CacheManager {
 
 
     
-    static async fillAppNav(url): Promise<AppNavData> {    
-        url = (config.nodeenv == 'production') ? 'https://www.kasaptanal.com': 'http://192.168.2.236:3000'        
-        let data: AppNavData =  await this.dataCache.get("app-nav-data");
-        if (!data) {
-            let rawdata = fs.readFileSync(path.join(config.projectDir, `app-nav-levels.json`));
-            let result = <AppNavLevel[]>JSON.parse(rawdata);
-            for(var i=0; i < result.length; i++) {
-                result[i].regex = result[i].regex.replace('{root}', url)
-            }
-            let categories = await this.dataCache.get<Category[]>("categories")
-            for(var i = 0; i < categories.length;i++) {
-                result.push({
-                    regex: `${url}/${categories[i].slug}?`,
-                    level: 2
-                })
-            }
-            // let prods = <any>this.dataCache.get("products")
-            // for (var o in prods) {
-            //     result.push({
-            //         regex: `${url}/${prods[o].slug}?`,
-            //         level: 3
-            //     })
-            // }
+    // static async fillAppNav(url): Promise<AppNavData> {    
+    //     url = (config.nodeenv == 'production') ? 'https://www.kasaptanal.com': 'http://192.168.2.236:3000'        
+    //     let data: AppNavData =  await this.dataCache.get("app-nav-data");
+    //     if (!data) {
+    //         let rawdata = fs.readFileSync(path.join(config.projectDir, `app-nav-levels.json`));
+    //         let result = <AppNavLevel[]>JSON.parse(rawdata);
+    //         for(var i=0; i < result.length; i++) {
+    //             result[i].regex = result[i].regex.replace('{root}', url)
+    //         }
+    //         let categories = await this.dataCache.get<Category[]>("categories") || await Category.findAll();
 
-            // let butchers = await Butcher.findAll();
-            // for(var i = 0; i < butchers.length;i++) {
-            //     result.push({
-            //         regex: `${url}/${butchers[i].slug}?`,
-            //         level: 2
-            //     })
-            // }
+    //         for(var i = 0; i < categories.length;i++) {
+    //             result.push({
+    //                 regex: `${url}/${categories[i].slug}?`,
+    //                 level: 2
+    //             })
+    //         }
+    //         // let prods = <any>this.dataCache.get("products")
+    //         // for (var o in prods) {
+    //         //     result.push({
+    //         //         regex: `${url}/${prods[o].slug}?`,
+    //         //         level: 3
+    //         //     })
+    //         // }
 
-            data = {
-                active: true,
-                levels: result
-            };
-            await this.dataCache.set("app-nav-data", data);
-        }
-        return data;
-    }
+    //         // let butchers = await Butcher.findAll();
+    //         // for(var i = 0; i < butchers.length;i++) {
+    //         //     result.push({
+    //         //         regex: `${url}/${butchers[i].slug}?`,
+    //         //         level: 2
+    //         //     })
+    //         // }
+
+    //         data = {
+    //             active: true,
+    //             levels: result
+    //         };
+    //         await this.dataCache.set("app-nav-data", data);
+    //     }
+    //     return data;
+    // }
     
 
     static async fillRedirects() {        
@@ -366,7 +367,7 @@ export class CacheManager {
         let recentBlogs = <any>await this.fillRecentBlogs();
         let webPages = <any>await this.fillWebPages();
         let redirects = <any>await this.fillRedirects();
-        let appNavs = <any>await this.fillAppNav(Helper.getUrl(req));
+        //let appNavs = <any>await this.fillAppNav(Helper.getUrl(req));
 
         let categoryProducts = <any>await this.fillProductsByCategory(categories);
         return {
@@ -381,7 +382,7 @@ export class CacheManager {
             butchers: butchers,
             webPages: webPages,
             redirects: redirects,
-            appNavs: appNavs
+            //appNavs: appNavs
         }
     }
 

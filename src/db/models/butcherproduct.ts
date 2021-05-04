@@ -49,6 +49,16 @@ class ButcherProduct extends BaseModel<ButcherProduct> {
         return true;
     }
 
+    // canSellable() {
+    //     let result = true;
+    //     for (let i = 1; i < 4; i++) {
+    //         if (this[`unit${i}enabled`] && !this.product[`unit${i}enabled`]) {
+    //             result = false;
+    //         } else result = true;
+    //     }
+    //     return result;
+    // }
+
     get priceView(): PriceView {
         let units = ['unit1', 'unit2', 'unit3'];
         if (this.kgPrice > 0) {

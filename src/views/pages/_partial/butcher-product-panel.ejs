@@ -89,7 +89,7 @@ class="gallery-item-caption"><%= butcherVideo.title %></span></a>
           <% } %>
 
             <div v-if="product && selectedUnit" class="mb-2 text-right">
-              <money-view class="font-weight-bold  border p-2 text-dark bg-white font-size-md" :unit="product.kgPrice ? 'Kg':  selectedUnit.unitTitle" :regular="product.regularKgPrice || selectedUnit.regularUnitPrice"  :money="product.kgPrice || selectedUnit.unitPrice"></money-view>
+              <money-view class="font-weight-bold  border p-2 text-dark bg-white font-size-md" :unit="product.regularKgPrice ? product.kgTitle:  selectedUnit.unitTitle" :regular="product.regularKgPrice || selectedUnit.regularUnitPrice"  :money="product.kgPrice || selectedUnit.unitPrice"></money-view>
 
             </div>
 
@@ -279,8 +279,9 @@ class="gallery-item-caption"><%= butcherVideo.title %></span></a>
               <div class="font-size-sm p-3  ">
                 <div>
                   <div class="py-2 d-flex justify-content-center">
-                   <a class="btn  btn-sm btn-dark mr-2" target="_blank" href="tel://+908503054216"><i class="czi_icon czi-phone mr-1"></i>Kasabı Ara</a> 
-                    <a class="btn  btn-sm btn-dark" target="_blank" href="https://wa.me/+908503059286?text=<%=view.butcher.name%> <%=__req.prefAddr.display%> semtinden <%=view.name%> siparişi vermek istiyorum."><i class="czi_icon czi-message mr-1"></i>Whatsapp</a>
+                  <a data-tag="true" data-category="user actions" data-action="pratik sipariş click üründe" data-label="<%=view.butcher.slug%>" onclick="quickOrderApp.open({butchername: '<%=view.butcher.name%>', 'butcherslug': '<%=view.butcher.slug%>'})" class="d-none font-weight-bold btn  btn-sm rounded btn-danger mr-2"><i class="czi-icon czi-cart mr-1"></i>Pratik</a>
+                   <a data-tag="true" data-category="user actions" data-action="kasabı ara click üründe" data-label="<%=view.butcher.slug%>" class="btn  btn-sm btn-dark mr-2" target="_blank" href="tel://+908503054216"><i class="czi_icon czi-phone mr-1"></i>Telefonla</a> 
+                    <a data-tag="true" data-category="user actions" data-action="whats ara click üründe" data-label="<%=view.butcher.slug%>" class="btn  btn-sm btn-dark" target="_blank" href="https://wa.me/+908503059286?text=<%=view.butcher.name%> <%=__req.prefAddr.display%> semtinden <%=view.name%> siparişi vermek istiyorum."><i class="czi_icon czi-message mr-1"></i>Whatsapp</a>
                   </div>
                 </div>
               </div>

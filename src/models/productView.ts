@@ -6,7 +6,7 @@ import { ShipmentDayHours } from "./shipment";
 import { ButcherUnitEdit, ButcherUnitSelection } from "../db/models/product";
 
 export interface PurchaseOption {
-    id: number;
+    id: string;
     enabled: boolean;
     unit: string,
     unitTitle: string,

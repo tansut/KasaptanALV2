@@ -183,7 +183,8 @@ export default class BaseRouter {
             if (useCatcpha && instance.useCatpcha) {
                 let token = (req.body ? req.body.__token: undefined);
                 if (!token) {
-                     return reject(new http.PermissionError("Güvenlik adımını maalesef tamamlayamadık. Sayfayı yenileyip tekrar deneyin.", 403))
+                    console.log(req.url)
+                     return reject(new http.PermissionError("Token yok, güvenlik adımını maalesef tamamlayamadık. Sayfayı yenileyip tekrar deneyin.", 403))
                 } else {
                     Google.verifyCatpcha(token).then(()=>{
                         resolve();

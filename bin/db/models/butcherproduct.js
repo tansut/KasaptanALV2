@@ -29,6 +29,15 @@ let ButcherProduct = class ButcherProduct extends basemodel_1.default {
             return false;
         return true;
     }
+    // canSellable() {
+    //     let result = true;
+    //     for (let i = 1; i < 4; i++) {
+    //         if (this[`unit${i}enabled`] && !this.product[`unit${i}enabled`]) {
+    //             result = false;
+    //         } else result = true;
+    //     }
+    //     return result;
+    // }
     get priceView() {
         let units = ['unit1', 'unit2', 'unit3'];
         if (this.kgPrice > 0) {

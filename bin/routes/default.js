@@ -23,10 +23,13 @@ const butcher_1 = require("../db/models/butcher");
 const common_1 = require("../lib/common");
 const helper_1 = require("../lib/helper");
 const area_1 = require("../db/models/area");
-const product_1 = require("./api/product");
+const product_1 = require("../db/models/product");
+const product_2 = require("./api/product");
 const cache_1 = require("../lib/cache");
 const temp_loc_1 = require("../db/models/temp_loc");
 const order_1 = require("./api/order");
+const butcherproduct_1 = require("../db/models/butcherproduct");
+const butcher_2 = require("../db/models/butcher");
 let ellipsis = require('text-ellipsis');
 class Route extends router_1.ViewRouter {
     constructor() {
@@ -56,7 +59,7 @@ class Route extends router_1.ViewRouter {
     }
     kasapViewRoute() {
         return __awaiter(this, void 0, void 0, function* () {
-            this.foods = yield new product_1.default(this.constructorParams).getFoodResources(null, 10);
+            this.foods = yield new product_2.default(this.constructorParams).getFoodResources(null, 10);
             yield this.sendView("pages/content.kasap-basvuru.ejs", this.viewData({}));
         });
     }
@@ -126,6 +129,59 @@ class Route extends router_1.ViewRouter {
                 this.res.redirect('/');
         });
     }
+    tempprods() {
+        return __awaiter(this, void 0, void 0, function* () {
+            let prods = yield product_1.default.findAll({});
+            for (let i = 0; i < prods.length; i++) {
+                let prod = prods[i];
+                let pbu = prod.priceBasedUnitId;
+                let availIds = prod.availableUnitIds;
+                if (pbu && prod[`${pbu}kgRatio`] != 1) {
+                    prod[`${pbu}kgRatio`] = 1;
+                    console.log(`${prod.name} ratio 1 olmalıydı`);
+                }
+                if (availIds.length == 1 && prod[`${availIds[0]}ButcherUnitSelection`] != 'forced') {
+                    console.log(`${prod.name} için tek unit var ancak zorunlu tutulmamış`);
+                    prod[`${availIds[0]}ButcherUnitSelection`] = 'forced';
+                    yield prod.save();
+                }
+            }
+            let bps = yield butcherproduct_1.default.findAll({
+                include: [
+                    { model: product_1.default },
+                    { model: butcher_2.default }
+                ]
+            });
+            for (let i = 0; i < bps.length; i++) {
+                let bp = bps[i];
+                for (let u = 1; u < 4; u++) {
+                    let unit = `unit${u}`;
+                    if (bp.enabled && (bp.kgPrice > 0 || bp[`${unit}price`] > 0)
+                        && bp[`${unit}enabled`] && !bp.product[`${unit}`]) {
+                        bp[`${unit}enabled`] = false;
+                        console.log(`${bp.butcher.name}-${bp.product.name}-${unit} null olduğu için disable edildi`);
+                    }
+                }
+                if (bp.enabled && bp.enabledUnits.length == 0) {
+                    bp.enabled = false;
+                    console.log(`${bp.butcher.name}-${bp.product.name} hiçbir unit seçili olmadığı için için disable edildi`);
+                }
+                let availIds = bp.product.availableUnitIds;
+                if (bp.enabled) {
+                    let exist = false;
+                    availIds.forEach(a => {
+                        if (bp[`${a}enabled`])
+                            exist = true;
+                    });
+                    if (!exist) {
+                        console.log(`${bp.butcher.name}-${bp.product.name} ürünü satışta ancak hiçbir unit seçili değil`);
+                    }
+                }
+                yield bp.save();
+            }
+            this.res.send('OK');
+        });
+    }
     tempares() {
         return __awaiter(this, void 0, void 0, function* () {
             let tl = yield temp_loc_1.default.findAll({
@@ -190,6 +246,7 @@ class Route extends router_1.ViewRouter {
         // }
         router.get("/", Route.BindRequest(this.prototype.defaultRoute));
         router.get("/temparea", Route.BindRequest(this.prototype.tempares));
+        router.get("/tempproducts", Route.BindRequest(this.prototype.tempprods));
         // router.get("/testsubmit", Route.BindToView("pages/test-submit.ejs"))
         // router.post("/testsubmit", Route.BindRequest(this.prototype.testsubmit))
         router.get("/adres-belirle/:slug", Route.BindRequest(this.prototype.setUserAddr));

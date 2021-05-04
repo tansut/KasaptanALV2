@@ -38,6 +38,7 @@ const ButcherLd_1 = require("../models/ButcherLd");
 class Route extends router_1.ViewRouter {
     constructor() {
         super(...arguments);
+        this.disableQuickOrder = false;
         this.markdown = new MarkdownIt();
         this.reviews = [];
         this._ = _;
@@ -190,6 +191,13 @@ class Route extends router_1.ViewRouter {
                 }
             }
             this.butcherLd = this.butcher.approved ? new ButcherLd_1.ButcherLd(this.butcher) : null;
+            var userMessage = '';
+            if ((!this.logisticsProvider || this.logisticsPriceSlice.length == 0) && this.req.prefAddr) {
+                this.disableQuickOrder = true;
+                if (this.req.query.quickorder) {
+                    userMessage = 'Kasabımızın maalesef semtinize hizmeti bulunmuyor, aşağıdaki bağlantıdan başka bir semt seçebilir veya diğer kasaplarımıza ulaşabilirsiniz.';
+                }
+            }
             if (this.req.session.isNew) {
                 this.req.session.prefButcher = butcher.slug;
                 yield this.req.session.save();
@@ -199,7 +207,7 @@ class Route extends router_1.ViewRouter {
                 this.res.render('pages/category-items.ejs', this.viewData({ pageThumbnail: pageThumbnail, pageTitle: pageTitle, pageDescription: pageDescription, butcher: butcher, images: images }));
             }
             else
-                this.res.render('pages/butcher', this.viewData({ pageThumbnail: pageThumbnail, pageTitle: pageTitle, pageDescription: pageDescription, butcher: butcher, images: images }));
+                this.res.render('pages/butcher', this.viewData({ _usrmsg: { text: userMessage }, pageThumbnail: pageThumbnail, pageTitle: pageTitle, pageDescription: pageDescription, butcher: butcher, images: images }));
         });
     }
     getPriceData(product) {

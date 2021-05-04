@@ -195,7 +195,13 @@
                                 ul.selectedDistrict = ul.selectedDistrict || {}
                                 ul.selectedDistrict.slug = adr.url;
                                 $(window).trigger('kb.selectArea.selected', [self, ul]);
-                                window.kb.done && window.kb.done(window.kb, ul)
+                                if (window.kb.done) {
+                                    var save = window.kb.done;
+                                    window.kb.done = undefined
+                                    save(window.kb, ul);
+
+                                }
+                                
                             }
                         }
                     })

@@ -86,46 +86,44 @@ class CacheManager {
             return result;
         });
     }
-    static fillAppNav(url) {
-        return __awaiter(this, void 0, void 0, function* () {
-            url = (config_1.default.nodeenv == 'production') ? 'https://www.kasaptanal.com' : 'http://192.168.2.236:3000';
-            let data = yield this.dataCache.get("app-nav-data");
-            if (!data) {
-                let rawdata = fs.readFileSync(path.join(config_1.default.projectDir, `app-nav-levels.json`));
-                let result = JSON.parse(rawdata);
-                for (var i = 0; i < result.length; i++) {
-                    result[i].regex = result[i].regex.replace('{root}', url);
-                }
-                let categories = yield this.dataCache.get("categories");
-                for (var i = 0; i < categories.length; i++) {
-                    result.push({
-                        regex: `${url}/${categories[i].slug}?`,
-                        level: 2
-                    });
-                }
-                // let prods = <any>this.dataCache.get("products")
-                // for (var o in prods) {
-                //     result.push({
-                //         regex: `${url}/${prods[o].slug}?`,
-                //         level: 3
-                //     })
-                // }
-                // let butchers = await Butcher.findAll();
-                // for(var i = 0; i < butchers.length;i++) {
-                //     result.push({
-                //         regex: `${url}/${butchers[i].slug}?`,
-                //         level: 2
-                //     })
-                // }
-                data = {
-                    active: true,
-                    levels: result
-                };
-                yield this.dataCache.set("app-nav-data", data);
-            }
-            return data;
-        });
-    }
+    // static async fillAppNav(url): Promise<AppNavData> {    
+    //     url = (config.nodeenv == 'production') ? 'https://www.kasaptanal.com': 'http://192.168.2.236:3000'        
+    //     let data: AppNavData =  await this.dataCache.get("app-nav-data");
+    //     if (!data) {
+    //         let rawdata = fs.readFileSync(path.join(config.projectDir, `app-nav-levels.json`));
+    //         let result = <AppNavLevel[]>JSON.parse(rawdata);
+    //         for(var i=0; i < result.length; i++) {
+    //             result[i].regex = result[i].regex.replace('{root}', url)
+    //         }
+    //         let categories = await this.dataCache.get<Category[]>("categories") || await Category.findAll();
+    //         for(var i = 0; i < categories.length;i++) {
+    //             result.push({
+    //                 regex: `${url}/${categories[i].slug}?`,
+    //                 level: 2
+    //             })
+    //         }
+    //         // let prods = <any>this.dataCache.get("products")
+    //         // for (var o in prods) {
+    //         //     result.push({
+    //         //         regex: `${url}/${prods[o].slug}?`,
+    //         //         level: 3
+    //         //     })
+    //         // }
+    //         // let butchers = await Butcher.findAll();
+    //         // for(var i = 0; i < butchers.length;i++) {
+    //         //     result.push({
+    //         //         regex: `${url}/${butchers[i].slug}?`,
+    //         //         level: 2
+    //         //     })
+    //         // }
+    //         data = {
+    //             active: true,
+    //             levels: result
+    //         };
+    //         await this.dataCache.set("app-nav-data", data);
+    //     }
+    //     return data;
+    // }
     static fillRedirects() {
         return __awaiter(this, void 0, void 0, function* () {
             let result = yield this.dataCache.get("redirects");
@@ -329,7 +327,7 @@ class CacheManager {
             let recentBlogs = yield this.fillRecentBlogs();
             let webPages = yield this.fillWebPages();
             let redirects = yield this.fillRedirects();
-            let appNavs = yield this.fillAppNav(helper_1.default.getUrl(req));
+            //let appNavs = <any>await this.fillAppNav(Helper.getUrl(req));
             let categoryProducts = yield this.fillProductsByCategory(categories);
             return {
                 categories: categories,
@@ -343,7 +341,6 @@ class CacheManager {
                 butchers: butchers,
                 webPages: webPages,
                 redirects: redirects,
-                appNavs: appNavs
             };
         });
     }

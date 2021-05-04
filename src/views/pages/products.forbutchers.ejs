@@ -134,7 +134,7 @@
                   </span>
                 </p>
                 <ul v-if="p.enabled" class="list-unstyled mb-3">
-                  <li v-for="(u, i) in p.units" class="badge badge-secondary mr-2 p-2 " v-if="u.enabled && u.id != 0">
+                  <li v-for="(u, i) in p.units" class="badge badge-secondary mr-2 p-2 " v-if="u.enabled && u.id">
                     <money-view :unit="u.title || u.unit" :money="u.price">
                     </money-view>
                     <span v-if="u.unit != 'kg' && u.kgRatio"> ({{u.kgRatio}} {{p.kgTitle}})</span>
@@ -258,10 +258,10 @@
                     <div v-html="editUnit.butcherNote" v-if="editUnit.butcherNote" class="mb-3 mt-n3 p-2 bg-secondary font-size-sm">
                       
                     </div>
-                    <div v-if="editUnit.id != 0" class="mb-3 custom-control custom-checkbox">
+                    <div v-if="editUnit.id" class="mb-3 custom-control custom-checkbox">
                       <input :disabled="editUnit.butcherUnitSelection == 'forced'" :id="editUnit.unit + 'enabled'" type="checkbox" v-model="editUnit.enabled"
                         class="custom-control-input">
-                      <label v-if="editUnit.id != 0" :for="editUnit.unit + 'enabled'" class="custom-control-label">Müşterinize {{editUnit.title}} ile
+                      <label v-if="editUnit.id" :for="editUnit.unit + 'enabled'" class="custom-control-label">Müşterinize {{editUnit.title}} ile
                         satış yapmak için işaretleyin. {{editUnit.butcherUnitSelection == 'forced' ? '[Zorunlu]':''}}</label>
                       <label v-else :for="editUnit.unit + 'enabled'" class="custom-control-label">{{editUnit.title}} satış fiyatınız:</label>
                     </div>
@@ -270,12 +270,15 @@
 
                     <div v-if="editUnit.enabled">
 
-                      <div v-if="(editUnit.id != 0) && (editUnit.unit != 'kg') && (canEdit(editUnit, 'weight'))"
+                      <div v-if="(editUnit.id) && (editUnit.unit != 'kg') && (canEdit(editUnit, 'weight'))"
                         class="custom-control custom-checkbox mb-1">
                         <input required :id="editUnit.unit + 'customWeightcb'" v-model="editUnit.customWeight"
                           type="checkbox" class="custom-control-input">
-                        <label :for="editUnit.unit + 'customWeightcb'" class="custom-control-label">1 {{editUnit.title}} ortalama <strong>
+                        <label v-if="(editUnit.kgRatio != 1 && editUnit.kgRatio != 0)" :for="editUnit.unit + 'customWeightcb'" class="custom-control-label">1 {{editUnit.title}} ortalama <strong>
                           {{editUnit.kgRatio}} {{edit.kgTitle}}</strong> içerecek şekilde tanımlı. Size özel değiştirmek isterseniz işaretleyin.</label>
+                        <label :for="editUnit.unit + 'customWeightcb'" class="custom-control-label" v-else>
+                          {{editUnit.title}} miktarını size özel değiştirmek isterseniz işaretleyin.
+                        </label>
                       </div>
                       <div class="font-size-sm text-muted" v-else>
                         <p v-if="(editUnit.id > 0) && (editUnit.kgRatio != 1 && editUnit.kgRatio != 0)">
@@ -289,7 +292,7 @@
                         <input  v-model="editUnit.kgRatio" type="number" class="form-control price-control">
                       </div>
 
-                      <div v-if=" (editUnit.id != 0) && (editUnit.unit != 'kg') && (canEdit(editUnit,'price'))"
+                      <div v-if=" (editUnit.id) && (editUnit.unit != 'kg') && (canEdit(editUnit,'price'))"
                         class="custom-control custom-checkbox mb-1">
                         <input required :id="editUnit.unit + 'salemanualcb'" v-model="editUnit.customPrice"
                           type="checkbox" class="custom-control-input">
@@ -501,14 +504,22 @@
 
                 var valid = true;
 
-                // p.units.forEach(function (u) {
-                //   if (u.unit == 'kg' && u.enabled && !u.price) {
-                //     u.enabled = false
-                //   }
-                //   if (u.unit != 'kg' && !(u.kgRatio) && !(u.price)) {
-                //     u.enabled = false;
-                //   }
-                // });
+                let errors = [];
+
+                p.units.forEach(function (u) {
+                  if (u.customWeight && u.kgRatio <= 0) {
+                    errors.push(u.title + ' için geçersiz ağırık')
+                  }
+                  if (u.customPrice && u.price <= 0) {
+                    errors.push(u.title + ' için geçersiz bedel')
+                  }
+                });
+
+                if (errors.length > 0) {
+                  alert(errors.join(String.fromCharCode(13)));
+                  return
+                }
+              
 
                 var self = this;
 

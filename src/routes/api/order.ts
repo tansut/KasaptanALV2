@@ -27,6 +27,7 @@ import { Op } from 'sequelize';
 import { LogisticFactory } from '../../lib/logistic/core';
 import { throws } from 'assert';
 import User from '../../db/models/user';
+import { auth } from '../../middleware/auth';
 
 
 const orderid = require('order-id')('dkfjsdklfjsdlkg450435034.,')
@@ -1488,6 +1489,11 @@ export default class Route extends ApiRouter {
         this.res.send(200);
     }
 
+    @Auth.Anonymous()
+    @Auth.RequireCatcpha()
+    async getManuelOrder() {
+        this.res.sendStatus(200);
+    }
 
     static SetRoutes(router: express.Router) {
         router.post('/order/:ordernum/approve', Route.BindRequest(Route.prototype.approveRoute))
@@ -1496,6 +1502,7 @@ export default class Route extends ApiRouter {
         router.post('/order/:ordernum/setDelivery', Route.BindRequest(Route.prototype.setDeliveryRoute))
         router.post('/order/:ordernum/cancelDelivery', Route.BindRequest(Route.prototype.cancelDeliveryRoute))
         router.post('/order/:ordernum/markAsShipped', Route.BindRequest(Route.prototype.markAsShippedRoute))
+        router.post('/order/createManuel', Route.BindRequest(Route.prototype.getManuelOrder))
 
         
         //router.get("/admin/order/:ordernum", Route.BindRequest(this.prototype.getOrderRoute));
