@@ -582,6 +582,10 @@ window.App.platform = '<%=controller.platform%>'
       isAuthenticated: <%=__req.user ? true : false %>,
   
       prefAdr: <%- JSON.stringify(__req.prefAddr ? __helper.serializePrefAddr(__req.prefAddr) : null) %>
+      
+      mphone: '<%= __req.user.mphone  %>',
+      name: '<%= __req.user.name  %>'
+
 
     }
   
@@ -614,3 +618,5 @@ window.App.platform = '<%=controller.platform%>'
 
 
 </script>
+
+<%- include('./_partial/quick-order.ejs', {}) %>

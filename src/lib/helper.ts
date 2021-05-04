@@ -30,7 +30,8 @@ export default class Helper {
             level1Id: adr.level1Id,
             level2Id: adr.level2Id,
             level3Id: adr.level3Id,
-            level4Id: adr.level4Id
+            level4Id: adr.level4Id,
+            display:  adr.display
         }
     }
 

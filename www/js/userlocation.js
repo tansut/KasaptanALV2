@@ -346,7 +346,9 @@
         } else $('#areaModal').modal("show")
     }
 
-
+    window.kb.hide = function() {
+        $('#areaModal').modal("hide")
+    }
 
 })(window);
 
