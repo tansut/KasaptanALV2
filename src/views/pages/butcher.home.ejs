@@ -82,7 +82,7 @@
     <div class="card">
       <div class="card-body">
         <h5 class="card-title">Online Ödeme Alın</h5>
-          <strong>Kendi siparişlerinizden </strong> sadece %<%=controller.butcher.payCommissionRate*100%> pos komisyonu ile online ödeme alın, <strong>EFT, kapıya POS cihazı taşımakla </strong> uğraşmayın. Bilgi almak için <a target="_blank" href="https://www.youtube.com/watch?v=mKlBHYADTqg">tıklayın.</a>
+          <strong>Kendi siparişlerinizden </strong> sadece %<%=controller.butcher ? controller.butcher.payCommissionRate*100:'XXX'%> pos komisyonu ile online ödeme alın, <strong>EFT, kapıya POS cihazı taşımakla </strong> uğraşmayın. Bilgi almak için <a target="_blank" href="https://www.youtube.com/watch?v=mKlBHYADTqg">tıklayın.</a>
           <p class="card-text"></p>
         <a href="/kasapsayfam/odemeal" class="btn btn-primary">Online Ödeme Alın</a>
       </div>

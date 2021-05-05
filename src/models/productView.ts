@@ -4,6 +4,7 @@ import { PriceSlice } from "../lib/logistic/core";
 import { NutritionView, PriceDiscount, PriceView } from "./common";
 import { ShipmentDayHours } from "./shipment";
 import { ButcherUnitEdit, ButcherUnitSelection } from "../db/models/product";
+import Brand from "../db/models/brand";
 
 export interface PurchaseOption {
     id: string;
@@ -95,6 +96,16 @@ export interface ResourceView {
     settings: any
 }
 
+export interface BrandGroupView {
+    id: number;
+    name: string;
+}
+
+export interface BrandView {
+    id: number;
+    name: string;
+}
+
 export interface ProductView {
     id: number;
     source: 'product' | 'butcher';
@@ -113,14 +124,11 @@ export interface ProductView {
     name: string;
     productType: string;
     priceView: PriceView;
-    // viewUnitPrice: number;
-    // viewUnit: string;
-    // viewUnitDesc: string;
-    // viewUnitAmount: number;
     shortDesc: string;
     notePlaceholder: string;
     purchaseOptions: PurchaseOption[];
-    //defaultUnit: number
+    brandGroup: BrandGroupView;
+    brand?: BrandView;
     resources?: ResourceView[];
     nutritionView: NutritionView;
     shipmentDayHours: ShipmentDayHours [];

@@ -28,6 +28,7 @@ const resource_1 = require("./resource");
 const sequelize_1 = require("sequelize");
 const common_1 = require("../../lib/common");
 const nutritionvalue_1 = require("./nutritionvalue");
+const brandgroup_1 = require("./brandgroup");
 var ProductType;
 (function (ProductType) {
     ProductType["generic"] = "generic";
@@ -87,7 +88,16 @@ let Product = Product_1 = class Product extends basemodel_1.default {
     get priceUnitTitle() {
         if (this.priceUnit == 'kg')
             return 'KG';
+        if (this.priceUnit == 'lt')
+            return 'Litre';
         return this[`${this.priceUnit}title`] || this[`${this.priceUnit}`];
+    }
+    getPriceUnit() {
+        if (this.priceUnit == 'kg')
+            return 'kg';
+        if (this.priceUnit == 'lt')
+            return 'lt';
+        return this[`${this.priceUnit}`];
     }
     get priceBasedUnitId() {
         if (this.unit1 == this.priceUnit)
@@ -119,6 +129,8 @@ let Product = Product_1 = class Product extends basemodel_1.default {
     getUnitTitle(unit) {
         if (unit == 'kg')
             return 'KG';
+        if (unit == 'lt')
+            return 'Litre';
         return this[`${unit}title`] || this[`${unit}`];
     }
     getUnitBy(nameOrTitle) {
@@ -197,6 +209,14 @@ __decorate([
     sequelize_typescript_1.Column,
     __metadata("design:type", String)
 ], Product.prototype, "keywords", void 0);
+__decorate([
+    sequelize_typescript_1.ForeignKey(() => brandgroup_1.default),
+    __metadata("design:type", Number)
+], Product.prototype, "brandGroupid", void 0);
+__decorate([
+    sequelize_typescript_1.BelongsTo(() => brandgroup_1.default, "brandGroupid"),
+    __metadata("design:type", brandgroup_1.default)
+], Product.prototype, "brandGroup", void 0);
 __decorate([
     sequelize_typescript_1.Column({}),
     __metadata("design:type", String)

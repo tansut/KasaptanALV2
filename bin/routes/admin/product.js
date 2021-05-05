@@ -30,10 +30,12 @@ const common_2 = require("../../models/common");
 const nutritionvalue_1 = require("../../db/models/nutritionvalue");
 const nutritionvalueitem_1 = require("../../db/models/nutritionvalueitem");
 const product_2 = require("../../db/models/product");
+const brandgroup_1 = require("../../db/models/brandgroup");
 class Route extends router_1.ViewRouter {
     constructor() {
         super(...arguments);
         this.nutritionValueUnits = common_2.NutritionValueUnits;
+        this.brandGroups = [];
     }
     listViewRoute() {
         return __awaiter(this, void 0, void 0, function* () {
@@ -128,6 +130,7 @@ class Route extends router_1.ViewRouter {
             let product = this.product = yield this.getProduct(this.req.params.product);
             let resources = yield this.getResources(product);
             let categories = yield this.getCategories();
+            this.brandGroups = yield brandgroup_1.default.findAll({});
             yield this.loadNutiritionValues();
             this.res.render('pages/admin/product.edit.ejs', this.viewData({ getProductCategory: this.getProductCategory, categories: categories, images: resources, product: product }));
         });
@@ -156,6 +159,7 @@ class Route extends router_1.ViewRouter {
             this.product = yield this.getProduct(this.req.params.product);
             let resources = yield this.getResources(this.product);
             let categories = yield this.getCategories();
+            this.brandGroups = yield brandgroup_1.default.findAll({});
             let pSlug = this.product.slug;
             yield this.loadNutiritionValues();
             if (this.req.body.copyproduct == "true") {
@@ -180,6 +184,7 @@ class Route extends router_1.ViewRouter {
                     this.product.featuresText = this.req.body.featuresText;
                     this.product.butcherNote = this.req.body.butcherNote;
                     this.product.butcherProductNote = this.req.body.butcherProductNote;
+                    this.product.brandGroupid = this.req.body.brandGroupid ? parseInt(this.req.body.brandGroupid) : null;
                 }
                 this.product.mddesc = this.req.body.mddesc;
                 if (pSlug != this.product.slug) {

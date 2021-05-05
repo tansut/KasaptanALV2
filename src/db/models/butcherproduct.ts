@@ -8,6 +8,7 @@ import ProductCategory from './productcategory';
 import { PriceDiscount, PriceView } from '../../models/common';
 import { Transaction } from "sequelize";
 import ButcherPriceHistory from './butcherpricehistory';
+import Brand from './brand';
 
 
 
@@ -31,6 +32,12 @@ class ButcherProduct extends BaseModel<ButcherProduct> {
 
     @BelongsTo(() => Product, "productid")
     product: Product;
+
+    @ForeignKey(() => Brand)
+    brandid: number
+
+    @BelongsTo(() => Brand, "brandid")
+    brand: Brand;
 
 
     get enabledUnits() {

@@ -14,6 +14,7 @@ const basemodel_1 = require("./basemodel");
 const helper_1 = require("../../lib/helper");
 const product_1 = require("./product");
 const butcher_1 = require("./butcher");
+const brand_1 = require("./brand");
 let ButcherProduct = class ButcherProduct extends basemodel_1.default {
     get enabledUnits() {
         let res = [];
@@ -90,6 +91,14 @@ __decorate([
     sequelize_typescript_1.BelongsTo(() => product_1.default, "productid"),
     __metadata("design:type", product_1.default)
 ], ButcherProduct.prototype, "product", void 0);
+__decorate([
+    sequelize_typescript_1.ForeignKey(() => brand_1.default),
+    __metadata("design:type", Number)
+], ButcherProduct.prototype, "brandid", void 0);
+__decorate([
+    sequelize_typescript_1.BelongsTo(() => brand_1.default, "brandid"),
+    __metadata("design:type", brand_1.default)
+], ButcherProduct.prototype, "brand", void 0);
 __decorate([
     sequelize_typescript_1.Column({
         allowNull: true,

@@ -1,7 +1,7 @@
 import { Auth } from '../../lib/common';
 import { ApiRouter, ViewRouter } from '../../lib/router';
 import * as express from "express";
-import { ProductView, ProductViewForButcher, PurchaseOption, } from '../../models/productView';
+import { BrandView, ProductView, ProductViewForButcher, PurchaseOption, } from '../../models/productView';
 import Product, { ProductSelectionWeigts, ProductType } from '../../db/models/product';
 import Butcher from '../../db/models/butcher';
 import ButcherProduct from '../../db/models/butcherproduct';
@@ -34,6 +34,8 @@ import { BusinessError, PermissionError, ValidationError } from '../../lib/http'
 import ButcherPriceHistory from '../../db/models/butcherpricehistory';
 import ProductRelation from '../../db/models/productrelation';
 import { getEnabledCategories } from 'node:trace_events';
+import Brand from '../../db/models/brand';
+import BrandGroup from '../../db/models/brandgroup';
 const fs = require('fs');
 
 export interface ProductFeedItem {
@@ -753,7 +755,23 @@ export default class Route extends ApiRouter {
             butcherProduct = butcher.products.find(c => (c.productid == product.id) && (includeDisable ? true : c.enabled));
         }
 
-
+        let brandGroup: BrandGroup = product.brandGroupid ? (product.brandGroup || await BrandGroup.findByPk(product.brandGroupid)): null;
+        let brand: BrandView = null;
+        
+        if (butcherProduct && butcherProduct.brandid) {
+            if (butcherProduct.brand) {
+                brand = {
+                    id: butcherProduct.brand.id,
+                    name: butcherProduct.brand.name
+                }
+            } else {
+                let b = await Brand.findByPk(butcherProduct.brandid);
+                brand = {
+                    id: b.id,
+                    name: b.name
+                }
+            }
+        }
         let view: ProductView;
 
         let discount = butcherProduct ? butcherProduct.discountType: 'none';
@@ -766,6 +784,8 @@ export default class Route extends ApiRouter {
             discount: discount,
             discountValue: discountValue,
             regularKgPrice: regularPrice,
+            brandGroup: brandGroup,
+            brand: brand,
             source: butcherProduct ? 'butcher' : 'product',
             butcher: butcherProduct ? {
                 shipday0: butcher.shipday0,
@@ -856,7 +876,7 @@ export default class Route extends ApiRouter {
     // }
 
     getProductView2Edit(product: Product, view: ProductViewForButcher, category?: Category) {
-        let price = view.priceUnit == 'kg' ? Helper.asCurrency(view.regularKgPrice) : 0.00;
+        let price = (view.priceUnit == 'kg' || view.priceUnit == 'lt') ? Helper.asCurrency(view.regularKgPrice) : 0.00;
 
         let getpOptions = () => {
             let orj: any = view.purchaseOptions.filter(p => ((p.butcherUnitSelection != 'none-unselected') && (p.butcherUnitSelection != 'none-selected')));
@@ -864,7 +884,7 @@ export default class Route extends ApiRouter {
             let hasKgDependency = view.purchaseOptions.find(po => po.kgRatio > 0);
             {
             orj.splice(0, 0, {
-                unit: product.priceUnit == 'kg' ? 'kg': product[`${product.priceUnit}`],
+                unit: product.getPriceUnit(),
                 unitTitle: product.priceUnitTitle,
                 id: '',
                 enabled: true,
@@ -918,7 +938,7 @@ export default class Route extends ApiRouter {
                     customPrice: po.customPrice,
                     customWeight: po.customWeight,
                     butcherUnitSelection: po.butcherUnitSelection,
-                    butcherUnitEdit: (po.id != 0 && po.unit == 'kg') ? 'none': po.butcherUnitEdit,
+                    butcherUnitEdit: (po.id && (po.unit == 'kg' || po.unit == 'lt')) ? 'none': po.butcherUnitEdit,
                     butcherNote: this.markdown.render(product[`unit${po.id}ButcherNote`] || '')
                 }
             }),

@@ -36,6 +36,8 @@ import UserLog from './models/userlog';
 import ShopList from './models/shoplist';
 import ShopListItem from './models/shoplistitem';
 import PaymentMethod from './models/paymentmethod';
+import Brand from './models/brand';
+import BrandGroup from './models/brandgroup';
 
 
 
@@ -56,7 +58,7 @@ let init = (alter: boolean = true) => {
 
     
 
-    dbInstance.addModels([PaymentMethod, ShopList, ShopListItem, UserLog, ProductRelation, AgreementLog, TempLoc, DBCache, NutritionValue, NutritionValueItem, ButcherArea, Subcategory, Payment, AccountModel, Review, ButcherPriceHistory, PriceCategory, Redirect, WebPage, ButcherModel, Order, OrderItem, Dispatcher, User, RefreshToken, Resource, Area, SiteLog, Category, Product, ProductCategory, ButcherProduct, Content, ResourceCategory]);
+    dbInstance.addModels([Brand, BrandGroup, PaymentMethod, ShopList, ShopListItem, UserLog, ProductRelation, AgreementLog, TempLoc, DBCache, NutritionValue, NutritionValueItem, ButcherArea, Subcategory, Payment, AccountModel, Review, ButcherPriceHistory, PriceCategory, Redirect, WebPage, ButcherModel, Order, OrderItem, Dispatcher, User, RefreshToken, Resource, Area, SiteLog, Category, Product, ProductCategory, ButcherProduct, Content, ResourceCategory]);
 
     return dbInstance.sync({
         alter: alter,

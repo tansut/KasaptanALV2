@@ -16,11 +16,13 @@ import { NutritionValueTitles, NutritionValueOrders, NutritionValueUnits } from 
 import NutritionValue from '../../db/models/nutritionvalue';
 import NutritionValueItem from '../../db/models/nutritionvalueitem';
 import Product from '../../db/models/product';
+import BrandGroup from '../../db/models/brandgroup';
 
 export default class Route extends ViewRouter {
     nutritionValueUnits = NutritionValueUnits;
     product: ProductModel;
     editingNutritionValue: NutritionValue;
+    brandGroups: BrandGroup [] = [];
 
     @Auth.Anonymous()
     async listViewRoute() {
@@ -119,6 +121,9 @@ export default class Route extends ViewRouter {
         let product = this.product = await this.getProduct(this.req.params.product);
         let resources = await this.getResources(product)
         let categories = await this.getCategories();
+        this.brandGroups = await BrandGroup.findAll({
+
+        });
         await this.loadNutiritionValues();
         this.res.render('pages/admin/product.edit.ejs', this.viewData({ getProductCategory: this.getProductCategory, categories: categories, images: resources, product: product }))
     }
@@ -154,6 +159,9 @@ export default class Route extends ViewRouter {
         this.product = await this.getProduct(this.req.params.product);
         let resources = await this.getResources(this.product)
         let categories = await this.getCategories();
+        this.brandGroups = await BrandGroup.findAll({
+
+        });
         let pSlug = this.product.slug;
         await this.loadNutiritionValues();
 
@@ -183,6 +191,7 @@ export default class Route extends ViewRouter {
                 this.product.featuresText = this.req.body.featuresText;
                 this.product.butcherNote = this.req.body.butcherNote;
                 this.product.butcherProductNote = this.req.body.butcherProductNote;
+                this.product.brandGroupid = this.req.body.brandGroupid ? parseInt(this.req.body.brandGroupid): null;
                 
             }
             this.product.mddesc = this.req.body.mddesc;

@@ -35,6 +35,8 @@ import { LogisticProvider, PriceSlice, FromTo } from '../lib/logistic/core';
 import { PriceView } from '../models/common';
 import { pbkdf2 } from 'crypto';
 import { off } from 'process';
+import Brand from '../db/models/brand';
+import BrandGroup from '../db/models/brandgroup';
 
 
 
@@ -105,7 +107,7 @@ export default class Route extends ViewRouter {
         let product = await ProductModel.findOne({
             include: [{
                 model: ProductCategory,
-                include: [Category]
+                include: [Category, BrandGroup]
             }
             ], where: { slug: this.req.params.product }
         });

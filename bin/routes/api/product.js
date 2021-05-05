@@ -44,6 +44,8 @@ const productManager_1 = require("../../lib/productManager");
 const http_1 = require("../../lib/http");
 const butcherpricehistory_1 = require("../../db/models/butcherpricehistory");
 const productrelation_1 = require("../../db/models/productrelation");
+const brand_1 = require("../../db/models/brand");
+const brandgroup_1 = require("../../db/models/brandgroup");
 const fs = require('fs');
 class Route extends router_1.ApiRouter {
     constructor() {
@@ -660,6 +662,23 @@ class Route extends router_1.ApiRouter {
             else if (butcher && butcher.products) {
                 butcherProduct = butcher.products.find(c => (c.productid == product.id) && (includeDisable ? true : c.enabled));
             }
+            let brandGroup = product.brandGroupid ? (product.brandGroup || (yield brandgroup_1.default.findByPk(product.brandGroupid))) : null;
+            let brand = null;
+            if (butcherProduct && butcherProduct.brandid) {
+                if (butcherProduct.brand) {
+                    brand = {
+                        id: butcherProduct.brand.id,
+                        name: butcherProduct.brand.name
+                    };
+                }
+                else {
+                    let b = yield brand_1.default.findByPk(butcherProduct.brandid);
+                    brand = {
+                        id: b.id,
+                        name: b.name
+                    };
+                }
+            }
             let view;
             let discount = butcherProduct ? butcherProduct.discountType : 'none';
             let discountValue = butcherProduct ? butcherProduct.priceDiscount : 0.00;
@@ -670,6 +689,8 @@ class Route extends router_1.ApiRouter {
                 discount: discount,
                 discountValue: discountValue,
                 regularKgPrice: regularPrice,
+                brandGroup: brandGroup,
+                brand: brand,
                 source: butcherProduct ? 'butcher' : 'product',
                 butcher: butcherProduct ? {
                     shipday0: butcher.shipday0,
@@ -749,14 +770,14 @@ class Route extends router_1.ApiRouter {
     //     this.res.send(view)
     // }
     getProductView2Edit(product, view, category) {
-        let price = view.priceUnit == 'kg' ? helper_1.default.asCurrency(view.regularKgPrice) : 0.00;
+        let price = (view.priceUnit == 'kg' || view.priceUnit == 'lt') ? helper_1.default.asCurrency(view.regularKgPrice) : 0.00;
         let getpOptions = () => {
             let orj = view.purchaseOptions.filter(p => ((p.butcherUnitSelection != 'none-unselected') && (p.butcherUnitSelection != 'none-selected')));
             let priceUnit = view.purchaseOptions.find(po => po.unit == product.priceUnit);
             let hasKgDependency = view.purchaseOptions.find(po => po.kgRatio > 0);
             {
                 orj.splice(0, 0, {
-                    unit: product.priceUnit == 'kg' ? 'kg' : product[`${product.priceUnit}`],
+                    unit: product.getPriceUnit(),
                     unitTitle: product.priceUnitTitle,
                     id: '',
                     enabled: true,
@@ -804,7 +825,7 @@ class Route extends router_1.ApiRouter {
                     customPrice: po.customPrice,
                     customWeight: po.customWeight,
                     butcherUnitSelection: po.butcherUnitSelection,
-                    butcherUnitEdit: (po.id != 0 && po.unit == 'kg') ? 'none' : po.butcherUnitEdit,
+                    butcherUnitEdit: (po.id && (po.unit == 'kg' || po.unit == 'lt')) ? 'none' : po.butcherUnitEdit,
                     butcherNote: this.markdown.render(product[`unit${po.id}ButcherNote`] || '')
                 };
             }),

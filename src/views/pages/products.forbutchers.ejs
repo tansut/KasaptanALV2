@@ -297,7 +297,7 @@
                         <input required :id="editUnit.unit + 'salemanualcb'" v-model="editUnit.customPrice"
                           type="checkbox" class="custom-control-input">
                         <label :for="editUnit.unit + 'salemanualcb'" class="custom-control-label">{{editUnit.title}}
-                          fiyatı <strong>{{editUnit.kgRatio}} x {{edit.kgTitle}} fiyatı</strong> olacak şekilde otomatik hesaplanır. Ayrı fiyat vermek için işaretleyin.</label>
+                          fiyatı <strong>{{editUnit.kgRatio}} x {{edit.kgTitle}} fiyatı</strong> olacak şekilde otomatik hesaplanır. <strong>Ayrı fiyat vermek</strong> için işaretleyin.</label>
                       </div>
 
 
@@ -510,7 +510,7 @@
                   if (u.customWeight && u.kgRatio <= 0) {
                     errors.push(u.title + ' için geçersiz ağırık')
                   }
-                  if (u.customPrice && u.price <= 0) {
+                  if (u.id && u.customPrice && u.price <= 0) {
                     errors.push(u.title + ' için geçersiz bedel')
                   }
                 });

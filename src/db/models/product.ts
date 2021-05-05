@@ -10,6 +10,7 @@ import { AdakProductManager, KurbanProductManager, KurbanDigerProductManager } f
 import NutritionValue from './nutritionvalue';
 import { NutritionView } from '../../models/common';
 import { ButcherProperty } from '../../routes/api/product';
+import BrandGroup from './brandgroup';
 
 export enum ProductType {
     generic = 'generic',
@@ -25,7 +26,7 @@ export enum ProductType {
      countrywide = 'countrywide'
  }
 
- export type ProductPriceUnit = 'kg' | 'unit1' | 'unit3' | 'unit3';
+ export type ProductPriceUnit = 'kg' | 'lt'  | 'unit1' | 'unit3' | 'unit3';
 
  export type ButcherUnitSelection = 'unselected' | 'selected' | 'forced' | 'none-selected' | 'none-unselected';
  
@@ -59,6 +60,13 @@ class Product extends BaseModel<Product> {
 
     @Column
     keywords: string;    
+
+    @ForeignKey(() => BrandGroup)
+    brandGroupid: number;
+
+
+    @BelongsTo(() => BrandGroup, "brandGroupid")
+    brandGroup: BrandGroup;
 
     @Column({})
     butcherweightsjson: string
@@ -118,7 +126,14 @@ class Product extends BaseModel<Product> {
 
     get priceUnitTitle() {
         if (this.priceUnit == 'kg') return 'KG';
+        if (this.priceUnit == 'lt') return 'Litre';
         return this[`${this.priceUnit}title`] || this[`${this.priceUnit}`]
+    }
+
+     getPriceUnit() {
+        if (this.priceUnit == 'kg') return 'kg';
+        if (this.priceUnit == 'lt') return 'lt';
+        return this[`${this.priceUnit}`]
     }
 
     get priceBasedUnitId() {
@@ -150,6 +165,7 @@ class Product extends BaseModel<Product> {
 
     getUnitTitle(unit: string) {
         if (unit == 'kg') return 'KG';
+        if (unit == 'lt') return 'Litre';
         return this[`${unit}title`] || this[`${unit}`]
     }
 
