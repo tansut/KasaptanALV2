@@ -107,7 +107,7 @@ export default class Route extends ViewRouter {
         let product = await ProductModel.findOne({
             include: [{
                 model: ProductCategory,
-                include: [Category, BrandGroup]
+                include: [Category]
             }
             ], where: { slug: this.req.params.product }
         });

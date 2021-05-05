@@ -38,7 +38,6 @@ const config_1 = require("../config");
 const sequelize_1 = require("sequelize");
 const productcategory_1 = require("../db/models/productcategory");
 const commissionHelper_1 = require("../lib/commissionHelper");
-const brandgroup_1 = require("../db/models/brandgroup");
 class Route extends router_1.ViewRouter {
     constructor() {
         super(...arguments);
@@ -86,7 +85,7 @@ class Route extends router_1.ViewRouter {
             let product = yield product_1.default.findOne({
                 include: [{
                         model: productcategory_1.default,
-                        include: [category_1.default, brandgroup_1.default]
+                        include: [category_1.default]
                     }
                 ], where: { slug: this.req.params.product }
             });
