@@ -689,6 +689,11 @@ export default class Route extends ApiRouter {
                     Helper.asCurrency((butcherProduct[`${col}kgRatio`] || product[`${col}kgRatio`]) * kgPrice)
             ) :0.00;
             let unitPrice = Helper.CalculateDiscount(discount, discountValue, regularUnitPrice);
+            let unitWeight = product[`${col}weight`];
+            if (butcherProduct && butcherProduct[`${col}kgRatio`]) {
+                unitWeight = `${product.priceUnit == 'kg'? 'ortalama ':''}${butcherProduct[`${col}kgRatio`]}  ${product.priceUnitTitle}`;
+            }
+            
             add && purchaseOptions.push({
                 id: p,
                 discount: discount,
@@ -699,7 +704,7 @@ export default class Route extends ApiRouter {
                 desc: this.markdown.render(product[`${col}desc`] || ""),
                 kgRatio: (butcherProduct && butcherProduct[`${col}kgRatio`]) ? butcherProduct[`${col}kgRatio`] : product[`${col}kgRatio`],
                 customWeight: butcherProduct && butcherProduct[`${col}kgRatio`] ? true : false,
-                unitWeight: (butcherProduct && butcherProduct[`${col}weight`]) || product[`${col}weight`],
+                unitWeight: unitWeight,
                 unitPrice: unitPrice,
                 customPrice: butcherProduct ? (Helper.asCurrency(butcherProduct[`${col}price`]) > 0) : false,
                 unit: product[`${col}`],
@@ -1096,9 +1101,11 @@ export default class Route extends ApiRouter {
         newItem.unit2weight = null;
         newItem.unit3weight = null;
 
-        newItem.unit1price = null;
-        newItem.unit2price = null;
-        newItem.unit3price = null;
+        newItem.unit1price = 0;
+        newItem.unit2price = 0;
+        newItem.unit3price = 0;
+        newItem.unit4price = 0;
+        newItem.unit5price = 0; 
 
         newItem.unit1kgRatio = 0;
         newItem.unit2kgRatio = 0;
@@ -1119,12 +1126,11 @@ export default class Route extends ApiRouter {
         this.req.body.units.forEach(u => {
             let unitid = product.getUnitBy(u.unit);
 
-            if (u.kgRatio && u.unit != unitPrice.unit && u.customWeight) {
+            if (u.kgRatio && u.unit != unitPrice.unit && u.customWeight && (product[`${u.id}ButcherUnitEdit`] == 'weight' || product[`${u.id}ButcherUnitEdit`] == 'all')) {
                 let butcherKgRatio = u.kgRatio;
                 let productKgRatio = product[`${unitid}kgRatio`];
                 if (butcherKgRatio != productKgRatio) {
                     newItem[`${unitid}kgRatio`] = butcherKgRatio;
-                    newItem[`${unitid}weight`] = `${unitPrice.unit == 'kg'? 'ortalama ':''}${u.kgRatio}  ${product.getUnitTitle(unitPrice.unit)}`;
                 } else newItem[`${unitid}weight`] = null;
             }
 
@@ -1133,8 +1139,8 @@ export default class Route extends ApiRouter {
             }
 
             if (unitid) {
-                
-                if (u.price && !u.isPriceUnit && u.customPrice) {
+                if (u.price && !u.isPriceUnit && u.customPrice && 
+                    (product[`${u.id}ButcherUnitEdit`] == 'price' || product[`${u.id}ButcherUnitEdit`] == 'all')) {
                     newItem[`${unitid}price`] = Helper.parseFloat(u.price);
                 }
                 if (u.isPriceUnit && !u.price) u.enabled = false;

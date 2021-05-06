@@ -65,6 +65,10 @@
           <li>
             Fiyat giriş ve düzenleme bittikten sonra gerekli kontroller için <strong>bizi haberdar ediniz</strong>
           </li>
+          <li>
+            <strong>Ondalık işareti</strong> olarak virgül yerine . (nokta) kullanın. Örneğin 1250.54 gibi.
+
+          </li>
         </ul>
         <button v-if="!canGo" @click="canGo=1" class="btn-info btn mr-1">Okudum Devam</button>
         <a v-if="canGo" target="_blank" class="btn btn-dark" href="/<%=butcher.slug%>">Profilinizi Görüntüleyin</a>
@@ -202,8 +206,8 @@
                   <label for="inputState">Kampanya durumu</label>
                   <select v-model="edit.discountType" required class="form-control">
                     <option disabled value="">Lütfen seçim yapın</option>
-                    <option value="none" :selected="edit.discountType == 'none'">Kapmanya Kapalı</option>
-                    <option value="discountAsPercent" :selected="edit.discountType == 'discountAsPercent'">Kapmanya Aktif</option>
+                    <option value="none" :selected="edit.discountType == 'none'">Kampanya Kapalı</option>
+                    <option value="discountAsPercent" :selected="edit.discountType == 'discountAsPercent'">Kampanya Aktif</option>
                     
                   </select>
                 </div>
@@ -251,7 +255,7 @@
                 <div v-if="edit">
                   <ul class="nav nav-tabs  mb-3">
                     <li v-for="(u, i) in edit.units" class="nav-item font-size-sm">
-                      <a @click="editUnitVal=u" :class="{'active': editUnit == u}" class="nav-link">{{u.id == 0 ? 'Birim': u.title}}</a>
+                      <a @click="editUnitVal=u; editUnitIndex=i" :class="{'active': editUnit == u}" class="nav-link">{{u.id == 0 ? 'Birim': u.title}}</a>
                     </li>
                   </ul>
                   <div  v-if="editUnit">
@@ -274,16 +278,15 @@
                         class="custom-control custom-checkbox mb-1">
                         <input required :id="editUnit.unit + 'customWeightcb'" v-model="editUnit.customWeight"
                           type="checkbox" class="custom-control-input">
-                        <label v-if="(editUnit.kgRatio != 1 && editUnit.kgRatio != 0)" :for="editUnit.unit + 'customWeightcb'" class="custom-control-label">1 {{editUnit.title}} ortalama <strong>
-                          {{editUnit.kgRatio}} {{edit.kgTitle}}</strong> içerecek şekilde tanımlı. Size özel değiştirmek isterseniz işaretleyin.</label>
-                        <label :for="editUnit.unit + 'customWeightcb'" class="custom-control-label" v-else>
+                        <label :for="editUnit.unit + 'customWeightcb'" class="custom-control-label">1 {{editUnit.title}} sistemde ortalama <strong>
+                          {{editOrj.units[editUnitIndex].kgRatio}} {{edit.kgTitle}}</strong> içerecek şekilde tanımlı. Size özel değiştirmek isterseniz işaretleyin.</label>
+                        <!-- <label :for="editUnit.unit + 'customWeightcb'" class="custom-control-label" v-else>
                           {{editUnit.title}} miktarını size özel değiştirmek isterseniz işaretleyin.
-                        </label>
+                        </label> -->
                       </div>
                       <div class="font-size-sm text-muted" v-else>
                         <p v-if="(editUnit.id) && (editUnit.kgRatio != 1 && editUnit.kgRatio != 0)">
-                          1 {{editUnit.title}} ortalama <strong>{{editUnit.kgRatio}} {{edit.kgTitle}}</strong> içerecek şekilde tanımlıdır.</span>
-
+                          1 {{editUnit.title}} ortalama <strong>{{editOrj.units[editUnitIndex].kgRatio}} {{edit.kgTitle}}</strong> içerecek şekilde tanımlıdır.</span>
                         </p>
                       </div>
 
@@ -297,7 +300,7 @@
                         <input required :id="editUnit.unit + 'salemanualcb'" v-model="editUnit.customPrice"
                           type="checkbox" class="custom-control-input">
                         <label :for="editUnit.unit + 'salemanualcb'" class="custom-control-label">{{editUnit.title}}
-                          fiyatı <strong>{{editUnit.kgRatio}} x {{edit.kgTitle}} fiyatı</strong> olacak şekilde otomatik hesaplanır. <strong>Ayrı fiyat vermek</strong> için işaretleyin.</label>
+                          fiyatı <strong>{{editOrj.units[editUnitIndex].kgRatio}} x {{edit.kgTitle}} fiyatı</strong> olacak şekilde otomatik hesaplanır. <strong>Ayrı fiyat vermek</strong> için işaretleyin.</label>
                       </div>
 
 
@@ -305,7 +308,7 @@
                       <div class="form-group" v-if="canEdit(editUnit,'price', true)">
                         <div class="d-block"><strong style="text-transform: uppercase;">{{editUnit.title}}</strong>
                           satış fiyatınız</div>
-                        <input required v-model="editUnit.price" type="text" class="form-control price-control"
+                        <input  required v-model="editUnit.price" type="number" class="form-control price-control"
                           placeholder="tezgah satış fiyatınız">
                       </div>
 
@@ -368,6 +371,8 @@
                 errors: [],
                 list: [],
                 edit: null,
+                editOrj: null,
+                editUnitIndex: 0,
                 editUnitVal: null,
                 editIndex: -1,
                 completedPerc: 0,
@@ -399,6 +404,8 @@
 
             methods: {
 
+    
+
               checkCampaignForm: function (e) {
                 this.errors = [];
                 
@@ -416,8 +423,8 @@
                 })
               },
 
-
               openCampaign(p, index) {
+                this.editOrj = p;
                 this.edit = JSON.parse(JSON.stringify(p));                
                 this.editIndex = index;
                 this.editUnitVal = null;
@@ -436,9 +443,10 @@
                 
                 if (prop == 'price' && unit.id == 0) return true;
                 if (unit.butcherUnitEdit == 'none') return false;
-                if (checkCustom) {
+                var mustMeet = unit.butcherUnitEdit == prop | unit.butcherUnitEdit == "all";
+                if (checkCustom && mustMeet) {
                   return ((prop == "price" && unit.customPrice) || (prop == "weight" && unit.customWeight));
-                } else return unit.butcherUnitEdit == prop | unit.butcherUnitEdit == "all"
+                } else return mustMeet
                 
               },
 
@@ -513,6 +521,12 @@
                   if (u.id && u.customPrice && u.price <= 0) {
                     errors.push(u.title + ' için geçersiz bedel')
                   }
+                  // if (u.price && u.price.indexOf(',') >=0) {
+                  //   errors.push(u.title + ' virgül içeremez. Ondalık değeri nokta ile girin. Örneğin 1256.12 (binikiyüzelli TL 12 kuruş')
+                  // }
+                  // if (u.kgRatio && u.kgRatio.indexOf(',') >=0) {
+                  //   errors.push(u.title + ' virgül içeremez. Ondalık değeri nokta ile girin. Örneğin 2.5 (iki nokta beş');
+                  // }
                 });
 
                 if (errors.length > 0) {
@@ -553,12 +567,8 @@
               },
 
               openDialog(p, index) {
+                this.editOrj = p;
                 this.edit = JSON.parse(JSON.stringify(p));
-                // this.edit.units.forEach(function (u) {
-                //   if (u.butcherUnitSelection == 'selected' || u.butcherUnitSelection == 'forced') {
-                //     u.enabled = true
-                //   }
-                // });                
                 this.editIndex = index;
                 this.editUnitVal = null;
                 $('#pricemodal').modal('show');
@@ -566,6 +576,8 @@
             }
           })
         </script>
+
+        
 
 </body>
 
