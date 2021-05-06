@@ -185,6 +185,13 @@ __decorate([
     __metadata("design:type", String)
 ], User.prototype, "lastLocationType", void 0);
 __decorate([
+    sequelize_typescript_1.Column({
+        allowNull: true,
+        type: sequelize_typescript_1.DataType.TEXT
+    }),
+    __metadata("design:type", String)
+], User.prototype, "lastManuealOrder", void 0);
+__decorate([
     sequelize_typescript_1.Column,
     __metadata("design:type", Number)
 ], User.prototype, "butcherid", void 0);

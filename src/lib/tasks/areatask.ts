@@ -101,6 +101,7 @@ where t1.level=4`;
             await p.loadRelatedAreas();
             p.display = p.getDisplay();
             await p.save();
+            await new Promise(r => setTimeout(r, 50));
         })
 
         console.log('done AreaTask job', Date.now())

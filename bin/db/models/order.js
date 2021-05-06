@@ -501,6 +501,13 @@ __decorate([
     __metadata("design:type", String)
 ], Order.prototype, "statusDesc", void 0);
 __decorate([
+    sequelize_typescript_1.Column({
+        allowNull: true,
+        type: sequelize_typescript_1.DataType.TEXT
+    }),
+    __metadata("design:type", String)
+], Order.prototype, "lastManuealOrder", void 0);
+__decorate([
     sequelize_typescript_1.Column,
     __metadata("design:type", Buffer)
 ], Order.prototype, "shopcardjson", void 0);

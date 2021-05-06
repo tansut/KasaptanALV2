@@ -129,7 +129,7 @@ __decorate([
 ], UserLog.prototype, "ip", void 0);
 __decorate([
     sequelize_typescript_1.Column({
-        allowNull: true
+        type: sequelize_typescript_1.DataType.TEXT
     }),
     __metadata("design:type", String)
 ], UserLog.prototype, "url", void 0);

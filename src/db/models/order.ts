@@ -153,6 +153,7 @@ class Order extends BaseModel<Order> {
     })
     email: string;
 
+
     @Column({
         allowNull: false,
     })
@@ -327,6 +328,12 @@ class Order extends BaseModel<Order> {
         type: DataType.TEXT
     })    
     statusDesc: string;      
+
+    @Column({
+        allowNull: true,
+        type: DataType.TEXT
+    })    
+    lastManuealOrder: string;      
 
     @Column
     shopcardjson: Buffer

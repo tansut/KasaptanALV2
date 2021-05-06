@@ -2,7 +2,8 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 let appRoutes = [
     './order',
-    './home'
+    './home',
+    './manuelorders'
 ];
 class RouteLoader {
     static use(router) {

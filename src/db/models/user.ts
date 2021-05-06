@@ -136,6 +136,12 @@ export default class User extends BaseModel<User> {
 
     puans: AccountModel;
     usablePuans = 0.00;
+
+    @Column({
+        allowNull: true,
+        type: DataType.TEXT
+    })    
+    lastManuealOrder: string;     
     
     async loadPuanView() {
         this.puans  = await AccountModel.summary([

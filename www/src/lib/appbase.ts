@@ -73,7 +73,7 @@ export default class AppBase {
         this.jq('a[href="#' + tab + '"]').tab('show');
     };
 
-    static showSignupDlg(returnUrl: string = null, showAd: boolean = false, message?: string) {
+    static showSignupDlg(returnUrl: string | Function = null, showAd: boolean = false, message?: string) {
         message ? $('#signupDlgMessageDiv').show(): $('#signupDlgMessageDiv').hide();
         message ? $('#signupDlgMessage').html(message): $('#signupDlgMessage').html("")        
         this.activaTab("signup-tab");
@@ -88,7 +88,7 @@ export default class AppBase {
 
     }    
 
-    static showLoginDlg(returnUrl: string = null, showAd: boolean = false, user: string = '') {
+    static showLoginDlg(returnUrl: string | Function = null, showAd: boolean = false, user: string = '') {
         $('#signupDlgMessageDiv').hide();
         $('#signupDlgMessage').html("") 
         this.activaTab("signin-tab")

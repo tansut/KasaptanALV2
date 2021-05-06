@@ -156,13 +156,20 @@ export default class Route extends ApiRouter {
         shopcard.remove(item.order);
         await shopcard.saveToRequest(this.req);
         let l = this.generateUserLog('shopcard', 'remove');
-        if (l) {
-            l.productid = scItem.product.id;
-            l.productName = scItem.product.name;
-            l.butcherid = scItem.product.butcher.id;
-            l.butcherName = scItem.product.butcher.name;
-            await this.saveUserLog(l);
+        try {
+            if (l) {
+                l.productid = scItem.product.id;
+                l.productName = scItem.product.name;
+                l.butcherid = scItem.product.butcher.id;
+                l.butcherName = scItem.product.butcher.name;
+                await this.saveUserLog(l);
+            }
+        } catch(err) {
+            Helper.logError(err, {
+                item: scItem
+            }, this.req)
         }
+
         this.res.send(shopcard);
     }
 

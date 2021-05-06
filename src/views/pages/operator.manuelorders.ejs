@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="tr-TR" prefix="og: http://ogp.me/ns#">
+
+<head>
+  <% include ./_partial/head %>
+</head>
+
+<body>
+  <% include ./_partial/header %>
+
+    <!-- Page Title (Light)-->
+    <div class="bg-secondary pt-4 ">
+      <div class="container d-lg-flex justify-content-between py-2 py-lg-3">
+        <div class="order-lg-2 mb-3 mb-lg-0 pt-lg-2">
+          <nav aria-label="breadcrumb" class="d-none d-lg-block">
+            <ol class="breadcrumb flex-lg-nowrap justify-content-center justify-content-lg-star">
+              <li class="breadcrumb-item"><a class="text-nowrap" href="/"><i class="czi-home"></i></a></li>
+            </ol>
+          </nav>
+        </div>
+        <div class="order-lg-1 pr-lg-4 text-center text-lg-left">
+          <h1 class="h3">Manuel Siparişler </h1>
+        </div>
+      </div>
+    </div>
+
+
+
+
+
+    <div id="manuelorderapp" class="container mb-3 ">
+      <table class="table table-hover">
+        <thead>
+          <tr>
+            <th>Sipariş</th>
+            <th>Tel</th>
+            <th>Tarih</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr v-for="(o,i) in orders">
+            <th v-html="o.order">
+              
+            </th>
+            <th>
+              <a target="_blank" :href="'/pages/operator?phone=' + o.mphone">{{o.mphone}}</a>
+            </th>
+            <th>{{o.date}}</th>
+          </tr>
+        </tbody>
+      </table>
+
+
+
+
+    </div>
+
+
+
+
+
+
+
+
+    <% include ./_partial/footer %>
+      <% include ./_partial/scripts %>
+
+        <script>
+          window.manuelorderapp = new Vue(
+            {
+              el: "#manuelorderapp",
+
+              data: {
+                orders: []
+              },
+
+              mounted: function() {
+                this.list()
+              },
+
+              methods: {
+                list: function() {
+                  var self = this;
+                  App.Backend.get('order/manuelorders/list').then(function(result) {
+                    self.orders = result.data;
+                  }).catch(App.HandleError.bind(App))
+                }
+              }
+            })
+        </script>
+
+</body>
+
+</html>

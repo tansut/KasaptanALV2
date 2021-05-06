@@ -80,6 +80,7 @@ where t1.level=4`;
                 yield p.loadRelatedAreas();
                 p.display = p.getDisplay();
                 yield p.save();
+                yield new Promise(r => setTimeout(r, 50));
             }));
             console.log('done AreaTask job', Date.now());
         });

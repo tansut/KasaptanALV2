@@ -6,7 +6,7 @@ export class Auth {
     static phone: string;
     static sms: string;
 
-    static checkAuthentication(returnUrl?: string, message?: string) {
+    static checkAuthentication(returnUrl?: string | Function, message?: string) {
         if (!App.User.isAuthenticated) {
             App.showSignupDlg(returnUrl, false, message);
             return false;
@@ -55,7 +55,6 @@ export class Auth {
 
                 } else {
                     App.gTag('signup', 'error-send-sms-code', tel);
-
                     App.HandleError(err)
                 }
                 
@@ -97,6 +96,17 @@ export class Auth {
             }
         }
     }
+
+    static handleAferLogin() {
+        if (typeof App.RunConfig['returnUrl'] == 'function') {
+            App.jq('#signin-modal').modal('hide');
+            App.RunConfig['returnUrl']()
+        } else {
+            window.location.href = App.RunConfig['returnUrl'] || '/';
+        }
+        
+    }
+
     static async signin() {
         if ((<HTMLFormElement>$("#signin-form")[0]).checkValidity()) {
             event.preventDefault();
@@ -116,10 +126,10 @@ export class Auth {
                 if (urlParams.has('r')) {
                     window.location.href = urlParams.get('r');
                 }
-                else window.location.href = App.RunConfig['returnUrl'] || '/'
+                else  Auth.handleAferLogin();
             } catch (err) {
                 App.gTag('signin', 'error', email);
-                App.HandleError(err)
+                App.HandleError(err);
             } finally {
                 $('#signin-btn').removeAttr("disabled");
             }
@@ -151,10 +161,7 @@ export class Auth {
                     birthYear: birthYear
                 })
                 App.gTag('signup', 'signup/complete', Auth.phone);
-                window.location.href = App.RunConfig['returnUrl'] || '/'
-                //$("#signup-form-4").removeClass('d-none');
-                //$("#signup-form-3").addClass('d-none');
-                //App.setCookie("auth", JSON.stringify(result.token))
+                Auth.handleAferLogin();
             } catch (err) {
                 App.gTag('signup', 'error-complete', Auth.phone);
                 App.HandleError(err)

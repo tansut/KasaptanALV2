@@ -1489,10 +1489,43 @@ export default class Route extends ApiRouter {
         this.res.send(200);
     }
 
-    @Auth.Anonymous()
     @Auth.RequireCatcpha()
     async getManuelOrder() {
+        let user = this.req.user;
+        user.lastManuealOrder = ` 
+            kasap: ${this.req.body.butchername}
+            müşteri: ${this.req.body.custName}
+            tel: ${this.req.body.custPhone}
+            email: ${this.req.body.custEmail}
+            sipariş: ${this.req.body.custOrder}
+            not: ${this.req.body.custNote}
+            adres: ${this.req.body.custAddress}
+            semt: ${JSON.stringify(this.req.body.addr)}
+        `
+        await user.save();
+        await Sms.sendMultiple(['5326275151'], `yeni manuel sipariş: www.kasaptanal.com/pages/operator/manuelorders`, false, new SiteLogRoute(this.constructorParams))
         this.res.sendStatus(200);
+    }
+
+
+    async listManuelOrders() {
+        let orders = await User.findAll({
+            where: {
+                lastManuealOrder: {
+                    [Op.ne]: ''
+                }
+            },
+            limit: 50,
+            order: [['updatedOn', 'desc']]
+        })
+        let result = orders.map(o=> {
+            return {
+                mphone: o.mphone,
+                date: o.updatedOn,
+                order: this.Markdown.render(o.lastManuealOrder || '')
+            }
+        });
+        this.res.send(result)
     }
 
     static SetRoutes(router: express.Router) {
@@ -1502,7 +1535,8 @@ export default class Route extends ApiRouter {
         router.post('/order/:ordernum/setDelivery', Route.BindRequest(Route.prototype.setDeliveryRoute))
         router.post('/order/:ordernum/cancelDelivery', Route.BindRequest(Route.prototype.cancelDeliveryRoute))
         router.post('/order/:ordernum/markAsShipped', Route.BindRequest(Route.prototype.markAsShippedRoute))
-        router.post('/order/createManuel', Route.BindRequest(Route.prototype.getManuelOrder))
+        router.post('/order/manuelorders/create', Route.BindRequest(Route.prototype.getManuelOrder))
+        router.get('/order/manuelorders/list', Route.BindRequest(Route.prototype.listManuelOrders))
 
         
         //router.get("/admin/order/:ordernum", Route.BindRequest(this.prototype.getOrderRoute));

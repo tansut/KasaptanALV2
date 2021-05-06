@@ -112,9 +112,10 @@ class UserLog extends BaseModel<UserLog> {
         allowNull: true
     })
     ip: string;
+   
 
     @Column({
-        allowNull: true
+        type: DataType.TEXT
     })
     url: string;
 

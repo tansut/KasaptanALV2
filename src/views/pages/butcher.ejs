@@ -154,7 +154,7 @@
                   <span class="d-block mb-3">Ücretsiz Sipariş Hattı: 0 850 305 4216</span>
                   <% if ((!controller.logisticsProvider || controller.logisticsPriceSlice.length == 0) && __req.prefAddr) { %>
                   <% } else { %>
-               <a data-tag="true" data-category="user actions" data-action="pratik sipariş click" data-label="<%=butcher.slug%>" onclick="quickOrderApp.open({butchername: '<%=butcher.name%>', 'butcherslug': '<%=butcher.slug%>'})" class="d-none font-weight-bold btn  btn-sm rounded btn-danger mr-2"><i class="czi-icon czi-cart mr-1"></i>Pratik Sipariş Ver</a>
+               <a data-tag="true" data-category="user actions" data-action="pratik sipariş click" data-label="<%=butcher.slug%>" onclick="quickOrderApp.open({butchername: '<%=butcher.name%>', 'butcherslug': '<%=butcher.slug%>'})" class="font-weight-bold btn  btn-sm rounded btn-danger mr-2"><i class="czi-icon czi-cart mr-1"></i>Pratik Sipariş Ver</a>
 
                   <% } %>
 
@@ -283,7 +283,7 @@
          <h6>Sipariş Ver</h6>
         <div class="py-2 d-flex justify-content-center">
           <a data-tag="true" data-category="user actions" data-action="online sipariş click" data-label="<%=butcher.slug%>" class="btn rounded-lg btn-sm btn-success mr-2" href="/<%=butcher.slug%>/siparis">Online</a>
-          <a data-tag="true" data-category="user actions" data-action="pratik sipariş click" data-label="<%=butcher.slug%>" onclick="quickOrderApp.open({butchername: '<%=butcher.name%>', 'butcherslug': '<%=butcher.slug%>'})" class="d-none font-weight-bold btn  btn-sm rounded btn-danger mr-2"><i class="czi-icon czi-cart mr-1"></i>Pratik Sipariş</a>
+          <a data-tag="true" data-category="user actions" data-action="pratik sipariş click" data-label="<%=butcher.slug%>" onclick="quickOrderApp.open({butchername: '<%=butcher.name%>', 'butcherslug': '<%=butcher.slug%>'})" class="font-weight-bold btn  btn-sm rounded btn-danger mr-2"><i class="czi-icon czi-cart mr-1"></i>Pratik Sipariş</a>
           <a data-tag="true" data-category="user actions" data-action="whatsapp sipariş click" data-label="<%=butcher.slug%>" class="btn rounded-lg btn-sm btn-dark" target="_blank" href="https://wa.me/+908503059286?text=<%=butcher.name%> <%=__req.prefAddr.display%> semtinden sipariş vermek istiyorum."><i class="czi_icon czi-message mr-1"></i>Whatsapp</a>
       
         </div>

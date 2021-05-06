@@ -1340,7 +1340,41 @@ class Route extends router_1.ApiRouter {
     }
     getManuelOrder() {
         return __awaiter(this, void 0, void 0, function* () {
+            let user = this.req.user;
+            user.lastManuealOrder = ` 
+            kasap: ${this.req.body.butchername}
+            müşteri: ${this.req.body.custName}
+            tel: ${this.req.body.custPhone}
+            email: ${this.req.body.custEmail}
+            sipariş: ${this.req.body.custOrder}
+            not: ${this.req.body.custNote}
+            adres: ${this.req.body.custAddress}
+            semt: ${JSON.stringify(this.req.body.addr)}
+        `;
+            yield user.save();
+            yield sms_1.Sms.sendMultiple(['5326275151'], `yeni manuel sipariş: www.kasaptanal.com/pages/operator/manuelorders`, false, new sitelog_1.default(this.constructorParams));
             this.res.sendStatus(200);
+        });
+    }
+    listManuelOrders() {
+        return __awaiter(this, void 0, void 0, function* () {
+            let orders = yield user_1.default.findAll({
+                where: {
+                    lastManuealOrder: {
+                        [sequelize_1.Op.ne]: ''
+                    }
+                },
+                limit: 50,
+                order: [['updatedOn', 'desc']]
+            });
+            let result = orders.map(o => {
+                return {
+                    mphone: o.mphone,
+                    date: o.updatedOn,
+                    order: this.Markdown.render(o.lastManuealOrder || '')
+                };
+            });
+            this.res.send(result);
         });
     }
     static SetRoutes(router) {
@@ -1350,7 +1384,8 @@ class Route extends router_1.ApiRouter {
         router.post('/order/:ordernum/setDelivery', Route.BindRequest(Route.prototype.setDeliveryRoute));
         router.post('/order/:ordernum/cancelDelivery', Route.BindRequest(Route.prototype.cancelDeliveryRoute));
         router.post('/order/:ordernum/markAsShipped', Route.BindRequest(Route.prototype.markAsShippedRoute));
-        router.post('/order/createManuel', Route.BindRequest(Route.prototype.getManuelOrder));
+        router.post('/order/manuelorders/create', Route.BindRequest(Route.prototype.getManuelOrder));
+        router.get('/order/manuelorders/list', Route.BindRequest(Route.prototype.listManuelOrders));
         //router.get("/admin/order/:ordernum", Route.BindRequest(this.prototype.getOrderRoute));
     }
 }
@@ -1385,7 +1420,6 @@ __decorate([
     __metadata("design:returntype", Promise)
 ], Route.prototype, "bnbCallbackRoute", null);
 __decorate([
-    common_1.Auth.Anonymous(),
     common_1.Auth.RequireCatcpha(),
     __metadata("design:type", Function),
     __metadata("design:paramtypes", []),

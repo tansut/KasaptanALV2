@@ -422,7 +422,7 @@ window.App.platform = '<%=controller.platform%>'
 
       <% if (!controller.disableQuickOrder) { %>
         var urlParams = new URLSearchParams(window.location.search); 
-        debugger
+        
           if (urlParams.has('quickorder')) {
             window.quickOrderApp.useUrl(urlParams);
             
