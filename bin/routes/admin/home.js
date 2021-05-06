@@ -10,6 +10,7 @@ class Route extends router_1.ViewRouter {
     static SetRoutes(router) {
         router.get("/home", Route.BindToView("pages/admin/home.ejs"));
         router.get("/admin/clearcache", Route.BindRequest(Route.prototype.clearCache));
+        router.get("/admin/manageproduct", Route.BindToView("pages/admin/manageproducts"));
     }
 }
 exports.default = Route;

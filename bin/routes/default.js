@@ -186,7 +186,7 @@ class Route extends router_1.ViewRouter {
         return __awaiter(this, void 0, void 0, function* () {
             let tl = yield temp_loc_1.default.findAll({
                 where: {
-                    il: ['KONYA']
+                    il: ['ISPARTA']
                 }
             });
             for (let i = 0; i < tl.length; i++) {

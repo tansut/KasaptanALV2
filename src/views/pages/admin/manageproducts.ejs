@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="tr-TR" prefix="og: http://ogp.me/ns#">
+
+<head>
+    <% include ./_partial/head %>
+
+</head>
+
+<body>
+    <% include ./_partial/header %>
+        <!-- Page Content -->
+        <div class="container">
+            <h1>Ürünler</h4>
+
+
+
+
+        </div>
+        <div v-cloak v-if="butchers" id="butcherprodapp" class="container">
+            <div class="form-row">
+                <div class="col form-group">
+                    <label>Kasap seçin</label>
+                    <select @change="loadProducts()" v-model="selectedButcher" class="form-control">
+                        <option value="">Son düzenlemeler</option>
+                        <option v-for="(o, i) in butchers" :value="o">{{o.name}}</option>
+                    </select>
+                </div>
+                <div class="col form-group">
+                    <label>Gözden Geçirdiklerim</label>
+                    <select @change="loadProducts()"  v-model="managerApproved" class="form-control">
+                        <option :selected="managerApproved == o" v-for="(o, i) in ['', 'false', 'true']" :value="o">{{o}}</option>
+                    </select>
+                </div>
+                <div class="col form-group">
+                    <label>Filtrele</label>
+                    <select @change="loadProducts()"  v-model="hasButcherNote" class="form-control">
+                        <option :selected="hasButcherNote == o" v-for="(o, i) in [true, false]" :value="o">{{o ? 'Sadece Not Gelenler': 'Hepsi'}}</option>
+                    </select>
+                </div>
+            </div>
+      
+
+            <div>
+                <form class="mb-3"  @submit="submit(p)" method="post" v-for="(p, i) in products" >
+                <div class="card" >
+
+                    <div class="card-body">
+                        <div class="d-flex justify-content-between">
+                            <h5 class="card-title">{{p.productName}}</h5>
+                            <a target="_blank" :href="'/fiyat-al/' + p.butcherSlug + '?productid=' + p.productId">Ürüne Git</a>
+                        </div>
+                        
+                        <div class="form-row">
+                            <div class="col-md-6 form-group">
+                                <label>Kasaptan gelen bilgi</label>
+                                <textarea class="form-control" v-model="p.fromButcherNote"  rows="3"></textarea>
+                            </div>
+        
+                            <div class="col-md-6 form-group">
+                                <label>Müşteriye gösterilen kısa not</label>
+                                <textarea class="form-control" v-model="p.customerNote"  rows="3"></textarea>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label>Müşteriye gösterilen uzun not</label>
+                            <textarea class="form-control" v-model="p.customerLongNote"  rows="3"></textarea>
+                        </div>
+                    <div class="d-flex justify-content-between">
+                        <button  class="btn btn-sm btn-dark" type="submit">Kaydet</button>
+                        <small>{{p.butcherName}}, {{p.updatedOn}}</small>
+                    </div>
+                    </div>
+
+
+                </div>
+            </form>
+            </div>
+
+        </div>
+
+
+        <% include ./_partial/scripts %>
+            <script>
+
+                window.butcherprodapp = new Vue({
+                    el: '#butcherprodapp',
+                    data: {
+                        selectedButcher: null,
+                        hasButcherNote: false,
+                        managerApproved: "false",
+                        butchers: [],
+                        products: []
+                    },
+
+                    mounted: function () {
+                        var self = this;
+
+                        this.getButchers();
+
+
+                    },
+
+                    methods: {
+
+                        submit: function(p) {
+                            var self = this;
+                            event.preventDefault()
+                            App.Backend.post('admin/butcherproducts/save', {
+                                id: p.id,
+                                customerNote: p.customerNote,
+                                customerLongNote: p.customerLongNote
+                            }).then(function (result) {
+                                alert("done")
+                            }).catch(function(err) {
+                                alert(err.message)
+                            })
+                        },
+                       
+                        loadProducts: function () {
+                            var self = this;
+                            App.Backend.post('admin/butcherproducts/list', {
+                                butcher: this.selectedButcher ? this.selectedButcher.id : 0,
+                                hasButcherNote: this.hasButcherNote,
+                                managerApproved: this.managerApproved
+                            }).then(function (result) {
+                                self.products = result;
+                            }).catch(function(err) {
+                                alert(err.message)
+                            })
+                        },
+
+                        getButchers: function () {
+                            var self = this;
+
+                            App.Backend.get('admin/butchers').then(function (result) {
+                                self.butchers = result.data;
+                                self.selectedButcher = 0;
+                            }).catch(function (err) {
+                                alert(err.message)
+                            })
+                        }
+                    }
+                })
+
+                window.App.Ready.then(function () {
+
+                })
+            </script>
+</body>
+
+</html>

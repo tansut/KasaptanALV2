@@ -21,7 +21,6 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const router_1 = require("../../lib/router");
 const butcher_1 = require("../../db/models/butcher");
 const common_1 = require("../../lib/common");
-const sq = require("sequelize");
 const area_1 = require("../../db/models/area");
 const resource_1 = require("../../db/models/resource");
 const helper_1 = require("../../lib/helper");
@@ -284,73 +283,77 @@ class Route extends router_1.ViewRouter {
                 let k = result.subMerchantKey;
             }
             else if (this.req.body.updateprices && this.butcher.priceBasedButcher) {
-                yield butcherproduct_1.default.destroy({
-                    where: {
-                        butcherid: this.butcher.id
-                    }
-                });
-                yield butcherproduct_1.default.sequelize.query(`INSERT INTO ButcherProducts
-            (
-            enabled,
-            unit1price,
-            unit2price,
-            unit3price,
-            unit4price,
-            unit5price,
-            displayOrder,
-            creationDate,
-            updatedOn,
-            butcherid,
-            productid,
-            vitrin,
-            kgPrice,
-            mddesc,
-            unit1enabled,
-            unit2enabled,
-            unit3enabled,
-            unit4enabled,
-            unit5enabled,
-            unit1kgRatio,
-            unit2kgRatio,
-            unit3kgRatio,
-            unit1weight,
-            unit2weight,
-            unit3weight,
-            longdesc,
-            selection)
-            
-            SELECT 
-                ButcherProducts.enabled,
-                ButcherProducts.unit1price,
-                ButcherProducts.unit2price,
-                ButcherProducts.unit3price,
-                ButcherProducts.unit4price,
-                ButcherProducts.unit5price,
-                ButcherProducts.displayOrder,
-                ButcherProducts.creationDate,
-                ButcherProducts.updatedOn,
-                ${this.butcher.id},
-                ButcherProducts.productid,
-                ButcherProducts.vitrin,
-                ButcherProducts.kgPrice,
-                ButcherProducts.mddesc,
-                ButcherProducts.unit1enabled,
-                ButcherProducts.unit2enabled,
-                ButcherProducts.unit3enabled,
-                ButcherProducts.unit4enabled,
-                ButcherProducts.unit5enabled,
-                ButcherProducts.unit1kgRatio,
-                ButcherProducts.unit2kgRatio,
-                ButcherProducts.unit3kgRatio,
-                ButcherProducts.unit1weight,
-                ButcherProducts.unit2weight,
-                ButcherProducts.unit3weight,
-                ButcherProducts.longdesc,
-                ButcherProducts.selection
-            FROM ButcherProducts where butcherid=${this.butcher.priceBasedButcher} and enabled=true                
-            `, {
-                    type: sq.QueryTypes.BULKUPDATE,
-                });
+                yield this.butcher.copyPricesFromMainButcher();
+                //ButcherProduct.copyAllFromPriceButcher()
+                // await ButcherProduct.destroy({
+                //     where: {
+                //         butcherid: this.butcher.id
+                //     }
+                // })
+                // await ButcherProduct.sequelize.query(
+                // `INSERT INTO ButcherProducts
+                // (
+                // enabled,
+                // unit1price,
+                // unit2price,
+                // unit3price,
+                // unit4price,
+                // unit5price,
+                // displayOrder,
+                // creationDate,
+                // updatedOn,
+                // updatedOn,
+                // butcherid,
+                // productid,
+                // vitrin,
+                // kgPrice,
+                // mddesc,
+                // unit1enabled,
+                // unit2enabled,
+                // unit3enabled,
+                // unit4enabled,
+                // unit5enabled,
+                // unit1kgRatio,
+                // unit2kgRatio,
+                // unit3kgRatio,
+                // unit1weight,
+                // unit2weight,
+                // unit3weight,
+                // longdesc,
+                // selection)
+                // SELECT 
+                //     ButcherProducts.enabled,
+                //     ButcherProducts.unit1price,
+                //     ButcherProducts.unit2price,
+                //     ButcherProducts.unit3price,
+                //     ButcherProducts.unit4price,
+                //     ButcherProducts.unit5price,
+                //     ButcherProducts.displayOrder,
+                //     ButcherProducts.creationDate,
+                //     ButcherProducts.updatedOn,
+                //     ${this.butcher.id},
+                //     ButcherProducts.productid,
+                //     ButcherProducts.vitrin,
+                //     ButcherProducts.kgPrice,
+                //     ButcherProducts.mddesc,
+                //     ButcherProducts.unit1enabled,
+                //     ButcherProducts.unit2enabled,
+                //     ButcherProducts.unit3enabled,
+                //     ButcherProducts.unit4enabled,
+                //     ButcherProducts.unit5enabled,
+                //     ButcherProducts.unit1kgRatio,
+                //     ButcherProducts.unit2kgRatio,
+                //     ButcherProducts.unit3kgRatio,
+                //     ButcherProducts.unit1weight,
+                //     ButcherProducts.unit2weight,
+                //     ButcherProducts.unit3weight,
+                //     ButcherProducts.longdesc,
+                //     ButcherProducts.selection
+                // FROM ButcherProducts where butcherid=${this.butcher.priceBasedButcher} and enabled=true                
+                // `,
+                // {
+                //     type: sq.QueryTypes.BULKUPDATE,
+                // });
             }
             else if (this.req.body.save == "true") {
                 this.butcher.slug = this.req.body.butcherslug;

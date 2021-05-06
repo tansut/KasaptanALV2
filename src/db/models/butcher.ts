@@ -597,6 +597,28 @@ class Butcher extends BaseModel<Butcher> {
         return this.location ? (<any>this.location).coordinates[1] : 0
     }
 
+     async copyPricesFromMainButcher() {
+            await ButcherProduct.destroy({
+                where: {
+                    butcherid: this.id
+                }
+            })        
+            let mainPrices = await ButcherProduct.findAll({
+                where: {
+                    butcherid: this.priceBasedButcher
+                },
+                raw: true
+            })
+
+            for(var i = 0; i < mainPrices.length;i++) {
+                let newItem = new ButcherProduct(mainPrices[i]);
+                newItem.id = null;
+                newItem.butcherid = this.id;
+                await newItem.save();
+            }
+
+    }
+
     static async loadButcherWithProducts(slug: string | number, includeDisabled: boolean = false) {
         let where = {}
         if (typeof slug == 'string') where['slug'] = slug;

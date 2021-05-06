@@ -15,6 +15,7 @@ export default class Route extends ViewRouter {
     static SetRoutes(router: express.Router) {
         router.get("/home", Route.BindToView("pages/admin/home.ejs"));
         router.get("/admin/clearcache", Route.BindRequest(Route.prototype.clearCache));
+        router.get("/admin/manageproduct", Route.BindToView("pages/admin/manageproducts"));
     }
 }
 

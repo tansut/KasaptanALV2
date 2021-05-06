@@ -39,6 +39,8 @@ class ButcherProduct extends BaseModel<ButcherProduct> {
     @BelongsTo(() => Brand, "brandid")
     brand: Brand;
 
+    
+
 
     get enabledUnits() {
         let res = [];
@@ -101,6 +103,12 @@ class ButcherProduct extends BaseModel<ButcherProduct> {
             }
         }
     }
+
+    @Column({
+        allowNull: false,
+        defaultValue: false
+    })
+    managerApproved: boolean;
 
     @Column({
         allowNull: true,
@@ -261,6 +269,12 @@ class ButcherProduct extends BaseModel<ButcherProduct> {
         type: DataType.TEXT
     })
     fromButcherDesc: string;       
+
+
+    static copyAllFromPriceButcher() {
+        
+    }
+
     
 }
 

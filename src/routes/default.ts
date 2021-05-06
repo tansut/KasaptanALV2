@@ -221,7 +221,7 @@ export default class Route extends ViewRouter {
     async tempares() {
         let tl = await TempLoc.findAll({
             where: {
-                il: ['KONYA']
+                il: ['ISPARTA']
             }
         })
 

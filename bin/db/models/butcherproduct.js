@@ -74,6 +74,8 @@ let ButcherProduct = class ButcherProduct extends basemodel_1.default {
             };
         }
     }
+    static copyAllFromPriceButcher() {
+    }
 };
 __decorate([
     sequelize_typescript_1.ForeignKey(() => butcher_1.default),
@@ -99,6 +101,13 @@ __decorate([
     sequelize_typescript_1.BelongsTo(() => brand_1.default, "brandid"),
     __metadata("design:type", brand_1.default)
 ], ButcherProduct.prototype, "brand", void 0);
+__decorate([
+    sequelize_typescript_1.Column({
+        allowNull: false,
+        defaultValue: false
+    }),
+    __metadata("design:type", Boolean)
+], ButcherProduct.prototype, "managerApproved", void 0);
 __decorate([
     sequelize_typescript_1.Column({
         allowNull: true,

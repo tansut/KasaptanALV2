@@ -949,6 +949,7 @@ export default class Route extends ApiRouter {
             }),
             enabled: view.enabled,
             price: price,
+            
             butcherProductNote: view.butcherProductNote,
             note: view.fromButcherNote,
             discountType: view.discount,
@@ -1112,6 +1113,7 @@ export default class Route extends ApiRouter {
         newItem.unit3kgRatio = 0;
 
         newItem.kgPrice = 0;
+        newItem.managerApproved = false;
 
         let unitPrice = this.req.body.units.find(u=>!u.id);
         if (unitPrice) {

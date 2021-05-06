@@ -53,7 +53,8 @@
             <strong>Tavuk gibi fiyatı günlük değişen ürünlerde</strong> 1-2 TL fiyat farkı ekleyebilirsiniz.
           </li>
           <li>
-            Aynı gün elinizde olmasa bile <strong>ertesi gün temin edebileceğiniz her ürüne</strong> not bölümünde belirterek fiyat verin.
+            Aynı gün elinizde olmasa bile <strong>ertesi gün temin edebileceğiniz her ürüne</strong> not bölümünde
+            belirterek fiyat verin.
           </li>
           <li>
             <strong>Aşırı yüksek fiyat vermeniz</strong> sıralamada arkalarda olmanıza yol açmaktadır.
@@ -157,12 +158,12 @@
                 <button v-if="hasPrice(p) && p.enabled" v-on:click="openCampaign(p, index)"
                   v-bind:class="{'btn-secondary': !hasCampaign(p) ,'btn-secondary border border-success': hasCampaign(p) }"
                   class="btn btn-sm btn-block">
-                  <i v-if="!hasCampaign(p)"  class="czi-icon czi-loudspeaker mr-1"></i>
+                  <i v-if="!hasCampaign(p)" class="czi-icon czi-loudspeaker mr-1"></i>
                   <i v-else class="czi-icon czi-thumb-up mr-1"></i>
 
                   <span>{{hasCampaign(p) ? 'Aktif - %' + (p.priceDiscount).toString() :'Kampanya Yap'}}</span>
                 </button>
-                
+
               </td>
 
             </tr>
@@ -170,61 +171,64 @@
         </table>
       </div>
 
-      
+
 
       <div class="modal modal-fullscreen-sm" id="campaignmodal" tabindex="-1" role="dialog" data-keyboard="false"
-      aria-hidden="true">
-      <div class="modal-dialog " role="document">
-        <div class="modal-content">
-          <div class="modal-header">
-            <h5 class="modal-title">{{edit && edit.name}}</h5>
-            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-              <span aria-hidden="true">&times;</span>
-            </button>
-          </div>
-          <div class="modal-body p-3">
-            <form v-if="edit" @submit="checkCampaignForm" method="post">
-              <div class="bg-secondary p-3 border font-size-sm">
-                <h5 class="h6">KasaptanAl ile öne çıkın</h5>
-                <p>
-                  Basit bir indirim ile yeni müşteriler kazanın. 
+        aria-hidden="true">
+        <div class="modal-dialog " role="document">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h5 class="modal-title">{{edit && edit.name}}</h5>
+              <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+              </button>
+            </div>
+            <div class="modal-body p-3">
+              <form v-if="edit" @submit="checkCampaignForm" method="post">
+                <div class="bg-secondary p-3 border font-size-sm">
+                  <h5 class="h6">KasaptanAl ile öne çıkın</h5>
+                  <p>
+                    Basit bir indirim ile yeni müşteriler kazanın.
+                  </p>
+                  <p>
+                    Kapmpanyalı ürününüz KasaptanAl'da <strong>indirim işaretiyle</strong> görünsün, KasaptanAl
+                    profilinizde <strong>kampanyalı ürünler</strong> bölümü hemen açılsın.
+                  </p>
+                </div>
+                <p class="text-primary" v-if="errors.length">
+                  <b>Lütfen aşağıdaki hataları düzeltin:</b>
+                <ul>
+                  <li v-for="error in errors">{{ error }}</li>
+                </ul>
                 </p>
-                <p>
-                  Kapmpanyalı ürününüz KasaptanAl'da  <strong>indirim işaretiyle</strong> görünsün, KasaptanAl profilinizde  <strong>kampanyalı ürünler</strong> bölümü hemen açılsın. 
-                </p>
-              </div>
-              <p class="text-primary" v-if="errors.length">
-                <b>Lütfen aşağıdaki hataları düzeltin:</b>
-              <ul>
-                <li v-for="error in errors">{{ error }}</li>
-              </ul>
-              </p>
 
-              <div>
+                <div>
 
-                <div class="form-group ">
-                  <label for="inputState">Kampanya durumu</label>
-                  <select v-model="edit.discountType" required class="form-control">
-                    <option disabled value="">Lütfen seçim yapın</option>
-                    <option value="none" :selected="edit.discountType == 'none'">Kampanya Kapalı</option>
-                    <option value="discountAsPercent" :selected="edit.discountType == 'discountAsPercent'">Kampanya Aktif</option>
-                    
-                  </select>
+                  <div class="form-group ">
+                    <label for="inputState">Kampanya durumu</label>
+                    <select v-model="edit.discountType" required class="form-control">
+                      <option disabled value="">Lütfen seçim yapın</option>
+                      <option value="none" :selected="edit.discountType == 'none'">Kampanya Kapalı</option>
+                      <option value="discountAsPercent" :selected="edit.discountType == 'discountAsPercent'">Kampanya
+                        Aktif</option>
+
+                    </select>
+                  </div>
+
+                  <div class="form-group">
+                    <label>İndirim yüzdesi belirleyin</label>
+                    <input v-model="edit.priceDiscount" min="2" max="25" required type="number" class="form-control"
+                      placeholder="yüzde kaç indirim yapmak istersiniz">
+                    <small></small>
+                  </div>
+
                 </div>
 
-                <div class="form-group">
-                  <label>İndirim yüzdesi belirleyin</label>
-                  <input v-model="edit.priceDiscount" min="2" max="25" required type="number" class="form-control"  placeholder="yüzde kaç indirim yapmak istersiniz">
-                  <small></small>
-                </div>
-              
-              </div>
-      
-              <button class="btn btn-primary">Değişiklikleri Kaydet</button>
-            </form>
+                <button class="btn btn-primary">Değişiklikleri Kaydet</button>
+              </form>
+            </div>
           </div>
         </div>
-      </div>
       </div>
 
       <div class="modal modal-fullscreen-sm" id="pricemodal" tabindex="-1" role="dialog" data-keyboard="false"
@@ -238,9 +242,9 @@
               </button>
             </div>
             <div class="modal-body p-0">
-              <div v-html="edit.butcherProductNote" class="font-size-sm px-2 pt-2 border-bottom bg-secondary  text-dark" v-if="edit && edit.butcherProductNote"
-                class="text-muted">
-                
+              <div v-html="edit.butcherProductNote" class="font-size-sm px-2 pt-2 border-bottom bg-secondary  text-dark"
+                v-if="edit && edit.butcherProductNote" class="text-muted">
+
               </div>
 
               <div class="p-2">
@@ -255,21 +259,26 @@
                 <div v-if="edit">
                   <ul class="nav nav-tabs  mb-3">
                     <li v-for="(u, i) in edit.units" class="nav-item font-size-sm">
-                      <a @click="editUnitVal=u; editUnitIndex=i" :class="{'active': editUnit == u}" class="nav-link">{{u.id == 0 ? 'Birim': u.title}}</a>
+                      <a @click="editUnitVal=u; editUnitIndex=i" :class="{'active': editUnit == u}"
+                        class="nav-link">{{u.id == 0 ? 'Birim': u.title}}</a>
                     </li>
                   </ul>
-                  <div  v-if="editUnit">
-                    <div v-html="editUnit.butcherNote" v-if="editUnit.butcherNote" class="mb-3 mt-n3 p-2 bg-secondary font-size-sm">
-                      
+                  <div v-if="editUnit">
+                    <div v-html="editUnit.butcherNote" v-if="editUnit.butcherNote"
+                      class="mb-3 mt-n3 p-2 bg-secondary font-size-sm">
+
                     </div>
                     <div v-if="editUnit.id" class="mb-3 custom-control custom-checkbox">
-                      <input :disabled="editUnit.butcherUnitSelection == 'forced'" :id="editUnit.unit + 'enabled'" type="checkbox" v-model="editUnit.enabled"
-                        class="custom-control-input">
-                      <label v-if="editUnit.id" :for="editUnit.unit + 'enabled'" class="custom-control-label">Müşterinize {{editUnit.title}} ile
-                        satış yapmak için işaretleyin. {{editUnit.butcherUnitSelection == 'forced' ? '[Zorunlu]':''}}</label>
-                      <label v-else :for="editUnit.unit + 'enabled'" class="custom-control-label">{{editUnit.title}} satış fiyatınız:</label>
+                      <input :disabled="editUnit.butcherUnitSelection == 'forced'" :id="editUnit.unit + 'enabled'"
+                        type="checkbox" v-model="editUnit.enabled" class="custom-control-input">
+                      <label v-if="editUnit.id" :for="editUnit.unit + 'enabled'"
+                        class="custom-control-label">Müşterinize {{editUnit.title}} ile
+                        satış yapmak için işaretleyin. {{editUnit.butcherUnitSelection == 'forced' ?
+                        '[Zorunlu]':''}}</label>
+                      <label v-else :for="editUnit.unit + 'enabled'" class="custom-control-label">{{editUnit.title}}
+                        satış fiyatınız:</label>
                     </div>
-                  
+
 
 
                     <div v-if="editUnit.enabled">
@@ -278,21 +287,26 @@
                         class="custom-control custom-checkbox mb-1">
                         <input required :id="editUnit.unit + 'customWeightcb'" v-model="editUnit.customWeight"
                           type="checkbox" class="custom-control-input">
-                        <label :for="editUnit.unit + 'customWeightcb'" class="custom-control-label">1 {{editUnit.title}} sistemde ortalama <strong>
-                          {{editOrj.units[editUnitIndex].kgRatio}} {{edit.kgTitle}}</strong> içerecek şekilde tanımlı. Size özel değiştirmek isterseniz işaretleyin.</label>
+                        <label :for="editUnit.unit + 'customWeightcb'" class="custom-control-label">1 {{editUnit.title}}
+                          sistemde ortalama <strong>
+                            {{editOrj.units[editUnitIndex].kgRatio}} {{edit.kgTitle}}</strong> içerecek şekilde tanımlı.
+                          Size özel değiştirmek isterseniz işaretleyin.</label>
                         <!-- <label :for="editUnit.unit + 'customWeightcb'" class="custom-control-label" v-else>
                           {{editUnit.title}} miktarını size özel değiştirmek isterseniz işaretleyin.
                         </label> -->
                       </div>
                       <div class="font-size-sm text-muted" v-else>
                         <p v-if="(editUnit.id) && (editUnit.kgRatio != 1 && editUnit.kgRatio != 0)">
-                          1 {{editUnit.title}} ortalama <strong>{{editOrj.units[editUnitIndex].kgRatio}} {{edit.kgTitle}}</strong> içerecek şekilde tanımlıdır.</span>
+                          1 {{editUnit.title}} ortalama <strong>{{editOrj.units[editUnitIndex].kgRatio}}
+                            {{edit.kgTitle}}</strong> içerecek şekilde tanımlıdır.</span>
                         </p>
                       </div>
 
-                      <div class="mb-3" v-if="editUnit.customWeight && canEdit(editUnit,'weight', true) && (editUnit.unit != 'kg')">
-                        <label for="">1 {{editUnit.title}} <strong>sizde</strong> ortalama kaç {{edit.kgTitle}} ?</label>
-                        <input  v-model="editUnit.kgRatio" type="number" class="form-control price-control">
+                      <div class="mb-3"
+                        v-if="editUnit.customWeight && canEdit(editUnit,'weight', true) && (editUnit.unit != 'kg')">
+                        <label for="">1 {{editUnit.title}} <strong>sizde</strong> ortalama kaç {{edit.kgTitle}}
+                          ?</label>
+                        <input v-model="editUnit.kgRatio" type="number" class="form-control price-control">
                       </div>
 
                       <div v-if=" (editUnit.id) && (editUnit.unit != 'kg') && (canEdit(editUnit,'price'))"
@@ -300,7 +314,9 @@
                         <input required :id="editUnit.unit + 'salemanualcb'" v-model="editUnit.customPrice"
                           type="checkbox" class="custom-control-input">
                         <label :for="editUnit.unit + 'salemanualcb'" class="custom-control-label">{{editUnit.title}}
-                          fiyatı <strong>{{editOrj.units[editUnitIndex].kgRatio}} x {{edit.kgTitle}} fiyatı</strong> olacak şekilde otomatik hesaplanır. <strong>Ayrı fiyat vermek</strong> için işaretleyin.</label>
+                          fiyatı <strong>{{editOrj.units[editUnitIndex].kgRatio}} x {{edit.kgTitle}} fiyatı</strong>
+                          olacak şekilde otomatik hesaplanır. <strong>Ayrı fiyat vermek</strong> için
+                          işaretleyin.</label>
                       </div>
 
 
@@ -308,7 +324,7 @@
                       <div class="form-group" v-if="canEdit(editUnit,'price', true)">
                         <div class="d-block"><strong style="text-transform: uppercase;">{{editUnit.title}}</strong>
                           satış fiyatınız</div>
-                        <input  required v-model="editUnit.price" type="number" class="form-control price-control"
+                        <input required v-model="editUnit.price" type="number" class="form-control price-control"
                           placeholder="tezgah satış fiyatınız">
                       </div>
 
@@ -363,6 +379,18 @@
 
               App.Backend.get('product/<%=butcher.slug%>/prePrices').then(function (result) {
                 self.list = result.data;
+                var urlParams = new URLSearchParams(window.location.search);
+
+                if (urlParams.has('productid')) {
+                  let index = 0, pid = parseInt(urlParams.get('productid'));
+                  let p = self.list.find(function(item) {
+                    if (item.id == pid) {
+                      return item;
+                    } else index++
+                  })
+                  self.canGo=1;
+                  self.openDialog(p, index)
+                }
               })
             },
 
@@ -404,33 +432,33 @@
 
             methods: {
 
-    
+
 
               checkCampaignForm: function (e) {
                 this.errors = [];
-                
+
                 e.preventDefault();
                 var self = this;
                 App.Backend.post('product/<%=butcher.slug%>/campaign', {
                   id: this.edit.id,
                   discountType: this.edit.discountType,
                   priceDiscount: this.edit.priceDiscount
-                }, null, true).then(function(result) {
+                }, null, true).then(function (result) {
                   self.updateItem(self.edit, result);
-                  $('#campaignmodal').modal('hide'); 
-                }).catch(function(err) {
+                  $('#campaignmodal').modal('hide');
+                }).catch(function (err) {
                   App.HandleError(err)
                 })
               },
 
               openCampaign(p, index) {
                 this.editOrj = p;
-                this.edit = JSON.parse(JSON.stringify(p));                
+                this.edit = JSON.parse(JSON.stringify(p));
                 this.editIndex = index;
                 this.editUnitVal = null;
                 this.edit.discountType = 'discountAsPercent';
                 this.edit.priceDiscount = this.edit.priceDiscount || 4;
-                $('#campaignmodal').modal('show');                
+                $('#campaignmodal').modal('show');
               },
 
               hasCampaign(p) {
@@ -440,14 +468,14 @@
               },
 
               canEdit(unit, prop, checkCustom) {
-                
+
                 if (prop == 'price' && unit.id == 0) return true;
                 if (unit.butcherUnitEdit == 'none') return false;
                 var mustMeet = unit.butcherUnitEdit == prop | unit.butcherUnitEdit == "all";
                 if (checkCustom && mustMeet) {
                   return ((prop == "price" && unit.customPrice) || (prop == "weight" && unit.customWeight));
                 } else return mustMeet
-                
+
               },
 
               forceRerender() {
@@ -493,22 +521,22 @@
                 return f && (enabled ? (f.enabled ? f : null) : f);
               },
 
-              updateItem: function(p, result) {
+              updateItem: function (p, result) {
                 var f = this.list.find(function (l) {
-                    return l.id == p.id
-                  })
+                  return l.id == p.id
+                })
 
-                  Object.assign(f, result);
-                  this.forceRerender()
-                  $('#' + p.slug + 'row').fadeOut(500).fadeIn(500);
+                Object.assign(f, result);
+                this.forceRerender()
+                $('#' + p.slug + 'row').fadeOut(500).fadeIn(500);
               },
 
-              toogleEnabled: function(p) {
+              toogleEnabled: function (p) {
                 p.enabled = !p.enabled;
                 this.saveDialog(p, false);
               },
 
-              saveDialog: function(p, doEnable) {
+              saveDialog: function (p, doEnable) {
 
                 var valid = true;
 
@@ -533,7 +561,7 @@
                   alert(errors.join(String.fromCharCode(13)));
                   return
                 }
-              
+
 
                 var self = this;
 
@@ -547,7 +575,7 @@
                       customPrice: u.customPrice,
                       price: (u.price),
                       customWeight: u.customWeight,
-                      kgRatio: u.kgRatio ? (u.kgRatio): 0
+                      kgRatio: u.kgRatio ? (u.kgRatio) : 0
                     }
                   }),
                   note: p.note,
@@ -558,7 +586,7 @@
 
 
                   $('#pricemodal').modal('hide');
-                  
+
 
                 }).catch(function (err) {
                   App.HandleError(err)
@@ -577,7 +605,7 @@
           })
         </script>
 
-        
+
 
 </body>
 

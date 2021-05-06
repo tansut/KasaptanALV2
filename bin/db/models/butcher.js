@@ -100,6 +100,27 @@ let Butcher = Butcher_1 = class Butcher extends basemodel_1.default {
     get lng() {
         return this.location ? this.location.coordinates[1] : 0;
     }
+    copyPricesFromMainButcher() {
+        return __awaiter(this, void 0, void 0, function* () {
+            yield butcherproduct_1.default.destroy({
+                where: {
+                    butcherid: this.id
+                }
+            });
+            let mainPrices = yield butcherproduct_1.default.findAll({
+                where: {
+                    butcherid: this.priceBasedButcher
+                },
+                raw: true
+            });
+            for (var i = 0; i < mainPrices.length; i++) {
+                let newItem = new butcherproduct_1.default(mainPrices[i]);
+                newItem.id = null;
+                newItem.butcherid = this.id;
+                yield newItem.save();
+            }
+        });
+    }
     static loadButcherWithProducts(slug, includeDisabled = false) {
         return __awaiter(this, void 0, void 0, function* () {
             let where = {};

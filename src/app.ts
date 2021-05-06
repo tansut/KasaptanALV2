@@ -12,6 +12,7 @@ import butcherPageRoutes from './routes/butcher/index';
 import operatorPageRoutes from './routes/operator/index';
 import apiRoutes from './routes/api';
 import butcherApiRoutes from './routes/api/butcherapirouter';
+import adminApiRoutes from './routes/api/adminapirouter';
 import userApiRoutes from './routes/api/userapirouter';
 import db from "./db/context";
 import User from './db/models/user';
@@ -72,6 +73,7 @@ class KasaptanAlApp {
     app: express.Application;
     apiRouter: express.Router;
     butcherApiRouter: express.Router;
+    adminApiRouter: express.Router;
     userApiRouter: express.Router;
     viewsRouter: express.Router;
     userRouter: express.Router;
@@ -186,6 +188,7 @@ class KasaptanAlApp {
         this.apiRouter = express.Router();
         this.adminPagesRouter = express.Router();
         this.butcherApiRouter = express.Router();
+        this.adminApiRouter = express.Router();
         this.userApiRouter = express.Router();
 
         this.userRouter = express.Router();
@@ -262,6 +265,12 @@ class KasaptanAlApp {
             else res.redirect('/login?r=' + req.originalUrl)
         }, this.butcherApiRouter);
 
+        this.app.use('/api/v1/admin', (req: AppRequest, res, next) => {
+            if (req.user && (req.user.hasRole('admin')))
+                next();
+            else res.redirect('/login?r=' + req.originalUrl)
+        }, this.adminApiRouter);
+
         this.app.use('/api/v1/user', (req: AppRequest, res, next) => {
             if (req.user)
                 next();
@@ -293,6 +302,7 @@ class KasaptanAlApp {
 
         this.app.use("/", this.viewsRouter);
         apiRoutes.use(this.apiRouter);
+        adminApiRoutes.use(this.adminApiRouter);
         butcherApiRoutes.use(this.butcherApiRouter);
         userApiRoutes.use(this.userApiRouter);
         adminPageRoutes.use(this.adminPagesRouter);

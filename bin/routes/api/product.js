@@ -966,6 +966,7 @@ class Route extends router_1.ApiRouter {
             newItem.unit2kgRatio = 0;
             newItem.unit3kgRatio = 0;
             newItem.kgPrice = 0;
+            newItem.managerApproved = false;
             let unitPrice = this.req.body.units.find(u => !u.id);
             if (unitPrice) {
                 let other = this.req.body.units.find(u => u.id && u.unit == unitPrice.unit);
