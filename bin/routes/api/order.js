@@ -1352,7 +1352,7 @@ class Route extends router_1.ApiRouter {
             semt: ${JSON.stringify(this.req.body.addr)}
         `;
             yield user.save();
-            yield sms_1.Sms.sendMultiple(['5326275151'], `yeni manuel sipariş: www.kasaptanal.com/pages/operator/manuelorders`, false, new sitelog_1.default(this.constructorParams));
+            yield sms_1.Sms.sendMultiple(['5326274151', '5531431988'], `yeni manuel sipariş: www.kasaptanal.com/pages/operator/manuelorders`, false, new sitelog_1.default(this.constructorParams));
             this.res.sendStatus(200);
         });
     }

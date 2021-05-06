@@ -1503,7 +1503,7 @@ export default class Route extends ApiRouter {
             semt: ${JSON.stringify(this.req.body.addr)}
         `
         await user.save();
-        await Sms.sendMultiple(['5326275151'], `yeni manuel sipariş: www.kasaptanal.com/pages/operator/manuelorders`, false, new SiteLogRoute(this.constructorParams))
+        await Sms.sendMultiple(['5326274151', '5531431988'], `yeni manuel sipariş: www.kasaptanal.com/pages/operator/manuelorders`, false, new SiteLogRoute(this.constructorParams))
         this.res.sendStatus(200);
     }
 
