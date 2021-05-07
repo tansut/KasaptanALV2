@@ -1,0 +1,271 @@
+<div class="modal fade" id="select-address-modal">
+    <div class="modal-dialog  modal-dialog-scrollable" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title">Bölge Belirleme</h4>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">×</span>
+                </button>
+            </div>
+            <div class="modal-body p-0">
+                <div class="p-2 text-muted font-size-sm bg-secondary text-center font-weight-bold">
+                    Adresizi birden çok bölge içerisinde bulduk. Lütfen önce doğru bölgeyi seçin, sonrasında açacağımız
+                    harita üzerinden tam adresinizi alacağız.
+                </div>
+                <div id="addresslist">
+                    <div if="list && list.length > 0" v-for="(addr, index) in list" class="border mb-2">
+                        <div id="approve-loc" class="text-center bg-secondary">
+                            <a class="d-block mb-2" @click="setloc(addr)">
+                                <img class=" rounded"
+                                    :src="'https://maps.googleapis.com/maps/api/staticmap?center=' + addr.location.coordinates[0] +'+'+addr.location.coordinates[1] + '&zoom=18&scale=1&size=600x300&maptype=roadmap&key=AIzaSyBFqn2GNAhwbJnpga-3S3xQGBc0EcdAgH8&format=png&visual_refresh=true&markers=size:mid%7Ccolor:0xff0000%7Clabel:M%7C' + addr.location.coordinates[0] + '+' + addr.location.coordinates[1]">
+                            </a>
+                            <button @click="setloc(addr)" type="button" class="btn btn-dark btn-sm">Bu
+                                Bölgedeyim</button>
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+</div>
+
+<div class="modal fade" id="set-address-modal">
+    <div class="modal-dialog " role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title">Adres Belirleme</h4>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">×</span>
+                </button>
+            </div>
+            <div class="modal-body p-0">
+                <div class="h-100 d-flex flex-column">
+                    <div id="mapdesc"
+                        class="p-2 mb-2 text-muted font-size-sm bg-secondary text-center font-weight-bold">
+                        <p class="mb-1">
+                            Haritayı sürükleyerek tam teslimat konumunu belirleyin.
+                        </p>
+                        <div>
+                            <button type="button"
+                                onclick="if (confirm('Belirttiğiniz konumun doğru olduğuna emin misiniz?')) App.latlngApp.select()"
+                                class="btn btn-sm btn-primary">Aşağıdaki Konuma
+                                Gönderin</button>
+
+                        </div>
+
+                    </div>
+
+                    <div class="justify-content-center bg-blue flex-grow-1">
+
+                        <div class="w-100" id="map"></div>
+
+                    </div>
+
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+</div>
+
+
+<script>
+
+
+
+
+    $('#set-address-modal').on('show.bs.modal', function () {
+        h = window.innerHeight * 0.80;
+        $(this).find('.modal-body').css({
+            height: h.toString() + 'px'
+        });
+        setTimeout(function () {
+            $('#map').css({
+                height: (h - $('#mapdesc').height()).toString() + 'px'
+            })
+        }, 1000)
+    });
+
+    var addresslist = new Vue({
+        el: '#addresslist',
+        data: { 
+            list: [], 
+            selected: null, 
+            _done: null, 
+            _reject: null, 
+            _setHandler: false
+        },
+        methods: {
+            setloc(geo) {
+                this.selected = geo;
+                this._reject = null;
+                $('#select-address-modal').modal('hide');
+                this._done && this._done({
+                    lat: geo.location.coordinates[0], lng: geo.location.coordinates[1]
+                })
+            },
+
+            show: function (list) {
+                this.list = list;
+                $('#select-address-modal').modal();
+                if (!this._setHandler) {
+                    $('#select-address-modal').on('hidden.bs.modal', function () {
+                    this._reject && this._reject();
+                }.bind(this));
+                this._setHandler = true;
+                }
+                return new App.Promise(function (resolve, reject) {
+                    this._done = resolve;
+                    this._reject = reject;
+                }.bind(this));
+            }
+
+        }
+    })
+
+
+    App.latlngApp = {
+
+        _map: null,
+        _marker: null,
+        _infoWindow: null,
+        _clat: 0,
+        _clng: 0,
+        _done: null,
+        _reject: null,
+
+
+
+        select: function () {
+            this._reject = null;
+            $('#set-address-modal').modal('hide');
+            this._done && this._done({
+                lat: this._clat,
+                lng: this._clng
+            })
+        },
+
+        handleLocationError: function (browserHasGeolocation, infoWindow, pos) {
+            infoWindow.setPosition(pos);
+            infoWindow.setContent(
+                browserHasGeolocation
+                    ? "Komum alınamadı."
+                    : "Desteklenmiyor"
+            );
+            infoWindow.open(map);
+        },
+
+        initWithAddress(adr) {
+            return App.Backend.post('shopcard/geocode', adr).then(function (results) {
+                if (results.length > 1) {
+                    return addresslist.show(results).then(function (val) {
+                        return App.latlngApp.init(val.lat, val.lng)
+                    });
+                } else if (results.length == 1) {
+                    return App.latlngApp.init(results[0].location.coordinates[0], results[0].location.coordinates[1])
+                } else {
+                    return Promise.reject();
+                }
+            }).catch(function (err) {
+                App.HandleError(err)
+            });
+        },
+
+        init: function (lat, lng) {
+
+            this._clat = lat;
+            this._clng = lng;
+            var self = this;
+
+
+
+
+            if (!this._map) {
+                $('#set-address-modal').on('hidden.bs.modal', function () {
+                    this._reject && this._reject();
+                }.bind(this));
+
+                this._map = new google.maps.Map(document.getElementById("map"), {
+                    zoom: 18
+                });
+
+                this._map.addListener("center_changed", function (lat, lng) {
+                    var loc = self._map.getCenter();
+                    self._clat = loc.lat();
+                    self._clng = loc.lng();
+                    self._marker && self._marker.setPosition(loc);
+                });
+
+                this._marker = new google.maps.Marker({
+                    position: {
+                        lat: lat,
+                        lng: lng
+                    },
+                    map: this._map,
+                    title: "Lokasyonum"
+                });
+
+                this._infowindow = new google.maps.InfoWindow({
+                    content: "Teslimat Konumu"
+                });
+
+                var locationButton = document.createElement("button");
+                locationButton.textContent = "MEVCUT KONUMUM";
+                locationButton.classList.add("custom-map-control-button");
+                this._map.controls[google.maps.ControlPosition.TOP_CENTER].push(locationButton);
+                var self = this;
+                locationButton.addEventListener("click", function () {
+                    locationButton.textContent = 'Alınıyor...'
+                    if (navigator.geolocation) {
+                        navigator.geolocation.getCurrentPosition(
+                            (position) => {
+                                const pos = {
+                                    lat: position.coords.latitude,
+                                    lng: position.coords.longitude,
+                                };
+                                self._infowindow.setPosition(pos);
+                                self._map.setCenter(pos);
+                                locationButton.textContent = "MEVCUT KONUMUM";
+                            },
+                            function () {
+                                locationButton.textContent = "MEVCUT KONUMUM";
+                                self.handleLocationError(true, self._infowindow, self._map.getCenter());
+                            }
+                        );
+                    } else {
+                        locationButton.textContent = "MEVCUT KONUMUM";
+                        self.handleLocationError(false, self._infowindo, self._map.getCenter());
+                    }
+                });
+
+
+            }
+            this._map.setCenter(new google.maps.LatLng(this._clat, this._clng))
+            this._marker.setPosition(new google.maps.LatLng(this._clat, this._clng))
+
+
+            $('#set-address-modal').modal({
+                backdrop: 'static',
+                keyboard: false
+            });
+
+            return new App.Promise(function (resolve, reject) {
+                this._done = resolve;
+                this._reject = reject;
+            }.bind(this));
+        }
+    }
+
+
+
+
+</script>
+
+<script async defer
+    src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBFqn2GNAhwbJnpga-3S3xQGBc0EcdAgH8&language=tr&region=TR"
+    type="text/javascript"></script>

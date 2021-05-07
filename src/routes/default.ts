@@ -40,7 +40,7 @@ export default class Route extends ViewRouter {
     }
 
 
-    filterProductsByCategory(category: Category, limit= 8) {
+    filterProductsByCategory(category: Category, limit = 8) {
         let result: ProductCacheItem[] = []
         let prodSlugs = this.req.__categoryProducts[category.slug];
         if (prodSlugs) {
@@ -55,8 +55,8 @@ export default class Route extends ViewRouter {
 
     @Auth.Anonymous()
     async kasapViewRoute() {
-         this.foods = await new ProductsApi(this.constructorParams).getFoodResources(null, 10);
- 
+        this.foods = await new ProductsApi(this.constructorParams).getFoodResources(null, 10);
+
         await this.sendView("pages/content.kasap-basvuru.ejs", this.viewData({
 
         }))
@@ -98,7 +98,7 @@ export default class Route extends ViewRouter {
         this.blogItems = await this.getBlogItems();
         //this.stats = await SiteStats.get();
 
-        
+
         this.appUI.tabIndex = 0;
         await this.createUserLog();
         this.res.render("pages/default.ejs", this.viewData({
@@ -118,7 +118,7 @@ export default class Route extends ViewRouter {
         this.renderView('pages/kasap-basvuru.ejs');
     }
 
-    
+
 
     @Auth.Anonymous()
     async butcherInfo() {
@@ -129,21 +129,23 @@ export default class Route extends ViewRouter {
     async setUserAddr() {
         let area = await Area.getBySlug(this.req.params.slug);
         if (!area) return this.next();
-        await this.req.helper.setPreferredAddressByArea(area, true);
+        await this.req.helper.setPreferredAddressByArea(area, true, (this.req.query.lat && this.req.query.lat != 'undefined')  ? {
+            type: 'Point',
+            coordinates: [parseFloat(this.req.query.lat as string),parseFloat(this.req.query.lat as string)]
+        }: null);
         
-        //this.res.send('ok')
-                 if (this.req.query.r)
-             this.res.redirect(this.req.query.r as string);
-         else this.res.redirect('/')
+        if (this.req.query.r)
+            this.res.redirect(this.req.query.r as string);
+        else this.res.redirect('/')
     }
 
     async tempprods() {
 
         let prods = await Product.findAll({
-       
+
         });
 
-        for (let i = 0; i < prods.length;i ++) {
+        for (let i = 0; i < prods.length; i++) {
             let prod = prods[i];
 
             let pbu = prod.priceBasedUnitId;
@@ -155,7 +157,7 @@ export default class Route extends ViewRouter {
             }
 
             if (availIds.length == 1 && prod[`${availIds[0]}ButcherUnitSelection`] != 'forced') {
-                console.log(`${prod.name} için tek unit var ancak zorunlu tutulmamış` )
+                console.log(`${prod.name} için tek unit var ancak zorunlu tutulmamış`)
                 prod[`${availIds[0]}ButcherUnitSelection`] = 'forced';
                 await prod.save();
             }
@@ -166,43 +168,43 @@ export default class Route extends ViewRouter {
 
         let bps = await ButcherProduct.findAll({
             include: [
-                {model: Product},
-                {model: Butcher}
+                { model: Product },
+                { model: Butcher }
             ]
         });
-        for (let i = 0; i < bps.length;i ++) {
+        for (let i = 0; i < bps.length; i++) {
             let bp = bps[i];
-            for (let u=1;u<4;u++) {
+            for (let u = 1; u < 4; u++) {
                 let unit = `unit${u}`;
-                
-                if (bp.enabled && (bp.kgPrice > 0  || bp[`${unit}price`] > 0) 
-                  && bp[`${unit}enabled`] && !bp.product[`${unit}`]) {
+
+                if (bp.enabled && (bp.kgPrice > 0 || bp[`${unit}price`] > 0)
+                    && bp[`${unit}enabled`] && !bp.product[`${unit}`]) {
                     bp[`${unit}enabled`] = false;
-                    console.log(`${bp.butcher.name}-${bp.product.name}-${unit} null olduğu için disable edildi` )
+                    console.log(`${bp.butcher.name}-${bp.product.name}-${unit} null olduğu için disable edildi`)
                 }
 
 
-                
+
 
 
             }
 
             if (bp.enabled && bp.enabledUnits.length == 0) {
                 bp.enabled = false;
-                console.log(`${bp.butcher.name}-${bp.product.name} hiçbir unit seçili olmadığı için için disable edildi` )
+                console.log(`${bp.butcher.name}-${bp.product.name} hiçbir unit seçili olmadığı için için disable edildi`)
 
             }
 
- 
+
             let availIds = bp.product.availableUnitIds;
 
             if (bp.enabled) {
                 let exist = false;
-                availIds.forEach(a=> {
+                availIds.forEach(a => {
                     if (bp[`${a}enabled`]) exist = true;
                 })
                 if (!exist) {
-                    console.log(`${bp.butcher.name}-${bp.product.name} ürünü satışta ancak hiçbir unit seçili değil` );
+                    console.log(`${bp.butcher.name}-${bp.product.name} ürünü satışta ancak hiçbir unit seçili değil`);
                 }
             }
 
@@ -225,12 +227,12 @@ export default class Route extends ViewRouter {
             }
         })
 
-        for(let i = 0; i < tl.length;i++) {
+        for (let i = 0; i < tl.length; i++) {
             let t = tl[i];
             t.semt = t.semt.replace("ERYAMANEVLERİ", "ERYAMAN")
             t.semt = t.semt.replace("HASKÖY S.EVLERİ", "HASKÖY SUBAYEVLERİ")
 
-            
+
 
             let slug = Helper.slugify(`${t.il}-${t.ilce}-${t.semt}`);
             let area = await Area.findOne({
@@ -256,31 +258,31 @@ export default class Route extends ViewRouter {
                 try {
                     await area.save();
                     console.log(area.slug + ' eklendi');
-                } catch(err) {
+                } catch (err) {
                     console.log(err.message);
                     console.log(area.slug + ' hata');
 
-                }                
-                
-            } 
-                let na: Area = new Area();
-                na.name = Helper.capitlize(t.mahalle.replace(" MAH", ' Mahallesi'));
-                na.slug = Helper.slugify(`${area.slug}-${t.mahalle.replace(" MAH", '')}`);
-                na.parentid = area.id;
-                na.lowerName = Helper.toLower(na.name);
-                na.level = 4;
-                na.status = 'generic';
-                try {
-                    await na.save();
-                } catch(err) {
-                    console.log(na.slug + ' mevcut')
                 }
-               
-            
+
+            }
+            let na: Area = new Area();
+            na.name = Helper.capitlize(t.mahalle.replace(" MAH", ' Mahallesi'));
+            na.slug = Helper.slugify(`${area.slug}-${t.mahalle.replace(" MAH", '')}`);
+            na.parentid = area.id;
+            na.lowerName = Helper.toLower(na.name);
+            na.level = 4;
+            na.status = 'generic';
+            try {
+                await na.save();
+            } catch (err) {
+                console.log(na.slug + ' mevcut')
+            }
+
+
 
 
         }
-        
+
         this.res.send('OK')
     }
 
@@ -290,7 +292,7 @@ export default class Route extends ViewRouter {
         //     router.get("/", Route.BindToView("pages/offline.ejs"))
         // }
         // else {
-            
+
         // }
         router.get("/", Route.BindRequest(this.prototype.defaultRoute))
         router.get("/temparea", Route.BindRequest(this.prototype.tempares))
@@ -313,4 +315,4 @@ export default class Route extends ViewRouter {
         router.get("/kasap-basvuru/:butcher?", Route.BindRequest(this.prototype.butcherApply));
         router.get("/kasap-bilgi-giris/:butcher?", Route.BindRequest(this.prototype.butcherInfo));
     }
-} 
+}

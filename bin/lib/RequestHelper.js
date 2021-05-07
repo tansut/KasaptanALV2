@@ -57,7 +57,7 @@ class RequestHelper {
     getResourcesOfType(type) {
         return this.req.__resources[type] || [];
     }
-    setPreferredAddressByArea(area, save = true) {
+    setPreferredAddressByArea(area, save = true, loc) {
         return __awaiter(this, void 0, void 0, function* () {
             let adr = yield area.getPreferredAddress();
             this.req.prefAddr = adr;
@@ -67,7 +67,7 @@ class RequestHelper {
                     this.req.user.lastLevel2Id = adr.level2Id;
                     this.req.user.lastLevel3Id = adr.level3Id;
                     this.req.user.lastLevel4Id = adr.level4Id;
-                    this.req.user.lastLocation = {
+                    this.req.user.lastLocation = loc || {
                         type: 'Point',
                         coordinates: [adr.lat, adr.lng]
                     };
@@ -84,7 +84,10 @@ class RequestHelper {
                     { all: true }
                 ]
             });
-            area && (yield this.setPreferredAddressByArea(area, save));
+            area && (yield this.setPreferredAddressByArea(area, save, adr.lat ? {
+                type: 'Point',
+                coordinates: [adr.lat, adr.lng]
+            } : null));
         });
     }
     static use(app) {
@@ -107,6 +110,10 @@ class RequestHelper {
                 req.user.lastLevel2Id = adr.level2Id;
                 req.user.lastLevel3Id = adr.level3Id;
                 req.user.lastLevel4Id = adr.level4Id;
+                req.user.lastLocation = adr.lat ? {
+                    type: 'Point',
+                    coordinates: [adr.lat, adr.lng]
+                } : null;
                 yield req.user.save();
             }
             if (req.user && req.user.hasSavedLocation()) {
@@ -114,11 +121,15 @@ class RequestHelper {
                     if ((req.user.lastLevel1Id != adr.level1Id) ||
                         (req.user.lastLevel2Id != adr.level2Id) ||
                         (req.user.lastLevel3Id != adr.level3Id) ||
-                        (req.user.lastLevel4Id != adr.level4Id)) {
+                        (req.user.lastLevel4Id != adr.level4Id) || (!req.user.hasSameLatLng({ lat: adr.lat, lng: adr.lng }))) {
                         req.user.lastLevel1Id = adr.level1Id;
                         req.user.lastLevel2Id = adr.level2Id;
                         req.user.lastLevel3Id = adr.level3Id;
                         req.user.lastLevel4Id = adr.level4Id;
+                        req.user.lastLocation = adr.lat ? {
+                            type: 'Point',
+                            coordinates: [adr.lat, adr.lng]
+                        } : null;
                         yield req.user.save();
                     }
                 }
@@ -128,6 +139,14 @@ class RequestHelper {
                     adr.level2Id = req.user.lastLevel2Id;
                     adr.level3Id = req.user.lastLevel3Id;
                     adr.level4Id = req.user.lastLevel4Id;
+                    if (req.user.lastLocation) {
+                        adr.lat = req.user.lastLocation.coordinates[0];
+                        adr.lng = req.user.lastLocation.coordinates[1];
+                    }
+                    else {
+                        adr.lat = null;
+                        adr.lng = null;
+                    }
                 }
             }
             adr && (yield this.setPreferredAddress(adr));

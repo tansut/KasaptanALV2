@@ -577,7 +577,16 @@ window.App.platform = '<%=controller.platform%>'
   <script>
     window.App.User = {
       isAuthenticated: false,
-      prefAdr: <%- JSON.stringify(__req.prefAddr ? __helper.serializePrefAddr(__req.prefAddr) : null) %>
+      prefAdr: <%- JSON.stringify(__req.prefAddr ? 
+            
+          { level1Id: __req.prefAddr.level1Id,
+            level2Id: __req.prefAddr.level2Id,
+            level3Id: __req.prefAddr.level3Id,
+            level4Id: __req.prefAddr.level4Id,
+            display: __req.prefAddr.display,
+            lat: __req.prefAddr.lat ? __req.prefAddr.lat: undefined,
+            lng: __req.prefAddr.lng ? __req.prefAddr.lng: undefined }
+      : null) %>,
     }
   </script>
   
@@ -589,12 +598,22 @@ window.App.platform = '<%=controller.platform%>'
     window.App.User = {
       isAuthenticated: <%=__req.user ? true : false %>,
   
-      prefAdr: <%- JSON.stringify(__req.prefAddr ? __helper.serializePrefAddr(__req.prefAddr) : null) %>,
+      prefAdr: <%- JSON.stringify(__req.prefAddr ? 
+            
+          { level1Id: __req.prefAddr.level1Id,
+            level2Id: __req.prefAddr.level2Id,
+            level3Id: __req.prefAddr.level3Id,
+            level4Id: __req.prefAddr.level4Id,
+            display: __req.prefAddr.display,
+            lat: __req.prefAddr.lat ? __req.prefAddr.lat: undefined,
+            lng: __req.prefAddr.lng ? __req.prefAddr.lng: undefined }
+      : null) %>,
       
       mphone: '<%= __req.user.mphone  %>',
       name: '<%= __req.user.name  %>',
       email: '<%= __req.user.email  %>',
-      address: '<%= __req.user.lastAddress  %>'
+      address: '<%= __req.user.lastAddress  %>',
+      tarif: '<%= __req.user.lastTarif  %>'
 
     }
   

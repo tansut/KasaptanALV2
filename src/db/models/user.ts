@@ -21,6 +21,8 @@ export interface PreferredAddressQuery {
     level2Id?: number;
     level3Id?: number;
     level4Id?: number;
+    lat?: number;
+    lng?: number;
 }
 
 export interface PreferredAddress {
@@ -154,6 +156,13 @@ export default class User extends BaseModel<User> {
             this.usablePuans = this.usablePuans < 0 ? Helper.asCurrency(0): this.usablePuans;
             return this;
     }
+
+    hasSameLatLng({lat, lng}) {
+        if (lat && !this.lastLocation) return false;
+        if (!lat && this.lastLocation) return false;
+        return lat == (this.lastLocation.coordinates[0]) && (lng == this.lastLocation.coordinates[1])
+    }
+
 
     @Column
     butcherid: number;

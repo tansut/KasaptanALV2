@@ -29,23 +29,87 @@
 
 
     <div id="manuelorderapp" class="container mb-3 ">
+
+      <div id="orderdetails" class="modal" tabindex="-1" role="dialog">
+        <div class="modal-dialog" role="document">
+          <div v-if="order" class="modal-content">
+            <div class="modal-header">
+              <h5 class="modal-title">{{order.custName}}</h5>
+              <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+              </button>
+            </div>
+            <div class="modal-body">
+              <div class="form-group row">
+                <label class="col-sm-2 col-form-label">Müşteri</label>
+                <div class="col-sm-10">
+                  <input :value="order.custName + ',' + order.custPhone" type="text" readonly class="form-control-plaintext" >
+                </div>
+              </div>
+              <div class="form-group row">
+                <label class="col-sm-2 col-form-label">Kasap</label>
+                <div class="col-sm-10">
+                  <input v-model="order.butchername" type="text" readonly class="form-control-plaintext" >
+                </div>
+              </div>
+
+              <div class="form-group row">
+                <label class="col-sm-2 col-form-label">Sipariş</label>
+                <div class="col-sm-10">
+                  <input v-model="order.custOrder" type="text" readonly class="form-control-plaintext" >
+                </div>
+              </div>
+
+              <div class="form-group row">
+                <label class="col-sm-2 col-form-label">Not</label>
+                <div class="col-sm-10">
+                  <input v-model="order.custNote" type="text" readonly class="form-control-plaintext" >
+                </div>
+              </div>
+
+              <div class="form-group row">
+                <label class="col-sm-2 col-form-label">Adres</label>
+                <div class="col-sm-10">
+                  <input v-model="order.custAddress" type="text" readonly class="form-control-plaintext" >
+                </div>
+              </div>
+
+              <div class="form-group row">
+                <label class="col-sm-2 col-form-label">Semt</label>
+                <div class="col-sm-10">
+                  <input v-model="order.semt" type="text" readonly class="form-control-plaintext" >
+                </div>
+              </div>
+
+              <div class="form-group row">
+                <label class="col-sm-2 col-form-label">Konum</label>
+                <div class="col-sm-10">
+                  <a target="_blank" :href="'https://www.google.com/maps/search/?api=1&query=' + order.prefAdr.lat + ',' +  order.prefAdr.lng">Git</a>
+                </div>
+              </div>
+
+            </div>
+          </div>
+        </div>
+      </div>
       <table class="table table-hover">
         <thead>
           <tr>
+            <th>Müşteri</th>
+            <th>Sipariş Tarihi</th>
             <th>Sipariş</th>
-            <th>Tel</th>
-            <th>Tarih</th>
           </tr>
         </thead>
         <tbody>
           <tr v-for="(o,i) in orders">
-            <th v-html="o.order">
-              
-            </th>
             <th>
-              <a target="_blank" :href="'/pages/operator?phone=' + o.mphone">{{o.mphone}}</a>
+              <a target="_blank" :href="'/pages/operator?phone=' + o.userphone">{{o.userphone}}, {{o.order.custName}}</a>
             </th>
-            <th>{{o.date}}</th>
+
+            <th>{{o.order.orderDate}}</th>
+            <th>
+              <a @click="show(o)">Görüntüle</a>
+            </th>
           </tr>
         </tbody>
       </table>
@@ -71,17 +135,24 @@
               el: "#manuelorderapp",
 
               data: {
-                orders: []
+                orders: [],
+                order: null
               },
 
-              mounted: function() {
+              mounted: function () {
                 this.list()
               },
 
+
+
               methods: {
-                list: function() {
+                show(o) {
+                  this.order = o.order;
+                  $("#orderdetails").modal('show')
+                },
+                list: function () {
                   var self = this;
-                  App.Backend.get('order/manuelorders/list').then(function(result) {
+                  App.Backend.get('order/manuelorders/list').then(function (result) {
                     self.orders = result.data;
                   }).catch(App.HandleError.bind(App))
                 }

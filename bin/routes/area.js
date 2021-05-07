@@ -31,7 +31,7 @@ class Route extends router_1.ViewRouter {
     checkSave(area) {
         return __awaiter(this, void 0, void 0, function* () {
             if (this.req.query.save) {
-                yield this.req.helper.setPreferredAddressByArea(area, true);
+                yield this.req.helper.setPreferredAddressByArea(area, true, null);
             }
         });
     }

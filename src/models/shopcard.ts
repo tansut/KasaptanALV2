@@ -406,6 +406,9 @@ export class ShopCard {
 
     async saveToRequest(req: AppRequest) {
         this.clearBeforeSave();
+        if (this.items.length == 0) {
+            return await ShopCard.empty(req)
+        }
         if (req.user) {
             req.user.shopcard = this
             await req.user.save();

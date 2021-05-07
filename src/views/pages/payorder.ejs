@@ -20,7 +20,7 @@
         <div class="order-lg-1 pr-lg-4 text-center text-lg-left d-print-none">
           <h1 class="h3">Online Ödeme</h1>
           <h2 class="lead h4">
-            <%= __helper.formatDate(order.creationDate) + ' tarihli ' + order.butcherName + ' siparişim' %>
+            <%= __helper.formatDate(order.creationDate) %>  tarihli <a target="_blank" class="" href="/user/orders/<%=controller.order.ordernum%>"><%=order.butcherName%> Siparişim <i class="font-size-sm czi-icon czi-arrow-right"></i> </a>  
           </h2>
 
         </div>

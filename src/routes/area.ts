@@ -22,7 +22,7 @@ export default class Route extends ViewRouter {
 
     async checkSave(area: AreaModel) {
         if (this.req.query.save) {
-            await this.req.helper.setPreferredAddressByArea(area, true);
+            await this.req.helper.setPreferredAddressByArea(area, true, null);
         }
     }
 

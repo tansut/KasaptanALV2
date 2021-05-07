@@ -64,7 +64,7 @@
                         <div v-if="step==1">
                             <div class="form-row">
                                 <div class="form-group col-md-12">
-                                    <label>Kasabımızdan taptaze neler istersiniz ?</label>
+                                    <label>Kasabımızdan taptaze neler istersiniz ? (kuzu veya dana belirtmeyi unutmayın)</label>
                                     <textarea rows="5" v-model="custOrder" required class="form-control"
                                         placeholder="Kuzu veya dana olarak ağırlık veya adetleriyle yazın. Örneğin &#13;&#10; 2kg kuzu kıyma &#13;&#10; 2kg dana kuşbaşı &#13;&#10; 1 adet sucuk gibi."></textarea>
                                 </div>
@@ -73,7 +73,8 @@
                         </div>
                         <div class="d-flex justify-content-between">
                             <button v-if="step==2" class="btn btn-primary">Siparişimi Oluştur</button>
-                            <button  type="button" :disabled="!custOrder"  @click="goNext()" v-show="step==1" class="btn btn-dark">İlerle</button>
+                            <button type="button" :disabled="!custOrder" @click="goNext()" v-show="step==1"
+                                class="btn btn-dark">İlerle</button>
                             <button type="button" @click="step=1" v-show="step ==2" class="btn btn-dark">Geri</button>
 
                         </div>
@@ -105,7 +106,8 @@
                 custOrder: '',
                 custAddress: '',
                 custNote: '',
-                step: 1
+                step: 1,
+                prefAdr: {}
             }
         },
 
@@ -118,7 +120,7 @@
 
             goNext() {
                 window.App.gTag("user actions", "pratik sipariş ileri click", this.butchername);
-                this.step=2;
+                this.step = 2;
             },
 
             continueOrder() {
@@ -131,7 +133,7 @@
                     custOrder: this.custOrder,
                     custAddress: this.custAddress,
                     custNote: this.custNote,
-                    addr: window.App.User.prefAdr
+                    prefAdr: this.prefAdr
 
                 }, null, true).then(function (result) {
                     App.alert('Teşekkür ederiz, siparişinizi aldık. Herşey hazır olduğunda sizi bilgilendireceğiz.')
@@ -151,18 +153,53 @@
                 if (!this.custOrder) {
                     this.errors.push('Lütfen içerik girin.')
                 }
-                
+
                 if (this.errors.length) return;
-                if (!confirm('Siparişinizi onaylıyor musunuz ?')) return;
-                $('#quickordermodal').modal('hide');
+
                 window.App.gTag("user actions", "pratik sipariş ver click", this.butchername);
-                var auth = App.Auth.checkAuthentication(this.continueOrder.bind(this), '<h6>Muazzam ürünler!</h6><p>Güvenlik adımını şimdi tamamlayalım.</p>')
-                if (auth) this.continueOrder();
-                else {
-                    $('#su-tel').val(this.custPhone);
-                     $('#su-name').val(this.custName);
-                     $('#su-email').val(this.custEmail);
-                }
+
+                if (App.User.isAuthenticated && App.User.prefAdr) {
+                    if (this.custAddress != App.User.address) this.prefAdr.lat = null;
+                } else this.prefAdr.lat = null;
+
+                var wait;
+
+                if (!this.prefAdr.lat) {
+                    $('#quickordermodal').modal('hide');
+                    wait = App.latlngApp.initWithAddress({
+                        address: this.custAddress
+                    }).then(function (result) {
+                        if (!result) {
+                            alert('Maalesef böyle bir adres bulamadık, lütfen cadde veya sokak adını tam olarak yazıp tekrar deneyin.');
+                            $('#quickordermodal').modal('show');
+                        } else {
+                            return result
+                        }
+                    }).finally(function () {
+                       
+                    }).catch(function(err) {
+                        $('#quickordermodal').modal('show');
+                    })
+                } else wait = App.Promise.resolve();
+                
+                wait.then(function(location) {
+                    if (location) {
+                        this.prefAdr.lat = location.lat;
+                        this.prefAdr.lng = location.lng
+                    } else if (!this.prefAdr.lat) {
+                        $('#quickordermodal').modal('show');
+                        return;
+                    };
+                    //if (!confirm('Siparişinizi onaylıyor musunuz ?')) return;
+                    $('#quickordermodal').modal('hide');
+                    var auth = App.Auth.checkAuthentication(this.continueOrder.bind(this), '<h6>Muazzam ürünler!</h6><p>Güvenlik adımını şimdi tamamlayalım.</p>')
+                    if (auth) this.continueOrder();
+                    else {
+                        $('#su-tel').val(this.custPhone);
+                        $('#su-name').val(this.custName);
+                        $('#su-email').val(this.custEmail);
+                    }
+                }.bind(this))
             },
 
             fillParams() {
@@ -171,6 +208,7 @@
                     this.custName = App.User.name;
                     this.custPhone = App.User.mphone;
                     this.custAddress = App.User.address;
+                    this.prefAdr = App.User.prefAdr;
                 }
             },
 
@@ -201,4 +239,9 @@
 
     })
 
+
+
 </script>
+
+<%- include("./get-latlng.ejs", {}) %>
+

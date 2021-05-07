@@ -1,11 +1,11 @@
 import { AppRequest } from "./http";
-import { PreferredAddress, PreferredAddressQuery } from "../db/models/user";
+import { PreferredAddressQuery } from "../db/models/user";
 import Area from "../db/models/area";
 import * as express from 'express';
-import { reject, resolve } from "bluebird";
 import { ResourceCacheItem } from "./cache";
 import config from "../config";
 import Helper from "./helper";
+import { GeoLocation } from "../models/geo";
 
 export class RequestHelper {
 
@@ -55,7 +55,7 @@ export class RequestHelper {
         return this.req.__resources[type] || [];
     }
 
-    async setPreferredAddressByArea(area: Area, save: boolean = true) {
+    async setPreferredAddressByArea(area: Area, save: boolean = true, loc: GeoLocation) {
         let adr = await area.getPreferredAddress();
         this.req.prefAddr = adr;
         if (save) {
@@ -64,14 +64,13 @@ export class RequestHelper {
                 this.req.user.lastLevel2Id = adr.level2Id;
                 this.req.user.lastLevel3Id = adr.level3Id;
                 this.req.user.lastLevel4Id = adr.level4Id;
-                this.req.user.lastLocation = {
+                this.req.user.lastLocation = loc || {
                     type: 'Point',
                     coordinates: [adr.lat, adr.lng]
                 }
                 await this.req.user.save();
             } 
             this.res.cookie('prefAddr', JSON.stringify(Helper.serializePrefAddr(adr)), { maxAge: 60 * 24 * 60 * 60 * 1000, httpOnly: false});
-
         } 
     }
 
@@ -82,7 +81,10 @@ export class RequestHelper {
             ]
         })
         
-        area && await this.setPreferredAddressByArea(area, save);
+        area && await this.setPreferredAddressByArea(area, save, adr.lat ? {
+            type: 'Point',
+            coordinates: [adr.lat, adr.lng] }: null
+        );
     }
 
     static use(app: express.Application) {
@@ -108,6 +110,10 @@ export class RequestHelper {
             req.user.lastLevel2Id = adr.level2Id;
             req.user.lastLevel3Id = adr.level3Id;
             req.user.lastLevel4Id = adr.level4Id;
+            req.user.lastLocation = adr.lat ? {
+                type: 'Point',
+                coordinates: [adr.lat, adr.lng]
+            }: null
             await req.user.save();
         }
 
@@ -116,11 +122,17 @@ export class RequestHelper {
                 if ((req.user.lastLevel1Id != adr.level1Id) ||
                 (req.user.lastLevel2Id != adr.level2Id) ||
                 (req.user.lastLevel3Id != adr.level3Id) ||
-                (req.user.lastLevel4Id != adr.level4Id)) {
+                (req.user.lastLevel4Id != adr.level4Id) || (
+                    !req.user.hasSameLatLng({lat: adr.lat, lng: adr.lng})
+                )  ) {
                     req.user.lastLevel1Id = adr.level1Id;
                     req.user.lastLevel2Id = adr.level2Id;
                     req.user.lastLevel3Id = adr.level3Id;
                     req.user.lastLevel4Id = adr.level4Id;
+                    req.user.lastLocation = adr.lat ? {
+                        type: 'Point',
+                        coordinates: [adr.lat, adr.lng]
+                    }: null
                     await req.user.save()
                 }
             } else {
@@ -129,6 +141,13 @@ export class RequestHelper {
                 adr.level2Id = req.user.lastLevel2Id;
                 adr.level3Id = req.user.lastLevel3Id;
                 adr.level4Id = req.user.lastLevel4Id;
+                if (req.user.lastLocation) {
+                    adr.lat = req.user.lastLocation.coordinates[0];
+                    adr.lng = req.user.lastLocation.coordinates[1];
+                } else {
+                    adr.lat = null;
+                    adr.lng = null;
+                }
             }            
         } 
 

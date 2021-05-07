@@ -121,8 +121,10 @@ class Route extends router_1.ViewRouter {
             let area = yield area_1.default.getBySlug(this.req.params.slug);
             if (!area)
                 return this.next();
-            yield this.req.helper.setPreferredAddressByArea(area, true);
-            //this.res.send('ok')
+            yield this.req.helper.setPreferredAddressByArea(area, true, (this.req.query.lat && this.req.query.lat != 'undefined') ? {
+                type: 'Point',
+                coordinates: [parseFloat(this.req.query.lat), parseFloat(this.req.query.lat)]
+            } : null);
             if (this.req.query.r)
                 this.res.redirect(this.req.query.r);
             else

@@ -591,6 +591,30 @@ class Route extends router_1.ApiRouter {
     getPurchaseOptions(product, butcherProduct, includeDisable = false) {
         let purchaseOptions = [];
         let kgPrice = butcherProduct ? butcherProduct.kgPrice : 0.00;
+        let getUnitWeight = (p, bp, col) => {
+            let result = product[`${col}weight`];
+            if (butcherProduct && butcherProduct[`${col}kgRatio`]) {
+                let ratio = butcherProduct[`${col}kgRatio`];
+                if (product.priceUnit == 'kg') {
+                    if (ratio < 1) {
+                        result = `ortalama ${ratio * 1000} gram`;
+                    }
+                    else
+                        result = `ortalama ${ratio} kg`;
+                }
+                else if (product.priceUnit == 'lt') {
+                    if (ratio < 1) {
+                        result = `${ratio * 1000} ml`;
+                    }
+                    else
+                        result = `${ratio} litre`;
+                }
+                else
+                    result = `${ratio} ${product.priceUnitTitle}`;
+            }
+            ;
+            return result;
+        };
         product.availableUnitIds.forEach((p, i) => {
             let col = `${p}`;
             let add = !butcherProduct ? true : (!includeDisable ? (butcherProduct[`${col}enabled`]) : true);
@@ -602,10 +626,7 @@ class Route extends router_1.ApiRouter {
                     helper_1.default.asCurrency(butcherProduct[`${col}price`]) :
                     helper_1.default.asCurrency((butcherProduct[`${col}kgRatio`] || product[`${col}kgRatio`]) * kgPrice)) : 0.00;
             let unitPrice = helper_1.default.CalculateDiscount(discount, discountValue, regularUnitPrice);
-            let unitWeight = product[`${col}weight`];
-            if (butcherProduct && butcherProduct[`${col}kgRatio`]) {
-                unitWeight = `${product.priceUnit == 'kg' ? 'ortalama ' : ''}${butcherProduct[`${col}kgRatio`]}  ${product.priceUnitTitle}`;
-            }
+            let unitWeight = getUnitWeight(product, butcherProduct, col);
             add && purchaseOptions.push({
                 id: p,
                 discount: discount,

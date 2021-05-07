@@ -118,7 +118,7 @@ class Route extends router_1.ViewRouter {
             this.foods = yield this.api.getTarifVideos([product]);
             if (this.req.query.semt) {
                 let area = yield area_1.default.getBySlug(this.req.query.semt);
-                yield this.req.helper.setPreferredAddressByArea(area, true);
+                yield this.req.helper.setPreferredAddressByArea(area, true, null);
             }
             let selectedButchers;
             if (!this.req.prefAddr) {

@@ -26,7 +26,8 @@ class Helper {
             level2Id: adr.level2Id,
             level3Id: adr.level3Id,
             level4Id: adr.level4Id,
-            display: adr.display
+            lat: adr.lat ? adr.lat : undefined,
+            lng: adr.lng ? adr.lng : undefined
         };
     }
     static getUrl(req) {

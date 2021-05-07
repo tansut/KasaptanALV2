@@ -50,6 +50,13 @@ let User = User_1 = class User extends basemodel_1.default {
             return this;
         });
     }
+    hasSameLatLng({ lat, lng }) {
+        if (lat && !this.lastLocation)
+            return false;
+        if (!lat && this.lastLocation)
+            return false;
+        return lat == (this.lastLocation.coordinates[0]) && (lng == this.lastLocation.coordinates[1]);
+    }
     static retrieveByEMailOrPhone(email) {
         email = email || "";
         let where = validator_1.default.isEmail(email) ? {

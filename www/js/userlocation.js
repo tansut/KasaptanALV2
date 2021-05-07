@@ -177,7 +177,7 @@
                                         $('.searchBox-semt').focus()
                                     }
 
-                                }).catch(function (err) {
+                                }.bind(this)).catch(function (err) {
                                     alert('Konumunuzu maalelesef alamadık, semtinizi arayın veya listeden seçin');
                                     $('#semt-from-device').text("Tekrar Deneyin");
                                     $('.searchBox-semt').focus()
@@ -190,8 +190,8 @@
                             go(adr) {
                                 window.App.gTag('location', 'location/set', adr.display)
                                 var ul = {};
-                                ul.lat = self.lat;
-                                ul.lng = self.lng;
+                                ul.lat = this.lat;
+                                ul.lng = this.lng;
                                 ul.selectedDistrict = ul.selectedDistrict || {}
                                 ul.selectedDistrict.slug = adr.url;
                                 $(window).trigger('kb.selectArea.selected', [self, ul]);

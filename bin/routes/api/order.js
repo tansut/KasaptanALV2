@@ -1341,16 +1341,16 @@ class Route extends router_1.ApiRouter {
     getManuelOrder() {
         return __awaiter(this, void 0, void 0, function* () {
             let user = this.req.user;
-            user.lastManuealOrder = ` 
-            kasap: ${this.req.body.butchername}
-            müşteri: ${this.req.body.custName}
-            tel: ${this.req.body.custPhone}
-            email: ${this.req.body.custEmail}
-            sipariş: ${this.req.body.custOrder}
-            not: ${this.req.body.custNote}
-            adres: ${this.req.body.custAddress}
-            semt: ${JSON.stringify(this.req.body.addr)}
-        `;
+            let order = this.req.body;
+            order.orderDate = helper_1.default.Now();
+            order.semt = this.req.prefAddr.display;
+            order.ip = this.userIp;
+            user.lastManuealOrder = JSON.stringify(order);
+            user.lastAddress = this.req.body.custAddress;
+            user.lastLocation = {
+                type: 'Point',
+                coordinates: [order.prefAdr.lat, order.prefAdr.lng]
+            };
             yield user.save();
             yield sms_1.Sms.sendMultiple(['5326274151', '5531431988'], `yeni manuel sipariş: www.kasaptanal.com/pages/operator/manuelorders`, false, new sitelog_1.default(this.constructorParams));
             this.res.sendStatus(200);
@@ -1358,7 +1358,7 @@ class Route extends router_1.ApiRouter {
     }
     listManuelOrders() {
         return __awaiter(this, void 0, void 0, function* () {
-            let orders = yield user_1.default.findAll({
+            let users = yield user_1.default.findAll({
                 where: {
                     lastManuealOrder: {
                         [sequelize_1.Op.ne]: ''
@@ -1367,11 +1367,10 @@ class Route extends router_1.ApiRouter {
                 limit: 50,
                 order: [['updatedOn', 'desc']]
             });
-            let result = orders.map(o => {
+            let result = users.map(o => {
                 return {
-                    mphone: o.mphone,
-                    date: o.updatedOn,
-                    order: this.Markdown.render(o.lastManuealOrder || '')
+                    userphone: o.mphone,
+                    order: JSON.parse(o.lastManuealOrder)
                 };
             });
             this.res.send(result);

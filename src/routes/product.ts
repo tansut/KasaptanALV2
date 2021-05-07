@@ -142,7 +142,7 @@ export default class Route extends ViewRouter {
         this.foods = await this.api.getTarifVideos([product])
         if (this.req.query.semt) {
             let area = await Area.getBySlug(this.req.query.semt as string);
-            await this.req.helper.setPreferredAddressByArea(area, true)
+            await this.req.helper.setPreferredAddressByArea(area, true, null)
         }
 
 

@@ -31,7 +31,8 @@ export class App extends AppBase {
     public static ShopCard = ShopCard;
     public static User = null;    
     public static ButcherApp = ButcherApp;
-
+    public static Promise = Promise;
+    
 
     public static ComponentMap: ComponentMap = {};
 
@@ -50,6 +51,8 @@ export class App extends AppBase {
         let result = Backend.post("shopcard/addFromOrder", {
             ordernum: ordernum
         })
+
+        
 
         if (redirectUrl) {
             result.then(()=> {

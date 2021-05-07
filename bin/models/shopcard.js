@@ -306,6 +306,9 @@ class ShopCard {
     saveToRequest(req) {
         return __awaiter(this, void 0, void 0, function* () {
             this.clearBeforeSave();
+            if (this.items.length == 0) {
+                return yield ShopCard.empty(req);
+            }
             if (req.user) {
                 req.user.shopcard = this;
                 yield req.user.save();
