@@ -22,49 +22,49 @@ export default class AreaTask extends BaseTask {
     async run() {
         console.log('running AreaTask job', Date.now())
 
-        let items = await Area.sequelize.query(`
-        select distinct areaLevel2Id as id from Orders
-        union
-        select distinct areaLevel3Id as id from Orders
-        union
-        select id from Areas where level=1 and status='active'
+        // let items = await Area.sequelize.query(`
+        // select distinct areaLevel2Id as id from Orders
+        // union
+        // select distinct areaLevel3Id as id from Orders
+        // union
+        // select id from Areas where level=1 and status='active'
         
 
-            `,
-            {
+        //     `,
+        //     {
 
-                type: sq.QueryTypes.SELECT,
-                mapToModel: false,
-                raw: true
-            })
+        //         type: sq.QueryTypes.SELECT,
+        //         mapToModel: false,
+        //         raw: true
+        //     })
 
-        let arr = items.map(i => i['id']);
+        // let arr = items.map(i => i['id']);
 
-        await Area.update({
-            status: 'generic'
-        },
-            {
+        // await Area.update({
+        //     status: 'generic'
+        // },
+        //     {
                 
-                where: {
-                    level: {
-                        [Op.notIn]: [1]
-                    }
-                }
-            }
-        )
+        //         where: {
+        //             level: {
+        //                 [Op.notIn]: [1]
+        //             }
+        //         }
+        //     }
+        // )
     
-        await Area.update({
-            status: 'active'
-        },
-            {
+        // await Area.update({
+        //     status: 'active'
+        // },
+        //     {
                 
-                where: {
-                    id: {
-                        [Op.in]: arr
-                    }
-                }
-            }
-        )
+        //         where: {
+        //             id: {
+        //                 [Op.in]: arr
+        //             }
+        //         }.
+        //     }
+        // )
 
         let emptyLoc = await Area.findAll({
             where: {
@@ -77,7 +77,10 @@ export default class AreaTask extends BaseTask {
         })
 
 
-        await emptyLoc.forEach(async l=>await l.ensureLocation());
+        await emptyLoc.forEach(async l=> {
+            await l.ensureLocation();
+            await new Promise(r => setTimeout(r, 5));
+        });
         
         let sql = `update Areas t1
 inner join Areas t2 on t1.parentid = t2.id
@@ -101,7 +104,7 @@ where t1.level=4`;
             await p.loadRelatedAreas();
             p.display = p.getDisplay();
             await p.save();
-            await new Promise(r => setTimeout(r, 50));
+            await new Promise(r => setTimeout(r, 5));
         })
 
         console.log('done AreaTask job', Date.now())
