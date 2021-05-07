@@ -160,6 +160,7 @@ export default class User extends BaseModel<User> {
     hasSameLatLng({lat, lng}) {
         if (lat && !this.lastLocation) return false;
         if (!lat && this.lastLocation) return false;
+        if (!lat && !this.lastLocation) return true;
         return lat == (this.lastLocation.coordinates[0]) && (lng == this.lastLocation.coordinates[1])
     }
 

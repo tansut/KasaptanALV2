@@ -55,6 +55,8 @@ let User = User_1 = class User extends basemodel_1.default {
             return false;
         if (!lat && this.lastLocation)
             return false;
+        if (!lat && !this.lastLocation)
+            return true;
         return lat == (this.lastLocation.coordinates[0]) && (lng == this.lastLocation.coordinates[1]);
     }
     static retrieveByEMailOrPhone(email) {
