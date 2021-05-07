@@ -12,7 +12,7 @@
                 <div class="modal-body p-3">
                     <form @submit="checkForm" method="post">
 
-                        <h5 class="h5">Siparişinizi bize iletin, hazırlayıp gönderelim.</h5>
+                        <h5 v-if="step==1" class="h5">Siparişinizi kasabımıza iletin, hemen hazırlayıp gönderelim.</h5>
                         <p class="text-primary" v-if="errors.length">
                             <b>Lütfen aşağıdaki hataları düzeltin:</b>
                         <ul>
@@ -66,7 +66,7 @@
                                 <div class="form-group col-md-12">
                                     <label>Kasabımızdan taptaze neler istersiniz ?</label>
                                     <textarea rows="5" v-model="custOrder" required class="form-control"
-                                        placeholder="Kuzu veya dana olarak ağırlık ve adetleriyle yazın. Örneğin 2kg kuzu kıyma, 2kh dana kuşbaşı, 1 adet sucuk ve 1kg kuzu pirzola gibi"></textarea>
+                                        placeholder="Kuzu veya dana olarak ağırlık veya adetleriyle yazın. Örneğin &#13;&#10; 2kg kuzu kıyma &#13;&#10; 2kg dana kuşbaşı &#13;&#10; 1 adet sucuk gibi."></textarea>
                                 </div>
                             </div>
 

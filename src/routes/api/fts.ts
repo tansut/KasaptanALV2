@@ -186,6 +186,60 @@ export default class Route extends ApiRouter {
         return foods        
     }
 
+
+    @Auth.Anonymous()
+    async searchRoute2() {
+        if (!this.req.query.q || (this.req.query.q as string).length < 2)
+            return this.res.send([])
+
+        let text = <string>this.req.query.q;
+        let words = text.match(/\S+/g).filter(w => w.length > 2).map(w => `+${w}*`)
+        let search = words.join()
+
+        let products = (!this.req.query.t || this.req.query.t == 'product') ? await this.getProducrs(search): [];
+        let categories = (!this.req.query.t || this.req.query.t == 'category') ? await this.getCategories(search): [];
+        let foods = (!this.req.query.t || this.req.query.t == 'food') ? await this.getFoods(search): [];
+        let butchers = (!this.req.query.t || this.req.query.t == 'butcher') ? await this.getButchers(search): [];
+        //let areaBtchers = (!this.req.query.t || this.req.query.t == 'area-butcher') ? await this.getAreaButchers(search): [];
+        let areas = (!this.req.query.t || this.req.query.t == 'area') ? await this.getAreas(search): [];
+
+         let combined = categories.concat(products.concat(foods.concat(butchers.concat(areas))));
+         //let combined = categories.concat(products.concat(foods.concat(butchers.concat(areaBtchers.concat(areas)))));
+        
+        let sorted = _.sortBy(combined, 'RELEVANCE');
+        let max = _.max([products.length, categories.length, foods.length, butchers.length, areas.length]);
+
+        let result = []
+        for (let i = 0; i < max; i++) {
+            let item = {};
+            if (products.length -1 > i) {
+               item['urun'] = products[i].name;
+            }
+            if (categories.length -1 > i) {
+                item['kategori'] = categories[i].name;
+             }
+             if (foods.length -1 > i) {
+                item['yemek'] = foods[i].name;
+             }
+             if (butchers.length -1 > i) {
+                item['kasap'] = butchers[i].name;
+             }
+             if (areas.length -1 > i) {
+                item['bolge'] = areas[i].name;
+             }
+             item['urun'] = item['urun'] || '';
+             item['kategori'] = item['kategori'] || '';
+             item['yemek'] = item['yemek'] || '';
+             item['kasap'] = item['kasap'] || '';
+             item['bolge'] = item['bolge'] || '';
+             Object.keys(item).length > 0 && result.push(item);
+        }
+
+        
+        this.res.send(result)
+    }
+
+
     @Auth.Anonymous()
     async searchRoute() {
         if (!this.req.query.q || (this.req.query.q as string).length < 2)
@@ -211,6 +265,7 @@ export default class Route extends ApiRouter {
 
     static SetRoutes(router: express.Router) {
         router.get("/fts", Route.BindRequest(this.prototype.searchRoute));
+        router.get("/fts2", Route.BindRequest(this.prototype.searchRoute2));
     }
 }
 

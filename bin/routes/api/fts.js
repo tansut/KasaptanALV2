@@ -176,6 +176,51 @@ class Route extends router_1.ApiRouter {
             return foods;
         });
     }
+    searchRoute2() {
+        return __awaiter(this, void 0, void 0, function* () {
+            if (!this.req.query.q || this.req.query.q.length < 2)
+                return this.res.send([]);
+            let text = this.req.query.q;
+            let words = text.match(/\S+/g).filter(w => w.length > 2).map(w => `+${w}*`);
+            let search = words.join();
+            let products = (!this.req.query.t || this.req.query.t == 'product') ? yield this.getProducrs(search) : [];
+            let categories = (!this.req.query.t || this.req.query.t == 'category') ? yield this.getCategories(search) : [];
+            let foods = (!this.req.query.t || this.req.query.t == 'food') ? yield this.getFoods(search) : [];
+            let butchers = (!this.req.query.t || this.req.query.t == 'butcher') ? yield this.getButchers(search) : [];
+            //let areaBtchers = (!this.req.query.t || this.req.query.t == 'area-butcher') ? await this.getAreaButchers(search): [];
+            let areas = (!this.req.query.t || this.req.query.t == 'area') ? yield this.getAreas(search) : [];
+            let combined = categories.concat(products.concat(foods.concat(butchers.concat(areas))));
+            //let combined = categories.concat(products.concat(foods.concat(butchers.concat(areaBtchers.concat(areas)))));
+            let sorted = _.sortBy(combined, 'RELEVANCE');
+            let max = _.max([products.length, categories.length, foods.length, butchers.length, areas.length]);
+            let result = [];
+            for (let i = 0; i < max; i++) {
+                let item = {};
+                if (products.length - 1 > i) {
+                    item['urun'] = products[i].name;
+                }
+                if (categories.length - 1 > i) {
+                    item['kategori'] = categories[i].name;
+                }
+                if (foods.length - 1 > i) {
+                    item['yemek'] = foods[i].name;
+                }
+                if (butchers.length - 1 > i) {
+                    item['kasap'] = butchers[i].name;
+                }
+                if (areas.length - 1 > i) {
+                    item['bolge'] = areas[i].name;
+                }
+                item['urun'] = item['urun'] || '';
+                item['kategori'] = item['kategori'] || '';
+                item['yemek'] = item['yemek'] || '';
+                item['kasap'] = item['kasap'] || '';
+                item['bolge'] = item['bolge'] || '';
+                Object.keys(item).length > 0 && result.push(item);
+            }
+            this.res.send(result);
+        });
+    }
     searchRoute() {
         return __awaiter(this, void 0, void 0, function* () {
             if (!this.req.query.q || this.req.query.q.length < 2)
@@ -197,8 +242,15 @@ class Route extends router_1.ApiRouter {
     }
     static SetRoutes(router) {
         router.get("/fts", Route.BindRequest(this.prototype.searchRoute));
+        router.get("/fts2", Route.BindRequest(this.prototype.searchRoute2));
     }
 }
+__decorate([
+    common_1.Auth.Anonymous(),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", []),
+    __metadata("design:returntype", Promise)
+], Route.prototype, "searchRoute2", null);
 __decorate([
     common_1.Auth.Anonymous(),
     __metadata("design:type", Function),
