@@ -52,7 +52,7 @@ class AreaTask extends basetask_1.BaseTask {
             //             id: {
             //                 [Op.in]: arr
             //             }
-            //         }
+            //         }.
             //     }
             // )
             let emptyLoc = yield area_1.default.findAll({

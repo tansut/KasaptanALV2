@@ -77,18 +77,23 @@ window.App.platform = '<%=controller.platform%>'
       minLength: 3,
   
       formatResult: function (item) {
+        var container = $('<div>').addClass('d-flex justify-content-between');
+        var item1 = $('<div>').addClass('flex-grow-1 truncate');
+        if (item.thumb) {
+          item1.append($('<img>').attr('src', item.thumb).css("height", 36).css("width", 36).addClass('mr-2'));
+          
+        }
+        item1.append($("<span>").text(item.text));
+        item2 = $('<div>');
+        if (item.type) {
+          item2.append($('<span>').text(item.type).addClass('text-muted font-size-sm'))
+        }
+        container.append(item1);
+        container.append(item2)
               return {
                 value: item.id,
                 text:  item.text,
-                html: item.thumb ? [ 
-                    $('<img>').attr('src', item.thumb).css("height", 36).css("width", 36), ' ', 
-                    item.text, 
-                    //item.type ? $('<span>').text(' /' + item.type + '').addClass('text-muted'):'' 
-                  ] : [
-                  item.text, 
-                  //item.type ? $('<span>').text(' /' + item.type + '').addClass('text-dark'):'' 
-
-                  ]
+                html: [container]
               };
             },
             
