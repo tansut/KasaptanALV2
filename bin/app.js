@@ -110,20 +110,14 @@ class KasaptanAlApp {
             let dbinstance = yield context_1.default.init(false);
             this.app = express();
             this.app.use(compression());
-            // let serverConfigFile = await fs.readFileSync(path.join(__dirname, "../server.json"));
-            // let serverConfig = JSON.parse(serverConfigFile);
-            // this.app.use(
-            //     ipfilter({
-            //     //   detectIp: function(req, res) {
-            //     //       debugger
-            //     //     return req.headers['x-forwarded-for'] ? (req.headers['x-forwarded-for']).split(',')[0] : this.req.connection.remoteAddress
-            //     //   },
-            //       log: true,
-            //       mode: 'deny',
-            //       forbidden: 'You are not authorized to access this page.',
-            //       filter: serverConfig.block,
-            //     })
-            //   )
+            let serverConfigFile = yield fs.readFileSync(path.join(__dirname, "../server.json"));
+            let serverConfig = JSON.parse(serverConfigFile);
+            this.app.use((req, res, next) => {
+                let ip = req.headers['x-forwarded-for'] ? (req.headers['x-forwarded-for']) : req.connection.remoteAddress;
+                if (serverConfig.blockedips.indexOf(ip) == -1)
+                    return next();
+                res.sendStatus(403);
+            });
             this.app.use(fileUpload());
             this.app.use(cors({}));
             const sequelizeSessionStore = new SessionStore({
