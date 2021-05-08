@@ -34,11 +34,11 @@ class Route extends router_1.ApiRouter {
     getProducrs(search) {
         return __awaiter(this, void 0, void 0, function* () {
             let psql = this.req.query.c ?
-                "select p.name as name, p.slug as url, 'ürün' as type, match(p.name, p.shortdesc, p.slug, p.keywords) against (:search IN BOOLEAN MODE) as RELEVANCE " +
+                "select p.id, p.name as name, p.slug as url, 'ürün' as type, match(p.name, p.shortdesc, p.slug, p.keywords) against (:search IN BOOLEAN MODE) as RELEVANCE " +
                     "from Products p, ProductCategories pc, Categories c where p.status='onsale' and pc.productid = p.id and c.id = pc.categoryid and c.slug = :category and match(p.name, p.shortdesc, p.slug, p.keywords)  against (:search IN BOOLEAN MODE) ORDER BY RELEVANCE DESC LIMIT 10"
                 :
-                    "select name, slug as url, '' as type, match(name, shortdesc, slug, keywords) against (:search IN BOOLEAN MODE) as RELEVANCE " +
-                        "from Products where status='onsale' and match(name, shortdesc, slug, keywords)  against (:search IN BOOLEAN MODE) ORDER BY RELEVANCE DESC LIMIT 10";
+                    "select p.id, p.name, p.slug as url, '' as type, match(p.name, p.shortdesc, p.slug, p.keywords) against (:search IN BOOLEAN MODE) as RELEVANCE " +
+                        "from Products p where p.status='onsale' and match(p.name, p.shortdesc, p.slug, p.keywords)  against (:search IN BOOLEAN MODE) ORDER BY RELEVANCE DESC LIMIT 10";
             let prods = yield user_1.default.sequelize.query(psql, {
                 replacements: { search: search, category: this.req.query.c },
                 type: sq.QueryTypes.SELECT,
@@ -48,6 +48,7 @@ class Route extends router_1.ApiRouter {
                 let px = p;
                 return {
                     id: 'p' + i,
+                    recid: px.id,
                     name: px.name,
                     url: '/' + px.url,
                     type: 'ürün',
@@ -60,7 +61,7 @@ class Route extends router_1.ApiRouter {
     }
     getCategories(search) {
         return __awaiter(this, void 0, void 0, function* () {
-            let cats = yield user_1.default.sequelize.query("select name, slug as url, 'kategori' as type, match(name, shortdesc, slug, keywords) against (:search IN BOOLEAN MODE) as RELEVANCE " +
+            let cats = yield user_1.default.sequelize.query("select id, name, slug as url, 'kategori' as type, match(name, shortdesc, slug, keywords) against (:search IN BOOLEAN MODE) as RELEVANCE " +
                 "from Categories where status = 'active' and match(name, shortdesc, slug, keywords)  against (:search IN BOOLEAN MODE) ORDER BY Categories.type, RELEVANCE DESC LIMIT 10", {
                 replacements: { search: search },
                 type: sq.QueryTypes.SELECT,
@@ -70,6 +71,7 @@ class Route extends router_1.ApiRouter {
                 let px = p;
                 return {
                     id: 'c' + i,
+                    recid: px.id,
                     name: px.name,
                     url: '/' + px.url,
                     type: px.type,
@@ -82,7 +84,7 @@ class Route extends router_1.ApiRouter {
     }
     getAreaButchers(search) {
         return __awaiter(this, void 0, void 0, function* () {
-            let areas = yield user_1.default.sequelize.query("select name, slug as url, 'bölge' as type, match(name, slug, keywords) against (:search IN BOOLEAN MODE) as RELEVANCE " +
+            let areas = yield user_1.default.sequelize.query("select id, name, slug as url, 'bölge' as type, match(name, slug, keywords) against (:search IN BOOLEAN MODE) as RELEVANCE " +
                 "from Areas where status='active' and match(name, slug, keywords)  against (:search IN BOOLEAN MODE) ORDER BY RELEVANCE DESC LIMIT 10", {
                 replacements: { search: search },
                 type: sq.QueryTypes.SELECT,
@@ -92,6 +94,7 @@ class Route extends router_1.ApiRouter {
                 let px = p;
                 return {
                     id: 'loc' + i,
+                    recid: px.id,
                     name: px.name + ' Kasapları',
                     url: '/' + px.url + '-kasap',
                     type: px.type,
@@ -114,6 +117,7 @@ class Route extends router_1.ApiRouter {
                 let px = p;
                 return {
                     id: px.id,
+                    recid: px.id,
                     name: px.display,
                     display: px.display,
                     url: px.url,
@@ -128,7 +132,7 @@ class Route extends router_1.ApiRouter {
     }
     getButchers(search) {
         return __awaiter(this, void 0, void 0, function* () {
-            let butchers = yield user_1.default.sequelize.query("select name, slug as url, 'kasap' as type, match(name, slug, keywords) against (:search IN BOOLEAN MODE) as RELEVANCE " +
+            let butchers = yield user_1.default.sequelize.query("select id, name, slug as url, 'kasap' as type, match(name, slug, keywords) against (:search IN BOOLEAN MODE) as RELEVANCE " +
                 "from Butchers where approved=true and match(name, slug, keywords)  against (:search IN BOOLEAN MODE) ORDER BY RELEVANCE DESC LIMIT 10", {
                 replacements: { search: search },
                 type: sq.QueryTypes.SELECT,
@@ -138,6 +142,7 @@ class Route extends router_1.ApiRouter {
                 let px = p;
                 return {
                     id: 'b' + i,
+                    recid: px.id,
                     name: px.name,
                     url: '/' + px.url,
                     type: px.type,
@@ -166,6 +171,7 @@ class Route extends router_1.ApiRouter {
                 let px = p;
                 return {
                     id: 'f' + i,
+                    recid: px.id,
                     name: px.title,
                     score: px.RELEVANCE,
                     url: px.slug ? ('/et-yemekleri/' + px.slug) : '/' + foodProds.find(fp => fp.id == px.ref1).slug + '?r=' + px.id,

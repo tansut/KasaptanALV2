@@ -246,6 +246,9 @@
                 v-if="edit && edit.butcherProductNote" class="text-muted">
 
               </div>
+              <div class="font-size-sm p-2" v-if="edit && edit.offerableBy != 'butcher'">
+                <span><strong>Not:</strong> Bu ürünün satışı ürün yönetici onayı gerektirmekte. Eğer satıyorsanız lütfen fiyat verip kaydedin, kontrol ardından satışa alacağız.</span>
+              </div>
 
               <div class="p-2">
 

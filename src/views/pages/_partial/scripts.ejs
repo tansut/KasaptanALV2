@@ -71,13 +71,14 @@ window.App.platform = '<%=controller.platform%>'
   $(document).ajaxComplete(function(){
     $("#loader").hide();
   });
-  
+
+  $(document).ready(function() {
     $('.searchBox').autoComplete({
       resolver: 'custom',
       minLength: 3,
   
       formatResult: function (item) {
-        var container = $('<div>').addClass('d-flex justify-content-between');
+        var container = $('<div>').addClass('d-flex align-items-center justify-content-between');
         var item1 = $('<div>').addClass('flex-grow-1 truncate');
         if (item.thumb) {
           item1.append($('<img>').attr('src', item.thumb).css("height", 36).css("width", 36).addClass('mr-2'));
@@ -157,7 +158,10 @@ window.App.platform = '<%=controller.platform%>'
               id: p.id,
               text: p.name,
               type: p.type,
-              thumb: p.thumb
+              thumb: p.thumb,
+              recid: p.recid,
+              slug: p.slug,
+              url: p.url
             }
           })
           // return window.__searchResult;
@@ -166,14 +170,20 @@ window.App.platform = '<%=controller.platform%>'
       }
     });
 
-    
+
 
     $('.searchBox').keypress(function(event){
       var keycode = (event.keyCode ? event.keyCode : event.which);
       if(keycode == '13') {
+        event.preventDefault();
         window.__searchResult = window.__searchResult || [];
         go = window.__searchResult[0];
-        go && (window.location.href = go.url.startsWith('/') ? go.url: '/' + go.url);
+        if ($(this).data('gourl') == false) {
+
+        } else {
+          go && (window.location.href = go.url.startsWith('/') ? go.url: '/' + go.url);
+        }
+        return false
       }
     });
 
@@ -182,9 +192,15 @@ window.App.platform = '<%=controller.platform%>'
       let go = window.__searchResult.find(function (result) {
         return result.id == item.id
       });
-      window.location.href = go.url.startsWith('/') ? go.url: '/' + go.url;
+      if ($(this).data('gourl') == false) {
+        $(this).trigger("autocomplete.selected", item)
+      }
+      else window.location.href = go.url.startsWith('/') ? go.url: '/' + go.url;
     });
 
+
+  })
+  
 
 
   </script>
@@ -647,9 +663,7 @@ window.App.platform = '<%=controller.platform%>'
       })
 </script>
 
-<script>
 
-
-</script>
+<%- include('./_partial/quick-order-product.ejs', {}) %>
 
 <%- include('./_partial/quick-order.ejs', {}) %>

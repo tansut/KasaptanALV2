@@ -662,6 +662,7 @@ class Route extends router_1.ApiRouter {
             result.butcherProductNote = this.markdown.render(product.butcherProductNote || '');
             result.priceUnit = product.priceUnit;
             result.enabled = false;
+            result.offerableBy = product.offerableBy;
             if (butcher && butcher.products) {
                 let butcherProduct = butcher.products.find(c => (c.productid == product.id));
                 result.fromButcherNote = butcherProduct ? butcherProduct.fromButcherDesc : '';
@@ -839,6 +840,7 @@ class Route extends router_1.ApiRouter {
             id: view.id,
             name: view.name,
             kgTitle: view.kgTitle,
+            offerableBy: view.offerableBy,
             units: getpOptions().map(po => {
                 return {
                     id: po.id,
@@ -1031,6 +1033,9 @@ class Route extends router_1.ApiRouter {
             // })
             if (!newItem.canBeEnabled())
                 newItem.enabled = false;
+            if (newItem.enabled && product.offerableBy == 'manager' && !this.req.user.hasRole('admin')) {
+                newItem.enabled = false;
+            }
             yield context_1.default.getContext().transaction((t) => {
                 return newItem.save({
                     transaction: t
@@ -1042,12 +1047,31 @@ class Route extends router_1.ApiRouter {
             this.res.send(edit);
         });
     }
+    getProductQuickInfo() {
+        return __awaiter(this, void 0, void 0, function* () {
+            if (!this.req.query.id)
+                return this.next;
+            let p = yield product_1.default.findOne({
+                where: { id: this.req.query.id }
+            });
+            if (!p)
+                return this.next;
+            let butcher = null;
+            if (this.req.query.butcher) {
+                butcher = yield butcher_1.default.loadButcherWithProducts(this.req.query.butcher, false);
+            }
+            let view = yield this.getProductView(p, butcher, null, false, false);
+            view['thumbnail'] = this.req.helper.imgUrl("product-photos", view.slug);
+            this.res.send(butcher ? (view.source != 'butcher' ? null : view) : view);
+        });
+    }
     static SetRoutes(router) {
         // router.get("/product/:slug", Route.BindRequest(this.prototype.searchRoute));
         // router.get("/product/:slug/:butcher", Route.BindRequest(this.prototype.searchRoute));
         router.get("/product/:butcher/prePrices", Route.BindRequest(this.prototype.viewProductsForButchers));
         router.post("/product/:butcher/prePrices", Route.BindRequest(this.prototype.saveProductsForButchers));
         router.post("/product/:butcher/campaign", Route.BindRequest(this.prototype.saveCampaign));
+        router.get("/product/quickinfo", Route.BindRequest(this.prototype.getProductQuickInfo));
     }
 }
 __decorate([
@@ -1068,4 +1092,10 @@ __decorate([
     __metadata("design:paramtypes", []),
     __metadata("design:returntype", Promise)
 ], Route.prototype, "saveCampaign", null);
+__decorate([
+    common_1.Auth.Anonymous(),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", []),
+    __metadata("design:returntype", Promise)
+], Route.prototype, "getProductQuickInfo", null);
 exports.default = Route;

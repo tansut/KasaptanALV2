@@ -36,6 +36,8 @@ export type ProductStatus = "onsale" | "archieved"
 
 export type ProductSelection = 'tam' | 'sadece liste' | 'one cikar';
 
+export type OfferableBy = 'butcher' | 'manager';
+
 export let ProductSelectionWeigts: {[key in ProductSelection]: number} = {
     'tam': 0,
     'sadece liste': -1,
@@ -78,6 +80,12 @@ class Product extends BaseModel<Product> {
     set butcherWeights(value: {[key in ButcherProperty]: number}) {
         this.setDataValue('butcherweightsjson', JSON.stringify(value));
     }
+
+    @Column({
+        defaultValue: 'butcher',
+        allowNull: false
+    })
+    offerableBy: OfferableBy;    
 
 
     @Column({

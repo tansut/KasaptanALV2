@@ -28,6 +28,7 @@ import { LogisticFactory } from '../../lib/logistic/core';
 import { throws } from 'assert';
 import User from '../../db/models/user';
 import { auth } from '../../middleware/auth';
+import moment = require('moment');
 
 
 const orderid = require('order-id')('dkfjsdklfjsdlkg450435034.,')
@@ -1507,6 +1508,77 @@ export default class Route extends ApiRouter {
         this.res.sendStatus(200);
     }
 
+    async listOrders() {
+        if (!this.req.user.hasRole('admin')) return this.next();
+        
+        let sdate = Helper.newDate2(2000,1,1);
+        let fdate = moment().endOf("month").toDate();
+
+        let q = this.req.query.q || '3days';
+
+        if (q == '3days') {
+            sdate = moment().startOf('day').subtract(3, "days").toDate();
+        } else if (q == '7days') {
+            sdate = moment().startOf('day').subtract(7, "days").toDate();
+        } else if (q=='thismonth') {
+            sdate = moment().startOf("month").toDate();
+            fdate = moment().endOf("month").toDate();
+        } else {
+            sdate = moment().subtract(1, "month").startOf("month").toDate();
+            fdate = moment(sdate).endOf("month").toDate();
+        }
+
+        let where = {
+            creationDate: {
+                [Op.and]: [
+                    {
+                        [Op.gte]: sdate
+                    },
+                    {
+                        [Op.lte]: fdate
+                    }
+                ]
+            }
+                           
+        };
+
+        if (this.req.query.status) {
+            where['status'] = this.req.query.status
+        }
+
+        if (this.req.query.nopayment == 'true') {
+            where['paidTotal']= {
+                [Op.eq]: 0
+            }
+        }
+
+        let orders = await Order.findAll({
+            where: where,
+            order: [['id', 'desc']]
+        })
+
+
+
+        let result = orders.map(o=> {
+            return {
+                ordernum: o.ordernum,
+                phone: o.phone,
+                date: o.creationDate,
+                semt: `${o.areaLevel4Text ? o.areaLevel4Text + ',':''} ${o.areaLevel3Text}, ${o.areaLevel2Text}/${o.areaLevel1Text}`,
+                butcher: o.butcherName,
+                status: o.status,
+                payment: o.paymentStatus,
+                dispatcherType: o.dispatcherType,
+                paymentType: o.paymentType,
+                paid: o.paidTotal,
+                name: o.name,
+                total: o.total
+                
+            }
+        });
+        this.res.send(result)
+    }
+
 
     async listManuelOrders() {
         let users = await User.findAll({
@@ -1536,6 +1608,7 @@ export default class Route extends ApiRouter {
         router.post('/order/:ordernum/markAsShipped', Route.BindRequest(Route.prototype.markAsShippedRoute))
         router.post('/order/manuelorders/create', Route.BindRequest(Route.prototype.getManuelOrder))
         router.get('/order/manuelorders/list', Route.BindRequest(Route.prototype.listManuelOrders))
+        router.get('/order/list', Route.BindRequest(Route.prototype.listOrders))
 
         
         //router.get("/admin/order/:ordernum", Route.BindRequest(this.prototype.getOrderRoute));

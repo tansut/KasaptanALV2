@@ -20,7 +20,7 @@
                         </ul>
                         </p>
 
-                        <div v-if="step==2">
+                        <div v-show="step==2">
                             <div class="form-row">
                                 <div class="form-group col-md-6">
                                     <label for="inputEmail4">Adınız ve Soyadınız</label>
@@ -61,10 +61,30 @@
 
                             </div>
                         </div>
-                        <div v-if="step==1">
+                        <div v-show="step==1">
+                            <div class="input-group-overlay mb-3">
+
+                                <div class="input-group-prepend-overlay">
+
+                                    <span class="input-group-text">
+                                        <i class="notsearching czi-search"></i>
+                                        <span class="searching d-none spinner-border spinner-border-sm" role="status"
+                                            aria-hidden="true"></span>
+                                    </span>
+                                </div>
+                                <input data-gourl="false" data-search="product" id="page-quickproductsearchbox"
+                                    class="form-control searchBox prepended-form-control"
+                                    data-noresults-text="Maalesef bulamadık." autocomplete="off" type="search"
+                                    placeholder="ürünler içerisinde arayın">
+                                <div>
+
+                                </div>
+                            </div>
+
+
                             <div class="form-row">
                                 <div class="form-group col-md-12">
-                                    <label>Kasabımızdan taptaze neler istersiniz ? (kuzu veya dana belirtmeyi unutmayın)</label>
+                                    <label>Kasabımızdan taptaze neler istersiniz ?</label>
                                     <textarea rows="5" v-model="custOrder" required class="form-control"
                                         placeholder="Kuzu veya dana olarak ağırlık veya adetleriyle yazın. Örneğin &#13;&#10; 2kg kuzu kıyma &#13;&#10; 2kg dana kuşbaşı &#13;&#10; 1 adet sucuk gibi."></textarea>
                                 </div>
@@ -92,6 +112,42 @@
         el: '#quickorder',
 
         mounted: function () {
+
+
+
+            $("#quickordermodal").on('shown.bs.modal', function () {
+                setTimeout(function () {
+                    $("#page-quickproductsearchbox").focus();
+                }, 100)
+            }.bind(this));
+
+
+            window.quickOrderProductApp.$on("add2sc", function (instance) {
+                this.custOrder += (this.custOrder ? String.fromCharCode(13) : '') + instance.quantity + ' ' + instance.selectedUnit.unitTitle + ' ' + instance.product.name;
+                $("#page-quickproductsearchbox").val("");
+            }.bind(this))
+
+            window.quickOrderProductApp.$on("dialog.shown", function (instance) {
+                $('#quickordermodal').modal('hide');
+            }.bind(this))
+
+            window.quickOrderProductApp.$on("dialog.hidden", function (instance) {
+                $('#quickordermodal').modal('show');
+
+            }.bind(this));
+
+            $("#page-quickproductsearchbox").on('autocomplete.selected', function (e, item) {
+                debugger;
+                window.quickOrderProductApp.show(item, this.butcherslug);
+            }.bind(this));
+
+
+            window.quickOrderProductApp.$on('product.notavailable', function (e, item) {
+                App.alert('Maalesef bu ürünü şu an sağlayamıyoruz, farklı bir ürün seçin lütfen.')
+                $("#page-quickproductsearchbox").val("");
+            }.bind(this));
+
+
 
         },
 
@@ -176,13 +232,13 @@
                             return result
                         }
                     }).finally(function () {
-                       
-                    }).catch(function(err) {
+
+                    }).catch(function (err) {
                         $('#quickordermodal').modal('show');
                     })
                 } else wait = App.Promise.resolve();
-                
-                wait.then(function(location) {
+
+                wait.then(function (location) {
                     if (location) {
                         this.prefAdr.lat = location.lat;
                         this.prefAdr.lng = location.lng
@@ -244,4 +300,3 @@
 </script>
 
 <%- include("./get-latlng.ejs", {}) %>
-

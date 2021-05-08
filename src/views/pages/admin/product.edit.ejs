@@ -162,8 +162,13 @@
 
                                         <% }) %>
                                     </select>
-
-
+                                </div>
+                                <div class="form-group">
+                                    <label>Satış Onayı</label>
+                                    <select class="form-control" name="offerableBy" id="offerableBy">
+                                        <option <%= product.offerableBy == "butcher"? 'selected':''%> value="butcher">Kasap Verebilir</option>
+                                        <option <%= product.offerableBy == "manager"? 'selected':''%> value="manager">Yönetici Verir</option>
+                                    </select>
                                 </div>
                                 <div class="form-group">
                                     <label>Kasaba Sipariş Hazırlama Notu</label>

@@ -185,6 +185,7 @@ class Route extends router_1.ViewRouter {
                     this.product.butcherNote = this.req.body.butcherNote;
                     this.product.butcherProductNote = this.req.body.butcherProductNote;
                     this.product.brandGroupid = this.req.body.brandGroupid ? parseInt(this.req.body.brandGroupid) : null;
+                    this.product.offerableBy = this.req.body.offerableBy;
                 }
                 this.product.mddesc = this.req.body.mddesc;
                 if (pSlug != this.product.slug) {

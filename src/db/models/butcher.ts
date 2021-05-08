@@ -620,9 +620,13 @@ class Butcher extends BaseModel<Butcher> {
     }
 
     static async loadButcherWithProducts(slug: string | number, includeDisabled: boolean = false) {
-        let where = {}
-        if (typeof slug == 'string') where['slug'] = slug;
-        else where["id"] = slug
+        let where = {};
+        let id = typeof(slug) == 'string' ? parseInt(slug): slug;
+        if (Number.isNaN(id)) {
+            where['slug'] = slug;
+        } else 
+            where["id"] = id
+
         let butcher = await Butcher.findOne({
             include: [{
                 model: ButcherProduct,

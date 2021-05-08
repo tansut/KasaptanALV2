@@ -28,11 +28,45 @@
 
 
 
-  <div class="container mb-3 ">
+  <div v-cloak id="orderlist" class="container mb-3 pt-3">
 
-    <table class="table table-hover">
+    <ul class="nav nav-pills mb-3">
+
+      <li class="nav-item dropdown">
+        <a class="nav-link dropdown-toggle" data-toggle="dropdown" href="#" role="button" aria-haspopup="true" aria-expanded="false">Süreye Göre</a>
+        <div class="dropdown-menu">
+        <a :class="{'font-weight-bold': time == '3days'}" class="dropdown-item" @click="time='3days'; go()">Son 3 gün</a>
+        <a :class="{'font-weight-bold': time == '7days'}" class="dropdown-item" @click="time='7days'; go()">Son 7 gün</a>
+
+          <a :class="{'font-weight-bold': time == 'thismonth'}" class="dropdown-item" @click="time='thismonth';go();">Bu ay</a>
+          <a :class="{'font-weight-bold': time == 'lastmonth'}" class="dropdown-item" @click="time='lastmonth';go();">Geçen Ay</a>
+        </div>
+      </li>
+      <li class="nav-item dropdown">
+        <a class="nav-link dropdown-toggle" data-toggle="dropdown" href="#" role="button" aria-haspopup="true" aria-expanded="false">Duruma Göre</a>
+        <div class="dropdown-menu">
+        <a  :class="{'font-weight-bold': !status}" class="dropdown-item" @click="status=''; go()">Tümü</a>
+
+        <a v-for="(o, i) in Object.keys(colors)" :class="{'font-weight-bold': status == o}" class="dropdown-item" @click="status=o; go()">{{o}}</a>
+
+
+        </div>
+      </li>
+
+      <li class="nav-item dropdown">
+        <a class="nav-link dropdown-toggle" data-toggle="dropdown" href="#" role="button" aria-haspopup="true" aria-expanded="false">Diğer</a>
+        <div class="dropdown-menu">
+        <a  :class="{'font-weight-bold': !nopayment}" class="dropdown-item" @click="nopayment=false; go()">Tümü</a>
+        <a  :class="{'font-weight-bold': nopayment}" class="dropdown-item" @click="nopayment=true; go()">Ödeme Yapılmamış</a>
+        </div>
+      </li>
+    </ul>  
+    <div v-if="!list">Yüklüyor ...</div>
+    <span v-if="list">Toplam {{list.length}} adet</span>
+    <table class="table table-hover table-sm font-size-sm">
       <thead>
           <tr>
+            <th>Yönet</th>
               <th>Müşteri</th>
               <th>Tarih</th>
               <th>Semt</th>
@@ -44,49 +78,46 @@
           </tr>
       </thead>
       <tbody>
-          <% 
-                  for(var i=0; i<orders.length; i++) {%>
-                    <%
-                     var colors = {
-                       'tedarik sürecinde': 'text-primary font-weight-bold',
-                       'ödeme bekleniyor': 'text-primary font-weight-bold',
-                       'teslim edilecek': 'text-warning',
-                       'paket yolda': 'text-warning',
-                       'teslim edildi': 'text-success',
-                       'iptal: müşteri': 'text-muted',
-                       'iptal: teslimat yapılamadı': 'text-muted',
-                       'iptal: tedarik edilemedi': 'text-muted'
-                     };
-
-                    %>
-          <tr class="<%=colors[orders[i].status]%>">
-              <td>
-                <a target="_blank" href="<%= `/pages/operator/order/${orders[i].ordernum}` %>"><%= orders[i].name %>, <%=orders[i].phone%> <br> <%=orders[i].ordernum%> </a>
-              </td>
-              <td><%= __helper.formatDate(orders[i].creationDate) %></td>
-              <td>
-                <%=orders[i].areaLevel4Text %>,
-                <%=orders[i].areaLevel3Text %>, <%=orders[i].areaLevel2Text%>/<%=orders[i].areaLevel1Text%>
-              </td>
-              <td><%= orders[i].butcherName %></td>
-              <td><%= orders[i].status %></td>
-              <td><%= orders[i].paymentType %></td>
-              <td><%= orders[i].dispatcherType %></td>
-              <td>
-                <a target="_blank" href="/manageorder/<%=orders[i].ordernum%>">
-    <%- include('./_partial/currency.ejs', {value: orders[i].paidTotal}) %></a>
-                
+          
             
-              
-              
+          <tr :class=colors[o.status] v-if="list" v-for="(o, i) in list">
+          
+              <td>
+                <a class="mb-1 btn btn-sm btn-block btn-dark" target="_blank" :href="'/manageorder/' + o.ordernum">Görüntüle</a>
+                <a class="btn btn-sm btn-block btn-dark" target="_blank" :href="'/pages/operator/order/' + o.ordernum">Yönet</a>
               </td>
-
+            
+             <td>
+               {{o.name}}, {{o.phone}}
+             </td>
+             <td>
+              {{o.date}}
+            </td>
+            <td>
+              {{o.semt}}
+            </td>
+            <td>
+              {{o.butcher}}
+            </td>
+            <td>
+              {{o.status}}
+            </td>
+            <td>
+              {{o.paymentType}}
+            </td>
+            <td>
+              {{o.dispatcherType}}
+            </td>
+            <td>
+              <money-view :money="o.paid"></money-view>
+            </td>
+            
           </tr>
 
 
-          <% } 
+  
               
-              %>
+     
 
       </tbody>
   </table>
@@ -105,6 +136,46 @@
 
   <% include ./_partial/footer %>
   <% include ./_partial/scripts %>
+
+
+  <script>
+    window.orderlistApp = new Vue({
+      el: '#orderlist',
+
+      data: {
+        list: null,
+        time: '3days',
+        status: '',
+        nopayment: false,
+        colors: {
+                       'tedarik sürecinde': 'text-primary font-weight-bold',
+                       'ödeme bekleniyor': 'text-primary font-weight-bold',
+                       'teslim edilecek': 'text-warning',
+                       'paket yolda': 'text-warning',
+                       'teslim edildi': 'text-success',
+                       'iptal: müşteri': 'text-muted',
+                       'iptal: teslimat yapılamadı': 'text-muted',
+                       'iptal: tedarik edilemedi': 'text-muted'
+                     }
+      },
+
+      mounted: function() {
+        this.go()
+      },
+
+      methods: {
+        go() {
+          App.Backend.get('order/list', {
+            q: this.time,
+            status: this.status,
+            nopayment: this.nopayment
+          }).then(function(result) {
+            this.list = result.data;
+          }.bind(this)).catch(App.HandleError.bind(App))
+        }
+      }
+    })
+  </script>
 
 </body>
 

@@ -3,7 +3,7 @@ import { Puan } from "./puan";
 import { PriceSlice } from "../lib/logistic/core";
 import { NutritionView, PriceDiscount, PriceView } from "./common";
 import { ShipmentDayHours } from "./shipment";
-import { ButcherUnitEdit, ButcherUnitSelection } from "../db/models/product";
+import { ButcherUnitEdit, ButcherUnitSelection, OfferableBy } from "../db/models/product";
 import Brand from "../db/models/brand";
 
 export interface PurchaseOption {
@@ -140,5 +140,6 @@ export interface ProductViewForButcher extends ProductView  {
     priceUnit: string;
     fromButcherNote: string;
     enabled: boolean;
+    offerableBy: OfferableBy;
     
 }

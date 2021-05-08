@@ -95,7 +95,7 @@
         
       } %>>
 
-      <div class="container text-center pb-3">
+      <div class="container text-center">
         <a class="d-block" href="javascript: window.App.openDefaultSlider()">
           <img width="500" height="500" class="img-thumbnail rounded-circle mx-auto mb-3 d-block" style="width: 12rem;"
           src="<%= `${__req.helper.imgUrl('butcher-google-photos', butcher.slug)}` %>" alt="<%=butcher.name%>">
@@ -123,82 +123,193 @@
           </h2>
          
              
-               
+          <ul class="nav nav-tabs justify-content-center" id="summarytab" role="tablist">
+            <li class="nav-item">
+              <a class="nav-link p-3 active" id="summarytabhome-tab" data-toggle="tab" href="#summarytabhome" role="tab" aria-controls="home" aria-selected="true">Sipariş</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link p-3" id="summarytabprofile-tab" data-toggle="tab" href="#summarytabprofile" role="tab" aria-controls="summarytabprofile" aria-selected="false">Teslimat</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link p-3" id="summarytabdays-tab" data-toggle="tab" href="#summarytabdays" role="tab" aria-controls="summarytabdays" aria-selected="false">Günler</a>
+            </li>
+          </ul>
 
-          <% if (puanData && butcher.status == 'open' && butcher.approved) { %>
-            <div class="d-flex justify-content-center mb-3">
-              <div class="border shadow  p-3  rounded-lg ">
-                <h5 class="h5 mb-3 ">KASAPTANAL SİPARİŞLERİNİZDE</h5>
-                <a class="mb-3 d-block" href="/blog/kasap-kart">
-                  <span class="badge badge-success font-weight-medium font-size-md">
-                    %<%= puanData.rate * 100 %> Puan Kazancı
-                  </span>
-                </a>
-                <div class="text-left font-size-sm">
-                  <ul>
-                  
-                    <li>
-                      Kazandığınız puanlarınızı sonraki alışverişlerinizde <strong>indirim olarak </strong>kullanabilirsiniz.
-
-                    </li>
-                    <li>
-                      <strong>Güvenli sipariş için telefon yerine</strong> online veya whatsapp üzerinden sipariş veriniz.
-                    </li>
-                    <li>
-                      Whatsapp üzerinden vereceğiniz siprişlerde de puan kazancı mevcuttur.
-                    </li>
-                  </ul>
-                 
-                </div>
+          <div class="tab-content mb-3 border-bottom"  id="summarytabContent">
+            <div class="tab-pane fade show active" id="summarytabhome" role="tabpanel" aria-labelledby="summarytabhome-tab">
+              <div class="d-flex justify-content-center">
                 <div>
-                  <span class="d-block mb-3">Ücretsiz Sipariş Hattı: 0 850 305 4216</span>
-                  <% if ((!controller.logisticsProvider || controller.logisticsPriceSlice.length == 0) && __req.prefAddr) { %>
-                  <% } else { %>
-               <a data-tag="true" data-category="user actions" data-action="pratik sipariş click" data-label="<%=butcher.slug%>" onclick="quickOrderApp.open({butchername: '<%=butcher.name%>', 'butcherslug': '<%=butcher.slug%>'})" class="font-weight-bold btn  btn-sm rounded btn-danger mr-2"><i class="czi-icon czi-cart mr-1"></i>Pratik Sipariş Ver</a>
 
-                  <% } %>
+                
+              <% if (puanData && butcher.status == 'open' && butcher.approved) { %>
+               
+                 
+                    <h5 class="h5 mb-3 ">ONLINE SİPARİŞLERDE</h5>
+                    <a class="mb-3 d-block" href="/blog/kasap-kart">
+                      <span class="badge badge-success font-weight-medium font-size-md">
+                        %<%= puanData.rate * 100 %> Puan Kazancı
+                      </span>
+                    </a>
 
-                  <a data-tag="true" data-category="user actions" data-action="kasabı ara click" data-label="<%=butcher.slug%>" href="tel:08503054216" class="font-weight-bold btn btn-dark btn-sm rounded "><i class="czi-icon czi-phone mr-2"></i> Kasabı Ara</a>
+              <% } %>
+              <% if (butcher.shipRatingAsPerc > 0 && butcher.userRatingAsPerc > 0) { %>
+                <div class="container row mx-auto">
+                  <div class="col">
+                    <div class="font-size-sm  mb-1">Memnuniyet</div>
+                    <div class="progress rounded-0 mb-3">
+                      <div class="progress-bar font-weight-medium bg-warning" role="progressbar"
+                        style="width: <%=butcher.userRatingAsPerc %>%" aria-valuenow="<%=butcher.userRatingAsPerc %>"
+                        aria-valuemin="0" aria-valuemax="100">
+                        <%=butcher.userRatingAsPerc %>%
+                      </div>
+                    </div>
+                  </div>
+          
+          
+                  <div class="col">
+                    <div class="font-size-sm truncate  mb-1">Teslimat Başarısı</div>
+          
+                    <div class="progress rounded-0 mb-3">
+                      <div class="progress-bar font-weight-medium bg-warning" role="progressbar"
+                        style="width: <%=butcher.shipRatingAsPerc %>%" aria-valuenow="<%=butcher.shipRatingAsPerc %>"
+                        aria-valuemin="0" aria-valuemax="100">
+                        <%=butcher.shipRatingAsPerc %>%
+                      </div>
+                    </div>
+                  </div>
                 </div>
-              </div>
+                <% } %>
+
+                <% if (!__req.prefAddr) {  %>
+                  <div class="alert alert-secondary">
+                    <span class="d-block mb-2">Sipariş vermek için lütfen önce semtinizi seçin.</span>
+                     
+                    <a data-return="/<%=butcher.slug%>#delivery" class=" select-area-action rounded  btn btn-primary">Semt Seç</a>
+                
+                  
+                  </div>
+                <% } else { %>
+                  <div class="mb-3">
+                    <% if ((!controller.logisticsProvider || controller.logisticsPriceSlice.length == 0) && __req.prefAddr) { %>
+                    
+                      <% } else { %>
+                 <a data-tag="true" data-category="user actions" data-action="pratik sipariş click" data-label="<%=butcher.slug%>" onclick="quickOrderApp.open({butchername: '<%=butcher.name%>', 'butcherslug': '<%=butcher.slug%>'})" class="font-weight-bold btn mb-3  btn-sm rounded btn-danger mr-2"><i class="czi-icon czi-cart mr-1"></i>Pratik Sipariş</a>
+  
+                    <% } %>
+  
+                    <a data-tag="true" data-category="user actions" data-action="kasabı ara click" data-label="<%=butcher.slug%>" href="tel:08503054216" class="mb-3 font-weight-bold btn btn-dark btn-sm rounded "><i class="czi-icon czi-phone mr-2"></i>Kasabı Ara</a>
+                    <span class="d-block mb-2">Whatasapp Destek: <a data-tag="true" data-category="user actions" data-action="whatsapp sipariş click" data-label="<%=butcher.slug%>" class="text-dark font-weight-bold" target="_blank" href="https://wa.me/+908503059286?text=<%=butcher.name%> <%=__req.prefAddr.display%> semtinden sipariş vermek istiyorum.">0 850 305 9286</a></span>
+                    
+                    <span class="d-none my-2">Whatsapp Destek</span>
+                    <!-- <a data-tag="true" data-category="user actions" data-action="online sipariş click" data-label="<%=butcher.slug%>" class="btn rounded-lg btn-sm btn-success mr-2" href="/<%=butcher.slug%>/siparis">Online</a> -->
+                     <!-- <a data-tag="true" data-category="user actions" data-action="whatsapp sipariş click" data-label="<%=butcher.slug%>" class="btn font-weight-bold rounded-lg btn-sm btn-dark" target="_blank" href="https://wa.me/+908503059286?text=<%=butcher.name%> <%=__req.prefAddr.display%> semtinden sipariş vermek istiyorum."><i class="czi-icon mr-1 czi-message"></i>Whatsapp</a> -->
+
+
+                  </div>
+                <% } %>
+
             
-             
-             
+
+              </div>
             </div>
+            </div>
+            <div class="tab-pane fade" id="summarytabprofile" role="tabpanel" aria-labelledby="summarytabprofile-tab">
+              <% if (butcher.status == 'open' && butcher.approved) { %>
+                <div class="d-flex justify-content-center" id="delivery">
+                  <% if ((!controller.logisticsProvider || controller.logisticsPriceSlice.length == 0) && __req.prefAddr) { %>
+                    <div>
+                      <p>
+                      
+                        Kasabımız maalesef semtinize hizmet vermemektedir. 
+                     
+                  
+                      </p>
+                      <p>
+                        <strong><%=__req.prefAddr.display%></strong> semtine hizmet veren kasaplarımızı <a class="font-weight-bold" href="/<%=__req.prefAddr.level3Slug%>-kasap">buradan</a> görebilirsiniz.
+                      </p>
+                      <a href="/<%=__req.prefAddr.level3Slug%>-kasap" class="mb-3 btn btn-sm btn-primary">Diğer Kasaplar</a>
+                  
+                      <a data-return="/<%=butcher.slug%>#delivery" class="mb-3 select-area-action btn-sm btn btn-primary">Semt Seç</a>
+                  
+                    </div>
+
+                
+                  <% } else if (controller.logisticsProvider) { %>
+                
+                    <div>
+                    
+                        <h5 class="h5">Kapınıza Teslim</h5>
+                        <p class="text-left">
+                        <%= controller.logisticsProvider.options.dispatcher.userNote || controller.logisticsProvider.options.dispatcher.priceInfo %>.
+                        <% if (controller.logisticsProvider.options.dispatcher.minCalculated > 0) { %>
+                          Semtinize en az <span class="font-weight-medium"><%- include('./_partial/currency.ejs', {value: controller.logisticsProvider.options.dispatcher.minCalculated}) %></span> sipariş kabul edilmektedir.
+                        <%  } %>
+                        </p>
+                
+                      
+                    
+                        <div class="font-size-sm text-left mb-3">
+                          <%- include('./_partial/ship-price-slice.ejs', {                                
+                            slices: controller.logisticsPriceSlice
+                              }) %>
+                        </div>
+                
+                        
+                
+                        <p class="font-size-sm text-left">
+                           <a data-return="/<%=butcher.slug%>#delivery" class="text-primary select-area-action"><%=__req.prefAddr.display%></a> için kasabın tahmini uzaklığı <%= controller.distance.toFixed(1) %> km.
+                        </p>
+                
+                     
+                
+                     
+                
+                    </div>
+                
+                
+                   
+                
+                       
           
+                
+                  <% } else { %>
+                    <div class="alert alert-secondary">
+                      <span class="d-block mb-2">Sipariş vermek için lütfen önce semtinizi seçin.</span>
+                       
+                      <a data-return="/<%=butcher.slug%>#delivery" class=" select-area-action rounded  btn btn-primary">Semt Seç</a>
+                  
+                    
+                    </div>
        
-      
-          <% } %>
-
-          
-
-          <% if (butcher.shipRatingAsPerc > 0 && butcher.userRatingAsPerc > 0) { %>
-          <div class="container row mx-auto">
-            <div class="col">
-              <div class="font-size-sm  mb-1">Memnuniyet</div>
-              <div class="progress rounded-0 mb-3">
-                <div class="progress-bar font-weight-medium bg-warning" role="progressbar"
-                  style="width: <%=butcher.userRatingAsPerc %>%" aria-valuenow="<%=butcher.userRatingAsPerc %>"
-                  aria-valuemin="0" aria-valuemax="100">
-                  <%=butcher.userRatingAsPerc %>%
+                
+                    
+                
+                
+                <% } %>
+                
+                
+                
                 </div>
-              </div>
+                
+                          
+                <% } %>
             </div>
-    
-    
-            <div class="col">
-              <div class="font-size-sm truncate  mb-1">Teslimat Başarısı</div>
-    
-              <div class="progress rounded-0 mb-3">
-                <div class="progress-bar font-weight-medium bg-warning" role="progressbar"
-                  style="width: <%=butcher.shipRatingAsPerc %>%" aria-valuenow="<%=butcher.shipRatingAsPerc %>"
-                  aria-valuemin="0" aria-valuemax="100">
-                  <%=butcher.shipRatingAsPerc %>%
-                </div>
-              </div>
+            <div class="tab-pane fade" id="summarytabdays" role="tabpanel" aria-labelledby="summarytabdays-tab">
+              <h5 class="h5">Çalışma Günleri</h5>
+           
+      <div class="mb-3 d-flex justify-content-center font-size-sm text-left">
+        <%- include('./_partial/workday-view', { butcher: controller.butcher }) %>
+      
+      </div>
+
             </div>
           </div>
-          <% } %>
+        
+
+
+          
+
+
 
           <% if (butcher.btnText && butcher.btnUrl) { %>
             <div class="text-center">
@@ -217,98 +328,7 @@
              <% } %>
           
         </div>
-<% if (butcher.status == 'open' && butcher.approved) { %>
-<div id="delivery">
-  <% if ((!controller.logisticsProvider || controller.logisticsPriceSlice.length == 0) && __req.prefAddr) { %>
-    <p>
-      
-      Kasabımız maalesef semtinize hizmet vermemektedir. 
-   
 
-    </p>
-    <p>
-      <strong><%=__req.prefAddr.display%></strong> semtine hizmet veren kasaplarımızı <a class="font-weight-bold" href="/<%=__req.prefAddr.level3Slug%>-kasap">buradan</a> görebilirsiniz.
-    </p>
-    <a href="/<%=__req.prefAddr.level3Slug%>-kasap" class="mb-3 btn btn-sm btn-primary">Diğer Kasaplar</a>
-
-    <a data-return="/<%=butcher.slug%>#delivery" class="mb-3 select-area-action btn-sm btn btn-primary">Semt Seç</a>
-
-
-  <% } else if (controller.logisticsProvider) { %>
-
-    <div class="row mb-3 text-left">
-      <div class="col-sm-6 ">
-        <h5 class="h5">Kapınıza Teslim</h5>
-        <p>
-        <%= controller.logisticsProvider.options.dispatcher.userNote || controller.logisticsProvider.options.dispatcher.priceInfo %>.
-        <% if (controller.logisticsProvider.options.dispatcher.minCalculated > 0) { %>
-          Semtinize en az <span class="font-weight-medium"><%- include('./_partial/currency.ejs', {value: controller.logisticsProvider.options.dispatcher.minCalculated}) %></span> sipariş kabul edilmektedir.
-        <%  } %>
-        </p>
-
-        <h6 class="h6">Teslimat Ücretleri</h5>
-    
-        <div class="mb-3 font-size-sm">
-          <%- include('./_partial/ship-price-slice.ejs', {                                
-            slices: controller.logisticsPriceSlice
-              }) %>
-        </div>
-
-        
-
-        <p class="font-size-sm">
-           <a data-return="/<%=butcher.slug%>#delivery" class="text-primary select-area-action"><%=__req.prefAddr.display%></a> için kasabın tahmini uzaklığı <%= controller.distance.toFixed(1) %> km.
-        </p>
-
-     
-
-      </div>
-      <div class="col-sm-6">
-        <h5 class="h5">Çalışma Günleri</h5>
-        <p>
-          <%=butcher.name%> aşağıdaki günlerde teslimat yapmaktadır:
-        </p>
-<div class="font-size-sm text-left">
-  <%- include('./_partial/workday-view', { butcher: controller.butcher }) %>
-
-</div>
-      </div>
-    </div>
-
-
-   
-
-       
-       <div>
-         <h6>Sipariş Ver</h6>
-        <div class="py-2 d-flex justify-content-center">
-          <a data-tag="true" data-category="user actions" data-action="online sipariş click" data-label="<%=butcher.slug%>" class="btn rounded-lg btn-sm btn-success mr-2" href="/<%=butcher.slug%>/siparis">Online</a>
-          <a data-tag="true" data-category="user actions" data-action="pratik sipariş click" data-label="<%=butcher.slug%>" onclick="quickOrderApp.open({butchername: '<%=butcher.name%>', 'butcherslug': '<%=butcher.slug%>'})" class="font-weight-bold btn  btn-sm rounded btn-danger mr-2"><i class="czi-icon czi-cart mr-1"></i>Pratik Sipariş</a>
-          <a data-tag="true" data-category="user actions" data-action="whatsapp sipariş click" data-label="<%=butcher.slug%>" class="btn rounded-lg btn-sm btn-dark" target="_blank" href="https://wa.me/+908503059286?text=<%=butcher.name%> <%=__req.prefAddr.display%> semtinden sipariş vermek istiyorum."><i class="czi_icon czi-message mr-1"></i>Whatsapp</a>
-      
-        </div>
-      </div>
-
-  <% } else { %>
-    <div class="text-center bg-secondary p-3 border mb-3">
-      <h6 class="h6">
-       Online sipariş vermek için önce semtinizi seçin
-      </h6>
-    <a data-return="/<%=butcher.slug%>#delivery" class=" select-area-action btn-sm btn btn-primary">Semt Seç</a>
-
-    </div>
-
-    
-
-
-<% } %>
-
-
-
-</div>
-
-          
-<% } %>
           
 
          
@@ -382,23 +402,10 @@
     
     
     
-                <div class="accordion" id="payment-method" role="tablist">
+                <div class="accordion mb-3" id="payment-method" role="tablist">
     
                   <% if (puanData) { %>
     
-                  <div class="card rounded-0">
-                    <div class="card-header" role="tab">
-                      <h3 class="accordion-heading"><a href="#kasapkart" data-toggle="collapse"><i
-                            class="font-size-lg mr-2 mt-n1 align-middle"></i>Kasap Kart&trade;<span
-                            class="accordion-indicator"><i data-feather="chevron-up"></i></span></a></h3>
-                    </div>
-                    <div class="collapse" id="kasapkart" data-parent="#payment-method" role="tabpanel">
-                      <div class="card-body ">
-                        <%- include('./_partial/puan-data-view.ejs', {puan: puanData}) %>
-                      </div>
-                    </div>
-    
-                  </div>
     
                   <% } %>
     
@@ -491,62 +498,6 @@
                   <% } %>
     
     
-    
-                  <div class="card rounded-0">
-                    <div class="card-header" role="tab">
-                      <h3 class="accordion-heading"><a href="#dispatchArea" data-toggle="collapse"><i
-                            class="font-size-lg mr-2 mt-n1 align-middle"></i><%='Teslimat Bilgisi'%><span
-                            class="accordion-indicator"><i data-feather="chevron-up"></i></span></a></h3>
-                    </div>
-                    <div class="collapse " id="dispatchArea" data-parent="#payment-method" role="tabpanel">
-                      <div class="card-body ">
-                        <% if ((!controller.logisticsProvider || controller.logisticsPriceSlice.length == 0) && __req.prefAddr) { %>
-                          <p>
-                            Kasabın semtinize hizmeti yoktur.
-                          </p>
-                        <% } else if (controller.logisticsProvider) { %>
-                          <div class="text-center font-weight-bolder">
-                            <%=controller.logisticsProvider.options.dispatcher.name%>
-                          </div>
-                          
-    
-                          <div class="mb-3">
-                            <%- include('./_partial/ship-price-slice.ejs', {                                
-                              slices: controller.logisticsPriceSlice
-                                }) %>
-                          </div>
-        
-                              <p>
-                                <%=__req.prefAddr.display%>
-                              </p>
-             
-                             <p>
-                                Ortalama: <%= controller.distance.toFixed(1) %> km 
-                             </p>                          
-                        <% } else { %>
-                          <div class="text-center ">
-                            <p>
-                               Teslimat bilgisi almak için semtinizi seçin.
-                            </p>
-                            <a class="select-area-action btn btn-sm btn-primary">Semt Seç</a>
-                          </div>
-               
-                          
-    
-    
-    <% } %>
-    <div>
-      <p class="border-bottom mb-1">Çalışma Günleri</p>
-      <%- include('./_partial/workday-view', { butcher: controller.butcher }) %>
-
-    </div>
-
-
-
-    
-                      </div>
-                    </div>
-                  </div>
     
                   <div class="card rounded-0">
                     <div class="card-header" role="tab">
@@ -647,6 +598,29 @@
                   Tüm ürünlerin miktar, fiyat ve birim özelliklerinin tamamlanmasını biz de sabırsızlıkla bekliyoruz.
                 </p>
               <%}%>
+
+              <div>
+                <div class="input-group-overlay mb-3">
+
+                  <div class="input-group-prepend-overlay">
+
+                      <span class="input-group-text">
+                          <i class="notsearching czi-search"></i>
+                          <span class="searching d-none spinner-border spinner-border-sm" role="status"
+                              aria-hidden="true"></span>
+                      </span>
+                  </div>
+                  <input data-gourl="false" data-search="product" id="butcher-page-quickproductsearchbox"
+                      class="form-control searchBox prepended-form-control"
+                      data-noresults-text="Maalesef bulamadık." autocomplete="off" type="search"
+                      placeholder="hızlıca arayın ve satın alın">
+                  <div>
+
+                  </div>
+              </div>
+
+
+              </div>
               
               <div id="cat-slider" class="mt-3 mt-md-0">
                 <%- include('./_partial/category-slider', { partialRender: true, partialRenderUrl: '/' + butcher.slug, categories: controller.categories, subUrl: butcher.slug + '/', selected: controller.category.slug, mode:'browse', header: false, titles: false, viewCats: ['discount', 'butcher', 'reyon', 'list', 'product:dispatch=countrywide'], title: 'Kategoriler', allUrl: '/kasap-urunleri' }); %>
@@ -697,7 +671,27 @@
   <%- include('./_partial/purchase', { returnUrl: butcher.slug + '/' + controller.category.slug  }); %>
   <%- include('./_partial/category-items-script', {   }); %>
 
+<script>
+  $(document).ready(function() {
+    if (window.location.hash=='#delivery') {
+      <% if ((!controller.logisticsProvider || controller.logisticsPriceSlice.length == 0) && __req.prefAddr) { %>
+        App.activaTab("summarytabprofile");
+      <%} else { %>
+        App.activaTab("summarytabhome");
+      <% } %>  
+      
+      App.scrollToAnchor('#summarytab');
+    }
 
+    $("#butcher-page-quickproductsearchbox").on('autocomplete.selected', function (e, item) {
+               
+      window.purchase.openDialog(item.url.replace('/', ''), 'butcher=<%=butcher.slug%>&utm_medium=Butcher');
+               $("#butcher-page-quickproductsearchbox").val("")
+                // window.quickOrderProductApp.show(item, '<%=butcher.slug%>');
+            }.bind(this));
+
+  })
+</script>
 
 
 </body>

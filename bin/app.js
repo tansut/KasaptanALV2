@@ -12,6 +12,8 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.App = void 0;
 const express = require("express");
 const compression = require('compression');
+// const ipfilter = require('express-ipfilter').IpFilter
+const fs = require('fs');
 const bp = require("body-parser");
 const http = require("http");
 const config_1 = require("./config");
@@ -108,6 +110,20 @@ class KasaptanAlApp {
             let dbinstance = yield context_1.default.init(false);
             this.app = express();
             this.app.use(compression());
+            // let serverConfigFile = await fs.readFileSync(path.join(__dirname, "../server.json"));
+            // let serverConfig = JSON.parse(serverConfigFile);
+            // this.app.use(
+            //     ipfilter({
+            //     //   detectIp: function(req, res) {
+            //     //       debugger
+            //     //     return req.headers['x-forwarded-for'] ? (req.headers['x-forwarded-for']).split(',')[0] : this.req.connection.remoteAddress
+            //     //   },
+            //       log: true,
+            //       mode: 'deny',
+            //       forbidden: 'You are not authorized to access this page.',
+            //       filter: serverConfig.block,
+            //     })
+            //   )
             this.app.use(fileUpload());
             this.app.use(cors({}));
             const sequelizeSessionStore = new SessionStore({

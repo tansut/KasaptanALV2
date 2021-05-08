@@ -223,6 +223,13 @@ __decorate([
 ], Product.prototype, "butcherweightsjson", void 0);
 __decorate([
     sequelize_typescript_1.Column({
+        defaultValue: 'butcher',
+        allowNull: false
+    }),
+    __metadata("design:type", String)
+], Product.prototype, "offerableBy", void 0);
+__decorate([
+    sequelize_typescript_1.Column({
         type: sequelize_typescript_1.DataType.TEXT
     }),
     __metadata("design:type", String)

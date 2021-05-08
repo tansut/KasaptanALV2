@@ -124,10 +124,12 @@ let Butcher = Butcher_1 = class Butcher extends basemodel_1.default {
     static loadButcherWithProducts(slug, includeDisabled = false) {
         return __awaiter(this, void 0, void 0, function* () {
             let where = {};
-            if (typeof slug == 'string')
+            let id = typeof (slug) == 'string' ? parseInt(slug) : slug;
+            if (Number.isNaN(id)) {
                 where['slug'] = slug;
+            }
             else
-                where["id"] = slug;
+                where["id"] = id;
             let butcher = yield Butcher_1.findOne({
                 include: [{
                         model: butcherproduct_1.default,

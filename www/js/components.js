@@ -156,7 +156,8 @@ window.initComponents = function initComponents() {
             },
 
             def: function (newVal, oldVal) {
-                this.value = this.value || newVal;
+                this.value =  newVal;
+                
             }
         }
     })

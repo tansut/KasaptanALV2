@@ -329,9 +329,9 @@ export default class Route extends ViewRouter {
     }
 
     async ordersListRoute() {
-        this.api = new OrderApi(this.constructorParams);
-        let orders = await this.api.getOrders();
-        await this.sendView('pages/operator.orders.ejs', { orders: orders })
+        // this.api = new OrderApi(this.constructorParams);
+        // let orders = await this.api.getOrders();
+        await this.sendView('pages/operator.orders.ejs')
     }
 
 

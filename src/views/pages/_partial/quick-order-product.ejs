@@ -1,0 +1,181 @@
+<div class="d-print-none" id="quickorderproduct">
+    <div class="modal modal-fullscreen-sm" id="quickorderproductmodal" tabindex="-1" role="dialog" data-keyboard="false"
+        aria-hidden="true">
+        <div class="modal-dialog " role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 v-if="product" class="modal-title">{{product.name}}</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body p-0">
+                    <div v-if="product" class="text-center">
+                        <a target="_blank" class=" d-block overflow-hidden app_blank" :href="product.slug">
+                            <img style="width: 10rem;" width="500" height="500" :src="product.thumbnail"
+                                class="lazyload ">
+                        </a>
+
+                    </div>
+
+                    <form class="p-2" v-if="product" @submit="checkForm" method="post">
+                        <ul v-if="product.purchaseOptions.length > 1" class="nav nav-tabs  mb-3">
+                            <li v-for="(u, i) in product.purchaseOptions" class="nav-item font-size-sm">
+                                <a @click="selectedUnit=u; " :class="{'active': selectedUnit == u}"
+                                    class="nav-link">{{u.unitTitle}}</a>
+                            </li>
+                        </ul>
+                        <div v-if="selectedUnit" class=" mt-3 d-flex align-items-center justify-content-center">
+                            <p class="font-size-lg" v-if="selectedUnit && (selectedUnit.unit != 'kg')">Kaç <b>{{
+                                    selectedUnit.unitTitle }}</b> hazırlayalım?</p>
+                            <p class="font-size-lg" v-if="selectedUnit && (selectedUnit.unit == 'kg')"><b>Ne kadar</b>
+                                hazırlayalım?</p>
+
+
+
+                        </div>
+                        <amount-input v-if="selectedUnit" class="mb-2 font-size-md" :def="selectedUnit.default"
+                            :min="selectedUnit.min" :max="selectedUnit.max" :step="selectedUnit.step" v-model="quantity"
+                            :unit="selectedUnit.unitTitle">
+
+                        </amount-input>
+                        <div class="text-center mb-3" v-if="selectedUnit && selectedUnit.unitWeight">
+                            <span class="d-block text-muted font-size-sm">{{selectedUnit.unit != 'kg' ? '1 ' +
+                                selectedUnit.unit:''}} {{selectedUnit.unitWeight}}</span>
+
+                        </div>
+
+                        <div v-if="selectedUnit" class="px-3 mb-3 d-flex justify-content-between">
+                            <div  class="text-center">
+                              <span v-if="puan > 0" class="text-muted font-size-sm d-block">
+                                
+                                 Puan
+                              </span>
+                    
+                              <money-view v-if="puan > 0" class="badge badge-success font-size-md font-weight-medium" :money="puan">
+                              </money-view>
+                            </div>
+                    
+                            <div class="text-center">
+                              <span class="text-muted font-size-sm d-block">
+                                Tutar
+                              </span>
+                    
+                              <money-view class="badge badge-dark font-weight-medium font-size-md" :money="price">
+                              </money-view>
+                            </div>
+                    
+                    
+                          </div>
+                          <div class="form-group px-3">
+                                
+    
+                        </label>
+                        <textarea  v-model="note" maxlength="250"
+                          :placeholder="(selectedUnit && selectedUnit.notePlaceholder) || (product && product.notePlaceholder) || 'İletmek istediğiniz notunuz varsa burayı kullanabilirsiniz.'"
+                          class="d-none form-control font-size-sm" rows="4" name="note" id="note">
+
+                                                                
+                                                            </textarea>
+                      </div>
+
+                    </form>
+                </div>
+                <div class="d-flex justify-content-center modal-footer">
+                    <button type="button" @click="add2sc" class="btn rounded btn-primary" data-dismiss="modal"><i
+                            class="mr-1 czi-icon czi-thumb-up"></i> Sepete
+                        Ekle</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<script>
+
+    window.quickOrderProductApp = new Vue({
+        el: '#quickorderproduct',
+
+        mounted: function () {
+
+
+            $("#quickorderproductmodal").on('hide.bs.modal', function () {
+                this.$emit("dialog.hidden", this);
+            }.bind(this));
+        },
+
+        data: function () {
+            return {
+                errors: [],
+                selectedUnit: null,
+                product: null,
+                quantity: 0,
+            }
+        },
+
+        computed: {
+            price: function () {
+                if (this.selectedUnit && this.quantity) {
+                    var quantity = Number(this.quantity.toFixed(3));
+                    return Number((this.selectedUnit.unitPrice * quantity).toFixed(2));
+                } else return 0.00;
+            },
+
+            puan: function () {
+                var price = this.price;
+                if (price >= 0 && this.product && this.product.butcher && this.product.butcher.puanData && this.product.butcher.puanData.rate > 0) {
+                    return Number((price * this.product.butcher.puanData.rate).toFixed(2))
+                } else return 0.00;
+            }
+
+        },
+
+        methods: {
+
+            add2sc() {
+                this.$emit("add2sc", this);
+                $('#quickorderproductmodal').modal('hide');
+            },
+
+
+            show: function (product, butcher) {
+                App.Backend.get('product/quickinfo', {
+                    id: product.recid,
+                    butcher: butcher ? butcher : ''
+                }).then(function (result) {
+                    if (result.data) {
+                        this.$emit("dialog.shown", this);
+                        this.product = result.data;
+                        this.selectedUnit = result.data.purchaseOptions[0];
+                        this.quantity = this.selectedUnit.default;
+                        $('#quickorderproductmodal').modal('show');
+                    } else {
+                        this.$emit("product.notavailable", product);
+                    }
+
+                }.bind(this)).catch(App.HandleError.bind(App))
+
+            },
+
+            checkForm: function (e) {
+                this.errors = [];
+                e.preventDefault();
+                var self = this;
+
+                if (!this.custOrder) {
+                    this.errors.push('Lütfen içerik girin.')
+                }
+
+                if (this.errors.length) return;
+
+                window.App.gTag("user actions", "pratik sipariş ver click", this.butchername);
+
+            }
+        }
+
+    })
+
+
+
+</script>

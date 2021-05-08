@@ -272,9 +272,9 @@ class Route extends router_1.ViewRouter {
     }
     ordersListRoute() {
         return __awaiter(this, void 0, void 0, function* () {
-            this.api = new order_1.default(this.constructorParams);
-            let orders = yield this.api.getOrders();
-            yield this.sendView('pages/operator.orders.ejs', { orders: orders });
+            // this.api = new OrderApi(this.constructorParams);
+            // let orders = await this.api.getOrders();
+            yield this.sendView('pages/operator.orders.ejs');
         });
     }
     orderItemUpdateRoute() {

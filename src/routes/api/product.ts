@@ -750,7 +750,7 @@ export default class Route extends ApiRouter {
         result.butcherProductNote = this.markdown.render(product.butcherProductNote || '');
         result.priceUnit = product.priceUnit;
         result.enabled = false;
-
+        result.offerableBy = product.offerableBy;
         if (butcher && butcher.products) {
             let butcherProduct = butcher.products.find(c => (c.productid == product.id));
             result.fromButcherNote = butcherProduct ? butcherProduct.fromButcherDesc : '';
@@ -950,6 +950,7 @@ export default class Route extends ApiRouter {
             id: view.id,
             name: view.name,
             kgTitle: view.kgTitle,
+            offerableBy: view.offerableBy,
             units: getpOptions().map(po => {
                 return {
                     id: po.id,
@@ -1178,7 +1179,9 @@ export default class Route extends ApiRouter {
         // })
 
         if (!newItem.canBeEnabled()) newItem.enabled = false;
-
+        if (newItem.enabled && product.offerableBy == 'manager' && !this.req.user.hasRole('admin')) {
+            newItem.enabled = false;
+        }
 
 
         await db.getContext().transaction((t: Transaction) => {
@@ -1193,13 +1196,31 @@ export default class Route extends ApiRouter {
         this.res.send(edit);
     }
 
+   @Auth.Anonymous() 
+    async getProductQuickInfo() {
+        if (!this.req.query.id) return this.next;
+        let p = await Product.findOne({
+            where: {id: this.req.query.id}
+        });
+        if (!p) return this.next;
+        let butcher: Butcher = null;
+        if (this.req.query.butcher) {
+            butcher = await Butcher.loadButcherWithProducts(this.req.query.butcher as string, false);
+        }
+        let view = await this.getProductView(p, butcher, null, false, false);
+        view['thumbnail'] = this.req.helper.imgUrl("product-photos", view.slug)
+        this.res.send(butcher ? (view.source != 'butcher' ? null: view): view);
+    }
+
     static SetRoutes(router: express.Router) {
         // router.get("/product/:slug", Route.BindRequest(this.prototype.searchRoute));
         // router.get("/product/:slug/:butcher", Route.BindRequest(this.prototype.searchRoute));
         router.get("/product/:butcher/prePrices", Route.BindRequest(this.prototype.viewProductsForButchers));
         router.post("/product/:butcher/prePrices", Route.BindRequest(this.prototype.saveProductsForButchers));
         router.post("/product/:butcher/campaign", Route.BindRequest(this.prototype.saveCampaign));
+        router.get("/product/quickinfo", Route.BindRequest(this.prototype.getProductQuickInfo));
 
+        
         
     }
 }

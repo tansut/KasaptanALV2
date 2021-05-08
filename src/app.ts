@@ -1,5 +1,7 @@
 import * as express from 'express';
-const compression = require('compression')
+const compression = require('compression');
+// const ipfilter = require('express-ipfilter').IpFilter
+const fs = require('fs');
 
 import * as bp from 'body-parser';
 import * as http from 'http';
@@ -138,6 +140,23 @@ class KasaptanAlApp {
         let dbinstance = await db.init(false);
         this.app = express();
         this.app.use(compression())
+
+        // let serverConfigFile = await fs.readFileSync(path.join(__dirname, "../server.json"));
+        // let serverConfig = JSON.parse(serverConfigFile);
+
+        // this.app.use(
+        //     ipfilter({
+        //     //   detectIp: function(req, res) {
+        //     //       debugger
+        //     //     return req.headers['x-forwarded-for'] ? (req.headers['x-forwarded-for']).split(',')[0] : this.req.connection.remoteAddress
+        //     //   },
+        //       log: true,
+        //       mode: 'deny',
+        //       forbidden: 'You are not authorized to access this page.',
+        //       filter: serverConfig.block,
+        //     })
+        //   )
+
         this.app.use(fileUpload())
         this.app.use(cors({
 
@@ -167,10 +186,14 @@ class KasaptanAlApp {
         ButcherManualLogistics.register();
         ButcherAutoLogistics.register();
         ToBanabikuryeProvider.register();
+
+
+
+ 
         this.app.use((req, res, next) => {
             let proto = req.header("x-forwarded-proto") || null;
             let host = (req.get('Host') || "").toLowerCase();
-
+ 
             if (proto && host == "kasaptanal.com")
                 return res.redirect(301, "https://www.kasaptanal.com" + req.originalUrl)
 
