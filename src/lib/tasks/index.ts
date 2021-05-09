@@ -6,7 +6,7 @@ let appRoutes = [
     //'./butcherstats',
     //'./productstats',
     //'./reviewstask',
-    './rutins',
+    //'./rutins',
     //'./areatask',
     './orderbutcherremainers',
     './ordercustomerremainers'
