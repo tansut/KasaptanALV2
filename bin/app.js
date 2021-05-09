@@ -116,6 +116,7 @@ class KasaptanAlApp {
                 let ip = req.headers['x-forwarded-for'] ? (req.headers['x-forwarded-for']) : req.connection.remoteAddress;
                 if (serverConfig.blockedips.indexOf(ip) == -1)
                     return next();
+                console.log('Blocked' + ip);
                 res.sendStatus(403);
             });
             this.app.use(fileUpload());

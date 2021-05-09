@@ -33,14 +33,18 @@ exports.SearchResult = SearchResult;
 class Route extends router_1.ApiRouter {
     getProducrs(search) {
         return __awaiter(this, void 0, void 0, function* () {
-            let psql = this.req.query.c ?
-                "select p.id, p.name as name, p.slug as url, 'ürün' as type, match(p.name, p.shortdesc, p.slug, p.keywords) against (:search IN BOOLEAN MODE) as RELEVANCE " +
-                    "from Products p, ProductCategories pc, Categories c where p.status='onsale' and pc.productid = p.id and c.id = pc.categoryid and c.slug = :category and match(p.name, p.shortdesc, p.slug, p.keywords)  against (:search IN BOOLEAN MODE) ORDER BY RELEVANCE DESC LIMIT 10"
-                :
-                    "select p.id, p.name, p.slug as url, '' as type, match(p.name, p.shortdesc, p.slug, p.keywords) against (:search IN BOOLEAN MODE) as RELEVANCE " +
-                        "from Products p where p.status='onsale' and match(p.name, p.shortdesc, p.slug, p.keywords)  against (:search IN BOOLEAN MODE) ORDER BY RELEVANCE DESC LIMIT 10";
+            let psql = "select p.id, p.name, p.slug as url, '' as type, match(p.name, p.shortdesc, p.slug, p.keywords) against (:search IN BOOLEAN MODE) as RELEVANCE " +
+                "from Products p where p.status='onsale' and match(p.name, p.shortdesc, p.slug, p.keywords)  against (:search IN BOOLEAN MODE) ORDER BY RELEVANCE DESC LIMIT 15";
+            if (this.req.query.c) {
+                psql = "select p.id, p.name as name, p.slug as url, 'ürün' as type, match(p.name, p.shortdesc, p.slug, p.keywords) against (:search IN BOOLEAN MODE) as RELEVANCE " +
+                    "from Products p, ProductCategories pc, Categories c where p.status='onsale' and pc.productid = p.id and c.id = pc.categoryid and c.slug = :category and match(p.name, p.shortdesc, p.slug, p.keywords)  against (:search IN BOOLEAN MODE) ORDER BY RELEVANCE DESC LIMIT 15";
+            }
+            else if (this.req.query.b) {
+                psql = "select p.id, p.name as name, p.slug as url, 'ürün' as type, match(p.name, p.shortdesc, p.slug, p.keywords) against (:search IN BOOLEAN MODE) as RELEVANCE " +
+                    "from Products p, ButcherProducts bp, Butchers b where p.status='onsale' and b.slug=:butcher and bp.enabled and bp.productid = p.id and b.id = bp.butcherid and match(p.name, p.shortdesc, p.slug, p.keywords)  against (:search IN BOOLEAN MODE) ORDER BY RELEVANCE DESC LIMIT 15";
+            }
             let prods = yield user_1.default.sequelize.query(psql, {
-                replacements: { search: search, category: this.req.query.c },
+                replacements: { search: search, butcher: this.req.query.b, category: this.req.query.c },
                 type: sq.QueryTypes.SELECT,
                 mapToModel: false,
                 raw: true

@@ -165,6 +165,7 @@
 
       methods: {
         go() {
+          this.list = null;
           App.Backend.get('order/list', {
             q: this.time,
             status: this.status,

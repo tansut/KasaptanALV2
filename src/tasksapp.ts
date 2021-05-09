@@ -96,7 +96,7 @@ class KasaptanAlTasksApp {
   
         process.on('SIGTERM', this.shutDown.bind(this));
         process.on('SIGINT', this.shutDown.bind(this));
-        await Tasks.start()
+        await Tasks.start();
     }
 }
 

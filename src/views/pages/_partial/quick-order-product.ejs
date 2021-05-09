@@ -154,7 +154,10 @@
                         this.$emit("product.notavailable", product);
                     }
 
-                }.bind(this)).catch(App.HandleError.bind(App))
+                }.bind(this)).catch(function(err) {
+                    App.HandleError(err);
+                    this.$emit("product.notavailable", product);
+                }.bind(this))
 
             },
 

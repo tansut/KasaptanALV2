@@ -1209,7 +1209,32 @@ export default class Route extends ApiRouter {
         }
         let view = await this.getProductView(p, butcher, null, false, false);
         view['thumbnail'] = this.req.helper.imgUrl("product-photos", view.slug)
-        this.res.send(butcher ? (view.source != 'butcher' ? null: view): view);
+        let result = butcher ? (view.source != 'butcher' ? null: view): view;
+        if (result) {
+            let r = {
+                name: view.name,
+                slug: view.slug,
+                thumbnail: view['thumbnail'],
+                butcher: view.butcher ? {
+                    puanData: view.butcher.puanData,
+                    
+                }: null,
+                purchaseOptions: view.purchaseOptions.map(po=> {
+                    return {
+                        default: po.default,
+                        min: po.min,
+                        max: po.max,
+                        unit: po.unit,
+                        unitTitle: po.unitTitle,
+                        step: po.step,
+                        unitWeight: po.unitWeight,
+                        notePlaceholder: po.notePlaceholder,
+                        unitPrice: po.unitPrice
+                    }
+                })
+            }
+            this.res.send(r)
+        } else this.res.send(null)
     }
 
     static SetRoutes(router: express.Router) {

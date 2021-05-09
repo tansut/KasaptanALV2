@@ -3,11 +3,11 @@ import Helper from "../helper";
 import { BaseTask } from "./basetask";
 
 let appRoutes = [
-    './butcherstats',
-    './productstats',
-    './reviewstask',
+    //'./butcherstats',
+    //'./productstats',
+    //'./reviewstask',
     './rutins',
-    './areatask',
+    //'./areatask',
     './orderbutcherremainers',
     './ordercustomerremainers'
 ];
@@ -48,9 +48,10 @@ export default class TaskLoader {
             let instance: BaseTask = new type(file);
             TaskLoader.tasks.push(instance);
         });
-        TaskLoader.tasks.forEach(t => {
-             t.init();
-        })
+        for(let i= 0; i < TaskLoader.tasks.length; i++) {
+            let t = TaskLoader.tasks[i]
+            await t.init();
+        }
         return routings;
     }
 }

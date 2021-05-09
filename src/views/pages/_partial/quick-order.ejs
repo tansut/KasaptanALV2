@@ -12,7 +12,10 @@
                 <div class="modal-body p-3">
                     <form @submit="checkForm" method="post">
 
-                        <h5 v-if="step==1" class="h5">Siparişinizi kasabımıza iletin, hemen hazırlayıp gönderelim.</h5>
+                        <h5 v-if="step==1" class="h5">Siparişinizi kasabımıza iletin, hemen hazırlayıp gönderelim.  <span v-if="working" class="spinner-grow text-primary" role="status">
+                           
+                        </span></h5>
+                       
                         <p class="text-primary" v-if="errors.length">
                             <b>Lütfen aşağıdaki hataları düzeltin:</b>
                         <ul>
@@ -72,10 +75,10 @@
                                             aria-hidden="true"></span>
                                     </span>
                                 </div>
-                                <input data-gourl="false" data-search="product" id="page-quickproductsearchbox"
+                                <input data-gourl="false" data-search="product" :data-butcher="butcherslug" id="page-quickproductsearchbox"
                                     class="form-control searchBox prepended-form-control"
                                     data-noresults-text="Maalesef bulamadık." autocomplete="off" type="search"
-                                    placeholder="ürünler içerisinde arayın">
+                                    placeholder="arayın ve listeye ekleyin">
                                 <div>
 
                                 </div>
@@ -86,7 +89,7 @@
                                 <div class="form-group col-md-12">
                                     <label>Kasabımızdan taptaze neler istersiniz ?</label>
                                     <textarea rows="5" v-model="custOrder" required class="form-control"
-                                        placeholder="Kuzu veya dana olarak ağırlık veya adetleriyle yazın. Örneğin &#13;&#10; 2kg kuzu kıyma &#13;&#10; 2kg dana kuşbaşı &#13;&#10; 1 adet sucuk gibi."></textarea>
+                                        placeholder="Kuzu veya dana olarak ağırlık veya adetleriyle yazın. Örneğin &#13;&#10; 2kg az yağlı kuzu kıyma &#13;&#10; 2kg yağsız dana kuşbaşı &#13;&#10; 1 adet sucuk gibi."></textarea>
                                 </div>
                             </div>
 
@@ -133,11 +136,11 @@
 
             window.quickOrderProductApp.$on("dialog.hidden", function (instance) {
                 $('#quickordermodal').modal('show');
-
+                this.working = false;
             }.bind(this));
 
             $("#page-quickproductsearchbox").on('autocomplete.selected', function (e, item) {
-                debugger;
+                this.working = true;
                 window.quickOrderProductApp.show(item, this.butcherslug);
             }.bind(this));
 
@@ -145,6 +148,7 @@
             window.quickOrderProductApp.$on('product.notavailable', function (e, item) {
                 App.alert('Maalesef bu ürünü şu an sağlayamıyoruz, farklı bir ürün seçin lütfen.')
                 $("#page-quickproductsearchbox").val("");
+                this.working = false;
             }.bind(this));
 
 
@@ -163,7 +167,8 @@
                 custAddress: '',
                 custNote: '',
                 step: 1,
-                prefAdr: {}
+                prefAdr: {},
+                working: false
             }
         },
 

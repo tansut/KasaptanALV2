@@ -126,7 +126,7 @@ window.App.platform = '<%=controller.platform%>'
                 self.jqXHR = $.ajax(
                   '/api/v1/fts',
                   {
-                    data: { t: $(el).data('search'), c: $(el).data('category'), 'q': qry}
+                    data: { t: $(el).data('search'), b: $(el).data('butcher'), c: $(el).data('category'), 'q': qry}
                   }
                 ).done(function (res) {
                   console.log('done',qry)

@@ -11,11 +11,11 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 Object.defineProperty(exports, "__esModule", { value: true });
 const helper_1 = require("../helper");
 let appRoutes = [
-    './butcherstats',
-    './productstats',
-    './reviewstask',
+    //'./butcherstats',
+    //'./productstats',
+    //'./reviewstask',
     './rutins',
-    './areatask',
+    //'./areatask',
     './orderbutcherremainers',
     './ordercustomerremainers'
 ];
@@ -50,9 +50,10 @@ class TaskLoader {
                 let instance = new type(file);
                 TaskLoader.tasks.push(instance);
             });
-            TaskLoader.tasks.forEach(t => {
-                t.init();
-            });
+            for (let i = 0; i < TaskLoader.tasks.length; i++) {
+                let t = TaskLoader.tasks[i];
+                yield t.init();
+            }
             return routings;
         });
     }
