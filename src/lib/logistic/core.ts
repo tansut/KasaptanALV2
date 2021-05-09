@@ -289,14 +289,14 @@ export class LogisticProvider {
 
     offerFromOrder(o: Order): OfferRequest {
         let req: OfferRequest = <any>this.fromOrder(o);
-        req.notifyCustomerSms = true;
+        req.notifyCustomerSms = false;
         return req;
     }
 
 
     orderFromOrder(o: Order): OrderRequest {
         let req: OrderRequest = <any>this.fromOrder(o);
-        req.notifyCustomerSms = true;
+        req.notifyCustomerSms = false;
         return req;
     }
 

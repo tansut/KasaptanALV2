@@ -167,17 +167,15 @@ class Route extends router_1.ViewRouter {
                         level: 1,
                         status: "active"
                     },
+                    mapToModel: false,
+                    raw: true,
                     order: [['displayOrder', 'desc']]
                 });
             }
             let butchers = yield butcher_1.default.findAll({
                 where: where,
                 limit: 100,
-                order: [["displayOrder", "DESC"]],
-                include: [{
-                        model: area_2.default,
-                        as: "areaLevel1"
-                    }]
+                order: [["displayOrder", "DESC"]]
             });
             this.res.render('pages/butchers.ejs', this.viewData({
                 subs: subs, ellipsis: ellipsis,

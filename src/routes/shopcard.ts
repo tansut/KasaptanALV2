@@ -458,11 +458,11 @@ export default class Route extends ViewRouter {
 
     @Auth.Anonymous()
     async savereviewRoute() {
-        this.shopcard = await ShopCard.createFromRequest(this.req);
-        await this.setDispatcher();
 
-        this.shopcard.calculateShippingCosts();
         try {
+            this.shopcard = await ShopCard.createFromRequest(this.req);
+            await this.setDispatcher();
+            this.shopcard.calculateShippingCosts();
             let api = new OrderApi(this.constructorParams);
             let orders = await api.create(this.shopcard);
             if (this.req.body.usepuan == "true") {
@@ -481,7 +481,10 @@ export default class Route extends ViewRouter {
             
 
         } catch (err) {
-            Helper.logError(err, this.req);
+            Helper.logError(err, {
+                method: 'savereviewRoute',
+                user: this.req.user ? this.req.user.name:''
+            }, this.req);
             await this.reviewViewRoute({ _usrmsg: { text: err.message || err.errorMessage } })
         }
     }

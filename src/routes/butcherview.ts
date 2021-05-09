@@ -110,13 +110,13 @@ export default class Route extends ViewRouter {
         this.shopcard = await ShopCard.createFromRequest(this.req);
         
         if (!butcher) {
-            let group = await ButcherModel.count({
+            let group = await ButcherModel.findOne({
                 where: {
                     parentButcher: this.req.params.butcher
                 }
                 
             })
-            if (group > 0) {
+            if (group ) {
                 return this.res.redirect('/kasaplar?g=' + this.req.params.butcher)
             }  
             return this.next();
@@ -166,7 +166,7 @@ export default class Route extends ViewRouter {
 
         let productCategories = await ProductCategory.findAll({
             include: [{
-                all: true
+                model: Category
             }]
         });
 

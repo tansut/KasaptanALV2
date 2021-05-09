@@ -428,10 +428,10 @@ class Route extends router_1.ViewRouter {
     }
     savereviewRoute() {
         return __awaiter(this, void 0, void 0, function* () {
-            this.shopcard = yield shopcard_1.ShopCard.createFromRequest(this.req);
-            yield this.setDispatcher();
-            this.shopcard.calculateShippingCosts();
             try {
+                this.shopcard = yield shopcard_1.ShopCard.createFromRequest(this.req);
+                yield this.setDispatcher();
+                this.shopcard.calculateShippingCosts();
                 let api = new order_2.default(this.constructorParams);
                 let orders = yield api.create(this.shopcard);
                 if (this.req.body.usepuan == "true") {
@@ -448,7 +448,10 @@ class Route extends router_1.ViewRouter {
                 this.res.redirect('/alisveris-sepetim/complete?orders=' + orders.map(o => o.ordernum).join(','));
             }
             catch (err) {
-                helper_1.default.logError(err, this.req);
+                helper_1.default.logError(err, {
+                    method: 'savereviewRoute',
+                    user: this.req.user ? this.req.user.name : ''
+                }, this.req);
                 yield this.reviewViewRoute({ _usrmsg: { text: err.message || err.errorMessage } });
             }
         });

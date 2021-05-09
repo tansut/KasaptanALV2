@@ -12,7 +12,7 @@ import ButcherProduct from './butcherproduct';
     },
 
     {
-        name: "review_idx2",
+        // name: "review_idx2",
         fields: ["type", "ref2"]
     }]
 })

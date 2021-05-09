@@ -176,7 +176,7 @@ Review = __decorate([
                 fields: ["type", "ref1"]
             },
             {
-                name: "review_idx2",
+                // name: "review_idx2",
                 fields: ["type", "ref2"]
             }]
     })

@@ -148,6 +148,7 @@
                         $('#quickorderproductmodal').modal('hide');
                     }.bind(this)).catch(function (err) {
                         App.HandleError(err);
+                        $('#quickorderproductmodal').modal('hide');
                     })
                 } else {
                     this.$emit("add2sc", this);

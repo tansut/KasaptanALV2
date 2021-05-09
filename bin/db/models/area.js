@@ -374,6 +374,22 @@ Area = Area_1 = __decorate([
                 fields: ["slug"],
                 unique: true
             },
+            {
+                name: "status_idx",
+                fields: ["status"]
+            },
+            {
+                name: "name_idx",
+                fields: ["Name"]
+            },
+            {
+                name: "order_idx",
+                fields: ["displayOrder"]
+            },
+            {
+                name: "level_idx",
+                fields: ["level"]
+            },
             { type: 'FULLTEXT', name: 'area_fts', fields: ['name', 'slug', 'keywords', 'display'] }]
     })
 ], Area);

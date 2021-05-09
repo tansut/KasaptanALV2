@@ -181,6 +181,8 @@ export default class Route extends ViewRouter {
                     level: 1,
                     status: "active"
                 },
+                mapToModel: false,
+                raw: true,
                 order: [['displayOrder', 'desc']]
             })
         }
@@ -188,11 +190,7 @@ export default class Route extends ViewRouter {
         let butchers = await ButcherModel.findAll({
             where: where,
             limit: 100,
-            order: [["displayOrder", "DESC"]],
-            include: [{
-                model: Area,
-                as: "areaLevel1"
-            }]
+            order: [["displayOrder", "DESC"]]
         })
 
 

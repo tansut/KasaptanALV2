@@ -1,22 +1,22 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 let appRoutes = [
-    './butcherview',
+    './default',
+    './shopcard',
+    './product.list',
+    './anonymous',
+    './error',
+    './category',
+    './content',
     './area',
     './resource',
     './product',
-    './category',
     './pricecategory',
-    './content',
-    './product.list',
-    './default',
-    './anonymous',
-    './error',
-    './shopcard',
     './creditcard',
     './payorder',
     './butcherfeecalculator',
-    './manageorder'
+    './manageorder',
+    './butcherview'
 ];
 class RouteLoader {
     static use(router) {

@@ -157,7 +157,9 @@ class KasaptanAlApp {
         }))
 
         const sequelizeSessionStore = new SessionStore({
-            db: dbinstance,
+            db: dbinstance
+        }, function() {
+            sequelizeSessionStore.setExpirationInterval()
         });
 
         let sess = {
@@ -165,7 +167,8 @@ class KasaptanAlApp {
             cookie: <any>{},
             store: sequelizeSessionStore,
             resave: false,
-            saveUninitialized: true
+            saveUninitialized: false,
+            
         }
 
         if (config.nodeenv === 'production') {

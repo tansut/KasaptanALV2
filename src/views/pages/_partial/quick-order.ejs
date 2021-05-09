@@ -130,15 +130,12 @@
                 this.custOrder += (this.custOrder ? String.fromCharCode(13) : '') + instance.quantity + ' ' + instance.selectedUnit.unitTitle + ' ' + instance.product.name;
                 $("#page-quickproductsearchbox").val("");
                 setTimeout(function() {
-               
-                $("#page-quickproductsearchbox").focus();
-                    
+                    $("#page-quickproductsearchbox").focus();
                 }, 100);
             }.bind(this))
 
             window.quickOrderProductApp.$on("dialog.shown", function (instance) {
                 if (this.disabled) return;
-
                 $('#quickordermodal').modal('hide');
             }.bind(this))
 

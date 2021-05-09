@@ -30,6 +30,25 @@ export interface AreaLevels {
         unique: true
     },
 
+    {
+        name: "status_idx",
+        fields: ["status"]
+    },
+
+    {
+        name: "name_idx",
+        fields: ["Name"]
+    },
+        {
+        name: "order_idx",
+        fields: ["displayOrder"]
+    },
+
+    {
+        name: "level_idx",
+        fields: ["level"]
+    },
+
     { type: 'FULLTEXT', name: 'area_fts', fields: ['name', 'slug', 'keywords', 'display'] }]
 })
 class Area extends BaseModel<Area> {

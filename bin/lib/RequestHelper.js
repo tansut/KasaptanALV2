@@ -93,6 +93,10 @@ class RequestHelper {
     static use(app) {
         app.use((req, res, next) => {
             req.helper = new RequestHelper(req, res);
+            if (config_1.default.nodeenv == 'development') {
+                if (req.url.indexOf('static') >= 0)
+                    return next();
+            }
             req.helper.fillPreferredAddress().then(r => next()).catch(next);
         });
     }

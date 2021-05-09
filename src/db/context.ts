@@ -47,11 +47,17 @@ let init = (alter: boolean = true) => {
     dbInstance = new Sequelize({
         database: config.dbname,
     
+
         dialect: 'mysql',
         username: config.dbuser,
         password: config.dbpwd,
         port: config.dbport,
         host: config.dbaddress,
+        // logging: function(sql) {
+        //     if (sql.indexOf('SELECT `id`, `location`,') >=0) {
+        //         console.log(sql)
+        //     }
+        // },
         logging: false,
         dialectOptions: { decimalNumbers: true }
     });

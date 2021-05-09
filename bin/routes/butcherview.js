@@ -25,6 +25,7 @@ const helper_1 = require("../lib/helper");
 const resource_1 = require("./resource");
 const Jimp = require('jimp');
 const productManager_1 = require("../lib/productManager");
+const category_1 = require("../db/models/category");
 const productcategory_1 = require("../db/models/productcategory");
 var MarkdownIt = require('markdown-it');
 const _ = require("lodash");
@@ -93,12 +94,12 @@ class Route extends router_1.ViewRouter {
             let butcher = this.butcher = yield butcher_1.default.loadButcherWithProducts(this.req.params.butcher);
             this.shopcard = yield shopcard_1.ShopCard.createFromRequest(this.req);
             if (!butcher) {
-                let group = yield butcher_1.default.count({
+                let group = yield butcher_1.default.findOne({
                     where: {
                         parentButcher: this.req.params.butcher
                     }
                 });
-                if (group > 0) {
+                if (group) {
                     return this.res.redirect('/kasaplar?g=' + this.req.params.butcher);
                 }
                 return this.next();
@@ -132,7 +133,7 @@ class Route extends router_1.ViewRouter {
             butcher.products = _.sortBy(butcher.products, ["displayOrder", "updatedOn"]).reverse();
             let productCategories = yield productcategory_1.default.findAll({
                 include: [{
-                        all: true
+                        model: category_1.default
                     }]
             });
             this.products = butcher.products.map(p => {

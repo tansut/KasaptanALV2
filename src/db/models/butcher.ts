@@ -30,7 +30,19 @@ export type ManualPaymentsAsDebt = 'add' | 'none';
         {
             name: "displayOrder_idx",
             fields: ["displayOrder"]
-        }]
+        }, {
+            name: 'parentButcher_idx',
+            fields: ['parentButcher']
+        },
+        {
+            name: 'butcherstatus_idx',
+            fields: ['status']
+        },
+        {
+            name: 'approved_idx',
+            fields: ['approved']
+        }
+    ]
 })
 class Butcher extends BaseModel<Butcher> {
 

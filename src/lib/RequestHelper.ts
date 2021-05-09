@@ -90,6 +90,9 @@ export class RequestHelper {
     static use(app: express.Application) {
         app.use((req: AppRequest, res, next) => {
             req.helper = new RequestHelper(req, res);
+            if (config.nodeenv == 'development') {
+                if (req.url.indexOf('static')>=0) return next()
+            }
             req.helper.fillPreferredAddress().then(r => next()).catch(next)
         })
     }

@@ -167,21 +167,20 @@ class Route extends router_1.ApiRouter {
             let scItem = shopcard.items[item.order];
             shopcard.remove(item.order);
             yield shopcard.saveToRequest(this.req);
-            let l = this.generateUserLog('shopcard', 'remove');
-            try {
-                if (l) {
-                    l.productid = scItem.product.id;
-                    l.productName = scItem.product.name;
-                    l.butcherid = scItem.product.butcher.id;
-                    l.butcherName = scItem.product.butcher.name;
-                    yield this.saveUserLog(l);
-                }
-            }
-            catch (err) {
-                helper_1.default.logError(err, {
-                    item: scItem
-                }, this.req);
-            }
+            // let l = this.generateUserLog('shopcard', 'remove');
+            // try {
+            //     if (l) {
+            //         l.productid = scItem.product.id;
+            //         l.productName = scItem.product.name;
+            //         l.butcherid = scItem.product.butcher.id;
+            //         l.butcherName = scItem.product.butcher.name;
+            //         await this.saveUserLog(l);
+            //     }
+            // } catch(err) {
+            //     Helper.logError(err, {
+            //         item: scItem
+            //     }, this.req)
+            // }
             this.res.send(shopcard);
         });
     }

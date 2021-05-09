@@ -1,22 +1,22 @@
 import * as express from "express";
 
 let appRoutes = [
-    './butcherview',
+    './default',
+    './shopcard',
+    './product.list',
+    './anonymous',
+    './error',
+    './category',
+    './content',
     './area',
     './resource',
     './product',
-    './category',
     './pricecategory',
-    './content',
-    './product.list',
-    './default',
-    './anonymous',
-    './error',
-    './shopcard',
     './creditcard',
     './payorder',
     './butcherfeecalculator',
-    './manageorder'
+    './manageorder',
+    './butcherview'
 ];
 
 export default class RouteLoader {

@@ -122,14 +122,16 @@ class KasaptanAlApp {
             this.app.use(fileUpload());
             this.app.use(cors({}));
             const sequelizeSessionStore = new SessionStore({
-                db: dbinstance,
+                db: dbinstance
+            }, function () {
+                sequelizeSessionStore.setExpirationInterval();
             });
             let sess = {
                 secret: 'kasaplarin efendisi',
                 cookie: {},
                 store: sequelizeSessionStore,
                 resave: false,
-                saveUninitialized: true
+                saveUninitialized: false,
             };
             if (config_1.default.nodeenv === 'production') {
                 this.app.set('trust proxy', 1); // trust first proxy
