@@ -65,7 +65,7 @@
                             </div>
                         </div>
                         <div v-show="step==1">
-                            <div class="input-group-overlay mb-3">
+                            <div class="d-none input-group-overlay mb-3">
 
                                 <div class="input-group-prepend-overlay">
 
@@ -126,15 +126,20 @@
 
 
             window.quickOrderProductApp.$on("add2sc", function (instance) {
+                if (this.disabled) return;
                 this.custOrder += (this.custOrder ? String.fromCharCode(13) : '') + instance.quantity + ' ' + instance.selectedUnit.unitTitle + ' ' + instance.product.name;
                 $("#page-quickproductsearchbox").val("");
             }.bind(this))
 
             window.quickOrderProductApp.$on("dialog.shown", function (instance) {
+                if (this.disabled) return;
+
                 $('#quickordermodal').modal('hide');
             }.bind(this))
 
             window.quickOrderProductApp.$on("dialog.hidden", function (instance) {
+                if (this.disabled) return;
+
                 $('#quickordermodal').modal('show');
                 this.working = false;
             }.bind(this));
@@ -146,6 +151,8 @@
 
 
             window.quickOrderProductApp.$on('product.notavailable', function (e, item) {
+                if (this.disabled) return;
+
                 App.alert('Maalesef bu ürünü şu an sağlayamıyoruz, farklı bir ürün seçin lütfen.')
                 $("#page-quickproductsearchbox").val("");
                 this.working = false;
@@ -168,7 +175,8 @@
                 custNote: '',
                 step: 1,
                 prefAdr: {},
-                working: false
+                working: false,
+                disabled: false
             }
         },
 
@@ -290,9 +298,12 @@
                     }, { msg: 'Lütfen önce mahallenizi seçin böylece hizmet verip veremeyeceğimizi kontrol edelim.' })
                 } else {
                     this.step = 1;
+                    this.disabled = false;
+                    this.working = false;
                     var self = this;
                     Object.assign(self, params || {});
-                    this.fillParams()
+                    this.fillParams();
+                    window.quickOrderProductApp.useShopcard = true;
                     $('#quickordermodal').modal('show');
                 }
             }

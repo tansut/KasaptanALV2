@@ -181,33 +181,32 @@
                 <% } %>
 
                 <% if (!__req.prefAddr) {  %>
-                  <div class="alert alert-secondary">
+                  <!-- <div class="alert alert-secondary">
                     <span class="d-block mb-2">Sipariş vermek için lütfen önce semtinizi seçin.</span>
                      
                     <a data-return="/<%=butcher.slug%>#delivery" class=" select-area-action rounded  btn btn-primary">Semt Seç</a>
                 
                   
-                  </div>
+                  </div> -->
                 <% } else { %>
-                  <div class="mb-3">
-                    <% if ((!controller.logisticsProvider || controller.logisticsPriceSlice.length == 0) && __req.prefAddr) { %>
-                    
-                      <% } else { %>
-                 <a data-tag="true" data-category="user actions" data-action="pratik sipariş click" data-label="<%=butcher.slug%>" onclick="quickOrderApp.open({butchername: '<%=butcher.name%>', 'butcherslug': '<%=butcher.slug%>'})" class="font-weight-bold btn mb-3  btn-sm rounded btn-danger mr-2"><i class="czi-icon czi-cart mr-1"></i>Pratik Sipariş</a>
-  
-                    <% } %>
-  
-                    <a data-tag="true" data-category="user actions" data-action="kasabı ara click" data-label="<%=butcher.slug%>" href="tel:08503054216" class="mb-3 font-weight-bold btn btn-dark btn-sm rounded "><i class="czi-icon czi-phone mr-2"></i>Kasabı Ara</a>
-                    <span class="d-block mb-2">Whatasapp Destek: <a data-tag="true" data-category="user actions" data-action="whatsapp sipariş click" data-label="<%=butcher.slug%>" class="text-dark" target="_blank" href="https://wa.me/+908503059286?text=<%=butcher.name%> <%=__req.prefAddr.display%> semtinden sipariş vermek istiyorum.">0 850 305 9286</a></span>
-                    
-                    <span class="d-none my-2">Whatsapp Destek</span>
-                    <!-- <a data-tag="true" data-category="user actions" data-action="online sipariş click" data-label="<%=butcher.slug%>" class="btn rounded-lg btn-sm btn-success mr-2" href="/<%=butcher.slug%>/siparis">Online</a> -->
-                     <!-- <a data-tag="true" data-category="user actions" data-action="whatsapp sipariş click" data-label="<%=butcher.slug%>" class="btn font-weight-bold rounded-lg btn-sm btn-dark" target="_blank" href="https://wa.me/+908503059286?text=<%=butcher.name%> <%=__req.prefAddr.display%> semtinden sipariş vermek istiyorum."><i class="czi-icon mr-1 czi-message"></i>Whatsapp</a> -->
-
-
-                  </div>
+                  
                 <% } %>
 
+                <div class="mb-3">
+                  <% if ((!controller.logisticsProvider || controller.logisticsPriceSlice.length == 0) && __req.prefAddr) { %>
+                  
+                    <% } else { %>
+               <a data-tag="true" data-category="user actions" data-action="pratik sipariş click" data-label="<%=butcher.slug%>" onclick="quickOrderApp.open({butchername: '<%=butcher.name%>', 'butcherslug': '<%=butcher.slug%>'})" class="font-weight-bold btn mb-3  btn-sm rounded btn-danger mr-2"><i class="czi-icon czi-cart mr-1"></i>Pratik Sipariş</a>
+
+                  <% } %>
+
+                  <a data-tag="true" data-category="user actions" data-action="kasabı ara click" data-label="<%=butcher.slug%>" href="tel:08503054216" class="mb-3 font-weight-bold btn btn-dark btn-sm rounded "><i class="czi-icon czi-phone mr-2"></i>Kasabı Ara</a>
+                  <% if (__req.prefAddr) {  %>
+                  <span class="d-block mb-2">Whatasapp Destek: <a data-tag="true" data-category="user actions" data-action="whatsapp sipariş click" data-label="<%=butcher.slug%>" class="text-dark" target="_blank" href="https://wa.me/+908503059286?text=<%=butcher.name%> <%=__req.prefAddr.display%> semtinden sipariş vermek istiyorum.">0 850 305 9286</a></span>
+                  <% } %>
+          
+
+                </div>
             
 
               </div>
@@ -598,29 +597,34 @@
                   Tüm ürünlerin miktar, fiyat ve birim özelliklerinin tamamlanmasını biz de sabırsızlıkla bekliyoruz.
                 </p>
               <%}%>
-
-              <div>
-                <div class="input-group-overlay mb-3">
-
-                  <div class="input-group-prepend-overlay">
-
-                      <span class="input-group-text">
-                          <i class="notsearching czi-search"></i>
-                          <span class="searching d-none spinner-border spinner-border-sm" role="status"
-                              aria-hidden="true"></span>
-                      </span>
+                <div class="alert alert-secondary">
+                  <div class="d-flex  align-items-center">
+                    <div class=" flex-grow-1 input-group-overlay">
+    
+                      <div class="input-group-prepend-overlay">
+    
+                          <span class="input-group-text">
+                              <i class="notsearching czi-search"></i>
+                              <span class="searching d-none spinner-border spinner-border-sm" role="status"
+                                  aria-hidden="true"></span>
+                          </span>
+                      </div>
+                      <input data-gourl="false" data-butcher="<%=butcher.slug%>" data-search="product" id="butcher-page-quickproductsearchbox"
+                          class="border rounded-0 border-dark form-control searchBox prepended-form-control"
+                          data-noresults-text="Maalesef bulamadık." autocomplete="off" type="search"
+                          placeholder="hızlıca arayın ve satın alın">
+                      <div>
+    
+                      </div>
                   </div>
-                  <input data-gourl="false" data-butcher="<%=butcher.slug%>" data-search="product" id="butcher-page-quickproductsearchbox"
-                      class="form-control searchBox prepended-form-control"
-                      data-noresults-text="Maalesef bulamadık." autocomplete="off" type="search"
-                      placeholder="hızlıca arayın ve satın alın">
-                  <div>
-
+                  
+                  <div id="gotoscBtn" class="ml-2 align-self-center <%=controller.shopcard && controller.shopcard.items.length > 0 ? '':'d-none'%>">
+                    <a class="app_blank btn btn-primary" href="/alisveris-sepetim"><i class="czi-icon czi-cart mr-1"></i>Sepete Git</a>
                   </div>
-              </div>
+                  
+                  </div>
+                </div>
 
-
-              </div>
               
               <div id="cat-slider" class="mt-3 mt-md-0">
                 <%- include('./_partial/category-slider', { partialRender: true, partialRenderUrl: '/' + butcher.slug, categories: controller.categories, subUrl: butcher.slug + '/', selected: controller.category.slug, mode:'browse', header: false, titles: false, viewCats: ['discount', 'butcher', 'reyon', 'list', 'product:dispatch=countrywide'], title: 'Kategoriler', allUrl: '/kasap-urunleri' }); %>
@@ -683,12 +687,35 @@
       App.scrollToAnchor('#summarytab');
     }
 
+    window.quickOrderProductApp.$on("add2sc", function (instance) {
+      $("#butcher-page-quickproductsearchbox").val("");
+      $("#butcher-page-quickproductsearchbox").focus();
+      $('#gotoscBtn').removeClass('d-none');
+      App.alert('Eklendi')
+    }.bind(this))
+
+
+
+
+
     $("#butcher-page-quickproductsearchbox").on('autocomplete.selected', function (e, item) {
+      <% if ((!controller.logisticsProvider || controller.logisticsPriceSlice.length == 0) && __req.prefAddr) { %>
+        App.activaTab("summarytabprofile");
+        App.scrollToAnchor('#summarytab');
+      <% } else if (!__req.prefAddr) { %>
+        App.scrollToAnchor('#summarytab');
+        App.activaTab("summarytabprofile");
+      <% } else { %>
+        quickOrderApp.disabled=true;
+        window.quickOrderProductApp.useShopcard=true;
+        window.quickOrderProductApp.show(item, '<%=butcher.slug%>');
+        //
+
+        //window.purchase.openDialog(item.url.replace('/', ''), 'butcher=<%=butcher.slug%>&utm_medium=Butcher');
+        //$("#butcher-page-quickproductsearchbox").val("")
                
-      window.purchase.openDialog(item.url.replace('/', ''), 'butcher=<%=butcher.slug%>&utm_medium=Butcher');
-               $("#butcher-page-quickproductsearchbox").val("")
-                // window.quickOrderProductApp.show(item, '<%=butcher.slug%>');
-            }.bind(this));
+      <% } %>
+      }); 
 
   })
 </script>

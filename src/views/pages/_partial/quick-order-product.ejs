@@ -11,7 +11,8 @@
                 </div>
                 <div class="modal-body p-0">
                     <div v-if="product" class="text-center">
-                        <a target="_blank" class=" d-block overflow-hidden app_blank" :href="product.slug">
+                        <a target="_blank" class=" d-block overflow-hidden app_blank"
+                            :href="'/' + product.slug + (product.butcher ? '?butcher=' + product.butcher.slug: '')">
                             <img style="width: 10rem;" width="500" height="500" :src="product.thumbnail"
                                 class="lazyload ">
                         </a>
@@ -46,46 +47,47 @@
                         </div>
 
                         <div v-if="selectedUnit" class="px-3 mb-3 d-flex justify-content-between">
-                            <div  class="text-center">
-                              <span v-if="puan > 0" class="text-muted font-size-sm d-block">
-                                
-                                 Puan
-                              </span>
-                    
-                              <money-view v-if="puan > 0" class="badge badge-success font-size-md font-weight-medium" :money="puan">
-                              </money-view>
-                            </div>
-                    
                             <div class="text-center">
-                              <span class="text-muted font-size-sm d-block">
-                                Tutar
-                              </span>
-                    
-                              <money-view class="badge badge-dark font-weight-medium font-size-md" :money="price">
-                              </money-view>
+                                <span v-if="puan > 0" class="text-muted font-size-sm d-block">
+
+                                    Puan
+                                </span>
+
+                                <money-view v-if="puan > 0" class="badge badge-success font-size-md font-weight-medium"
+                                    :money="puan">
+                                </money-view>
                             </div>
-                    
-                    
-                          </div>
-                          <div class="form-group px-3">
-                                
-    
-                        </label>
-                        <textarea  v-model="note" maxlength="250"
-                          :placeholder="(selectedUnit && selectedUnit.notePlaceholder) || (product && product.notePlaceholder) || 'İletmek istediğiniz notunuz varsa burayı kullanabilirsiniz.'"
-                          class="d-none form-control font-size-sm" rows="4" name="note" id="note">
 
-                                                                
+                            <div class="text-center">
+                                <span class="text-muted font-size-sm d-block">
+                                    Tutar
+                                </span>
+
+                                <money-view class="badge badge-dark font-weight-medium font-size-md" :money="price">
+                                </money-view>
+                            </div>
+
+
+                        </div>
+                        <div class="form-group px-3">
+
+
+                            </label>
+                            <textarea v-model="note" maxlength="250"
+                                :placeholder="(selectedUnit && selectedUnit.notePlaceholder) || (product && product.notePlaceholder) || 'İletmek istediğiniz notunuz varsa burayı kullanabilirsiniz.'"
+                                class="d-none form-control font-size-sm" rows="4" name="note" id="note">
+
+
                                                             </textarea>
-                      </div>
-
+                        </div>
+                        <div class="d-flex justify-content-center">
+                            <button type="button" @click="add2sc" class="btn btn-primary" data-dismiss="modal"><i
+                                    class="mr-1 czi-icon czi-thumb-up"></i> Sepete
+                                Ekle</button>
+                        </div>
                     </form>
                 </div>
-                <div class="d-flex justify-content-center modal-footer">
-                    <button type="button" @click="add2sc" class="btn rounded btn-primary" data-dismiss="modal"><i
-                            class="mr-1 czi-icon czi-thumb-up"></i> Sepete
-                        Ekle</button>
-                </div>
+
             </div>
         </div>
     </div>
@@ -111,6 +113,7 @@
                 selectedUnit: null,
                 product: null,
                 quantity: 0,
+                useShopcard: false
             }
         },
 
@@ -134,8 +137,23 @@
         methods: {
 
             add2sc() {
-                this.$emit("add2sc", this);
-                $('#quickorderproductmodal').modal('hide');
+                if (this.useShopcard) {
+                    return App.Backend.post('shopcard/add', {
+                        id: this.product.id,
+                        butcher: this.product.butcher,
+                        quantity: this.quantity,
+                        purchaseoption: this.selectedUnit
+                    }).then(function (result) {
+                        this.$emit("add2sc", this);
+                        $('#quickorderproductmodal').modal('hide');
+                    }.bind(this)).catch(function (err) {
+                        App.HandleError(err);
+                    })
+                } else {
+                    this.$emit("add2sc", this);
+                    $('#quickorderproductmodal').modal('hide');
+                }
+
             },
 
 
@@ -154,7 +172,7 @@
                         this.$emit("product.notavailable", product);
                     }
 
-                }.bind(this)).catch(function(err) {
+                }.bind(this)).catch(function (err) {
                     App.HandleError(err);
                     this.$emit("product.notavailable", product);
                 }.bind(this))

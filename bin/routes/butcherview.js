@@ -35,6 +35,7 @@ const dispatcher_1 = require("./api/dispatcher");
 const product_1 = require("./api/product");
 const area_1 = require("./api/area");
 const ButcherLd_1 = require("../models/ButcherLd");
+const shopcard_1 = require("../models/shopcard");
 class Route extends router_1.ViewRouter {
     constructor() {
         super(...arguments);
@@ -90,6 +91,7 @@ class Route extends router_1.ViewRouter {
                 return this.next();
             }
             let butcher = this.butcher = yield butcher_1.default.loadButcherWithProducts(this.req.params.butcher);
+            this.shopcard = yield shopcard_1.ShopCard.createFromRequest(this.req);
             if (!butcher) {
                 let group = yield butcher_1.default.count({
                     where: {

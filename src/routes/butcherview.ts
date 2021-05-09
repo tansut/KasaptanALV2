@@ -33,6 +33,7 @@ import  ProductApi from './api/product';
 import { Provider } from 'nconf';
 import AreaApi from './api/area'
 import { ButcherLd } from '../models/ButcherLd';
+import { ShopCard } from '../models/shopcard';
 
 
 
@@ -47,6 +48,7 @@ export default class Route extends ViewRouter {
     category: Category;
     categories: Category[];
     butcherLd: ButcherLd;
+    shopcard: ShopCard;
 
     _ = _;
     subCategories: SubCategory[] = [];
@@ -105,7 +107,7 @@ export default class Route extends ViewRouter {
         }
 
         let butcher = this.butcher = await ButcherModel.loadButcherWithProducts(this.req.params.butcher);
-
+        this.shopcard = await ShopCard.createFromRequest(this.req);
         
         if (!butcher) {
             let group = await ButcherModel.count({

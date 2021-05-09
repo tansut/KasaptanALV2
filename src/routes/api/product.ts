@@ -36,6 +36,7 @@ import ProductRelation from '../../db/models/productrelation';
 import { getEnabledCategories } from 'node:trace_events';
 import Brand from '../../db/models/brand';
 import BrandGroup from '../../db/models/brandgroup';
+import productfeed from '../../middleware/productfeed';
 const fs = require('fs');
 
 export interface ProductFeedItem {
@@ -1213,11 +1214,12 @@ export default class Route extends ApiRouter {
         if (result) {
             let r = {
                 name: view.name,
+                id: view.id,
                 slug: view.slug,
                 thumbnail: view['thumbnail'],
                 butcher: view.butcher ? {
                     puanData: view.butcher.puanData,
-                    
+                    slug: view.butcher.slug
                 }: null,
                 purchaseOptions: view.purchaseOptions.map(po=> {
                     return {

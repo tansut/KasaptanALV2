@@ -1066,10 +1066,12 @@ class Route extends router_1.ApiRouter {
             if (result) {
                 let r = {
                     name: view.name,
+                    id: view.id,
                     slug: view.slug,
                     thumbnail: view['thumbnail'],
                     butcher: view.butcher ? {
                         puanData: view.butcher.puanData,
+                        slug: view.butcher.slug
                     } : null,
                     purchaseOptions: view.purchaseOptions.map(po => {
                         return {
