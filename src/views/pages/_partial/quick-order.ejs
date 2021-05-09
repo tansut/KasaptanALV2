@@ -65,7 +65,7 @@
                             </div>
                         </div>
                         <div v-show="step==1">
-                            <div class="d-none input-group-overlay mb-3">
+                            <div class="input-group-overlay mb-3">
 
                                 <div class="input-group-prepend-overlay">
 
@@ -78,7 +78,7 @@
                                 <input data-gourl="false" data-search="product" :data-butcher="butcherslug" id="page-quickproductsearchbox"
                                     class="form-control searchBox prepended-form-control"
                                     data-noresults-text="Maalesef bulamadık." autocomplete="off" type="search"
-                                    placeholder="arayın ve listeye ekleyin">
+                                    placeholder="Ne almak istersiniz ? Hızlıca arayın.">
                                 <div>
 
                                 </div>
@@ -87,7 +87,7 @@
 
                             <div class="form-row">
                                 <div class="form-group col-md-12">
-                                    <label>Kasabımızdan taptaze neler istersiniz ?</label>
+                                    <label>veya direkt aşağıya yazın</label>
                                     <textarea rows="5" v-model="custOrder" required class="form-control"
                                         placeholder="Kuzu veya dana olarak ağırlık veya adetleriyle yazın. Örneğin &#13;&#10; 2kg az yağlı kuzu kıyma &#13;&#10; 2kg yağsız dana kuşbaşı &#13;&#10; 1 adet sucuk gibi."></textarea>
                                 </div>
@@ -129,6 +129,11 @@
                 if (this.disabled) return;
                 this.custOrder += (this.custOrder ? String.fromCharCode(13) : '') + instance.quantity + ' ' + instance.selectedUnit.unitTitle + ' ' + instance.product.name;
                 $("#page-quickproductsearchbox").val("");
+                setTimeout(function() {
+               
+                $("#page-quickproductsearchbox").focus();
+                    
+                }, 100);
             }.bind(this))
 
             window.quickOrderProductApp.$on("dialog.shown", function (instance) {
