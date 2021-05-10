@@ -21,7 +21,7 @@ class ButcherStats extends basetask_1.BaseTask {
     }
     run() {
         return __awaiter(this, void 0, void 0, function* () {
-            console.log('running popular products job', Date.now());
+            console.log('running popular products job', helper_1.default.formatDate(helper_1.default.Now(), true));
             let popular = yield category_1.default.findOne({ where: { slug: "populer-etler" } });
             let popularWeek = yield category_1.default.findOne({ where: { slug: "bu-hafta" } });
             if (!popular || !popularWeek)
@@ -57,7 +57,7 @@ class ButcherStats extends basetask_1.BaseTask {
             //         replacements: { start: startWeek, popular: popularWeek.id},
             //         type: sq.QueryTypes.BULKUPDATE,
             //     });
-            console.log('done popular job', Date.now());
+            console.log('done popular job', helper_1.default.formatDate(helper_1.default.Now(), true));
         });
     }
 }

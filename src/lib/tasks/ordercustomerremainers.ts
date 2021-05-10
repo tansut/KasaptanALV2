@@ -23,7 +23,7 @@ export default class OrderRemainers extends BaseTask {
     }
 
     async run() {
-        console.log('running OrderRemainers job', Date.now());
+        console.log('running OrderRemainers job', Helper.formatDate(Helper.Now(), true));
 
         let mesaiStart = Helper.Now();
         mesaiStart.setHours(9);
@@ -57,7 +57,9 @@ export default class OrderRemainers extends BaseTask {
             })
             for (let i = 0; i < orders.length; i++) {
                 let userUrl = `${this.url}/user/orders/${orders[i].ordernum}`;
-                await Sms.send(orders[i].phone, `KasaptanAl.com ${orders[i].butcherName} siparisiniz henuz odenmemis gozukuyor. Bilgi: ${userUrl} `, false, new SiteLogRoute())
+                await Sms.send(orders[i].phone, `KasaptanAl.com ${orders[i].butcherName} siparisiniz henuz odenmemis gozukuyor. Bilgi: ${userUrl} `, false, new SiteLogRoute());
+                await new Promise(r => setTimeout(r, 5));
+
                 orders[i].customerLastReminder = now;
                 orders[i].customerLastReminderType = 'pay';
                 orders[i].sentCustomerReminders++;
@@ -66,7 +68,7 @@ export default class OrderRemainers extends BaseTask {
         }
 
 
-        console.log('done OrderRemainers job', Date.now())
+        console.log('done OrderRemainers job', Helper.formatDate(Helper.Now(), true))
 
     }
 }

@@ -10,12 +10,15 @@
 
      
      <% if (butcherVideo) {%>
+      <div class="w-25 text-center">
+
+      
       <a data-gtrack="1" data-restype="<%= butcherVideo.type %>" 
         data-resref="<%= view.butcher.slug %>" 
         data-restitle="<%= product.slug %>" 
         onclick="openSlider(<%=butcherVideo.id%>);return false" 
         data-resid="<%=butcherVideo.id%>" id="butcher-video-link" 
-        class="w-25 align-self-start gallery-item <%= butcherVideo.contentType == 'video-youtube' ? 'video-item':''%>"
+        class="align-self-start gallery-item <%= butcherVideo.contentType == 'video-youtube' ? 'video-item':''%>"
 href="<%= `${butcherVideo.fileUrl}`  %>"
 data-sub-html="&lt;h6 class=&quot;font-size-sm text-light&quot;&gt;<%= butcherVideo.title %>&lt;/h6&gt;"><img
  class=""
@@ -25,9 +28,11 @@ class="gallery-item-caption"><%= butcherVideo.title %></span></a>
 <%} else { %>
   <a target="_blank" class="media align-self-start flex-grow-1" target="_blank" href="/<%=view.butcher.slug%>">
     
-    <img class="w-25 gallery-item"
+    <img class="gallery-item"
     src="<%= `${__req.helper.imgUrl('butcher-google-photos', view.butcher.slug)}` %>" alt="<%=view.butcher.name%>">
  <% } %>
+
+</div>
       <div class="media-body p-2">
         <div class="d-flex align-items-center justify-content-between">
           <div>
@@ -206,12 +211,24 @@ class="gallery-item-caption"><%= butcherVideo.title %></span></a>
 
         </div>
 
+        <div class="card rounded-0">
+  
+          <div class="card-header" role="tab">
+            <h3 class="h6 font-weight-normal  accordion-heading px-0"><a href="#butcher-info" class="collapsed" data-toggle="collapse"><i class="czi-cart text-muted font-size-lg align-middle mt-n1 mr-2"></i>Pratik Sipariş <span class="align-middle mt-n1 badge badge-primary">yeni</span><span class="accordion-indicator "></span></a></h3>
+          </div>
+          <div class="collapse p-3" id="butcher-info" data-parent="#teslimat-info-panel" role="tabpanel">
+            <p>Kasabımız ürünlerine hızlıca ulaşın ve sepete ekleyin.</p>
+            <a data-tag="true" data-category="user actions" data-action="pratik sipariş click üründe" data-label="<%=view.butcher.slug%>" onclick="quickOrderApp.open({butchername: '<%=view.butcher.name%>', 'butcherslug': '<%=view.butcher.slug%>'}, 'butcher')" class="font-weight-bold btn   btn-danger ">Pratik Sipariş</a>
+        
+          </div>
+        </div>
+
         <% if (view.butcher.puanData) { %>
           <div class="card rounded-0">
       
             <div class="card-header" role="tab">
               <h3 class="h6 font-weight-normal  accordion-heading px-0"><a href="#butcher-kart" class="collapsed" data-toggle="collapse"><i class="czi-card text-muted font-size-lg align-middle mt-n1 mr-2"></i>Kasap Kart&trade; Puan
-                <span class="align-middle mt-n1 badge badge-primary">1</span><span
+                <span class="align-middle mt-n1 badge badge-secondary">1</span><span
                     class="accordion-indicator"></span></a></h3>
             </div>
             <div class="collapse" id="butcher-kart" data-parent="#teslimat-info-panel" role="tabpanel">
@@ -267,6 +284,8 @@ class="gallery-item-caption"><%= butcherVideo.title %></span></a>
     
         <% } %>   
 
+     
+
         <% if (__helper.canBeOrderedByPhone()) { %>
 
           <div class="card rounded-0">
@@ -279,8 +298,7 @@ class="gallery-item-caption"><%= butcherVideo.title %></span></a>
               <div class="font-size-sm p-3  ">
                 <div>
                   <div class="py-2 d-flex justify-content-center">
-                  <a data-tag="true" data-category="user actions" data-action="pratik sipariş click üründe" data-label="<%=view.butcher.slug%>" onclick="quickOrderApp.open({butchername: '<%=view.butcher.name%>', 'butcherslug': '<%=view.butcher.slug%>'})" class="d-none font-weight-bold btn  btn-sm rounded btn-danger mr-2"><i class="czi-icon czi-cart mr-1"></i>Pratik</a>
-                   <a data-tag="true" data-category="user actions" data-action="kasabı ara click üründe" data-label="<%=view.butcher.slug%>" class="btn  btn-sm btn-dark mr-2" target="_blank" href="tel://+908503054216"><i class="czi_icon czi-phone mr-1"></i>Telefonla</a> 
+                   <a data-tag="true" data-category="user actions" data-action="kasabı ara click üründe" data-label="<%=view.butcher.slug%>" class="btn  btn-sm btn-dark mr-2" target="_blank" href="tel://+908503054216"><i class="czi_icon czi-phone mr-1"></i>Telefon</a> 
                     <a data-tag="true" data-category="user actions" data-action="whats ara click üründe" data-label="<%=view.butcher.slug%>" class="btn  btn-sm btn-dark" target="_blank" href="https://wa.me/+908503059286?text=<%=view.butcher.name%> <%=__req.prefAddr.display%> semtinden <%=view.name%> siparişi vermek istiyorum."><i class="czi_icon czi-message mr-1"></i>Whatsapp</a>
                   </div>
                 </div>
@@ -291,19 +309,13 @@ class="gallery-item-caption"><%= butcherVideo.title %></span></a>
         
         
         <% } %>
+
+
+
+
+
 <% if (view.butcher.description) { %>
-        <div class="card rounded-0">
-  
-          <div class="card-header" role="tab">
-            <h3 class="h6 font-weight-normal  accordion-heading px-0"><a href="#butcher-info" class="collapsed" data-toggle="collapse"><i class="czi-announcement text-muted font-size-lg align-middle mt-n1 mr-2"></i>Kasabı Tanıyın<span
-                  class="accordion-indicator"></span></a></h3>
-          </div>
-          <div class="collapse" id="butcher-info" data-parent="#teslimat-info-panel" role="tabpanel">
-            <div class="font-size-sm p-3  ">
-              <%- controller.markdown.render(view.butcher.description || '') %>
-            </div>
-          </div>
-        </div>
+    
 
 <% } %>
 

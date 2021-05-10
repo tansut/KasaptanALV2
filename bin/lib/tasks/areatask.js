@@ -13,26 +13,28 @@ const basetask_1 = require("./basetask");
 const sq = require("sequelize");
 const sequelize_1 = require("sequelize");
 const area_1 = require("../../db/models/area");
+const helper_1 = require("../helper");
 class AreaTask extends basetask_1.BaseTask {
     get interval() {
         return "0 0 * * *";
     }
     run() {
         return __awaiter(this, void 0, void 0, function* () {
-            console.log('running AreaTask job', Date.now());
-            // let items = await Area.sequelize.query(`
-            // select distinct areaLevel2Id as id from Orders
-            // union
-            // select distinct areaLevel3Id as id from Orders
-            // union
-            // select id from Areas where level=1 and status='active'
-            //     `,
-            //     {
-            //         type: sq.QueryTypes.SELECT,
-            //         mapToModel: false,
-            //         raw: true
-            //     })
-            // let arr = items.map(i => i['id']);
+            console.log('running AreaTask job', helper_1.default.formatDate(helper_1.default.Now(), true));
+            let items = yield area_1.default.sequelize.query(`
+        select distinct areaLevel2Id as id from Orders
+        union
+        select distinct areaLevel3Id as id from Orders
+        union
+        select distinct id from Areas where level=1 and status='active'
+        
+
+             `, {
+                type: sq.QueryTypes.SELECT,
+                mapToModel: false,
+                raw: true
+            });
+            let arr = items.map(i => i['id']);
             // await Area.update({
             //     status: 'generic'
             // },
@@ -44,17 +46,18 @@ class AreaTask extends basetask_1.BaseTask {
             //         }
             //     }
             // )
-            // await Area.update({
-            //     status: 'active'
-            // },
-            //     {
-            //         where: {
-            //             id: {
-            //                 [Op.in]: arr
-            //             }
-            //         }.
-            //     }
-            // )
+            yield area_1.default.update({
+                status: 'active'
+            }, {
+                where: {
+                    id: {
+                        [sequelize_1.Op.in]: arr
+                    },
+                    status: {
+                        [sequelize_1.Op.ne]: 'active'
+                    }
+                }
+            });
             let emptyLoc = yield area_1.default.findAll({
                 where: {
                     locationData: {
@@ -62,7 +65,7 @@ class AreaTask extends basetask_1.BaseTask {
                     },
                     level: [1, 2, 3, 4]
                 },
-                limit: 1000
+                limit: 100
             });
             yield emptyLoc.forEach((l) => __awaiter(this, void 0, void 0, function* () {
                 yield l.ensureLocation();
@@ -88,7 +91,7 @@ where t1.level=4`;
                 yield p.save();
                 yield new Promise(r => setTimeout(r, 5));
             }));
-            console.log('done AreaTask job', Date.now());
+            console.log('done AreaTask job', helper_1.default.formatDate(helper_1.default.Now(), true));
         });
     }
 }

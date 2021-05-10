@@ -8,6 +8,7 @@ import { Op, Sequelize } from "sequelize";
 import Product from "../../db/models/product";
 import Area from "../../db/models/area";
 import db from "../../db/context";
+import Helper from "../helper";
 
 
 
@@ -20,25 +21,25 @@ export default class AreaTask extends BaseTask {
 
 
     async run() {
-        console.log('running AreaTask job', Date.now())
+        console.log('running AreaTask job', Helper.formatDate(Helper.Now(), true))
 
-        // let items = await Area.sequelize.query(`
-        // select distinct areaLevel2Id as id from Orders
-        // union
-        // select distinct areaLevel3Id as id from Orders
-        // union
-        // select id from Areas where level=1 and status='active'
+        let items = await Area.sequelize.query(`
+        select distinct areaLevel2Id as id from Orders
+        union
+        select distinct areaLevel3Id as id from Orders
+        union
+        select distinct id from Areas where level=1 and status='active'
         
 
-        //     `,
-        //     {
+             `,
+            {
 
-        //         type: sq.QueryTypes.SELECT,
-        //         mapToModel: false,
-        //         raw: true
-        //     })
+                type: sq.QueryTypes.SELECT,
+                mapToModel: false,
+                raw: true
+            })
 
-        // let arr = items.map(i => i['id']);
+        let arr = items.map(i => i['id']);
 
         // await Area.update({
         //     status: 'generic'
@@ -53,18 +54,21 @@ export default class AreaTask extends BaseTask {
         //     }
         // )
     
-        // await Area.update({
-        //     status: 'active'
-        // },
-        //     {
+        await Area.update({
+            status: 'active'
+        },
+            {
                 
-        //         where: {
-        //             id: {
-        //                 [Op.in]: arr
-        //             }
-        //         }.
-        //     }
-        // )
+                where: {
+                    id: {
+                        [Op.in]: arr
+                    },
+                    status: {
+                        [Op.ne]: 'active'
+                    }
+                }
+            }
+        )
 
         let emptyLoc = await Area.findAll({
             where: {
@@ -73,7 +77,7 @@ export default class AreaTask extends BaseTask {
                 },
                 level: [1,2,3,4]
             },
-            limit: 1000
+            limit: 100
         })
 
 
@@ -107,7 +111,7 @@ where t1.level=4`;
             await new Promise(r => setTimeout(r, 5));
         })
 
-        console.log('done AreaTask job', Date.now())
+        console.log('done AreaTask job', Helper.formatDate(Helper.Now(), true))
 
     }
 }

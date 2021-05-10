@@ -15,13 +15,14 @@ const order_2 = require("../../models/order");
 const review_1 = require("../../db/models/review");
 const sequelize_1 = require("sequelize");
 const product_1 = require("../../db/models/product");
+const helper_1 = require("../helper");
 class ButcherStats extends basetask_1.BaseTask {
     get interval() {
         return "25 0 * * *";
     }
     run() {
         return __awaiter(this, void 0, void 0, function* () {
-            console.log('running reviews job', Date.now());
+            console.log('running reviews job', helper_1.default.formatDate(helper_1.default.Now(), true));
             let reviews = yield review_1.default.findAll({
                 where: {
                     settingsjson: {
@@ -52,9 +53,10 @@ class ButcherStats extends basetask_1.BaseTask {
                         })
                     };
                     yield r.save();
+                    yield new Promise(r => setTimeout(r, 5));
                 }
             }
-            console.log('done reviews job', Date.now());
+            console.log('done reviews job', helper_1.default.formatDate(helper_1.default.Now(), true));
         });
     }
 }

@@ -11,11 +11,11 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 Object.defineProperty(exports, "__esModule", { value: true });
 const helper_1 = require("../helper");
 let appRoutes = [
-    //'./butcherstats',
-    //'./productstats',
-    //'./reviewstask',
-    //'./rutins',
-    //'./areatask',
+    './butcherstats',
+    './productstats',
+    './reviewstask',
+    './rutins',
+    './areatask',
     './orderbutcherremainers',
     './ordercustomerremainers'
 ];

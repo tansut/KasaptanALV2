@@ -12,7 +12,11 @@
                 <div class="modal-body p-3">
                     <form @submit="checkForm" method="post">
 
-                        <h5 v-if="step==1" class="h5">Siparişinizi kasabımıza iletin, hemen hazırlayıp gönderelim.  <span v-if="working" class="spinner-grow text-primary" role="status">
+                        <h5 v-if="step==1 && mode=='quick'" class="h6">Siparişinizi kasabımıza iletin, hemen hazırlayıp gönderelim.  <span v-if="working" class="spinner-grow text-primary" role="status">
+                           
+                        </span></h5>
+
+                        <h5 v-if="mode=='butcher'" class="h6">Alacaklarınızı sepete ekleyin ve bitince alışverişinizi tamamlayın.<span v-if="working" class="spinner-grow text-primary" role="status">
                            
                         </span></h5>
                        
@@ -23,7 +27,7 @@
                         </ul>
                         </p>
 
-                        <div v-show="step==2">
+                        <div v-show="mode=='quick' && step==2">
                             <div class="form-row">
                                 <div class="form-group col-md-6">
                                     <label for="inputEmail4">Adınız ve Soyadınız</label>
@@ -64,25 +68,26 @@
 
                             </div>
                         </div>
-                        <div v-show="step==1">
-                            <div class="input-group-overlay mb-3">
+                        <div v-show="(mode=='quick' && step==1) || mode=='butcher'" class="input-group-overlay mb-3">
 
-                                <div class="input-group-prepend-overlay">
+                            <div class="input-group-prepend-overlay">
 
-                                    <span class="input-group-text">
-                                        <i class="notsearching czi-search"></i>
-                                        <span class="searching d-none spinner-border spinner-border-sm" role="status"
-                                            aria-hidden="true"></span>
-                                    </span>
-                                </div>
-                                <input data-gourl="false" data-search="product" :data-butcher="butcherslug" id="page-quickproductsearchbox"
-                                    class="form-control searchBox prepended-form-control"
-                                    data-noresults-text="Maalesef bulamadık." autocomplete="off" type="search"
-                                    placeholder="Ne almak istersiniz ? Hızlıca arayın.">
-                                <div>
-
-                                </div>
+                                <span class="input-group-text">
+                                    <i class="notsearching czi-search"></i>
+                                    <span class="searching d-none spinner-border spinner-border-sm" role="status"
+                                        aria-hidden="true"></span>
+                                </span>
                             </div>
+                            <input data-gourl="false" data-search="product" :data-butcher="butcherslug" id="page-quickproductsearchbox"
+                                class="form-control searchBox prepended-form-control"
+                                data-noresults-text="Maalesef bulamadık." autocomplete="off" type="search"
+                                placeholder="Ne almak istersiniz ? Hızlıca arayın.">
+                            <div>
+
+                            </div>
+                        </div>
+                        <div v-show="mode=='quick' && step==1">
+                   
 
 
                             <div class="form-row">
@@ -94,11 +99,15 @@
                             </div>
 
                         </div>
-                        <div class="d-flex justify-content-between">
+                        <div v-if="mode=='quick'" class="d-flex justify-content-between">
                             <button v-if="step==2" class="btn btn-primary">Siparişimi Oluştur</button>
                             <button type="button" :disabled="!custOrder" @click="goNext()" v-show="step==1"
                                 class="btn btn-dark">İlerle</button>
                             <button type="button" @click="step=1" v-show="step ==2" class="btn btn-dark">Geri</button>
+
+                        </div>
+                        <div v-if="mode=='butcher'" class="d-flex justify-content-end">
+                            <a class="btn btn-primary" href="/alisveris-sepetim">Alışverişimi Tamamla</a>
 
                         </div>
                     </form>
@@ -128,7 +137,12 @@
             window.quickOrderProductApp.$on("add2sc", function (instance) {
                 if (this.disabled) return;
                 this.custOrder += (this.custOrder ? String.fromCharCode(13) : '') + instance.quantity + ' ' + instance.selectedUnit.unitTitle + ' ' + instance.product.name;
+                if (instance.note) {
+                    this.custOrder += String.fromCharCode(13) + 'Not:' + instance.note
+                }
                 $("#page-quickproductsearchbox").val("");
+                $("#page-quickproductsearchbox").attr('placeholder', 'Sepete ekledik. Başka neler istersiniz?')
+
                 setTimeout(function() {
                     $("#page-quickproductsearchbox").focus();
                 }, 100);
@@ -154,14 +168,10 @@
 
             window.quickOrderProductApp.$on('product.notavailable', function (e, item) {
                 if (this.disabled) return;
-
                 App.alert('Maalesef bu ürünü şu an sağlayamıyoruz, farklı bir ürün seçin lütfen.')
                 $("#page-quickproductsearchbox").val("");
                 this.working = false;
             }.bind(this));
-
-
-
         },
 
         data: function () {
@@ -178,7 +188,8 @@
                 step: 1,
                 prefAdr: {},
                 working: false,
-                disabled: false
+                disabled: false,
+                mode: 'quick'
             }
         },
 
@@ -290,7 +301,7 @@
                 $('#quickordermodal').modal('show');
             },
 
-            open(params) {
+            open(params, mode) {
                 if (!window.App.User.prefAdr) {
                     window.kb.selectArea(function (done, ul) {
                         params = params || {};
@@ -303,6 +314,7 @@
                     this.disabled = false;
                     this.working = false;
                     var self = this;
+                    this.mode = mode || 'quick';
                     Object.assign(self, params || {});
                     this.fillParams();
                     window.quickOrderProductApp.useShopcard = true;

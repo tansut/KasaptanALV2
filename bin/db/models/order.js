@@ -697,6 +697,17 @@ Order = Order_1 = __decorate([
                 fields: ['ordernum'],
                 name: 'ordernum_idx',
                 unique: true
+            }, {
+                fields: ['butcherid'],
+                name: 'butcherid_idx'
+            },
+            {
+                fields: ['status', 'butcherLastReminder'],
+                name: 'orderstatus_idx'
+            },
+            {
+                fields: ['status', 'customerLastReminder'],
+                name: 'orderstatuscustomer_idx'
             }]
     })
 ], Order);

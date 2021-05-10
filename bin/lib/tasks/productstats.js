@@ -12,13 +12,14 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const basetask_1 = require("./basetask");
 const order_1 = require("../../db/models/order");
 const sq = require("sequelize");
+const helper_1 = require("../helper");
 class ButcherStats extends basetask_1.BaseTask {
     get interval() {
         return "20 0 * * *";
     }
     run() {
         return __awaiter(this, void 0, void 0, function* () {
-            console.log('running product stats job', Date.now());
+            console.log('running product stats job', helper_1.default.formatDate(helper_1.default.Now(), true));
             yield order_1.Order.sequelize.query(`
         
         update Products as dest, 
@@ -36,7 +37,7 @@ class ButcherStats extends basetask_1.BaseTask {
         `, {
                 type: sq.QueryTypes.BULKUPDATE,
             });
-            console.log('done product stats job', Date.now());
+            console.log('done product stats job', helper_1.default.formatDate(helper_1.default.Now(), true));
         });
     }
 }

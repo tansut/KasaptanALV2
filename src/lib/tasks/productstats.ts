@@ -3,6 +3,7 @@ import { Order } from "../../db/models/order";
 import * as sq from 'sequelize';
 import { OrderItemStatus } from "../../models/order";
 import Butcher from "../../db/models/butcher";
+import Helper from "../helper";
 
 
 export default class ButcherStats extends BaseTask {
@@ -14,7 +15,7 @@ export default class ButcherStats extends BaseTask {
 
 
     async run() {
-        console.log('running product stats job', Date.now())
+        console.log('running product stats job', Helper.formatDate(Helper.Now(), true))
         await Order.sequelize.query(`
         
         update Products as dest, 
@@ -33,6 +34,6 @@ export default class ButcherStats extends BaseTask {
             {
                 type: sq.QueryTypes.BULKUPDATE,
             });
-        console.log('done product stats job', Date.now())
+        console.log('done product stats job', Helper.formatDate(Helper.Now(), true))
     }
 }

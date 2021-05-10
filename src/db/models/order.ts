@@ -28,7 +28,18 @@ export type OrderButcherSelection = "default" | "user"
         fields: ['ordernum'],
         name: 'ordernum_idx',
         unique: true
-    }]
+    }, {
+        fields: ['butcherid'],
+        name: 'butcherid_idx'
+    },
+    {
+        fields: ['status', 'butcherLastReminder'],
+        name: 'orderstatus_idx'
+    },
+    {
+        fields: ['status', 'customerLastReminder'],
+        name: 'orderstatuscustomer_idx'
+    }  ]
 })
 class Order extends BaseModel<Order> {
 

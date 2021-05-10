@@ -6,6 +6,7 @@ import Butcher from "../../db/models/butcher";
 import Review from "../../db/models/review";
 import { Op, Sequelize } from "sequelize";
 import Product from "../../db/models/product";
+import Helper from "../helper";
 
 
 
@@ -18,7 +19,7 @@ export default class ButcherStats extends BaseTask {
 
 
     async run() {
-        console.log('running reviews job', Date.now())
+        console.log('running reviews job', Helper.formatDate(Helper.Now(), true))
         let reviews = await Review.findAll({
             where: {
                 settingsjson: {
@@ -52,11 +53,12 @@ export default class ButcherStats extends BaseTask {
                     })
                 }
                 await r.save();
+                await new Promise(r => setTimeout(r, 5));
             }
         }
 
 
-        console.log('done reviews job', Date.now())
+        console.log('done reviews job', Helper.formatDate(Helper.Now(), true))
 
     }
 }

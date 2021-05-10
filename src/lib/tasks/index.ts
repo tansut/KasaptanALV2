@@ -3,11 +3,11 @@ import Helper from "../helper";
 import { BaseTask } from "./basetask";
 
 let appRoutes = [
-    //'./butcherstats',
-    //'./productstats',
-    //'./reviewstask',
-    //'./rutins',
-    //'./areatask',
+    './butcherstats',
+    './productstats',
+    './reviewstask',
+    './rutins',
+    './areatask',
     './orderbutcherremainers',
     './ordercustomerremainers'
 ];

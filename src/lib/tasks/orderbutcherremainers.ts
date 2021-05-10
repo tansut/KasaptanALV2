@@ -21,7 +21,7 @@ export default class OrderRemainers extends BaseTask {
     }
 
     async run() {
-        console.log('running OrderRemainers job', Date.now());
+        console.log('running OrderRemainers job', Helper.formatDate(Helper.Now(), true));
 
         let mesaiStart = Helper.Now();
         mesaiStart.setHours(9);
@@ -57,6 +57,7 @@ export default class OrderRemainers extends BaseTask {
                 let manageUrl = `${this.url}/manageorder/${orders[i].ordernum}`;
                 let text = `UYARI: Musteriniz hala cevabinizi bekliyor: ${orders[i].butcherName} siparis [${orders[i].displayName}] suresinde yanitlanmadi. LUTFEN SIMDI YANITLAYIN: ${manageUrl} `
                 await api.sendButcherNotifications(orders[i], text);
+                await new Promise(r => setTimeout(r, 5));
                 orders[i].butcherLastReminder = now;
                 orders[i].butcherLastReminderType = 'plan';
                 orders[i].sentButcherReminders++;
@@ -65,7 +66,7 @@ export default class OrderRemainers extends BaseTask {
         }
 
 
-        console.log('done OrderRemainers job', Date.now())
+        console.log('done OrderRemainers job', Helper.formatDate(Helper.Now(), true))
 
     }
 }

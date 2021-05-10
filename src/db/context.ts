@@ -54,9 +54,9 @@ let init = (alter: boolean = true) => {
         port: config.dbport,
         host: config.dbaddress,
         // logging: function(sql) {
-        //     if (sql.indexOf('SELECT `id`, `location`,') >=0) {
+        //     //if (sql.indexOf('BUTCHER') >=0) {
         //         console.log(sql)
-        //     }
+        //     //}
         // },
         logging: false,
         dialectOptions: { decimalNumbers: true }

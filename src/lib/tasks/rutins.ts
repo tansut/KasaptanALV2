@@ -21,7 +21,7 @@ export default class ButcherStats extends BaseTask {
 
 
     async run() {
-        console.log('running popular products job', Date.now());
+        console.log('running popular products job', Helper.formatDate(Helper.Now(), true));
 
         let popular = await Category.findOne({where: {slug: "populer-etler"}});
         let popularWeek = await Category.findOne({where: {slug: "bu-hafta"}});
@@ -70,7 +70,7 @@ export default class ButcherStats extends BaseTask {
             //         type: sq.QueryTypes.BULKUPDATE,
             //     });
 
-        console.log('done popular job', Date.now())
+        console.log('done popular job', Helper.formatDate(Helper.Now(), true))
 
     }
 }

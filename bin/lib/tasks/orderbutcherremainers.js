@@ -23,7 +23,7 @@ class OrderRemainers extends basetask_1.BaseTask {
     }
     run() {
         return __awaiter(this, void 0, void 0, function* () {
-            console.log('running OrderRemainers job', Date.now());
+            console.log('running OrderRemainers job', helper_1.default.formatDate(helper_1.default.Now(), true));
             let mesaiStart = helper_1.default.Now();
             mesaiStart.setHours(9);
             mesaiStart.setMinutes(0);
@@ -53,13 +53,14 @@ class OrderRemainers extends basetask_1.BaseTask {
                     let manageUrl = `${this.url}/manageorder/${orders[i].ordernum}`;
                     let text = `UYARI: Musteriniz hala cevabinizi bekliyor: ${orders[i].butcherName} siparis [${orders[i].displayName}] suresinde yanitlanmadi. LUTFEN SIMDI YANITLAYIN: ${manageUrl} `;
                     yield api.sendButcherNotifications(orders[i], text);
+                    yield new Promise(r => setTimeout(r, 5));
                     orders[i].butcherLastReminder = now;
                     orders[i].butcherLastReminderType = 'plan';
                     orders[i].sentButcherReminders++;
                     yield orders[i].save();
                 }
             }
-            console.log('done OrderRemainers job', Date.now());
+            console.log('done OrderRemainers job', helper_1.default.formatDate(helper_1.default.Now(), true));
         });
     }
 }

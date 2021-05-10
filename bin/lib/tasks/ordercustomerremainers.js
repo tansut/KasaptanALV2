@@ -25,7 +25,7 @@ class OrderRemainers extends basetask_1.BaseTask {
     }
     run() {
         return __awaiter(this, void 0, void 0, function* () {
-            console.log('running OrderRemainers job', Date.now());
+            console.log('running OrderRemainers job', helper_1.default.formatDate(helper_1.default.Now(), true));
             let mesaiStart = helper_1.default.Now();
             mesaiStart.setHours(9);
             mesaiStart.setMinutes(0);
@@ -54,13 +54,14 @@ class OrderRemainers extends basetask_1.BaseTask {
                 for (let i = 0; i < orders.length; i++) {
                     let userUrl = `${this.url}/user/orders/${orders[i].ordernum}`;
                     yield sms_1.Sms.send(orders[i].phone, `KasaptanAl.com ${orders[i].butcherName} siparisiniz henuz odenmemis gozukuyor. Bilgi: ${userUrl} `, false, new sitelog_1.default());
+                    yield new Promise(r => setTimeout(r, 5));
                     orders[i].customerLastReminder = now;
                     orders[i].customerLastReminderType = 'pay';
                     orders[i].sentCustomerReminders++;
                     yield orders[i].save();
                 }
             }
-            console.log('done OrderRemainers job', Date.now());
+            console.log('done OrderRemainers job', helper_1.default.formatDate(helper_1.default.Now(), true));
         });
     }
 }
