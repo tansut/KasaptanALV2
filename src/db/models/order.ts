@@ -835,7 +835,7 @@ class OrderItem extends BaseModel<Order> {
     pounitWeight: string;       
 
     @Column({
-        allowNull: false,
+        allowNull: true,
         type: DataType.TEXT
     })
     pounitdesc: string;
@@ -847,14 +847,14 @@ class OrderItem extends BaseModel<Order> {
 
 
     @Column({
-        allowNull: false,
+        allowNull: true,
         defaultValue: 0,
         type: DataType.DECIMAL(13, 2)
     })
     pounitkgRatio: number;
 
     @Column({
-        allowNull: false,
+        allowNull: true,
         defaultValue: 0,
         type: DataType.DECIMAL(13, 2)
     })

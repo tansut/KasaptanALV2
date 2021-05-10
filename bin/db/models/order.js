@@ -965,7 +965,7 @@ __decorate([
 ], OrderItem.prototype, "pounitWeight", void 0);
 __decorate([
     sequelize_typescript_1.Column({
-        allowNull: false,
+        allowNull: true,
         type: sequelize_typescript_1.DataType.TEXT
     }),
     __metadata("design:type", String)
@@ -978,7 +978,7 @@ __decorate([
 ], OrderItem.prototype, "orderitemnum", void 0);
 __decorate([
     sequelize_typescript_1.Column({
-        allowNull: false,
+        allowNull: true,
         defaultValue: 0,
         type: sequelize_typescript_1.DataType.DECIMAL(13, 2)
     }),
@@ -986,7 +986,7 @@ __decorate([
 ], OrderItem.prototype, "pounitkgRatio", void 0);
 __decorate([
     sequelize_typescript_1.Column({
-        allowNull: false,
+        allowNull: true,
         defaultValue: 0,
         type: sequelize_typescript_1.DataType.DECIMAL(13, 2)
     }),
