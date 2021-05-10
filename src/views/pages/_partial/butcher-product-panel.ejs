@@ -210,7 +210,7 @@ class="gallery-item-caption"><%= butcherVideo.title %></span></a>
           </div>
 
         </div>
-
+        <%if (__req.query.frame != '1') { %>
         <div class="card rounded-0">
   
           <div class="card-header" role="tab">
@@ -222,7 +222,7 @@ class="gallery-item-caption"><%= butcherVideo.title %></span></a>
         
           </div>
         </div>
-
+<% } %>
         <% if (view.butcher.puanData) { %>
           <div class="card rounded-0">
       
