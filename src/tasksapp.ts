@@ -88,7 +88,7 @@ class KasaptanAlTasksApp {
 
     async bootstrap() {
 
-        let dbinstance = await db.init(true);        
+        let dbinstance = await db.init(false);        
 
 
     

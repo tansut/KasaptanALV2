@@ -54,7 +54,7 @@ class KasaptanAlTasksApp {
     }
     bootstrap() {
         return __awaiter(this, void 0, void 0, function* () {
-            let dbinstance = yield context_1.default.init(true);
+            let dbinstance = yield context_1.default.init(false);
             process.on('SIGTERM', this.shutDown.bind(this));
             process.on('SIGINT', this.shutDown.bind(this));
             yield index_1.default.start();
