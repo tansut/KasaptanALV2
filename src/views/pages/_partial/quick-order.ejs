@@ -67,6 +67,27 @@
                                 </div>
 
                             </div>
+                            
+                            <div class="form-group">
+                                <label>Teslimat Gün ve Saati</label>
+                              <div class="mb-3">
+                                <select required v-if="card" class="form-control custom-select" v-model="shipDay">
+                                  <option v-for="option in card.availableShipHours" v-bind:value="option">
+                                    {{ option.title }}
+                                  </option>
+                                </select>
+
+                              </div>
+                              <div class="mb-3">
+      
+                                <select required v-if="card" class="form-control custom-select" v-model="shipHour">
+                                    <option disabled value="">Lütfen saat seçin</option>
+                                    <option v-for="(item, key) in shipDay.hours" v-bind:value="key">
+                                    {{ item }}
+                                  </option>
+                                </select>
+                              </div>
+                            </div>
                         </div>
                         <div v-show="(mode=='quick' && step==1) || mode=='butcher'" class="input-group-overlay mb-3">
 
@@ -189,13 +210,25 @@
                 prefAdr: {},
                 working: false,
                 disabled: false,
-                mode: 'quick'
+                mode: 'quick',
+                shipDay: null,
+                shipHour: null,
+                card: null
             }
         },
 
         computed: {
 
 
+        },
+
+        watch: {
+            card: function(newVal) {
+                if (newVal.availableShipHours.length) {
+                    this.shipDay = newVal.availableShipHours[0];
+                    this.shipHour = Object.keys(this.shipDay.hours)[0];
+                }
+            }
         },
 
         methods: {
@@ -215,7 +248,9 @@
                     custOrder: this.custOrder,
                     custAddress: this.custAddress,
                     custNote: this.custNote,
-                    prefAdr: this.prefAdr
+                    prefAdr: this.prefAdr,
+                    shipHour: this.shipHour,
+                    shipDay: this.shipDay
 
                 }, null, true).then(function (result) {
                     App.alert('Teşekkür ederiz, siparişinizi aldık. Herşey hazır olduğunda sizi bilgilendireceğiz.')
@@ -272,7 +307,6 @@
                         $('#quickordermodal').modal('show');
                         return;
                     };
-                    //if (!confirm('Siparişinizi onaylıyor musunuz ?')) return;
                     $('#quickordermodal').modal('hide');
                     var auth = App.Auth.checkAuthentication(this.continueOrder.bind(this), '<h6>Muazzam ürünler!</h6><p>Güvenlik adımını şimdi tamamlayalım.</p>')
                     if (auth) this.continueOrder();
@@ -294,12 +328,7 @@
                 }
             },
 
-            useUrl(urlParams) {
-                this.butchername = urlParams.get('butchername');
-                this.butcherslug = urlParams.get('butcherslug');
-                this.fillParams();
-                $('#quickordermodal').modal('show');
-            },
+
 
             open(params, mode) {
                 if (!window.App.User.prefAdr) {
@@ -317,6 +346,7 @@
                     this.mode = mode || 'quick';
                     Object.assign(self, params || {});
                     this.fillParams();
+                    this.card = this.card || window.shopcard.card.data;
                     window.quickOrderProductApp.useShopcard = true;
                     $('#quickordermodal').modal('show');
                 }

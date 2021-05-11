@@ -40,53 +40,20 @@
               </button>
             </div>
             <div class="modal-body">
-              <div class="form-group row">
-                <label class="col-sm-2 col-form-label">Müşteri</label>
-                <div class="col-sm-10">
-                  <input :value="order.custName + ',' + order.custPhone" type="text" readonly class="form-control-plaintext" >
-                </div>
-              </div>
-              <div class="form-group row">
-                <label class="col-sm-2 col-form-label">Kasap</label>
-                <div class="col-sm-10">
-                  <input v-model="order.butchername" type="text" readonly class="form-control-plaintext" >
-                </div>
-              </div>
 
-              <div class="form-group row">
-                <label class="col-sm-2 col-form-label">Sipariş</label>
-                <div class="col-sm-10">
-                  <input v-model="order.custOrder" type="text" readonly class="form-control-plaintext" >
-                </div>
-              </div>
+              <h5 class="h5">{{order.custName + ',' + order.custPhone}}</h5>
+              <p>{{order.butchername}} Siparişi</p>
+              <h6 class="h6" >Sipariş</h6>
+              {{order.custOrder}}, {{order.custNote}}
+              <h6 class="h6">Adres</h6>
+                  {{order.custAddress}}, {{order.semt}}, 
+                  <a target="_blank" :href="'https://www.google.com/maps/search/?api=1&query=' + order.prefAdr.lat + ',' +  order.prefAdr.lng">Tam Konuma Git</a>
+              <h6 class="h6">Teslimat Talebi</h6>
+              {{order.shipHour}}, {{order.shipDay.date}}
 
-              <div class="form-group row">
-                <label class="col-sm-2 col-form-label">Not</label>
-                <div class="col-sm-10">
-                  <input v-model="order.custNote" type="text" readonly class="form-control-plaintext" >
-                </div>
-              </div>
+           
 
-              <div class="form-group row">
-                <label class="col-sm-2 col-form-label">Adres</label>
-                <div class="col-sm-10">
-                  <input v-model="order.custAddress" type="text" readonly class="form-control-plaintext" >
-                </div>
-              </div>
 
-              <div class="form-group row">
-                <label class="col-sm-2 col-form-label">Semt</label>
-                <div class="col-sm-10">
-                  <input v-model="order.semt" type="text" readonly class="form-control-plaintext" >
-                </div>
-              </div>
-
-              <div class="form-group row">
-                <label class="col-sm-2 col-form-label">Konum</label>
-                <div class="col-sm-10">
-                  <a target="_blank" :href="'https://www.google.com/maps/search/?api=1&query=' + order.prefAdr.lat + ',' +  order.prefAdr.lng">Git</a>
-                </div>
-              </div>
 
             </div>
           </div>

@@ -114,7 +114,7 @@ export default class Route extends ViewRouter {
         if (!product) return this.next();
         this.product = product;
         this.api = new ProductApi(this.constructorParams);
-        let shopcard = this.shopcard = await ShopCard.createFromRequest(this.req);
+        let shopcard = this.shopcard = this.req.shopCard;
         await product.loadResources();
         await product.loadnutritionValues();        
 

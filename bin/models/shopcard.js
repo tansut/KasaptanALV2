@@ -71,6 +71,8 @@ class ShopCard {
         this.butcherDiscounts = {};
         this.discounts = [];
         this.items = [];
+        this.availableShipHours = [];
+        this.availableShipHours = shipment_1.Shipment.getShipmentDays();
         this.items = [];
         this.note = values.note || "";
         values = values || {};

@@ -65,6 +65,7 @@ export interface AppRequest extends express.Request {
     session: any;
     helper: RequestHelper;
     prefAddr: PreferredAddress;
+    shopCard: ShopCard;
     __categories: Category[];
     __pricecategories: PriceCategory[];
     __resources: { [key: string]: [ResourceCacheItem]; }

@@ -33,7 +33,6 @@ const area_1 = require("../db/models/area");
 const butcherproduct_1 = require("../db/models/butcherproduct");
 const dispatcher_2 = require("../db/models/dispatcher");
 var MarkdownIt = require('markdown-it');
-const shopcard_1 = require("../models/shopcard");
 const config_1 = require("../config");
 const sequelize_1 = require("sequelize");
 const productcategory_1 = require("../db/models/productcategory");
@@ -93,7 +92,7 @@ class Route extends router_1.ViewRouter {
                 return this.next();
             this.product = product;
             this.api = new product_2.default(this.constructorParams);
-            let shopcard = this.shopcard = yield shopcard_1.ShopCard.createFromRequest(this.req);
+            let shopcard = this.shopcard = this.req.shopCard;
             yield product.loadResources();
             yield product.loadnutritionValues();
             this.shopCardIndex = this.req.query.shopcarditem ? parseInt(this.req.query.shopcarditem) : -1;

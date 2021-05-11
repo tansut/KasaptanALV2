@@ -87,7 +87,7 @@ class Route extends router_1.ViewRouter {
     }
     viewRoute() {
         return __awaiter(this, void 0, void 0, function* () {
-            this.shopcard = yield shopcard_1.ShopCard.createFromRequest(this.req);
+            this.shopcard = this.req.shopCard;
             yield this.setDispatcher();
             yield this.getOrderSummary();
             this.appUI.title = 'Sepetim';
@@ -100,7 +100,7 @@ class Route extends router_1.ViewRouter {
     }
     savecardRoute() {
         return __awaiter(this, void 0, void 0, function* () {
-            this.shopcard = yield shopcard_1.ShopCard.createFromRequest(this.req);
+            this.shopcard = this.req.shopCard;
             this.shopcard.note = this.req.body["order-comments"] || "";
             yield this.setDispatcher();
             if (this.shopcard.getOrderType() == 'kurban') {
@@ -126,7 +126,7 @@ class Route extends router_1.ViewRouter {
     }
     adresViewRoute() {
         return __awaiter(this, void 0, void 0, function* () {
-            this.shopcard = yield shopcard_1.ShopCard.createFromRequest(this.req);
+            this.shopcard = this.req.shopCard;
             yield this.setDispatcher();
             if (this.req.user && !this.shopcard.address.name) {
                 this.shopcard.address.name = this.req.user.name;
@@ -236,7 +236,7 @@ class Route extends router_1.ViewRouter {
     }
     saveadresTakeRoute() {
         return __awaiter(this, void 0, void 0, function* () {
-            this.shopcard = yield shopcard_1.ShopCard.createFromRequest(this.req);
+            this.shopcard = this.req.shopCard;
             if (this.req.user) {
                 this.shopcard.address.name = this.req.body.name;
                 this.shopcard.address.email = this.req.body.email;
@@ -250,7 +250,7 @@ class Route extends router_1.ViewRouter {
     }
     saveadresRoute() {
         return __awaiter(this, void 0, void 0, function* () {
-            this.shopcard = yield shopcard_1.ShopCard.createFromRequest(this.req);
+            this.shopcard = this.req.shopCard;
             this.shopcard.address.name = this.req.body.name;
             this.shopcard.address.email = this.req.body.email;
             this.shopcard.address.phone = this.req.body.phone;
@@ -285,7 +285,7 @@ class Route extends router_1.ViewRouter {
     }
     shipViewRoute() {
         return __awaiter(this, void 0, void 0, function* () {
-            this.shopcard = yield shopcard_1.ShopCard.createFromRequest(this.req);
+            this.shopcard = this.req.shopCard;
             yield this.setDispatcher();
             yield this.shopcard.saveToRequest(this.req);
             if (this.shopcard.getOrderType() == 'kurban') {
@@ -311,7 +311,7 @@ class Route extends router_1.ViewRouter {
     }
     saveshipRoute() {
         return __awaiter(this, void 0, void 0, function* () {
-            this.shopcard = yield shopcard_1.ShopCard.createFromRequest(this.req);
+            this.shopcard = this.req.shopCard;
             yield this.loadButchers();
             let needAddress = false;
             let hasDispatcher = true;
@@ -379,7 +379,7 @@ class Route extends router_1.ViewRouter {
     }
     paymentViewRoute() {
         return __awaiter(this, void 0, void 0, function* () {
-            this.shopcard = yield shopcard_1.ShopCard.createFromRequest(this.req);
+            this.shopcard = this.req.shopCard;
             yield this.setDispatcher();
             yield this.getOrderSummary();
             this.renderPage("pages/checkout.payment.ejs");
@@ -387,7 +387,7 @@ class Route extends router_1.ViewRouter {
     }
     savepaymentRoute() {
         return __awaiter(this, void 0, void 0, function* () {
-            this.shopcard = yield shopcard_1.ShopCard.createFromRequest(this.req);
+            this.shopcard = this.req.shopCard;
             for (let k in this.shopcard.butchers) {
                 let butcher = this.shopcard.butchers[k];
                 this.shopcard.payment[k].type = this.req.body[`paymentmethod${k}`];
@@ -404,7 +404,7 @@ class Route extends router_1.ViewRouter {
     }
     reviewViewRoute(userMessage) {
         return __awaiter(this, void 0, void 0, function* () {
-            this.shopcard = yield shopcard_1.ShopCard.createFromRequest(this.req);
+            this.shopcard = this.req.shopCard;
             this.shopcard.arrangeButchers();
             yield this.setDispatcher();
             this.shopcard.calculateShippingCosts();
@@ -429,7 +429,7 @@ class Route extends router_1.ViewRouter {
     savereviewRoute() {
         return __awaiter(this, void 0, void 0, function* () {
             try {
-                this.shopcard = yield shopcard_1.ShopCard.createFromRequest(this.req);
+                this.shopcard = this.req.shopCard;
                 yield this.setDispatcher();
                 this.shopcard.calculateShippingCosts();
                 let api = new order_2.default(this.constructorParams);

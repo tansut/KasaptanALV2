@@ -46,6 +46,7 @@ const banabikurye_1 = require("./lib/logistic/banabikurye");
 const butcher_1 = require("./lib/logistic/butcher");
 const banabikuryeprovidercar_1 = require("./lib/logistic/banabikuryeprovidercar");
 const tobanabikurye_1 = require("./lib/logistic/tobanabikurye");
+const shopcard_1 = require("./models/shopcard");
 const winston = require('winston');
 const expressWinston = require('express-winston');
 const Sequelize = require('sequelize');
@@ -98,10 +99,18 @@ class KasaptanAlApp {
                 }
                 else if (req.user && req.user.shopcard && req.session.shopcard != null) {
                 }
-                Promise.all(list).then(r => {
-                    res.locals.__shopcard = () => (req.user ? req.user.shopcard : req.session.shopcard);
+                shopcard_1.ShopCard.createFromRequest(req).then(sc => {
+                    req.shopCard = sc;
                     next();
                 }).catch(next);
+                // Promise.all(list).then(r => {
+                //     ShopCard.createFromRequest(req).then(sc=>{
+                //         res.locals.__shopcard = sc;
+                //         res.locals.__shopcard = () => (req.user ? req.user.shopcard : req.session.shopcard);
+                //         next();
+                //     }).catch(next)
+                //     //res.locals.__shopcard = () => (req.user ? req.user.shopcard : req.session.shopcard);
+                // }).catch(next)
             });
         });
     }

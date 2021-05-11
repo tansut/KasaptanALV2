@@ -288,7 +288,7 @@ export default class Route extends ViewRouter {
                 excludeCitywide: this.category.slug != 'tum-turkiye',
             }
             let serving = await dapi.getDispatchers(q);
-            //this.shopcard = await ShopCard.createFromRequest(this.req);
+            //this.shopcard = this.req.shopCard;
             // let scButcher = (shopcard.items && shopcard.items.length) ? shopcard.items[0].product.butcher.id : null;
             // let servings = serving;
             // if (scButcher) {

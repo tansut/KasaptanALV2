@@ -20,7 +20,6 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 Object.defineProperty(exports, "__esModule", { value: true });
 const common_1 = require("../../lib/common");
 const router_1 = require("../../lib/router");
-const shopcard_1 = require("../../models/shopcard");
 const product_1 = require("../../db/models/product");
 const product_2 = require("./product");
 const butcher_1 = require("../../db/models/butcher");
@@ -30,6 +29,7 @@ const shoplist_1 = require("../../db/models/shoplist");
 const helper_1 = require("../../lib/helper");
 const order_1 = require("../../db/models/order");
 const winston_1 = require("winston");
+const shipment_1 = require("../../models/shipment");
 class Route extends router_1.ApiRouter {
     getDispatcher(to) {
         return __awaiter(this, void 0, void 0, function* () {
@@ -67,7 +67,7 @@ class Route extends router_1.ApiRouter {
                     }
                 ]
             });
-            let shopcard = yield shopcard_1.ShopCard.createFromRequest(this.req);
+            let shopcard = this.req.shopCard;
             let product;
             for (let i = 0; i < list.items.length; i++) {
                 let li = list.items[i];
@@ -92,7 +92,7 @@ class Route extends router_1.ApiRouter {
         return __awaiter(this, void 0, void 0, function* () {
             let api = new product_2.default(this.constructorParams);
             item = item || this.req.body;
-            let shopcard = yield shopcard_1.ShopCard.createFromRequest(this.req);
+            let shopcard = this.req.shopCard;
             let product = yield product_1.default.findByPk(item.id);
             let butcher = item.butcher ? yield butcher_1.default.findOne({
                 where: {
@@ -136,7 +136,7 @@ class Route extends router_1.ApiRouter {
         return __awaiter(this, void 0, void 0, function* () {
             let api = new product_2.default(this.constructorParams);
             let item = this.req.body;
-            let shopcard = yield shopcard_1.ShopCard.createFromRequest(this.req);
+            let shopcard = this.req.shopCard;
             let product = yield product_1.default.findByPk(item.id);
             let butcher = this.req.body.butcher ? yield butcher_1.default.findOne({
                 where: {
@@ -163,7 +163,7 @@ class Route extends router_1.ApiRouter {
     removeRoute() {
         return __awaiter(this, void 0, void 0, function* () {
             let item = this.req.body;
-            let shopcard = yield shopcard_1.ShopCard.createFromRequest(this.req);
+            let shopcard = this.req.shopCard;
             let scItem = shopcard.items[item.order];
             shopcard.remove(item.order);
             yield shopcard.saveToRequest(this.req);
@@ -203,6 +203,12 @@ class Route extends router_1.ApiRouter {
             this.res.send(address);
         });
     }
+    availableShipmentHours() {
+        return __awaiter(this, void 0, void 0, function* () {
+            let result = shipment_1.Shipment.getShipmentDays();
+            this.res.send(result);
+        });
+    }
     static SetRoutes(router) {
         router.post("/shopcard/geocode", Route.BindRequest(this.prototype.geocode));
         router.post("/shopcard/reversegeocode", Route.BindRequest(this.prototype.revgeocode));
@@ -210,6 +216,7 @@ class Route extends router_1.ApiRouter {
         router.post("/shopcard/addFromOrder", Route.BindRequest(this.prototype.addFromOrderRoute));
         router.post("/shopcard/update", Route.BindRequest(this.prototype.updateRoute));
         router.post("/shopcard/remove", Route.BindRequest(this.prototype.removeRoute));
+        router.post("/shopcard/availableShipmentHours", Route.BindRequest(this.prototype.availableShipmentHours));
     }
 }
 __decorate([
@@ -236,4 +243,10 @@ __decorate([
     __metadata("design:paramtypes", []),
     __metadata("design:returntype", Promise)
 ], Route.prototype, "geocode", null);
+__decorate([
+    common_1.Auth.Anonymous(),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", []),
+    __metadata("design:returntype", Promise)
+], Route.prototype, "availableShipmentHours", null);
 exports.default = Route;

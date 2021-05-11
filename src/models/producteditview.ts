@@ -105,14 +105,9 @@ export interface ProductView {
     name: string;
     productType: string;
     priceView: PriceView;
-    // viewUnitPrice: number;
-    // viewUnit: string;
-    // viewUnitDesc: string;
-    // viewUnitAmount: number;
     shortDesc: string;
     notePlaceholder: string;
     purchaseOptions: PurchaseOption[];
-    //defaultUnit: number
     resources?: ResourceView[];
     nutritionView: NutritionView;
     shipmentDayHours: ShipmentDayHours [];

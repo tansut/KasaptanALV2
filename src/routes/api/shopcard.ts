@@ -15,6 +15,7 @@ import Helper from '../../lib/helper';
 import { Order, OrderItem } from '../../db/models/order';
 import { all } from 'sequelize/types/lib/operators';
 import { exceptions } from 'winston';
+import { Shipment, ShipmentHours } from '../../models/shipment';
 
 
 export default class Route extends ApiRouter {
@@ -53,7 +54,7 @@ export default class Route extends ApiRouter {
                 }
             ]
         });
-        let shopcard = await ShopCard.createFromRequest(this.req);
+        let shopcard = this.req.shopCard;
         let product: Product;
         for (let i = 0; i < list.items.length; i++) {
             let li = list.items[i];
@@ -79,7 +80,7 @@ export default class Route extends ApiRouter {
         let api = new ProductApi(this.constructorParams);
         item = item || this.req.body;
 
-        let shopcard = await ShopCard.createFromRequest(this.req);
+        let shopcard = this.req.shopCard;
         let product = await Product.findByPk(item.id);
         let butcher = item.butcher ? await Butcher.findOne({
             where: {
@@ -124,7 +125,7 @@ export default class Route extends ApiRouter {
         let api = new ProductApi(this.constructorParams);
         let item = this.req.body;
 
-        let shopcard = await ShopCard.createFromRequest(this.req);
+        let shopcard = this.req.shopCard;
         let product = await Product.findByPk(item.id);
         let butcher = this.req.body.butcher ? await Butcher.findOne({
             where: {
@@ -151,7 +152,7 @@ export default class Route extends ApiRouter {
     @Auth.Anonymous()
     async removeRoute() {
         let item = this.req.body;
-        let shopcard = await ShopCard.createFromRequest(this.req);
+        let shopcard = this.req.shopCard;
         let scItem = shopcard.items[item.order]
         shopcard.remove(item.order);
         await shopcard.saveToRequest(this.req);
@@ -194,6 +195,12 @@ export default class Route extends ApiRouter {
     }
 
 
+    @Auth.Anonymous()
+    async availableShipmentHours() {
+        let result = Shipment.getShipmentDays();
+        this.res.send(result);
+    }
+
 
     static SetRoutes(router: express.Router) {
         router.post("/shopcard/geocode", Route.BindRequest(this.prototype.geocode));
@@ -202,6 +209,7 @@ export default class Route extends ApiRouter {
         router.post("/shopcard/addFromOrder", Route.BindRequest(this.prototype.addFromOrderRoute));
         router.post("/shopcard/update", Route.BindRequest(this.prototype.updateRoute));
         router.post("/shopcard/remove", Route.BindRequest(this.prototype.removeRoute));
+        router.post("/shopcard/availableShipmentHours", Route.BindRequest(this.prototype.availableShipmentHours));
 
     }
 }

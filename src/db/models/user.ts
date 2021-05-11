@@ -10,6 +10,7 @@ import { GeoLocation, LocationType } from '../../models/geo';
 import AccountModel from './accountmodel';
 import { Account } from '../../models/account';
 import Area from './area';
+import { ShopCard } from '../../models/shopcard';
 
 
 export enum UserRole {
@@ -265,6 +266,8 @@ export default class User extends BaseModel<User> {
 
     @Column
     shopcardjson: Buffer
+
+    shopCard: ShopCard;
 
     get shopcard(): any {
         return this.shopcardjson ? JSON.parse((<Buffer>this.getDataValue('shopcardjson')).toString()) : null

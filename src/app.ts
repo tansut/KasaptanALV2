@@ -44,6 +44,7 @@ import BanabikuryeProvider from './lib/logistic/banabikurye';
 import { ButcherManualLogistics, ButcherAutoLogistics } from './lib/logistic/butcher';
 import BanabikuryeCarProvider from './lib/logistic/banabikuryeprovidercar';
 import ToBanabikuryeProvider from './lib/logistic/tobanabikurye';
+import { ShopCard } from './models/shopcard';
 
 const winston = require('winston');
 const expressWinston = require('express-winston');
@@ -123,11 +124,21 @@ class KasaptanAlApp {
             } else if (req.user && req.user.shopcard && req.session.shopcard != null) {
             }
 
-
-            Promise.all(list).then(r => {
-                res.locals.__shopcard = () => (req.user ? req.user.shopcard : req.session.shopcard);
+            ShopCard.createFromRequest(req).then(sc=>{
+                req.shopCard = sc;
                 next();
             }).catch(next)
+
+
+            // Promise.all(list).then(r => {
+            //     ShopCard.createFromRequest(req).then(sc=>{
+            //         res.locals.__shopcard = sc;
+            //         res.locals.__shopcard = () => (req.user ? req.user.shopcard : req.session.shopcard);
+            //         next();
+            //     }).catch(next)
+            //     //res.locals.__shopcard = () => (req.user ? req.user.shopcard : req.session.shopcard);
+               
+            // }).catch(next)
         })
     }
 

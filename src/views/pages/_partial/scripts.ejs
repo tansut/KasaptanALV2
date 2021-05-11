@@ -105,7 +105,7 @@ window.App.platform = '<%=controller.platform%>'
   
     window.shopcard = {
       card: {
-        data: <%- JSON.stringify(__shopcard() || { items: [] }) %>
+        data: <%- JSON.stringify(__req.shopCard || { items: [] }) %>
       }
     };
   
@@ -496,8 +496,14 @@ window.App.platform = '<%=controller.platform%>'
         var urlParams = new URLSearchParams(window.location.search); 
         
           if (urlParams.has('quickorder')) {
-            window.quickOrderApp.useUrl(urlParams);
             
+            var butchername = urlParams.get('butchername');
+            var butcherslug = urlParams.get('butcherslug');
+            window.quickOrderApp.open({
+              butchername: butchername,
+              butcherslug: butcherslug,
+              card: window.shopcard.card.data
+            });
           }
       <% } %>
 

@@ -1497,7 +1497,7 @@ export default class Route extends ApiRouter {
         order.orderDate = Helper.Now();
         order.semt = this.req.prefAddr.display;
         order.ip = this.userIp;
-        user.lastManuealOrder = JSON.stringify(order)
+        user.lastManuealOrder = JSON.stringify(order);
         user.lastAddress = this.req.body.custAddress;
         user.lastLocation = {
             type: 'Point',

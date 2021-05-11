@@ -283,7 +283,7 @@ class Route extends router_1.ViewRouter {
                     excludeCitywide: this.category.slug != 'tum-turkiye',
                 };
                 let serving = yield dapi.getDispatchers(q);
-                //this.shopcard = await ShopCard.createFromRequest(this.req);
+                //this.shopcard = this.req.shopCard;
                 // let scButcher = (shopcard.items && shopcard.items.length) ? shopcard.items[0].product.butcher.id : null;
                 // let servings = serving;
                 // if (scButcher) {

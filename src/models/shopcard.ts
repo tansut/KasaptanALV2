@@ -2,7 +2,7 @@ import { AppRequest, ValidationError } from "../lib/http";
 import Product, { ProductType } from "../db/models/product";
 import { PurchaseOption, ProductView } from "./productView";
 import Helper from "../lib/helper";
-import { Shipment, ShipmentType, ShipmentTypeDesc } from "./shipment";
+import { Shipment, ShipmentDayHours, ShipmentType, ShipmentTypeDesc } from "./shipment";
 import { Payment, PaymentType, PaymentTypeDesc } from "./payment";
 import { Order } from "../db/models/order";
 import * as _ from "lodash"
@@ -128,11 +128,10 @@ export class ShopCard {
     payment: { [key: number]: Payment; } = {};
     shippingCosts: { [key: number]: ShippingCost; } = {};
     butcherDiscounts: { [key: number]: Discount[]; } = {};
-
     discounts = [];
-
-
     items: ShopcardItem[] = [];
+
+    availableShipHours: ShipmentDayHours [] = [];
 
     getPaymentTotal(type: string) {
         let total = 0.00;
@@ -337,7 +336,10 @@ export class ShopCard {
         return this.created < d;
     }
 
+    
+
     constructor(values: any) {
+        this.availableShipHours = Shipment.getShipmentDays();
         this.items = [];
         this.note = values.note || "";
         values = values || {};

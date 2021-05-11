@@ -90,7 +90,7 @@ export default class Route extends ViewRouter {
 
     @Auth.Anonymous()
     async viewRoute() {
-        this.shopcard = await ShopCard.createFromRequest(this.req);
+        this.shopcard = this.req.shopCard;
         await this.setDispatcher();
         await this.getOrderSummary();
         this.appUI.title = 'Sepetim';
@@ -107,7 +107,7 @@ export default class Route extends ViewRouter {
 
     @Auth.Anonymous()
     async savecardRoute() {
-        this.shopcard = await ShopCard.createFromRequest(this.req);
+        this.shopcard = this.req.shopCard;
         this.shopcard.note = this.req.body["order-comments"] || "";
         await this.setDispatcher();        
         if (this.shopcard.getOrderType() == 'kurban') {
@@ -133,7 +133,7 @@ export default class Route extends ViewRouter {
 
     @Auth.Anonymous()
     async adresViewRoute() {
-        this.shopcard = await ShopCard.createFromRequest(this.req);
+        this.shopcard = this.req.shopCard;
         await this.setDispatcher();
         if (this.req.user && !this.shopcard.address.name) {
             this.shopcard.address.name = this.req.user.name;
@@ -263,7 +263,7 @@ export default class Route extends ViewRouter {
 
     @Auth.Anonymous()
     async saveadresTakeRoute() {
-        this.shopcard = await ShopCard.createFromRequest(this.req);
+        this.shopcard = this.req.shopCard;
         if (this.req.user) {
             this.shopcard.address.name = this.req.body.name;
             this.shopcard.address.email = this.req.body.email;
@@ -278,7 +278,7 @@ export default class Route extends ViewRouter {
 
     @Auth.Anonymous()
     async saveadresRoute() {
-        this.shopcard = await ShopCard.createFromRequest(this.req);
+        this.shopcard = this.req.shopCard;
         this.shopcard.address.name = this.req.body.name;
         this.shopcard.address.email = this.req.body.email;
         this.shopcard.address.phone = this.req.body.phone;
@@ -309,7 +309,7 @@ export default class Route extends ViewRouter {
 
     @Auth.Anonymous()
     async shipViewRoute() {
-        this.shopcard = await ShopCard.createFromRequest(this.req);
+        this.shopcard = this.req.shopCard;
         await this.setDispatcher();
         await this.shopcard.saveToRequest(this.req);
         if (this.shopcard.getOrderType() == 'kurban') {
@@ -334,7 +334,7 @@ export default class Route extends ViewRouter {
 
     @Auth.Anonymous()
     async saveshipRoute() {
-        this.shopcard = await ShopCard.createFromRequest(this.req);
+        this.shopcard = this.req.shopCard;
         await this.loadButchers();
         let needAddress = false;
         let hasDispatcher = true;
@@ -403,7 +403,7 @@ export default class Route extends ViewRouter {
 
     @Auth.Anonymous()
     async paymentViewRoute() {
-        this.shopcard = await ShopCard.createFromRequest(this.req);
+        this.shopcard = this.req.shopCard;
         await this.setDispatcher();
         await this.getOrderSummary();
         this.renderPage("pages/checkout.payment.ejs");
@@ -417,7 +417,7 @@ export default class Route extends ViewRouter {
 
     @Auth.Anonymous()
     async savepaymentRoute() {
-        this.shopcard = await ShopCard.createFromRequest(this.req);
+        this.shopcard = this.req.shopCard;
         for (let k in this.shopcard.butchers) {
             let butcher = this.shopcard.butchers[k];
             this.shopcard.payment[k].type = this.req.body[`paymentmethod${k}`];
@@ -434,7 +434,7 @@ export default class Route extends ViewRouter {
 
     @Auth.Anonymous()
     async reviewViewRoute(userMessage?: any) {
-        this.shopcard = await ShopCard.createFromRequest(this.req);
+        this.shopcard = this.req.shopCard;
         this.shopcard.arrangeButchers();
         await this.setDispatcher();
         this.shopcard.calculateShippingCosts();
@@ -460,7 +460,7 @@ export default class Route extends ViewRouter {
     async savereviewRoute() {
 
         try {
-            this.shopcard = await ShopCard.createFromRequest(this.req);
+            this.shopcard = this.req.shopCard;
             await this.setDispatcher();
             this.shopcard.calculateShippingCosts();
             let api = new OrderApi(this.constructorParams);

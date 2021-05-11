@@ -107,7 +107,7 @@ export default class Route extends ViewRouter {
         }
 
         let butcher = this.butcher = await ButcherModel.loadButcherWithProducts(this.req.params.butcher);
-        this.shopcard = await ShopCard.createFromRequest(this.req);
+        this.shopcard = this.req.shopCard;
         
         if (!butcher) {
             let group = await ButcherModel.findOne({
