@@ -120,7 +120,7 @@ export default class Route extends ViewRouter {
 
     get paymentProvider() {
         if (!this._paymentProvider) {
-            let payment = CreditcardPaymentFactory.getInstance();
+            let payment = CreditcardPaymentFactory.getInstance('iyzico');
             let log = new SiteLogRoute(this.constructorParams);
             payment.logger = log;
             payment.userid = this.req.user ? this.req.user.id : null;

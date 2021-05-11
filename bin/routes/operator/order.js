@@ -90,7 +90,7 @@ class Route extends router_1.ViewRouter {
     }
     get paymentProvider() {
         if (!this._paymentProvider) {
-            let payment = creditcard_1.CreditcardPaymentFactory.getInstance();
+            let payment = creditcard_1.CreditcardPaymentFactory.getInstance('iyzico');
             let log = new sitelog_1.default(this.constructorParams);
             payment.logger = log;
             payment.userid = this.req.user ? this.req.user.id : null;
