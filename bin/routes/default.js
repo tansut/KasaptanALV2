@@ -30,6 +30,8 @@ const temp_loc_1 = require("../db/models/temp_loc");
 const order_1 = require("./api/order");
 const butcherproduct_1 = require("../db/models/butcherproduct");
 const butcher_2 = require("../db/models/butcher");
+const creditcard_1 = require("../lib/payment/creditcard");
+const sitelog_1 = require("./api/sitelog");
 let ellipsis = require('text-ellipsis');
 class Route extends router_1.ViewRouter {
     constructor() {
@@ -129,6 +131,36 @@ class Route extends router_1.ViewRouter {
                 this.res.redirect(this.req.query.r);
             else
                 this.res.redirect('/');
+        });
+    }
+    tempbutcher() {
+        return __awaiter(this, void 0, void 0, function* () {
+            let bs = yield butcher_2.default.findAll({
+                where: {
+                    approved: true
+                }
+            });
+            let s = "";
+            for (let i = 0; i < (bs).length; i++) {
+                let bt = bs[i];
+                try {
+                    if (!bt.companyType)
+                        continue;
+                    let payment = creditcard_1.CreditcardPaymentFactory.getInstance("iyzico");
+                    payment.logger = new sitelog_1.default(this.constructorParams);
+                    let subMerchantReq = payment.subMerchantRequestFromButcher(bt);
+                    let result = yield payment.createSubMerchant(subMerchantReq);
+                    let k = result.subMerchantKey;
+                    bt.iyzicoSubMerchantKey = k;
+                    yield bt.save();
+                    s += 'BAŞARILI' + bt.name + '\n';
+                }
+                catch (err) {
+                    console.log(bt.name + ' hata:' + err.errorMessage);
+                    s += 'HATA' + bt.name + ' hata:' + err.errorMessage + bt.name + '\n';
+                }
+            }
+            this.res.send(s);
         });
     }
     tempprods() {
@@ -249,6 +281,7 @@ class Route extends router_1.ViewRouter {
         router.get("/", Route.BindRequest(this.prototype.defaultRoute));
         router.get("/temparea", Route.BindRequest(this.prototype.tempares));
         router.get("/tempproducts", Route.BindRequest(this.prototype.tempprods));
+        router.get("/tempiyzico", Route.BindRequest(this.prototype.tempbutcher));
         // router.get("/testsubmit", Route.BindToView("pages/test-submit.ejs"))
         // router.post("/testsubmit", Route.BindRequest(this.prototype.testsubmit))
         router.get("/adres-belirle/:slug", Route.BindRequest(this.prototype.setUserAddr));

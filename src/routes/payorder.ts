@@ -35,7 +35,7 @@ import PaymentMethod from '../db/models/paymentmethod';
 
 export default class Route extends PaymentRouter {
     DeliveryStatusDesc = DeliveryStatusDesc;
-    savedCards: PaymentMethod [] = [];
+
     order: Order;
     api: OrderApi;
     balance: AccountModel;
@@ -50,7 +50,7 @@ export default class Route extends PaymentRouter {
     usablePuanTotal = 0.00;
     productTotal = 0.00;
     markdown = new MarkdownIt();
-
+    savedCards: PaymentMethod[]=[];
     possiblePuanList: PuanResult[] = [];
 
     async renderPage(userMessage: string, view: string, msgType: string='success') {
@@ -80,13 +80,6 @@ export default class Route extends PaymentRouter {
 
     }
 
-    redirect({success, error}) {
-        let url = this.req.url.indexOf('?') <= 0 ? 
-            this.req.url + `?${success ? 'success=':'error='}${(success || error)}`:
-            this.req.url + `&${success ? 'success=':'error='}${(success || error)}`
-        this.res.redirect(url);
-    }
-
     async getOrderSummary() {
         if (this.order.workedAccounts.length == 1) {
             let initial = this.api.generateInitialAccounting(this.order);
@@ -108,7 +101,9 @@ export default class Route extends PaymentRouter {
             this.possiblePuanList.forEach(pg => this.mayEarnPuanTotal += pg.earned)
             this.mayEarnPuanTotal = Helper.asCurrency(this.mayEarnPuanTotal);
             this.usablePuanTotal = Math.min(this.order.requestedPuan, await this.api.getUsablePuans(this.order))
+            
         }
+
         if (this.req.user) {
             this.savedCards = await PaymentMethod.findAll({
                 where: {
@@ -145,12 +140,19 @@ export default class Route extends PaymentRouter {
             this.api.fillEarnedPuanAccounts(this.order, this.productTotal);
             let butcherDebptAccounts = await AccountModel.summary([Account.generateCode("kasaplardan-alacaklar", [this.order.butcherid])])
             let butcherDebt =  Helper.asCurrency(butcherDebptAccounts.borc - butcherDebptAccounts.alacak);
-            debt[this.order.butcherid] = butcherDebt;    
+            debt[this.order.butcherid] = butcherDebt;   
+            // if (this.req.body.puanusage == 'yes') {
+            //     puanUsage[this.order.butcherid] = this.usablePuanTotal;
+            // }        
         }
+        
+
 
         
         let request = this.paymentProvider.requestFromOrder([this.order], debt);
         request.callbackUrl = this.url + '/3dnotify?provider=' + this.paymentProvider.providerKey;        
+        // if (this.shouldBePaid != request.paidPrice)
+        //     throw new Error("Geçersiz sipariş ve muhasebesel tutarlar");
 
         return request;
     }
@@ -172,7 +174,7 @@ export default class Route extends PaymentRouter {
                 let threedPaymentMade = await this.created3DPayment();
                 if (threedPaymentMade) {
                     await this.paymentSuccess(req, threedPaymentMade);
-                    userMessage = "Ödemeniz başarıyla alındı";
+                    userMessage = "Ödemeniz başarıyla alındı"
                 } else {
                     throw new Error("Ödemenizi maalesef alamadık. 3d şifresini hatalı girmiş olabilirsiniz veya kredi kartınızın bakiyesi yeterli olmayabilir, kullanım süresi geçmiş olabilir.")
                 }
@@ -195,7 +197,7 @@ export default class Route extends PaymentRouter {
                     let creditCard = this.getCreditCard();
                     paymentResult = await this.createPayment(req, creditCard);
                     await this.paymentSuccess(req, paymentResult)
-                    userMessage = "Ödemenizi başarıyla aldık";
+                    userMessage = "Ödemenizi başarıyla aldık"
                 }
             } else {
                 if (this.req.body.usepuan == 'true') {
@@ -211,15 +213,17 @@ export default class Route extends PaymentRouter {
             }
         } catch (err) {
             userMessage = err.message || err.errorMessage;
-            this.paySession = req ? await this.paymentProvider.paySession(req): null;
+
+            userMessage = `${userMessage}`
+            this.paySession = await this.paymentProvider.paySession(req);
             gotError = true;
             Helper.logError(err, {
                 method: 'PayOrder',
                 order: this.order.ordernum
             }, this.req)         
         }
-        this.redirect({success: gotError ? undefined: userMessage, error: gotError ? userMessage:undefined})
-        //await this.renderPage(userMessage, "pages/payorder.ejs", gotError ? 'danger': 'success');
+
+        await this.renderPage(userMessage, "pages/payorder.ejs", gotError ? 'danger': 'success');
 
     }
 
@@ -227,16 +231,6 @@ export default class Route extends PaymentRouter {
         let ordernum = this.req.params.ordernum;
         this.api = new OrderApi(this.constructorParams);
         this.order = await this.api.getOrder(ordernum, true);
-        if (this.req.user) {
-            this.savedCards = await PaymentMethod.findAll({
-                where: {
-                    userid: this.order.userId,
-                    method: 'creditcard',
-                    instance: this.paymentProvider.providerKey,
-                    enabled: true   
-                }
-            })
-        }
     }
 
     @Auth.Anonymous()
@@ -251,9 +245,8 @@ export default class Route extends PaymentRouter {
             let payRequest = await this.getPaymentRequest();
             this.paySession = await this.paymentProvider.paySession(payRequest);
         }   
-        let msg = <string>(this.req.query.success || this.req.query.error);
-        let msgType = this.req.query.success ? 'info' : 'danger';
-        await this.renderPage(msg, "pages/payorder.ejs", msgType);
+
+        await this.renderPage(null, "pages/payorder.ejs");
     }
 
 

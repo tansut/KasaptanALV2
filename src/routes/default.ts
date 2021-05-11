@@ -23,6 +23,8 @@ import OrderApi from './api/order'
 import ButcherProduct from '../db/models/butcherproduct';
 import Butcher from '../db/models/butcher';
 import { bodyBlacklist } from 'express-winston';
+import { CreditcardPaymentFactory } from '../lib/payment/creditcard';
+import SiteLogRoute from './api/sitelog';
 
 let ellipsis = require('text-ellipsis');
 
@@ -137,6 +139,38 @@ export default class Route extends ViewRouter {
         if (this.req.query.r)
             this.res.redirect(this.req.query.r as string);
         else this.res.redirect('/')
+    }
+
+    async tempbutcher() {
+
+        let bs = await Butcher.findAll({
+            where: {
+                approved: true
+            }
+        });
+
+        let s = "";
+
+        for (let i = 0; i < (bs).length; i++) {
+            let bt = bs[i];
+            try {
+                if (!bt.companyType) continue;
+                let payment = CreditcardPaymentFactory.getInstance("iyzico");
+                payment.logger = new SiteLogRoute(this.constructorParams);
+                let subMerchantReq = payment.subMerchantRequestFromButcher(bt);
+                let result = await payment.createSubMerchant(subMerchantReq);
+                let k = result.subMerchantKey;
+                bt.iyzicoSubMerchantKey = k;
+                await bt.save();
+                s += 'BAŞARILI' + bt.name + '\n'; 
+            } catch (err) {
+                console.log(bt.name + ' hata:' + err.errorMessage);
+                s += 'HATA' + bt.name + ' hata:' + err.errorMessage + bt.name + '\n';
+            }
+
+        }
+
+        this.res.send(s);
     }
 
     async tempprods() {
@@ -296,7 +330,8 @@ export default class Route extends ViewRouter {
         // }
         router.get("/", Route.BindRequest(this.prototype.defaultRoute))
         router.get("/temparea", Route.BindRequest(this.prototype.tempares))
-        router.get("/tempproducts", Route.BindRequest(this.prototype.tempprods))
+        router.get("/tempproducts", Route.BindRequest(this.prototype.tempprods));
+        router.get("/tempiyzico", Route.BindRequest(this.prototype.tempbutcher));
 
         // router.get("/testsubmit", Route.BindToView("pages/test-submit.ejs"))
         // router.post("/testsubmit", Route.BindRequest(this.prototype.testsubmit))

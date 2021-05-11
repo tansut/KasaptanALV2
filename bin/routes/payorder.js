@@ -33,7 +33,6 @@ class Route extends paymentrouter_1.PaymentRouter {
     constructor() {
         super(...arguments);
         this.DeliveryStatusDesc = order_3.DeliveryStatusDesc;
-        this.savedCards = [];
         this.paySession = {};
         this.shouldBePaid = 0.00;
         this.earnedPuanButcher = 0.00;
@@ -43,6 +42,7 @@ class Route extends paymentrouter_1.PaymentRouter {
         this.usablePuanTotal = 0.00;
         this.productTotal = 0.00;
         this.markdown = new MarkdownIt();
+        this.savedCards = [];
         this.possiblePuanList = [];
     }
     renderPage(userMessage, view, msgType = 'success') {
@@ -67,12 +67,6 @@ class Route extends paymentrouter_1.PaymentRouter {
             }
             yield this.sendView(view, Object.assign(Object.assign(Object.assign(Object.assign({}, pageInfo), { _usrmsg: { type: msgType, text: userMessage } }), this.api.getView(this.order)), { enableImgContextMenu: true }));
         });
-    }
-    redirect({ success, error }) {
-        let url = this.req.url.indexOf('?') <= 0 ?
-            this.req.url + `?${success ? 'success=' : 'error='}${(success || error)}` :
-            this.req.url + `&${success ? 'success=' : 'error='}${(success || error)}`;
-        this.res.redirect(url);
     }
     getOrderSummary() {
         return __awaiter(this, void 0, void 0, function* () {
@@ -137,9 +131,14 @@ class Route extends paymentrouter_1.PaymentRouter {
                 let butcherDebptAccounts = yield accountmodel_1.default.summary([account_1.Account.generateCode("kasaplardan-alacaklar", [this.order.butcherid])]);
                 let butcherDebt = helper_1.default.asCurrency(butcherDebptAccounts.borc - butcherDebptAccounts.alacak);
                 debt[this.order.butcherid] = butcherDebt;
+                // if (this.req.body.puanusage == 'yes') {
+                //     puanUsage[this.order.butcherid] = this.usablePuanTotal;
+                // }        
             }
             let request = this.paymentProvider.requestFromOrder([this.order], debt);
             request.callbackUrl = this.url + '/3dnotify?provider=' + this.paymentProvider.providerKey;
+            // if (this.shouldBePaid != request.paidPrice)
+            //     throw new Error("Geçersiz sipariş ve muhasebesel tutarlar");
             return request;
         });
     }
@@ -200,15 +199,15 @@ class Route extends paymentrouter_1.PaymentRouter {
             }
             catch (err) {
                 userMessage = err.message || err.errorMessage;
-                this.paySession = req ? yield this.paymentProvider.paySession(req) : null;
+                userMessage = `${userMessage}`;
+                this.paySession = yield this.paymentProvider.paySession(req);
                 gotError = true;
                 helper_1.default.logError(err, {
                     method: 'PayOrder',
                     order: this.order.ordernum
                 }, this.req);
             }
-            this.redirect({ success: gotError ? undefined : userMessage, error: gotError ? userMessage : undefined });
-            //await this.renderPage(userMessage, "pages/payorder.ejs", gotError ? 'danger': 'success');
+            yield this.renderPage(userMessage, "pages/payorder.ejs", gotError ? 'danger' : 'success');
         });
     }
     getOrder() {
@@ -216,16 +215,6 @@ class Route extends paymentrouter_1.PaymentRouter {
             let ordernum = this.req.params.ordernum;
             this.api = new order_1.default(this.constructorParams);
             this.order = yield this.api.getOrder(ordernum, true);
-            if (this.req.user) {
-                this.savedCards = yield paymentmethod_1.default.findAll({
-                    where: {
-                        userid: this.order.userId,
-                        method: 'creditcard',
-                        instance: this.paymentProvider.providerKey,
-                        enabled: true
-                    }
-                });
-            }
         });
     }
     payOrderViewRoute() {
@@ -238,9 +227,7 @@ class Route extends paymentrouter_1.PaymentRouter {
                 let payRequest = yield this.getPaymentRequest();
                 this.paySession = yield this.paymentProvider.paySession(payRequest);
             }
-            let msg = (this.req.query.success || this.req.query.error);
-            let msgType = this.req.query.success ? 'info' : 'danger';
-            yield this.renderPage(msg, "pages/payorder.ejs", msgType);
+            yield this.renderPage(null, "pages/payorder.ejs");
         });
     }
     static SetRoutes(router) {

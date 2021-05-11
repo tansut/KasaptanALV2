@@ -274,13 +274,23 @@ class Route extends router_1.ViewRouter {
                 yield newItem.save();
                 return this.res.redirect("/pages/admin//butcher/" + newItem.slug);
             }
-            if (this.req.body.saveAsSubMerchant) {
+            if (this.req.body.saveAsSubMerchantp) {
                 let logger = new sitelog_1.default(this.constructorParams);
-                let payment = creditcard_1.CreditcardPaymentFactory.getInstance();
+                let payment = creditcard_1.CreditcardPaymentFactory.getInstance("paratika");
                 payment.logger = logger;
                 let subMerchantReq = payment.subMerchantRequestFromButcher(this.butcher);
                 let result = yield payment.createSubMerchant(subMerchantReq);
                 let k = result.subMerchantKey;
+            }
+            else if (this.req.body.saveAsSubMerchanti) {
+                let logger = new sitelog_1.default(this.constructorParams);
+                let payment = creditcard_1.CreditcardPaymentFactory.getInstance("iyzico");
+                payment.logger = logger;
+                let subMerchantReq = payment.subMerchantRequestFromButcher(this.butcher);
+                let result = yield payment.createSubMerchant(subMerchantReq);
+                let k = result.subMerchantKey;
+                this.butcher.iyzicoSubMerchantKey = k;
+                yield this.butcher.save();
             }
             else if (this.req.body.updateprices && this.butcher.priceBasedButcher) {
                 yield this.butcher.copyPricesFromMainButcher();

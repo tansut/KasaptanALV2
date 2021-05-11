@@ -20,7 +20,7 @@ import SiteLogRoute from '../api/sitelog';
 import Butcher from '../../db/models/butcher';
 import { type } from 'node:os';
 
-export default class Route  extends ViewRouter {
+export default class Route extends ViewRouter {
 
     butcher: ButcherModel;
     products: Product[];
@@ -29,9 +29,9 @@ export default class Route  extends ViewRouter {
 
     activetab: string;
 
-    darea1: Area [] = [];
-    darea2: Area [] = [];
-    darea3: Area [] = [];
+    darea1: Area[] = [];
+    darea2: Area[] = [];
+    darea3: Area[] = [];
 
     darea1sel: number;
     darea2sel: number;
@@ -71,7 +71,7 @@ export default class Route  extends ViewRouter {
             include: [{
                 all: true
             }
-            ], 
+            ],
             order: ["Tag1", "Name"],
             where: {}
         });
@@ -99,16 +99,16 @@ export default class Route  extends ViewRouter {
             mddesc: butcherProduct.mddesc,
             longdesc: butcherProduct.longdesc
         } : {
-                displayOrder: "",
-                enabled: false,
-                unit1price: 0,
-                unit2price: 0,
-                unit3price: 0,
-                vitrin: false,
-                kgPrice: 0,
-                mddesc: "",
-                longdesc:""
-            }
+            displayOrder: "",
+            enabled: false,
+            unit1price: 0,
+            unit2price: 0,
+            unit3price: 0,
+            vitrin: false,
+            kgPrice: 0,
+            mddesc: "",
+            longdesc: ""
+        }
     }
 
 
@@ -117,6 +117,10 @@ export default class Route  extends ViewRouter {
         if (!this.req.params.butcher) {
             return this.next();
         }
+
+
+
+
 
         this.butcher = await this.getButcher();
         let resources = await this.getResources(this.butcher);
@@ -134,7 +138,7 @@ export default class Route  extends ViewRouter {
         })
 
         for (let i = 0; i < this.dispatchs.length; i++) {
-            this.dispatchs[i].address = this.dispatchs[i].toarea ? await this.dispatchs[i].toarea.getPreferredAddress(): null;
+            this.dispatchs[i].address = this.dispatchs[i].toarea ? await this.dispatchs[i].toarea.getPreferredAddress() : null;
         }
 
         let area1 = await Area.findAll({
@@ -179,21 +183,21 @@ export default class Route  extends ViewRouter {
 
         if (parseInt(this.req.body.dareal1) > 0) {
             this.darea1sel = parseInt(this.req.body.dareal1)
-        
+
             this.darea2 = await Area.findAll({
-                where: { level: 2, parentid :parseInt(this.req.body.dareal1) }
+                where: { level: 2, parentid: parseInt(this.req.body.dareal1) }
             });
         }
 
         if (parseInt(this.req.body.dareal2) > 0) {
             this.darea2sel = parseInt(this.req.body.dareal2)
             this.darea3 = await Area.findAll({
-                where: { level: 3, parentid :parseInt(this.req.body.dareal2) }
+                where: { level: 3, parentid: parseInt(this.req.body.dareal2) }
             });
         }
 
         if (this.req.body.add == "ilceekle") {
-            let l2 = this.darea2.find(p=>p.id == parseInt(this.req.body.dareal2))
+            let l2 = this.darea2.find(p => p.id == parseInt(this.req.body.dareal2))
             let paddr = await l2.getPreferredAddress();
             let d = new Dispatcher();
             d.toarealevel = 2;
@@ -207,11 +211,11 @@ export default class Route  extends ViewRouter {
             d.note = paddr.display;
             d.typeid = 0;
             await d.save();
-        }  
+        }
 
 
         if (this.req.body.add == "sehirekle") {
-            let l1 = this.darea1.find(p=>p.id == parseInt(this.req.body.dareal1))
+            let l1 = this.darea1.find(p => p.id == parseInt(this.req.body.dareal1))
             let paddr = await l1.getPreferredAddress();
             let d = new Dispatcher();
             d.toarealevel = 1;
@@ -225,13 +229,13 @@ export default class Route  extends ViewRouter {
             d.note = paddr.display;
             d.typeid = 0;
             await d.save();
-        } 
-        
+        }
 
- 
+
+
 
         if (this.req.body.add == "semtekle") {
-            let l3 = this.darea3.find(p=>p.id == parseInt(this.req.body.dareal3))
+            let l3 = this.darea3.find(p => p.id == parseInt(this.req.body.dareal3))
             let paddr = await l3.getPreferredAddress();
             let d = new Dispatcher();
             d.toarealevel = 3;
@@ -245,7 +249,7 @@ export default class Route  extends ViewRouter {
             d.note = paddr.display;
             d.typeid = 0;
             await d.save();
-        }  
+        }
 
         if (this.req.body.delete) {
             let id = parseInt(this.req.body.delete);
@@ -268,11 +272,11 @@ export default class Route  extends ViewRouter {
             d.userNote = this.req.body['userNote' + id.toString()];
 
 
-            
+
             d.selection = sel;
             //d.logisticProviderUsage = dlogistic;
             d.type = dlogistic;
-            
+
             d.fee = fee;
             d.totalForFree = free;
             d.min = min;
@@ -281,7 +285,7 @@ export default class Route  extends ViewRouter {
 
         this.activetab = "dispatch";
         return this.editViewRoute()
-    }        
+    }
 
 
     async saveRoute() {
@@ -306,14 +310,24 @@ export default class Route  extends ViewRouter {
 
         }
 
-        if (this.req.body.saveAsSubMerchant) {
+        if (this.req.body.saveAsSubMerchantp) {
             let logger = new SiteLogRoute(this.constructorParams);
-            let payment = CreditcardPaymentFactory.getInstance();
+            let payment = CreditcardPaymentFactory.getInstance("paratika");
             payment.logger = logger;
             let subMerchantReq = payment.subMerchantRequestFromButcher(this.butcher);
             let result = await payment.createSubMerchant(subMerchantReq);
             let k = result.subMerchantKey;
-        } else if (this.req.body.updateprices && this.butcher.priceBasedButcher) {
+        } else if (this.req.body.saveAsSubMerchanti) {
+            let logger = new SiteLogRoute(this.constructorParams);
+            let payment = CreditcardPaymentFactory.getInstance("iyzico");
+            payment.logger = logger;
+            let subMerchantReq = payment.subMerchantRequestFromButcher(this.butcher);
+            let result = await payment.createSubMerchant(subMerchantReq);
+            let k = result.subMerchantKey;
+            this.butcher.iyzicoSubMerchantKey = k;
+            await this.butcher.save();
+        }
+        else if (this.req.body.updateprices && this.butcher.priceBasedButcher) {
             await this.butcher.copyPricesFromMainButcher();
             //ButcherProduct.copyAllFromPriceButcher()
             // await ButcherProduct.destroy({
@@ -353,7 +367,7 @@ export default class Route  extends ViewRouter {
             // unit3weight,
             // longdesc,
             // selection)
-            
+
             // SELECT 
             //     ButcherProducts.enabled,
             //     ButcherProducts.unit1price,
@@ -385,7 +399,7 @@ export default class Route  extends ViewRouter {
             //     ButcherProducts.selection
             // FROM ButcherProducts where butcherid=${this.butcher.priceBasedButcher} and enabled=true                
             // `,
-            
+
             // {
             //     type: sq.QueryTypes.BULKUPDATE,
             // });
@@ -432,19 +446,19 @@ export default class Route  extends ViewRouter {
 
             this.butcher.areaLevel1Text = this.req.body.butcherarealevel1text;
 
-            this.butcher.radiusAsKm = this.req.body.butcherradiusAsKm ? parseInt(this.req.body.butcherradiusAsKm):0;
-            this.butcher.selectionRadiusAsKm = this.req.body.butcherselectionRadiusAsKm ? parseInt(this.req.body.butcherselectionRadiusAsKm):0;
+            this.butcher.radiusAsKm = this.req.body.butcherradiusAsKm ? parseInt(this.req.body.butcherradiusAsKm) : 0;
+            this.butcher.selectionRadiusAsKm = this.req.body.butcherselectionRadiusAsKm ? parseInt(this.req.body.butcherselectionRadiusAsKm) : 0;
 
 
             if (this.req.body.butcherlat && this.req.body.butcherlng) {
-                this.butcher.location = {                                
+                this.butcher.location = {
                     type: 'Point',
                     coordinates: [parseFloat(this.req.body.butcherlat), parseFloat(this.req.body.butcherlng)]
-            }
+                }
             }
             this.butcher.defaultDispatcher = this.req.body.defaultDispatcher;
             await this.butcher.save();
-            
+
         }
 
         else if (this.req.body.updateproduct == "true") {
