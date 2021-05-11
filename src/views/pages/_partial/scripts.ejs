@@ -24,6 +24,57 @@
   <script src="<%=__config.staticDomain %>/resource/js/site.min.js?v=<%=__config.versionKey%>"></script>
   <script src="<%=__config.staticDomain %>/resource/js/app.js?v=<%=__config.versionKey%>"></script>
   
+  <% if (!__req.user) { %>
+  
+    <script>
+      window.App.User = {
+        isAuthenticated: false,
+        prefAdr: <%- JSON.stringify(__req.prefAddr ? 
+              
+            { level1Id: __req.prefAddr.level1Id,
+              level2Id: __req.prefAddr.level2Id,
+              level3Id: __req.prefAddr.level3Id,
+              level4Id: __req.prefAddr.level4Id,
+              display: __req.prefAddr.display,
+              lat: __req.prefAddr.lat ? __req.prefAddr.lat: undefined,
+              lng: __req.prefAddr.lng ? __req.prefAddr.lng: undefined }
+        : null) %>,
+      }
+    </script>
+    
+  
+    
+    <% } else { %>
+    
+    <script>
+      window.App.User = {
+        isAuthenticated: <%=__req.user ? true : false %>,
+    
+        prefAdr: <%- JSON.stringify(__req.prefAddr ? 
+              
+            { level1Id: __req.prefAddr.level1Id,
+              level2Id: __req.prefAddr.level2Id,
+              level3Id: __req.prefAddr.level3Id,
+              level4Id: __req.prefAddr.level4Id,
+              display: __req.prefAddr.display,
+              lat: __req.prefAddr.lat ? __req.prefAddr.lat: undefined,
+              lng: __req.prefAddr.lng ? __req.prefAddr.lng: undefined }
+        : null) %>,
+        
+        mphone: '<%= __req.user.mphone  %>',
+        name: '<%= __req.user.name  %>',
+        email: '<%= __req.user.email  %>',
+        tarif: '<%= __req.user.lastTarif  %>'
+  
+      }
+    
+    </script>
+    
+  
+    
+    
+    <%}%>
+  
   <script>
 
 <% if (__config) {  %>
@@ -593,58 +644,7 @@ window.App.platform = '<%=controller.platform%>'
     <% } %>
   
   </script>
-  <% if (!__req.user) { %>
   
-  <script>
-    window.App.User = {
-      isAuthenticated: false,
-      prefAdr: <%- JSON.stringify(__req.prefAddr ? 
-            
-          { level1Id: __req.prefAddr.level1Id,
-            level2Id: __req.prefAddr.level2Id,
-            level3Id: __req.prefAddr.level3Id,
-            level4Id: __req.prefAddr.level4Id,
-            display: __req.prefAddr.display,
-            lat: __req.prefAddr.lat ? __req.prefAddr.lat: undefined,
-            lng: __req.prefAddr.lng ? __req.prefAddr.lng: undefined }
-      : null) %>,
-    }
-  </script>
-  
-
-  
-  <% } else { %>
-  
-  <script>
-    window.App.User = {
-      isAuthenticated: <%=__req.user ? true : false %>,
-  
-      prefAdr: <%- JSON.stringify(__req.prefAddr ? 
-            
-          { level1Id: __req.prefAddr.level1Id,
-            level2Id: __req.prefAddr.level2Id,
-            level3Id: __req.prefAddr.level3Id,
-            level4Id: __req.prefAddr.level4Id,
-            display: __req.prefAddr.display,
-            lat: __req.prefAddr.lat ? __req.prefAddr.lat: undefined,
-            lng: __req.prefAddr.lng ? __req.prefAddr.lng: undefined }
-      : null) %>,
-      
-      mphone: '<%= __req.user.mphone  %>',
-      name: '<%= __req.user.name  %>',
-      email: '<%= __req.user.email  %>',
-      address: '<%= __req.user.lastAddress  %>',
-      tarif: '<%= __req.user.lastTarif  %>'
-
-    }
-  
-  </script>
-  
-
-  
-  
-  <%}%>
-
 
 
 <script>
