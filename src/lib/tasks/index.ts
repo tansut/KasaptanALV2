@@ -9,7 +9,8 @@ let appRoutes = [
     './rutins',
     './areatask',
     './orderbutcherremainers',
-    './ordercustomerremainers'
+    './payremainders',
+    './evalremainders'
 ];
 
 export default class TaskLoader {

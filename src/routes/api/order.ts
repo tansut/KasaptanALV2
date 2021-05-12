@@ -29,6 +29,8 @@ import { throws } from 'assert';
 import User from '../../db/models/user';
 import { auth } from '../../middleware/auth';
 import moment = require('moment');
+import { ValidationError } from '../../lib/http';
+import Review from '../../db/models/review';
 
 
 const orderid = require('order-id')('dkfjsdklfjsdlkg450435034.,')
@@ -1599,6 +1601,54 @@ export default class Route extends ApiRouter {
         this.res.send(result)
     }
 
+   @Auth.Anonymous()
+   @Auth.RequireCatcpha() 
+    async evaluateOrder() {
+        let ordernum = this.req.params.ordernum;
+        let order = await this.getOrder(ordernum, true);
+        if (!order)
+            return this.res.sendStatus(404);
+        if (!order.canBeEvaluated()) throw new ValidationError('Bu sipariş değerlendirme süresi maalesef geçmiş')
+        
+        let puan = Helper.parseFloat(this.req.body.star);
+        let review = await Review.findOne({
+            where: {
+                userId: order.userId,
+                type: 'order',
+                ref1: order.id
+            }
+        })
+        if (review == null) {
+            review = new Review();
+            review.userId = order.userId;
+            review.type = 'order';
+            review.ref1 = order.id;
+            review.ref2 = order.butcherid,
+            review.itemDate = order.creationDate;
+            review.ref2Text = order.butcher.name;
+            review.ref2slug = order.butcher.slug;
+            review.level1Id = order.areaLevel1Id;
+            review.level2Id = order.areaLevel2Id;
+            review.level3Id = order.areaLevel3Id;
+            review.level1Text = order.areaLevel1Text;
+            review.level2Text = order.areaLevel2Text;
+            review.level3Text = order.areaLevel3Text;
+            review.areaSlug = (await Area.findByPk(review.level3Id)).slug;
+            review.userRating1 = puan;
+            review.published = false;
+            review.tempContent = `Kasaba: ${this.req.body.butcherComment}\nSiteye:${this.req.body.siteComment}`;
+            let words = order.name.match(/\S+/g).map(w=> `${w}`)
+            if (words.length >= 2)
+                review.displayUser = words[0]  + ' ' + words[1][0] + '.';
+            else  review.displayUser = words[0]  + '.'
+            await review.save()
+
+        } else if (review.published) {
+            throw new ValidationError('Bu siparişle ilgili yorum yapılmış ve yayınlanmakta.')
+        }            
+        this.res.sendStatus(200);
+    }
+
     static SetRoutes(router: express.Router) {
         router.post('/order/:ordernum/approve', Route.BindRequest(Route.prototype.approveRoute))
         // router.post('/order/:ordernum/kuryeCagir', Route.BindRequest(Route.prototype.kuryeCagirRoute))
@@ -1608,7 +1658,8 @@ export default class Route extends ApiRouter {
         router.post('/order/:ordernum/markAsShipped', Route.BindRequest(Route.prototype.markAsShippedRoute))
         router.post('/order/manuelorders/create', Route.BindRequest(Route.prototype.getManuelOrder))
         router.get('/order/manuelorders/list', Route.BindRequest(Route.prototype.listManuelOrders))
-        router.get('/order/list', Route.BindRequest(Route.prototype.listOrders))
+        router.get('/order/list', Route.BindRequest(Route.prototype.listOrders));
+        router.post('/order/:ordernum/evaluate', Route.BindRequest(Route.prototype.evaluateOrder));
 
         
         //router.get("/admin/order/:ordernum", Route.BindRequest(this.prototype.getOrderRoute));

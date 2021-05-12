@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html lang="tr-TR" prefix="og: http://ogp.me/ns#">
+
+<head>
+  <% include ./_partial/head %>
+</head>
+
+<body>
+  <% include ./_partial/header %>
+
+    <!-- Page Title (Light)-->
+    <div class="bg-secondary pt-4 ">
+      <div class="container d-lg-flex justify-content-between py-2 py-lg-3">
+        <div class="order-lg-2 mb-3 mb-lg-0 pt-lg-2">
+          <nav aria-label="breadcrumb" class="d-none d-lg-block">
+            <ol class="breadcrumb flex-lg-nowrap justify-content-center justify-content-lg-star">
+              <li class="breadcrumb-item"><a class="text-nowrap" href="/"><i class="czi-home"></i></a></li>
+            </ol>
+          </nav>
+        </div>
+        <div class="order-lg-1 pr-lg-4 text-center text-lg-left">
+          <h1 class="h3">Yorumları Yönet</h1>
+        </div>
+      </div>
+    </div>
+
+
+
+
+
+    <div v-cloak id="reviewsapp" class="container mb-3 ">
+
+      <div id="reviewappdetails" class="modal" tabindex="-1" role="dialog">
+        <div class="modal-dialog" role="document">
+          <div v-if="review" class="modal-content">
+            <div class="modal-header">
+              <h5 class="modal-title">{{review.displayUser}}</h5>
+              <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+              </button>
+            </div>
+            <div class="modal-body">
+              <form @submit="saveReview">
+                <div class="form-group">
+
+                  <select v-model="review.userRating1" class="form-control">
+                      <option :selected="review.userRating1 == 5" value="5">Muhteşemdi</option>
+                      <option :selected="review.userRating1 == 4" value="4">Başarılıydı</option>
+                      <option :selected="review.userRating1 == 3" value="3">Ne iyi ne kötü</option>
+                      <option :selected="review.userRating1 == 2" value="2">Beğenmedim</option>
+                      <option :selected="review.userRating1 == 1" value="1">Çok kötüydü</option>
+                  </select>
+              </div>
+
+                <div class="form-group">
+                  <label>Müşteriden Gelen</label>
+                  <textarea class="form-control" v-model="review.tempContent" rows="5"></textarea>
+
+                </div>
+                <div class="form-group">
+                  <label>Sitede Gösterilen</label>
+                  <textarea required  class="form-control" v-model="review.content" rows="5"></textarea>
+                </div>
+
+                <input type="submit" class="btn btn-primary" value="Kaydet ve Yayına Al">
+              </form>
+
+
+            </div>
+          </div>
+        </div>
+      </div>
+      <table class="table table-hover">
+        <thead>
+          <tr>
+            <th>Müşteri</th>
+            <th>Kasap</th>
+            <th>Sipariş Tarihi</th>
+            <th>Durum</th>
+            <th>Detay</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr v-for="(o,i) in reviews">
+            <th>
+              {{o.displayUser}}
+            </th>
+            <th>
+              {{o.ref2Text}}
+            </th>
+            <th>
+
+              <date-view :use-time="true" :value="o.itemDate"></date-view>
+            </th>
+            <th>
+              {{o.published ? 'Yayında':'Onay Bekliyor'}}
+            </th>
+            <th>
+              <a @click="show(o, i)">Görüntüle</a>
+            </th>
+          </tr>
+        </tbody>
+      </table>
+<div v-if="list && !list.length">Hiçbir kayıt bulunamadı.</div>
+
+
+
+    </div>
+
+
+
+
+
+
+
+
+    <% include ./_partial/footer %>
+      <% include ./_partial/scripts %>
+
+        <script>
+          window.reviewsapp = new Vue(
+            {
+              el: "#reviewsapp",
+
+              data: {
+                reviews: [],
+                review: null,
+                index: null,
+              },
+
+              mounted: function () {
+                this.list()
+              },
+
+
+
+              methods: {
+
+                saveReview: function(e) {
+                  e.preventDefault();
+                  App.Backend.post('operator/reviews/save', {
+                    id: this.review.id,
+                    star: this.review.userRating1,
+                    content: this.review.content
+                  }).then(function (result) {
+                    this.reviews[this.index] = result; 
+                    this.review = this.reviews[this.index];
+                    $("#reviewappdetails").modal('hide')
+                  }.bind(this)).catch(App.HandleError.bind(App))                  
+                },
+
+                show(o, i) {
+                  this.review = o;
+                  this.index = i;
+                  $("#reviewappdetails").modal('show')
+                },
+                list: function () {
+                  App.Backend.post('operator/reviews/list').then(function (result) {
+                    this.reviews = result;
+                  }.bind(this)).catch(App.HandleError.bind(App))
+                }
+              }
+            })
+        </script>
+
+</body>
+
+</html>

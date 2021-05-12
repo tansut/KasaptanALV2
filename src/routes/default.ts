@@ -320,6 +320,23 @@ export default class Route extends ViewRouter {
         this.res.send('OK')
     }
 
+    @Auth.Anonymous()
+    async evaluateOrder() {
+        let order = await Order.findOne({
+            where: {
+                ordernum: this.req.params.ordernum
+            }
+        });
+
+        if (!order) return this.next();
+
+        //if (!order.canBeEvaluated()) order = null;
+
+        this.sendView('pages/order.evaluate.ejs', {
+            order: order
+        });
+    }
+
     
 
     static SetRoutes(router: express.Router) {
@@ -351,6 +368,7 @@ export default class Route extends ViewRouter {
         router.get("/mobil-uygulamalar", Route.BindToView("pages/content.mobil-uygulamalar.ejs"));
         router.get("/kasap-basvuru/:butcher?", Route.BindRequest(this.prototype.butcherApply));
         router.get("/kasap-bilgi-giris/:butcher?", Route.BindRequest(this.prototype.butcherInfo));
+        router.get("/eval/:ordernum", Route.BindRequest(this.prototype.evaluateOrder));
         
     }
 }

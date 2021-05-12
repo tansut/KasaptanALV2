@@ -39,7 +39,7 @@ class ButcherStats extends basetask_1.BaseTask {
                 mapToModel: false,
                 raw: true
             });
-            let rates = yield order_1.Order.sequelize.query("SELECT type, ref2, avg(userRating1) as avg, count(*) as total FROM Reviews group by type, ref2;", {
+            let rates = yield order_1.Order.sequelize.query("SELECT type, ref2, avg(userRating1) as avg, count(*) as total FROM Reviews where published=true group by type, ref2;", {
                 type: sq.QueryTypes.SELECT,
                 mapToModel: false,
                 raw: true

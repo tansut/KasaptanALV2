@@ -8,12 +8,12 @@ import ButcherProduct from './butcherproduct';
     tableName: "Reviews",
     indexes: [{
         name: "review_idx1",
-        fields: ["type", "ref1"]
+        fields: ["type", "ref1", "published"]
     },
 
     {
         // name: "review_idx2",
-        fields: ["type", "ref2"]
+        fields: ["type", "ref2", "published"]
     }]
 })
 
@@ -89,6 +89,12 @@ class Review extends BaseModel<Review> {
 
     @Column({
         allowNull: true,
+        type: DataType.TEXT
+    })
+    tempContent: string;
+
+    @Column({
+        allowNull: true,
         type: DataType.DECIMAL(5, 2)
     })    
     userRating1: number;  
@@ -139,8 +145,13 @@ class Review extends BaseModel<Review> {
         allowNull: true        
     })
     areaSlug: string;       
-         
 
+    @Column({
+        allowNull: false,
+        defaultValue: true       
+    })
+    published: boolean;   
+         
     @Column({
         type: DataType.TEXT
     })

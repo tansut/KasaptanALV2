@@ -57,7 +57,7 @@ export class Backend {
             if (!usecaptcha) return resolve(null);
             g.ready(() => {
                 try {
-                    g.execute(Backend.catpchaKey, {action: method})
+                    g.execute(Backend.catpchaKey, {action: method.replace(/-/g, '_')})
                     .then((token) => {
                         resolve(token)
                     }).catch((err) => {

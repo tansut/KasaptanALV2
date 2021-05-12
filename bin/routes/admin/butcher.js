@@ -273,7 +273,7 @@ class Route extends router_1.ViewRouter {
                 newItem.slug = this.butcher.slug + '-kopya';
                 newItem.name = 'giriniz';
                 yield newItem.save();
-                return this.res.redirect("/pages/admin//butcher/" + newItem.slug);
+                return this.res.redirect("/pages/admin/butcher/" + newItem.slug);
             }
             if (this.req.body.saveAsSubMerchantp) {
                 let logger = new sitelog_1.default(this.constructorParams);

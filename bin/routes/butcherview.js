@@ -59,7 +59,7 @@ class Route extends router_1.ViewRouter {
             let res = yield review_1.default.sequelize.query(`
 
         SELECT r.* FROM Reviews r
-        WHERE :butcherid = ref2
+        WHERE r.published=true and :butcherid = ref2
         ORDER BY r.ID DESC
 
          `, {

@@ -104,7 +104,7 @@ class Route extends router_1.ApiRouter {
         return __awaiter(this, void 0, void 0, function* () {
             let res = yield review_1.default.sequelize.query(`
         SELECT r.* FROM Reviews r, Orders o, OrderItems oi 
-        WHERE r.type='order'  and r.ref1=o.id and oi.orderid = o.id and oi.productid=:pid
+        WHERE r.published=true and r.type='order'  and r.ref1=o.id and oi.orderid = o.id and oi.productid=:pid
         and (:butcherid = 0 || :butcherid = ref2)
         ORDER BY r.ID DESC
         `, {

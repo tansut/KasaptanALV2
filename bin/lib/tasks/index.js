@@ -17,7 +17,8 @@ let appRoutes = [
     './rutins',
     './areatask',
     './orderbutcherremainers',
-    './ordercustomerremainers'
+    './payremainders',
+    './evalremainders'
 ];
 class TaskLoader {
     static stop() {

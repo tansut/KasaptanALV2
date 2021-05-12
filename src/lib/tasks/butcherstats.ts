@@ -33,7 +33,7 @@ export default class ButcherStats extends BaseTask {
             raw: true
         })
 
-        let rates = await Order.sequelize.query<any>("SELECT type, ref2, avg(userRating1) as avg, count(*) as total FROM Reviews group by type, ref2;",
+        let rates = await Order.sequelize.query<any>("SELECT type, ref2, avg(userRating1) as avg, count(*) as total FROM Reviews where published=true group by type, ref2;",
         {            
             type: sq.QueryTypes.SELECT,
             mapToModel: false,

@@ -23,7 +23,7 @@ export default class OrderRemainers extends BaseTask {
     }
 
     async run() {
-        console.log('running OrderRemainers job', Helper.formatDate(Helper.Now(), true));
+        console.log('running OrderPayRemainers job', Helper.formatDate(Helper.Now(), true));
 
         let mesaiStart = Helper.Now();
         mesaiStart.setHours(9);
@@ -37,13 +37,13 @@ export default class OrderRemainers extends BaseTask {
         let now = Helper.Now();
 
         if ((now > mesaiStart) && (now < mesaiEnd)) {
-            let api = new OrderApi();
             let orders = await Order.findAll({
                 limit: 10,
                 include: [{
                     model: Butcher
                 }],
                 where: {
+                    orderSource: 'kasaptanal.com',
                     status: OrderItemStatus.reqirePayment,
                     customerLastReminder: {
                         [Op.eq]: null
@@ -58,7 +58,7 @@ export default class OrderRemainers extends BaseTask {
             for (let i = 0; i < orders.length; i++) {
                 let userUrl = `${this.url}/user/orders/${orders[i].ordernum}`;
                 await Sms.send(orders[i].phone, `KasaptanAl.com ${orders[i].butcherName} siparisiniz henuz odenmemis gozukuyor. Bilgi: ${userUrl} `, false, new SiteLogRoute());
-                await new Promise(r => setTimeout(r, 5));
+                await new Promise(r => setTimeout(r, 25));
 
                 orders[i].customerLastReminder = now;
                 orders[i].customerLastReminderType = 'pay';

@@ -27,7 +27,8 @@ const product_1 = require("../db/models/product");
 const product_2 = require("./api/product");
 const cache_1 = require("../lib/cache");
 const temp_loc_1 = require("../db/models/temp_loc");
-const order_1 = require("./api/order");
+const order_1 = require("../db/models/order");
+const order_2 = require("./api/order");
 const butcherproduct_1 = require("../db/models/butcherproduct");
 const butcher_2 = require("../db/models/butcher");
 const creditcard_1 = require("../lib/payment/creditcard");
@@ -80,7 +81,7 @@ class Route extends router_1.ViewRouter {
                 cache_1.CacheManager.dataCache.set("recent-butchers", recentButchers.map(b => b.get({ plain: true })));
             }
             if (this.req.user) {
-                this.lastOrders = yield new order_1.default(this.constructorParams).lastOrders(this.req.user.id, 9);
+                this.lastOrders = yield new order_2.default(this.constructorParams).lastOrders(this.req.user.id, 9);
             }
             // this.foods = await new ProductsApi(this.constructorParams).getResources({
             //     type: ['product-videos', 'product-photos'],
@@ -271,6 +272,21 @@ class Route extends router_1.ViewRouter {
             this.res.send('OK');
         });
     }
+    evaluateOrder() {
+        return __awaiter(this, void 0, void 0, function* () {
+            let order = yield order_1.Order.findOne({
+                where: {
+                    ordernum: this.req.params.ordernum
+                }
+            });
+            if (!order)
+                return this.next();
+            //if (!order.canBeEvaluated()) order = null;
+            this.sendView('pages/order.evaluate.ejs', {
+                order: order
+            });
+        });
+    }
     static SetRoutes(router) {
         // if (config.nodeenv == 'production') {
         //     router.get("/home", Route.BindRequest(this.prototype.defaultRoute))
@@ -297,6 +313,7 @@ class Route extends router_1.ViewRouter {
         router.get("/mobil-uygulamalar", Route.BindToView("pages/content.mobil-uygulamalar.ejs"));
         router.get("/kasap-basvuru/:butcher?", Route.BindRequest(this.prototype.butcherApply));
         router.get("/kasap-bilgi-giris/:butcher?", Route.BindRequest(this.prototype.butcherInfo));
+        router.get("/eval/:ordernum", Route.BindRequest(this.prototype.evaluateOrder));
     }
 }
 __decorate([
@@ -335,4 +352,10 @@ __decorate([
     __metadata("design:paramtypes", []),
     __metadata("design:returntype", Promise)
 ], Route.prototype, "setUserAddr", null);
+__decorate([
+    common_1.Auth.Anonymous(),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", []),
+    __metadata("design:returntype", Promise)
+], Route.prototype, "evaluateOrder", null);
 exports.default = Route;

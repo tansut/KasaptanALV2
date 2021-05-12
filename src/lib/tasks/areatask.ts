@@ -2,8 +2,6 @@ import { BaseTask } from "./basetask";
 import { Order, OrderItem } from "../../db/models/order";
 import * as sq from 'sequelize';
 import { OrderItemStatus } from "../../models/order";
-import Butcher from "../../db/models/butcher";
-import Review from "../../db/models/review";
 import { Op, Sequelize } from "sequelize";
 import Product from "../../db/models/product";
 import Area from "../../db/models/area";

@@ -69,6 +69,23 @@ window.initComponents = function initComponents() {
         }
     })
 
+
+    Vue.component('date-view', {
+        template: 
+            `<span>{{formatted(value)}}</span>`,
+        props: {
+            value: { type: Date },
+            useTime: { type: Boolean }
+        },
+
+        methods: {
+            formatted(v) {
+                var dateObj = new Date(v);
+                return window.App.formatDate(dateObj, this.useTime)
+            }
+        }  
+    });
+
     Vue.component('amount-input', {
         template: `
              <div>

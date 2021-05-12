@@ -306,7 +306,7 @@ export default class Route extends ViewRouter {
             newItem.name = 'giriniz';
 
             await newItem.save();
-            return this.res.redirect("/pages/admin//butcher/" + newItem.slug)
+            return this.res.redirect("/pages/admin/butcher/" + newItem.slug)
 
         }
 

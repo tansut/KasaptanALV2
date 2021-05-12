@@ -91,7 +91,9 @@
                {{o.name}}, {{o.phone}}
              </td>
              <td>
-              {{o.date}}
+              <date-view :use-time="true" :value="o.date"></date-view>
+
+              
             </td>
             <td>
               {{o.semt}}

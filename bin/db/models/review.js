@@ -102,6 +102,13 @@ __decorate([
 __decorate([
     sequelize_typescript_1.Column({
         allowNull: true,
+        type: sequelize_typescript_1.DataType.TEXT
+    }),
+    __metadata("design:type", String)
+], Review.prototype, "tempContent", void 0);
+__decorate([
+    sequelize_typescript_1.Column({
+        allowNull: true,
         type: sequelize_typescript_1.DataType.DECIMAL(5, 2)
     }),
     __metadata("design:type", Number)
@@ -164,6 +171,13 @@ __decorate([
 ], Review.prototype, "areaSlug", void 0);
 __decorate([
     sequelize_typescript_1.Column({
+        allowNull: false,
+        defaultValue: true
+    }),
+    __metadata("design:type", Boolean)
+], Review.prototype, "published", void 0);
+__decorate([
+    sequelize_typescript_1.Column({
         type: sequelize_typescript_1.DataType.TEXT
     }),
     __metadata("design:type", String)
@@ -173,11 +187,11 @@ Review = __decorate([
         tableName: "Reviews",
         indexes: [{
                 name: "review_idx1",
-                fields: ["type", "ref1"]
+                fields: ["type", "ref1", "published"]
             },
             {
                 // name: "review_idx2",
-                fields: ["type", "ref2"]
+                fields: ["type", "ref2", "published"]
             }]
     })
 ], Review);

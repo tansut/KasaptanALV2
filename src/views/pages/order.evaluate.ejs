@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="tr-TR" prefix="og: http://ogp.me/ns#">
+
+<head>
+    <% include ./_partial/head %>
+</head>
+
+<body>
+    <% include ./_partial/header %>
+
+
+        <div class="page-title app-d-none">
+            <div class="container d-lg-flex justify-content-between py-2 py-lg-3">
+                <div class="order-lg-2 mb-3 mb-lg-0 pt-lg-2">
+                    <nav aria-label="breadcrumb" class="d-none d-lg-block">
+                        <ol
+                            class="breadcrumb breadcrumb-dark flex-lg-nowrap justify-content-center justify-content-lg-star">
+                            <li class="breadcrumb-item"><a class="text-nowrap" href="/"><i class="czi-home"></i></a>
+                            </li>
+                            <li class="breadcrumb-item text-nowrap">Kasabı Değerlendirin
+                            </li>
+                        </ol>
+                    </nav>
+                </div>
+                <div class="order-lg-1 pr-lg-4 text-center text-lg-left">
+                    <h1 class="h3 ">
+                        <%= order.butcherName %>
+                    </h1>
+                    <h2 class=" h4 lead">
+                        <%= __helper.formatDate(order.creationDate) %> tarihli siparişiniz %>
+                    </h2>
+                </div>
+            </div>
+        </div>
+        <% if (!order.canBeEvaluated()) { %>
+        <div class="alert alert-secondary mb-3">
+            Bu sipariş değerlendirmeye kapalı gözükmekte.
+        </div>
+        <% } %>
+
+        <div id="applyApp" v-cloak  class="container mb-3 ">
+
+            <% if (order.canBeEvaluated()) { %>
+                <form v-if="!done" id="app" @submit="checkForm" method="post">
+                    <p class="text-primary" v-if="errors.length">
+                        <b>Lütfen aşağıdaki hataları düzeltin:</b>
+                    <ul>
+                        <li v-for="error in errors">{{ error }}</li>
+                    </ul>
+                    </p>
+                    <div>
+                        <h4 class="h6 font-weight-normal">
+                            Ürün kalitesi, paketleme ve teslimat sürecini düşündüğünüzde <span
+                                class="font-weight-bolder">
+                                <%=order.butcherName%>
+                            </span> sizce nasıldı?
+                        </h4>
+                        <div class="form-group">
+
+                            <select v-model="star" class="form-control">
+                                <option disabled value="0">Lütfen seçin</option>
+                                <option value="5">Muhteşemdi</option>
+                                <option value="4">Başarılıydı</option>
+                                <option value="3">Ne iyi ne kötü</option>
+                                <option value="2">Beğenmedim</option>
+                                <option value="1">Çok kötüydü</option>
+                            </select>
+                        </div>
+                        <div v-if="star" class="form-group">
+                            <label>
+                                <%=order.butcherName%> siparişinizde neler iyi gitti nelerden memnun kalmadınız?
+                            </label>
+                            <textarea v-model="butcherComment" required type="text" class="form-control"
+                                placeholder="Olumlu veya olumsuz gördüğübüz yönlerini paylaşmanız çok değerli bizim için.">
+
+              </textarea>
+                        </div>
+
+                        <div v-if="star" class="form-group">
+                            <label>Bizlere önerileriniz var mı?</label>
+                            <textarea v-model="siteComment" type="text" class="form-control"
+                                placeholder="KasaptanAl olarak sizce nasıl daha iyi olabiliriz?">
+
+                </textarea>
+                        </div>
+
+                    </div>
+
+
+
+
+
+                    <button v-if="star" id="submit" type="submit" class="btn btn-primary"><i class="czi-icon czi-thumb-up mr-1"></i> Görüşlerinizi İletin</button>
+                </form>
+                <% } else { %>
+                  
+                    <% }%>
+                        <div v-show="done" class=" mb-3">
+                            <p>
+                                Görüşleriniz bizim için önemli, kontroller ardından en kısa sürede yayınlayacağız.
+                            </p>
+                            <p class="font-weight-bolder">
+                                Teşekkürler, şimdi muhteşem ürünlerimize göz atabilirsiniz.
+                            </p>
+                            <%- include('./_partial/category-slider', { header:true, title: 'Kategoriler' ,
+                                allUrl: '/kasap-urunleri' }); %>
+
+                        </div>
+
+
+        </div>
+
+
+        <% include ./_partial/footer %>
+
+            <% include ./_partial/scripts %>
+
+                <%- include('./_partial/purchase', { }); %>
+
+
+</body>
+
+<script>
+
+    <% if (order.canBeEvaluated()) { %>
+        window.applyApp = new Vue({
+            el: '#applyApp',
+
+            mounted: function () {
+            },
+
+            data: function () {
+                return {
+                    errors: [],
+                    star: 0,
+                    butcherComment: '',
+                    siteComment: '',
+                    done: false
+                }
+            },
+
+
+            methods: {
+                checkForm: function (e) {
+                    this.errors = [];
+                    if (!this.star) this.errors.push('Lütfen değerlendirme yapın');
+                    e.preventDefault();
+                    App.Backend.post('order/<%=order.ordernum%>/evaluate', {
+                        star: this.star,
+                        butcherComment: this.butcherComment,
+                        siteComment: this.siteComment
+                    }, null, true).then(function () {
+                        App.alert('Değerlendirmenizi aldık.', 'info');
+                        $('#submit').hide();
+                        this.done = true;
+                    }.bind(this)).catch(function (err) {
+                        App.HandleError(err)
+
+                    })
+                }
+
+
+            }
+        })
+
+            <% } %>
+</script>
+
+
+</html>

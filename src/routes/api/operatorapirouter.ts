@@ -1,10 +1,7 @@
 import * as express from "express";
 
 let appRoutes = [
-    './order'    ,
-    './home',
-    './manuelorders',
-    './reviews'
+    './operatorapi'
 ];
 
 export default class RouteLoader {

@@ -21,6 +21,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const common_1 = require("../../lib/common");
 const router_1 = require("../../lib/router");
 const order_1 = require("../../db/models/order");
+const area_1 = require("../../db/models/area");
 const email_1 = require("../../lib/email");
 const shipment_1 = require("../../models/shipment");
 const dispatcher_1 = require("../../db/models/dispatcher");
@@ -40,6 +41,8 @@ const sequelize_1 = require("sequelize");
 const core_1 = require("../../lib/logistic/core");
 const user_1 = require("../../db/models/user");
 const moment = require("moment");
+const http_1 = require("../../lib/http");
+const review_1 = require("../../db/models/review");
 const orderid = require('order-id')('dkfjsdklfjsdlkg450435034.,');
 class Route extends router_1.ApiRouter {
     getButcherPuanAccounts(o) {
@@ -1441,6 +1444,54 @@ class Route extends router_1.ApiRouter {
             this.res.send(result);
         });
     }
+    evaluateOrder() {
+        return __awaiter(this, void 0, void 0, function* () {
+            let ordernum = this.req.params.ordernum;
+            let order = yield this.getOrder(ordernum, true);
+            if (!order)
+                return this.res.sendStatus(404);
+            if (!order.canBeEvaluated())
+                throw new http_1.ValidationError('Bu sipariş değerlendirme süresi maalesef geçmiş');
+            let puan = helper_1.default.parseFloat(this.req.body.star);
+            let review = yield review_1.default.findOne({
+                where: {
+                    userId: order.userId,
+                    type: 'order',
+                    ref1: order.id
+                }
+            });
+            if (review == null) {
+                review = new review_1.default();
+                review.userId = order.userId;
+                review.type = 'order';
+                review.ref1 = order.id;
+                review.ref2 = order.butcherid,
+                    review.itemDate = order.creationDate;
+                review.ref2Text = order.butcher.name;
+                review.ref2slug = order.butcher.slug;
+                review.level1Id = order.areaLevel1Id;
+                review.level2Id = order.areaLevel2Id;
+                review.level3Id = order.areaLevel3Id;
+                review.level1Text = order.areaLevel1Text;
+                review.level2Text = order.areaLevel2Text;
+                review.level3Text = order.areaLevel3Text;
+                review.areaSlug = (yield area_1.default.findByPk(review.level3Id)).slug;
+                review.userRating1 = puan;
+                review.published = false;
+                review.tempContent = `Kasaba: ${this.req.body.butcherComment}\nSiteye:${this.req.body.siteComment}`;
+                let words = order.name.match(/\S+/g).map(w => `${w}`);
+                if (words.length >= 2)
+                    review.displayUser = words[0] + ' ' + words[1][0] + '.';
+                else
+                    review.displayUser = words[0] + '.';
+                yield review.save();
+            }
+            else if (review.published) {
+                throw new http_1.ValidationError('Bu siparişle ilgili yorum yapılmış ve yayınlanmakta.');
+            }
+            this.res.sendStatus(200);
+        });
+    }
     static SetRoutes(router) {
         router.post('/order/:ordernum/approve', Route.BindRequest(Route.prototype.approveRoute));
         // router.post('/order/:ordernum/kuryeCagir', Route.BindRequest(Route.prototype.kuryeCagirRoute))
@@ -1451,6 +1502,7 @@ class Route extends router_1.ApiRouter {
         router.post('/order/manuelorders/create', Route.BindRequest(Route.prototype.getManuelOrder));
         router.get('/order/manuelorders/list', Route.BindRequest(Route.prototype.listManuelOrders));
         router.get('/order/list', Route.BindRequest(Route.prototype.listOrders));
+        router.post('/order/:ordernum/evaluate', Route.BindRequest(Route.prototype.evaluateOrder));
         //router.get("/admin/order/:ordernum", Route.BindRequest(this.prototype.getOrderRoute));
     }
 }
@@ -1490,4 +1542,11 @@ __decorate([
     __metadata("design:paramtypes", []),
     __metadata("design:returntype", Promise)
 ], Route.prototype, "getManuelOrder", null);
+__decorate([
+    common_1.Auth.Anonymous(),
+    common_1.Auth.RequireCatcpha(),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", []),
+    __metadata("design:returntype", Promise)
+], Route.prototype, "evaluateOrder", null);
 exports.default = Route;

@@ -588,6 +588,13 @@ class Order extends BaseModel<Order> {
         } else return Helper.asCurrency(totalFee.kalitteFee + totalFee.kalitteVat);     
     }
 
+    canBeEvaluated() {
+        let timespan = 30 * 24 * 60 * 60 * 1000; 
+        let d = Helper.Now()
+        d.setTime(d.getTime() - timespan);
+        return this.status == "teslim edildi" && this.creationDate > d;
+    }
+
     static async fromShopcard(c: ShopCard, bi: number): Promise<Order> {
         let o = new Order();
         o.ordernum = orderid.generate();

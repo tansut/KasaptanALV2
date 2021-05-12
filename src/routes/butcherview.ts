@@ -71,7 +71,7 @@ export default class Route extends ViewRouter {
         let res: Review[] = await Review.sequelize.query(`
 
         SELECT r.* FROM Reviews r
-        WHERE :butcherid = ref2
+        WHERE r.published=true and :butcherid = ref2
         ORDER BY r.ID DESC
 
          `

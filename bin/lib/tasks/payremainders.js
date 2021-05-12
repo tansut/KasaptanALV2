@@ -15,7 +15,6 @@ const order_2 = require("../../models/order");
 const butcher_1 = require("../../db/models/butcher");
 const sequelize_1 = require("sequelize");
 const helper_1 = require("../helper");
-const order_3 = require("../../routes/api/order");
 const moment = require("moment");
 const sms_1 = require("../sms");
 const sitelog_1 = require("../../routes/api/sitelog");
@@ -25,7 +24,7 @@ class OrderRemainers extends basetask_1.BaseTask {
     }
     run() {
         return __awaiter(this, void 0, void 0, function* () {
-            console.log('running OrderRemainers job', helper_1.default.formatDate(helper_1.default.Now(), true));
+            console.log('running OrderPayRemainers job', helper_1.default.formatDate(helper_1.default.Now(), true));
             let mesaiStart = helper_1.default.Now();
             mesaiStart.setHours(9);
             mesaiStart.setMinutes(0);
@@ -34,13 +33,13 @@ class OrderRemainers extends basetask_1.BaseTask {
             mesaiEnd.setMinutes(0);
             let now = helper_1.default.Now();
             if ((now > mesaiStart) && (now < mesaiEnd)) {
-                let api = new order_3.default();
                 let orders = yield order_1.Order.findAll({
                     limit: 10,
                     include: [{
                             model: butcher_1.default
                         }],
                     where: {
+                        orderSource: 'kasaptanal.com',
                         status: order_2.OrderItemStatus.reqirePayment,
                         customerLastReminder: {
                             [sequelize_1.Op.eq]: null
@@ -54,7 +53,7 @@ class OrderRemainers extends basetask_1.BaseTask {
                 for (let i = 0; i < orders.length; i++) {
                     let userUrl = `${this.url}/user/orders/${orders[i].ordernum}`;
                     yield sms_1.Sms.send(orders[i].phone, `KasaptanAl.com ${orders[i].butcherName} siparisiniz henuz odenmemis gozukuyor. Bilgi: ${userUrl} `, false, new sitelog_1.default());
-                    yield new Promise(r => setTimeout(r, 5));
+                    yield new Promise(r => setTimeout(r, 25));
                     orders[i].customerLastReminder = now;
                     orders[i].customerLastReminderType = 'pay';
                     orders[i].sentCustomerReminders++;

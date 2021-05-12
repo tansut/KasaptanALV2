@@ -1,14 +1,10 @@
-import * as express from "express";
-
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
 let appRoutes = [
-    './order'    ,
-    './home',
-    './manuelorders',
-    './reviews'
+    './operatorapi'
 ];
-
-export default class RouteLoader {
-    static use(router?: express.Router) {
+class RouteLoader {
+    static use(router) {
         var routings = [];
         appRoutes.forEach((file) => {
             var routing = require(file).default.SetRoutes(router);
@@ -17,3 +13,4 @@ export default class RouteLoader {
         return routings;
     }
 }
+exports.default = RouteLoader;

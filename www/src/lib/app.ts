@@ -187,6 +187,13 @@ export class App extends AppBase {
         }
     }
 
+    static formatDate(date: Date, useTime: boolean = false, useYear: boolean=true) {
+        if (date) {
+        const options: Intl.DateTimeFormatOptions = { weekday: "long", year:  useYear ? 'numeric': 'numeric', month: 'long', day: 'numeric' };
+        return date.toLocaleDateString('tr-TR', options) + (useTime ? ` ${date.getHours()}:${date.getMinutes()}`:'');
+        } else return ''
+    }
+
 
     static run(config: IAppconfig) {
         this.Config = config;

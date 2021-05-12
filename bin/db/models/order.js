@@ -132,6 +132,12 @@ let Order = Order_1 = class Order extends basemodel_1.default {
         else
             return helper_1.default.asCurrency(totalFee.kalitteFee + totalFee.kalitteVat);
     }
+    canBeEvaluated() {
+        let timespan = 30 * 24 * 60 * 60 * 1000;
+        let d = helper_1.default.Now();
+        d.setTime(d.getTime() - timespan);
+        return this.status == "teslim edildi" && this.creationDate > d;
+    }
     static fromShopcard(c, bi) {
         return __awaiter(this, void 0, void 0, function* () {
             let o = new Order_1();
