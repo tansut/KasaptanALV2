@@ -154,7 +154,7 @@ export default class Route extends ApiRouter {
         let item = this.req.body;
         let shopcard = this.req.shopCard;
         let scItem = shopcard.items[item.order]
-        shopcard.remove(item.order);
+        typeof(item.order) != 'undefined' ? shopcard.remove(item.order): shopcard.removeItemById(item.id);
         await shopcard.saveToRequest(this.req);
         // let l = this.generateUserLog('shopcard', 'remove');
         // try {

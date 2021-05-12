@@ -83,18 +83,17 @@
                 <li><span class="text-muted">Ödeme:&nbsp;</span><%= shopcard.payment[bi].desc%> </li>
               </ul>
               <div class="px-4">
-                <h6 class="h6">
-                  Mesafeli Satış Sözleşmesi
-                </h6>
+              
+
                 <div class="form-group">
-                  <textarea style="font-family: 'Courier New', Courier, monospace;" class="font-size-xs form-control" rows="5" readonly><%= include('../legal/user-butcher-agreement.ejs', {
-                      user: shopcard,
-                      butcher: controller.Butchers.find(b=>b.id == bi)
-                    }) %>
-                  </textarea>
+              
                   <div class="custom-control custom-checkbox mb-2">
                     <input class="custom-control-input" type="checkbox" checked >
-                    <label class="custom-control-label" for="si-remember">Mesafeli Satış Sözleşmesini okudum ve kabul ediyorum.</label>
+                    <label class="custom-control-label" for="si-remember">
+                <a href="javascript:App.agreementDialog('customermss?butcherid=<%=controller.Butchers.find(b=>b.id == bi).id%>')">Mesafeli Satış Sözleşmesi</a> ve 
+                <a href="javascript:App.agreementDialog('customerobf?butcherid=<%=controller.Butchers.find(b=>b.id == bi).id%>')">Ön Bilgilendirme Formunu</a> okudum.
+
+                    </label>
                 </div>
     
                 </div>

@@ -33,6 +33,7 @@ const butcher_2 = require("../../db/models/butcher");
 class Route extends router_1.ViewRouter {
     constructor() {
         super(...arguments);
+        //products: Product[];
         this.dispatchs = [];
         this.darea1 = [];
         this.darea2 = [];
@@ -117,7 +118,7 @@ class Route extends router_1.ViewRouter {
             }
             this.butcher = yield this.getButcher();
             let resources = yield this.getResources(this.butcher);
-            this.products = yield this.getProducts();
+            //this.products = await this.getProducts();
             this.dispatchs = yield dispatcher_1.default.findAll({
                 where: {
                     butcherId: this.butcher.id
@@ -263,7 +264,7 @@ class Route extends router_1.ViewRouter {
             }
             this.butcher = yield this.getButcher();
             let resources = yield this.getResources(this.butcher);
-            this.products = yield this.getProducts();
+            //this.products = await this.getProducts();
             if (this.req.body.savecopy == "true") {
                 var json = this.butcher.toJSON();
                 delete json['id'];

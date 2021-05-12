@@ -597,7 +597,7 @@
                   Tüm ürünlerin miktar, fiyat ve birim özelliklerinin tamamlanmasını biz de sabırsızlıkla bekliyoruz.
                 </p>
               <%}%>
-                <div class="">
+                <div v-cloak  id="scapp">
                   <div class="d-flex mb-3  align-items-center">
                     <div class=" flex-grow-1 input-group-overlay">
     
@@ -618,11 +618,38 @@
                       </div>
                   </div>
                   
-                  <div id="gotoscBtn" class="ml-2 align-self-center <%=controller.shopcard && controller.shopcard.items.length > 0 ? '':'d-none'%>">
-                    <a class="app_blank btn btn-primary" href="/alisveris-sepetim"><i class="czi-icon czi-cart"></i></a>
+                  <div class="ml-2 align-self-center">
+                    <button @click="visible=!visible" type="button" class="btn rounded-lg btn-primary">
+                      <i class="czi-icon czi-cart"></i> <span v-if="false && card && card.data.items.length" class="badge badge-dark">{{card.data.items.length}}</span>
+                     
+                    </button>
+
+                
                   </div>
                   
                   </div>
+<div class="mb-3">
+  <div v-if="visible && card && card.data.items.length > 0">
+    <ul  class="font-size-sm list-group mb-3 ">
+      <li v-for="(si, i) in card.data.items" class="list-group-item d-flex justify-content-between align-items-center">
+        <div>
+          {{si.quantity}} {{si.purchaseoption.unitTitle}} {{si.product.name}}, <money-view :money="si.price"></money-view> 
+      
+        </div>
+        <a @click="remove(si, i)" class="btn btn-sm btn-secondary rounded">Kaldır</a>
+      </li>
+      </ul>
+      <div class="d-flex justify-content-center">
+        <a class="app_blank btn btn-primary" href="/alisveris-sepetim"><i class="czi-icon czi-cart"></i>Sepete Git</a>
+      
+      </div>
+  </div>
+  <div  v-else-if="visible && card && !card.data.items.length">
+    Sepetinizde henüz hiçbir ürün yok.
+  </div>
+</div>
+
+
                 </div>
 
               
@@ -675,6 +702,23 @@
   <%- include('./_partial/purchase', { returnUrl: butcher.slug + '/' + controller.category.slug  }); %>
   <%- include('./_partial/category-items-script', {   }); %>
 
+  <script>
+    window.scapp = new Vue({
+      el:'#scapp',
+      data: {
+        card: window.shopcard.card,
+        visible: false
+      },
+      methods: {
+        remove: function(item, index) {
+          App.ShopCard.removeItem(item.id).then(function(result) {
+            window.shopcard.card.data = result;
+          }.bind(this)).catch(App.HandleError.bind(App))
+        }
+      }
+    })
+  </script>
+
 <script>
   $(document).ready(function() {
     if (window.location.hash=='#delivery') {
@@ -692,6 +736,10 @@
       $("#butcher-page-quickproductsearchbox").focus();
       $('#gotoscBtn').removeClass('d-none');
       $('#gotoscBtn').fadeOut(500).fadeIn(500);
+      if (!window.firstAdded) {
+        window.scapp.visible = true;
+        window.firstAdded = true;
+      } 
       //$("#butcher-page-quickproductsearchbox").attr('placeholder', 'Sepete ekledik. Arayın ve satın alın.')
     }.bind(this))
 

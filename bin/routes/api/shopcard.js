@@ -165,7 +165,7 @@ class Route extends router_1.ApiRouter {
             let item = this.req.body;
             let shopcard = this.req.shopCard;
             let scItem = shopcard.items[item.order];
-            shopcard.remove(item.order);
+            typeof (item.order) != 'undefined' ? shopcard.remove(item.order) : shopcard.removeItemById(item.id);
             yield shopcard.saveToRequest(this.req);
             // let l = this.generateUserLog('shopcard', 'remove');
             // try {

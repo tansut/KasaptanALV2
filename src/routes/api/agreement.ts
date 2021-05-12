@@ -18,6 +18,7 @@ import UserRoute from "./user";
 import * as ejs from 'ejs';
 import config from '../../config';
 import * as path from 'path';
+import { auth } from "../../middleware/auth";
 
 
 export default class Route extends ApiRouter {
@@ -91,9 +92,84 @@ export default class Route extends ApiRouter {
         })
     }    
 
+    @Auth.Anonymous()
+    async customerMss() {
+        if (!this.req.query.butcherid) return this.next();
+        let butcher = await Butcher.findByPk(parseInt(<string>this.req.query.butcherid), {
+            include: [{
+                model: Area,
+                all: true,
+                as: "areaLevel1Id"
+            }]
+        });
+        if (!butcher) return this.next();
+        let file = await this.getFile("customer.butcher-seller-agreement.ejs", {
+            butcher: butcher,
+            user: this.req.shopCard
+        } )
+        let content =  this.Markdown.render(file);
+        this.res.send({
+            title: 'Mesafeli Satış Sözleşmesi',
+            content: content
+        })
+    }  
+
+    @Auth.Anonymous()
+    async customerObf() {
+        if (!this.req.query.butcherid) return this.next();
+        let butcher = await Butcher.findByPk(parseInt(<string>this.req.query.butcherid), {
+            include: [{
+                model: Area,
+                all: true,
+                as: "areaLevel1Id"
+            }]
+        });
+        if (!butcher) return this.next();
+        let file = await this.getFile("customer.butcher-obf.ejs", {
+            butcher: butcher,
+            user: this.req.shopCard
+        } )
+        let content =  this.Markdown.render(file);
+        this.res.send({
+            title: 'Ön Bilgilendirme Formu',
+            content: content
+        })
+    }  
+
+    @Auth.Anonymous()
+    async customerAym() {
+        let file = await this.getFile("customer.aydinlatma.ejs", {
+      
+        } )
+        let content =  this.Markdown.render(file);
+        this.res.send({
+            title: 'Aydınlatma Metni',
+            content: content
+        })
+    }  
+
+
+    @Auth.Anonymous()
+    async customerKvkk() {
+        let file = await this.getFile("customer.kvkk.ejs", {
+      
+        } )
+        let content =  this.Markdown.render(file);
+        this.res.send({
+            title: 'KVKK Metni',
+            content: content
+        })
+    }  
+ 
+
     static SetRoutes(router: express.Router) {
         router.get("/agreement/content/butchersales", Route.BindRequest(this.prototype.butchersales));        
         router.get("/agreement/content/butcherkvkk", Route.BindRequest(this.prototype.butcherkvkk));        
-        router.get("/agreement/content/butcherriza", Route.BindRequest(this.prototype.butcherriza));        
+        router.get("/agreement/content/butcherriza", Route.BindRequest(this.prototype.butcherriza));     
+        router.get("/agreement/content/customerobf", Route.BindRequest(this.prototype.customerObf));
+        router.get("/agreement/content/customermss", Route.BindRequest(this.prototype.customerMss));
+        router.get("/agreement/content/customeraym", Route.BindRequest(this.prototype.customerAym));
+        router.get("/agreement/content/customerkvkk", Route.BindRequest(this.prototype.customerKvkk));
+
     }
 }

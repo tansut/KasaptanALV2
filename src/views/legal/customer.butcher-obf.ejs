@@ -1,0 +1,67 @@
+##
+
+**ÖN BİLGİLENDİRME FORMU**
+
+**I-SATICI BİLGİLERİ**
+
+Adı / Soyadı / Unvanı: <%= user.address.name %> (&quot; **ALICI**&quot;)
+
+Adres: <%= user.address.adres%>, <%= user.address.level3Text%>/<%= user.address.level1Text%>
+
+Tel: <%= user.address.phone%>
+
+E-posta: <%= user.address.email %>
+
+**II-ÜRÜNÜN TEMEL NİTELİKLERİ**
+
+İşbu Ön Bilgilendirme Formu&#39;nun konusu ürün, Kalitte Profesyonel Bilgi Teknolojileri Basım ve Yayıncılık Ltd.Şti.&#39;ye ait (&quot; **KasaptanAL**&quot;) [www.kasaptanal.com](http://www.kasaptanal.com/) internet sitesinde (&quot; **Platform**&quot;) Satıcı tarafından satışa sunulan üründür.
+
+Ürün&#39;ün, Platform&#39;da yer alan görsellerinden asgari düzeyde farklı olması ilgili Ürün&#39;ü iade hakkı doğurmaz.
+
+Ürün ile ilgili daha detaylı bilgi, Platform&#39;da yer almaktadır. Ayrıca, Ürün&#39;e ilişkin detaylı bilgiye Mesafeli Satış Sözleşmesi&#39;nden de ulaşabilirsiniz.
+
+Satıcı, Platform üzerinden satışa sunduğu Ürünlere ilişkin -ürün güvenliği dahil- tüm hukuki ve cezai sorumluluğun kendisinde olduğunu; bu ürünlerin ve ürünlerin satışının gıda mevzuatı dahil yürürlükte olan mevzuata aykırı olmadığını, Ürün&#39;ün bozuk olmadığını, son kullanım tarihinin geçmemiş olduğunu, kaliteli olduğunu, Platform üzerinde kendisi tarafından belirtilen niteliklere sahip olduğunu, Ürün&#39;de herhangi bir ayıp bulunmadığını, uygun ambalajlandığını kabul, beyan ve taahhüt eder. Platform&#39;un sahibi olan KasaptanAL, Mesafeli Satış Sözleşmesi&#39;nin kurulmasına aracılık eden &quot;aracı hizmet sağlayıcı&quot; sıfatını haiz olup, hiçbir şekilde Satıcı tarafından sağlanan ürünleri kontrol etmekle, hukuka aykırı bir durumun olup olmadığını araştırmakla yükümlü değildir.
+
+**III- ÜRÜN BEDELİ VE ÖDEME YÖNTEMLERİ**
+
+<% let b = user.butchers[butcher.id]%>
+
+
+  <% b.products.forEach((pi, i) => { %>
+  <% let item = user.items[pi] %>
+    <%= item.quantity%> <%=item.purchaseoption.unitTitle %> <%=item.product.name %>, <%=item.price%>TL
+  <%})%>
+
+Yukarıda yer alan Ürün Bedeli&#39;ne, Ürün&#39;ün teslimatında ödenecek taşıyıcı bedeli ve tüm vergiler dahildir. Ödeme, aşağıda belirtilen yöntemlerden biri ile yapılabilecektir:
+
+1. **POS Cihazı ile Ödeme:** Ürün&#39;ün teslimi sırasında POS cihazı aracılığıyla Ürün Bedeli&#39;ni ödeyebilirsiniz.
+
+1. **Nakit Ödeme:** Ürün&#39;ün teslimi sırasında Ürün Bedeli&#39;ni nakit olarak ödeyebilirsiniz.
+
+1. **Online Ödeme:** Ürün&#39;ü Platform üzerinden satın aldığınız esnada KasaptanAL&#39;ın anlaşmalı olduğu ödeme hizmeti sağlayıcısı aracılığıyla Ürün Bedeli&#39;ni online olarak ödeyebilirsiniz. Satıcı&#39;nın Kasapkart programına dahil olması ve Online Ödeme ile ödeme yapmayı tercih etmeniz halinde kısmen/tamamen Kasapkart ile ödeme yapabilirsiniz. Bu halde Ürün Bedeli&#39;nden, Kasapkartınıza tanımlı puanların mahsup edilmesiyle ortaya çıkan tutarda indirim yapılacaktır.
+
+**IV—SATIN ALMA İŞLEMİNİN TAMAMLANMASI VE ÜRÜNÜN TESLİMATI**
+
+&quot;Online Ödeme&quot; veya &quot;Kasapkart ile Ödeme&quot; yöntemini tercih etmeniz halinde, Ürün ile ilgili işbu Ön Bilgilendirme Formu&#39;nu ve Mesafeli Satış Sözleşmesi&#39;ni onaylamanızı ve Ürün Bedeli&#39;ni ödemenizi müteakip satış tamamlanacaktır.
+
+&quot;POS Cihazı ile Ödeme&quot; veya &quot;Nakit Ödeme&quot; yöntemini tercih etmeniz halinde, Ürün ile ilgili işbu Ön Bilgilendirme Formu&#39;nu ve Mesafeli Satış Sözleşmesi&#39;ni onaylamanızı müteakip satış tamamlanacaktır.
+
+Ürün, satın alma sırasında belirttiğiniz adrese, seçeceğiniz tarih ve saatte gönderilecektir. Teslimat, Satıcı veya KasaptanAL tarafından yapılacaktır. KasaptanAL, teslimatın bizzat kendisi tarafından yapılması hali de dahil olmak üzere, teslimatta yaşanan gecikmelerden hiçbir şekilde sorumlu olmayıp bu hususta yalnızca Satıcı sorumludur.
+
+**V-MÜCBİR SEBEP**
+
+İşbu Ön Bilgilendirme Formu&#39;nun onaylanmasından sonra meydana gelen ve ¨mücbir sebep¨ sayılan, öngörülemeyen ve engellenemeyen durumlarda Satıcı&#39;nın işbu Sözleşme ile belirlenen yükümlülüklerinden herhangi birini geç veya eksik ifa etmesi veya ifa etmemesi halinde sorumluluğu mücbir sebep devam ettiği sürece askıya alınacaktır. Bu veya bu gibi durumlar gecikme, eksik ifa etme, ifa etmeme veya temerrüt addedilmeyecek veya bu durumlar için Satıcı&#39;dan herhangi bir nam altında tazminat talep etmeniz mümkün olmayacaktır.
+
+&quot;Mücbir sebep&quot; terimi, Sözleşme&#39;nin imzalanmasından sonra ortaya çıkan doğal afet, isyan, salgın hastalık, savaş, grev, iletişim sorunları, altyapı ve internet arızaları, kötü hava koşulları, mahkemelerce web sitesine, satış kanallarına, yayın mecralarına erişimin engellenmesine yönelik verilen ihtiyati tedbir kararları da dahil ve fakat bunlarla sınırlı olmamak kaydıyla, Satıcı&#39;nın kusurlarıyla neden olmadığı, kontrolü haricinde gelişen kaçınılamayacak olaylar olarak yorumlanacaktır.
+
+**VI-CAYMA HAKKI**
+
+İşbu Sözleşme, Mesafeli Sözleşmeler Yönetmeliği&#39;nin 15/c maddesi uyarınca &quot;çabuk bozulabilen veya son kullanma tarihi geçebilecek malların teslimine ilişkin sözleşmeler&quot; kapsamında olduğundan, satın alma işlemlerinin tamamlandığı anda cayma hakkınız bulunmamaktadır.
+
+**VII-TÜKETİCİ ŞİKÂYETLERİ:**
+
+Soru, talep ve şikayetlerinizi Satıcı&#39;ya ait yukarıdaki adrese ve telefon numarasına iletebilirsiniz. Ayrıca, şikâyet ve itirazlarınız konusundaki, her takvim yılı başından itibaren geçerli olmak üzere Ticaret Bakanlığı tarafından ilan edilen parasal sınıra kadar olan başvurularınızı Tüketici Hakem Heyeti&#39;ne, söz konusu parasal sınırın üzerindeki başvurularınızı ise Tüketici Mahkemesi&#39;ne yapabilirsiniz.
+
+İşbu Ön Bilgilendirme Formu&#39;nda yer alan Ürün&#39;ün temel özelliklerine, Ürün Bedeli&#39;ne, ödeme yöntemlerine, Ürün&#39;ün teslimatına ilişkin bilgiler dahil fakat bunlarla sınırlı olmamak üzere Ürün ile ilgili her türlü bilgiyi okuduğunuzu, anladığınızı ve onayladığınızı kabul ve beyan etmektesiniz.
+
+İşbu Ön Bilgilendirme Formu&#39;nun bir örneğini yazıcınızdan alabileceğiniz gibi, dijital olarak da saklamanız mümkündür. Onaylamış olduğunuz işbu Ön Bilgilendirme Formu&#39;nun bir örneği, Satıcı ve KasaptanAL tarafından saklanacaktır.

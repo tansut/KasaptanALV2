@@ -7,6 +7,7 @@ import { Payment, PaymentType, PaymentTypeDesc } from "./payment";
 import { Order } from "../db/models/order";
 import * as _ from "lodash"
 import { GeoLocation, LocationType } from "./geo";
+const orderid = require('order-id')('dkfjsdklfjsdlkg450435034.,')
 
 export interface ShopcardAdres {
     name: string;
@@ -216,6 +217,12 @@ export class ShopCard {
         this.calculateShippingCosts();
     }
 
+    removeItemById(id: string) {
+        _.remove(this.items, i=>i.id == id)
+        this.arrangeButchers();
+        this.calculateShippingCosts();
+    }
+
     static calculatePrice(product: ProductView, quantity: number, purchaseoption: PurchaseOption) {
         return Helper.asCurrency(purchaseoption.unitPrice * quantity);
     }
@@ -336,7 +343,7 @@ export class ShopCard {
         return this.created < d;
     }
 
-    
+
 
     constructor(values: any) {
         this.availableShipHours = Shipment.getShipmentDays();
@@ -348,6 +355,7 @@ export class ShopCard {
         values.items = values.items || [];
         values.items.forEach(i => {
             let item = new ShopcardItem(i.product, i.quantity, i.price, i.purchaseoption, i.note,i.productTypeData || {});
+            item.id = i.id || item.id;
             this.items.push(item)
         })
         values.address = values.address || this.address;
@@ -575,12 +583,14 @@ export class ShopCard {
 export class ShopcardItem {
     // public discount: number = 0.00;
     public product: ShopcardProductView;
+    public id: string;
     constructor(product: ProductView,
         public quantity: number, public price: number,
         public purchaseoption: PurchaseOption, public note: string, public productTypeData: Object) {
         if (!product) throw new ValidationError('geçersiz ürün');
         if (!quantity) throw new ValidationError('geçersiz miktar:' + product.name);
         if (!price) throw new ValidationError('geçersiz bedel: ' + product.name);
+        this.id = orderid.generate();
         this.product = {
             id: product.id,
             name: product.name,

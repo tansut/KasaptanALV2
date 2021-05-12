@@ -16,6 +16,7 @@ const shipment_1 = require("./shipment");
 const payment_1 = require("./payment");
 const order_1 = require("../db/models/order");
 const _ = require("lodash");
+const orderid = require('order-id')('dkfjsdklfjsdlkg450435034.,');
 class Modifier {
 }
 class Discount extends Modifier {
@@ -81,6 +82,7 @@ class ShopCard {
         values.items = values.items || [];
         values.items.forEach(i => {
             let item = new ShopcardItem(i.product, i.quantity, i.price, i.purchaseoption, i.note, i.productTypeData || {});
+            item.id = i.id || item.id;
             this.items.push(item);
         });
         values.address = values.address || this.address;
@@ -186,6 +188,11 @@ class ShopCard {
     }
     remove(i) {
         this.items.splice(i, 1);
+        this.arrangeButchers();
+        this.calculateShippingCosts();
+    }
+    removeItemById(id) {
+        _.remove(this.items, i => i.id == id);
         this.arrangeButchers();
         this.calculateShippingCosts();
     }
@@ -476,6 +483,7 @@ class ShopcardItem {
             throw new http_1.ValidationError('geçersiz miktar:' + product.name);
         if (!price)
             throw new http_1.ValidationError('geçersiz bedel: ' + product.name);
+        this.id = orderid.generate();
         this.product = {
             id: product.id,
             name: product.name,

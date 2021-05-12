@@ -12,14 +12,17 @@
                 <div class="modal-body p-3">
                     <form @submit="checkForm" method="post">
 
-                        <h5 v-if="step==1 && mode=='quick'" class="h6">Siparişinizi kasabımıza iletin, hemen hazırlayıp gönderelim.  <span v-if="working" class="spinner-grow text-primary" role="status">
-                           
-                        </span></h5>
+                        <h5 v-if="step==1 && mode=='quick'" class="h6">Siparişinizi kasabımıza iletin, hemen hazırlayıp
+                            gönderelim. <span v-if="working" class="spinner-grow text-primary" role="status">
 
-                        <h5 v-if="mode=='butcher'" class="h6">Arayın ve sepete ekleyin. Tüm alacaklarınız bitince alışverişinizi tamamlayın.<span v-if="working" class="spinner-grow text-primary" role="status">
-                           
-                        </span></h5>
-                       
+                            </span></h5>
+
+                        <h5 v-if="mode=='butcher'" class="h6">Arayın ve sepete ekleyin. Tüm alacaklarınız bitince
+                            alışverişinizi tamamlayın.<span v-if="working" class="spinner-grow text-primary"
+                                role="status">
+
+                            </span></h5>
+
                         <p class="text-primary" v-if="errors.length">
                             <b>Lütfen aşağıdaki hataları düzeltin:</b>
                         <ul>
@@ -67,26 +70,26 @@
                                 </div>
 
                             </div>
-                            
+
                             <div class="form-group">
                                 <label>Teslimat Gün ve Saati</label>
-                              <div class="mb-3">
-                                <select required v-if="card" class="form-control custom-select" v-model="shipDay">
-                                  <option v-for="option in card.availableShipHours" v-bind:value="option">
-                                    {{ option.title }}
-                                  </option>
-                                </select>
+                                <div class="mb-3">
+                                    <select required v-if="card" class="form-control custom-select" v-model="shipDay">
+                                        <option v-for="option in card.data.availableShipHours" v-bind:value="option">
+                                            {{ option.title }}
+                                        </option>
+                                    </select>
 
-                              </div>
-                              <div class="mb-3">
-      
-                                <select required v-if="card" class="form-control custom-select" v-model="shipHour">
-                                    <option disabled value="">Lütfen saat seçin</option>
-                                    <option v-for="(item, key) in shipDay.hours" v-bind:value="key">
-                                    {{ item }}
-                                  </option>
-                                </select>
-                              </div>
+                                </div>
+                                <div class="mb-3">
+
+                                    <select required v-if="card" class="form-control custom-select" v-model="shipHour">
+                                        <option disabled value="">Lütfen saat seçin</option>
+                                        <option v-for="(item, key) in shipDay.hours" v-bind:value="key">
+                                            {{ item }}
+                                        </option>
+                                    </select>
+                                </div>
                             </div>
                         </div>
                         <div v-show="(mode=='quick' && step==1) || mode=='butcher'" class="input-group-overlay mb-3">
@@ -99,8 +102,8 @@
                                         aria-hidden="true"></span>
                                 </span>
                             </div>
-                            <input data-gourl="false" data-search="product" :data-butcher="butcherslug" id="page-quickproductsearchbox"
-                                class="form-control searchBox prepended-form-control"
+                            <input data-gourl="false" data-search="product" :data-butcher="butcherslug"
+                                id="page-quickproductsearchbox" class="form-control searchBox prepended-form-control"
                                 data-noresults-text="Maalesef bulamadık." autocomplete="off" type="search"
                                 placeholder="Ne almak istersiniz ? Hızlıca arayın.">
                             <div>
@@ -108,7 +111,7 @@
                             </div>
                         </div>
                         <div v-show="mode=='quick' && step==1">
-                   
+
 
 
                             <div class="form-row">
@@ -125,12 +128,30 @@
                             <button type="button" :disabled="!custOrder" @click="goNext()" v-show="step==1"
                                 class="btn btn-dark">İlerle</button>
                             <button type="button" @click="step=1" v-show="step ==2" class="btn btn-dark">Geri</button>
-
                         </div>
-                        <div v-if="mode=='butcher'" class="d-flex justify-content-end">
-                            <a class="btn btn-primary" href="/alisveris-sepetim">Alışverişimi Tamamla</a>
-
+                        <div v-show="mode=='butcher'">
+                            <div class="mb-3">
+                                <div v-if="shopCardVisible && card && card.data.items.length > 0">
+                                  <ul  class="font-size-sm list-group mb-3 ">
+                                    <li v-for="(si, i) in card.data.items" class="list-group-item d-flex justify-content-between align-items-center">
+                                      <div>
+                                        {{si.quantity}} {{si.purchaseoption.unitTitle}} {{si.product.name}}, <money-view :money="si.price"></money-view> 
+                                    
+                                      </div>
+                                      <a @click="remove(si, i)" class="btn btn-sm btn-secondary rounded">Kaldır</a>
+                                    </li>
+                                    </ul>
+                                    <div class="d-flex justify-content-center">
+                                      <a class="app_blank btn btn-primary" href="/alisveris-sepetim"><i class="czi-icon czi-cart"></i>Sepete Git</a>
+                                    
+                                    </div>
+                                </div>
+                                <div  v-else-if="shopCardVisible && card && !card.data.items.length">
+                                  Sepetinizde henüz hiçbir ürün yok.
+                                </div>
+                              </div>
                         </div>
+
                     </form>
                 </div>
             </div>
@@ -140,6 +161,8 @@
 
 
 <script>
+
+
 
     window.quickOrderApp = new Vue({
         el: '#quickorder',
@@ -164,14 +187,9 @@
                 $("#page-quickproductsearchbox").val("");
                 $("#page-quickproductsearchbox").attr('placeholder', 'Sepete ekledik. Başka neler istersiniz?')
 
-                setTimeout(function() {
+                setTimeout(function () {
                     $("#page-quickproductsearchbox").focus();
                 }, 100);
-            }.bind(this))
-
-            window.quickOrderProductApp.$on("dialog.shown", function (instance) {
-                if (this.disabled) return;
-                $('#quickordermodal').modal('hide');
             }.bind(this))
 
             window.quickOrderProductApp.$on("dialog.hidden", function (instance) {
@@ -183,7 +201,10 @@
 
             $("#page-quickproductsearchbox").on('autocomplete.selected', function (e, item) {
                 this.working = true;
-                window.quickOrderProductApp.show(item, this.butcherslug);
+                window.quickOrderProductApp.show(item, this.butcherslug).then(function () {
+                    if (this.disabled) return;
+                    $('#quickordermodal').modal('hide');
+                }.bind(this));
             }.bind(this));
 
 
@@ -213,7 +234,8 @@
                 mode: 'quick',
                 shipDay: null,
                 shipHour: null,
-                card: null
+                card: null,
+                shopCardVisible: true
             }
         },
 
@@ -223,15 +245,24 @@
         },
 
         watch: {
-            card: function(newVal) {
-                if (newVal.availableShipHours.length) {
-                    this.shipDay = newVal.availableShipHours[0];
+            card: function (newVal) {
+                if (newVal.data.availableShipHours.length) {
+                    this.shipDay = newVal.data.availableShipHours[0];
                     this.shipHour = Object.keys(this.shipDay.hours)[0];
                 }
             }
         },
 
         methods: {
+
+            remove: function (item, index) {
+                App.ShopCard.removeItem(item.id).then(function (result) {
+                    window.shopcard.card.data = result;
+                    setTimeout(function () {
+                    $("#page-quickproductsearchbox").focus();
+                }, 100);
+                }.bind(this)).catch(App.HandleError.bind(App))
+            },
 
             goNext() {
                 window.App.gTag("user actions", "pratik sipariş ileri click", this.butchername);
@@ -346,7 +377,7 @@
                     this.mode = mode || 'quick';
                     Object.assign(self, params || {});
                     this.fillParams();
-                    this.card = this.card || window.shopcard.card.data;
+                    this.card = this.card || window.shopcard.card;
                     window.quickOrderProductApp.useShopcard = true;
                     $('#quickordermodal').modal('show');
                 }

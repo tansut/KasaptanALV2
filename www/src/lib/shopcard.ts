@@ -4,6 +4,15 @@ import { Backend } from "./backend";
 
 export class ShopCard {
 
+    static async removeItem(id: string) {
+    
+            return await Backend.post('shopcard/remove', {
+                id: id
+            });
+    }
+
+
+
     static async remove(i) {
         try {
             let result = await Backend.post('shopcard/remove', {
@@ -13,7 +22,6 @@ export class ShopCard {
         } catch (err) {
             App.HandleError(err);
         }
-
     }
 
     static async add() {

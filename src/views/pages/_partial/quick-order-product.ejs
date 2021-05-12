@@ -187,6 +187,7 @@
                         purchaseoption: this.selectedUnit,
                         note: this.note
                     }).then(function (result) {
+                        window.shopcard.card.data = result;
                         this.$emit("add2sc", this);
                         $('#quickorderproductmodal').modal('hide');
                     }.bind(this)).catch(function (err) {
@@ -202,10 +203,11 @@
 
 
             show: function (product, butcher) {
-                App.Backend.get('product/quickinfo', {
+                return App.Backend.get('product/quickinfo', {
                     id: product.recid,
                     butcher: butcher ? butcher : ''
                 }).then(function (result) {
+                    this.data = result;
                     if (result.data) {
                         this.$emit("dialog.shown", this);
                         this.product = result.data;
@@ -215,7 +217,8 @@
                         $('#quickorderproductmodal').modal('show');
                     } else {
                         this.$emit("product.notavailable", product);
-                    }
+                    };
+                    return this.data;
 
                 }.bind(this)).catch(function (err) {
                     App.HandleError(err);

@@ -23,7 +23,7 @@ import { type } from 'node:os';
 export default class Route extends ViewRouter {
 
     butcher: ButcherModel;
-    products: Product[];
+    //products: Product[];
 
     dispatchs: Dispatcher[] = [];
 
@@ -124,7 +124,7 @@ export default class Route extends ViewRouter {
 
         this.butcher = await this.getButcher();
         let resources = await this.getResources(this.butcher);
-        this.products = await this.getProducts();
+        //this.products = await this.getProducts();
         this.dispatchs = await Dispatcher.findAll({
             where: {
                 butcherId: this.butcher.id
@@ -295,7 +295,7 @@ export default class Route extends ViewRouter {
         }
         this.butcher = await this.getButcher();
         let resources = await this.getResources(this.butcher);
-        this.products = await this.getProducts();
+        //this.products = await this.getProducts();
 
         if (this.req.body.savecopy == "true") {
             var json = this.butcher.toJSON();

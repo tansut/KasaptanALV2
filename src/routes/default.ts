@@ -320,6 +320,8 @@ export default class Route extends ViewRouter {
         this.res.send('OK')
     }
 
+    
+
     static SetRoutes(router: express.Router) {
         // if (config.nodeenv == 'production') {
         //     router.get("/home", Route.BindRequest(this.prototype.defaultRoute))
@@ -349,5 +351,6 @@ export default class Route extends ViewRouter {
         router.get("/mobil-uygulamalar", Route.BindToView("pages/content.mobil-uygulamalar.ejs"));
         router.get("/kasap-basvuru/:butcher?", Route.BindRequest(this.prototype.butcherApply));
         router.get("/kasap-bilgi-giris/:butcher?", Route.BindRequest(this.prototype.butcherInfo));
+        
     }
 }
