@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="tr-TR" prefix="og: http://ogp.me/ns#">
+
+<head>
+  <% include ./_partial/head %>
+</head>
+
+<body>
+  <% include ./_partial/header %>
+
+  <div class="page-title">
+    <div class="container d-lg-flex justify-content-between py-2 py-lg-3">
+      <div class="order-lg-2 mb-3 mb-lg-0 pt-lg-2">
+        <nav aria-label="breadcrumb" class="d-none d-lg-block">
+          <ol class="breadcrumb breadcrumb-dark flex-lg-nowrap justify-content-center justify-content-lg-star">
+            <li class="breadcrumb-item"><a class="text-nowrap" href="/kasapsayfam"><i class="czi-home"></i></a></li>
+            <li class="breadcrumb-item text-nowrap active" aria-current="page"><%= controller.butcher ? controller.butcher.name: "Kasap" %></li>
+          </ol>
+        </nav>
+      </div>
+      <div class="media-body pt-2">
+
+
+        <h1 class="h3"><%= controller.butcher ? controller.butcher.name + ' Temel Ayarlar': "Kasap Sayfam" %></h1>
+        <h2 class=" h4 lead">Kasap dostu KasaptanAl.com hayırlı işler, bol kazançlar diler.</h2>         
+      </div>
+    </div>
+  </div>
+
+
+
+  <div id="pageapp" v-cloak class="container mb-3">
+    <div v-if="butcher && settings">
+      <% if (controller.butcher) { %>
+     <form @submit="save">
+      <p class="text-primary" v-if="errors.length">
+        <b>Lütfen aşağıdaki hataları düzeltin:</b>
+      <ul>
+        <li v-for="error in errors">{{ error }}</li>
+      </ul>
+      </p>
+      <div class="form-row">
+        <div class="form-group col-md-6">
+
+          <label>Müşterinize verdiğiniz puan</label>
+          <select class="form-control" required v-model="settings.puan">
+            <option disabled value="">Lütfen seçin</option>
+            <option :selected="settings.puan == v" v-for="(v, i) in availPuans" :value="v">%{{v*100}}</option>
+          </select>
+        </div>
+        <div class="form-group col-md-6">
+
+          <label>Durum</label>
+          <div class="d-flex">
+            <input class="form-control mr-2" type="text" readonly :value="settings.status=='closed' ? 'Satışa Kapalı': 'Aktif Satış Yapılıyor'">
+            <button @click="setStatus(settings.status=='closed' ? 'open': 'closed')" type="button" :class="{'btn-success': settings.status=='closed', 'btn-danger':settings.status == 'open'}" class="btn btn-sm">{{settings.status == 'open'? 'Satışa Kapat': 'Satışa Aç'}}</button>
+  
+          </div>
+       
+        </div>
+       <button type="submit" class="btn btn-primary">Kaydet</button>
+
+      </div>
+
+    </div>
+
+
+     </form>
+<%}%>
+
+  </div>
+
+  </div>
+
+  <% include ./_partial/footer %>
+  <% include ./_partial/scripts %>
+
+  <script>
+    var app = window.pageapp = new Vue({
+      el: '#pageapp',
+      data: {
+        butcher: null,
+        errors: [],
+        settings: null,
+        availPuans: [0.02,0.03,0.04,0.05,0.06,0.08,0.10,0.12,0.15,0.20]
+      },
+
+      methods: {
+
+        setStatus(newStatus) {
+          return App.Backend.post('butcher/settings/saveStatus', {
+            butcherid: this.butcher.id,
+            status: newStatus
+          }).then(function(result) {
+            App.alert('Değişiklikler kaydedildi.');
+            this.settings.status = newStatus;
+          }.bind(this)).catch(App.HandleError)
+        },
+
+        save: function(e) {
+          e.preventDefault();
+          this.errors = [];
+          return App.Backend.post('butcher/settings/save', {
+            butcherid: this.butcher.id,
+            puan: this.settings.puan
+          }).then(function(result) {
+            App.alert('Değişiklikler kaydedildi.')
+          }.bind(this)).catch(App.HandleError)
+        }
+      }
+    })
+
+    app.butcher = {
+      name: '<%=controller.butcher.name%>',
+      id: <%=controller.butcher.id%>
+    }
+
+    app.settings = {
+      puan: <%=controller.butcher.customerPuanRate%>,
+      commissionRate: <%=controller.butcher.commissionRate%>,
+      commissionFee: <%=controller.butcher.commissionFee%>,
+      noshipCommissionRate: <%=controller.butcher.noshipCommissionRate%>,
+      noshipCommissionFee: <%=controller.butcher.noshipCommissionFee%>,
+      status: '<%=controller.butcher.status%>'
+    }
+
+
+  </script>
+
+</body>
+
+</html>

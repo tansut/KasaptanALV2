@@ -39,7 +39,7 @@ let Butcher = Butcher_1 = class Butcher extends basemodel_1.default {
         return Math.round((this.userRatingAsPerc + this.shipRatingAsPerc) / 2);
     }
     get weightRatingAsPerc() {
-        if (this.shipSuccessCount < 5)
+        if (this.shipSuccessCount < 3)
             return 100;
         return this.totalRatingAsPerc;
     }

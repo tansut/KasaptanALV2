@@ -46,19 +46,19 @@ export default class OrderRemainers extends BaseTask {
                     status: OrderItemStatus.success,
                     customerLastReminderType: {
                         [Op.or]:
-                        [{[Op.ne]: 'eval'}, {[Op.eq]: null}]
+                            [{ [Op.ne]: 'eval' }, { [Op.eq]: null }]
                     },
                     creationDate: {
                         [Op.and]: [{
-                           [Op.lte]:  oneweek
+                            [Op.lte]: oneweek
                         }, {
-                            [Op.gte]:  twoweeks
+                            [Op.gte]: twoweeks
                         }]
-                        
+
                     }
                 }
             })
-            
+
             for (let i = 0; i < orders.length; i++) {
                 let userUrl = `${this.url}/eval/${orders[i].ordernum}`;
                 await Sms.send(orders[i].phone, `Gorusleriniz cok onemli. KasaptanAl ${orders[i].butcherName} siparisinizi simdi degerlendirin: ${userUrl} `, false, new SiteLogRoute());
@@ -67,7 +67,7 @@ export default class OrderRemainers extends BaseTask {
                 orders[i].customerLastReminder = now;
                 orders[i].customerLastReminderType = 'eval';
                 orders[i].sentCustomerReminders++;
-                await  orders[i].save();
+                await orders[i].save();
             }
         }
 

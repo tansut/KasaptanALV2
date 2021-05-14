@@ -16,7 +16,15 @@ const butcherproduct_1 = require("../../db/models/butcherproduct");
 const product_1 = require("../../db/models/product");
 const area_1 = require("../../db/models/area");
 const agreement_1 = require("../../db/models/agreement");
+const fs = require('fs');
+const path = require("path");
 class ButcherRouter extends router_1.ViewRouter {
+    getButcherPropertyWeights() {
+        return __awaiter(this, void 0, void 0, function* () {
+            let rawdata = yield fs.readFileSync(path.join(__dirname, "../../../butcherweights.json"));
+            return JSON.parse(rawdata);
+        });
+    }
     loadButcher(id) {
         return __awaiter(this, void 0, void 0, function* () {
             let butcher = yield butcher_1.default.findOne({
@@ -32,6 +40,7 @@ class ButcherRouter extends router_1.ViewRouter {
                     }], where: { id: id
                 }
             });
+            this.weights = yield this.getButcherPropertyWeights();
             return butcher;
         });
     }
@@ -86,6 +95,12 @@ class Route extends ButcherRouter {
             this.res.render("pages/butcher.home.ejs", this.viewData({}));
         });
     }
+    viewSettings() {
+        return __awaiter(this, void 0, void 0, function* () {
+            yield this.setButcher(false);
+            this.res.render("pages/butcher.settings.ejs", this.viewData({}));
+        });
+    }
     setButcherRoute() {
         return __awaiter(this, void 0, void 0, function* () {
             let id = parseInt(this.req.body.butcherid);
@@ -97,6 +112,7 @@ class Route extends ButcherRouter {
         router.get("/", Route.BindRequest(this.prototype.viewRoute));
         router.post("/acceptAgreement", Route.BindRequest(this.prototype.acceptAgreements));
         router.post("/setbutcher", Route.BindRequest(this.prototype.setButcherRoute));
+        router.get("/settings", Route.BindRequest(this.prototype.viewSettings));
     }
 }
 exports.default = Route;

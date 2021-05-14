@@ -15,6 +15,9 @@ import { Sms } from "../../lib/sms";
 import SiteLogRoute from "./sitelog";
 import User from "../../db/models/user";
 import UserRoute from "./user";
+import { ButcherProperty } from "./product";
+const fs = require('fs');
+import * as path from "path"
 
 
 
@@ -23,6 +26,11 @@ export default class Route extends ApiRouter {
     butcher: Butcher;
     adminButchers: Butcher[];
     api: OrderApi;
+
+    async getButcherPropertyWeights(): Promise<{ [key in ButcherProperty]: number }> {
+        let rawdata = await fs.readFileSync(path.join(__dirname, "../../../butcherweights.json"));
+        return JSON.parse(rawdata);
+    }
 
     async loadButcher(id: number) {
         let butcher = await Butcher.findOne({
@@ -111,9 +119,28 @@ export default class Route extends ApiRouter {
     }
 
 
+    async saveSettings() {
+        await this.setButcher();
+        this.butcher.customerPuanRate = this.req.body.puan;
+        await this.butcher.save();
+        this.res.send('OK')
+    }
+
+    async saveStatus() {
+        await this.setButcher();
+
+        this.butcher.status = this.req.body.status;
+        await this.butcher.save();
+        this.res.send('OK')
+
+    }
+
+
 
     static SetRoutes(router: express.Router) {
         router.post("/payment/send", Route.BindRequest(this.prototype.sendPayment));        
         router.post("/payment/getsms", Route.BindRequest(this.prototype.getPaymentSmsTextRoute));        
+        router.post("/settings/save", Route.BindRequest(this.prototype.saveSettings));        
+        router.post("/settings/saveStatus", Route.BindRequest(this.prototype.saveStatus));        
     }
 }

@@ -9,10 +9,20 @@ import ButcherProduct from "../../db/models/butcherproduct";
 import Product from "../../db/models/product";
 import Area from "../../db/models/area";
 import AgreementLog from "../../db/models/agreement";
+const fs = require('fs');
+import * as path from "path"
+import { ButcherProperty } from "../api/product";
 
 export class ButcherRouter extends ViewRouter {
     butcher: Butcher;
     adminButchers: Butcher[];
+
+    weights: { [key in ButcherProperty]: number }
+
+    async getButcherPropertyWeights(): Promise<{ [key in ButcherProperty]: number }> {
+        let rawdata = await fs.readFileSync(path.join(__dirname, "../../../butcherweights.json"));
+        return JSON.parse(rawdata);
+    }
 
     async loadButcher(id: number) {
         let butcher = await Butcher.findOne({
@@ -32,6 +42,7 @@ export class ButcherRouter extends ViewRouter {
             
             }
         });
+        this.weights = await this.getButcherPropertyWeights();
         return butcher;
     }
 
@@ -56,6 +67,8 @@ export class ButcherRouter extends ViewRouter {
 }
 
 export default class Route extends ButcherRouter {
+
+
 
 
 
@@ -92,6 +105,18 @@ export default class Route extends ButcherRouter {
         }))
     }
 
+    async viewSettings() {
+
+        
+        await this.setButcher(false);   
+   
+        this.res.render("pages/butcher.settings.ejs", this.viewData({
+
+        }))
+    }
+
+
+    
 
     async setButcherRoute() {
         let id = parseInt(this.req.body.butcherid);
@@ -103,6 +128,7 @@ export default class Route extends ButcherRouter {
         router.get("/", Route.BindRequest(this.prototype.viewRoute));        
         router.post("/acceptAgreement", Route.BindRequest(this.prototype.acceptAgreements));        
         router.post("/setbutcher", Route.BindRequest(this.prototype.setButcherRoute));        
+        router.get("/settings", Route.BindRequest(this.prototype.viewSettings));        
     }
 }
 

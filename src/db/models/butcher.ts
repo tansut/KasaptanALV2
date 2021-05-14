@@ -80,7 +80,7 @@ class Butcher extends BaseModel<Butcher> {
     }    
 
     get weightRatingAsPerc() {
-        if (this.shipSuccessCount < 5)
+        if (this.shipSuccessCount < 3)
             return 100;
         return this.totalRatingAsPerc;
     } 

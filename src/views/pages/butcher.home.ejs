@@ -55,6 +55,14 @@
       </ul>
 <%}%>
 
+<div class="alert alert-secondary">
+  <h5 class="h5">Bilgilendirme</h5>
+  <p>KasaptanAl ürün sayfasında kasap sıralamasını nasıl yapıyor? </p>
+  <p>Ürün fiyatınız <strong>%<%=-controller.weights['productPrice']*100%></strong>, müşteriye yakınlığınız <strong>%<%=-controller.weights['distance']*100 %></strong>, Kasap Kart puanınız <strong>%<%=controller.weights['kasapkart']*100 %></strong>, ürün ve teslimat başarınızın ortalaması <strong>%<%=controller.weights['rating']*100%></strong>, başarılı teslim edilen her sipariş <strong>%<%=controller.weights['shipTotal']*100%></strong> olarak etki ediyor. </p>
+  <p>Kasaplar başarı puanına göre sıralanarak gösteriliyor.</p>
+  
+</div>
+
 <div class="row mb-3">
   <div class="col-sm-6">
     <div class="card">
@@ -78,7 +86,7 @@
 
 <div class="row">
   <div class="col-sm-6">
-    <div class="card">
+    <div class="card h-100">
       <div class="card-body">
         <h5 class="card-title">Online Ödeme Alın</h5>
           <strong>Kendi siparişlerinizden </strong> sadece %<%=controller.butcher ? controller.butcher.payCommissionRate*100:'XXX'%> pos komisyonu ile online ödeme alın, <strong>EFT, kapıya POS cihazı taşımakla </strong> uğraşmayın. Bilgi almak için <a target="_blank" href="https://www.youtube.com/watch?v=mKlBHYADTqg">tıklayın.</a>
@@ -87,8 +95,19 @@
       </div>
     </div>
   </div>
-
+  <div class="col-sm-6">
+    <div class="card h-100">
+      <div class="card-body">
+        <h5 class="card-title">Temel Ayarlar</h5>
+          <strong>%<%=controller.butcher.customerPuanRate * 100%></strong> olan Kasap Kart puanınızı değiştirin, kasabınızla ilgili temel ayarları yönetin.
+          <p class="card-text"></p>
+        <a href="/kasapsayfam/settings" class="btn btn-primary">Temel Ayarlar</a>
+      </div>
+    </div>
+  </div>
 </div>
+
+
 
     <% if (__req.user.hasRole('admin')) { %>
     <div>

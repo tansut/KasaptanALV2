@@ -22,7 +22,15 @@ const sms_1 = require("../../lib/sms");
 const sitelog_1 = require("./sitelog");
 const user_1 = require("../../db/models/user");
 const user_2 = require("./user");
+const fs = require('fs');
+const path = require("path");
 class Route extends router_1.ApiRouter {
+    getButcherPropertyWeights() {
+        return __awaiter(this, void 0, void 0, function* () {
+            let rawdata = yield fs.readFileSync(path.join(__dirname, "../../../butcherweights.json"));
+            return JSON.parse(rawdata);
+        });
+    }
     loadButcher(id) {
         return __awaiter(this, void 0, void 0, function* () {
             let butcher = yield butcher_1.default.findOne({
@@ -106,9 +114,27 @@ class Route extends router_1.ApiRouter {
             this.res.send({ text: text });
         });
     }
+    saveSettings() {
+        return __awaiter(this, void 0, void 0, function* () {
+            yield this.setButcher();
+            this.butcher.customerPuanRate = this.req.body.puan;
+            yield this.butcher.save();
+            this.res.send('OK');
+        });
+    }
+    saveStatus() {
+        return __awaiter(this, void 0, void 0, function* () {
+            yield this.setButcher();
+            this.butcher.status = this.req.body.status;
+            yield this.butcher.save();
+            this.res.send('OK');
+        });
+    }
     static SetRoutes(router) {
         router.post("/payment/send", Route.BindRequest(this.prototype.sendPayment));
         router.post("/payment/getsms", Route.BindRequest(this.prototype.getPaymentSmsTextRoute));
+        router.post("/settings/save", Route.BindRequest(this.prototype.saveSettings));
+        router.post("/settings/saveStatus", Route.BindRequest(this.prototype.saveStatus));
     }
 }
 exports.default = Route;
