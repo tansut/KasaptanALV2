@@ -518,6 +518,12 @@ export default class Route extends ApiRouter {
 
         weights = product.butcherWeights ? { ...weights, ...product.butcherWeights } : weights;
 
+        if (config.nodeenv == 'development') {
+            console.log('*****WEIGHTS***');
+            console.log(weights)
+            console.log('***********')
+        }
+
         for (let i = 0; i < serving.length; i++) {
 
             serving[i].butcher.calculatedRate = await this.calculateButcherRate(serving[i].butcher, product, serving[i], limits, typeof customerFees[serving[i].butcher.id] == 'undefined' ? maxFee : customerFees[serving[i].butcher.id], weights)

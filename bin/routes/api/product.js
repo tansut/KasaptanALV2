@@ -450,6 +450,11 @@ class Route extends router_1.ApiRouter {
             weights = l2.butcherWeights ? Object.assign(Object.assign({}, weights), l2.butcherWeights) : weights;
             weights = l3.butcherWeights ? Object.assign(Object.assign({}, weights), l3.butcherWeights) : weights;
             weights = product.butcherWeights ? Object.assign(Object.assign({}, weights), product.butcherWeights) : weights;
+            if (config_1.default.nodeenv == 'development') {
+                console.log('*****WEIGHTS***');
+                console.log(weights);
+                console.log('***********');
+            }
             for (let i = 0; i < serving.length; i++) {
                 serving[i].butcher.calculatedRate = yield this.calculateButcherRate(serving[i].butcher, product, serving[i], limits, typeof customerFees[serving[i].butcher.id] == 'undefined' ? maxFee : customerFees[serving[i].butcher.id], weights);
             }

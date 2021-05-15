@@ -3,8 +3,8 @@
     "kasapkart": 0.05,
     "productPrice": -0.25,
     "shipmentPrice": -0.50,
-    "rating": 0.20,
-    "shipTotal": 0.02,
+    "rating": 0.02,
+    "shipTotal": 0.005,
     "butcherSelection": 1.00,
     "productSelection": 1.00
 }
