@@ -112,10 +112,10 @@ export class ShopCard {
         level4Id: 0,
         saveaddress: true,
         adres: '',
-        addresstarif:'',
-        bina:'',
-        kat:'',
-        daire:'',
+        addresstarif: '',
+        bina: '',
+        kat: '',
+        daire: '',
         level1Text: '',
         level2Text: '',
         level3Text: '',
@@ -132,7 +132,7 @@ export class ShopCard {
     discounts = [];
     items: ShopcardItem[] = [];
 
-    availableShipHours: ShipmentDayHours [] = [];
+    availableShipHours: ShipmentDayHours[] = [];
 
     getPaymentTotal(type: string) {
         let total = 0.00;
@@ -148,7 +148,7 @@ export class ShopCard {
         let totalPrice = 0;
         if (!this.butcherDiscounts[bi])
             return 0.00;
-        this.butcherDiscounts[bi].forEach(d => (totalPrice += (d.type == 'discount' ? d.calculated: 0.00)));
+        this.butcherDiscounts[bi].forEach(d => (totalPrice += (d.type == 'discount' ? d.calculated : 0.00)));
         return Helper.asCurrency(totalPrice);
     }
 
@@ -163,7 +163,7 @@ export class ShopCard {
         let totalPrice = this.butchers[bi].subTotal;
         let discounts = this.getButcherDiscountTotal(bi);
         return totalPrice + discounts;
-    }    
+    }
 
 
     // butcherDi(bi) {
@@ -184,7 +184,7 @@ export class ShopCard {
     get discountTotal() {
         let totalPrice = 0;
         this.discounts.forEach(p => {
-            totalPrice += (p.type=='discount' ? p.calculated: 0.00);
+            totalPrice += (p.type == 'discount' ? p.calculated : 0.00);
         })
         return Helper.asCurrency(totalPrice + this.butcherDiscountTotal)
     }
@@ -218,7 +218,7 @@ export class ShopCard {
     }
 
     removeItemById(id: string) {
-        _.remove(this.items, i=>i.id == id)
+        _.remove(this.items, i => i.id == id)
         this.arrangeButchers();
         this.calculateShippingCosts();
     }
@@ -260,9 +260,9 @@ export class ShopCard {
             //     } else return Helper.asCurrency(shipment.dispatcher.fee / 2);
 
             // }  
-        } 
+        }
         return 0.00;
-    }    
+    }
 
     calculateShippingCosts() {
         this.shippingCosts = {};
@@ -290,7 +290,7 @@ export class ShopCard {
                 butchers[bi] = item.product.butcher;
                 butchers[bi].products = [i];
                 butchers[bi].subTotal = item.price;
-                butchers[bi].userSelected = this.butchers[bi] ? this.butchers[bi].userSelected: false
+                butchers[bi].userSelected = this.butchers[bi] ? this.butchers[bi].userSelected : false
             } else {
                 butchers[bi].products.push(i);
                 butchers[bi].subTotal += item.price;
@@ -322,22 +322,26 @@ export class ShopCard {
         //     found.quantity = quantity + found.quantity;
         //     found.price = price + found.price;
         // }
-        this.items.push(new ShopcardItem(product, quantity, price, purchaseoption, note, productTypeData));
-        
-        let removed = [];
+        try {
+            this.items.push(new ShopcardItem(product, quantity, price, purchaseoption, note, productTypeData));
 
-        if (Helper.isSingleShopcardProduct(product.productType)) {
-            this.items = this.items.filter(p=>p.product.productType == product.productType)
-        } else {
-            this.items = this.items.filter(p=> !Helper.isSingleShopcardProduct(p.product.productType))                      
+            let removed = [];
+
+            if (Helper.isSingleShopcardProduct(product.productType)) {
+                this.items = this.items.filter(p => p.product.productType == product.productType)
+            } else {
+                this.items = this.items.filter(p => !Helper.isSingleShopcardProduct(p.product.productType))
+            }
+            this.arrangeButchers();
+            this.calculateShippingCosts();
+        } catch (err) {
+            throw err;
         }
-        this.arrangeButchers();
-        this.calculateShippingCosts();
     }
 
     isExpired(): boolean {
         if (!this.created) return false;
-        let timespan = 6 * 60 * 60 * 1000; 
+        let timespan = 6 * 60 * 60 * 1000;
         let d = Helper.Now()
         d.setTime(d.getTime() - timespan);
         return this.created < d;
@@ -351,10 +355,10 @@ export class ShopCard {
         this.note = values.note || "";
         values = values || {};
         values.created = values.created || Helper.Now();
-        this.created = typeof values.created == 'string' ? new Date(values.created): values.created;
+        this.created = typeof values.created == 'string' ? new Date(values.created) : values.created;
         values.items = values.items || [];
         values.items.forEach(i => {
-            let item = new ShopcardItem(i.product, i.quantity, i.price, i.purchaseoption, i.note,i.productTypeData || {});
+            let item = new ShopcardItem(i.product, i.quantity, i.price, i.purchaseoption, i.note, i.productTypeData || {});
             item.id = i.id || item.id;
             this.items.push(item)
         })
@@ -428,7 +432,7 @@ export class ShopCard {
             return new Promise<any>((resolve, reject) => {
                 req.session.save((err) => err ? reject(err) : resolve(null))
             })
-            
+
         }
     }
 
@@ -477,7 +481,7 @@ export class ShopCard {
         //     let butcherProducts = this.butchers[b].products;
         //     butcherProducts.forEach((pi) => {
         //         let product = this.items[pi];
-                
+
         //     })
         // }        
 
@@ -510,7 +514,7 @@ export class ShopCard {
                 applied = null;
             }
             if (!applied) {
-                if (!hasFirstOrder ) {
+                if (!hasFirstOrder) {
                     this.addButcherDiscount(b, Object.assign(new Discount(), {
                         type: firstOrderDiscount.type,
                         code: firstOrderDiscount.code,

@@ -68,7 +68,7 @@ export default class Route extends ApiRouter {
                     shopcard.addProduct(productView, li.quantity, po, li.note, {});
                 }
             } catch (exc) {
-                Helper.logError(exc, {product: product.slug}, this.req);
+                Helper.logError(exc, {butcher: list.butcherid, product: product.slug}, this.req);
             }
         }
         await shopcard.saveToRequest(this.req);
@@ -114,8 +114,8 @@ export default class Route extends ApiRouter {
             }
             this.res.send(shopcard);
         } catch(err) {
-            Helper.logError(err, {product: product.slug, method:'shopcard/add'}, this.req);
-            throw exceptions;
+            Helper.logError(err, { butcher: item.butcher || null, product: product.slug, method:'shopcard/add'}, this.req);
+            throw err;
         }
         
     }

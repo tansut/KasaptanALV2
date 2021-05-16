@@ -288,16 +288,21 @@ class ShopCard {
         //     found.quantity = quantity + found.quantity;
         //     found.price = price + found.price;
         // }
-        this.items.push(new ShopcardItem(product, quantity, price, purchaseoption, note, productTypeData));
-        let removed = [];
-        if (helper_1.default.isSingleShopcardProduct(product.productType)) {
-            this.items = this.items.filter(p => p.product.productType == product.productType);
+        try {
+            this.items.push(new ShopcardItem(product, quantity, price, purchaseoption, note, productTypeData));
+            let removed = [];
+            if (helper_1.default.isSingleShopcardProduct(product.productType)) {
+                this.items = this.items.filter(p => p.product.productType == product.productType);
+            }
+            else {
+                this.items = this.items.filter(p => !helper_1.default.isSingleShopcardProduct(p.product.productType));
+            }
+            this.arrangeButchers();
+            this.calculateShippingCosts();
         }
-        else {
-            this.items = this.items.filter(p => !helper_1.default.isSingleShopcardProduct(p.product.productType));
+        catch (err) {
+            throw err;
         }
-        this.arrangeButchers();
-        this.calculateShippingCosts();
     }
     isExpired() {
         if (!this.created)

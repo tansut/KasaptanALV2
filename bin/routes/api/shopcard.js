@@ -28,7 +28,6 @@ const google_1 = require("../../lib/google");
 const shoplist_1 = require("../../db/models/shoplist");
 const helper_1 = require("../../lib/helper");
 const order_1 = require("../../db/models/order");
-const winston_1 = require("winston");
 const shipment_1 = require("../../models/shipment");
 class Route extends router_1.ApiRouter {
     getDispatcher(to) {
@@ -82,7 +81,7 @@ class Route extends router_1.ApiRouter {
                     }
                 }
                 catch (exc) {
-                    helper_1.default.logError(exc, { product: product.slug }, this.req);
+                    helper_1.default.logError(exc, { butcher: list.butcherid, product: product.slug }, this.req);
                 }
             }
             yield shopcard.saveToRequest(this.req);
@@ -127,8 +126,8 @@ class Route extends router_1.ApiRouter {
                 this.res.send(shopcard);
             }
             catch (err) {
-                helper_1.default.logError(err, { product: product.slug, method: 'shopcard/add' }, this.req);
-                throw winston_1.exceptions;
+                helper_1.default.logError(err, { butcher: item.butcher || null, product: product.slug, method: 'shopcard/add' }, this.req);
+                throw err;
             }
         });
     }
