@@ -231,11 +231,8 @@ class Route extends router_1.ApiRouter {
             this.res.send(result);
         });
     }
-    searchRoute() {
+    getResult(text) {
         return __awaiter(this, void 0, void 0, function* () {
-            if (!this.req.query.q || this.req.query.q.length < 2)
-                return this.res.send([]);
-            let text = this.req.query.q;
             let words = text.match(/\S+/g).filter(w => w.length > 2).map(w => `+${w}*`);
             let search = words.join();
             let products = (!this.req.query.t || this.req.query.t == 'product') ? yield this.getProducrs(search) : [];
@@ -247,7 +244,16 @@ class Route extends router_1.ApiRouter {
             let combined = categories.concat(products.concat(foods.concat(butchers.concat(areas))));
             //let combined = categories.concat(products.concat(foods.concat(butchers.concat(areaBtchers.concat(areas)))));
             let sorted = _.sortBy(combined, 'RELEVANCE');
-            this.res.send(sorted);
+            return sorted;
+        });
+    }
+    searchRoute() {
+        return __awaiter(this, void 0, void 0, function* () {
+            if (!this.req.query.q || this.req.query.q.length < 2)
+                return this.res.send([]);
+            let text = this.req.query.q;
+            let result = yield this.getResult(text);
+            this.res.send(result);
         });
     }
     static SetRoutes(router) {
@@ -261,6 +267,12 @@ __decorate([
     __metadata("design:paramtypes", []),
     __metadata("design:returntype", Promise)
 ], Route.prototype, "searchRoute2", null);
+__decorate([
+    common_1.Auth.Anonymous(),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [String]),
+    __metadata("design:returntype", Promise)
+], Route.prototype, "getResult", null);
 __decorate([
     common_1.Auth.Anonymous(),
     __metadata("design:type", Function),

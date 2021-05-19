@@ -122,7 +122,7 @@
            
           </h2>
          
-             
+          <% if (controller.butcher.approved)  { %>
           <ul class="nav nav-tabs justify-content-center" id="summarytab" role="tablist">
             <li class="nav-item">
               <a class="nav-link p-3 active" id="summarytabhome-tab" data-toggle="tab" href="#summarytabhome" role="tab" aria-controls="home" aria-selected="true">Sipariş</a>
@@ -304,7 +304,7 @@
             </div>
           </div>
         
-
+          <% } %>
 
           
 
@@ -408,7 +408,7 @@
     
                   <% } %>
     
-                  <%if (controller.reviews.length > 0 ) { %>
+                  <%if (controller.reviews.length > 0 && controller.butcher.approved) { %>
                   <div class="card rounded-0">
                     <div class="card-header" role="tab">
                       <h3 class="accordion-heading"><a href="#revires" data-toggle="collapse"><i
@@ -497,7 +497,7 @@
                   <% } %>
     
     
-    
+                  <% if (controller.butcher.approved)  { %>
                   <div class="card rounded-0">
                     <div class="card-header" role="tab">
                       <h3 class="accordion-heading"><a href="#card" data-toggle="collapse"><i
@@ -578,6 +578,7 @@
                       </div>
                     </div>
                   </div>
+                  <% } %>
                 </div>
     
               </div>
@@ -597,6 +598,7 @@
                   Tüm ürünlerin miktar, fiyat ve birim özelliklerinin tamamlanmasını biz de sabırsızlıkla bekliyoruz.
                 </p>
               <%}%>
+              <% if (controller.butcher.approved)  { %>
                 <div v-cloak  id="scapp">
                   <div class="d-flex mb-3  align-items-center">
                     <div class=" flex-grow-1 input-group-overlay">
@@ -651,7 +653,7 @@
 
 
                 </div>
-
+<% } %>
               
               <div id="cat-slider" class="mt-3 mt-md-0">
                 <%- include('./_partial/category-slider', { partialRender: true, partialRenderUrl: '/' + butcher.slug, categories: controller.categories, subUrl: butcher.slug + '/', selected: controller.category.slug, mode:'browse', header: false, titles: false, viewCats: ['discount', 'butcher', 'reyon', 'list', 'product:dispatch=countrywide'], title: 'Kategoriler', allUrl: '/kasap-urunleri' }); %>

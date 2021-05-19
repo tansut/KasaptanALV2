@@ -30,10 +30,41 @@
                 </div>
             </div>
         </div>
- 
-<div>
-    ara: <%=__req.query.q%>
-</div>
+
+        <div class="container mb-3">
+            <ul class="list-group">
+                
+            <% for (let i=0; i < results.length; i++) { %>
+                <% var r=results[i] %>
+                <li class="list-group-item p-2">
+                <a href="<%=r.url%>" class="app_blank">
+                    <div class="d-flex align-items-center justify-content-between">
+                        <div class="flex-grow-1 truncate">
+                            <% if (r.thumb) { %>
+                            <img
+                                src="<%=r.thumb%>" class="mr-2"
+                                style="height: 4rem; width: 4rem;">
+                                <% } %>
+                                <span><%=r.name%></span></div>
+                        <div><span class="text-muted font-size-sm"> <%=r.type%></span></div>
+                    </div>
+                </a>
+            </li>
+           
+                
+
+                    
+
+                        
+
+                           
+
+                                
+
+
+                                    <% } %>
+                                </ul>
+        </div>
 
 
         <% include ./_partial/footer %>

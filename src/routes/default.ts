@@ -25,6 +25,7 @@ import Butcher from '../db/models/butcher';
 import { bodyBlacklist } from 'express-winston';
 import { CreditcardPaymentFactory } from '../lib/payment/creditcard';
 import SiteLogRoute from './api/sitelog';
+import fts from './api/fts';
 
 let ellipsis = require('text-ellipsis');
 
@@ -341,8 +342,9 @@ export default class Route extends ViewRouter {
 
     @Auth.Anonymous()
     async searchView() {
+        let results = !this.req.query.q ? []: await (new fts(this.constructorParams).getResult(this.req.query.q as string))
         this.sendView('pages/search.ejs', {
-            
+            results: results
         });        
     }
 

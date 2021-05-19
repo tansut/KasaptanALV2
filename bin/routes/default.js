@@ -33,6 +33,7 @@ const butcherproduct_1 = require("../db/models/butcherproduct");
 const butcher_2 = require("../db/models/butcher");
 const creditcard_1 = require("../lib/payment/creditcard");
 const sitelog_1 = require("./api/sitelog");
+const fts_1 = require("./api/fts");
 let ellipsis = require('text-ellipsis');
 class Route extends router_1.ViewRouter {
     constructor() {
@@ -289,7 +290,10 @@ class Route extends router_1.ViewRouter {
     }
     searchView() {
         return __awaiter(this, void 0, void 0, function* () {
-            this.sendView('pages/search.ejs', {});
+            let results = !this.req.query.q ? [] : yield (new fts_1.default(this.constructorParams).getResult(this.req.query.q));
+            this.sendView('pages/search.ejs', {
+                results: results
+            });
         });
     }
     static SetRoutes(router) {

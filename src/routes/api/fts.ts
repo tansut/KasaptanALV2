@@ -250,13 +250,8 @@ psql =  "select p.id, p.name as name, p.slug as url, 'ürün' as type, match(p.n
         this.res.send(result)
     }
 
-
     @Auth.Anonymous()
-    async searchRoute() {
-        if (!this.req.query.q || (this.req.query.q as string).length < 2)
-            return this.res.send([])
-
-        let text = <string>this.req.query.q;
+    async getResult(text: string) {
         let words = text.match(/\S+/g).filter(w => w.length > 2).map(w => `+${w}*`)
         let search = words.join()
 
@@ -270,8 +265,20 @@ psql =  "select p.id, p.name as name, p.slug as url, 'ürün' as type, match(p.n
          let combined = categories.concat(products.concat(foods.concat(butchers.concat(areas))));
          //let combined = categories.concat(products.concat(foods.concat(butchers.concat(areaBtchers.concat(areas)))));
         
-        let sorted = _.sortBy(combined, 'RELEVANCE')
-        this.res.send(sorted)
+        let sorted = _.sortBy(combined, 'RELEVANCE');
+
+        return sorted;
+    }
+
+
+    @Auth.Anonymous()
+    async searchRoute() {
+        if (!this.req.query.q || (this.req.query.q as string).length < 2)
+            return this.res.send([])
+
+        let text = <string>this.req.query.q;
+        let result = await this.getResult(text);
+        this.res.send(result);
     }
 
     static SetRoutes(router: express.Router) {
