@@ -93,7 +93,21 @@
 
 
 
+        <div>
+          <div class="form-row">
+            <div class="form-group col-md-6">
+              <select class="form-control" v-model="filter">
+                <option selected="true" :value="null">Tüm Ürünlerim</option>
+                <option :selected="this.filter == c" v-for="(c,i) in filters" :value="c">{{c.name}}</option>
+              </select>
+  
+            </div>
+            <div class="form-group col-md-6">
+              <input class="form-control" :placeholder="this.filter ? this.filter.name + ' içinde ara': 'Tüm ürünlerde arayın'" type="search" v-model="searchString">
+            </div>
+          </div>
 
+        </div>
 
 
         <table v-if="list && list.length > 0" class="table table-sm">
@@ -106,7 +120,7 @@
           <tbody>
 
 
-            <tr :id="p.slug + 'row'" v-bind:class="{'border border-primary': !hasPrice(p)}" v-for="(p, index) in list">
+            <tr :id="p.slug + 'row'" v-bind:class="{'border border-primary': !hasPrice(p)}" v-for="(p, index) in filteredList()">
 
 
 
@@ -247,7 +261,8 @@
 
               </div>
               <div class="font-size-sm p-2" v-if="edit && edit.offerableBy != 'butcher'">
-                <span><strong>Not:</strong> Bu ürünün satışı ürün yönetici onayı gerektirmekte. Eğer satıyorsanız lütfen fiyat verip kaydedin, kontrol ardından satışa alacağız.</span>
+                <span><strong>Not:</strong> Bu ürünün satışı ürün yönetici onayı gerektirmekte. Eğer satıyorsanız lütfen
+                  fiyat verip kaydedin, kontrol ardından satışa alacağız.</span>
               </div>
 
               <div class="p-2">
@@ -344,10 +359,10 @@
                 <div class="d-flex justify-content-between">
                   <button v-on:click="saveDialog(edit, true)" class="btn btn-sm btn-primary">Kaydet</button>
 
-                  <button v-if="edit && hasPrice(list[editIndex])" v-on:click="toogleEnabled(edit)"
-                    :class="{'btn-warning': list[editIndex].enabled, 'btn-success': !list[editIndex].enabled}"
+                  <button v-if="edit && hasPrice(editOrj)" v-on:click="toogleEnabled(edit)"
+                    :class="{'btn-warning': editOrj.enabled, 'btn-success': !editOrj.enabled}"
                     class="btn btn-sm">
-                    <span v-if="list[editIndex].enabled">Satıştan Kaldır</span>
+                    <span v-if="editOrj.enabled">Satıştan Kaldır</span>
                     <span v-else>Satışa Al</span>
                   </button>
                   <a v-if="edit" class="btn btn-sm btn-primary" target="_blank" :href="'/' + edit.slug">Ürünü Gör</a>
@@ -380,21 +395,50 @@
             mounted: function () {
               var self = this;
 
+              App.Backend.get('category/list').then(function (results) {
+                this.categories = results.data;
+                this.filters = [];
+                this.filters.push({
+                  id: -1,
+                  name: 'Hiç Fiyat Vermediklerim',
+                  type: 'noprice'
+                });
+                this.filters.push({
+                  id: -2,
+                  name: 'Satışını Durdurduklarım',
+                  type: 'stopped'
+                });
+                this.filters.push({
+                  id: -3,
+                  name: 'Kampanyada Olanlar',
+                  type: 'campaign'
+                });
+                this.categories.forEach(function (c) {
+                  this.filters.push({
+                    id: c.id,
+                    name: c.name,
+                    type: 'category'
+                  })
+                }.bind(this))
+              }.bind(this)).catch(App.HandleError.bind(App))
+
               App.Backend.get('product/<%=butcher.slug%>/prePrices').then(function (result) {
                 self.list = result.data;
                 var urlParams = new URLSearchParams(window.location.search);
 
                 if (urlParams.has('productid')) {
                   let index = 0, pid = parseInt(urlParams.get('productid'));
-                  let p = self.list.find(function(item) {
+                  let p = self.list.find(function (item) {
                     if (item.id == pid) {
                       return item;
                     } else index++
                   })
-                  self.canGo=1;
+                  self.canGo = 1;
                   self.openDialog(p, index)
                 }
-              })
+              }).catch(App.HandleError.bind(App))
+
+
             },
 
             data: function () {
@@ -405,11 +449,15 @@
                 editOrj: null,
                 editUnitIndex: 0,
                 editUnitVal: null,
-                editIndex: -1,
+                //editIndex: -1,
                 completedPerc: 0,
-                canGo: 0,
+                canGo: 1,
                 lastCat: 0,
                 renderComponent: true,
+                categories: [],
+                filters: [],
+                filter: null,
+                searchString:''
               }
             },
 
@@ -436,6 +484,42 @@
             methods: {
 
 
+              filteredList() {
+                var result = this.list;
+                var f1 = function(item) {
+                  if (!this.searchString) return true;
+                  var parts = this.searchString.split(' ');
+                  var result = true;
+                  for (var i = 0; i < parts.length; i++) {
+                    let p = parts[i].trim().toLocaleUpperCase();
+                    if (p) {
+                      result = result && (item.name.toLocaleUpperCase().indexOf(p) != -1);
+                      if (!result) return false;
+                    }
+                  }
+                  return result;
+                }
+                var filterFuncs = {
+                  'stopped': function (item) {
+                    return !item.enabled && this.hasPrice(item) && f1.apply(this, [item])
+                  },
+                  'noprice': function (item) {
+                    return !this.hasPrice(item) && f1.apply(this, [item])
+                  },
+                  'category': function (item) {
+                    return item.category.id == this.filter.id && f1.apply(this, [item])
+                  },
+                  'campaign': function (item) {
+                    return this.hasCampaign(item) && f1.apply(this, [item])
+                  },
+                }
+
+                var f = !this.filter ? f1: filterFuncs[this.filter.type];
+                return this.list.filter(f.bind(this));
+                
+              },
+
+
 
               checkCampaignForm: function (e) {
                 this.errors = [];
@@ -457,7 +541,7 @@
               openCampaign(p, index) {
                 this.editOrj = p;
                 this.edit = JSON.parse(JSON.stringify(p));
-                this.editIndex = index;
+                
                 this.editUnitVal = null;
                 this.edit.discountType = 'discountAsPercent';
                 this.edit.priceDiscount = this.edit.priceDiscount || 4;
@@ -600,7 +684,7 @@
               openDialog(p, index) {
                 this.editOrj = p;
                 this.edit = JSON.parse(JSON.stringify(p));
-                this.editIndex = index;
+         
                 this.editUnitVal = null;
                 $('#pricemodal').modal('show');
               }

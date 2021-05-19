@@ -46,6 +46,12 @@ class PaymentMethod extends BaseModel<PaymentMethod> {
     })
     name: string;   
 
+    // @Column({
+    //     allowNull: true
+    // })
+    // customerId: string;  
+
+
     @Column({
         allowNull: false,
         type: DataType.TEXT

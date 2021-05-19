@@ -1098,6 +1098,18 @@ class Route extends router_1.ApiRouter {
                 this.res.send(null);
         });
     }
+    listCategories() {
+        return __awaiter(this, void 0, void 0, function* () {
+            let cats = this.req.__categories.filter(c => c.status == 'active' && (c.type == 'list' || c.type == 'reyon'));
+            let result = cats.map(c => {
+                return {
+                    id: c.id,
+                    name: c.name
+                };
+            });
+            this.res.send(result);
+        });
+    }
     static SetRoutes(router) {
         // router.get("/product/:slug", Route.BindRequest(this.prototype.searchRoute));
         // router.get("/product/:slug/:butcher", Route.BindRequest(this.prototype.searchRoute));
@@ -1105,6 +1117,7 @@ class Route extends router_1.ApiRouter {
         router.post("/product/:butcher/prePrices", Route.BindRequest(this.prototype.saveProductsForButchers));
         router.post("/product/:butcher/campaign", Route.BindRequest(this.prototype.saveCampaign));
         router.get("/product/quickinfo", Route.BindRequest(this.prototype.getProductQuickInfo));
+        router.get("/category/list", Route.BindRequest(this.prototype.listCategories));
     }
 }
 __decorate([
@@ -1131,4 +1144,10 @@ __decorate([
     __metadata("design:paramtypes", []),
     __metadata("design:returntype", Promise)
 ], Route.prototype, "getProductQuickInfo", null);
+__decorate([
+    common_1.Auth.Anonymous(),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", []),
+    __metadata("design:returntype", Promise)
+], Route.prototype, "listCategories", null);
 exports.default = Route;

@@ -160,6 +160,30 @@ export default class Route extends ApiRouter {
             content: content
         })
     }  
+
+    @Auth.Anonymous()
+    async customerPermission() {
+        let file = await this.getFile("customer.permission.ejs", {
+      
+        } )
+        let content =  this.Markdown.render(file);
+        this.res.send({
+            title: 'KVKK Ticari Elektronik İleti Açık Rıza Metni',
+            content: content
+        })
+    }      
+
+    @Auth.Anonymous()
+    async customerCookie() {
+        let file = await this.getFile("customer.cookie.ejs", {
+      
+        } )
+        let content =  this.Markdown.render(file);
+        this.res.send({
+            title: 'Çerez Politikası',
+            content: content
+        })
+    }        
  
 
     static SetRoutes(router: express.Router) {
@@ -170,6 +194,8 @@ export default class Route extends ApiRouter {
         router.get("/agreement/content/customermss", Route.BindRequest(this.prototype.customerMss));
         router.get("/agreement/content/customeraym", Route.BindRequest(this.prototype.customerAym));
         router.get("/agreement/content/customerkvkk", Route.BindRequest(this.prototype.customerKvkk));
+        router.get("/agreement/content/customerpermission", Route.BindRequest(this.prototype.customerPermission));
+        router.get("/agreement/content/customercookie", Route.BindRequest(this.prototype.customerCookie));
 
     }
 }

@@ -162,6 +162,10 @@ export class CreditcardPaymentProvider {
 
     }
 
+    async updateSavedCard(userid: number, token: string) {
+        
+    }
+
     async saveOrUpdateSavedCard(orderid: string, response: any) {
        let token = response.cardToken;
        let order = await Order.findOne({where: {ordernum: orderid}});

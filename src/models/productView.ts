@@ -141,5 +141,5 @@ export interface ProductViewForButcher extends ProductView  {
     fromButcherNote: string;
     enabled: boolean;
     offerableBy: OfferableBy;
-    
+    //categories: []
 }

@@ -337,6 +337,15 @@ export default class Route extends ViewRouter {
         });
     }
 
+
+
+    @Auth.Anonymous()
+    async searchView() {
+        this.sendView('pages/search.ejs', {
+            
+        });        
+    }
+
     
 
     static SetRoutes(router: express.Router) {
@@ -369,6 +378,7 @@ export default class Route extends ViewRouter {
         router.get("/kasap-basvuru/:butcher?", Route.BindRequest(this.prototype.butcherApply));
         router.get("/kasap-bilgi-giris/:butcher?", Route.BindRequest(this.prototype.butcherInfo));
         router.get("/eval/:ordernum", Route.BindRequest(this.prototype.evaluateOrder));
+        router.get("/ara", Route.BindRequest(this.prototype.searchView));
         
     }
 }

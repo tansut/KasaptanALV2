@@ -172,6 +172,26 @@ class Route extends router_1.ApiRouter {
             });
         });
     }
+    customerPermission() {
+        return __awaiter(this, void 0, void 0, function* () {
+            let file = yield this.getFile("customer.permission.ejs", {});
+            let content = this.Markdown.render(file);
+            this.res.send({
+                title: 'KVKK Ticari Elektronik İleti Açık Rıza Metni',
+                content: content
+            });
+        });
+    }
+    customerCookie() {
+        return __awaiter(this, void 0, void 0, function* () {
+            let file = yield this.getFile("customer.cookie.ejs", {});
+            let content = this.Markdown.render(file);
+            this.res.send({
+                title: 'Çerez Politikası',
+                content: content
+            });
+        });
+    }
     static SetRoutes(router) {
         router.get("/agreement/content/butchersales", Route.BindRequest(this.prototype.butchersales));
         router.get("/agreement/content/butcherkvkk", Route.BindRequest(this.prototype.butcherkvkk));
@@ -180,6 +200,8 @@ class Route extends router_1.ApiRouter {
         router.get("/agreement/content/customermss", Route.BindRequest(this.prototype.customerMss));
         router.get("/agreement/content/customeraym", Route.BindRequest(this.prototype.customerAym));
         router.get("/agreement/content/customerkvkk", Route.BindRequest(this.prototype.customerKvkk));
+        router.get("/agreement/content/customerpermission", Route.BindRequest(this.prototype.customerPermission));
+        router.get("/agreement/content/customercookie", Route.BindRequest(this.prototype.customerCookie));
     }
 }
 __decorate([
@@ -206,4 +228,16 @@ __decorate([
     __metadata("design:paramtypes", []),
     __metadata("design:returntype", Promise)
 ], Route.prototype, "customerKvkk", null);
+__decorate([
+    common_1.Auth.Anonymous(),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", []),
+    __metadata("design:returntype", Promise)
+], Route.prototype, "customerPermission", null);
+__decorate([
+    common_1.Auth.Anonymous(),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", []),
+    __metadata("design:returntype", Promise)
+], Route.prototype, "customerCookie", null);
 exports.default = Route;

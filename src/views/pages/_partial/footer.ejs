@@ -74,9 +74,9 @@
     <%}%>
 
     <div class="container mb-3 font-size-xs">
-        <!-- <div class="text-center cookiealert" role="alert">
+      <div class="text-center cookiealert" role="alert">
             <p>
-                <b>Kullanıcı deneyiminizi artırmak için çerez kullanıyoruz.</b>
+                <b>Kullanıcı deneyimini artırmak için <a href="javascript:App.agreementDialog('customercookie')">çerez politikamızda</a> belirttiğimiz şekilde çerezler kullanıyoruz.</b>
 
             </p>
 
@@ -84,7 +84,7 @@
             <button type="button" class="btn btn-primary btn-sm acceptcookies" aria-label="Close">
                 Onayla
             </button>
-        </div> -->
+        </div> 
 
         <div class="row pb-2">
             <div class="col-md-4 col-sm-6">
@@ -191,12 +191,12 @@
                             </li>
                             <li class="widget-list-item"><a class="widget-list-link" href="/yardim">Yardım ve Sıkça
                                     Sorulan Sorular</a></li>
+                                    <li class="widget-list-item"><a class="widget-list-link"
+                                        href="javascript:App.agreementDialog('customeraym')">Aydınlatma Metni</a></li>
                             <li class="widget-list-item"><a class="widget-list-link"
-                                    href="/gizlilik-sozlesmesi">Gizlilik Sözleşmesi</a></li>
-                            <li class="widget-list-item"><a class="widget-list-link" href="/satis-sozlesmesi">Mesafeli
-                                    Satış Sözleşmesi</a></li>
-                            <li class="widget-list-item"><a class="widget-list-link" href="/satis-sozlesmesi#iade">İade
-                                    ve İptal Şartları</a></li>
+                                    href="javascript:App.agreementDialog('customercookie')">Çerez Politikası</a></li>
+                                    <li class="widget-list-item"><a class="widget-list-link"
+                                        href="javascript:App.agreementDialog('customerkvkk')">KVKK Politikası</a></li>                                    
                             <li class="widget-list-item"><a class="widget-list-link"
                                     href="/kasap-secim-kriterleri">Kasap Seçim Kriterlerimiz</a></li>
 

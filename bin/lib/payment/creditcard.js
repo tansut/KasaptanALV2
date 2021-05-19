@@ -29,6 +29,10 @@ class CreditcardPaymentProvider {
         return __awaiter(this, void 0, void 0, function* () {
         });
     }
+    updateSavedCard(userid, token) {
+        return __awaiter(this, void 0, void 0, function* () {
+        });
+    }
     saveOrUpdateSavedCard(orderid, response) {
         return __awaiter(this, void 0, void 0, function* () {
             let token = response.cardToken;

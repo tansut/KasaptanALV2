@@ -287,6 +287,11 @@ class Route extends router_1.ViewRouter {
             });
         });
     }
+    searchView() {
+        return __awaiter(this, void 0, void 0, function* () {
+            this.sendView('pages/search.ejs', {});
+        });
+    }
     static SetRoutes(router) {
         // if (config.nodeenv == 'production') {
         //     router.get("/home", Route.BindRequest(this.prototype.defaultRoute))
@@ -314,6 +319,7 @@ class Route extends router_1.ViewRouter {
         router.get("/kasap-basvuru/:butcher?", Route.BindRequest(this.prototype.butcherApply));
         router.get("/kasap-bilgi-giris/:butcher?", Route.BindRequest(this.prototype.butcherInfo));
         router.get("/eval/:ordernum", Route.BindRequest(this.prototype.evaluateOrder));
+        router.get("/ara", Route.BindRequest(this.prototype.searchView));
     }
 }
 __decorate([
@@ -358,4 +364,10 @@ __decorate([
     __metadata("design:paramtypes", []),
     __metadata("design:returntype", Promise)
 ], Route.prototype, "evaluateOrder", null);
+__decorate([
+    common_1.Auth.Anonymous(),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", []),
+    __metadata("design:returntype", Promise)
+], Route.prototype, "searchView", null);
 exports.default = Route;

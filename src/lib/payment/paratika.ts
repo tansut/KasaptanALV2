@@ -219,6 +219,20 @@ export default class ParatikaPayment extends CreditcardPaymentProvider {
         } 
     }
 
+    async updateSavedCard(userid: number, token: string) {
+        let req = {
+            ACTION: "EWALLETEDITCARD",
+            MERCHANT: this.config.merchant,
+            MERCHANTUSER: this.config.merchantUser,
+            MERCHANTPASSWORD: this.config.merchantPassword,
+            CARDTOKEN: token,
+            CUSTOMER: userid.toString()
+        };
+
+        let binResponse = null;
+        binResponse = await this.post2(req)
+    }
+
     async createSavedCreditcard(userid: number, response) {
         let req = {
             ACTION: "QUERYBIN",
@@ -237,6 +251,7 @@ export default class ParatikaPayment extends CreditcardPaymentProvider {
             save.method = 'creditcard';
             save.instance = this.providerKey;
             save.data = response.cardToken;
+            //save.customerId = response.customerId;
             save.enabled = true;
     
             save.name = (binResponse && binResponse.responseCode == "00" && binResponse.bin) ? `${binResponse.bin.cardNetwork} ${binResponse.bin.bin}****`: `${Helper.formatDate(Helper.Now())} kaydettiğim kredi kartım`

@@ -207,6 +207,20 @@ class ParatikaPayment extends creditcard_1.CreditcardPaymentProvider {
             }
         });
     }
+    updateSavedCard(userid, token) {
+        return __awaiter(this, void 0, void 0, function* () {
+            let req = {
+                ACTION: "EWALLETEDITCARD",
+                MERCHANT: this.config.merchant,
+                MERCHANTUSER: this.config.merchantUser,
+                MERCHANTPASSWORD: this.config.merchantPassword,
+                CARDTOKEN: token,
+                CUSTOMER: userid.toString()
+            };
+            let binResponse = null;
+            binResponse = yield this.post2(req);
+        });
+    }
     createSavedCreditcard(userid, response) {
         return __awaiter(this, void 0, void 0, function* () {
             let req = {
@@ -226,6 +240,7 @@ class ParatikaPayment extends creditcard_1.CreditcardPaymentProvider {
                 save.method = 'creditcard';
                 save.instance = this.providerKey;
                 save.data = response.cardToken;
+                //save.customerId = response.customerId;
                 save.enabled = true;
                 save.name = (binResponse && binResponse.responseCode == "00" && binResponse.bin) ? `${binResponse.bin.cardNetwork} ${binResponse.bin.bin}****` : `${helper_1.default.formatDate(helper_1.default.Now())} kaydettiğim kredi kartım`;
                 yield save.save();

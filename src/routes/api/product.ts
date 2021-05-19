@@ -1245,6 +1245,21 @@ export default class Route extends ApiRouter {
         } else this.res.send(null)
     }
 
+
+    @Auth.Anonymous()
+    async listCategories() {
+        let cats = this.req.__categories.filter(c=>c.status == 'active' && (c.type == 'list' || c.type == 'reyon'));
+
+        let result = cats.map(c=> {
+            return {
+                id: c.id,
+                name: c.name
+            }
+        });
+ 
+        this.res.send(result)
+    }
+
     static SetRoutes(router: express.Router) {
         // router.get("/product/:slug", Route.BindRequest(this.prototype.searchRoute));
         // router.get("/product/:slug/:butcher", Route.BindRequest(this.prototype.searchRoute));
@@ -1252,6 +1267,7 @@ export default class Route extends ApiRouter {
         router.post("/product/:butcher/prePrices", Route.BindRequest(this.prototype.saveProductsForButchers));
         router.post("/product/:butcher/campaign", Route.BindRequest(this.prototype.saveCampaign));
         router.get("/product/quickinfo", Route.BindRequest(this.prototype.getProductQuickInfo));
+        router.get("/category/list", Route.BindRequest(this.prototype.listCategories));
 
         
         
