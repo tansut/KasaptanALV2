@@ -54,7 +54,7 @@ let Dispatcher = class Dispatcher extends basemodel_1.default {
             if (dispath.butcher.dispatchArea == "radius") {
                 let distance = distance2Butcher || helper_1.default.distance(dispath.butcher.location, l3.location);
                 butcherAvail = dispath.butcher.radiusAsKm >= distance;
-                if (!butcherAvail && dispath.butcher.logisticProvider && dispath.butcher.logisticProviderUsage == "auto") {
+                if (!butcherAvail && dispath.butcher.logisticProvider && dispath.butcher.logisticProviderUsage == "auto" && ((dispath.butcher.radiusAsKmMax == 0) || (distance2Butcher < dispath.butcher.radiusAsKmMax))) {
                     forcedProvider = dispath.butcher.logisticProvider;
                     butcherAvail = true;
                 }

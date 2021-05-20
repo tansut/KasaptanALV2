@@ -156,6 +156,13 @@ class Butcher extends BaseModel<Butcher> {
         defaultValue: 0,
         type: DataType.INTEGER
     })
+    radiusAsKmMax: number;    
+
+    @Column({
+        allowNull: false,
+        defaultValue: 0,
+        type: DataType.INTEGER
+    })
     selectionRadiusAsKm: number;
 
     @Column({

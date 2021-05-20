@@ -447,6 +447,7 @@ export default class Route extends ViewRouter {
             this.butcher.areaLevel1Text = this.req.body.butcherarealevel1text;
 
             this.butcher.radiusAsKm = this.req.body.butcherradiusAsKm ? parseInt(this.req.body.butcherradiusAsKm) : 0;
+            this.butcher.radiusAsKmMax = this.req.body.butcherradiusAsKmMax ? parseInt(this.req.body.butcherradiusAsKmMax) : 0;
             this.butcher.selectionRadiusAsKm = this.req.body.butcherselectionRadiusAsKm ? parseInt(this.req.body.butcherselectionRadiusAsKm) : 0;
 
 
