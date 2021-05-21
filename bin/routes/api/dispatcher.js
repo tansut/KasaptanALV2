@@ -75,44 +75,40 @@ class Route extends router_1.ApiRouter {
                 where['$butcher.approved$'] = true;
                 where['$butcher.products.productid$'] = q.product.id;
                 where['$butcher.products.enabled$'] = true;
-                let w = [{
-                        '$butcher.products.kgPrice$': {
-                            [sequelize_1.Op.gt]: 0.0
-                        }
+                let w = [
+                    {
+                        [sequelize_1.Op.or]: [
+                            {
+                                '$butcher.products.kgPrice$': {
+                                    [sequelize_1.Op.gt]: 0.0
+                                }
+                            }
+                        ]
                     },
                     {
-                        [sequelize_1.Op.and]: [
+                        [sequelize_1.Op.or]: [
                             {
                                 '$butcher.products.unit1price$': {
                                     [sequelize_1.Op.gt]: 0.0
                                 }
-                            },
-                            {
-                                '$butcher.products.unit1enabled$': true
                             }
                         ]
                     },
                     {
-                        [sequelize_1.Op.and]: [
+                        [sequelize_1.Op.or]: [
                             {
                                 '$butcher.products.unit2price$': {
                                     [sequelize_1.Op.gt]: 0.0
                                 }
-                            },
-                            {
-                                '$butcher.products.unit2enabled$': true
                             }
                         ]
                     },
                     {
-                        [sequelize_1.Op.and]: [
+                        [sequelize_1.Op.or]: [
                             {
                                 '$butcher.products.unit3price$': {
                                     [sequelize_1.Op.gt]: 0.0
                                 }
-                            },
-                            {
-                                '$butcher.products.unit3enabled$': true
                             }
                         ]
                     }
@@ -122,7 +118,9 @@ class Route extends router_1.ApiRouter {
                 //         toarealevel: [0]
                 //     })
                 // }
-                where[sequelize_1.Op.or].push(w);
+                where[sequelize_1.Op.and] = {
+                    [sequelize_1.Op.or]: w
+                };
             }
             if (q.butcher) {
                 let butcher = typeof (q.butcher) == 'number' ? yield butcher_1.default.findByPk(q.butcher) : q.butcher;

@@ -28,6 +28,8 @@ let ButcherProduct = class ButcherProduct extends basemodel_1.default {
         let eu = this.enabledUnits;
         if (!eu.length)
             return false;
+        if (this.kgPrice <= 0 && this.unit1price <= 0 && this.unit2price <= 0 && this.unit3price <= 0)
+            return false;
         return true;
     }
     // canSellable() {

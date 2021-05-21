@@ -92,44 +92,43 @@ export default class Route extends ApiRouter {
             where['$butcher.products.productid$'] = q.product.id;
             where['$butcher.products.enabled$'] = true;
 
-            let w = [{
-                '$butcher.products.kgPrice$': {
-                    [Op.gt]: 0.0
-                }
-            },
+            let w = [
+            
+
             {
-                [Op.and]: [
+                [Op.or]: [
+                    {
+                        '$butcher.products.kgPrice$': {
+                            [Op.gt]: 0.0
+                        }
+                    }
+                ]
+            },
+
+            {
+                [Op.or]: [
                     {
                         '$butcher.products.unit1price$': {
                             [Op.gt]: 0.0
                         }
-                    },
-                    {
-                        '$butcher.products.unit1enabled$': true
                     }
                 ]
             },
             {
-                [Op.and]: [
+                [Op.or]: [
                     {
                         '$butcher.products.unit2price$': {
                             [Op.gt]: 0.0
                         }
-                    },
-                    {
-                        '$butcher.products.unit2enabled$': true
                     }
                 ]
             },
             {
-                [Op.and]: [
+                [Op.or]: [
                     {
                         '$butcher.products.unit3price$': {
                             [Op.gt]: 0.0
                         }
-                    },
-                    {
-                        '$butcher.products.unit3enabled$': true
                     }
                 ]
             }
@@ -140,7 +139,9 @@ export default class Route extends ApiRouter {
             //     })
             // }
 
-            where[Op.or].push(w);
+            where[Op.and] = {
+                [Op.or]: w
+            }
         }
 
         if (q.butcher) {

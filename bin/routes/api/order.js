@@ -862,11 +862,12 @@ class Route extends router_1.ApiRouter {
             let butcherShip = this.calculateTeslimatOfButcher(o);
             let kasaptanAlShip = this.calculateTeslimatOfKasaptanAl(o);
             let puanAccounts = this.getEarnedPuanAccounts(o, productPrice);
-            //let usedPuanAccounts = this.getUsedPuanAccounts(o, usablePuan);
-            let comissionAccounts = this.getComissionAccounts(o, butcherShip + productPrice, kasaptanAlShip, usablePuan);
             ops.push(puanAccounts);
-            //ops.push(usedPuanAccounts);
-            ops.push(comissionAccounts);
+            if (o.butcher.manualPaymentsAsDebt == "add") {
+                let comissionAccounts = this.getComissionAccounts(o, butcherShip + productPrice, kasaptanAlShip, usablePuan);
+                ops.push(comissionAccounts);
+            }
+            ;
             o.paidTotal = total;
             promises.push(o.save({
                 transaction: t
