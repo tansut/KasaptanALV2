@@ -122,14 +122,20 @@
 
         <div class="container mb-3">
         
-            <%- include('./_partial/category-slider', { header:true, title: 'Kategoriler', allUrl: '/kasap-urunleri' }); %>
+            <%- include('./_partial/category-slider', { header:true, mode:'view', title: 'Kategoriler', allUrl: '/kasap-urunleri' }); %>
       
           </div>
 
           <div class="container mb-3">
-            <a class="d-block app_blank" href="/kasaplar">
-                <h3 class="h6 text-uppercase">Kasaplar</h3>
-            </a>
+        
+
+            <div class="mb-2 d-flex flex-nowrap justify-content-between align-items-center">
+                <a class="d-block" href="/kasaplar">
+                    <h3 class="mb-0 text-uppercase h6">Kasaplar</h3>
+                </a>
+                <a class="mb-0 p-0 btn btn-sm" href="/kasaplar">Tümü &raquo;</a>
+            </div>
+
         <div data-simplebar data-simplebar-auto-hide="false">
             <div class="d-flex pb-md-2">
                 <% var items= recentButchers %>
@@ -181,9 +187,9 @@
     </div>
     
 
-          <div class="container mb-3">
+          <!-- <div class="container mb-3">
             <%- include('./_partial/category-products-slider', {category: 'populer-etler' , viewMode: 'tab', limit: 8}); %>
-        </div>
+        </div> -->
 
         <div class="container mb-3">
             <%- include('./_partial/category-slider', { linkCss: 'app_blank', viewCats: ['resource'], title: 'Et Yemekleri', allUrl: '/et-yemekleri' }); %>
@@ -219,9 +225,12 @@
 
 
         <div class="container mb-3">
-            <a class="d-block" href="/blog">
-                <h3 class="h6 text-uppercase">Blog</h3>
-            </a>
+            <div class="mb-2 d-flex flex-nowrap justify-content-between align-items-center">
+                <a class="d-block" href="/blog">
+                    <h3 class="mb-0 text-uppercase h6">Blog</h3>
+                </a>
+                <a class="mb-0 p-0 btn btn-sm" href="/kasaplar">Tümü &raquo;</a>
+            </div>
         <div data-simplebar data-simplebar-auto-hide="false">
             <div class="d-flex pb-md-2">
                 <% var items=controller.blogItems %>

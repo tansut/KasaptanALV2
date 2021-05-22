@@ -45,11 +45,11 @@
 
 
 <% if (header) { %>
-<div class="d-flex flex-nowrap justify-content-between align-items-center">
+<div class="mb-2 d-flex flex-nowrap justify-content-between align-items-center">
     <a class="d-block" href="<%=allUrl%>">
-        <h3 class="text-uppercase h6 mb-2"><%=title%></h3>
+        <h3 class="mb-0 text-uppercase h6"><%=title%></h3>
     </a>
-    <a class="d-none d-md-block btn btn-sm" href="<%=allUrl%>">Tümü &raquo;</a>
+    <a class="mb-0 d-none p-0 btn btn-sm" href="<%=allUrl%>">Tümü &raquo;</a>
 </div>
 
 <% } %>
@@ -98,13 +98,13 @@
 
     
     <div class="row justify-content-center">
-    <% viewCats.forEach(cat => { %>
    
-      <% var reyonlar = categories.filter(p=>p.type.includes(cat) && p.status == 'active') %>
+   
+      <% var reyonlar = visibleCategories; %>
 
       <% for(var c=0; c< reyonlar.length; c++) {%>
-      <div class="col-md-2 col-3 py-2">
-          <div class="card h-100 text-center mb-3">
+      <div class="col-md-2 col-4 pr-1 pl-1 pb-2">
+          <div class="card h-100 text-center mb-0">
             <a class=" d-block overflow-hidden" href="<%= `/${reyonlar[c].slug}${__req.query.butcher ? '?butcher=' + __req.query.butcher:''}`%>">
               <img width="500" height="500" class="card-img-top" src="<%=`${__req.helper.imgUrl('category-photos', reyonlar[c].slug, 'thumbnail', true, 'list')}`%>"
                 alt="<%= reyonlar[c].name %>"></a>
@@ -119,7 +119,7 @@
       </div>
       <%}%>
    
-          <%})%>
+         
         </div>
         <!-- <div class="d-xs-block border-bottom d-md-none text-center mb-3">
             <a class="btn rounded-0 btn-sm btn-secondary" href="<%=allUrl%>">Tümü &raquo;
