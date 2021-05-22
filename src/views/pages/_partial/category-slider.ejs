@@ -105,11 +105,11 @@
       <% for(var c=0; c< reyonlar.length; c++) {%>
       <div class="col-md-2 col-4 pr-1 pl-1 pb-2">
           <div class="card h-100 text-center mb-0">
-            <a class=" d-block overflow-hidden" href="<%= `/${reyonlar[c].slug}${__req.query.butcher ? '?butcher=' + __req.query.butcher:''}`%>">
+            <a class=" d-block overflow-hidden <%=linkCss%>" href="<%= `/${reyonlar[c].slug}${__req.query.butcher ? '?butcher=' + __req.query.butcher:''}`%>">
               <img width="500" height="500" class="card-img-top" src="<%=`${__req.helper.imgUrl('category-photos', reyonlar[c].slug, 'thumbnail', true, 'list')}`%>"
                 alt="<%= reyonlar[c].name %>"></a>
             <div class="card-body p-2 d-flex flex-column align-items-center">
-              <h5 class="m-auto  font-size-md"><a class="text-dark"
+              <h5 class="m-auto  font-size-md"><a class="text-dark <%=linkCss%>"
                   href="<%= `/${reyonlar[c].slug}${__req.query.butcher ? '?butcher=' + __req.query.butcher:''}`%>"><%= reyonlar[c].listTitle || reyonlar[c].name %></a>
               </h5>
             </div>
