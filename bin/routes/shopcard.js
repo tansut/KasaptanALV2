@@ -101,7 +101,10 @@ class Route extends router_1.ViewRouter {
     savecardRoute() {
         return __awaiter(this, void 0, void 0, function* () {
             this.shopcard = this.req.shopCard;
-            this.shopcard.note = this.req.body["order-comments"] || "";
+            for (var bi in this.shopcard.butchers) {
+                this.shopcard.butchers[bi].note = this.req.body[`ordernote-${bi}`];
+            }
+            //this.shopcard.note = this.req.body["order-comments"] || "";
             yield this.setDispatcher();
             if (this.shopcard.getOrderType() == 'kurban') {
                 let man = common_1.ProductTypeFactory.create('kurban', this.shopcard.items[0].productTypeData);
@@ -169,9 +172,11 @@ class Route extends router_1.ViewRouter {
                     this.shopcard.shipment[o].howTo = 'ship';
                 }
                 let area = yield area_1.default.findByPk(this.shopcard.address.level4Id || this.shopcard.address.level3Id);
+                let location = order.shipLocation || helper_1.default.toGeoPoint(this.req.prefAddr.lat, this.req.prefAddr.lng);
                 if (this.shopcard.shipment[o].howTo == 'ship') {
+                    let adr = this.req.prefAddr;
                     let q = {
-                        adr: yield area.getPreferredAddress(),
+                        adr: adr,
                         useLevel1: order.orderType == 'kurban',
                         butcher: parseInt(o),
                         orderType: order.orderType
@@ -180,7 +185,7 @@ class Route extends router_1.ViewRouter {
                     let provider = serving.length ? serving[0].provider : null;
                     if (provider && !provider.options.dispatcher.takeOnly) {
                         let req, offer;
-                        order.shipLocation = order.shipLocation || area.location;
+                        order.shipLocation = location;
                         req = provider.offerFromOrder(order);
                         offer = yield provider.requestOffer(req);
                         let dispatcher = this.shopcard.shipment[o].dispatcher = {
@@ -206,12 +211,12 @@ class Route extends router_1.ViewRouter {
                         }
                         this.destinationMatrix[o] = {
                             start: provider.options.dispatcher.butcher.location,
-                            finish: area.location,
+                            finish: location,
                             provider: provider,
                             slices: yield provider.priceSlice({
                                 start: provider.options.dispatcher.butcher.location,
                                 sId: provider.options.dispatcher.butcher.id.toString(),
-                                finish: area.location,
+                                finish: location,
                                 fId: area.id.toString()
                             })
                         };

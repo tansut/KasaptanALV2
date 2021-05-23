@@ -1,3 +1,6 @@
+<% var addNote = typeof(addNote) == 'undefined' ? false: addNote %>
+
+
 <% let scItem = 0 %>
 <% for (let bi in shopcard.butchers) { %>
 <% let butcher = shopcard.butchers[bi]%>
@@ -76,10 +79,21 @@
 
     </div>
 
+
+    <div>
+
+    </div>
+
     <% }) %>
 
 
-
+    <% if (addNote) { %>
+      <div class="form-group px-3 pb-3 border-bottom">
+      <label for="ordernote-<%=bi%>">Sipariş notunuz varsa lütfen yazın</label>
+        <textarea class="form-control" name="ordernote-<%=bi%>" id="ordernote-<%=bi%>" maxlength="250" rows="3"><%=butcher.note%></textarea>
+      
+      </div>
+          <% } %>
   </div>
   <%}%>  
 

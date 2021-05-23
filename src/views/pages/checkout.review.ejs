@@ -80,6 +80,13 @@
                 </li>
 
                 <% } %>
+                <%if (shopcard.butchers[bi].note) { %>
+
+                  <li><span class="text-muted">Sipariş notum:&nbsp;</span><%= shopcard.butchers[bi].note %>
+                   
+          </li>
+
+          <% } %>
                 <li><span class="text-muted">Ödeme:&nbsp;</span><%= shopcard.payment[bi].desc%> </li>
               </ul>
               <div class="px-4">

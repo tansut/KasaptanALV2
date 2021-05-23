@@ -231,7 +231,7 @@ export default class Route extends ViewRouter {
                 let areaInfo = await new AreaApi(this.constructorParams).ensureDistance(butcher, this.req.prefAddr.based);                
                 let fromTo: FromTo = {                    
                     start: this.butcher.location,
-                    finish: this.req.prefAddr.based.location,
+                    finish: Helper.toGeoPoint(this.req.prefAddr.lat, this.req.prefAddr.lng),
                     fId: this.req.prefAddr.based.id.toString(),
                     sId: this.butcher.id.toString()
                 }

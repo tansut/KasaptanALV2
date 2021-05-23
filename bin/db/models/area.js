@@ -132,7 +132,9 @@ let Area = Area_1 = class Area extends basemodel_1.default {
     getPreferredAddress() {
         return __awaiter(this, void 0, void 0, function* () {
             let adr = {
-                based: this
+                based: this,
+                lat: this.location.coordinates[0],
+                lng: this.location.coordinates[1],
             };
             yield this.loadRelatedAreas();
             let l1 = this.getLevel(1);

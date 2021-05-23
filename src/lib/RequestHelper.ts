@@ -57,6 +57,8 @@ export class RequestHelper {
 
     async setPreferredAddressByArea(area: Area, save: boolean = true, loc: GeoLocation) {
         let adr = await area.getPreferredAddress();
+        adr.lat = loc ? loc.coordinates[0]: adr.lat;
+        adr.lng = loc ? loc.coordinates[1]: adr.lng;
         this.req.prefAddr = adr;
         if (save) {
             if (this.req.user) {

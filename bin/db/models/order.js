@@ -142,7 +142,6 @@ let Order = Order_1 = class Order extends basemodel_1.default {
         return __awaiter(this, void 0, void 0, function* () {
             let o = new Order_1();
             o.ordernum = orderid.generate();
-            o.note = c.note;
             let firstDiscount = c.getButcherDiscount(bi, shopcard_1.firstOrderDiscount.code);
             o.isFirstButcherOrder = firstDiscount != null;
             o.discountTotal = c.getButcherDiscountTotal(bi);
@@ -163,6 +162,7 @@ let Order = Order_1 = class Order extends basemodel_1.default {
             o.kat = c.address.kat;
             o.daire = c.address.daire;
             o.adresTarif = c.address.addresstarif;
+            o.note = c.butchers[bi].note;
             if (c.address.geolocation) {
                 o.shipLocation = c.address.geolocation;
                 o.locationType = c.address.geolocationType;

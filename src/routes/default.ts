@@ -134,7 +134,7 @@ export default class Route extends ViewRouter {
         if (!area) return this.next();
         await this.req.helper.setPreferredAddressByArea(area, true, (this.req.query.lat && this.req.query.lat != 'undefined')  ? {
             type: 'Point',
-            coordinates: [parseFloat(this.req.query.lat as string),parseFloat(this.req.query.lat as string)]
+            coordinates: [parseFloat(this.req.query.lat as string),parseFloat(this.req.query.lng as string)]
         }: null);
         
         if (this.req.query.r)

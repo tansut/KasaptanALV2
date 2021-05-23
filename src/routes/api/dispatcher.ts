@@ -163,7 +163,7 @@ export default class Route extends ApiRouter {
             if (q.product && res[i].toarealevel == 0 && q.product.dispatch != ProductDispatch.countrywide)
                 continue; 
             let areaData = butcherAreaData.find(ad=>ad.butcherid == res[i].butcherid)
-            let provider = res[i].setProvider(q.useLevel1, q.adr.based, q.orderType, areaData.bestKm);
+            let provider = res[i].setProvider(q.useLevel1, q.adr.based, q.orderType, areaData.bestKm, Helper.toGeoPoint(q.adr.lat, q.adr.lng));
 
             if (provider && !ugly[res[i].butcherid]) {
                 res[i].butcherArea = areaData;

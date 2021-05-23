@@ -60,6 +60,8 @@ class RequestHelper {
     setPreferredAddressByArea(area, save = true, loc) {
         return __awaiter(this, void 0, void 0, function* () {
             let adr = yield area.getPreferredAddress();
+            adr.lat = loc ? loc.coordinates[0] : adr.lat;
+            adr.lng = loc ? loc.coordinates[1] : adr.lng;
             this.req.prefAddr = adr;
             if (save) {
                 if (this.req.user) {

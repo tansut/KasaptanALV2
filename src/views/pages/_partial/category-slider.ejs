@@ -97,13 +97,13 @@
 <%} else if (mode=='view') { %>
 
     
-    <div class="row justify-content-center">
+    <div class="row no-gutters justify-content-center">
    
    
       <% var reyonlar = visibleCategories; %>
 
       <% for(var c=0; c< reyonlar.length; c++) {%>
-      <div class="col-md-2 col-4 pr-1 pl-1 pb-2">
+      <div class="col-md-2 col-4 pl-1 pr-1 mb-2">
           <div class="card h-100 text-center mb-0">
             <a class=" d-block overflow-hidden <%=linkCss%>" href="<%= `/${reyonlar[c].slug}${__req.query.butcher ? '?butcher=' + __req.query.butcher:''}`%>">
               <img width="500" height="500" class="card-img-top" src="<%=`${__req.helper.imgUrl('category-photos', reyonlar[c].slug, 'thumbnail', true, 'list')}`%>"

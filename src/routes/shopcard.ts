@@ -108,7 +108,10 @@ export default class Route extends ViewRouter {
     @Auth.Anonymous()
     async savecardRoute() {
         this.shopcard = this.req.shopCard;
-        this.shopcard.note = this.req.body["order-comments"] || "";
+        for (var bi in this.shopcard.butchers) {
+            this.shopcard.butchers[bi].note = this.req.body[`ordernote-${bi}`];
+        }
+        //this.shopcard.note = this.req.body["order-comments"] || "";
         await this.setDispatcher();        
         if (this.shopcard.getOrderType() == 'kurban') {
             let man = ProductTypeFactory.create('kurban', this.shopcard.items[0].productTypeData) as KurbanProductManager;
@@ -185,11 +188,14 @@ export default class Route extends ViewRouter {
             }
 
             let area = await Area.findByPk(this.shopcard.address.level4Id || this.shopcard.address.level3Id);
-
+            let location = order.shipLocation || Helper.toGeoPoint(this.req.prefAddr.lat, this.req.prefAddr.lng);
             if (this.shopcard.shipment[o].howTo == 'ship') {
 
+                let adr = this.req.prefAddr;
+
+
                 let q: DispatcherQuery = {
-                    adr: await area.getPreferredAddress(),
+                    adr: adr,
                     useLevel1: order.orderType == 'kurban',
                     butcher: parseInt(o),
                     orderType: order.orderType
@@ -201,7 +207,7 @@ export default class Route extends ViewRouter {
                 if (provider && !provider.options.dispatcher.takeOnly) {
 
                     let req: OfferRequest, offer: OfferResponse;
-                    order.shipLocation = order.shipLocation || area.location;
+                    order.shipLocation =  location;
                     req = provider.offerFromOrder(order);
                     offer = await provider.requestOffer(req)
                     
@@ -231,12 +237,12 @@ export default class Route extends ViewRouter {
 
                     this.destinationMatrix[o] = {
                         start: provider.options.dispatcher.butcher.location,
-                        finish: area.location,
+                        finish: location,
                         provider: provider,
                         slices: await provider.priceSlice({
                             start: provider.options.dispatcher.butcher.location,
                             sId: provider.options.dispatcher.butcher.id.toString(),
-                            finish: area.location,
+                            finish: location,
                             fId: area.id.toString()
                           })
                     } 

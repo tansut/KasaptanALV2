@@ -241,7 +241,12 @@ export default class Helper {
         return val ? 'Evet' : 'Hayır'
     }
 
-
+    static toGeoPoint(lat, lng): GeoLocation {
+        return {
+            type: 'POINT',
+            coordinates: [lat, lng]
+        }
+    }
     
 
 

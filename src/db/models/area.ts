@@ -262,7 +262,9 @@ class Area extends BaseModel<Area> {
 
     async getPreferredAddress(): Promise<PreferredAddress> {
         let adr: PreferredAddress = {
-            based: this
+            based: this,
+            lat: this.location.coordinates[0],
+            lng: this.location.coordinates[1],
         };
         await this.loadRelatedAreas();
         let l1 = this.getLevel(1);

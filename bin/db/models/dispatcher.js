@@ -45,14 +45,14 @@ let Dispatcher = class Dispatcher extends basemodel_1.default {
     set minCalculated(val) {
         this._minCalculated = val;
     }
-    setProvider(useLevel1, l3, productType, distance2Butcher) {
+    setProvider(useLevel1, l3, productType, distance2Butcher, location) {
         let dispath = this;
         let butcherAvail = dispath.toarealevel == 0 || (dispath.toarealevel > 1) || useLevel1;
         let forcedProvider = null;
         if (!useLevel1 && dispath.toarealevel == 1) {
             let forceL1 = dispath.butcher.dispatchArea == "citywide" || dispath.butcher.dispatchArea == "radius";
             if (dispath.butcher.dispatchArea == "radius") {
-                let distance = distance2Butcher || helper_1.default.distance(dispath.butcher.location, l3.location);
+                let distance = distance2Butcher || helper_1.default.distance(dispath.butcher.location, location);
                 butcherAvail = dispath.butcher.radiusAsKm >= distance;
                 if (!butcherAvail && dispath.butcher.logisticProvider && dispath.butcher.logisticProviderUsage == "auto" && ((dispath.butcher.radiusAsKmMax == 0) || (distance2Butcher < dispath.butcher.radiusAsKmMax))) {
                     forcedProvider = dispath.butcher.logisticProvider;

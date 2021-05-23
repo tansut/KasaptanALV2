@@ -1,8 +1,8 @@
 (function (window) {
     window.kb = window.kb || {}
 
-    
-    
+
+
 
     window.kb.userlocation = function () {
         var self =
@@ -132,23 +132,31 @@
                     }
                 });
 
-                
+
 
 
 
             },
 
             initApp: function () {
+                
                 this.gpsQueryApp =
                     new Vue({
                         el: '#userlocationapp',
                         data: { lat: 0, lng: 0, list: [], selected: null },
                         methods: {
+
+                            showMap: function () {
+                                return App.latlngApp.init(this.lat, this.lng).then(function (result) {
+                                    return result;
+                                }.bind(this))
+                            },
+
                             locateSemt: function () {
                                 $('#semt-from-device').text("Hesaplıyorum...");
                                 var self = this;
                                 window.App.GetGeoLocation().then(function (position) {
-                                    
+
                                     if (position.coords.accuracy < 6000) {
                                         App.Backend.post('user/findsemt', {
                                             lat: position.coords.latitude,
@@ -165,7 +173,7 @@
                                                 alert('Konumunuzdan adrese maalesef ulaşamadık, semtinizi arayın veya listeden seçin.');
                                             }
                                         }).catch(function (err) {
-                                            debugger
+                                            
                                             alert('Konumunuzu maalesef alamadık, teslimat adresini yazmanız yeterli.');
                                             $('#semt-from-device').text("Tekrar Deneyin");
                                             $('.searchBox-semt').focus()
@@ -188,20 +196,20 @@
                             },
 
                             go(adr) {
-                                window.App.gTag('location', 'location/set', adr.display)
-                                var ul = {};
-                                ul.lat = this.lat;
-                                ul.lng = this.lng;
-                                ul.selectedDistrict = ul.selectedDistrict || {}
-                                ul.selectedDistrict.slug = adr.url;
-                                $(window).trigger('kb.selectArea.selected', [self, ul]);
-                                if (window.kb.done) {
-                                    var save = window.kb.done;
-                                    window.kb.done = undefined
-                                    save(window.kb, ul);
-
-                                }
-                                
+                                this.showMap().then(function(result) {
+                                    window.App.gTag('location', 'location/set', adr.display);
+                                    var ul = {};
+                                    ul.lat = result.lat;
+                                    ul.lng = result.lng;
+                                    ul.selectedDistrict = ul.selectedDistrict || {}
+                                    ul.selectedDistrict.slug = adr.url;
+                                    $(window).trigger('kb.selectArea.selected', [self, ul]);
+                                    if (window.kb.done) {
+                                        var save = window.kb.done;
+                                        window.kb.done = undefined
+                                        save(window.kb, ul);
+                                    }
+                                }.bind(this));
                             }
                         }
                     })
@@ -311,7 +319,7 @@
                     $('#exploreAreaMsg').html(options.msg || '')
                 } else if (options.showWarning) {
                     $('#exploreAreaMsg').show();
-                    $('#exploreAreaMsg').html('Kasaplar ve ürün fiyatları için lütfen semtinizi seçin')                    
+                    $('#exploreAreaMsg').html('Kasaplar ve ürün fiyatları için lütfen semtinizi seçin')
                 } else {
                     $('#exploreAreaMsg').hide();
                 }
@@ -327,14 +335,25 @@
                         return result.id == item.id
                     });
 
-                    window.App.gTag('location', 'location/set', go.display)
+                    
+
+                    var lat = go.location.coordinates[0];
+                    var lng = go.location.coordinates[1];
+
+                    window.App.gTag('location', 'location/set', go.display);
+                    ul.lat = lat;
+                    ul.lng = lng;
+                    
                     ul.selectedDistrict = ul.selectedDistrict || {}
                     ul.selectedDistrict.slug = go.url;
 
                     $(window).trigger('kb.selectArea.selected', [self, ul]);
                     done && done(self, ul)
+                    
 
+                    // App.latlngApp.init(lat, lng).then(function(result) {
 
+                    // })
                 });
 
                 $(window).on('kb.selectArea.searched', function (sender, ul) {
@@ -352,7 +371,7 @@
         } else $('#areaModal').modal("show")
     }
 
-    window.kb.hide = function() {
+    window.kb.hide = function () {
         $('#areaModal').modal("hide")
     }
 

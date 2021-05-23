@@ -88,6 +88,7 @@ if (orderClosed && __req.user && __req.user.hasRole('admin')) {
           <% if (!orderClosed) { %>
           <li><span class="text-muted">Müşteri:&nbsp;</span><%= order.displayName %></li>    
           <% } %>
+          <li><span class="text-muted">Sipariş notu:&nbsp;</span><span class="font-weight-bold text-accent"> <%=order.note || 'Belirtilmemiş'%></span></li>    
           <% if (order.deliveryOrderId) { %>
           <li><span class="text-muted">Kurye Planlandı:&nbsp;</span><%=order.deliveryOrderId%></li>    
 

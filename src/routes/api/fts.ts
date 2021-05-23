@@ -108,7 +108,7 @@ psql =  "select p.id, p.name as name, p.slug as url, 'ürün' as type, match(p.n
     }
 
     async getAreas(search: string) {
-        let areas =  await User.sequelize.query("select id, level, name, slug as url, 'lokasyon' as type, display, match(name, slug, keywords, display) against (:search IN BOOLEAN MODE) as RELEVANCE " +
+        let areas =  await User.sequelize.query("select id, level, name, slug as url, 'lokasyon' as type, display, location, match(name, slug, keywords, display) against (:search IN BOOLEAN MODE) as RELEVANCE " +
             "from Areas where level>=3  and (match(name, slug, keywords, display)  against (:search IN BOOLEAN MODE) or match(name, slug, keywords, display)  against (:search2 IN BOOLEAN MODE)) ORDER BY status, level desc, RELEVANCE DESC LIMIT 25",
             {
                 replacements: { search2: Helper.slugify(search), search: search },
@@ -120,6 +120,7 @@ psql =  "select p.id, p.name as name, p.slug as url, 'ürün' as type, match(p.n
             return {
                 id: px.id,
                 recid: px.id,
+                location: px.location,
                 name: px.display,
                 display: px.display,
                 url:  px.url,

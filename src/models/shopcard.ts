@@ -82,6 +82,7 @@ export interface ShopcardButcherView {
     subTotal: number;
     products: number[];
     userSelected: boolean;
+    note: string;
 }
 
 export interface ShopcardProductView {
@@ -288,6 +289,7 @@ export class ShopCard {
             let bi = item.product.butcher.id
             if (!butchers[bi]) {
                 butchers[bi] = item.product.butcher;
+                butchers[bi].note = this.butchers[bi] ? this.butchers[bi].note:'';
                 butchers[bi].products = [i];
                 butchers[bi].subTotal = item.price;
                 butchers[bi].userSelected = this.butchers[bi] ? this.butchers[bi].userSelected : false

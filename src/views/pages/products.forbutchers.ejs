@@ -277,7 +277,7 @@
                   <ul class="nav nav-tabs  mb-3">
                     <li v-for="(u, i) in edit.units" class="nav-item font-size-sm">
                       <a @click="editUnitVal=u; editUnitIndex=i" :class="{'active': editUnit == u}"
-                        class="nav-link">{{u.id == 0 ? 'Birim': u.title}}</a>
+                        class="nav-link p-2">{{u.id == 0 ? 'Birim': u.title}}</a>
                     </li>
                   </ul>
                   <div v-if="editUnit">
@@ -306,7 +306,7 @@
                           type="checkbox" class="custom-control-input">
                         <label :for="editUnit.unit + 'customWeightcb'" class="custom-control-label">1 {{editUnit.title}}
                           sistemde ortalama <strong>
-                            {{editOrj.units[editUnitIndex].kgRatio}} {{edit.kgTitle}}</strong> içerecek şekilde tanımlı.
+                            {{editOrj.units[editUnitIndex].kgRatio}} {{edit.kgTitle}}</strong> olacak şekilde tanımlı.
                           Size özel değiştirmek isterseniz işaretleyin.</label>
                         <!-- <label :for="editUnit.unit + 'customWeightcb'" class="custom-control-label" v-else>
                           {{editUnit.title}} miktarını size özel değiştirmek isterseniz işaretleyin.
@@ -315,7 +315,7 @@
                       <div class="font-size-sm text-muted" v-else>
                         <p v-if="(editUnit.id) && (editUnit.kgRatio != 1 && editUnit.kgRatio != 0)">
                           1 {{editUnit.title}} ortalama <strong>{{editOrj.units[editUnitIndex].kgRatio}}
-                            {{edit.kgTitle}}</strong> içerecek şekilde tanımlıdır.</span>
+                            {{edit.kgTitle}}</strong> olacak şekilde tanımlıdır.</span>
                         </p>
                       </div>
 

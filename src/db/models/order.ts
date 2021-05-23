@@ -597,8 +597,7 @@ class Order extends BaseModel<Order> {
 
     static async fromShopcard(c: ShopCard, bi: number): Promise<Order> {
         let o = new Order();
-        o.ordernum = orderid.generate();
-        o.note = c.note;        
+        o.ordernum = orderid.generate();     
         let firstDiscount = c.getButcherDiscount(bi, firstOrderDiscount.code)
         o.isFirstButcherOrder = firstDiscount != null;
         o.discountTotal = c.getButcherDiscountTotal(bi);
@@ -619,6 +618,7 @@ class Order extends BaseModel<Order> {
         o.kat = c.address.kat;
         o.daire = c.address.daire;
         o.adresTarif = c.address.addresstarif;
+        o.note = c.butchers[bi].note;
         if (c.address.geolocation) {
             o.shipLocation = c.address.geolocation;
             o.locationType = c.address.geolocationType

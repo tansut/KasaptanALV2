@@ -184,7 +184,7 @@ class Route extends router_1.ViewRouter {
                     let areaInfo = yield new area_1.default(this.constructorParams).ensureDistance(butcher, this.req.prefAddr.based);
                     let fromTo = {
                         start: this.butcher.location,
-                        finish: this.req.prefAddr.based.location,
+                        finish: helper_1.default.toGeoPoint(this.req.prefAddr.lat, this.req.prefAddr.lng),
                         fId: this.req.prefAddr.based.id.toString(),
                         sId: this.butcher.id.toString()
                     };

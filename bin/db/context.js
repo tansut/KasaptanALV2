@@ -37,6 +37,8 @@ const shoplistitem_1 = require("./models/shoplistitem");
 const paymentmethod_1 = require("./models/paymentmethod");
 const brand_1 = require("./models/brand");
 const brandgroup_1 = require("./models/brandgroup");
+const kurban_1 = require("./models/kurban");
+const adres_1 = require("./models/adres");
 let dbInstance;
 let init = (alter = true) => {
     dbInstance = new sequelize_typescript_1.Sequelize({
@@ -52,7 +54,7 @@ let init = (alter = true) => {
         logging: false,
         dialectOptions: { decimalNumbers: true }
     });
-    dbInstance.addModels([brand_1.default, brandgroup_1.default, paymentmethod_1.default, shoplist_1.default, shoplistitem_1.default, userlog_1.default, productrelation_1.default, agreement_1.default, temp_loc_1.default, dbcache_1.default, nutritionvalue_1.default, nutritionvalueitem_1.default, butcherarea_1.default, subcategory_1.default, payment_1.default, accountmodel_1.default, review_1.default, butcherpricehistory_1.default, pricecategory_1.default, redirect_1.default, webpage_1.default, butcher_1.default, order_1.Order, order_1.OrderItem, dispatcher_1.default, user_1.default, refreshToken_1.default, resource_1.default, area_1.default, sitelog_1.default, category_1.default, product_1.default, productcategory_1.default, butcherproduct_1.default, content_1.default, resourcecategory_1.default]);
+    dbInstance.addModels([adres_1.default, kurban_1.default, brand_1.default, brandgroup_1.default, paymentmethod_1.default, shoplist_1.default, shoplistitem_1.default, userlog_1.default, productrelation_1.default, agreement_1.default, temp_loc_1.default, dbcache_1.default, nutritionvalue_1.default, nutritionvalueitem_1.default, butcherarea_1.default, subcategory_1.default, payment_1.default, accountmodel_1.default, review_1.default, butcherpricehistory_1.default, pricecategory_1.default, redirect_1.default, webpage_1.default, butcher_1.default, order_1.Order, order_1.OrderItem, dispatcher_1.default, user_1.default, refreshToken_1.default, resource_1.default, area_1.default, sitelog_1.default, category_1.default, product_1.default, productcategory_1.default, butcherproduct_1.default, content_1.default, resourcecategory_1.default]);
     return dbInstance.sync({
         alter: alter,
         logging: false

@@ -9,6 +9,7 @@ import { PreferredAddress } from './user';
 import { LogisticFactory, LogisticProvider } from '../../lib/logistic/core';
 import { ProductType } from './product';
 import ButcherArea from './butcherarea';
+import { GeoLocation } from '../../models/geo';
 
 export enum DispatcherSelection {    
     full = 'tam',
@@ -195,14 +196,14 @@ class Dispatcher extends BaseModel<Dispatcher> {
 
     provider: LogisticProvider;
 
-    setProvider(useLevel1: boolean, l3: Area, productType: ProductType | string, distance2Butcher: number) {
+    setProvider(useLevel1: boolean, l3: Area, productType: ProductType | string, distance2Butcher: number, location: GeoLocation) {
         let dispath = this;
         let butcherAvail = dispath.toarealevel == 0 || (dispath.toarealevel > 1) || useLevel1;
         let forcedProvider = null;
         if (!useLevel1 && dispath.toarealevel == 1) {
             let forceL1 = dispath.butcher.dispatchArea == "citywide" || dispath.butcher.dispatchArea == "radius";
             if (dispath.butcher.dispatchArea == "radius") {
-                let distance = distance2Butcher || Helper.distance(dispath.butcher.location, l3.location);
+                let distance = distance2Butcher || Helper.distance(dispath.butcher.location, location);
                 butcherAvail = dispath.butcher.radiusAsKm >= distance;
                 if (!butcherAvail && dispath.butcher.logisticProvider && dispath.butcher.logisticProviderUsage == "auto" && ((dispath.butcher.radiusAsKmMax == 0) || (distance2Butcher < dispath.butcher.radiusAsKmMax))) {                    
                     forcedProvider = dispath.butcher.logisticProvider;

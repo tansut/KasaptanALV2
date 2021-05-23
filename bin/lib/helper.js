@@ -207,6 +207,12 @@ class Helper {
     static boolStr(val) {
         return val ? 'Evet' : 'Hayır';
     }
+    static toGeoPoint(lat, lng) {
+        return {
+            type: 'POINT',
+            coordinates: [lat, lng]
+        };
+    }
     static formatDate(date, useTime = false, useYear = true) {
         if (date) {
             const options = { weekday: "long", year: useYear ? 'numeric' : 'numeric', month: 'long', day: 'numeric' };

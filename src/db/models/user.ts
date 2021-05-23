@@ -55,8 +55,8 @@ export interface PreferredAddress {
     level3Status?: string;
     level4Status?: string;
 
-    lat?:number;
-    lng?:number;
+    lat:number;
+    lng:number;
 
     display?: string;
 }

@@ -138,7 +138,7 @@ class Route extends router_1.ApiRouter {
                 if (q.product && res[i].toarealevel == 0 && q.product.dispatch != product_1.ProductDispatch.countrywide)
                     continue;
                 let areaData = butcherAreaData.find(ad => ad.butcherid == res[i].butcherid);
-                let provider = res[i].setProvider(q.useLevel1, q.adr.based, q.orderType, areaData.bestKm);
+                let provider = res[i].setProvider(q.useLevel1, q.adr.based, q.orderType, areaData.bestKm, helper_1.default.toGeoPoint(q.adr.lat, q.adr.lng));
                 if (provider && !ugly[res[i].butcherid]) {
                     res[i].butcherArea = areaData;
                     ugly[res[i].butcherid] = res[i];
