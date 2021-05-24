@@ -277,7 +277,7 @@
                   <ul class="nav nav-tabs  mb-3">
                     <li v-for="(u, i) in edit.units" class="nav-item font-size-sm">
                       <a @click="editUnitVal=u; editUnitIndex=i" :class="{'active': editUnit == u}"
-                        class="nav-link p-2">{{u.id == 0 ? 'Birim': u.title}}</a>
+                        class="nav-link p-3">{{u.id == 0 ? 'Birim': u.title}}</a>
                     </li>
                   </ul>
                   <div v-if="editUnit">

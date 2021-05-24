@@ -44,16 +44,11 @@ let ButcherProduct = class ButcherProduct extends basemodel_1.default {
     get priceView() {
         let units = ['unit1', 'unit2', 'unit3'];
         if (this.kgPrice > 0) {
-            let title = 'KG';
-            units.forEach(u => {
-                if (this.product[`${u}`] == 'kg') {
-                    title = this.product[`${u}title`];
-                }
-            });
+            let title = this.product.priceUnitTitle;
             return {
                 price: helper_1.default.CalculateDiscount(this.discountType, this.priceDiscount, this.kgPrice),
                 regular: this.kgPrice,
-                unit: 'kg',
+                unit: this.product.priceUnit,
                 unitTitle: title
             };
         }

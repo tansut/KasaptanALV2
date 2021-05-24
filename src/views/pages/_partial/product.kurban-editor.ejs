@@ -37,6 +37,19 @@
             <label class="custom-control-label text-accent" for="kurban-bagis-mi"><strong>Kurbanımı benim adıma bağışlayın</strong> istiyorum.</label>
           </div>   
           <div id="kurban-bagis-detay" style="display: <%=man.bagis ? 'block':'none'%>;">
+            <div>
+             
+                <ul>
+                    <li>
+                        <span class="font-size-sm mb-3">Kime bağışlayacağınızı belirtmezseniz biz karar veriyoruz ve sizi arayarak onayınızı alıyoruz.</span>
+
+                    </li>                    
+                    <li>
+                        <span class="font-size-sm mb-3">Bağış makbuzunu veya kurbanınızı aileye teslim ederken çektiğimiz videoyu size gönderiyoruz.</span>
+                    </li>
+
+                </ul>
+            </div>
             <div class="form-group">
                 <label class="font-weight-bolder" for="kurban-bagis-target">Bağışınız konusunda nasıl ilerleyelim?</label>
                 <select id="kurban-bagis-target" name="kurban-bagis-target" class="form-control bsselect" >
@@ -51,21 +64,7 @@
                 <input placeholder="" type="text" class="form-control" name="kurban-bagis-note" id="kurban-bagis-note" value="<%=man.bagisNote%>">
                 <span class="font-size-xs text-muted">* Boş bırakın veya kime, hangi kuruma bağışlamamızı istiyorsanız belirtin.</span>
             </div>
-            <div>
-                <span class="d-block">
-                    <strong>Önemli Notlar: </strong>
-                </span>
-                <ul>
-                    <li>
-                        <span class="font-size-sm mb-3">Kime bağışlayacağınızı belirtmezseniz biz karar veriyoruz ve sizi arayarak onayınızı alıyoruz.</span>
-
-                    </li>                    
-                    <li>
-                        <span class="font-size-sm mb-3">Bağış makbuzunu veya kurbanınızı aileye teslim ederken çektiğimiz videoyu size gönderiyoruz.</span>
-                    </li>
-
-                </ul>
-            </div>
+      
 
             
 

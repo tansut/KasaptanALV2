@@ -96,7 +96,7 @@ export default class ProductManager {
     static generateSubcategories(category: Category, products: ProductModel[]) {
         let subCategories: SubCategory [] = [];
         if (category.subItemsMode == CategorySubItemsMode.subitems) {
-            subCategories = category.subCategories;
+            subCategories = category.subCategories.filter(sc=>sc.visible);
         } else if (category.subItemsMode == CategorySubItemsMode.tag1 || category.subItemsMode == CategorySubItemsMode.tag3) {
             let tags = _.uniq(products.map(p=>p[category.subItemsMode]));
             let tagOrder = {

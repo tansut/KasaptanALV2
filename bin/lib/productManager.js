@@ -93,7 +93,7 @@ class ProductManager {
     static generateSubcategories(category, products) {
         let subCategories = [];
         if (category.subItemsMode == category_1.CategorySubItemsMode.subitems) {
-            subCategories = category.subCategories;
+            subCategories = category.subCategories.filter(sc => sc.visible);
         }
         else if (category.subItemsMode == category_1.CategorySubItemsMode.tag1 || category.subItemsMode == category_1.CategorySubItemsMode.tag3) {
             let tags = _.uniq(products.map(p => p[category.subItemsMode]));

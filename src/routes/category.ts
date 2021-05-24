@@ -79,7 +79,7 @@ export default class Route extends ViewRouter {
                 offerCount: price['count'],
                 highPrice: Number(price[`${usedUnit}max`].toFixed(2)),
                 lowPrice: Number(price[`${usedUnit}min`].toFixed(2)),
-                priceUnit: usedUnit == 'kg' ? 'KG' : product[`${usedUnit}title`],
+                priceUnit: product.priceUnitTitle,
                 priceCurrency: "TRY"
             }
         } else return null;

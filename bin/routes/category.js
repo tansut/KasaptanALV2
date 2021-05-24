@@ -78,7 +78,7 @@ class Route extends router_1.ViewRouter {
                 offerCount: price['count'],
                 highPrice: Number(price[`${usedUnit}max`].toFixed(2)),
                 lowPrice: Number(price[`${usedUnit}min`].toFixed(2)),
-                priceUnit: usedUnit == 'kg' ? 'KG' : product[`${usedUnit}title`],
+                priceUnit: product.priceUnitTitle,
                 priceCurrency: "TRY"
             };
         }

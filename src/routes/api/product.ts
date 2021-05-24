@@ -970,7 +970,7 @@ export default class Route extends ApiRouter {
                     customWeight: po.customWeight,
                     butcherUnitSelection: po.butcherUnitSelection,
                     butcherUnitEdit: (po.id && (po.unit == 'kg' || po.unit == 'lt')) ? 'none': po.butcherUnitEdit,
-                    butcherNote: this.markdown.render(product[`unit${po.id}ButcherNote`] || '')
+                    butcherNote: this.markdown.render(product[`${po.id}ButcherNote`] || '')
                 }
             }),
             enabled: view.enabled,
