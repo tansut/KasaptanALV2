@@ -826,6 +826,7 @@ export default class Route extends ApiRouter {
                 shipday5: butcher.shipday5,
                 shipday6: butcher.shipday6,
                 enableCreditCard: butcher.enableCreditCard,
+                enableOnDoor: butcher.enableOnDoor,
                 userRatingAsPerc: butcher.userRatingAsPerc,
                 shipRatingAsPerc: butcher.shipRatingAsPerc,
                 shipSuccessText: butcher.shipSuccessText,

@@ -147,6 +147,7 @@ class Route extends router_1.ViewRouter {
         return result;
     }
     allowNonOnline(bi) {
+        let butcher = this.Butchers.find(p => p.id == bi);
         let allow = true;
         if (this.shopcard.getOrderType() == 'kurban') {
             allow = false;
@@ -158,6 +159,8 @@ class Route extends router_1.ViewRouter {
             if (allow && this.shopcard.shipment[bi].dispatcher) {
                 allow = this.shopcard.shipment[bi].dispatcher.toAreaLevel > 0;
             }
+            if (allow)
+                allow = butcher.enableOnDoor;
         }
         return allow;
     }

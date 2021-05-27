@@ -164,6 +164,7 @@ class Route extends router_1.ViewRouter {
                             id: butcher.id,
                             description: butcher.description,
                             enableCreditCard: butcher.enableCreditCard,
+                            enableOnDoor: butcher.enableOnDoor,
                             slug: butcher.slug,
                             badges: butcher.getBadgeList(),
                             userRatingAsPerc: butcher.userRatingAsPerc,

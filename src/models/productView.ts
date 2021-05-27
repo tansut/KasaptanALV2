@@ -58,6 +58,7 @@ export interface ProductButcherView {
     name: string;
     productNote: string;
     enableCreditCard: boolean;
+    enableOnDoor: boolean;    
     badges: Badge[];
     id: number;
     kgPrice: number;

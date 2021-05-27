@@ -426,6 +426,12 @@ class Butcher extends BaseModel<Butcher> {
     enableCreditCard: boolean;
 
     @Column({
+        allowNull: false,
+        defaultValue: true
+    })
+    enableOnDoor: boolean;    
+
+    @Column({
         allowNull: true
     })
     badges: string;

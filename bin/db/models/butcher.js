@@ -602,6 +602,13 @@ __decorate([
 ], Butcher.prototype, "enableCreditCard", void 0);
 __decorate([
     sequelize_typescript_1.Column({
+        allowNull: false,
+        defaultValue: true
+    }),
+    __metadata("design:type", Boolean)
+], Butcher.prototype, "enableOnDoor", void 0);
+__decorate([
+    sequelize_typescript_1.Column({
         allowNull: true
     }),
     __metadata("design:type", String)

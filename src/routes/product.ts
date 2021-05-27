@@ -199,6 +199,7 @@ export default class Route extends ViewRouter {
                         id: butcher.id,
                         description: butcher.description,
                         enableCreditCard: butcher.enableCreditCard,
+                        enableOnDoor: butcher.enableOnDoor,
                         slug: butcher.slug,
                         badges: butcher.getBadgeList(),
                         userRatingAsPerc: butcher.userRatingAsPerc,
