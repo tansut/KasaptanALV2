@@ -1018,6 +1018,7 @@ export default class Route extends ApiRouter {
         for (let i = 0; i < ol.length; i++) {
             let notifyMobilePhones = (ol[i].butcher.notifyMobilePhones || "").split(',');
             notifyMobilePhones.push('5531431988');
+            notifyMobilePhones.push('5013320886');            
             notifyMobilePhones.push('5326274151');
             notifyMobilePhones.push('5316857306');
 
@@ -1186,6 +1187,7 @@ export default class Route extends ApiRouter {
             if (order.paymentType != "onlinepayment") {
                 let notifyMobilePhones = (order.butcher.notifyMobilePhones || "").split(',');
                 notifyMobilePhones.push('5531431988');
+                notifyMobilePhones.push('5013320886');
                 notifyMobilePhones.push('5326274151');
                 notifyMobilePhones.push('5316857306');
 
@@ -1253,11 +1255,9 @@ export default class Route extends ApiRouter {
     }
 
     async sendButcherNotifications(order: Order, text: string) {
-        let notifyMobilePhones = (order.butcher.notifyMobilePhones || "").split(',');
-        notifyMobilePhones.push('5531431988');
+        let notifyMobilePhones = (order.butcher.notifyMobilePhones || "").split(',');        
+        notifyMobilePhones.push('5013320886');
         notifyMobilePhones.push('5326274151');
-
-
         for (var p = 0; p < notifyMobilePhones.length; p++) {
             if (notifyMobilePhones[p].trim()) {
                 await Sms.send(notifyMobilePhones[p].trim(), text, false, new SiteLogRoute(this.constructorParams))
@@ -1266,14 +1266,8 @@ export default class Route extends ApiRouter {
     }
 
     async sendPlanNotifications(order: Order) {
-        let notifyMobilePhones = (order.butcher.notifyMobilePhones || "").split(',');
-        notifyMobilePhones.push('5531431988');
-        notifyMobilePhones.push('5326274151');
-
-
         let manageUrl = `${this.url}/manageorder/${order.ordernum}`;
         let text = `${order.butcherName} musteriniz ${order.displayName} teslimat icin bilgilendirildi: ${order.shipmentStartText}. Siparis: ${manageUrl}`;
-
 
         await this.sendButcherNotifications(order, text);
 

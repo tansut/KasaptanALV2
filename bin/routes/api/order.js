@@ -930,6 +930,7 @@ class Route extends router_1.ApiRouter {
             for (let i = 0; i < ol.length; i++) {
                 let notifyMobilePhones = (ol[i].butcher.notifyMobilePhones || "").split(',');
                 notifyMobilePhones.push('5531431988');
+                notifyMobilePhones.push('5013320886');
                 notifyMobilePhones.push('5326274151');
                 notifyMobilePhones.push('5316857306');
                 email_1.default.send(ol[i].email, "siparişinizin ödemesi yapıldı", "order.paid.ejs", this.getView(ol[i]), 'order/paid');
@@ -1068,6 +1069,7 @@ class Route extends router_1.ApiRouter {
                 if (order.paymentType != "onlinepayment") {
                     let notifyMobilePhones = (order.butcher.notifyMobilePhones || "").split(',');
                     notifyMobilePhones.push('5531431988');
+                    notifyMobilePhones.push('5013320886');
                     notifyMobilePhones.push('5326274151');
                     notifyMobilePhones.push('5316857306');
                     for (var p = 0; p < notifyMobilePhones.length; p++) {
@@ -1134,7 +1136,7 @@ class Route extends router_1.ApiRouter {
     sendButcherNotifications(order, text) {
         return __awaiter(this, void 0, void 0, function* () {
             let notifyMobilePhones = (order.butcher.notifyMobilePhones || "").split(',');
-            notifyMobilePhones.push('5531431988');
+            notifyMobilePhones.push('5013320886');
             notifyMobilePhones.push('5326274151');
             for (var p = 0; p < notifyMobilePhones.length; p++) {
                 if (notifyMobilePhones[p].trim()) {
@@ -1145,9 +1147,6 @@ class Route extends router_1.ApiRouter {
     }
     sendPlanNotifications(order) {
         return __awaiter(this, void 0, void 0, function* () {
-            let notifyMobilePhones = (order.butcher.notifyMobilePhones || "").split(',');
-            notifyMobilePhones.push('5531431988');
-            notifyMobilePhones.push('5326274151');
             let manageUrl = `${this.url}/manageorder/${order.ordernum}`;
             let text = `${order.butcherName} musteriniz ${order.displayName} teslimat icin bilgilendirildi: ${order.shipmentStartText}. Siparis: ${manageUrl}`;
             yield this.sendButcherNotifications(order, text);
