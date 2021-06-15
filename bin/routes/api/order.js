@@ -1356,7 +1356,7 @@ class Route extends router_1.ApiRouter {
                 coordinates: [order.prefAdr.lat, order.prefAdr.lng]
             };
             yield user.save();
-            yield sms_1.Sms.sendMultiple(['5326274151', '5531431988'], `yeni manuel sipariş: www.kasaptanal.com/pages/operator/manuelorders`, false, new sitelog_1.default(this.constructorParams));
+            yield sms_1.Sms.sendMultiple(['5326274151', '5013320886'], `yeni manuel sipariş: www.kasaptanal.com/pages/operator/manuelorders`, false, new sitelog_1.default(this.constructorParams));
             this.res.sendStatus(200);
         });
     }

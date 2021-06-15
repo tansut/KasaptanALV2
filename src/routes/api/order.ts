@@ -1499,7 +1499,7 @@ export default class Route extends ApiRouter {
             coordinates: [order.prefAdr.lat, order.prefAdr.lng]
         }
         await user.save();
-        await Sms.sendMultiple(['5326274151', '5531431988'], `yeni manuel sipariş: www.kasaptanal.com/pages/operator/manuelorders`, false, new SiteLogRoute(this.constructorParams))
+        await Sms.sendMultiple(['5326274151', '5013320886'], `yeni manuel sipariş: www.kasaptanal.com/pages/operator/manuelorders`, false, new SiteLogRoute(this.constructorParams))
         this.res.sendStatus(200);
     }
 
