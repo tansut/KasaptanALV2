@@ -1017,7 +1017,7 @@ export default class Route extends ApiRouter {
 
         for (let i = 0; i < ol.length; i++) {
             let notifyMobilePhones = (ol[i].butcher.notifyMobilePhones || "").split(',');
-            notifyMobilePhones.push('5531431988');
+            //notifyMobilePhones.push('5531431988');
             notifyMobilePhones.push('5013320886');            
             notifyMobilePhones.push('5326274151');
             notifyMobilePhones.push('5316857306');
@@ -1186,7 +1186,7 @@ export default class Route extends ApiRouter {
             await Sms.send(dbOrder.phone, `KasaptanAl.com ${dbOrder.butcherName} siparisinizi aldik, Teslimat kodu: ${order.securityCode}. ${order.paymentType == 'onlinepayment' ? 'Simdi odeme yapabilirsiniz' : 'Bilgi'}: ${viewUrl}`, false, new SiteLogRoute(this.constructorParams));
             if (order.paymentType != "onlinepayment") {
                 let notifyMobilePhones = (order.butcher.notifyMobilePhones || "").split(',');
-                notifyMobilePhones.push('5531431988');
+                //notifyMobilePhones.push('5531431988');
                 notifyMobilePhones.push('5013320886');
                 notifyMobilePhones.push('5326274151');
                 notifyMobilePhones.push('5316857306');
