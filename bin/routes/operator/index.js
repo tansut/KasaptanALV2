@@ -4,7 +4,8 @@ let appRoutes = [
     './order',
     './home',
     './manuelorders',
-    './reviews'
+    './reviews',
+    './butcherapplications'
 ];
 class RouteLoader {
     static use(router) {

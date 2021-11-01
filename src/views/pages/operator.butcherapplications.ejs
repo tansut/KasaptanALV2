@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="tr-TR" prefix="og: http://ogp.me/ns#">
+
+<head>
+  <% include ./_partial/head %>
+</head>
+
+<body>
+  <% include ./_partial/header %>
+
+  <!-- Page Title (Light)-->
+  <div class="bg-secondary pt-4 ">
+    <div class="container d-lg-flex justify-content-between py-2 py-lg-3">
+      <div class="order-lg-2 mb-3 mb-lg-0 pt-lg-2">
+        <nav aria-label="breadcrumb" class="d-none d-lg-block">
+          <ol class="breadcrumb flex-lg-nowrap justify-content-center justify-content-lg-star">
+            <li class="breadcrumb-item"><a class="text-nowrap" href="/"><i class="czi-home"></i></a></li>
+          </ol>
+        </nav>
+      </div>
+      <div class="order-lg-1 pr-lg-4 text-center text-lg-left">
+        <h1 class="h3">Kasap Başvuruları </h1>        
+      </div>
+    </div>
+  </div>
+
+
+
+
+
+  <div v-cloak id="orderlist" class="container mb-3 pt-3">
+
+    <ul class="nav nav-pills mb-3">
+
+      <li class="nav-item dropdown">
+        <a class="nav-link dropdown-toggle" data-toggle="dropdown" href="#" role="button" aria-haspopup="true" aria-expanded="false">Süreye Göre</a>
+        <div class="dropdown-menu">
+        <a :class="{'font-weight-bold': time == '3days'}" class="dropdown-item" @click="time='3days'; go()">Son 3 gün</a>
+        <a :class="{'font-weight-bold': time == '7days'}" class="dropdown-item" @click="time='7days'; go()">Son 7 gün</a>
+
+          <a :class="{'font-weight-bold': time == 'thismonth'}" class="dropdown-item" @click="time='thismonth';go();">Bu ay</a>
+          <a :class="{'font-weight-bold': time == 'lastmonth'}" class="dropdown-item" @click="time='lastmonth';go();">Geçen Ay</a>
+          <a :class="{'font-weight-bold': time == 'all'}" class="dropdown-item" @click="time='all';go();">Tamamı</a>
+        </div>
+      </li>
+ 
+
+
+    </ul>  
+    <div v-if="!list">Yüklüyor ...</div>
+    <span v-if="list">Toplam {{list.length}} adet</span>
+    <table class="table table-hover table-sm font-size-sm">
+      <thead>
+          <tr>
+            <th>Ad</th>
+              <th>Tel</th>
+              <th>Adres</th>
+              
+              <th>Tarih</th>
+          </tr>
+      </thead>
+      <tbody>
+          
+            
+          <tr v-if="list" v-for="(o, i) in list">
+          
+        
+            
+             <td>
+               {{o.name}}, {{o.butcher}}
+             </td>
+      
+            <td>
+              {{o.tel}}
+            </td>
+            <td>
+              {{o.butcherAddress}}, {{o.city}}
+
+            </td>
+          
+            <td>
+              <date-view :use-time="false" :value="o.date"></date-view>
+
+              
+            </td>
+          </tr>
+
+
+  
+              
+     
+
+      </tbody>
+  </table>
+    
+
+
+
+    </div>
+
+
+
+
+
+
+
+
+  <% include ./_partial/footer %>
+  <% include ./_partial/scripts %>
+
+
+  <script>
+    window.orderlistApp = new Vue({
+      el: '#orderlist',
+
+      data: {
+        list: null,
+        time: '3days',
+        status: '',
+        nopayment: false
+      },
+
+      mounted: function() {
+        this.go()
+      },
+
+      methods: {
+        go() {
+          this.list = null;
+          App.Backend.get('operator/butcherapplications/list', {
+            q: this.time
+          }).then(function(result) {
+            this.list = result.data;
+          }.bind(this)).catch(App.HandleError.bind(App))
+        }
+      }
+    })
+  </script>
+
+</body>
+
+</html>
