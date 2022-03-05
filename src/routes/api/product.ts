@@ -407,6 +407,7 @@ export default class Route extends ApiRouter {
 
 
         serving = serving.filter(p => !p.takeOnly);
+        serving = serving.filter(p=>p.toareaid == 999999);
         let sameGroup: string[] = []
 
         _.remove(serving, (item) => {

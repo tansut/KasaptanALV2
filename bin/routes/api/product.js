@@ -360,6 +360,7 @@ class Route extends router_1.ApiRouter {
             let serving = yield api.getDispatchers(q);
             let takeOnly = serving.filter(p => p.takeOnly == true);
             serving = serving.filter(p => !p.takeOnly);
+            serving = serving.filter(p => p.toareaid == 999999);
             let sameGroup = [];
             _.remove(serving, (item) => {
                 if (item.butcher.parentButcher) {
