@@ -195,15 +195,17 @@
                 <div class="mb-3">
                   <% if ((!controller.logisticsProvider || controller.logisticsPriceSlice.length == 0) && __req.prefAddr) { %>
                   
-                    <% } else { %>
+                    <% } else if (false) { %>
                <a data-tag="true" data-category="user actions" data-action="pratik sipariş click" data-label="<%=butcher.slug%>" onclick="quickOrderApp.open({butchername: '<%=butcher.name%>', 'butcherslug': '<%=butcher.slug%>'})" class="font-weight-bold btn mb-3  btn-sm rounded btn-danger mr-2"><i class="czi-icon czi-cart mr-1"></i>Pratik Sipariş</a>
 
                   <% } %>
+                  <div class="d-none">
+                    <a data-tag="true" data-category="user actions" data-action="kasabı ara click" data-label="<%=butcher.slug%>" href="tel:08503054216" class="mb-3 font-weight-bold btn btn-dark btn-sm rounded "><i class="czi-icon czi-phone mr-2"></i>Kasabı Ara</a>
+                    <% if (__req.prefAddr) {  %>
+                    <span class="d-block mb-2">Whatasapp Destek: <a data-tag="true" data-category="user actions" data-action="whatsapp sipariş click" data-label="<%=butcher.slug%>" class="text-dark" target="_blank" href="https://wa.me/+908503059286?text=<%=butcher.name%> <%=__req.prefAddr.display%> semtinden sipariş vermek istiyorum.">0 850 305 9286</a></span>
+                    <% } %>
+                  </div>
 
-                  <a data-tag="true" data-category="user actions" data-action="kasabı ara click" data-label="<%=butcher.slug%>" href="tel:08503054216" class="mb-3 font-weight-bold btn btn-dark btn-sm rounded "><i class="czi-icon czi-phone mr-2"></i>Kasabı Ara</a>
-                  <% if (__req.prefAddr) {  %>
-                  <span class="d-block mb-2">Whatasapp Destek: <a data-tag="true" data-category="user actions" data-action="whatsapp sipariş click" data-label="<%=butcher.slug%>" class="text-dark" target="_blank" href="https://wa.me/+908503059286?text=<%=butcher.name%> <%=__req.prefAddr.display%> semtinden sipariş vermek istiyorum.">0 850 305 9286</a></span>
-                  <% } %>
           
 
                 </div>
@@ -598,7 +600,7 @@
                   Tüm ürünlerin miktar, fiyat ve birim özelliklerinin tamamlanmasını biz de sabırsızlıkla bekliyoruz.
                 </p>
               <%}%>
-              <% if (controller.butcher.approved)  { %>
+              <% if (controller.butcher.approved && false)  { %>
                 <div v-cloak  id="scapp">
                   <div class="d-flex mb-3  align-items-center">
                     <div class=" flex-grow-1 input-group-overlay">

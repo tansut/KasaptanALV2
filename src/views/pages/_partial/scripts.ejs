@@ -407,7 +407,7 @@ window.App.platform = '<%=controller.platform%>'
 
       %>
 
-      <% if (!hideMember && (controller.platform) == 'web' && (!forceSemt || (forceSemt && __req.prefAddr))) { %>
+      <% if (false && !hideMember && (controller.platform) == 'web' && (!forceSemt || (forceSemt && __req.prefAddr))) { %>
   
       $(window).scroll(function () {
         if (($(document).scrollTop() >= $(document).height() / 4) && !userGuide.autoPopuped) {
@@ -422,7 +422,7 @@ window.App.platform = '<%=controller.platform%>'
       
 
 
-      <%  if (!__req.prefAddr && forceSemt && (!__req.session._semtForced)) { %>
+      <%  if (false && !__req.prefAddr && forceSemt && (!__req.session._semtForced)) { %>
         <% __req.session._semtForced = true; %>
         
         $(window).scroll(function () {
@@ -625,7 +625,7 @@ window.App.platform = '<%=controller.platform%>'
   </script>
   
   <script>
-    <% if (controller.platform == 'web' && (typeof(__supportMessage) == "undefined" || !__hidesupportMessage)) { %>
+    <% if (false && controller.platform == 'web' && (typeof(__supportMessage) == "undefined" || !__hidesupportMessage)) { %>
   $('#__whatsup').floatingWhatsApp({
       phone: '908503059286',
       popupMessage: 'Nasıl yardımcı olabilirim ?',
